@@ -1,0 +1,57 @@
+<!-- <wiz-navigator [steps]="steps"></wiz-navigator> -->
+<div class="wiz-page-container">
+    <div>
+        <wiz-navigator [steps]="steps"></wiz-navigator>
+    </div>
+    
+    <div class="step-page-container">
+        <form [formGroup]="fgSteps" style="height: 100%;">
+            <!-- <div class="step-page-container"> -->
+                <div class="form-step">
+                    <ng-container [ngSwitch]="currentStep?.stepIndex">
+                        <ng-container *ngSwitchCase="'1'">
+                            <div formGroupName="pubtype" class="step-page">
+                                <app-pubtype [dataModel]="dataModel" [steps]="steps"></app-pubtype>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'2'">
+                            <div formGroupName="contactInfo" class="step-page">
+                                <app-contactinfo [dataModel]="dataModel" [steps]="steps"></app-contactinfo>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'3'">
+                            <div formGroupName="files" class="step-page">
+                                <app-files [dataModel]="dataModel" [steps]="steps"></app-files>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'4'">
+                            <div formGroupName="softwareInfo" class="step-page">
+                                <app-softwareinfo [dataModel]="dataModel" [steps]="steps"></app-softwareinfo>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'5'">
+                            <div formGroupName="assocPapers" class="step-page">
+                                <app-associated-papers [dataModel]="dataModel" [steps]="steps"></app-associated-papers>
+                            </div>
+                        </ng-container>
+                    </ng-container>
+                </div>
+            <!-- </div> -->
+        </form>
+    </div>
+    <div class="bottom-control-container">
+        <div class="bottom-btn-container">
+            <button (click)="onCancel()" class="form-cancel-btn common-btn">
+                Cancel
+            </button>
+
+            <button (click)="onNextStep()" [disabled]="!currentStep?.canGoNext" class="form-nav-btn common-btn">
+                {{ showButtonLabel() }}
+            </button>
+
+            <button (click)="onPrevStep()" [disabled]="!currentStep?.canGoPrev" class="form-nav-btn common-btn">
+                Prev
+            </button>
+        </div>
+    </div>
+</div>
