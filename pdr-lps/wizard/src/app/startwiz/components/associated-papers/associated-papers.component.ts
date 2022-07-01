@@ -52,7 +52,9 @@ export class AssociatedPapersComponent implements OnInit {
         return this._sbarvisible
     }
 
-    submit() {
+    onSelectChange(evt: any) {
+        this.dataModel.assocPageType = evt.target.value;
+
         if(this.dataModel.assocPageType != undefined){
             this.steps[4].isComplete = true;
         }else{

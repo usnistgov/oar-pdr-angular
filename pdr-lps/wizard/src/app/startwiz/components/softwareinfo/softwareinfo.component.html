@@ -20,7 +20,7 @@
 
             <div style="margin-top: 1em;" *ngIf="dataModel.provideLink">
                 <div style="margin-bottom: .5em;">Type in software link: </div>
-                <input type="text" pInputText name="softwareLink" formControlName="softwareLink" [(ngModel)]="dataModel.softwareLink" (input)="updateSoftwareLink()"/>
+                <input type="text" pInputText name="softwareLink" formControlName="softwareLink" (input)="updateSoftwareLink($event)"/>
             </div>
         </div>
         <span class="sidebar-title">Question Help</span>

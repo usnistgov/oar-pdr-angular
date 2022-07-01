@@ -72,7 +72,8 @@ export class SoftwareinfoComponent implements OnInit {
         this.steps[4].canGoNext = this.stepService.allDone();
     }
 
-    updateSoftwareLink(): void {
+    updateSoftwareLink(evt:any): void {
+        this.dataModel.softwareLink = evt.target.value;
         this.steps[3].isComplete = (this.dataModel.softwareLink?.trim() != "");
         this.steps[4].canGoNext = this.stepService.allDone();
     }

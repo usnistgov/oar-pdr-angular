@@ -63,7 +63,7 @@ export class ContactinfoComponent implements OnInit {
         var target = evt.target;
         this.dataModel.creatorIsContact = (target.value==='true');
 
-        if(!this.dataModel.creatorIsContact) {
+        if(this.dataModel.creatorIsContact) {
             this.dataModel.contactName = undefined;
             this.parantFormGroup.patchValue({
                 contactName: ""
@@ -77,7 +77,8 @@ export class ContactinfoComponent implements OnInit {
         this.steps[4].canGoNext = this.stepService.allDone();
     }
 
-    updateContactName() {
+    updateContactName(evt:any) {
+        this.dataModel.contactName = evt.target.value;
         this.steps[1].isComplete = (this.dataModel.contactName?.trim() != "");
         this.steps[4].canGoNext = this.stepService.allDone();
     }

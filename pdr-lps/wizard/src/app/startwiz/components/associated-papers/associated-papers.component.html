@@ -8,20 +8,20 @@
             <div class="radio-group">
                 <div class="radio">
                     <label title="No, this will be a stand-alone publication">
-                        <input type="radio" required name="assocPageType" value="stand-alone" (change)="submit()" formControlName="assocPageType" [(ngModel)]="dataModel.assocPageType">
+                        <input type="radio" required name="assocPageType" value="stand-alone" formControlName="assocPageType" (change)="onSelectChange($event)">
                         No, this will be a stand-alone publication
                     </label>
                 </div>
                 <div class="radio">
                     <label title="Yes, this (Data/Software/...) publication should be considered a supplement of the article">
-                        <input type="radio" required name="assocPageType" value="supplement" (change)="submit()"
-                            formControlName="assocPageType" [(ngModel)]="dataModel.assocPageType">
+                        <input type="radio" required name="assocPageType" value="supplement" 
+                            formControlName="assocPageType" (change)="onSelectChange($event)">
                         Yes, this {{dataModel.resourceType}} publication should be considered a supplement of the article
                     </label>
                 </div>
                 <div class="radio">
                     <label title="Yes, but the article is only loosely related this publication.">
-                        <input type="radio" required name="assocPageType" value="loosely-related"  (change)="submit()" formControlName="assocPageType" [(ngModel)]="dataModel.assocPageType">
+                        <input type="radio" required name="assocPageType" value="loosely-related"  formControlName="assocPageType" (change)="onSelectChange($event)">
                         Yes, but the article is only loosely related this publication.
                     </label>
                 </div>
