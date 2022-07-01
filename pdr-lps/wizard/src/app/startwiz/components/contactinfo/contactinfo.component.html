@@ -17,9 +17,9 @@
                     </label>
                 </div>
             </div>
-            <div style="margin-top: 1em;" *ngIf="dataModel.creatorIsContact">
+            <div style="margin-top: 1em;" *ngIf="dataModel.creatorIsContact != undefined && !dataModel.creatorIsContact">
                 <div style="margin-bottom: .5em;">Type in contact's name and select the appropriate match: </div>
-                <input type="text" pInputText name="otherContact" formControlName="contactName" [(ngModel)]="dataModel.contactName" (input)="updateContactName()"/>
+                <input type="text" pInputText name="otherContact" formControlName="contactName" (input)="updateContactName($event)"/>
             </div>
         </div>
         <span class="sidebar-title">Question Help</span>

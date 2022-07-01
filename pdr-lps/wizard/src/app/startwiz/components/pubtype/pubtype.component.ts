@@ -28,13 +28,13 @@ export class PubtypeComponent implements OnInit {
         // console.log('this.parantFormGroup', this.parantFormGroup.controls['pubtype'])
         this.parantFormGroup.valueChanges.subscribe(selectedValue  => {
             this.dataModel.resourceType = selectedValue.resourceType;
-            if(this.dataModel.resourceType != undefined){
-                this.steps[0].canGoNext = true;
-                this.steps[0].isComplete = true;
-                for(let i = 1; i < this.steps.length; i++){
-                    this.steps[i].canEnter = true;
-                }
-            }else{
+            if(this.dataModel.resourceType == undefined){
+            //     this.steps[0].canGoNext = true;
+            //     this.steps[0].isComplete = true;
+            //     for(let i = 1; i < this.steps.length; i++){
+            //         this.steps[i].canEnter = true;
+            //     }
+            // }else{
                 for(let i = 1; i < this.steps.length; i++){
                     this.steps[i].canEnter = false;
                 }
@@ -43,9 +43,9 @@ export class PubtypeComponent implements OnInit {
             }
                 
             // Turn on optional step if resource type is software
-            this.steps[3].active = (this.dataModel.resourceType == "software");
+            // this.steps[3].active = (this.dataModel.resourceType == "software");
 
-            this.steps[4].canGoNext = this.stepService.allDone();
+            // this.steps[4].canGoNext = this.stepService.allDone();
         })
     }
 
@@ -62,4 +62,18 @@ export class PubtypeComponent implements OnInit {
         return this._sbarvisible
     }
 
+    onSelectChange(evt: any) {
+        this.dataModel.resourceType = evt.target.value;
+
+        this.steps[0].canGoNext = true;
+        this.steps[0].isComplete = true;
+        for(let i = 1; i < this.steps.length; i++){
+            this.steps[i].canEnter = true;
+        }
+
+        // Turn on optional step if resource type is software
+        this.steps[3].active = (this.dataModel.resourceType == "software");
+
+        this.steps[4].canGoNext = this.stepService.allDone();
+    }
 }

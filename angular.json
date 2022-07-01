@@ -55,7 +55,12 @@
                         "tsConfig": "pdr-lps/wizard/tsconfig.app.json",
                         "assets": [
                             "pdr-lps/wizard/src/favicon.ico",
-                            "pdr-lps/wizard/src/assets"
+                            "pdr-lps/wizard/src/assets",
+                            {
+                                "glob": "**/*",
+                                "input": "./node_modules/oarng/src/assets/",
+                                "output": "./assets/"
+                            }
                         ],
                         "styles": [                            
                             "node_modules/bootstrap/dist/css/bootstrap.css",
