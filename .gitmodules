@@ -1,3 +1,6 @@
 [submodule "lib"]
 	path = lib
 	url = https://github.com/usnistgov/oar-lib-angular
+[submodule "oar-pdr"]
+	path = oar-pdr
+	url = https://github.com/usnistgov/oar-pdr.git
