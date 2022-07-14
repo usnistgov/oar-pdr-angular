@@ -104,7 +104,62 @@ command-line options.
 The `npm` tool can be used in the standard way for [Angular projects](https://angular.io/docs) to
 build and test this software.
 
-[detail commands and instructions]
+Detail commands and instructions:
+
+1. Clone this repository and update Angular library
+    
+    After clone the repository, do the following:
+    
+```
+    cd oar-pdr-angular
+    git submodule update --init --recursive
+    cd lib
+    git checkout integration
+```
+
+Now lib folder should have the latest code of oar-lib-angular.
+    
+2. Install packages
+
+    Go to root folder, switch to initial-portal-setup02 branch, then do npm install:
+    
+```    
+    Note: make sure your npm version is 7.0.0 or higher. Use npm -v to check your version. 
+    If not, run npm install -g npm@latest.
+    
+    cd ..
+    git checkout initial-portal-setup02
+    npm i 
+```    
+    
+3. Build and run your application
+
+You can build Angular library and your application separately or with one command.
+
+To build Angular library only:
+
+```    
+    npm run build-lib
+```
+
+To build your application only:
+
+```    
+    npm run build
+```
+
+To build both lib and your application:
+
+```    
+    npm run build-all
+```
+
+4. Testing your app
+
+```
+    Browse: http://localhost:4200
+```
+
 
 
 ## Repository Administration

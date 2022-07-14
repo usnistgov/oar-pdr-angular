@@ -1,0 +1,13 @@
+{
+    "name": "midas-publishing",
+    "workspaces": [
+        "lib",
+        "pdr-lps/wizard"
+    ],
+    "scripts": {
+        "build-lib": "npm run build oarng --prefix ./lib",
+        "build-all": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./pdr-lps/wizard",
+        "build": "npm run build step-wizard --prefix ./pdr-lps/wizard",
+        "start": "npm run start step-wizard --prefix ./pdr-lps/wizard"
+    }
+}
