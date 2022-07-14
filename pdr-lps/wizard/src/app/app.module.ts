@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { StepWizModule } from './startwiz/stepwizard.module';
 import { WizardModule } from 'oarng';
 import { OARngModule } from 'oarng';
+import { FrameModule } from 'oarng';
 import { InputTextModule } from "primeng/inputtext";
 
 @NgModule({
@@ -18,7 +19,8 @@ import { InputTextModule } from "primeng/inputtext";
         AppRoutingModule,
         WizardModule,
         InputTextModule,
-        OARngModule
+        OARngModule,
+        FrameModule
     ],
     providers: [],
     bootstrap: [AppComponent]
