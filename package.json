@@ -2,12 +2,14 @@
     "name": "midas-publishing",
     "workspaces": [
         "lib",
-        "pdr-lps/wizard"
+        "oar-lps",
+        "midas-author/wizard"
     ],
     "scripts": {
         "build-lib": "npm run build oarng --prefix ./lib",
-        "build-all": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./pdr-lps/wizard",
-        "build": "npm run build step-wizard --prefix ./pdr-lps/wizard",
-        "start": "npm run start step-wizard --prefix ./pdr-lps/wizard"
+        "build-oarlps": "npm run build oarlps --prefix ./oar-lps",
+        "build-all": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./midas-author/wizard",
+        "build-sw": "npm run build step-wizard --prefix ./midas-author/wizard",
+        "start": "npm run start step-wizard --prefix ./midas-author/wizard"
     }
 }
