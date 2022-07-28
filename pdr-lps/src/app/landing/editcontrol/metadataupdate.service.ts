@@ -2,7 +2,7 @@ import { Injectable, EventEmitter, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Subject } from 'rxjs';
 
-import { UserMessageService } from '../../frame/usermessage.service';
+import { UserMessageService } from 'oarlps';
 import { CustomizationService } from './customization.service';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { Observable, of, throwError, Subscriber } from 'rxjs';

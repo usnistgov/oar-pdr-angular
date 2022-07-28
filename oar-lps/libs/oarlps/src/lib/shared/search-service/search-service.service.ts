@@ -11,7 +11,7 @@ import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';
 import { tap } from 'rxjs/operators';
 import { isPlatformServer } from '@angular/common';
-import { MessageBarComponent } from 'oarlps';
+import { MessageBarComponent } from '../../frame/messagebar.component';
 import { BehaviorSubject } from 'rxjs';
 
 export const SEARCH_SERVICE = 'SEARCH_SERVICE';

@@ -4,7 +4,7 @@ import { TreeNode } from 'primeng/api';
 import { TemplateBindingParseResult, preserveWhitespacesDefault } from '@angular/compiler';
 import { AppConfig } from '../../../config/config';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
-import { UserMessageService } from '../../../frame/usermessage.service';
+import { UserMessageService } from 'oarlps';
 import { OverlayPanel } from 'primeng/overlaypanel';
 
 export const ROW_COLOR = '#1E6BA1';

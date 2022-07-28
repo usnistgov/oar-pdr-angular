@@ -5,7 +5,7 @@ import { EditControlComponent } from './editcontrol.component';
 import { EditStatusComponent } from './editstatus.component';
 import { AuthService, createAuthService } from './auth.service';
 import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confirmation-dialog.module';
-import { FrameModule } from '../../frame/frame.module';
+import { FrameModule } from 'oarlps';
 import { ButtonModule } from 'primeng/button';
 import { AppConfig } from '../../config/config';
 import { HttpClient } from '@angular/common/http';

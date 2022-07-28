@@ -8,4 +8,9 @@
         "path": "./pdr-lps/wizard/tsconfig.ref.json"
       },
     ],
+    "compilerOptions": {
+        "types": [
+          "node"
+        ],
+    },
   }

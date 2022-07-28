@@ -3,8 +3,8 @@ import { Observable, of, BehaviorSubject } from 'rxjs';
 
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { MessageBarComponent } from '../../frame/messagebar.component';
+import { UserMessageService } from 'oarlps';
+import { MessageBarComponent } from 'oarlps';
 import { EditStatusComponent } from './editstatus.component';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { EditStatusService } from './editstatus.service';

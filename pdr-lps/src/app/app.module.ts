@@ -24,7 +24,7 @@ import { LandingAboutModule } from './landingAbout/landingAbout.module';
 import { SharedModule } from './shared/shared.module';
 import { FragmentPolyfillModule } from "./fragment-polyfill.module";
 import { ErrorsModule, AppErrorHandler } from './errors/errors.module';
-import { FrameModule } from './frame/frame.module';
+
 import { ConfigModule } from './config/config.module';
 import { DatacartModule } from './datacart/datacart.module';
 import { DirectivesModule } from './directives/directives.module';
@@ -40,6 +40,9 @@ import { ContactPopupComponent } from './landing/contact/contact-popup/contact-p
 import { GoogleAnalyticsService} from "./shared/ga-service/google-analytics.service";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
+import { FrameModule } from 'oarlps';
+import { OARLPSModule } from 'oarlps';
+
 enableProdMode();
 
 /**
@@ -52,6 +55,7 @@ enableProdMode();
     imports: [
         ConfigModule,
         FrameModule,
+        OARLPSModule,
         ErrorsModule,
         LandingPageModule,
         AppRoutingModule,

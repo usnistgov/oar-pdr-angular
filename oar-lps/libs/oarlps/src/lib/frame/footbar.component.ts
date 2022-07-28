@@ -9,7 +9,6 @@ import * as footerlinks from '../../assets/site-constants/footer-links.json';
  * * Set as black bar at the bottom of the page
  */
 @Component({
-  moduleId: module.id,
   selector: 'pdr-footbar',
   templateUrl: 'footbar.component.html',
   styleUrls: ['footbar.component.css']
