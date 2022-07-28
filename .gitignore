@@ -52,4 +52,5 @@ m2repo
 #angular
 */node_modules
 */.idea**
-
+.angular
+node_modules
