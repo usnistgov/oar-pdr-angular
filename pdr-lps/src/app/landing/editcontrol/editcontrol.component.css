@@ -1,0 +1,76 @@
+.edit-control-buttons {
+    background-color: #153971;
+    color: #FFFFFF; 
+    height: 3em;
+}
+  
+.btn-label {
+    position: relative;
+    left: -19px;
+    top: -1px;
+    display: inline-block;
+    padding: 3px 0px 0px 12px;
+    background: rgba(0,0,0,0.15);
+    border-radius: 3px 0 0 3px; 
+    height: inherit;
+}
+  
+.btn-labeled {
+    padding-top: 0;
+    padding-bottom: 0;
+    width:140px; 
+    margin: 0em .5em .5em 0em;
+}
+
+.btn {
+    margin-bottom:10px;
+    height:2em;
+}
+
+#ec-edit-btn {
+    background-color:rgb(245, 198, 54);
+    color:black;
+}
+
+#ec-quited-btn {
+    background-color:rgb(221, 172, 9);
+    color:white;
+}
+
+#ec-close-btn {
+    background-color:green;
+    color:white;
+}
+
+#ec-discard-btn {
+    background-color:rgb(94, 94, 94);
+    color:white;
+}
+
+#ec-preview-btn {
+    background-color:rgb(9, 108, 221);
+    color:white;
+}
+
+#ec-info-btn {
+    margin:.3em 1em auto 0.2em;
+    font-size: 30px;
+    cursor: pointer;
+    float: right;
+}
+
+.fileDialog {
+    z-index: 999;
+}
+
+.overlay-title {
+    color: white; 
+    background-color: #1c4d9b;
+    width: 100%;
+    text-align: center;
+    height: 2.5em;
+    padding-top: .5em;
+    font-weight: bolder;
+    font-size: larger;
+    margin-bottom: 1em;
+}

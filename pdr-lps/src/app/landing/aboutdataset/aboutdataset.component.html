@@ -1,0 +1,105 @@
+<!-- About This Dataset section -->
+
+<!-- Version info -->
+<pdr-version [record]="record"></pdr-version> 
+
+<!-- is part of -->
+<div id="about-ispartof" *ngIf="isPartOf">
+  <div *ngIf="isPartOf.length == 1; else multiIsPartOf">
+    This dataset is part of {{isPartOf[0][0]}}
+    <a href="{{isPartOf[0][1]}}" title="view collection">{{isPartOf[0][2]}}</a> {{isPartOf[0][3]}}. 
+  </div>
+  <ng-template #multiIsPartOf>
+    This dataset is part of the following collections:
+    <ul>
+    <div *ngFor="let coll of isPartOf">
+       <li> {{coll[0]}} <a href="{{coll[1]}}" title="view collection">{{coll[2]}}</a> {{coll[3]}} </li>
+    </div>
+    </ul>
+  </ng-template>
+</div>
+
+<!-- Collection creators -->
+<div *ngIf="record.creators" style="padding-right: 10pt; margin-bottom: 1em"> 
+    <b>Collection creators: </b>
+    <span *ngFor="let creator of record.creators; index i">
+        {{creator.fn}} <span *ngIf="i < record.creators.length-1">, </span>
+    </span>
+</div>
+
+<!-- Citation info -->
+<div style="margin: 1em 0em;" id="cite">
+    <div><b style="margin-right: 10px;">Cite this {{resourceType.toLowerCase()}}</b>
+        <span id="copy-to-clipboard" (click)="copyToClipboard(citetext)" data-toggle="tooltip" title="Copy to clipboard"><i class="faa faa-clone"></i></span><span [@enterAnimation] *ngIf="citeCopied" class="badge"
+        style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Citation copied to clipboard</span>
+    </div>
+    <span [ngClass]="{'highlight': citeCopied}" [@enterAnimation]>
+        {{citetext}}
+    </span>
+</div>
+
+<!-- Repository metadata -->
+<div style="margin: 0em 0em .5em 0em;" id="metadata">
+    <div><b>Repository Metadata</b></div>
+    Machine-readable descriptions of this {{resourceType.toLowerCase()}} are available in the following formats:
+    <div (click)="showJsonViewer = !showJsonViewer" class="linked-text"><i class="faa faa-caret-right" *ngIf="!showJsonViewer"></i><i class="faa faa-caret-down" *ngIf="showJsonViewer"></i> NERDm</div>
+</div>
+<div *ngIf="showJsonViewer" style="margin: 0 0 .5em 1em;">
+    <a href="{{nerdmDocUrl}}" target="_blank">
+        NERDm documentation
+    </a>
+</div>
+<!-- JSON viewer with a thin grey border -->
+<div class="json-viewer-box" id="json-viewer" *ngIf="showJsonViewer">
+    <!-- Header bar with JSON tree navigate buttons (left) and JSON export button (right)-->
+    <div class="json-viewer-header">
+        <!-- JSON export button (right alignment) -->
+        <div >
+            <a [href]='getDownloadURL()'>
+                <span class="json-export-btn nist-blue-bc" (click)="onjson()"><i class="faa faa-file-code-o" style="margin-right: 10px;"></i>Export</span></a>
+        </div>
+
+        <!-- JSON tree navigate buttons (left alignment) -->
+        <div style="width: 100%;">
+            <div class="json-level">
+                <!-- Hide this label in mobile mode to save space -->
+                <span *ngIf="!mobileMode" class="json-label">JSON View: </span>
+                <span class="item-list">
+                    <ul>
+                        <li (click)="expandToLevel('1')">1</li>
+                        <li (click)="expandToLevel('2')">2</li>
+                        <!-- Hide the 3rd button in mobile mode to save space -->
+                        <li *ngIf="!mobileMode" (click)="expandToLevel('3')">3</li>
+                        <li *ngIf="!mobileMode" (click)="expandToLevel('all')">View Full Tree</li>
+                        <li *ngIf="mobileMode" (click)="expandToLevel('all')">Full Tree</li>
+                    </ul>
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <!-- JSON viewer -->
+    <div style="padding: 20px;" [@enterAnimation]>
+        <ngx-json-viewer *ngIf="showJson" [json]="nerdmRecord" [expanded]="!collapsed" [depth]='jsonExpandDepth'></ngx-json-viewer>
+    </div>
+
+</div>
+
+<!-- Metrics info: for default theme only -->
+<div *ngIf="resourceType != scienceThemeResourceType" style="margin: 0em 0em 1em 0em;" id="metrics">
+    <div>
+        <b>Access Metrics</b>
+    </div>
+    <div *ngIf="metricsData.hasCurrentMetrics; else noMetrics">
+        Number of unique downloads of some or all of this dataset: {{metricsData.totalDatasetDownload}}<br>
+        Number of unique users downloading this dataset: {{metricsData.totalUsers}}<br>
+        Total number of bytes delivered from this dataset: {{totalDownloadSize}}<br>
+
+        <div style="margin-left: 1em;color:#1471AE;">
+            <a href="{{metricsData.url}}" target="_blank"><i class="faa faa-bar-chart" style="margin-right: 5px;"></i>See more details...</a>
+        </div>
+    </div>
+    <ng-template #noMetrics>
+        Metrics data is not available for all datasets, including this one. This may be because the data is served via servers external to this repository.
+    </ng-template>
+</div>
