@@ -52,5 +52,6 @@ m2repo
 #angular
 */node_modules
 */.idea**
-.angular
+*/.angular
 node_modules
+package-lock.json
