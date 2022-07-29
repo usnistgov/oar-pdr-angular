@@ -9,24 +9,24 @@ import { HttpEventType } from '@angular/common/http';
 
 import { AppConfig } from '../config/config';
 import { MetadataService } from '../nerdm/nerdm.service';
-import { EditStatusService } from './editcontrol/editstatus.service';
+import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
 import { IDNotFound } from '../errors/error';
-import { MetadataUpdateService } from './editcontrol/metadataupdate.service';
+import { MetadataUpdateService } from 'oarlps';
 import { LandingConstants } from './constants';
-import { CartService } from '../datacart/cart.service';
-import { DataCartStatus } from '../datacart/cartstatus';
-import { CartConstants } from '../datacart/cartconstants';
-import { RecordLevelMetrics } from '../metrics/metrics';
-import { MetricsService } from '../shared/metrics-service/metrics.service';
+import { CartService } from 'oarlps';
+import { DataCartStatus } from 'oarlps';
+import { CartConstants } from 'oarlps';
+import { RecordLevelMetrics } from 'oarlps';
+import { MetricsService } from 'oarlps';
 import { formatBytes } from '../utils';
 import { LandingBodyComponent } from './landingbody.component';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 // import { MetricsinfoComponent } from './metricsinfo/metricsinfo.component';
-import { CartActions } from '../datacart/cartconstants';
+import { CartActions } from 'oarlps';
 import { initBrowserMetadataTransfer } from '../nerdm/metadatatransfer-browser.module';
-import { MetricsData } from "./metrics-data";
-import { Themes, ThemesPrefs } from '../shared/globals/globals';
+import { MetricsData } from "oarlps";
+import { Themes, ThemesPrefs } from 'oarlps';
 
 /**
  * A component providing the complete display of landing page content associated with 

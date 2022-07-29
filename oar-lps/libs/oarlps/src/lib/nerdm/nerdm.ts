@@ -2,7 +2,7 @@
  * Classes and interfaces to support the NERDm metadata infrastructure
  */
 import { Injectable, InjectionToken } from '@angular/core';
-import { Themes, ThemesPrefs } from 'oarlps';
+import { Themes, ThemesPrefs } from '../shared/globals/globals';
 import * as _ from 'lodash-es';
 
 /**

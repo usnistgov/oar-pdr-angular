@@ -19,5 +19,10 @@
     "devDependencies": {
         "ng-packagr": "^13.0.0",
         "typescript": "4.5.5"
+    },
+    "browser": {
+      "fs": false,
+      "proc": false,
+      "process": false
     }
 }

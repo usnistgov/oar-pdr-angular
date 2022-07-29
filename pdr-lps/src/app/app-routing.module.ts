@@ -6,10 +6,10 @@ import { NoidComponent } from './landing/noid.component';
 import { NerdmComponent } from './landing/nerdm.component';
 // import { SearchResolve } from './landing/search-service.resolve';
 import { NotFoundComponent, InternalErrorComponent } from './errors/errors.module';
-import { DatacartComponent } from './datacart/datacart.component';
-import { DoneComponent } from './landing/done/done.component';
-import { DatacartRoutes } from './datacart/datacart.routes';
-import { MetricsComponent } from './metrics/metrics.component';
+import { DatacartComponent } from 'oarlps';
+import { DoneComponent } from 'oarlps';
+import { DatacartRoutes } from 'oarlps';
+import { MetricsComponent } from 'oarlps';
 
 const routes: Routes = [
     ...DatacartRoutes,

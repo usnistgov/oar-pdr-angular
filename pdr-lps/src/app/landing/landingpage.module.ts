@@ -10,19 +10,17 @@ import { LandingPageComponent } from './landingpage.component';
 import { LandingBodyComponent } from './landingbody.component';
 import { NoidComponent } from './noid.component';
 import { NerdmComponent } from './nerdm.component';
-import { SectionsModule } from './sections/sections.module';
-import { MetadataUpdateService } from './editcontrol/metadataupdate.service';
-import { EditControlModule } from './editcontrol/editcontrol.module';
-import { ToolsModule } from './tools/tools.module';
-import { CitationModule } from './citation/citation.module';
-import { DoneComponent } from './done/done.component';
-import { DownloadstatusComponent } from './downloadstatus/downloadstatus.component';
-import { TaxonomyListService } from '../shared/taxonomy-list'
+import { SectionsModule } from 'oarlps';
+import { MetadataUpdateService } from 'oarlps';
+import { EditControlModule } from 'oarlps';
+import { ToolsModule } from 'oarlps';
+import { CitationModule } from 'oarlps';
+import { DoneModule } from 'oarlps';
+import { TaxonomyListService } from 'oarlps'
 import { ErrorComponent, UserErrorComponent } from './error.component';
-import { MetricsinfoComponent } from './metricsinfo/metricsinfo.component';
 // import { ForensicslandingbodyModule } from './forensicslandingbody/forensicslandingbody.module';
 // import { ForensicssearchresultModule } from './forensicssearchresult/forensicssearchresult.module';
-import { SearchresultModule } from './searchresult/searchresult.module';
+import { SearchresultModule } from 'oarlps';
 
 
 /**
@@ -39,21 +37,23 @@ import { SearchresultModule } from './searchresult/searchresult.module';
         ToolsModule,
         CitationModule,
         SectionsModule,
-        SearchresultModule
+        SearchresultModule,
+        DoneModule
     ],
     declarations: [
-        LandingPageComponent, LandingBodyComponent, DoneComponent, DownloadstatusComponent,
-        ErrorComponent, UserErrorComponent, NoidComponent, NerdmComponent, MetricsinfoComponent
+        LandingPageComponent, LandingBodyComponent, 
+        ErrorComponent, UserErrorComponent, NoidComponent, NerdmComponent
     ],
     providers: [
         MetadataUpdateService, TaxonomyListService, DatePipe
     ],
     exports: [
-        LandingPageComponent, LandingBodyComponent, DoneComponent, DownloadstatusComponent,
+        LandingPageComponent, LandingBodyComponent, 
         ErrorComponent, UserErrorComponent, NoidComponent, NerdmComponent
     ]
 })
 export class LandingPageModule { }
 
-export { LandingPageComponent, LandingBodyComponent, NoidComponent, NerdmComponent };
+export { LandingPageComponent, LandingBodyComponent, 
+    ErrorComponent, UserErrorComponent,NoidComponent, NerdmComponent };
     

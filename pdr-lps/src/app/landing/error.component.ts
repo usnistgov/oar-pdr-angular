@@ -6,7 +6,6 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 
 @Component({
-  moduleId: module.id,
   styleUrls: ['landing.component.css'],
   selector: 'error-template',
   template: `
@@ -38,7 +37,6 @@ export class ErrorComponent {
 }
 
 @Component({
-  moduleId: module.id,
   // styleUrls: ['landing.component.css'],
   selector: 'user-error',
   template: `

@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, ElementRef, Output, EventEmitter } from '@
 
 import { AppConfig } from '../config/config';
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
-import { ResourceMetadataComponent } from './sections/resourcemetadata.component';
+import { ResourceMetadataComponent } from 'oarlps';
 import { Console } from 'console';
 import { MetricsData } from "./metrics-data";
 

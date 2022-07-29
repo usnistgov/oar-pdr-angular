@@ -21,23 +21,23 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { LandingPageModule } from './landing/landingpage.module';
 import { LandingAboutModule } from './landingAbout/landingAbout.module';
-import { SharedModule } from './shared/shared.module';
+import { SharedModule } from 'oarlps';
 import { FragmentPolyfillModule } from "./fragment-polyfill.module";
 import { ErrorsModule, AppErrorHandler } from './errors/errors.module';
 
 import { ConfigModule } from './config/config.module';
-import { DatacartModule } from './datacart/datacart.module';
-import { DirectivesModule } from './directives/directives.module';
-import { MetricsModule } from './metrics/metrics.module';
+import { DatacartModule } from 'oarlps';
+import { DirectivesModule } from 'oarlps';
+import { MetricsModule } from 'oarlps';
 
 import { ErrorComponent, UserErrorComponent } from './landing/error.component';
-import { ModalComponent } from './directives';
-import { ComboBoxComponent } from './shared/combobox/combo-box.component';
-import { SearchTopicsComponent } from './landing/topic/topic-popup/search-topics.component';
-import { DescriptionPopupComponent } from './landing/description/description-popup/description-popup.component';
-import { AuthorPopupComponent } from './landing/author/author-popup/author-popup.component';
-import { ContactPopupComponent } from './landing/contact/contact-popup/contact-popup.component';
-import { GoogleAnalyticsService} from "./shared/ga-service/google-analytics.service";
+import { ModalComponent } from 'oarlps';
+import { ComboBoxComponent } from 'oarlps';
+import { SearchTopicsComponent } from 'oarlps';
+import { DescriptionPopupComponent } from 'oarlps';
+import { AuthorPopupComponent } from 'oarlps';
+import { ContactPopupComponent } from 'oarlps';
+import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
 import { FrameModule } from 'oarlps';
