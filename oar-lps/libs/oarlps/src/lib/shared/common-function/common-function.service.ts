@@ -34,9 +34,9 @@ export class CommonFunctionService {
      * @param obj 
      * @returns copy of the input object
      */
-    deepCopy(obj) {
-        return JSON.parse(JSON.stringify(obj));
-    }
+    // deepCopy(obj) {
+    //     return JSON.parse(JSON.stringify(obj));
+    // }
 
     /**
      *  Convert the file size into display format

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SearchService } from '../../../shared/search-service/index';
-import { deepCopy } from '../../../utils';
+import { deepCopy } from '../../../config/config.service';
 import { AuthorService } from '../author.service';
 
 @Component({

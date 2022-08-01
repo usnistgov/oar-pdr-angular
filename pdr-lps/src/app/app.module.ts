@@ -20,17 +20,17 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { LandingPageModule } from './landing/landingpage.module';
-import { LandingAboutModule } from './landingAbout/landingAbout.module';
+import { LandingAboutModule } from 'oarlps';
 import { SharedModule } from 'oarlps';
 import { FragmentPolyfillModule } from "./fragment-polyfill.module";
-import { ErrorsModule, AppErrorHandler } from './errors/errors.module';
+import { ErrorsModule, AppErrorHandler } from 'oarlps';
 
-import { ConfigModule } from './config/config.module';
+import { ConfigModule } from 'oarlps';
 import { DatacartModule } from 'oarlps';
 import { DirectivesModule } from 'oarlps';
 import { MetricsModule } from 'oarlps';
 
-import { ErrorComponent, UserErrorComponent } from './landing/error.component';
+// import { ErrorComponent, UserErrorComponent } from './landing/error.component';
 import { ModalComponent } from 'oarlps';
 import { ComboBoxComponent } from 'oarlps';
 import { SearchTopicsComponent } from 'oarlps';

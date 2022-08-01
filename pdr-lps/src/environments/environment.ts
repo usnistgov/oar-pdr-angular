@@ -9,7 +9,7 @@
  * This is the default version of this file.  When the app is built via `ng build --env=label`,
  * the contents of ./environment.label.ts will be used instead.  
  */
-import { LPSConfig } from '../app/config/config';
+import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: false,

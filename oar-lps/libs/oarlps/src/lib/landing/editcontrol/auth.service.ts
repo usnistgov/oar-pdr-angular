@@ -9,6 +9,7 @@ import {
 } from './customization.service';
 import * as ngenv from '../../../environments/environment';
 import { UserDetails } from './interfaces';
+import { deepCopy } from '../../config/config.service';
 
 /**
  * a container for authorization and authentication information that is obtained
@@ -173,7 +174,7 @@ export class WebAuthService extends AuthService {
             this.getAuthorization(resid).subscribe(
                 (info) => {
                     this._authcred.token = info.token;
-                    this._authcred.userDetails = _deepCopy(info.userDetails);
+                    this._authcred.userDetails = deepCopy(info.userDetails);
                     if (info.token) {
                         // the user is authenticated and authorized to edit!
                         subscriber.next(
@@ -378,10 +379,6 @@ export class MockAuthService extends AuthService {
         } 
         window.location.assign(redirectURL);
     }
-}
-
-function _deepCopy(obj) {
-    return JSON.parse(JSON.stringify(obj));
 }
 
 /**

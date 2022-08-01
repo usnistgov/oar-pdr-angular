@@ -6,9 +6,9 @@ import { HttpClient } from '@angular/common/http';
 import * as fs from 'fs';
 import * as proc from 'process';
 
-import { AppConfig } from '../config/config';
+// import { AppConfig } from 'oarlps';
 import { NerdmRes, MetadataTransfer  } from './nerdm';
-import { IDNotFound } from '../errors/error';
+import { IDNotFound } from 'oarlps';
 import * as ngenv from '../../environments/environment';
 
 /**

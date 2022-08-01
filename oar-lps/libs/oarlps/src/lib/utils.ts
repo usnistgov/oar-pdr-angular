@@ -27,7 +27,7 @@ export function formatBytes(bytes: number, numAfterDecimal: number = null) : str
  * and parsing it back again; thus, the object must not be class instance, and it can only contain
  * JSON-encodable properties
  */
-export function deepCopy(obj) {
-    return JSON.parse(JSON.stringify(obj));
-}
+// export function deepCopy(obj) {
+//     return JSON.parse(JSON.stringify(obj));
+// }
 

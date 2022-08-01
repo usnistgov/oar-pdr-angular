@@ -64,3 +64,21 @@ export * from './lib/shared/shared.module';
 export * from './lib/shared/combobox/combo-box.component';
 export * from './lib/shared/ga-service/google-analytics.service';
 export * from './lib/shared/metrics-service/metrics.service';
+
+export * from './lib/errors/errors.module';
+export * from './lib/errors/error';
+export * from './lib/errors/internalerror.component';
+export * from './lib/errors/notfound.component';
+
+export * from './lib/landingAbout/landingAbout.module';
+export * from './lib/landingAbout/landingAbout.component';
+
+export * from './lib/form-can-deactivate/form-can-deactivate';
+export * from './lib/can-deactivate/can-deactivate.guard';
+export * from './lib/can-deactivate/component-can-deactivate';
+
+export * from './lib/config/config.module';
+export * from './lib/config/config';
+export * from './lib/config/config.service';
+
+export * from './lib/utils';

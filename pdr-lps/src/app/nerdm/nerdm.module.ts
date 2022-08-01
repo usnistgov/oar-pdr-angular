@@ -5,7 +5,7 @@ import * as proc from 'process';
 
 import { MetadataService, createMetadataService } from './nerdm.service'
 import { MetadataTransfer } from './nerdm';
-import { AppConfig } from '../config/config';
+import { AppConfig } from 'oarlps';
 
 const PDR_METADATA_SVCEP : InjectionToken<string> =
     new InjectionToken<string>("PDR_METADATA_SVCEP");

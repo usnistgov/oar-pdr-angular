@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { AppConfig } from '../config/config';
+import { AppConfig } from 'oarlps';
 import { NerdmRes, NERDResource } from './nerdm';
 
 /**

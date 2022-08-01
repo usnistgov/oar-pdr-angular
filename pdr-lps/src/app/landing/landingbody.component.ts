@@ -1,6 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 
-import { AppConfig } from '../config/config';
+import { AppConfig } from 'oarlps';
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
 import { ResourceMetadataComponent } from 'oarlps';
 import { Console } from 'console';

@@ -1,7 +1,11 @@
   
+import { Component } from '@angular/core';
 import {HostListener} from "@angular/core";
 import { CartService } from '../datacart/cart.service';
 
+@Component({
+    template: ''
+})
 export abstract class ComponentCanDeactivate {
  
     abstract  canDeactivate(): boolean;

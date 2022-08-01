@@ -14,6 +14,7 @@ import { NerdmRes } from '../../nerdm/nerdm'
 import { LandingConstants } from '../constants';
 import { AppConfig } from '../../config/config';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { deepCopy } from '../../config/config.service';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -122,7 +123,7 @@ export class EditControlComponent implements OnInit, OnChanges {
             if (!this.resID)
                 this._resid = this.mdrec['ediid'];
             if (this.originalRecord === null) {
-                this.originalRecord = this._deepCopy(this.mdrec) as NerdmRes;
+                this.originalRecord = deepCopy(this.mdrec) as NerdmRes;
                 //Should not change original rec when record changed. Only after submit or discard changes
                 // this.mdupdsvc.setOriginalMetadata(this.originalRecord)
             }
@@ -446,9 +447,4 @@ export class EditControlComponent implements OnInit, OnChanges {
             );
         });
     }
-
-    private _deepCopy(obj: {} | [] | string | boolean | number): {} | [] | string | boolean | number {
-        return JSON.parse(JSON.stringify(obj));
-    }
-
 }

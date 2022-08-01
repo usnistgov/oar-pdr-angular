@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ContactService } from '../contact.service';
-import { deepCopy } from '../../../utils';
+import { deepCopy } from '../../../config/config.service';
 
 @Component({
     selector: 'app-contact-popup',

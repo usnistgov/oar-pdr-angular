@@ -5,7 +5,7 @@ import { NotificationService } from '../../shared/notification-service/notificat
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { deepCopy } from '../../utils';
+// import { deepCopy } from '../../utils';
 
 @Component({
     selector: 'app-topic',
