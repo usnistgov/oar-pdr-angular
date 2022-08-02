@@ -10,6 +10,7 @@ import * as ngenv from '../../environments/environment';
 export const CONFIG_KEY_NAME : string = "LPSConfig";
 export const CONFIG_TS_KEY : StateKey<string> = makeStateKey(CONFIG_KEY_NAME);
 export const CFG_DATA : InjectionToken<LPSConfig> = new InjectionToken<LPSConfig>("lpsconfig");
+import { EnvironmentService } from '../../environments/environment.service';
 
 /**
  * create a deep copy of an object
@@ -83,7 +84,10 @@ export class AngularEnvironmentConfigService extends ConfigService {
      * @param cache    the TransferState instance for the application.  If we are on the server,
      *                 getConfig() will cache the configuration to the TransferState object.
      */
-    constructor(private platid : object, private cache : TransferState) {
+    constructor(
+        private platid : object, 
+        private cache : TransferState, 
+        private envServ : EnvironmentService) {
         super();
     }
 
@@ -95,7 +99,7 @@ export class AngularEnvironmentConfigService extends ConfigService {
     getConfig() : AppConfig {
         if (! this.config) {
             console.log("Loading development-mode configuration data from the Angular built-in environment");
-            let data : LPSConfig = deepCopy(ngenv.config);
+            let data : LPSConfig = deepCopy(this.envServ.lPSConfig);
             let out : AppConfig = new AppConfig(data);
             out["source"] = this.source;
             if (! out["env"]) 
@@ -248,7 +252,7 @@ export class TransferStateConfigService extends ConfigService {
  *                    explicitly by some other means.  (This hook is intended for future 
  *                    ways of loading the configuration data on the server.)
  */
-export function newConfigService(platid : Object, cache : TransferState, cfgdata? : LPSConfig)
+export function newConfigService(ngenv: EnvironmentService, platid : Object, cache : TransferState, cfgdata? : LPSConfig)
     : ConfigService
 {
     if (cache.hasKey(CONFIG_TS_KEY))
@@ -267,5 +271,5 @@ export function newConfigService(platid : Object, cache : TransferState, cfgdata
 
     // This is the default intended for a development context
     // this will stash the data into the TransferState
-    return new AngularEnvironmentConfigService(platid, cache);
+    return new AngularEnvironmentConfigService(platid, cache, ngenv);
 }

@@ -25,7 +25,7 @@ import { SharedModule } from 'oarlps';
 import { FragmentPolyfillModule } from "./fragment-polyfill.module";
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
 
-import { ConfigModule } from 'oarlps';
+import { ConfigModule } from './config/config.module';
 import { DatacartModule } from 'oarlps';
 import { DirectivesModule } from 'oarlps';
 import { MetricsModule } from 'oarlps';

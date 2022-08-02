@@ -1,4 +1,4 @@
-import * as ngenv from "./environment";
+import * as ngenv from "./environment-impl";
 
 describe("environments.environment", function() {
 

@@ -6,6 +6,7 @@ import * as proc from 'process';
 import { MetadataService, createMetadataService } from './nerdm.service'
 import { MetadataTransfer } from './nerdm';
 import { AppConfig } from '../config/config';
+import { EnvironmentService } from '../../environments/environment.service';
 
 const PDR_METADATA_SVCEP : InjectionToken<string> =
     new InjectionToken<string>("PDR_METADATA_SVCEP");
@@ -29,6 +30,7 @@ export function getMetadataEndpoint(platid : Object, config : AppConfig) : strin
     declarations: [ ],
     providers: [
         HttpClient,
+        EnvironmentService,
 
         // The metadata service endpoint
         { provide: PDR_METADATA_SVCEP, useFactory: getMetadataEndpoint,
@@ -36,7 +38,7 @@ export function getMetadataEndpoint(platid : Object, config : AppConfig) : strin
 
         // The metadata service
         { provide: MetadataService, useFactory: createMetadataService,
-          deps: [ PLATFORM_ID, PDR_METADATA_SVCEP, HttpClient, MetadataTransfer ] },
+          deps: [ EnvironmentService, PLATFORM_ID, PDR_METADATA_SVCEP, HttpClient, MetadataTransfer ] },
     ],
     exports: [ ]
 })

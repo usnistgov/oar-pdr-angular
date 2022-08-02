@@ -6,6 +6,8 @@ import * as proc from 'process';
 import { MetadataService, createMetadataService } from 'oarlps'
 import { MetadataTransfer } from 'oarlps';
 import { AppConfig } from 'oarlps';
+import { EnvironmentService } from '../../environments/environment.service';
+import * as ngenv from '../../environments/environment';
 
 const PDR_METADATA_SVCEP : InjectionToken<string> =
     new InjectionToken<string>("PDR_METADATA_SVCEP");
@@ -29,14 +31,14 @@ export function getMetadataEndpoint(platid : Object, config : AppConfig) : strin
     declarations: [ ],
     providers: [
         HttpClient,
-
+        { provide: EnvironmentService, useValue: ngenv },
         // The metadata service endpoint
         { provide: PDR_METADATA_SVCEP, useFactory: getMetadataEndpoint,
           deps: [ PLATFORM_ID, AppConfig ] },
 
         // The metadata service
         { provide: MetadataService, useFactory: createMetadataService,
-          deps: [ PLATFORM_ID, PDR_METADATA_SVCEP, HttpClient, MetadataTransfer ] },
+          deps: [ EnvironmentService, PLATFORM_ID, PDR_METADATA_SVCEP, HttpClient, MetadataTransfer ] },
     ],
     exports: [ ]
 })
