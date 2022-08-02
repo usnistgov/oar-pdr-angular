@@ -7,24 +7,24 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 
-import { ModalService } from '../shared/modal-service';
+import { ModalService } from 'oarlps';
 import { LandingPageModule } from './landingpage.module';
 import { LandingPageComponent } from './landingpage.component';
-import { AngularEnvironmentConfigService } from '../config/config.service';
-import { AppConfig } from '../config/config'
-import { MetadataTransfer, NerdmRes } from '../nerdm/nerdm'
-import { MetadataService, TransferMetadataService } from '../nerdm/nerdm.service'
-import { MetadataUpdateService } from './editcontrol/metadataupdate.service';
-import { UserMessageService } from '../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from './editcontrol/auth.service';
-import { CartService } from "../datacart/cart.service";
-import { DownloadService } from "../shared/download-service/download-service.service";
-import { TestDataService } from '../shared/testdata-service/testDataService';
-import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
+import { AngularEnvironmentConfigService } from 'oarlps';
+import { AppConfig } from 'oarlps'
+import { MetadataTransfer, NerdmRes } from 'oarlps'
+import { MetadataService, TransferMetadataService } from 'oarlps'
+import { MetadataUpdateService } from 'oarlps';
+import { UserMessageService } from 'oarlps';
+import { AuthService, WebAuthService, MockAuthService } from 'oarlps';
+import { CartService } from "oarlps";
+import { DownloadService } from "oarlps";
+import { TestDataService } from 'oarlps';
+import { GoogleAnalyticsService } from 'oarlps';
 import * as mock from '../testing/mock.services';
 import {RouterTestingModule} from "@angular/router/testing";
-import { testdata } from '../../environments/environment';
-import { CommonFunctionService } from "../shared/common-function/common-function.service";
+import { testdata } from 'oarlps';
+import { CommonFunctionService } from "oarlps";
 
 describe('LandingPageComponent', () => {
     let component : LandingPageComponent;

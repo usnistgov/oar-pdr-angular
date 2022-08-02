@@ -1,8 +1,8 @@
 import * as mdt from './metadatatransfer-server.module';
-import { NerdmRes, MetadataTransfer } from './nerdm';
-import { AppConfig } from '../config/config';
-import { SchemaLabel, NerdmConversionService } from './nerdmconversion.service';
-import { config, testdata } from '../../environments/environment';
+import { NerdmRes, MetadataTransfer } from 'oarlps';
+import { AppConfig } from 'oarlps';
+import { SchemaLabel, NerdmConversionService } from 'oarlps';
+import { config, testdata } from 'oarlps';
 
 describe('serializeMetadataTransferFactory', function() {
 

@@ -8,9 +8,9 @@ import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
 
 import { AppConfig } from 'oarlps';
-import { MetadataService } from '../nerdm/nerdm.service';
+import { MetadataService } from 'oarlps';
 import { EditStatusService } from 'oarlps';
-import { NerdmRes, NERDResource } from '../nerdm/nerdm';
+import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
 import { LandingConstants } from './constants';
@@ -24,7 +24,7 @@ import { LandingBodyComponent } from './landingbody.component';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 // import { MetricsinfoComponent } from './metricsinfo/metricsinfo.component';
 import { CartActions } from 'oarlps';
-import { initBrowserMetadataTransfer } from '../nerdm/metadatatransfer-browser.module';
+// import { initBrowserMetadataTransfer } from 'oarlps';
 import { MetricsData } from "oarlps";
 import { Themes, ThemesPrefs } from 'oarlps';
 

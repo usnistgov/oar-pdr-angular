@@ -27,6 +27,7 @@ export * from './lib/landing/editcontrol/editcontrol.module';
 export * from './lib/landing/editcontrol/editstatus.component';
 export * from './lib/landing/editcontrol/editcontrol.component';
 export * from './lib/landing/editcontrol/editstatus.service';
+export * from './lib/landing/editcontrol/auth.service';
 export * from './lib/landing/citation/citation.module';
 export * from './lib/landing/citation/citation.component';
 export * from './lib/landing/downloadstatus/downloadstatus.component';
@@ -34,11 +35,14 @@ export * from './lib/landing/metricsinfo/metricsinfo.component';
 export * from './lib/landing/searchresult/searchresult.module';
 export * from './lib/landing/searchresult/searchresult.component';
 export * from './lib/landing/metrics-data';
+export * from './lib/landing/nerdm.component';
 
 export * from './lib/landing/topic/topic-popup/search-topics.component';
 export * from './lib/landing/description/description-popup/description-popup.component';
 export * from './lib/landing/author/author-popup/author-popup.component';
 export * from './lib/landing/contact/contact-popup/contact-popup.component';
+export * from './lib/landing/author/author.service';
+export * from './lib/landing/author/author.module';
 
 export * from './lib/landing/tools/tools.module';
 export * from './lib/landing/tools/toolmenu.component';
@@ -64,6 +68,7 @@ export * from './lib/shared/shared.module';
 export * from './lib/shared/combobox/combo-box.component';
 export * from './lib/shared/ga-service/google-analytics.service';
 export * from './lib/shared/metrics-service/metrics.service';
+export * from './lib/shared/modal-service';
 
 export * from './lib/errors/errors.module';
 export * from './lib/errors/error';
@@ -82,3 +87,15 @@ export * from './lib/config/config';
 export * from './lib/config/config.service';
 
 export * from './lib/utils';
+
+export * from './lib/nerdm/nerdm.module';
+export * from './lib/nerdm/metadatatransfer-browser.module';
+// export * from './lib/nerdm/metadatatransfer-server.module';
+export * from './lib/nerdm/nerdm';
+export * from './lib/nerdm/nerdm.service';
+export * from './lib/nerdm/nerdmconversion.service';
+
+export * from './environments/environment';
+export * as envprod from './environments/environment.prod';
+
+export * from './lib/shared/common-function/common-function.service';

@@ -8,7 +8,7 @@ export const environment = {
   LANDING: 'http://testdata.nist.gov/rmm/'
 };
 
-import { LPSConfig } from '../app/config/config';
+import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: true,

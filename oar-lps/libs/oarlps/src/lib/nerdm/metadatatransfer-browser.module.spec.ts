@@ -1,6 +1,6 @@
 import * as mdt from './metadatatransfer-browser.module';
 import * as smdt from './metadatatransfer-server.module';
-import * as nrdsv from './nerdm.service';
+// import * as nrdsv from './nerdm.service';
 import { MetadataTransfer } from './nerdm';
 import { SchemaLabel } from './nerdmconversion.service';
 

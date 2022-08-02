@@ -8,9 +8,9 @@ import { NgModule, InjectionToken } from '@angular/core';
 import { DOCUMENT } from "@angular/common";
 import { BEFORE_APP_SERIALIZED } from '@angular/platform-server';
 
-import { NerdmRes, MetadataTransfer } from './nerdm';
-import { NERDResource } from '../nerdm/nerdm';
-import { NerdmConversionService, SchemaLabel, MetadataEnvelope } from '../nerdm/nerdmconversion.service';
+import { NerdmRes, MetadataTransfer } from 'oarlps';
+// import { NERDResource } from 'oarlps';
+import { NerdmConversionService, SchemaLabel, MetadataEnvelope } from 'oarlps';
 
 const escapeHTMLchars = function(text : string, doc : Document) : string {
     let div = doc.createElement('div');

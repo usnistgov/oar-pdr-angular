@@ -4,17 +4,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { LandingBodyComponent } from './landingbody.component';
-import { SectionsModule } from './sections/sections.module';
+import { SectionsModule } from 'oarlps';
 
-import { AppConfig } from '../config/config';
-import { NerdmRes, NerdmComp } from '../nerdm/nerdm';
-import { MetadataUpdateService } from './editcontrol/metadataupdate.service';
-import { UserMessageService } from '../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from './editcontrol/auth.service';
-import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
-import { CartService } from '../datacart/cart.service';
+import { AppConfig } from 'oarlps';
+import { NerdmRes, NerdmComp } from 'oarlps';
+import { MetadataUpdateService } from 'oarlps';
+import { UserMessageService } from 'oarlps';
+import { AuthService, WebAuthService, MockAuthService } from 'oarlps';
+import { GoogleAnalyticsService } from 'oarlps';
+import { CartService } from 'oarlps';
 
-import { config, testdata } from '../../environments/environment';
+import { config, testdata } from 'oarlps';
 import { MetricsData } from "./metrics-data";
 
 describe('LandingBodyComponent', () => {

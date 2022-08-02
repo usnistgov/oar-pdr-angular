@@ -9,7 +9,6 @@ import { NerdmModule } from '../nerdm/nerdm.module';
 import { LandingPageComponent } from './landingpage.component';
 import { LandingBodyComponent } from './landingbody.component';
 import { NoidComponent } from './noid.component';
-import { NerdmComponent } from './nerdm.component';
 import { SectionsModule } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
 import { EditControlModule } from 'oarlps';
@@ -42,18 +41,18 @@ import { SearchresultModule } from 'oarlps';
     ],
     declarations: [
         LandingPageComponent, LandingBodyComponent, 
-        ErrorComponent, UserErrorComponent, NoidComponent, NerdmComponent
+        ErrorComponent, UserErrorComponent, NoidComponent
     ],
     providers: [
         MetadataUpdateService, TaxonomyListService, DatePipe
     ],
     exports: [
         LandingPageComponent, LandingBodyComponent, 
-        ErrorComponent, UserErrorComponent, NoidComponent, NerdmComponent
+        ErrorComponent, UserErrorComponent, NoidComponent
     ]
 })
 export class LandingPageModule { }
 
 export { LandingPageComponent, LandingBodyComponent, 
-    ErrorComponent, UserErrorComponent,NoidComponent, NerdmComponent };
+    ErrorComponent, UserErrorComponent,NoidComponent };
     

@@ -3,8 +3,8 @@ import { isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import * as proc from 'process';
 
-import { MetadataService, createMetadataService } from './nerdm.service'
-import { MetadataTransfer } from './nerdm';
+import { MetadataService, createMetadataService } from 'oarlps'
+import { MetadataTransfer } from 'oarlps';
 import { AppConfig } from 'oarlps';
 
 const PDR_METADATA_SVCEP : InjectionToken<string> =

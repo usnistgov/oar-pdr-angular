@@ -10,7 +10,7 @@ enableProdMode();
 
 // Import module map for lazy loading
 // import {provideModuleMap} from '@nguniversal/module-map-ngfactory-loader';
-import {renderModuleFactory} from '@angular/platform-server';
+import {renderModule} from '@angular/platform-server';
 import {ROUTES} from './static.paths';
 
 // * NOTE :: leave this as require() since this file is built Dynamically from webpack
@@ -33,7 +33,7 @@ ROUTES.forEach(route => {
   }
 
   // Writes rendered HTML to index.html, replacing the file if it already exists.
-  previousRender = previousRender.then(_ => renderModuleFactory(AppServerModuleNgFactory, {
+  previousRender = previousRender.then(_ => renderModule(AppServerModuleNgFactory, {
     document: index,
     url: route
     // extraProviders: [

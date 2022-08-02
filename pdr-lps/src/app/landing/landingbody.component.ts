@@ -1,7 +1,7 @@
 import { Component, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
 
 import { AppConfig } from 'oarlps';
-import { NerdmRes, NERDResource } from '../nerdm/nerdm';
+import { NerdmRes, NERDResource } from 'oarlps';
 import { ResourceMetadataComponent } from 'oarlps';
 import { Console } from 'console';
 import { MetricsData } from "./metrics-data";

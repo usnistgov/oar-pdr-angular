@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { LandingAboutComponent } from 'oarlps';
 import { LandingPageComponent } from './landing/landingpage.component';
 import { NoidComponent } from './landing/noid.component';
-import { NerdmComponent } from './landing/nerdm.component';
+import { NerdmComponent } from 'oarlps';
 // import { SearchResolve } from './landing/search-service.resolve';
 import { NotFoundComponent, InternalErrorComponent } from 'oarlps';
 import { DatacartComponent } from 'oarlps';
