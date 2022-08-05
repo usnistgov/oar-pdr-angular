@@ -13,8 +13,8 @@ import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: false,
-    useMetadataService: true,
-    useCustomizationService: true
+    useMetadataService: false,
+    useCustomizationService: false
 };
 
 export const config: LPSConfig = {
@@ -34,7 +34,7 @@ export const config: LPSConfig = {
     status: "Dev Version",
     appVersion: "v1.3.X",
     production: context.production,
-    editEnabled: false,
+    editEnabled: true,
     distService: "https://testdata.nist.gov/od/ds/",
     gacode: "not-set",
     screenSizeBreakPoint: 1060,
@@ -45,6 +45,7 @@ export const config: LPSConfig = {
 }
 
 export const testdata: {} = {
+    test0: require('../assets/sample-data/testdata01.json'),
     test1: {
         "@context": [
             "https://www.nist.gov/od/dm/nerdm-pub-context.jsonld",
@@ -65,7 +66,7 @@ export const testdata: {} = {
         },
         "modified": "2019-03-27 12:24:31",
         "issued": "2019-04-05T16:04:26.0",
-        "ediid": "26DEA39AD677678AE0531A570681F32C1449",
+        "ediid": "test1",
         "landingPage": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
         "version": "1.0.1",
         "versionHistory": [

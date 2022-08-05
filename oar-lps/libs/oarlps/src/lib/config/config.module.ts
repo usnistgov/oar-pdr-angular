@@ -1,9 +1,10 @@
-import { NgModule, PLATFORM_ID, Optional } from '@angular/core';
+import { ModuleWithProviders, NgModule, PLATFORM_ID, Optional } from '@angular/core';
 import { BrowserTransferStateModule, TransferState } from '@angular/platform-browser';
 
 import { AppConfig, LPSConfig, WebLocations } from './config'
 import { ConfigService, newConfigService, CFG_DATA } from './config.service'
-import { EnvironmentService } from '../../environments/environment.service';
+import { IEnvironment } from '../../environments/ienvironment';
+import { environment } from '../../environments/environment-impl';
 
 export function getAppConfig(configService: ConfigService) : AppConfig {
     let out : AppConfig = configService.getConfig();
@@ -19,8 +20,18 @@ export function getAppConfig(configService: ConfigService) : AppConfig {
 @NgModule({
     providers: [
         { provide: ConfigService, useFactory: newConfigService,
-          deps: [ EnvironmentService, PLATFORM_ID, TransferState ] },
+          deps: [ environment, PLATFORM_ID, TransferState ] },
         { provide: AppConfig, useFactory: getAppConfig, deps: [ ConfigService ] }
     ]
 })
-export class ConfigModule { }
+export class ConfigModule { 
+    public static forRoot(env: IEnvironment): ModuleWithProviders<ConfigModule> {
+
+        return {
+          ngModule: ConfigModule,
+          providers: [
+            { provide: environment, useValue: env }
+          ]
+        };
+    } 
+}

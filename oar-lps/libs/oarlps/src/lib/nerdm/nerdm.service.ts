@@ -10,7 +10,6 @@ import { AppConfig } from '../config/config';
 import { NerdmRes, MetadataTransfer  } from './nerdm';
 import { IDNotFound } from '../errors/error';
 // import * as ngenv from '../../environments/environment';
-import { EnvironmentService } from '../../environments/environment.service';
 import { IEnvironment } from '../../environments/ienvironment';
 
 /**
@@ -25,7 +24,7 @@ export abstract class MetadataService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    abstract getMetadata(id : string, ngenv?: EnvironmentService) : Observable<NerdmRes>;
+    abstract getMetadata(id : string, ngenv?: IEnvironment) : Observable<NerdmRes>;
 }
 
 /**
@@ -237,9 +236,13 @@ export class TransmittingMetadataService extends CachingMetadataService {
  * property, `testdata`.  
  */
 export class AngularEnvironmentMetadataService extends MetadataService {
+    ngenv: IEnvironment;
 
-    constructor(ngenv: EnvironmentService) {
+    constructor( ngenv: IEnvironment ) {
         super();
+
+        this.ngenv = ngenv;
+
         if (! ngenv.testdata)
             throw new Error("No test data encoded into angular environment");
         if (Object.keys(ngenv.testdata).length <= 0)
@@ -259,8 +262,8 @@ export class AngularEnvironmentMetadataService extends MetadataService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    getMetadata(id : string, ngenv: EnvironmentService) : Observable<NerdmRes> {
-        return rxjs.of(ngenv.testdata[id]);
+    getMetadata(id : string) : Observable<NerdmRes> {
+        return rxjs.of(this.ngenv.testdata[id]);
     }
 }
 
@@ -275,7 +278,7 @@ export class AngularEnvironmentMetadataService extends MetadataService {
  *                   metadata records from the server to the browser.  If not provided 
  *                   (on the server side), none of the requested records will be transmitted.  
  */
-export function createMetadataService(ngenv: EnvironmentService, platid : Object, endpoint : string, httpClient : HttpClient,
+export function createMetadataService(ngenv: IEnvironment, platid : Object, endpoint : string, httpClient : HttpClient,
                                       mdtrx? : MetadataTransfer)
 {
     // Note: this implementation is based on the assumption that the app only needs one
@@ -308,7 +311,7 @@ export function createMetadataService(ngenv: EnvironmentService, platid : Object
         console.log("Will attempt to load NERDm record from embedded JSON");
         return new TransferMetadataService(mdtrx);
     }
-    else if (ngenv['context']['useMetadataService']) {
+    else if (ngenv.context['useMetadataService']) {
         console.log("Will load NERDm records from remote web service: " + endpoint);
         svc = new RemoteWebMetadataService(endpoint, httpClient, true);
     }

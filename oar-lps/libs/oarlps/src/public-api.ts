@@ -69,6 +69,8 @@ export * from './lib/shared/combobox/combo-box.component';
 export * from './lib/shared/ga-service/google-analytics.service';
 export * from './lib/shared/metrics-service/metrics.service';
 export * from './lib/shared/modal-service';
+export * from './lib/shared/confirmation-dialog/confirmation-dialog.module';
+export * from './lib/shared/confirmation-dialog/confirmation-dialog.component';
 
 export * from './lib/errors/errors.module';
 export * from './lib/errors/error';
@@ -95,7 +97,8 @@ export * from './lib/nerdm/nerdm';
 export * from './lib/nerdm/nerdm.service';
 export * from './lib/nerdm/nerdmconversion.service';
 
-export * from './environments/environment';
-export * as envprod from './environments/environment.prod';
+export * from './environments/ienvironment';
+export * from './environments/environment-impl';
+// export * as envprod from './environments/environment.prod';
 
 export * from './lib/shared/common-function/common-function.service';

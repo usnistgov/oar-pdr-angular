@@ -8,6 +8,6 @@ export interface Context {
 
 export interface IEnvironment {
     context: Context;
-    lPSConfig: LPSConfig;
+    config: LPSConfig;
     testdata: {};
 }

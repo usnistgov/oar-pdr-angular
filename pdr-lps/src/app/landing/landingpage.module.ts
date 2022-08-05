@@ -5,7 +5,7 @@ import { ButtonModule } from 'primeng/button';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-import { NerdmModule } from '../nerdm/nerdm.module';
+import { NerdmModule } from 'oarlps';
 import { LandingPageComponent } from './landingpage.component';
 import { LandingBodyComponent } from './landingbody.component';
 import { NoidComponent } from './noid.component';

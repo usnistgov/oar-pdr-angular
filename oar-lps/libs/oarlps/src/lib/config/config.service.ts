@@ -10,7 +10,7 @@ import * as ngenv from '../../environments/environment';
 export const CONFIG_KEY_NAME : string = "LPSConfig";
 export const CONFIG_TS_KEY : StateKey<string> = makeStateKey(CONFIG_KEY_NAME);
 export const CFG_DATA : InjectionToken<LPSConfig> = new InjectionToken<LPSConfig>("lpsconfig");
-import { EnvironmentService } from '../../environments/environment.service';
+import { IEnvironment } from '../../environments/ienvironment';
 
 /**
  * create a deep copy of an object
@@ -76,6 +76,7 @@ export class AngularEnvironmentConfigService extends ConfigService {
     private source : string = "angular-env";
     private defMode : string = "dev";
     private config : AppConfig|null = null;
+    private ngenv : IEnvironment;
 
     /**
      * construct the service
@@ -85,10 +86,12 @@ export class AngularEnvironmentConfigService extends ConfigService {
      *                 getConfig() will cache the configuration to the TransferState object.
      */
     constructor(
+        private ienv : IEnvironment,
         private platid : object, 
-        private cache : TransferState, 
-        private envServ : EnvironmentService) {
+        private cache : TransferState) {
+
         super();
+        this.ngenv = ienv;
     }
 
     /**
@@ -99,7 +102,7 @@ export class AngularEnvironmentConfigService extends ConfigService {
     getConfig() : AppConfig {
         if (! this.config) {
             console.log("Loading development-mode configuration data from the Angular built-in environment");
-            let data : LPSConfig = deepCopy(this.envServ.lPSConfig);
+            let data : LPSConfig = deepCopy(this.ngenv.config);
             let out : AppConfig = new AppConfig(data);
             out["source"] = this.source;
             if (! out["env"]) 
@@ -252,7 +255,7 @@ export class TransferStateConfigService extends ConfigService {
  *                    explicitly by some other means.  (This hook is intended for future 
  *                    ways of loading the configuration data on the server.)
  */
-export function newConfigService(ngenv: EnvironmentService, platid : Object, cache : TransferState, cfgdata? : LPSConfig)
+export function newConfigService(ngenv: IEnvironment, platid : Object, cache : TransferState, cfgdata? : LPSConfig)
     : ConfigService
 {
     if (cache.hasKey(CONFIG_TS_KEY))
@@ -271,5 +274,5 @@ export function newConfigService(ngenv: EnvironmentService, platid : Object, cac
 
     // This is the default intended for a development context
     // this will stash the data into the TransferState
-    return new AngularEnvironmentConfigService(platid, cache, ngenv);
+    return new AngularEnvironmentConfigService(ngenv, platid, cache);
 }

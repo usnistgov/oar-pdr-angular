@@ -25,7 +25,7 @@ import { SharedModule } from 'oarlps';
 import { FragmentPolyfillModule } from "./fragment-polyfill.module";
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
 
-import { ConfigModule } from './config/config.module';
+// import { ConfigModule } from './config/config.module';
 import { DatacartModule } from 'oarlps';
 import { DirectivesModule } from 'oarlps';
 import { MetricsModule } from 'oarlps';
@@ -42,6 +42,10 @@ import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
 import { FrameModule } from 'oarlps';
 import { OARLPSModule } from 'oarlps';
+import { environment } from '../environments/environment-impl';
+import { NerdmModule } from 'oarlps';
+import { ConfigModule } from 'oarlps';
+import { EditControlModule } from 'oarlps';
 
 enableProdMode();
 
@@ -53,7 +57,7 @@ enableProdMode();
         AppComponent
     ],
     imports: [
-        ConfigModule,
+        // ConfigModule,
         FrameModule,
         OARLPSModule,
         ErrorsModule,
@@ -72,7 +76,10 @@ enableProdMode();
         ToastrModule.forRoot({
             toastClass: 'toast toast-bootstrap-compatibility-fix'
         }),
-        NgbModule
+        NgbModule,
+        NerdmModule.forRoot(environment),
+        ConfigModule.forRoot(environment),
+        EditControlModule.forRoot(environment)
     ],
     exports: [],
     providers: [

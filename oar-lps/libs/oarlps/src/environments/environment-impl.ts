@@ -14,7 +14,7 @@ import * as ngenv from './environment';
 
 export const environment: IEnvironment = {
     context: ngenv.context,
-    lPSConfig: ngenv.config,
+    config: ngenv.config,
     testdata: ngenv.testdata
 };
 

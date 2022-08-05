@@ -16,6 +16,7 @@ export class AppComponent {
     inBrowser: boolean = false;
 
     constructor(private gaService: GoogleAnalyticsService,
+                // public environmentService : EnvironmentService,
                 private cfg: AppConfig,
                 @Inject(PLATFORM_ID) private platformId: Object)
     { 

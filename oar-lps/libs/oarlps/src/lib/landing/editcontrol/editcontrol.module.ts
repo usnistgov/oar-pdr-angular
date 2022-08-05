@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { EditControlComponent } from './editcontrol.component';
@@ -10,6 +10,8 @@ import { ButtonModule } from 'primeng/button';
 import { AppConfig } from '../../config/config';
 import { HttpClient } from '@angular/common/http';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { IEnvironment } from '../../../environments/ienvironment';
+import { environment } from '../../../environments/environment-impl';
 
 @NgModule({
     declarations: [ EditControlComponent, EditStatusComponent ],
@@ -17,7 +19,17 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
     exports: [ EditControlComponent, EditStatusComponent ],
     providers: [
         HttpClient,
-        { provide: AuthService, useFactory: createAuthService, deps: [ AppConfig, HttpClient ] }
+        { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient ] }
     ]
 })
-export class EditControlModule { }
+export class EditControlModule { 
+    public static forRoot(env: IEnvironment): ModuleWithProviders<EditControlModule> {
+
+        return {
+          ngModule: EditControlModule,
+          providers: [
+            { provide: environment, useValue: env }
+          ]
+        };
+    } 
+}

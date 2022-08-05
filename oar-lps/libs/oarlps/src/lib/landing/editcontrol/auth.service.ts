@@ -7,9 +7,10 @@ import {
     CustomizationService, WebCustomizationService, InMemCustomizationService,
     SystemCustomizationError, ConnectionCustomizationError
 } from './customization.service';
-import * as ngenv from '../../../environments/environment';
+// import * as ngenv from '../../../environments/environment';
 import { UserDetails } from './interfaces';
 import { deepCopy } from '../../config/config.service';
+import { IEnvironment } from '../../../environments/ienvironment';
 
 /**
  * a container for authorization and authentication information that is obtained
@@ -298,7 +299,7 @@ export class MockAuthService extends AuthService {
      * @param resmd      the original resource metadata 
      * @param userid     the ID of the user; default "anon"
      */
-    constructor(userDetails?: UserDetails) {
+    constructor(userDetails?: UserDetails, ngenv2?: IEnvironment) {
         super();
         if (userDetails === undefined) {
             this._authcred = {
@@ -316,16 +317,16 @@ export class MockAuthService extends AuthService {
                 token: 'fake jwt token'
             }
         }
-        
-        if (!ngenv.testdata)
+
+        if (!ngenv2.testdata)
             throw new Error("No test data encoded into angular environment");
-        if (Object.keys(ngenv.testdata).length < 0)
+        if (Object.keys(ngenv2.testdata).length < 0)
             console.warn("No NERDm records included in the angular environment");
 
         // load resource metadata lookup by ediid
-        for (let key of Object.keys(ngenv.testdata)) {
-            if (ngenv.testdata[key]['ediid'])
-                this.resdata[ngenv.testdata[key]['ediid']] = ngenv.testdata[key];
+        for (let key of Object.keys(ngenv2.testdata)) {
+            if (ngenv2.testdata[key]['ediid'])
+                this.resdata[ngenv2.testdata[key]['ediid']] = ngenv2.testdata[key];
         }
     }
 
@@ -393,10 +394,11 @@ export class MockAuthService extends AuthService {
  * context.useCustomizationService from the angular environment (i.e. 
  * src/environments/environment.ts).  A value of false assumes a develoment context.
  */
-export function createAuthService(config: AppConfig, httpClient: HttpClient, devmode?: boolean)
+export function createAuthService(ngenv: IEnvironment, config: AppConfig, httpClient: HttpClient, devmode?: boolean)
     : AuthService {
+
     if (devmode === undefined)
-        devmode = Boolean(ngenv['context'] && ngenv['context']['useCustomizationService']) === false;
+        devmode = Boolean(ngenv.context && ngenv.context['useCustomizationService']) === false;
 
     if (!devmode) {
         // production mode
@@ -408,6 +410,6 @@ export function createAuthService(config: AppConfig, httpClient: HttpClient, dev
     if (!ngenv['context'])
         console.warn("Warning: angular environment is missing context data");
     console.log("Using mock AuthService/CustomizationService");
-    return new MockAuthService();
+    return new MockAuthService(undefined, ngenv);
 }
 

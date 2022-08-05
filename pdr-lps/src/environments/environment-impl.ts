@@ -9,12 +9,12 @@
  * This is the default version of this file.  When the app is built via `ng build --env=label`,
  * the contents of ./environment.label.ts will be used instead.  
  */
-import { IEnvironment } from './ienvironment';
+import { IEnvironment } from 'oarlps';
 import * as ngenv from './environment';
 
 export const environment: IEnvironment = {
     context: ngenv.context,
-    lPSConfig: ngenv.config,
+    config: ngenv.config,
     testdata: ngenv.testdata
 };
 

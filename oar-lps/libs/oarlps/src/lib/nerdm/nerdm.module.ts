@@ -1,4 +1,4 @@
-import { NgModule, PLATFORM_ID, InjectionToken } from '@angular/core';
+import { ModuleWithProviders, NgModule, PLATFORM_ID, InjectionToken } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import * as proc from 'process';
@@ -6,7 +6,8 @@ import * as proc from 'process';
 import { MetadataService, createMetadataService } from './nerdm.service'
 import { MetadataTransfer } from './nerdm';
 import { AppConfig } from '../config/config';
-import { EnvironmentService } from '../../environments/environment.service';
+import { IEnvironment } from '../../environments/ienvironment';
+import { environment } from '../../environments/environment-impl';
 
 const PDR_METADATA_SVCEP : InjectionToken<string> =
     new InjectionToken<string>("PDR_METADATA_SVCEP");
@@ -30,7 +31,6 @@ export function getMetadataEndpoint(platid : Object, config : AppConfig) : strin
     declarations: [ ],
     providers: [
         HttpClient,
-        EnvironmentService,
 
         // The metadata service endpoint
         { provide: PDR_METADATA_SVCEP, useFactory: getMetadataEndpoint,
@@ -38,9 +38,19 @@ export function getMetadataEndpoint(platid : Object, config : AppConfig) : strin
 
         // The metadata service
         { provide: MetadataService, useFactory: createMetadataService,
-          deps: [ EnvironmentService, PLATFORM_ID, PDR_METADATA_SVCEP, HttpClient, MetadataTransfer ] },
+          deps: [ environment, PLATFORM_ID, PDR_METADATA_SVCEP, HttpClient, MetadataTransfer ] },
     ],
     exports: [ ]
 })
-export class NerdmModule { }
+export class NerdmModule { 
+    public static forRoot(env: IEnvironment): ModuleWithProviders<NerdmModule> {
+
+        return {
+          ngModule: NerdmModule,
+          providers: [
+            { provide: environment, useValue: env }
+          ]
+        };
+    }
+}
 
