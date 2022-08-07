@@ -6,8 +6,10 @@
         "start": "ng serve",
         "build": "ng build",
         "watch": "ng build --watch --configuration development",
-        "test": "ng test"
+        "test": "ng test",
+        "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
     },
+    "pre-commit": [ "precommit-msg", "lint" ],
     "private": true,
     "dependencies": {
         "@angular/animations": "13.1.3",
