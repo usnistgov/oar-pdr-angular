@@ -22,10 +22,9 @@
         "serve:ssr": "node dist/server/main.js",
         "e2e": "ng e2e",
         "dev:ssr": "ng run pdr-lps:serve-ssr",
-        "prerender": "ng run pdr-lps:prerender",
-        "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
+        "prerender": "ng run pdr-lps:prerender"
     },
-    "pre-commit": [ "precommit-msg", "lint" ],
+    "pre-commit": [],
     "private": true,
     "peerDependencies": {
         "@angular/common": "^13.1.3",
