@@ -2,6 +2,14 @@
   "compileOnSave": false,
   "compilerOptions": {
     "module": "esnext",
+    "paths": {
+        "rxjs": [
+          "./node_modules/rxjs"
+        ],
+        "rxjs/*": [
+          "./node_modules/rxjs/*"
+        ]
+    },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
@@ -9,7 +17,7 @@
     "experimentalDecorators": true,
     "target": "es2015",
     "typeRoots": [
-      "node_modules/@types"
+      "./node_modules/@types"
     ],
     "lib": [
       "es2017",

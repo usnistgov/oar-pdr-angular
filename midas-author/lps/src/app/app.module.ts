@@ -40,12 +40,16 @@ import { ContactPopupComponent } from 'oarlps';
 import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
-import { FrameModule } from 'oarlps';
+// import { FrameModule } from 'oarlps';
 import { OARLPSModule } from 'oarlps';
 import { environment } from '../environments/environment-impl';
 import { NerdmModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
 import { EditControlModule } from 'oarlps';
+
+import { OARngModule } from 'oarng';
+import { FrameModule } from 'oarng';
+import { WizardModule } from 'oarng';
 
 enableProdMode();
 
@@ -60,6 +64,7 @@ enableProdMode();
         // ConfigModule,
         FrameModule,
         OARLPSModule,
+        WizardModule,
         ErrorsModule,
         LandingPageModule,
         AppRoutingModule,

@@ -4,6 +4,7 @@ import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
+import { Router } from "@angular/router";
 
 @Component({
     selector: 'app-wizard',
@@ -27,7 +28,8 @@ export class StepWizardComponent implements OnInit {
     constructor(
         private stepService: StepService,
         private fb: FormBuilder, 
-        private cdr: ChangeDetectorRef
+        private cdr: ChangeDetectorRef,
+        private router: Router
     ) { 
 
     }
@@ -126,6 +128,7 @@ export class StepWizardComponent implements OnInit {
 
     onSubmit(): void {
         // this.router.navigate(['/complete']);
+        window.location.href = 'http://localhost:4202/od/id/test1?editEnabled=true';
     }
 
     onResize(event: any){

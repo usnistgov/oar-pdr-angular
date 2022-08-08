@@ -20,7 +20,8 @@ import { ErrorComponent, UserErrorComponent } from './error.component';
 // import { ForensicslandingbodyModule } from './forensicslandingbody/forensicslandingbody.module';
 // import { ForensicssearchresultModule } from './forensicssearchresult/forensicssearchresult.module';
 import { SearchresultModule } from 'oarlps';
-
+// import { WizardModule } from 'oarng';
+import { WizardModule } from './wizard/wizard.module';
 
 /**
  * A module supporting the complete display of landing page content associated with 
@@ -37,7 +38,8 @@ import { SearchresultModule } from 'oarlps';
         CitationModule,
         SectionsModule,
         SearchresultModule,
-        DoneModule
+        DoneModule,
+        WizardModule
     ],
     declarations: [
         LandingPageComponent, LandingBodyComponent, 

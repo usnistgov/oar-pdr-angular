@@ -1,9 +1,9 @@
 {
     "name": "midas-publishing",
     "workspaces": [
+        "lib",
         "oar-lps",
-        "pdr-lps",
-        "midas-author/lps"
+        "pdr-lps"
     ],
     "scripts": {
         "build-lib": "npm run build oarng --prefix ./lib",

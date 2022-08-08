@@ -21,7 +21,12 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "src/assets",
+                "input": "../node_modules/oarng/src/assets/",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets/",
                 "output": "/assets"
               }
             ],
@@ -135,7 +140,8 @@
                   "with": "src/environments/environment.prod.ts"
                 }
               ]
-            ,              "optimization": true
+            ,              
+            "optimization": true
 }
           },
           "defaultConfiguration": ""
