@@ -20,8 +20,7 @@ import { ErrorComponent, UserErrorComponent } from './error.component';
 // import { ForensicslandingbodyModule } from './forensicslandingbody/forensicslandingbody.module';
 // import { ForensicssearchresultModule } from './forensicssearchresult/forensicssearchresult.module';
 import { SearchresultModule } from 'oarlps';
-// import { WizardModule } from 'oarng';
-import { WizardModule } from './wizard/wizard.module';
+import { WizardModule } from 'oarng';
 
 /**
  * A module supporting the complete display of landing page content associated with 
