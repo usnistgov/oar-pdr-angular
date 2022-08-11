@@ -38,7 +38,7 @@ import { DescriptionPopupComponent } from 'oarlps';
 import { AuthorPopupComponent } from 'oarlps';
 import { ContactPopupComponent } from 'oarlps';
 import { GoogleAnalyticsService} from "oarlps";
-import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
+// import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
 import { FrameModule } from 'oarng';
 import { OARLPSModule } from 'oarlps';

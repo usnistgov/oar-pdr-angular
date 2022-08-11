@@ -1,16 +1,28 @@
 {
     "files": [],
     "references": [
-      {
-        "path": "./lib/tsconfig.ref.json"
-      },
-      {
-        "path": "./pdr-lps/wizard/tsconfig.ref.json"
-      },
+        {
+            "path": "./lib/tsconfig.ref.json"
+        },
+        {
+            "path": "./pdr-lps/wizard/tsconfig.ref.json"
+        },
+        {
+            "path": "./pdr-lps/tsconfig.ref.json"
+        },
+        {
+            "path": "./oar-lps/tsconfig.ref.json"
+        },
+        {
+            "path": "./midas-author/wizard/tsconfig.ref.json"
+        },
+        {
+            "path": "./midas-author/lps/tsconfig.ref.json"
+        }
     ],
     "compilerOptions": {
         "types": [
-          "node"
+            "node"
         ],
     },
-  }
+}

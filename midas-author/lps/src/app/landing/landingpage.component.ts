@@ -99,6 +99,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
 
+    helpContent: any = {
+        "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
+    }
+
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
 
@@ -619,6 +623,18 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             return "col-12 md:col-12 lg:col-12 sm:flex-nowrap";
         }else{
             "col-10 md:col-10 lg:col-10 sm:flex-nowrap";
+        }
+    }
+
+    /**
+     * Determine the with of the landing page content panel. In edit mode or mobile mode,
+     * it will be 100%. In normal mode (public site), it will be 80%. The green menu takes 20%.
+     */
+    landingPageWidth() {
+        if(this.mobileMode || this.editEnabled){
+            return { 'width':'100%' };
+        }else {
+            return { 'width':'80%' };
         }
     }
 }

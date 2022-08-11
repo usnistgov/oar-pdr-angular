@@ -9,9 +9,14 @@ import { DirectivesModule } from './directives/directives.module';
 import { ErrorsModule } from './errors/errors.module';
 import { SectionsModule } from './landing/sections/sections.module';
 import { DoneModule } from './landing/done/done.module';
+import { VisithomeComponent } from './landing/visithome/visithome.component';
+import { VisithomePopupComponent } from './landing/visithome/visithome-popup/visithome-popup.component';
 
 @NgModule({
-    declarations: [],
+    declarations: [
+    VisithomeComponent,
+    VisithomePopupComponent
+  ],
     imports: [
         CommonModule, 
         FrameModule, 

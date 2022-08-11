@@ -20,13 +20,13 @@
     ],
     "paths": {
       "oarlps": [
-        "dist/oarlps"
+        "../node_modules/oarlps"
       ],
       "rxjs": [
-        "node_modules/rxjs"
+        "./node_modules/rxjs"
       ],
       "rxjs/*": [
-        "node_modules/rxjs/*"
+        "./node_modules/rxjs/*"
       ]
     }
   }

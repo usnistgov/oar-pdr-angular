@@ -12,6 +12,8 @@ import { EditStatusService } from '../../landing/editcontrol/editstatus.service'
 import { LandingConstants } from '../../landing/constants';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { AppSettings } from '../../shared/globals/globals';
+import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 
 declare var _initAutoTracker: Function;
 
@@ -133,6 +135,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     editMode: string;
     mobileMode: boolean = false;
     hashCopied: boolean = false;
+    fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -142,6 +145,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 private gaService: GoogleAnalyticsService,
                 public editstatsvc: EditStatusService,
                 public breakpointObserver: BreakpointObserver,
+                public mdupdsvc : MetadataUpdateService, 
                 ngZone: NgZone)
     {
         this.cols = [

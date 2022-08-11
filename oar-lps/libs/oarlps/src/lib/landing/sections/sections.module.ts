@@ -1,8 +1,5 @@
 import { NgModule }     from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-// import { ButtonModule } from 'primeng/button';
-
 import { NerdmModule } from '../../nerdm/nerdm.module';
 import { TitleModule } from '../title/title.module';
 import { AuthorModule } from '../author/author.module';
@@ -22,6 +19,7 @@ import { ResourceMetadataComponent } from './resourcemetadata.component';
 import { FacilitatorsModule } from '../facilitators/facilitators.module';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { DoneModule } from '../done/done.module';
+import { ButtonModule } from 'primeng/button';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -66,7 +64,8 @@ import { DoneModule } from '../done/done.module';
         AboutdatasetModule, 
         FacilitatorsModule, 
         SearchresultModule,
-        DoneModule
+        DoneModule,
+        ButtonModule
     ],
     declarations: [
         ResourceDataComponent,

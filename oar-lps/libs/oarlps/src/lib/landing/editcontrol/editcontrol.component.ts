@@ -15,6 +15,7 @@ import { LandingConstants } from '../constants';
 import { AppConfig } from '../../config/config';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { deepCopy } from '../../config/config.service';
+import { AppSettings } from '../../shared/globals/globals';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -39,6 +40,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     EDIT_MODES: any;
     screenWidth: number;
     screenSizeBreakPoint: number;
+    fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
 
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent

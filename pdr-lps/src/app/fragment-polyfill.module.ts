@@ -161,7 +161,7 @@ export class FragmentTargetDirective implements OnInit, OnDestroy {
 
 			}
 		);
-
+        
 	}
 
 }

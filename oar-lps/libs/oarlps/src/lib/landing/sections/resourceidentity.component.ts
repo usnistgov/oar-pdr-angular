@@ -6,7 +6,8 @@ import { VersionComponent } from '../version/version.component';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { LandingConstants } from '../../landing/constants';
-import { Themes, ThemesPrefs } from '../../shared/globals/globals';
+import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
+import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 
 /**
  * a component that lays out the "identity" section of a landing page
@@ -29,6 +30,7 @@ export class ResourceIdentityComponent implements OnChanges {
     isPartOf: string[] = null;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
+    fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -40,6 +42,7 @@ export class ResourceIdentityComponent implements OnChanges {
      */
     constructor(private cfg: AppConfig,
                 public editstatsvc: EditStatusService,
+                public mdupdsvc : MetadataUpdateService, 
                 private gaService: GoogleAnalyticsService)
     { }
 

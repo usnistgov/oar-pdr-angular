@@ -18,7 +18,7 @@ export class ContactComponent implements OnInit {
 
     tempInput: any = {};
     isEmail = false;
-    enableEdit = false; // Temprorarily disable edit mode for now. Can set it true to enable in the furure.
+    enableEdit = true; // Temprorarily disable edit mode for now. Can set it true to enable in the furure.
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,

@@ -1,5 +1,11 @@
 <div class="grid" id="identity">
     <div class="col-12 col-md-12 col-lg-12 col-sm-12">
+        <!-- <div *ngIf="mdupdsvc.isEditMode" style="margin-bottom: 10px;">
+            <a href={{fileManagerUrl}} target="_blank">
+                <button pButton type="submit" class="p-button-sm green-btn" id="btn-fm" label="Manage Files" icon="faa faa-external-link faa-1x icon-white" iconPos="left">
+                </button>
+            </a>
+        </div> -->
         <span class="recordType">
             <b>{{recordType}}</b>
             <span *ngIf="recordType=='Science Theme'" class="badge version"> Beta</span>

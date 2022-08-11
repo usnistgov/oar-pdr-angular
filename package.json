@@ -3,7 +3,9 @@
     "workspaces": [
         "lib",
         "oar-lps",
-        "pdr-lps"
+        "pdr-lps",
+        "midas-author/lps",
+        "midas-author/wizard"
     ],
     "scripts": {
         "build-lib": "npm run build oarng --prefix ./lib",
@@ -18,8 +20,11 @@
     },
     "devDependencies": {
         "@types/node": "^12.11.1",
-        "typescript": "4.5.5",
+        "fs": "0.0.2",
         "process": "0.11.10",
-        "fs": "0.0.2"
+        "typescript": "4.5.5"
+    },
+    "dependencies": {
+        "rxjs": "^6.6.7"
     }
 }

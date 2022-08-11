@@ -27,6 +27,16 @@
     height:2em;
 }
 
+#ec-files-btn {
+    /* background-color:rgb(50, 57, 193);
+    color:rgb(255, 255, 255); */
+    width: 180px;
+}
+
+/* #ec-files-btn.hover {
+    background-color:rgb(81, 89, 236) !important;
+} */
+
 #ec-edit-btn {
     background-color:rgb(245, 198, 54);
     color:black;
@@ -38,7 +48,7 @@
 }
 
 #ec-close-btn {
-    background-color:green;
+    background-color:var(--nist-green-default);
     color:white;
 }
 
@@ -48,7 +58,7 @@
 }
 
 #ec-preview-btn {
-    background-color:rgb(9, 108, 221);
+    background-color:var(--nist-blue-dark2);
     color:white;
 }
 
@@ -73,4 +83,13 @@
     font-weight: bolder;
     font-size: larger;
     margin-bottom: 1em;
+}
+
+.blue-btn2 {
+    background-color:var(--nist-blue-dark2);
+    color: white;
+}
+
+.blue-btn2:hover{ 
+    background-color: var(--nist-blue-light) !important; 
 }

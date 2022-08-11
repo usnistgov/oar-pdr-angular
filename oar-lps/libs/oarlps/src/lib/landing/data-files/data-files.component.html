@@ -9,7 +9,7 @@
                 <div class="flex-container" style="margin-top: 2em;">
                     <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
                     <div *ngIf="editEnabled; else editDisabled"
-                        style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
+                        style="flex: 0 0 130px; text-align: left; padding-bottom: 0em;">
                         <span><b id="filelist-heading">Files </b> </span>
                         <span class="faa-stack fa-lg icon-download grey-color">
                             <i class="faa faa-circle-thin faa-stack-2x" aria-hidden="true"></i>
@@ -170,6 +170,14 @@
                         </tr>
                     </ng-template>
                 </p-treeTable>
+                <div *ngIf="mdupdsvc.isEditMode" style="width: 100%; height: 40px; margin-top: 10px;">
+                    <a href={{fileManagerUrl}} target="_blank">
+                        <button pButton type="submit" class="p-button-sm light-blue-btn" id="btn-fm" label="Manage Files" icon="faa faa-external-link faa-1x icon-white" iconPos="left" style="float: right;">
+                        </button>
+                    </a>
+                    <button pButton type="submit" class="p-button-sm light-blue-btn" id="btn-fm" (click)="reloadFiles()" label="Reload Files" icon="faa faa-repeat faa-1x icon-white" iconPos="left" style="margin-right: 10px; float: right;">
+                    </button>
+                </div>
             </div>
             <ng-template #filesLoading>
                 <div>

@@ -93,6 +93,7 @@ export class StepWizardComponent implements OnInit {
     }
 
     onNextStep() {
+        console.log("Next")
         if (!this.stepService.isLastStep()) {
             this.stepService.moveToNextStep();
         } else {

@@ -8,6 +8,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BadgeModule } from 'primeng/badge';
 
 import { DataFilesComponent } from './data-files.component';
+import { ButtonModule } from 'primeng/button';
 
 /**
  * module that provides support for rendering the listing of data file
@@ -15,7 +16,7 @@ import { DataFilesComponent } from './data-files.component';
 @NgModule({
     imports: [
         CommonModule, RouterModule, BadgeModule,
-        TreeTableModule, OverlayPanelModule, ProgressSpinnerModule
+        TreeTableModule, OverlayPanelModule, ProgressSpinnerModule, ButtonModule
     ],
     declarations: [
         DataFilesComponent

@@ -18,6 +18,9 @@
     --nist-blue-default: #12659c;
     --nist-blue-dark: #0c4870;
     --nist-blue-light: #197dc0;
+    --nist-blue-lighter: #2293dd;
+    --nist-blue-dark2: #1c4d9b; 
+    --nist-blue-dark3: rgb(9, 108, 221);
     --background-light-grey: #f3f3f3;
 }
 
@@ -204,4 +207,40 @@ a {
     position: relative;
     width: 100%;
     margin-top: 2em;
+}
+
+.green-btn {
+    background-color:var(--nist-green-default);
+    color: white;
+}
+
+.green-btn:hover{ 
+    background-color: var(--nist-green-light) !important; 
+}
+
+.blue-btn {
+    background-color:var(--nist-blue-default);
+    color: white;
+}
+
+.blue-btn:hover{ 
+    background-color: var(--nist-blue-light) !important; 
+}
+
+.blue-btn2 {
+    background-color:var(--nist-blue-dark2);
+    color: white;
+}
+
+.blue-btn2:hover{ 
+    background-color: var(--nist-blue-light) !important; 
+}
+
+.light-blue-btn {
+    background-color:var(--nist-blue-light);
+    color: white;
+}
+
+.light-blue-btn:hover{ 
+    background-color: var(--nist-blue-lighter) !important; 
 }

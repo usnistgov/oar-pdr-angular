@@ -39,3 +39,7 @@ export class ThemesPrefs {
         return ThemesPrefs._lSourceLabel[theme]
     }
 }
+
+export class AppSettings {
+    public static HOMEPAGE_DEFAULT_URL='https://nextcloud-dev.nist.gov';
+ }
