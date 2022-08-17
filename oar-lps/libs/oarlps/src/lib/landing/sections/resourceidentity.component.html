@@ -53,8 +53,8 @@
     </div>
 
     <div class="col-4 col-md-4 col-lg-4 col-sm-12">
-        <span *ngIf="showHomePageLink" style="float: right;">
-            <span *ngIf="inBrowser; else visitHomeOnServer">
+        <div *ngIf="showHomePageLink" style="float: right;width: 100%;height: 30px;">
+            <!-- <span *ngIf="inBrowser; else visitHomeOnServer">
                 <a href={{record.landingPage}} target="_blank">
                     <button type="button" pButton type="submit" [disabled]="!inViewMode"
                         class="home_button p-button p-component ui-button-text-empty"
@@ -66,8 +66,10 @@
                     </button>
                 </a> 
             </span>
-            <ng-template #visitHomeOnServer>Visit Home Page</ng-template>
-        </span>
+            <ng-template #visitHomeOnServer>Visit Home Page</ng-template> -->
+
+            <app-visithome [record]="record" [inBrowser]="inBrowser" [editMode]="editMode" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
+        </div>
     </div>
 </div>
 

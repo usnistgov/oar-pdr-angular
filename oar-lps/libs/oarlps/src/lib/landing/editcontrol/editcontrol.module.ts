@@ -12,10 +12,11 @@ import { HttpClient } from '@angular/common/http';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { IEnvironment } from '../../../environments/ienvironment';
 import { environment } from '../../../environments/environment-impl';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
     declarations: [ EditControlComponent, EditStatusComponent ],
-    imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule ],
+    imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule, TooltipModule ],
     exports: [ EditControlComponent, EditStatusComponent ],
     providers: [
         HttpClient,

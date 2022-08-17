@@ -449,4 +449,15 @@ export class EditControlComponent implements OnInit, OnChanges {
             );
         });
     }
+
+    /**
+     * Open url in a new tab
+     */
+    openFileManager() {
+        window.open(this.fileManagerUrl);
+    }
+
+    submitReview() {
+        
+    }
 }

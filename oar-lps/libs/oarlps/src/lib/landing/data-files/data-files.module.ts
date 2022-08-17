@@ -9,6 +9,7 @@ import { BadgeModule } from 'primeng/badge';
 
 import { DataFilesComponent } from './data-files.component';
 import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 /**
  * module that provides support for rendering the listing of data file
@@ -16,7 +17,8 @@ import { ButtonModule } from 'primeng/button';
 @NgModule({
     imports: [
         CommonModule, RouterModule, BadgeModule,
-        TreeTableModule, OverlayPanelModule, ProgressSpinnerModule, ButtonModule
+        TreeTableModule, OverlayPanelModule, ProgressSpinnerModule, 
+        ButtonModule, TooltipModule
     ],
     declarations: [
         DataFilesComponent

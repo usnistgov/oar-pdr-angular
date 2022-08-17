@@ -52,6 +52,12 @@
     color:white;
 }
 
+#ec-review-btn {
+    background-color:var(--science-theme-background-default);
+    color:white;
+    width: 200px;
+}
+
 #ec-discard-btn {
     background-color:rgb(94, 94, 94);
     color:white;
@@ -92,4 +98,9 @@
 
 .blue-btn2:hover{ 
     background-color: var(--nist-blue-light) !important; 
+}
+
+a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
+    color: inherit;
 }

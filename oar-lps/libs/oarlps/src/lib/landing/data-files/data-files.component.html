@@ -171,10 +171,11 @@
                     </ng-template>
                 </p-treeTable>
                 <div *ngIf="mdupdsvc.isEditMode" style="width: 100%; height: 40px; margin-top: 10px;">
-                    <a href={{fileManagerUrl}} target="_blank">
-                        <button pButton type="submit" class="p-button-sm light-blue-btn" id="btn-fm" label="Manage Files" icon="faa faa-external-link faa-1x icon-white" iconPos="left" style="float: right;">
-                        </button>
-                    </a>
+                    <!-- Manage Files button -->
+                    <button pButton [pTooltip]="fileManagerUrl" tooltipPosition="bottom" tooltipStyleClass="tooltip-style" type="submit" class="p-button-sm light-blue-btn" id="btn-fm" label="Manage Files" icon="faa faa-external-link faa-1x icon-white" iconPos="left" style="float: right;" (click)="openFileManager()">
+                    </button>
+
+                    <!-- Reload Files button -->
                     <button pButton type="submit" class="p-button-sm light-blue-btn" id="btn-fm" (click)="reloadFiles()" label="Reload Files" icon="faa faa-repeat faa-1x icon-white" iconPos="left" style="margin-right: 10px; float: right;">
                     </button>
                 </div>

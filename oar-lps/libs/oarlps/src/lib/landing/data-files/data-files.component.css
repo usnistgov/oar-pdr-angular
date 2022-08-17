@@ -40,11 +40,4 @@ body .p-treetable .p-treetable-data tr.p-state-highlight .p-row-editor a {
     margin-left: 0.5em;
 }
 
-.blue-btn2 {
-    background-color:var(--nist-blue-dark2);
-    color: white;
-}
 
-.blue-btn2:hover{ 
-    background-color: var(--nist-blue-light) !important; 
-}

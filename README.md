@@ -128,36 +128,76 @@ Now lib folder should have the latest code of oar-lib-angular.
     If not, run npm install -g npm@latest.
     
     cd ..
-    git checkout initial-portal-setup02
-    npm i 
+    git checkout feature/add-lps-lib
+    npm i --legacy-peer-deps
+    npm i rxjs@6.6.7 --legacy-peer-deps
 ```    
     
 3. Build and run your application
 
 You can build Angular library and your application separately or with one command.
 
-To build Angular library only:
+To build Angular library:
 
 ```    
     npm run build-lib
 ```
 
-To build your application only:
+Yo build local Angular library:
+
+```
+    npm run build-oarlps
+```
+
+To build and run wizard:
 
 ```    
-    npm run build
+    npm run build-sw
+    npm run start-sw
 ```
 
-To build both lib and your application:
+To build MIDAS publishing UI application:
 
 ```    
-    npm run build-all
+    npm run build-midaslps
+    npm run start-midaslps
 ```
 
-4. Testing your app
+To build public landing page:
+
+```    
+    npm run build-pdrlps
+    npm run start-pdrlps
+```
+
+4. Testing your app locally
+
+Wizard:
 
 ```
-    Browse: http://localhost:4200
+    http://localhost:4200
+```
+
+Publishing UI:
+    Set the following flags in environment.ts:
+        useMetadataService: false
+        useCustomizationService: false
+
+        editEnabled: true
+
+```
+    http://localhost:4202/od/id/test1?editEnabled=true
+```
+
+Public landing page:
+    Set the following flags in environment.ts:
+        useMetadataService: false
+        useCustomizationService: false
+
+        editEnabled: false
+
+```
+    http://localhost:4201/od/id/test1
 ```
 
 

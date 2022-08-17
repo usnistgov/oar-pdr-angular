@@ -4,18 +4,21 @@ import { NotificationService } from '../../shared/notification-service/notificat
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { VisithomePopupComponent } from './visithome-popup/visithome-popup.component';
+import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
 
 @Component({
-    selector: 'lib-visithome',
+    selector: 'app-visithome',
     templateUrl: './visithome.component.html',
-    styleUrls: ['./visithome.component.css']
+    styleUrls: ['./visithome.component.css', '../landing.component.css']
 })
 export class VisithomeComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() inViewMode: boolean;
+    @Input() theme: string;
 
     fieldName = 'landingPage';
+    scienceTheme = Themes.SCIENCE_THEME;
     
     constructor(
         public mdupdsvc : MetadataUpdateService,        
@@ -27,6 +30,7 @@ export class VisithomeComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        console.log("this.record", this.record);
     }
 
     /**
@@ -45,28 +49,22 @@ export class VisithomeComponent implements OnInit {
 
         const modalRef = this.ngbModal.open(VisithomePopupComponent, ngbModalOptions);
 
-        let val = "";
-        if (this.record[this.fieldName])
-            val = this.record[this.fieldName].join('\n\n');
-
         modalRef.componentInstance.inputValue = { };
-        modalRef.componentInstance.inputValue[this.fieldName] = val;
+        modalRef.componentInstance.inputValue[this.fieldName] = this.record[this.fieldName];
         modalRef.componentInstance['field'] = this.fieldName;
-        modalRef.componentInstance['title'] = 'Description';
-        modalRef.componentInstance['message'] = 'Separate paragraphs by 2 lines.';
+        modalRef.componentInstance['title'] = 'Landingpage URL';
+        modalRef.componentInstance['message'] = '';
 
         modalRef.componentInstance.returnValue.subscribe((returnValue) => {
             if (returnValue) {
-                // console.log("###DBG  receiving editing output: " +
-                //             returnValue[this.fieldName].substring(0,20) + "....");
-                let updmd = {};
-                updmd[this.fieldName] = returnValue[this.fieldName].split(/\n\s*\n/).filter(desc => desc != '');
-                this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+                console.log("returnValue[this.fieldName]", returnValue[this.fieldName]);
+                this.record[this.fieldName] = returnValue[this.fieldName];
+                this.mdupdsvc.update(this.fieldName, returnValue[this.fieldName]).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess)
-                        this.notificationService.showSuccessWithTimeout("Description updated.", "", 3000);
+                        this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
                     else
-                        console.error("acknowledge description update failure");
+                        console.error("Updating " + this.fieldName + " failed.");
                 });
             }
         })
@@ -78,9 +76,31 @@ export class VisithomeComponent implements OnInit {
     undoEditing() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success)
-                this.notificationService.showSuccessWithTimeout("Reverted changes to description.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
             else
-                console.error("Failed to undo description metadata")
+                console.error("Failed to undo landingpage metadata")
         });
+    }
+
+    /**
+     * Return visit homepage button style
+     * @returns 
+     */
+    visitHomePageBtnStyle() {
+        if(this.theme == this.scienceTheme) {
+            return "var(--science-theme-background-default)";
+        }else{
+            return "var(--nist-green-default)";
+        }
+    }
+
+    /**
+     * Google Analytics track event
+     * @param url - URL that user visit
+     * @param event - action event
+     * @param title - action title
+     */
+    googleAnalytics(url: string, event, title) {
+        this.gaService.gaTrackEvent('homepage', event, title, url);
     }
 }

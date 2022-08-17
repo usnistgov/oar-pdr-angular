@@ -20,6 +20,7 @@ import { FacilitatorsModule } from '../facilitators/facilitators.module';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { DoneModule } from '../done/done.module';
 import { ButtonModule } from 'primeng/button';
+import { VisithomeModule } from '../visithome/visithome.module';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -65,7 +66,8 @@ import { ButtonModule } from 'primeng/button';
         FacilitatorsModule, 
         SearchresultModule,
         DoneModule,
-        ButtonModule
+        ButtonModule,
+        VisithomeModule
     ],
     declarations: [
         ResourceDataComponent,

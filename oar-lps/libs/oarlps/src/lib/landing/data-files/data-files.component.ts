@@ -803,4 +803,11 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }, 2000);
 
     }
+
+    /**
+     * Open url in a new tab
+     */
+    openFileManager() {
+    window.open(this.fileManagerUrl);
+}
 }
