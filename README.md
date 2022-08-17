@@ -130,7 +130,6 @@ Now lib folder should have the latest code of oar-lib-angular.
     cd ..
     git checkout feature/add-lps-lib
     npm i --legacy-peer-deps
-    npm i rxjs@6.6.7 --legacy-peer-deps
 ```    
     
 3. Build and run your application
