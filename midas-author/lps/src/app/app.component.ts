@@ -14,6 +14,7 @@ export class AppComponent {
     title = 'PDR Resource Landing Page';
     gaCode: string;
     inBrowser: boolean = false;
+    appVersion: string = "1.0"
 
     constructor(private gaService: GoogleAnalyticsService,
                 // public environmentService : EnvironmentService,
@@ -24,6 +25,7 @@ export class AppComponent {
     }
 
     ngOnInit() {
+        this.appVersion = this.cfg.get("appVersion", "1.0") as string;
     }
 
     ngAfterViewInit(): void {
