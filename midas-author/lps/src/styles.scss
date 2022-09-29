@@ -34,6 +34,24 @@
   width: 95% !important;
 }
 
+.modal-large > .modal-dialog {
+    max-width: 1720px !important;
+    min-width: 1000px !important;   
+    width: 70% !important;
+}
+
+.modal-mid > .modal-dialog {
+    max-width: 1300px !important;
+    min-width: 800px !important;   
+    width: 60% !important;
+}
+
+.modal-small > .modal-dialog {
+    max-width: 1000px !important;
+    min-width: 500px !important;   
+    width: 50% !important;
+}
+
 .comfirmModalClass > .modal-dialog {
     max-width: 500px !important;
     min-width: 200px !important;   
