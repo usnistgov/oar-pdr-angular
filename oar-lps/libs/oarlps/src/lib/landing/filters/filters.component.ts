@@ -8,6 +8,7 @@ import * as _ from 'lodash-es';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SearchService } from '../../shared/search-service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { AppConfig } from '../../config/config';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -72,6 +73,7 @@ export class FiltersComponent implements OnInit {
     themesTree: TreeNode[] = [];
     showMoreLink: boolean = false;
     selectedThemesNode: any[] = [];
+    standardNISTTaxonomyURI: string = "https://data.nist.gov/od/dm/nist-themes/";
 
 //  Forensics
     forensicsThemes: SelectItem[] = [];
@@ -146,8 +148,11 @@ export class FiltersComponent implements OnInit {
     constructor(
         public taxonomyListService: TaxonomyListService,
         public searchFieldsListService: SearchfieldsListService,
-        public searchService: SearchService
-    ) { }
+        public searchService: SearchService,
+        private cfg: AppConfig
+    ) { 
+        this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
+    }
 
     ngOnInit(): void {
         this.msgs = [];
@@ -584,8 +589,11 @@ export class FiltersComponent implements OnInit {
         for (let i = 0; i < this.keywords.length; i++) {
             let keyw = this.keywords[i].trim().toLowerCase();
             if (keyw.indexOf(keyword) >= 0) {
-                this.suggestedKeywords.push(this.shortenKeyword(keyw));
-                this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] = keyw;
+                //Avoid duplicate
+                if(this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] == undefined) {
+                    this.suggestedKeywords.push(this.shortenKeyword(keyw));
+                    this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] = keyw;
+                }
             }
         }
 
@@ -594,7 +602,9 @@ export class FiltersComponent implements OnInit {
             for (let i = 0; i < this.keywords.length; i++) {
                 let keyw = this.keywords[i].trim().toLowerCase();
                 if (keyw.indexOf(kw.toLowerCase()) >= 0) {
-                    this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] = keyw;
+                    if(this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] == undefined) {
+                        this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] = keyw;
+                    }
                 }
             }
         })
@@ -625,16 +635,17 @@ export class FiltersComponent implements OnInit {
 
             keywordAbbr = keyword.substring(0, keyword.split(' ', wordCount).join(' ').length);
             if(keywordAbbr.trim().length < keyword.length) keywordAbbr = keywordAbbr + "...";
+
+            let i = 1;
+            let tmpKeyword = keywordAbbr;
+            while(Object.keys(this.suggestedKeywordsLkup).indexOf(tmpKeyword) >= 0 
+                    && this.suggestedKeywordsLkup[tmpKeyword] != keyword && i < 100){
+                tmpKeyword = keywordAbbr + "(" + i + ")";
+                i++;
+            }
+            keywordAbbr = tmpKeyword;
         }else    
             keywordAbbr = keyword;
-
-        let i = 1;
-        let tmpKeyword = keywordAbbr;
-        while(Object.keys(this.suggestedKeywordsLkup).indexOf(tmpKeyword) >= 0 && i < 100){
-            tmpKeyword = keywordAbbr + "(" + i + ")";
-            i++;
-        }
-        keywordAbbr = tmpKeyword;
 
         return keywordAbbr;
     }
@@ -895,39 +906,30 @@ export class FiltersComponent implements OnInit {
 
         let topicLabel: string;
         let data: string;
+
         this.themesAllArray = [];
         this.forensicsThemesAllArray = [];
         this.unspecifiedCount = 0;
-
+        
         for (let resultItem of searchResults) {
             if (typeof resultItem.topic !== 'undefined' && resultItem.topic.length > 0) {
                 for (let topic of resultItem.topic) {
                     let topics = topic.tag.split(":");
-                    let collectDefaultTheme: boolean = false;
 
-                    if(topics[0].trim().toLowerCase() == 'forensics') {
-                        topicLabel = topic.tag.substring(this.findNthOccurence(topic.tag, 1, ":")+1).trim();
-                        data = topic.tag.substring(this.findNthOccurence(topic.tag, 1, ":")+1).trim();
+                    if(topic['scheme'].indexOf(this.standardNISTTaxonomyURI) < 0) {
+                        topicLabel = topics[0];
+                        data = topic.tag;
 
-                        let thirdTopic = this.findNthOccurence(topic.tag, 2, ":");
-                        if(thirdTopic > 0){
-                            topicLabel = topicLabel.substring(0, thirdTopic)
+                        if(topics.length > 1){
+                            topicLabel = topics[0] + ":" + topics[1];
                         }
 
                         if (forensicsThemesArray.indexOf(topicLabel) < 0) {
                             forensicsThemes.push({ label: topicLabel, value: data });
                             forensicsThemesArray.push(topicLabel);
-                        }
-
-                        if(topics.length > 1){
-                            collectDefaultTheme = true;
-                        }
+                        } 
                     }else{
-                        collectDefaultTheme = true;
-                    }
-
-                    if(collectDefaultTheme) {
-                        topicLabel = _.split(topic.tag, ':')[0];
+                        topicLabel = topics[0];
                         topic = topic.tag;
 
                         if (themesArray.indexOf(topicLabel) < 0) {
@@ -940,7 +942,7 @@ export class FiltersComponent implements OnInit {
                 this.unspecifiedCount += 1;
             }
         }
-        
+
         for (let resultItem of searchResults) {
             this.uniqueThemes = [];
             this.forensicsUniqueThemes = [];

@@ -30,7 +30,7 @@ export class TitleComponent implements OnInit {
         let ngbModalOptions: NgbModalOptions = {
             backdrop: 'static',
             keyboard: false,
-            windowClass: "myCustomModalClass"
+            windowClass: "modal-mid"
         };
 
         let val = "";

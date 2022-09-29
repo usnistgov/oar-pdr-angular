@@ -73,7 +73,7 @@ export class StepWizardComponent implements OnInit {
             new StepModel(1, 'Publication Type',true,true,false,false),
             new StepModel(2, 'Contact Info',true,false),
             new StepModel(3, 'Files',true,false),
-            new StepModel(4, 'Optional',false,false),
+            new StepModel(4, 'Software',false,false),
             new StepModel(5, 'Associated Papers',true,false,false)
         ]
 
