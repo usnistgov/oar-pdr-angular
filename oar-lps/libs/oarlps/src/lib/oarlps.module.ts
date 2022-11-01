@@ -9,6 +9,7 @@ import { DirectivesModule } from './directives/directives.module';
 import { ErrorsModule } from './errors/errors.module';
 import { SectionsModule } from './landing/sections/sections.module';
 import { DoneModule } from './landing/done/done.module';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
     declarations: [],
@@ -21,7 +22,8 @@ import { DoneModule } from './landing/done/done.module';
         DirectivesModule,
         ErrorsModule,
         SectionsModule,
-        DoneModule
+        DoneModule,
+        DragDropModule
     ],
     providers: [
         GoogleAnalyticsService

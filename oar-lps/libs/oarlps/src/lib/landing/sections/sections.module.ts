@@ -21,6 +21,7 @@ import { SearchresultModule } from '../searchresult/searchresult.module';
 import { DoneModule } from '../done/done.module';
 import { ButtonModule } from 'primeng/button';
 import { VisithomeModule } from '../visithome/visithome.module';
+import { ReferencesModule } from '../references/references.module';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -67,7 +68,8 @@ import { VisithomeModule } from '../visithome/visithome.module';
         SearchresultModule,
         DoneModule,
         ButtonModule,
-        VisithomeModule
+        VisithomeModule,
+        ReferencesModule
     ],
     declarations: [
         ResourceDataComponent,

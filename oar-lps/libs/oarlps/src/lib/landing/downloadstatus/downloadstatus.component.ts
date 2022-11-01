@@ -2,6 +2,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { DataCartStatus } from '../../datacart/cartstatus';
 import { CartConstants } from '../../datacart/cartconstants';
 
+
 @Component({
   selector: 'app-downloadstatus',
   templateUrl: './downloadstatus.component.html',
@@ -21,7 +22,7 @@ export class DownloadstatusComponent implements OnInit {
     ngOnInit() {
         if(this.inBrowser){
             this.dataCartStatus = DataCartStatus.openCartStatus();
-
+            console.log("this.dataCartStatus", this.dataCartStatus);
             window.addEventListener("storage", this.cartChanged.bind(this));
         }
     }
@@ -45,6 +46,7 @@ export class DownloadstatusComponent implements OnInit {
                 this.dataCartStatus.restore();
             }
         }
+
     }
 
     /**

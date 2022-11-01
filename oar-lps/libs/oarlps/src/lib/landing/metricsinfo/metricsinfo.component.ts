@@ -16,7 +16,7 @@ import { formatBytes } from '../../utils';
     templateUrl: './metricsinfo.component.html',
     styleUrls: ['./metricsinfo.component.css']
 })
-export class MetricsinfoComponent {
+export class MetricsinfoComponent implements OnInit {
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;
 
@@ -51,6 +51,11 @@ export class MetricsinfoComponent {
         private cfg: AppConfig
     ) { 
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+    }
+
+    ngOnInit(): void {
+        //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+        //Add 'implements OnInit' to the class.
     }
 
     get totalUsers() {

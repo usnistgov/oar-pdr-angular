@@ -22,10 +22,11 @@
     --nist-blue-dark2: #1c4d9b; 
     --nist-blue-dark3: rgb(9, 108, 221);
     --background-light-grey: #f3f3f3;
+    --background-light-grey02: #d3d3d3;
 }
 
 .myCustomModalClass .modal-dialog {
-  max-width: 1920px;
+  max-width: 1920px !important;
 }
 
 .myCustomModalClass > .modal-dialog {
@@ -255,11 +256,18 @@ a {
 }
 
 .light-blue-btn {
-    background-color:var(--nist-blue-light);
-    color: white;
+    background-color:var(--nist-blue-light) !important; 
+    color: white !important; 
 }
 
 .light-blue-btn:hover{ 
     background-color: var(--nist-blue-lighter) !important; 
 }
 
+.diagram-btn-labeled {
+    padding-top: 0 !important; 
+    padding-bottom: 0 !important; 
+    width:160px !important; 
+    height: 2.5em !important; 
+    margin: 0em .5em .5em 0em !important; 
+}

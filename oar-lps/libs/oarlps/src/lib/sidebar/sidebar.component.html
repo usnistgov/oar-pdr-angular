@@ -1,0 +1,21 @@
+<div class="sbar-container" [@togglesbar]="sidebarState">
+    <div>
+        <div style="float: right; margin: 0px 5px 5px 5px;">
+            <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i
+                    class="faa faa-times-circle faa-lg" aria-hidden="true"
+                    style="color: orange; cursor: pointer;"></i></a>
+        </div>
+        <div class="help-title">
+            Question Help
+        </div>
+    </div>
+    <div class="help-frame" [innerHTML]="helpContent.title">
+    </div>
+</div>
+<div *ngIf="!sbarvisible" style="float:right; margin: 44px 20px 20px 20px;">
+    <a (click)="toggleSbarView()" aria-label="Help"
+    title="{{(sbarvisible) ? 'Close Help' : 'Open Help'}}">
+    <i class="faa faa-question-circle-o faa-lg" aria-hidden="true"
+        style="color: orange; cursor: pointer;"></i>
+    </a>
+</div>

@@ -1,5 +1,5 @@
 import {
-    Component, OnInit, AfterViewInit, ViewChild,
+    Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef,
     PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -27,6 +27,8 @@ import { CartActions } from 'oarlps';
 // import { initBrowserMetadataTransfer } from 'oarlps';
 import { MetricsData } from "oarlps";
 import { Themes, ThemesPrefs } from 'oarlps';
+import { state, style, trigger, transition, animate } from '@angular/animations';
+import { LandingpageService } from 'oarlps';
 
 /**
  * A component providing the complete display of landing page content associated with 
@@ -49,7 +51,37 @@ import { Themes, ThemesPrefs } from 'oarlps';
     providers: [
         Title
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    animations: [
+        trigger("togglemain", [
+            state('mainsquished', style({
+                "width": "75%"
+            })),
+            state('mainexpanded', style({
+                "width": "93%"
+            })),
+            state('mainfullyexpanded', style({
+                "width": "100%"
+            })),
+            transition('mainsquished <=> mainexpanded', [
+                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
+            ])
+        ]),
+        trigger("togglesbar", [
+            state('mainsquished', style({
+                "width": "25%"
+            })),
+            state('mainexpanded', style({
+                "width": "5%"
+            })),
+            state('mainfullyexpanded', style({
+                "width": "0%"
+            })),
+            transition('mainsquished <=> mainexpanded', [
+                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
+            ])
+        ])
+    ]
 })
 export class LandingPageComponent implements OnInit, AfterViewInit {
     layoutCompact: boolean = true;
@@ -91,13 +123,20 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     windowScrolled: boolean = false;
     btnPosition: number = 20;
     menuPosition: number = 20;
-    menuBottom: string = "1em";
+    // menuBottom: string = "1em";
     showMetrics: boolean = false;
     recordType: string = "";
     imageURL: string;
     theme: string;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
+    hideToolMenu: boolean = false;
+
+    private _sbarvisible : boolean = true;
+    sidebarVisible: boolean = true;
+    mainBodyStatus: string = "mainsquished";
+    sidebarStartY: number = 160;
+    sidebarY: number = 160;
 
     helpContent: any = {
         "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
@@ -133,13 +172,19 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 private cartService: CartService,
                 private mdupdsvc: MetadataUpdateService,
                 public metricsService: MetricsService,
-                public breakpointObserver: BreakpointObserver) 
+                public breakpointObserver: BreakpointObserver,
+                private chref: ChangeDetectorRef,
+                public lpService: LandingpageService) 
     {
         this.reqId = this.route.snapshot.paramMap.get('id');
         this.inBrowser = isPlatformBrowser(platformId);
         this.editEnabled = cfg.get('editEnabled', false) as boolean;
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+
+        this.lpService.watchCurrentSection((currentSection) => {
+            this.goToSection(currentSection);
+        });
 
         if (this.editEnabled) {
             this.edstatsvc.watchEditMode((editMode) => {
@@ -151,6 +196,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     this._showContent = true;
                     this.setMessage();
                 }
+                
+                this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE);
             });
 
             this.mdupdsvc.subscribe(
@@ -295,7 +342,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
      getMetrics() {
         let ediid = this.md.ediid;
-
         this.metricsService.getFileLevelMetrics(ediid).subscribe(async (event) => {
             // Some large dataset might take a while to download. Only handle the response
             // when download is completed
@@ -377,7 +423,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         else
             this.windowScrolled = (window.pageYOffset > this.menuPosition);
 
-        this.menuBottom = (window.pageYOffset).toString() + 'px';
+        this.sidebarY = this.sidebarStartY - window.pageYOffset;
+        
+        this.sidebarY = this.sidebarY > 10 ? this.sidebarY : 10;
     }
 
     /**
@@ -477,11 +525,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 if (state.matches) {
                     this.mobileMode = false;
                     if (this.menuElement)
-                        this.menuPosition = this.menuElement.nativeElement.offsetTop + 20;
+                        this.menuPosition = this.menuElement.nativeElement.offsetTop + 10;
                 } else {
                     this.mobileMode = true;
                     if (this.btnElement)
-                        this.btnPosition = this.btnElement.nativeElement.offsetTop + 20;
+                        this.btnPosition = this.btnElement.nativeElement.offsetTop + 10;
                 }
             });
         }
@@ -489,6 +537,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     inViewMode() {
         return this.editMode == this.EDIT_MODES.VIEWONLY_MODE;
+    }
+
+    get inEditMode() {
+        return this.editMode == this.EDIT_MODES.EDIT_MODE;
     }
 
     showData() : void{
@@ -571,7 +623,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         if(sectionId == "Metadata") sectionId = "about";
 
         setTimeout(() => {
-            this.landingBodyComponent.goToSection(sectionId);
+            if(this.landingBodyComponent != undefined)
+                this.landingBodyComponent.goToSection(sectionId);
         }, 50);
     }
 
@@ -627,14 +680,28 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Determine the with of the landing page content panel. In edit mode or mobile mode,
-     * it will be 100%. In normal mode (public site), it will be 80%. The green menu takes 20%.
+     * toggle whether the sidebar is visible.  When this is called, a change in 
+     * in the visiblity of the sidebar will be animated (either opened or closed).
      */
-    landingPageWidth() {
-        if(this.mobileMode || this.editEnabled){
-            return { 'width':'100%' };
+    toggleSbarView() {
+        this._sbarvisible = ! this._sbarvisible;
+        this.chref.detectChanges();
+    }
+
+    isSbarVisible() {
+        return this._sbarvisible
+    }
+
+    updateSidebarStatus(sbarVisible) {
+        this.sidebarVisible = sbarVisible;
+
+        if(this.mobileMode){
+            this.mainBodyStatus = "mainfullyexpanded";
         }else {
-            return { 'width':'80%' };
+            if(this.sidebarVisible)
+                this.mainBodyStatus = "mainsquished";
+            else    
+                this.mainBodyStatus = "mainexpanded";
         }
     }
 }

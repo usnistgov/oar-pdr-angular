@@ -4,7 +4,7 @@ import { Subject } from 'rxjs';
 
 import { UserMessageService } from '../../frame/usermessage.service';
 import { CustomizationService } from './customization.service';
-import { NerdmRes } from '../../nerdm/nerdm';
+import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
 import { Observable, of, throwError, Subscriber } from 'rxjs';
 import { UpdateDetails } from './interfaces';
 import { AuthService, WebAuthService } from './auth.service';
@@ -210,6 +210,7 @@ export class MetadataUpdateService {
                     (res) => {
                         this.origfields = {};
                         this.forgetUpdateDate();
+                        this.originalRec = res as NerdmRes;
                         this.mdres.next(this.originalRec as NerdmRes);
                         resolve(true);
                     },
@@ -396,14 +397,57 @@ export class MetadataUpdateService {
      *  Return field style based on edit mode and data update status
      */
     getFieldStyle(fieldName : string) {
-      if (this.isEditMode) {
-          if (this.fieldUpdated(fieldName)) {
-              return { 'border': '1px solid lightgrey', 'background-color': '#FCF9CD', 'padding-right': '1em', 'cursor': 'pointer' };
-          } else {
-              return { 'border': '1px solid lightgrey', 'background-color': '#e6f2ff', 'padding-right': '1em', 'cursor': 'pointer' };
-          }
-      } else {
-          return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
-      }
-  }
+        if (this.isEditMode) {
+            if (this.fieldUpdated(fieldName)) {
+                return { 'border': '1px solid lightgrey', 'background-color': '#FCF9CD', 'padding-right': '1em', 'cursor': 'pointer' };
+            } else {
+                return { 'border': '1px solid lightgrey', 'background-color': '#e6f2ff', 'padding-right': '1em', 'cursor': 'pointer' };
+            }
+        } else {
+            return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
+        }
+    }
+
+
+    /**
+     * load files from the file manager.
+     */
+     public loadDataFiles(onSuccess?: () => void): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to update without authorization!  Ignoring update.");
+                return;
+            }
+            this.custsvc.getDataFiles().subscribe(
+                (res) => {
+                  subscriber.next(res as NerdmComp[]);
+                  subscriber.complete();
+                  if (onSuccess) onSuccess();
+                },
+                (err) => {
+                  console.log("err", err);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    // handle 404
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to retrieve data files: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to retrieve data files: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            );
+        });
+    }       
 }

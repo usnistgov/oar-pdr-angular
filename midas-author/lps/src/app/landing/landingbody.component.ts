@@ -5,6 +5,7 @@ import { NerdmRes, NERDResource } from 'oarlps';
 import { ResourceMetadataComponent } from 'oarlps';
 import { Console } from 'console';
 import { MetricsData } from "./metrics-data";
+import { MetadataUpdateService } from 'oarlps';
 
 /**
  * a component that presents the landing page's presentation of the resource description
@@ -63,7 +64,7 @@ export class LandingBodyComponent {
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig)
+    constructor(private cfg: AppConfig, public mdupdsvc : MetadataUpdateService)
     { }
 
     ngOnInit(): void {

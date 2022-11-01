@@ -12,8 +12,12 @@
 }
 
 .landing-body {
+    display: inline-block;
     border: 0px;
     width: 100%;
+    margin: 1em 1em 1em 2em;
+    z-index: 99;
+    padding-right: 1em;
 }
 
 .landing-body h3 {
@@ -69,6 +73,21 @@
     width: 18%;
 }
 
+.normal-sdbar {
+    position: fixed;
+    right: 1em;
+    height: 500px;
+}
+
+.sticky-sdbar {
+    width: 100%;
+    position: fixed;
+    right: 0em;
+    height: 500px;
+    display: inline-block;
+    vertical-align: top !important;
+}
+
 .p-menu-dynamic {
     position: fixed;
     top: 1em; 
@@ -80,4 +99,52 @@
     height: 50px;
     background-size: cover;
     background-position-y: 25%;
+}
+
+#block_container {
+    display: flex;
+}
+
+#bloc1 {
+    width: auto;
+    border: 1px solid blue;
+}
+
+#bloc2 {
+    width: 20%;
+    border: 1px solid red;
+}
+
+.help-title {
+    font-size: larger;
+    color: orange;
+    padding-left: 10px;
+}
+
+.help-frame {
+    padding: 10px 10px 10px 10px; 
+}
+
+.sidebar-container {
+    width: 20%;
+    margin-right: 20px;
+    height: fit-content;
+    max-height: 90%;
+    border: 3px solid orange; 
+    border-radius: 10px;
+    background-color:  #f7f7f7;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    overflow: auto;
+    position: relative;
+}
+
+.help-slider {
+    float: right;
+    padding-top: 10px;
+    padding-right: 10px;
+    position: relative;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
 }

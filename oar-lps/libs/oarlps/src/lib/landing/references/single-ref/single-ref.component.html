@@ -1,0 +1,78 @@
+<div style="width: 100%; padding: 0px 20px 20px 20px;">
+    <table width="100%" align="center">
+        <!-- doi -->
+        <tr>
+            <td align="right" width="20%">
+                <span style="margin-right: .5em;">DOI:</span>
+            </td>
+            <td>
+                <input type="text" [(ngModel)]="ref.doi" style="height:2em;"
+                (input)="onChange()"/>
+            </td>
+        </tr>
+
+        <!-- Reference type -->
+        <tr>
+            <td align="right" width="20%">
+                <span style="margin-right: .5em;">Reference Type:</span>
+            </td>
+            <td>
+                <select [(ngModel)]="ref.refType" [style]="{'width':'100%','height':'2em','text-align':'left', 'padding-left':'18px','padding-right':'18px'}">
+                    <option disabled> Choose one </option>
+                    <option *ngFor="let ref of refTypes; let i = index" [value]="ref"> {{ ref }} </option>
+                </select>
+            </td>
+        </tr>
+
+        <!-- Title -->
+        <tr>
+            <td align="right">
+                <span style="margin-right: .5em;">Title:</span>
+            </td>
+            <td>
+                <input type="text" [(ngModel)]="ref.title" style="height:2em;"
+                    (input)="onChange()"/>
+            </td>
+        </tr>
+
+        <!-- Citation
+            -->
+        <tr data-toggle="tooltip" title="Citation">
+            <td align="right">
+                <span style="margin-right: .5em;">Citation:</span>
+            </td>
+            <td>
+                <textarea [(ngModel)]='ref.citation' rows="4" (input)="onChange()">                             
+                </textarea>
+            </td>
+        </tr>
+
+        <!-- Label
+            -->
+            <tr data-toggle="tooltip" title="Label">
+            <td align="right">
+                <span style="margin-right: .5em;">Label:</span>
+            </td>
+            <td>
+                <!-- <input type="text" [(ngModel)]="ref.label" style="height:2em;"
+                    (input)="onChange()"/> -->
+                <textarea [(ngModel)]='ref.label' rows="1" (input)="onChange()">                             
+                </textarea>
+            </td>
+        </tr>
+
+        <!-- Location
+            -->
+            <tr data-toggle="tooltip" title="Label">
+            <td align="right">
+                <span style="margin-right: .5em;">Location:</span>
+            </td>
+            <td>
+                <input type="text" [(ngModel)]="ref.location" style="height:2em;"
+                    (input)="onChange()"/>
+            </td>
+        </tr>
+
+    </table>
+
+</div>

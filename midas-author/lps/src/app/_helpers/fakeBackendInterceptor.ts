@@ -12,27 +12,29 @@ export class FakeBackendInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // array in local storage for registered users
 
-    const sampleData: any = require('../../assets/science-theme/BiometricsScienceTheme.json');
-    const sampleRecord: any = require('../../assets/science-theme/DNAScienceTheme.json');
+    // const sampleData: any = require('../../assets/science-theme/BiometricsScienceTheme.json');
+    // const sampleRecord: any = require('../../assets/science-theme/DNAScienceTheme.json');
 
-    const biometricsData1: any  = require('../../assets/science-theme/SDB-300.json');
-    const biometricsData2: any  = require('../../assets/science-theme/SDB-301.json');
-    const biometricsData3: any  = require('../../assets/science-theme/SDB-302.json');
-    const dna1: any  = require('../../assets/science-theme/dna1.json');
-    const dna2: any  = require('../../assets/science-theme/dna2.json');
-    const dna3: any  = require('../../assets/science-theme/dna3.json');
-    const dna4: any  = require('../../assets/science-theme/dna4.json');
-    const dna5: any  = require('../../assets/science-theme/dna5.json');
+    // const biometricsData1: any  = require('../../assets/science-theme/SDB-300.json');
+    // const biometricsData2: any  = require('../../assets/science-theme/SDB-301.json');
+    // const biometricsData3: any  = require('../../assets/science-theme/SDB-302.json');
+    // const dna1: any  = require('../../assets/science-theme/dna1.json');
+    // const dna2: any  = require('../../assets/science-theme/dna2.json');
+    // const dna3: any  = require('../../assets/science-theme/dna3.json');
+    // const dna4: any  = require('../../assets/science-theme/dna4.json');
+    // const dna5: any  = require('../../assets/science-theme/dna5.json');
+
+    const sampleData: any = require('../../assets/sample1.json');
 
     const testdata: any = {
         PageSize: 1,
         ResultCount: 8,
-        ResultData: [biometricsData1,biometricsData2,biometricsData3,dna1,dna2,dna3,dna4,dna5]
+        ResultData: [sampleData]
     }
 
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
-      console.log("request.url", request.url);
+        console.log("request.url +++++++++", request.url);
 
         // metrics
         // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {

@@ -14,6 +14,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AppSettings } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { NotificationService } from '../../shared/notification-service/notification.service';
 
 declare var _initAutoTracker: Function;
 
@@ -146,6 +147,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 public editstatsvc: EditStatusService,
                 public breakpointObserver: BreakpointObserver,
                 public mdupdsvc : MetadataUpdateService, 
+                private notificationService: NotificationService,
                 ngZone: NgZone)
     {
         this.cols = [
@@ -221,7 +223,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
     useMetadata() {
         this.ediid = this.record['ediid']
-        this.buildTree();
+        this.buildTree(this.record['components']);
     }
 
     /**
@@ -278,7 +280,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     /**
      * Build data file tree. Exclude .sha files.
      */
-    buildTree() : void {
+    buildTree(comps: NerdmComp[]) : void {
         if (! this.record['components'])
             return;
 
@@ -331,7 +333,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         let node: TreeNode = null;
 
         // Filter out sha files
-        for (let comp of this.record['components']) {
+        for (let comp of comps) {
             if (comp.filepath && comp['@type'].filter(tp => tp.includes(':Hidden')).length == 0 &&
                 comp['@type'].filter(tp => tp.includes(':ChecksumFile')).length == 0)
             {
@@ -341,6 +343,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
             }
         }
         this.files = [...root.children];
+        console.log('this.files', this.files)
         this.fileCount = count;
         this.updateStatusFromCart();
     }
@@ -808,6 +811,28 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * Open url in a new tab
      */
     openFileManager() {
-    window.open(this.fileManagerUrl);
-}
+        window.open(this.fileManagerUrl);
+    }
+
+    /**
+     * Reload data files
+     */
+    reloadFiles() {
+        this.mdupdsvc.loadDataFiles().subscribe( data => {
+            let dataFiles: NerdmComp[] = data as NerdmComp[];
+            console.log("dataFiles", dataFiles)
+            this.record['components'] = dataFiles;
+            this.buildTree(this.record['components']);
+
+            // Update backend
+            this.mdupdsvc.update('components', dataFiles).then((updateSuccess) => {
+                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+                if (updateSuccess)
+                    this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
+                else
+                    console.error("acknowledge description update failure");
+            });
+
+        })
+    }
 }

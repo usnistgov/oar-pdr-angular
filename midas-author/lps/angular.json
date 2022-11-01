@@ -26,18 +26,23 @@
               },
               {
                 "glob": "**/*",
+                "input": "../../node_modules/oarlps/src/assets/",
+                "output": "/assets"
+              },
+              {
+                "glob": "**/*",
                 "input": "src/assets/",
                 "output": "/assets"
               }
             ],
             "styles": [
               "src/styles.scss",
-              "../../node_modules/bootstrap/dist/css/bootstrap.min.css",
               "../../node_modules/primeng/resources/primeng.css",
               "../../node_modules/primeicons/primeicons.css",
               "../../node_modules/primeflex/primeflex.css",
               "../../node_modules/primeng/resources/themes/saga-blue/theme.css",
               "src/styles/font-awesome/css/font-awesome.min.css",
+              "../../node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles/main.css",
               "src/app/content/modal.less",
               "../../node_modules/ngx-toastr/toastr.css"

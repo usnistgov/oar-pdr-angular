@@ -7,7 +7,7 @@ import {
 import { enableProdMode } from '@angular/core';
 import { ErrorHandler } from '@angular/core';
 
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule} from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

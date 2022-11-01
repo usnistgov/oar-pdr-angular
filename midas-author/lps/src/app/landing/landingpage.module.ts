@@ -21,6 +21,10 @@ import { ErrorComponent, UserErrorComponent } from './error.component';
 // import { ForensicssearchresultModule } from './forensicssearchresult/forensicssearchresult.module';
 import { SearchresultModule } from 'oarlps';
 import { WizardModule } from 'oarng';
+import { SidebarModule } from 'oarlps';
+import { DownloadStatusModule } from 'oarlps';
+import { MetricsiinfoModule } from 'oarlps';
+import { LandingpageService } from 'oarlps';
 
 /**
  * A module supporting the complete display of landing page content associated with 
@@ -38,14 +42,18 @@ import { WizardModule } from 'oarng';
         SectionsModule,
         SearchresultModule,
         DoneModule,
-        WizardModule
+        WizardModule,
+        SidebarModule,
+        DownloadStatusModule,
+        MetricsiinfoModule
     ],
     declarations: [
         LandingPageComponent, LandingBodyComponent, 
         ErrorComponent, UserErrorComponent, NoidComponent
     ],
     providers: [
-        MetadataUpdateService, TaxonomyListService, DatePipe
+        MetadataUpdateService, TaxonomyListService, DatePipe,
+        LandingpageService
     ],
     exports: [
         LandingPageComponent, LandingBodyComponent, 

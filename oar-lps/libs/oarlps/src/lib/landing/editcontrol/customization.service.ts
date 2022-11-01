@@ -1,5 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of, throwError, Subscriber } from 'rxjs';
+import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
 
 /**
  * a service for commiting metadata changes to a draft version stored on the server.
@@ -57,6 +58,12 @@ export abstract class CustomizationService {
      * Tell backend that the editing is done
      */
     public abstract doneEditing() : Observable<Object>;
+
+    /**
+     * retrieve the data files from the server-side 
+     * customization service.  
+     */
+    public abstract getDataFiles() : Observable<Object>;
 }
 
 /**
@@ -254,17 +261,113 @@ export class WebCustomizationService extends CustomizationService {
      *                     customization server, even to get back an error response.  
      */
     public doneEditing() : Observable<Object> {
-      // To transform the output with proper error handling, we wrap the
-      // HttpClient.patch() Observable with our own Observable
-      //
-      return new Observable<Object>(subscriber => {
-          let url = this.endpoint + this.draftapi + this.resid;
-          let body = { "_editStatus": "done" };
-          let obs : Observable<Object> = 
-              this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
-          this._wrapRespObs(obs, subscriber);
-      });
-  }
+        // To transform the output with proper error handling, we wrap the
+        // HttpClient.patch() Observable with our own Observable
+        //
+        return new Observable<Object>(subscriber => {
+            let url = this.endpoint + this.draftapi + this.resid;
+            let body = { "_editStatus": "done" };
+            let obs : Observable<Object> = 
+                this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+            this._wrapRespObs(obs, subscriber);
+        });
+    }
+
+    /**
+     * Retrieve the data files from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getDataFiles() : Observable<Object> {
+        const sampleData: NerdmComp[] = 
+        [ 
+            {
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "@type" : [ 
+                    "nrdp:DataFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
+                ]
+            }, 
+            {
+                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "algorithm" : {
+                    "tag" : "sha256",
+                    "@type" : "Thing"
+                },
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
+                "@type" : [ 
+                    "nrdp:ChecksumFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
+                ]
+            }, 
+            {
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "@type" : [ 
+                    "nrdp:DataFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
+                ]
+            }, 
+            {
+                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "algorithm" : {
+                    "tag" : "sha256",
+                    "@type" : "Thing"
+                },
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
+                "@type" : [ 
+                    "nrdp:ChecksumFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
+                ]
+            }, 
+            {
+                "accessURL" : "https://doi.org/10.18434/M37H4G",
+                "@id" : "#doi:10.18434/M37H4G",
+                "@type" : [ 
+                    "nrd:Hidden", 
+                    "dcat:Distribution"
+                ]
+            }
+        ];
+        return of(sampleData);
+        // To transform the output with proper error handling, we wrap the
+        // HttpClient.get() Observable with our own Observable
+        //
+        // return new Observable<Object>(subscriber => {
+        //     let url = this.endpoint + this.draftapi + this.resid;
+        //     let obs : Observable<Object> = 
+        //         this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
+        //     this._wrapRespObs(obs, subscriber);
+        // });
+    }
 }
 
 /**
@@ -285,6 +388,7 @@ export class InMemCustomizationService extends CustomizationService {
     constructor(resmd : Object) {
         super((resmd && resmd['ediid']) ? resmd['ediid'] : "resmd");
         this.origmd= resmd;
+
         this.resmd = (resmd == null) ? null : JSON.parse(JSON.stringify(resmd))
     }
 
@@ -318,6 +422,7 @@ export class InMemCustomizationService extends CustomizationService {
      */
     public saveDraft() : Observable<Object> {
         this.origmd = JSON.parse(JSON.stringify(this.resmd));
+        console.log("this.origmd", this.origmd);
         return of<Object>(this.resmd);
     }
 
@@ -325,7 +430,9 @@ export class InMemCustomizationService extends CustomizationService {
      * discard the changes in the draft, reverting to the original metadata
      */
     public discardDraft() : Observable<Object> {
+        console.log("this.origmd", this.origmd);
         this.resmd = JSON.parse(JSON.stringify(this.origmd));
+        console.log("this.resmd.references", this.resmd["references"]);
         return of<Object>(this.resmd);
     }
 
@@ -338,14 +445,103 @@ export class InMemCustomizationService extends CustomizationService {
      *                   failure, error function is called with an instance of a CustomizationError.
      */
     public updateMetadata(md : Object) : Observable<Object> {
-      if (! md)
-          return throwError(new SystemCustomizationError("No update data provided"));
+        if (! md)
+            return throwError(new SystemCustomizationError("No update data provided"));
 
-      for(let prop in md) {
-          this.resmd[prop] = JSON.parse(JSON.stringify(md[prop]));
-      }
-      return of<Object>(this.resmd);
-  }    
+        for(let prop in md) {
+            this.resmd[prop] = JSON.parse(JSON.stringify(md[prop]));
+        }
+
+        console.log("this.origmd", this.origmd);
+        return of<Object>(this.resmd);
+    }    
+
+    /**
+     * Retrieve the data files in memory.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getDataFiles() : Observable<Object> {
+        const sampleData: NerdmComp[] = 
+        [ 
+            {
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "@type" : [ 
+                    "nrdp:DataFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
+                ]
+            }, 
+            {
+                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
+                "algorithm" : {
+                    "tag" : "sha256",
+                    "@type" : "Thing"
+                },
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
+                "@type" : [ 
+                    "nrdp:ChecksumFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
+                ]
+            }, 
+            {
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "@type" : [ 
+                    "nrdp:DataFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
+                ]
+            }, 
+            {
+                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
+                "algorithm" : {
+                    "tag" : "sha256",
+                    "@type" : "Thing"
+                },
+                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
+                "mediaType" : "text/plain",
+                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
+                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
+                "@type" : [ 
+                    "nrdp:ChecksumFile", 
+                    "nrdp:DownloadableFile", 
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas" : [ 
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
+                ]
+            }, 
+            {
+                "accessURL" : "https://doi.org/10.18434/M37H4G",
+                "@id" : "#doi:10.18434/M37H4G",
+                "@type" : [ 
+                    "nrd:Hidden", 
+                    "dcat:Distribution"
+                ]
+            }
+        ];
+        return of(sampleData);        
+    }
 }
 
 

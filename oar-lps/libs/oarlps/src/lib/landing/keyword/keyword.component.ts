@@ -40,6 +40,7 @@ export class KeywordComponent implements OnInit {
     }
 
     openModal() {
+        console.log("Opening keyword popup...")
         if (! this.mdupdsvc.isEditMode) return;
 
         let ngbModalOptions: NgbModalOptions = {

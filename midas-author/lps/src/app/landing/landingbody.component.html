@@ -32,7 +32,7 @@
             <!-- About This Dataset visualization and export -->
             <a name="about" #about></a>
             <a name="references2" #references2></a>
-            <pdr-resource-md [record]="md" [inBrowser]="inBrowser" [mobileMode]="mobileMode"  [metricsData]="metricsData" [showJsonViewer]='showJsonViewer' [theme]="theme">
+            <pdr-resource-md *ngIf="!mdupdsvc.isEditMode" [record]="md" [inBrowser]="inBrowser" [mobileMode]="mobileMode"  [metricsData]="metricsData" [showJsonViewer]='showJsonViewer' [theme]="theme">
             </pdr-resource-md>
         </div>
     </div>
