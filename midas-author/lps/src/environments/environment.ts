@@ -113,7 +113,12 @@ export const testdata: {} = {
                 "location":"https://doi.org/10.1016/j.jnoncrysol.2019.119828",
                 "@id":"#ref:10.1016/j.jnoncrysol.2019.119828",
                 "@type":["schema:Article"],
-                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"]
+                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"],
+                "authors":["Gerbig, Y. B.", "Michaels, C. A."],
+                "vol":"15",
+                "volNumber":"20",
+                "pages":"12345",
+                "doi":"10.1016/j.jnoncrysol.2019.119828"
             },
             {
                 "refType":"IsCitedBy",
@@ -123,7 +128,12 @@ export const testdata: {} = {
                 "location":"https://doi.org/10.1063/1.4769995",
                 "@id":"#ref:10.1063/1.4769995",
                 "@type":["schema:Article"],
-                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"]
+                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"],
+                "authors":["Gerbig, Y. B.", "Michaels, C. A.", "Forster, A. M.", "J. W., Byrd, W. E.", "Morris, D. J.", "Cook, R. F."],
+                "vol":"53",
+                "volNumber":"12",
+                "pages":"125106",
+                "doi":"10.1063/1.4769995"
             }
         ],
         "accessLevel": "public",

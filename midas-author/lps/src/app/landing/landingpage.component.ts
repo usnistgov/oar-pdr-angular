@@ -29,6 +29,7 @@ import { MetricsData } from "oarlps";
 import { Themes, ThemesPrefs } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { LandingpageService } from 'oarlps';
+import questionhelp from '../../assets/site-constants/question-help.json';
 
 /**
  * A component providing the complete display of landing page content associated with 
@@ -141,6 +142,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     helpContent: any = {
         "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
     }
+    public helpContent2:{} = questionhelp;
 
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
@@ -186,6 +188,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.goToSection(currentSection);
         });
 
+        this.lpService.watchEditing((section) => {
+            console.log("section", section);
+            if(section == "") {
+                this.helpContent = this.helpContent2['general'];
+            }else{
+                this.helpContent = this.helpContent2[section];
+            }
+            console.log("this.helpContent", this.helpContent);
+        })
+
         if (this.editEnabled) {
             this.edstatsvc.watchEditMode((editMode) => {
                 this.editMode = editMode;
@@ -220,6 +232,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
+        console.log("helpContent2", this.helpContent2['references']);
+
         this.recordLevelMetrics = new RecordLevelMetrics();
         var showError: boolean = true;
         let metadataError = "";

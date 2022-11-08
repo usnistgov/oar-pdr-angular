@@ -1,4 +1,26 @@
 <div style="width: 100%; padding: 0px 20px 20px 20px;">
+    <!-- Controls -->
+    <!-- <div style="width: 100%;">
+        <button pButton type="submit" class="p-button-sm green-btn" id="btn-fm" label="Show all fields" icon="faa faa-eye faa-1x icon-white" iconPos="left" (click)="showAllField()" style="float: right;">
+        </button>
+    </div> -->
+
+    <div style="margin: 10px; border-bottom: 1px solid lightgray; align-content: center;">
+        <span style="margin-right: 1em;">How would you enter reference data?</span>
+        <span style="margin-right: 1em;">
+            <input type="radio" value="1" name="sortitem" id="inputMethod1" [ngModel]="inputMethod" (change)="setInputMethod($event)">
+            <label for="inputMethod1"> &nbsp;DOI&nbsp;&nbsp;&nbsp;</label>
+        </span>
+        <span style="margin-right: 1em;">
+            <input type="radio" value="2" name="sortitem" id="inputMethod2" [ngModel]="inputMethod" (change)="setInputMethod($event)">
+            <label for="inputMethod2"> &nbsp;Reference Data&nbsp;&nbsp;&nbsp;</label>
+        </span>
+        <span style="margin-right: 1em;">
+            <input type="radio" value="3" name="sortitem" id="inputMethod3" [ngModel]="inputMethod" (change)="setInputMethod($event)">
+            <label for="inputMethod3"> &nbsp;Citation Text&nbsp;&nbsp;&nbsp;</label>
+        </span>
+    </div>
+
     <table width="100%" align="center">
         <!-- doi -->
         <tr>
@@ -12,7 +34,7 @@
         </tr>
 
         <!-- Reference type -->
-        <tr>
+        <!-- <tr>
             <td align="right" width="20%">
                 <span style="margin-right: .5em;">Reference Type:</span>
             </td>
@@ -22,6 +44,97 @@
                     <option *ngFor="let ref of refTypes; let i = index" [value]="ref"> {{ ref }} </option>
                 </select>
             </td>
+        </tr> -->
+
+        <!-- Author list -->
+        <tr>
+            <td align="right" width="20%" style="vertical-align:top">
+                <span style="margin-right: .5em;">Author List:</span>
+            </td>
+            <td>
+                <div class="authorsbrief">
+                    <span *ngFor="let author of ref['authors']; let i = index">
+                        {{ author }}                 
+                        <i class="faa faa-remove" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
+                                data-toggle="tooltip" title="Remove author"></i> 
+                          
+                        <span *ngIf="i < ref['authors'].length-1 ">,</span>
+                    </span>
+                    <i style="margin-left: 1rem;" class="faa"
+                        [ngClass]="{'faa-plus-square-o': contentCollapsed, 'faa-minus-square-o': !contentCollapsed}"
+                        aria-hidden="true"
+                        (click)="expandClick();"></i>
+                </div>
+                <!-- Author editor -->
+                <div [@editExpand]="editBlockStatus" style="overflow: hidden;">
+                    <lib-ref-author [ref]="ref" (dataChanged)="onDataChange($event)"></lib-ref-author>
+                </div>
+            </td>
+        </tr>
+        <tr *ngIf="!contentCollapsed">
+            <td></td>
+            <td >
+                <div [collapse]="!isCollapsedContent" class="card card-block card-header customcard" style="width: 100%; padding:.5em;">
+
+                    <div>
+                        <lib-text-edit [textField]="newAuthor" [plusButton]="true" placeHolderText="Put author's name here" (command_out)="editAction($event)"></lib-text-edit>
+                        <!-- <input type="text" [(ngModel)]="newAuthor" style="height:2em;width: calc(100% - 50px) !important;margin-left: 10px;" placeholder="Put new author's name here"/>
+                        <button class="icon_button" type="button" style="margin-top: 5px;"
+                        (click)="addAuthor()" aria-label="Add button">
+                            <i class="faa faa-plus" 
+                                data-toggle="tooltip" title="Add this author"></i>
+                        </button>                        -->
+                    </div>
+
+                    <div #dropListContainer class="example-container" cdkDropListGroup>
+                        <div style="width: 100%;" 
+                        *ngFor="let author of ref['authors']; let i = index"
+                        cdkDropList
+                        [cdkDropListData]="i"
+                        >
+                            <div 
+                                cdkDrag
+                                [cdkDragData]="i"
+                                (cdkDragEntered)="dragEntered($event)"
+                                (cdkDragMoved)="dragMoved($event)"
+                                (cdkDragDropped)="dragDropped($event)"
+                                [cdkDragDisabled]="editingAuthorIndex != -1"
+                                class="ref-row"
+                            >
+                                <div style="width: 100%;">
+                                    <lib-text-edit [textField]="author" [dragDropIcon]="true" placeHolderText="Put author's name here" [disableControl]="(editingAuthorIndex!=-1) && (editingAuthorIndex!=i)" [forceReset]="forceReset" (command_out)="editAction($event, i)"></lib-text-edit>
+                                    <!-- <table WIDTH="100%">
+                                        <tr width="100%" style="width: 100% !important;">
+                                            <td width="5%" style="border-right: 1px solid var(--background-light-grey02);width: 5%;">
+                                                <img src="./assets/images/reorder.png" style="width: 20px; margin: 5px">
+                                            </td>
+
+                                            <td width="85%" style="text-align: left; width: 85% !important; margin-left: 10px;border-right: 1px solid var(--background-light-grey02);">
+                                                <input *ngIf="editingAuthorIndex==i" type="text" [(ngModel)]="currentEditingAuthor" style="height:2em;width: 100% !important;background-color: var(--nist-blue-lighter02);" placeholder="Put author's name here"/>
+                                                <span *ngIf="editingAuthorIndex!=i" style="margin-left: 10px !important;">
+                                                    {{ author }}
+                                                </span>
+                                            </td>
+                                            <td width="10%" style="width: 10% !important;">
+                                                <button class="icon_button" type="button" (click)="editAuthor(i)" aria-label="Edit button">
+                                                    <i [class]="getEditIconClass(i)"
+                                                        data-toggle="tooltip" [title]="getEditButtonTooltip(i)"></i>
+                                                </button>
+
+                                                <button class="icon_button" type="button" (click)="removeAuthor(i)" aria-label="Delete button">
+                                                    <i [class]="getDelIconClass(i)"
+                                                        data-toggle="tooltip" [title]="getDelButtonTooltip(i)"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </table> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+
         </tr>
 
         <!-- Title -->
@@ -30,10 +143,75 @@
                 <span style="margin-right: .5em;">Title:</span>
             </td>
             <td>
-                <input type="text" [(ngModel)]="ref.title" style="height:2em;"
-                    (input)="onChange()"/>
+                <span style="width: 100%">
+                    <span style="display:inline-block;width: calc(100% - 45px);
+                    ">
+                        <input type="text" [(ngModel)]="ref.title" style="height:2em;"
+                        (input)="onChange(true)"/>
+                    </span>
+                    <!-- <span style="display:inline-block;padding-left: 10px;">
+                        <i class="faa faa-eye-slash faa-1x" (click)="showTitle=false"
+                        style="cursor: pointer;" data-toggle="tooltip"
+                        title="Hide title"></i>
+                    </span> -->
+                </span>
             </td>
         </tr>
+
+        <!-- Journal(label) -->
+        <!-- <tr>
+            <td align="right">
+                <span style="margin-right: .5em;">Publish Year:</span>
+            </td>
+            <td>
+                <span style="width: 100%">
+                    <span style="display:inline-block;width: 100%;
+                    ">
+                        <input type="text" [(ngModel)]="ref.label" style="height:2em;"
+                        (input)="onChange(true)"/>
+                    </span>
+                </span>
+            </td>
+        </tr> -->
+
+        <!-- Publish Year -->
+        <!-- <tr>
+            <td align="right">
+                <span style="margin-right: .5em;">Publish Year:</span>
+            </td>
+            <td>
+                <span style="width: 100%">
+                    <span style="display:inline-block;width: calc(100% - 45px);
+                    ">
+                        <input type="text" [(ngModel)]="ref.issued" style="height:2em;"
+                        (input)="onChange(true)"/>
+                    </span>
+                </span>
+            </td>
+        </tr> -->
+
+        <!-- Vol/Number/Pages -->
+        <!-- <tr>
+            <td align="right">
+                <span style="margin-right: .5em;">Vol./Number/Pages:</span>
+            </td>
+            <td>
+                <span style="width: 100%">
+                    <span style="display:inline-block;width: 33%;">
+                        <input type="text" [(ngModel)]="ref.vol" style="height:2em;"
+                        (input)="onChange(true)"/>
+                    </span>
+                    <span style="display:inline-block;width: 33%;">
+                        <input type="text" [(ngModel)]="ref.volNumber" style="height:2em;"
+                        (input)="onChange(true)"/>
+                    </span>
+                    <span style="display:inline-block;width: 33%;">
+                        <input type="text" [(ngModel)]="ref.pages" style="height:2em;"
+                        (input)="onChange(true)"/>
+                    </span>
+                </span>
+            </td>
+        </tr> -->
 
         <!-- Citation
             -->
@@ -42,7 +220,7 @@
                 <span style="margin-right: .5em;">Citation:</span>
             </td>
             <td>
-                <textarea [(ngModel)]='ref.citation' rows="4" (input)="onChange()">                             
+                <textarea [(ngModel)]='ref.citation' rows="4" (input)="onChange(true)">                             
                 </textarea>
             </td>
         </tr>
@@ -54,10 +232,12 @@
                 <span style="margin-right: .5em;">Label:</span>
             </td>
             <td>
-                <!-- <input type="text" [(ngModel)]="ref.label" style="height:2em;"
-                    (input)="onChange()"/> -->
-                <textarea [(ngModel)]='ref.label' rows="1" (input)="onChange()">                             
-                </textarea>
+                <span style="width: 100%">
+                    <span style="display:inline-block;width: calc(100% - 40px);
+                    ">
+                        {{ref.label}}
+                    </span>
+                </span>
             </td>
         </tr>
 
@@ -68,8 +248,18 @@
                 <span style="margin-right: .5em;">Location:</span>
             </td>
             <td>
-                <input type="text" [(ngModel)]="ref.location" style="height:2em;"
-                    (input)="onChange()"/>
+                <span style="width: 100%">
+                    <span style="display:inline-block;width: calc(100% - 40px);
+                    ">
+                        <input type="text" [(ngModel)]="ref.location" style="height:2em;"
+                        (input)="onChange()"/>
+                    </span>
+                    <!-- <span style="display:inline-block;padding-left: 10px;">
+                        <i class="faa faa-eye-slash faa-1x" (click)="showLocation=false"
+                        style="cursor: pointer;" data-toggle="tooltip"
+                        title="Hide location"></i>
+                    </span> -->
+                </span>
             </td>
         </tr>
 

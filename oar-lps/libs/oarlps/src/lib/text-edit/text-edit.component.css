@@ -1,0 +1,34 @@
+.dragdrop {
+    border-right: 1px solid var(--background-light-grey02);
+    width: 32px !important;
+}
+
+.dragdropicon {
+    width: 20px; 
+    margin: auto;
+}
+
+.text-field-wrapper {
+    text-align: left;  
+    margin-left: 10px;
+}
+
+.editable-text-field {
+    height:2em;
+    margin: 5px;
+    width: calc(100% - 10px) !important;
+    background-color: var(--nist-blue-lighter02);
+}
+
+.display-text-field {
+    margin-left: 10px !important;
+}
+
+.icon_button {
+    border: 1px solid var(--background-light-grey02);
+    width: 27px;
+}
+
+.control-wrapper {
+    text-align: right;
+}

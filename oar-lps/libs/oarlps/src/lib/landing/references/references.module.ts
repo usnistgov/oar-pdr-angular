@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReferencesComponent } from './references.component';
-import { ReferencesPopupComponent } from './references-popup/references-popup.component';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastrModule } from 'ngx-toastr';
 import { ButtonModule } from 'primeng/button';
@@ -12,9 +11,12 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DragdropComponent } from './dragdrop/dragdrop.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { LandingpageService } from '../landingpage.service';
+import { CollapseModule } from '../collapseDirective/collapse.module';
+import { TextEditModule } from '../../text-edit/text-edit.module';
+import { RefAuthorComponent } from './ref-author/ref-author.component';
 
 @NgModule({
-  declarations: [ReferencesComponent, ReferencesPopupComponent, SingleRefComponent, DragdropComponent],
+  declarations: [ReferencesComponent, SingleRefComponent, DragdropComponent, RefAuthorComponent],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -23,15 +25,17 @@ import { LandingpageService } from '../landingpage.service';
     FormsModule,
     BrowserModule,
     DragDropModule,
-    DropdownModule
+    DropdownModule,
+    CollapseModule,
+    TextEditModule
   ],
   providers: [
     LandingpageService
   ],
-  exports: [ReferencesComponent, ReferencesPopupComponent]
+  exports: [ReferencesComponent, RefAuthorComponent]
 })
 export class ReferencesModule { }
 
 export {
-    ReferencesComponent, ReferencesPopupComponent
+    ReferencesComponent, RefAuthorComponent
 }

@@ -16,7 +16,7 @@ min-width: 571px !important;
 width: 95% !important;
 }
 
-
+/* Drag and drop */
 .example-list {
     list-style-type: none;
     padding: 0;
@@ -97,9 +97,8 @@ button {
 }
   
 .edit-block {
-    background-color: rgb(228, 251, 251);
+    background-color: var(--background-light-grey);
     overflow: hidden;
-    max-height: 400px;
 }
 
 .reference-box {

@@ -111,3 +111,6 @@ export * from './environments/environment-impl';
 export * from './lib/shared/common-function/common-function.service';
 export * from './lib/landing/editcontrol/metadataupdate.service';
 export * from './lib/landing/landingpage.service';
+
+export * from './lib/text-edit/text-edit.module';
+export * from './lib/text-edit/text-edit.component';

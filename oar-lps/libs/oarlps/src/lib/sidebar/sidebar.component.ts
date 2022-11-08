@@ -15,7 +15,7 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
         })),
         state('sbhidden', style({
             position: 'absolute',
-            right: '-140%',
+            right: '-150%',
             top: "20%",
             bottom: "100%"
         })),
@@ -33,7 +33,7 @@ export class SidebarComponent implements OnInit {
     //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
     // }
 
-    @Input() helpContent: any = {};
+    @Input() helpContent: string = "";
     @Output() sbarvisible_out = new EventEmitter<boolean>();
 
     constructor(private chref: ChangeDetectorRef) { }

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReferencesPopupComponent } from './references-popup.component';
+import { TextEditComponent } from './text-edit.component';
 
-describe('ReferencesPopupComponent', () => {
-  let component: ReferencesPopupComponent;
-  let fixture: ComponentFixture<ReferencesPopupComponent>;
+describe('TextEditComponent', () => {
+  let component: TextEditComponent;
+  let fixture: ComponentFixture<TextEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReferencesPopupComponent ]
+      declarations: [ TextEditComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReferencesPopupComponent);
+    fixture = TestBed.createComponent(TextEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

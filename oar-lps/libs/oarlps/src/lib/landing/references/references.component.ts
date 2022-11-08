@@ -4,7 +4,6 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { ReferencesPopupComponent } from './references-popup/references-popup.component';
 import { LandingpageService } from '../landingpage.service';
 import {
     CdkDragDrop,
@@ -34,6 +33,9 @@ export class ReferencesComponent implements OnInit {
     currentRefIndex: number = 0;
     isEditing: boolean = false;
     dataChanged: boolean = false;
+    orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
+    disableEditing: boolean = false;
+    forceSave: boolean = false;
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
@@ -51,24 +53,47 @@ export class ReferencesComponent implements OnInit {
         private ngbModal: NgbModal,                
         private notificationService: NotificationService,
         public lpService: LandingpageService) { 
+
+            this.lpService.watchEditing((section) => {
+                if(section != "" && section != this.fieldName) {
+                    this.onSave();
+                }
+            })
     }
 
     ngOnInit(): void {
         if(this.record && this.record['references'].length > 0) {
             this.currentRef = this.record['references'][0];
+
+            //Keep a copy of the record for undo purpose
+            this.orig_record = JSON.parse(JSON.stringify(this.record));
         }
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get nonEditing() { return !this.isEditing || this.disableEditing }
 
     startEditing() {
         // If is editing, save data to the draft server
         if(this.isEditing){
             this.onSave();
-            this.isEditing = false;
+            this.setStatus(false);
         }else{ // If not editing, enter edit mode
-            this.isEditing = true;
+            this.setStatus(true);
             this.openEditBlock(); 
+        }
+    }
+
+    setStatus(isEditing: boolean) {
+        this.isEditing = isEditing;
+        if(isEditing){
+            this.openEditBlock();
+            //Tell the system who is editing
+            this.lpService.setEditing(this.fieldName);
+        }else{
+            this.editBlockStatus = 'collapsed'
+            //Tell the system nobody is editing so system can display general help text
+            this.lpService.setEditing("");
         }
     }
 
@@ -80,13 +105,12 @@ export class ReferencesComponent implements OnInit {
     onSave() {
         this.editBlockStatus = 'collapsed';
         this.updateMatadata();
-        this.isEditing = false;
+        this.setStatus(false);
     }
 
     onCancel() {
         this.editBlockStatus = 'collapsed';
         this.undoEditing();
-        this.isEditing = false;
     }
 
     getEditIconClass() {
@@ -98,33 +122,43 @@ export class ReferencesComponent implements OnInit {
     }
 
     updateMatadata() {
-        let updmd = {};
-        updmd[this.fieldName] = this.record[this.fieldName];
-        this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
-            // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-            if (updateSuccess)
-                this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
-            else
-                console.error("acknowledge references update failure");
-        });
+        if(this.dataChanged){
+            let updmd = {};
+            updmd[this.fieldName] = this.record[this.fieldName];
+            this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+                if (updateSuccess){
+                    this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                }else
+                    console.error("acknowledge references update failure");
+            });
+        }
     }
 
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoEditing() {
-        this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
-                this.record.references.forEach((ref) => {
-                    ref.dataChanged = false;
-                });
-                this.record.references.dataChanged = false;
-                this.currentRefIndex = 0;
-                this.currentRef = this.record.references[this.currentRefIndex];
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            }else
-                console.error("Failed to undo keywords metadata")
-        });
+        if(this.updated){
+            this.mdupdsvc.undo(this.fieldName).then((success) => {
+                if (success){
+                    this.record.references.forEach((ref) => {
+                        ref.dataChanged = false;
+                    });
+
+                }else
+                    console.error("Failed to undo " + this.fieldName + " metadata");
+                    return;
+            });
+        }else{
+            this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
+        }
+
+        this.dataChanged = false;
+        this.currentRefIndex = 0;
+        this.currentRef = this.record.references[this.currentRefIndex];
+        this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+        this.setStatus(false);
     }
 
     /**
@@ -199,10 +233,10 @@ export class ReferencesComponent implements OnInit {
         if (!this.dropListReceiverElement) {
           return;
         }
-        console.log('event', event);
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
-        this.record.references.dataChanged = true;
+        this.dataChanged = true;
+        this.setStatus(true);
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;
@@ -211,21 +245,28 @@ export class ReferencesComponent implements OnInit {
 
     removeRef(index: number) {
         this.record.references.splice(index,1);
+        this.dataChanged = true;
         this.updateMatadata();
+        this.setStatus(true);
     }
 
     onAdd() {
         this.record.references.unshift({} as Reference);
         this.currentRefIndex = 0;
         this.currentRef = this.record["references"][0];
-        this.isEditing = true;
+        this.setStatus(true);
         this.openEditBlock();
+        this.dataChanged = true;
     }
 
     selectRef(index: number) {
         if(this.record["references"] && this.record["references"].length > 0){
+            if(this.currentRefIndex != -1)
+                this.forceSave = true;
+
             this.currentRefIndex = index;
-            this.currentRef = this.record["references"][index];
+            this.currentRef = {...this.record["references"][index]};
+            this.forceSave = false;
         }
     }
 
@@ -246,10 +287,25 @@ export class ReferencesComponent implements OnInit {
     }
 
     getRecordBackgroundColor() {
-        if(this.record['references'].dataChanged){
+        if(this.dataChanged){
             return '#FCF9CD';
         }else{
             return 'white';
+        }
+    }
+
+    /**
+     * When reference data changed, set the flag so 
+     */
+    onDataChange(dataChanged: boolean) {
+        this.dataChanged = dataChanged;
+    }
+
+    undoIconClass() {
+        if(this.nonEditing){
+            return "faa faa-undo icon_disabled";
+        }else{
+            return "faa faa-undo icon_enabled";
         }
     }
 }

@@ -1,0 +1,37 @@
+<!-- Drag drop icon -->
+<table WIDTH="100%">
+    <tr style="width: 100% !important;">
+        <td *ngIf="dragDropIcon" class="dragdrop">
+            <img src="./assets/images/reorder.png" class="dragdropicon">
+        </td>
+
+        <!-- Text field -->
+        <td class="text-field-wrapper" [style.width]="editboxWidth + ' !important'">
+            <input class="editable-text-field" *ngIf="editing" type="text" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
+            <span *ngIf="!editing" class="display-text-field">
+                {{ currentVal }}
+            </span>
+        </td>
+
+        <!-- Controls -->
+        <td [style.width]="controlBoxWidth" class="control-wrapper">
+            <!-- Edit/Save button-->
+            <button *ngIf="!plusButton" class="icon_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button">
+                <i [class]="getEditIconClass()"
+                    data-toggle="tooltip" [title]="getTooltip('edit')"></i>
+            </button>
+
+            <!-- Delete/Undo button-->
+            <button *ngIf="!plusButton" class="icon_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button">
+                <i [class]="getDelIconClass()"
+                    data-toggle="tooltip" [title]="getTooltip('delete')"></i>
+            </button>
+
+            <!-- Plus button-->
+            <button *ngIf="plusButton" class="icon_button" type="button" (click)="add()" [disabled]="disableControl" aria-label="Add button">
+                <i class="faa faa-plus"
+                    data-toggle="tooltip" [title]="Add"></i>
+            </button>
+        </td>
+    </tr>
+</table>

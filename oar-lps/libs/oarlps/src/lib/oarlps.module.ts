@@ -10,6 +10,7 @@ import { ErrorsModule } from './errors/errors.module';
 import { SectionsModule } from './landing/sections/sections.module';
 import { DoneModule } from './landing/done/done.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { TextEditModule } from './text-edit/text-edit.module';
 
 @NgModule({
     declarations: [],
@@ -23,7 +24,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         ErrorsModule,
         SectionsModule,
         DoneModule,
-        DragDropModule
+        DragDropModule,
+        TextEditModule
     ],
     providers: [
         GoogleAnalyticsService
