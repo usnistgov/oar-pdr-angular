@@ -108,6 +108,7 @@ export const testdata: {} = {
                 "refType":"IsDocumentedBy",
                 "title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses",
                 "issued":"2020-02",
+                "publishYear":"2002",
                 "citation":"Gerbig, Y. B., & Michaels, C. A. (2020). In-situ Raman spectroscopic measurements of the deformation region in indented glasses. Journal of Non-Crystalline Solids, 530, 119828. doi:10.1016/j.jnoncrysol.2019.119828\n",
                 "label":"Journal of Non-Crystalline Solids: In-situ Raman spectroscopic measurements of the deformation region in indented glasses",
                 "location":"https://doi.org/10.1016/j.jnoncrysol.2019.119828",
@@ -118,12 +119,14 @@ export const testdata: {} = {
                 "vol":"15",
                 "volNumber":"20",
                 "pages":"12345",
-                "doi":"10.1016/j.jnoncrysol.2019.119828"
+                "doi":"10.1016/j.jnoncrysol.2019.119828",
+                "inPreparation":"yes"
             },
             {
                 "refType":"IsCitedBy",
                 "title":"Indentation device forin situRaman spectroscopic and optical studies",
                 "issued":"2012-12",
+                "publishYear":"2012",
                 "citation":"Gerbig, Y. B., Michaels, C. A., Forster, A. M., Hettenhouser, J. W., Byrd, W. E., Morris, D. J., & Cook, R. F. (2012). Indentation device forin situRaman spectroscopic and optical studies. Review of Scientific Instruments, 83(12), 125106. doi:10.1063/1.4769995\n",
                 "location":"https://doi.org/10.1063/1.4769995",
                 "@id":"#ref:10.1063/1.4769995",
@@ -133,7 +136,8 @@ export const testdata: {} = {
                 "vol":"53",
                 "volNumber":"12",
                 "pages":"125106",
-                "doi":"10.1063/1.4769995"
+                "doi":"10.1063/1.4769995",
+                "inPreparation":"no"
             }
         ],
         "accessLevel": "public",
@@ -150,7 +154,7 @@ export const testdata: {} = {
                 "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
                 "filepath": "NIST_SD32_MEDS-I_face.zip",
                 "@type": [
-                    "nrdp:Hidden",
+                    "nrdp:Hidde",
                     "nrdp:AccessPage",
                     "dcat:Distribution"
                 ],

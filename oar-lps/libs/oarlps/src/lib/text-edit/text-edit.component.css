@@ -10,14 +10,14 @@
 
 .text-field-wrapper {
     text-align: left;  
-    margin-left: 10px;
+    margin-left: 10px !important;
 }
 
 .editable-text-field {
     height:2em;
-    margin: 5px;
+    padding-left: 5px;
     width: calc(100% - 10px) !important;
-    background-color: var(--nist-blue-lighter02);
+    background-color: #e6f2ff;
 }
 
 .display-text-field {
@@ -30,5 +30,6 @@
 }
 
 .control-wrapper {
-    text-align: right;
+    width: fit-content;
+    text-align: center;
 }

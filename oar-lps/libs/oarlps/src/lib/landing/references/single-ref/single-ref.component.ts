@@ -11,7 +11,7 @@ import {
 @Component({
     selector: 'lib-single-ref',
     templateUrl: './single-ref.component.html',
-    styleUrls: ['./single-ref.component.css'],
+    styleUrls: ['../../landing.component.css', './single-ref.component.css'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -21,48 +21,65 @@ import {
     ]
 })
 export class SingleRefComponent implements OnInit {
+    originalRef: Reference = {} as Reference;
     defaultText: string = "Enter citation here";
     refTypes: string[] = ["IsDocumentedBy","IsCitedBy"];
     
     // Input method. 1 = DOI, 2=Ref data, 3=Citation text
-    inputMethod: number = 1; 
+    inputMethod: string = "1"; 
 
-    contentCollapsed: boolean = true;
+    // contentCollapsed: boolean = true;
     citationLocked: boolean = false;
     editBlockStatus: string = 'collapsed';
 
-    // to be deleted
-    newAuthor: string = "";
-    forceReset: boolean = false;
-    originalRef: Reference = {} as Reference;
-    editingAuthorIndex: number = -1; // Indicating which author is being edited
-
-    //Drag and drop
-    @ViewChild('dropListContainer') dropListContainer?: ElementRef;
-
-    dropListReceiverElement?: HTMLElement;
-    dragDropInfo?: {
-        dragIndex: number;
-        dropIndex: number;
-    };
-
-    currentAuthorIndex: number = 0;
-    currentAuthor: string; // for drag drop
-    currentEditingAuthor: string // for editing
-
-// end to be deleted
-
-
+    showRefData: boolean = false;
+    showCitationData: boolean = false;
+    showAllFields: boolean = false;
 
     @Input() ref: Reference = {} as Reference;
-    @Output() dataChanged: EventEmitter<boolean> = new EventEmitter();
+    @Input() editMode: string = "edit";
+    @Input() forceReset: boolean = false;
+    @Output() dataChanged: EventEmitter<any> = new EventEmitter();
 
     constructor() { }
 
     ngOnInit(): void {
-        if(this.ref) {
-            this.originalRef = JSON.parse(JSON.stringify(this.ref));
+        if(this.isEditing) this.showAllFields = true;
+        if(this.ref) this.originalRef = JSON.parse(JSON.stringify(this.ref));
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+        //Add '${implements OnChanges}' to the class.
+        console.log('changes', changes);
+
+        if(changes.editMode && changes.editMode.currentValue == "normal") {
+            console.log("reseting... ");
+            this.reset();
         }
+
+        if(changes.ref) {
+            this.originalRef = JSON.parse(JSON.stringify(this.ref));
+            console.log("this.originalRef", this.originalRef);
+        }
+    }
+
+    get isEditing() { return this.editMode=="edit" };
+    get isAdding() { return this.editMode=="add" };
+    get useDOI() { return this.inputMethod == "1" };
+    get useRefData() { return this.inputMethod == "2" };
+    get useCitationData() { return this.inputMethod == "3" };
+
+    reset() {
+        this.inputMethod = "1"; 
+
+        this.citationLocked = false;
+        this.editBlockStatus = 'collapsed';
+    
+        this.showRefData = false;
+        this.showCitationData = false;
+        this.showAllFields = false; // Show all fields but doi
+     
     }
 
     onChange(updateCitation:boolean = false) {
@@ -70,16 +87,57 @@ export class SingleRefComponent implements OnInit {
 
         if(updateCitation) this.updateCitation();
 
-        this.dataChanged.emit(true);
+        this.dataChanged.emit({"ref": this.ref, "datachanged": true});
     }
 
-    // to be deleted
-    ngOnChanges(changes: SimpleChanges): void {
-        console.log("changes - singal ref", changes);
-        this.forceReset = true;
-        this.editingAuthorIndex = -1;
+    /**
+     * On DOI field changed, fetch ref data from backend then populate ref data.
+     * Set this.refDataPopulated to true.
+     */
+    onDoiChange(event) {
+        this.ref.doi = event.value;
+        // Get ref data from backend...
+        // ...
+        this.showAllFields = true;
     }
-    
+
+    onCitationChange() {
+
+    }
+
+    /**
+     * Reset citation value to original.
+     */
+    resetCitation() {
+        this.ref.citation = this.originalRef.citation;
+    }
+
+    removeAuthor(index: number) {
+        this.ref.authors.splice(index, 1);
+        this.onChange(true);
+    }
+
+    setInputMethod(event) {
+        var target = event.target;
+        this.inputMethod = event.target.value;
+        if(this.useCitationData) {
+            this.citationLocked = true;
+            this.showAllFields = false;
+        }
+        if(this.useRefData || this.useDOI) {
+            this.citationLocked = false;
+            this.showAllFields = true;
+        }
+    }
+
+    citationLockClass() {
+        if(this.citationLocked) {
+            return "faa faa-unlock";
+        }else{
+            return "faa faa-lock";
+        }
+    }
+
     /**
      * When reference data changed, set the flag so 
      */
@@ -92,233 +150,75 @@ export class SingleRefComponent implements OnInit {
      * If it's locked, citation text will be entered by user manually.
      */
     updateCitation() {
-        // this.ref.citation = "";
-        // if(!this.citationLocked) {
-        //     // Add authors
-        //     if(this.ref.authors && this.ref.authors.length > 0){
-        //         for(let i = 0; i <= this.ref.authors.length-1; i++) {
-        //             this.ref.citation += this.ref.authors[i];
-        //             if(i < this.ref.authors.length-2) this.ref.citation += ", ";
-        //             if(i == this.ref.authors.length-2) this.ref.citation += ", & ";
-        //             if(i == this.ref.authors.length-1) this.ref.citation += " ";
-        //         }
-        //     }
+        if(this.citationLocked) return;
 
-        //     // Add publish year
-        //     if(this.ref.issued)
-        //         this.ref.citation += "(" + this.ref.issued.substring(0, 4) + "). ";
 
-        //     // Add title
-        //     if(this.ref.title)
-        //         this.ref.citation += this.ref.title + ". ";
+        this.ref.citation = "";
+        // Add authors
+        if(this.ref.authors && this.ref.authors.length > 0){
+            for(let i = 0; i <= this.ref.authors.length-1; i++) {
+                this.ref.citation += this.ref.authors[i];
+                if(i < this.ref.authors.length-2) this.ref.citation += ", ";
+                if(i == this.ref.authors.length-2) this.ref.citation += ", & ";
+                if(i == this.ref.authors.length-1) this.ref.citation += " ";
+            }
+        }
 
-        //     // Add Journal
-        //     if(this.ref.label)
-        //         this.ref.citation += this.ref.label + ". ";
+        // Add publish year
+        if(this.ref.publishYear)
+            this.ref.citation += "(" + this.ref.publishYear + "). ";
 
-        //     let addPeriod: boolean = false;
-        //     // Add Vol
-        //     if(this.ref.vol){
-        //         this.ref.citation += this.ref.vol;  
-        //         addPeriod = true;
-        //     }
-                
-        //     // Add Vol number
-        //     if(this.ref.volNumber){
-        //         this.ref.citation += "(" + this.ref.volNumber + ")";  
-        //         addPeriod = true;
-        //     }
+        // Add title
+        if(this.ref.title)
+            this.ref.citation += this.ref.title + ". ";
 
-        //     // Add pages
-        //     if(this.ref.pages){
-        //         this.ref.citation += " " + this.ref.pages;  
-        //         addPeriod = true;
-        //     }
+        // Add Journal
+        if(this.ref.label)
+            this.ref.citation += this.ref.label + ". ";
 
-        //     if(addPeriod) this.ref.citation += ". "; 
+        let addPeriod: boolean = false;
+        // Add Vol
+        if(this.ref.vol){
+            this.ref.citation += this.ref.vol;  
+            addPeriod = true;
+        }
+            
+        // Add Vol number
+        if(this.ref.volNumber){
+            this.ref.citation += "(" + this.ref.volNumber + ")";  
+            addPeriod = true;
+        }
 
-        //     if(this.ref.doi) {
-        //         this.ref.citation += "doi: " + this.ref.doi;
-        //     }
+        // Add pages
+        if(this.ref.pages){
+            this.ref.citation += " " + this.ref.pages;  
+            addPeriod = true;
+        }
+
+        if(addPeriod) this.ref.citation += ". "; 
+
+        // Add URL
+        if(this.ref.doi) {
+            this.ref.citation += "doi: " + this.ref.doi;
+        }else if(this.ref.location) {
+            this.ref.citation += "doi: " + this.ref.location;
+        }
+
+        // In preparation
+        if(this.ref.inPreparation == "yes") {
+            this.ref.citation += ". In preparation."
+        }
+    }
+
+    authorExpandClick() {
+        // this.contentCollapsed = !this.contentCollapsed;
+        this.editBlockStatus = this.editBlockStatus=="collapsed"? "expanded" : "collapsed";
+        // if(this.contentCollapsed) {
+        //     this.editBlockStatus = "collapsed";
+        // }else{
+        //     this.editBlockStatus = "expanded";
         // }
     }
 
-    setInputMethod(method:number) {
-        // console.log("Method", method);
-    }
 
-    // to be deleted
-    editAction(action: any, index: number) {
-        switch ( action.command ) {
-            case "Delete":
-                this.removeAuthor(index);
-                break;
-            case "Add":
-                this.newAuthor = action.value;
-                this.addAuthor()
-                break;
-            case "Save":
-                this.ref["authors"][index] = action.value;
-                this.onChange(true);
-                if(this.editingAuthorIndex == index)
-                    this.editingAuthorIndex = -1;
-                break;
-            case "Edit":
-                this.editingAuthorIndex = index;
-                break;
-            case "Undo":
-                this.editingAuthorIndex = -1;
-                break;                  
-            default: 
-                // 
-                break;
-        }
-
-        this.forceReset = false;
-    }
-
-    // to be deleted
-    removeAuthor(index: number) {
-        if(this.editingAuthorIndex == index){ // Cancel editing
-            this.ref["authors"][index] = this.originalRef["authors"][index];
-        }else{ // Delete author
-            this.ref.authors.splice(index, 1);
-        }
-
-        this.editingAuthorIndex = -1;
-        this.onChange(true);
-    }
-
-    // to be deleted
-    addAuthor() {
-        if(this.ref["authors"]){
-            this.ref.authors.push(this.newAuthor);
-        }else{
-            this.ref["authors"] = [this.newAuthor];
-        }
-
-        this.newAuthor = "";
-        this.editingAuthorIndex = -1;
-        this.onChange(true);
-    }
-
-    // to be deleted
-    editAuthor(index: number) {
-        if(this.editingAuthorIndex == index){ // Save author
-            this.ref["authors"][index] = this.currentEditingAuthor;
-            this.editingAuthorIndex = -1;
-            this.onChange(true);
-        }else{ // start editing
-            this.currentEditingAuthor = this.ref["authors"][index];
-            this.editingAuthorIndex = index;
-        }
-    }
-
-    // to be deleted
-    getEditIconClass(index: number) {
-        if(this.editingAuthorIndex == index){
-            return "faa faa-check";
-        }else{
-            return "faa faa-pencil";
-        }
-    }
-
-    // to be deleted
-    getDelIconClass(index: number) {
-        if(this.editingAuthorIndex == index){
-            return "faa faa-remove";
-        }else{
-            return "faa faa-trash";
-        }
-    }
-
-    // to be deleted
-    getDelButtonTooltip(index: number) {
-        if(this.editingAuthorIndex == index){
-            return "Cancel changes";
-        }else{
-            return "Remove this author";
-        }
-    }
-
-    // to be deleted
-    getEditButtonTooltip(index: number) {
-        if(this.editingAuthorIndex == index){
-            return "Save changes";
-        }else{
-            return "Edit this author";
-        }
-    }
-
-    expandClick() {
-        this.contentCollapsed = !this.contentCollapsed;
-
-        if(this.contentCollapsed) {
-            this.editBlockStatus = "collapsed";
-        }else{
-            this.editBlockStatus = "expanded";
-        }
-    }
-
-    // Drag and drop
-    dragEntered(event: CdkDragEnter<number>) {
-        const drag = event.item;
-        const dropList = event.container;
-        const dragIndex = drag.data;
-        const dropIndex = dropList.data;
-    
-        this.dragDropInfo = { dragIndex, dropIndex };
-    
-        const phContainer = dropList.element.nativeElement;
-        const phElement = phContainer.querySelector('.cdk-drag-placeholder');
-    
-        if (phElement) {
-          phContainer.removeChild(phElement);
-          phContainer.parentElement?.insertBefore(phElement, phContainer);
-    
-          moveItemInArray(this.ref['authors'], dragIndex, dropIndex);
-        }
-    }
-    
-    dragMoved(event: CdkDragMove<number>) {
-        if (!this.dropListContainer || !this.dragDropInfo) return;
-    
-        const placeholderElement =
-          this.dropListContainer.nativeElement.querySelector(
-            '.cdk-drag-placeholder'
-          );
-    
-        const receiverElement =
-          this.dragDropInfo.dragIndex > this.dragDropInfo.dropIndex
-            ? placeholderElement?.nextElementSibling
-            : placeholderElement?.previousElementSibling;
-    
-        if (!receiverElement) {
-          return;
-        }
-    
-        receiverElement.style.display = 'none';
-        this.dropListReceiverElement = receiverElement;
-    }
-    
-    dragDropped(event: CdkDragDrop<number>) {
-        if (!this.dropListReceiverElement) {
-          return;
-        }
-
-        if(this.editingAuthorIndex != -1){
-            this.ref["authors"][this.editingAuthorIndex] = this.currentEditingAuthor;
-            this.editingAuthorIndex = -1;
-        }
-
-        this.onChange(true);
-
-        this.currentAuthorIndex = event.item.data;
-        this.currentAuthor = this.ref.authors[this.currentAuthorIndex];
-        this.dataChanged.emit(true);
-
-        this.dropListReceiverElement.style.removeProperty('display');
-        this.dropListReceiverElement = undefined;
-        this.dragDropInfo = undefined;
-    }
 }

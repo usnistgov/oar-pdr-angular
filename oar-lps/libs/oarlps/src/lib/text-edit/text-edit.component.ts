@@ -8,16 +8,20 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@
 export class TextEditComponent implements OnInit {
     prevVal: string = "";
     currentVal: string = "";
-    editboxWidth: string = "calc(100% - 60px)"; // Default only text box and two icon buttons
+    // editboxWidth: string = "calc(100% - 60px)"; // Default only text box and two icon buttons
     controlBoxWidth: string = "60px !important"
     editing: boolean = false;
 
     @Input() textField: string = "";
     @Input() dragDropIcon: boolean = false;
+    @Input() editButton: boolean = true; // Default button
+    @Input() deleteButton: boolean = true; // Default button
     @Input() plusButton: boolean = false; // If this is true, no edit/remove/undo button
     @Input() trashButton: boolean = false;
+    @Input() submitButton: boolean = false;
     @Input() placeHolderText: string = "Input text here";
     @Input() disableControl: boolean = false;
+    @Input() showBorder: boolean = true; // display the border between textbox and control
     @Input() forceReset: boolean = false;
 
     //Output actions: "Delete", "Cancel", "Save", etc.
@@ -28,15 +32,34 @@ export class TextEditComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log("dragDropIcon", this.dragDropIcon);
         if(this.plusButton){
             this.editing = true;
+            this.editButton = false;
+            this.deleteButton = false;
             this.dragDropIcon = false;
             this.trashButton = false;
+            this.submitButton = false;
             this.controlBoxWidth = "27px !important";
-            this.editboxWidth = "calc(100% - 30px)";
-        } 
-        if(this.dragDropIcon) this.editboxWidth = "calc(100% - 90px)"; //Reserve space for dragdrop icon button
+        } else if(this.submitButton) {
+            this.editing = true;
+            this.editButton = false;
+            this.deleteButton = false;
+            this.dragDropIcon = false;
+            this.trashButton = false;
+            this.plusButton = false;
+            this.controlBoxWidth = "27px !important";
+        }
+
+        let buttonCount = 0;
+        if(this.plusButton) buttonCount += 1;
+        if(this.submitButton) buttonCount += 1;
+        if(this.editButton) buttonCount += 1;
+        if(this.deleteButton) buttonCount += 1;
+        if(this.trashButton) buttonCount += 1;
+
+        this.controlBoxWidth = buttonCount * 29 + "px !important";
+        if(this.dragDropIcon) buttonCount += 1;
+        // this.editboxWidth = "calc(100% - " + buttonCount*30 + "px)"; //Reserve space for icon buttons
 
         this.prevVal = this.textField;
         this.currentVal = this.textField;
@@ -46,6 +69,11 @@ export class TextEditComponent implements OnInit {
         console.log('changes-text edit', changes);
         if(changes.forceReset && changes.forceReset.currentValue && this.editing){
             this.reset();
+        }
+
+        if(changes.textField) {
+            this.prevVal = this.textField;
+            this.currentVal = this.textField;
         }
     }
 
@@ -72,6 +100,14 @@ export class TextEditComponent implements OnInit {
         this.command_out.next({"value":this.currentVal, "command":"Update"});
     }
 
+    controlBorderStyle() {
+        if(this.showBorder){
+            return "1px solid var(--background-light-grey02)";
+        }else{
+            return "0px solid var(--background-light-grey02)"
+        }
+    }
+
     /**
      * Remove/Undo based on current edit status
      */
@@ -96,6 +132,13 @@ export class TextEditComponent implements OnInit {
         this.currentVal = "";
     }
 
+    /**
+     * Submit this item
+     */
+    submit() {
+        this.command_out.next({"value":this.currentVal, "command":"submit"});
+    }
+
     resetValue() {
         this.prevVal = this.textField;
         this.currentVal = this.textField;
@@ -116,6 +159,18 @@ export class TextEditComponent implements OnInit {
         }else{
             return "faa faa-pencil";
         }
+    }
+
+    /**
+     * Return the opacity of dragdrop icon to indicate enable/disable status
+     * @returns opacity
+     */
+    ddIconOpacity() {
+        if(this.editing || this.disableControl){
+            return 0.3;
+        }else{
+            return 1;
+        } 
     }
 
     /**

@@ -4,10 +4,12 @@ export interface Reference {
     authors: string[],
     title: string,
     issued: string,
+    publishYear: string,
     label: string,  // Journal
     vol: string,
     volNumber: string,
     pages: number,
+    inPreparation: string,
     location: string,
     citation: string,
     id: string,

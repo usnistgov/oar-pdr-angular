@@ -1,9 +1,11 @@
 <div class="card card-block card-header customcard" style="width: 100%; padding:.5em;">
 
-    <div>
-        <lib-text-edit [textField]="newAuthor" [plusButton]="true" placeHolderText="Put author's name here" (command_out)="editAction($event)"></lib-text-edit>
+    <!-- Add new author -->
+    <div style="margin: 0px 10px;">
+        <lib-text-edit [textField]="newAuthor" [plusButton]="true" [showBorder]="false" placeHolderText="Put author's name here" (command_out)="editAction($event)"></lib-text-edit>
     </div>
 
+    <!-- Existing authors -->
     <div #dropListContainer class="example-container" cdkDropListGroup>
         <div style="width: 100%;" 
         *ngFor="let author of ref['authors']; let i = index"
@@ -20,7 +22,7 @@
                 class="ref-row"
             >
                 <div style="width: 100%;">
-                    <lib-text-edit [textField]="author" [dragDropIcon]="true" placeHolderText="Put author's name here" [disableControl]="(editingAuthorIndex!=-1) && (editingAuthorIndex!=i)" [forceReset]="forceReset" (command_out)="editAction($event, i)"></lib-text-edit>
+                    <lib-text-edit [textField]="author" [dragDropIcon]="true" [showBorder]="false" placeHolderText="Put author's name here" [disableControl]="(editingAuthorIndex!=-1) && (editingAuthorIndex!=i)" [forceReset]="forceReset" (command_out)="editAction($event, i)"></lib-text-edit>
                     <!-- <table WIDTH="100%">
                         <tr width="100%" style="width: 100% !important;">
                             <td width="5%" style="border-right: 1px solid var(--background-light-grey02);width: 5%;">

@@ -1,12 +1,12 @@
-<!-- Drag drop icon -->
-<table WIDTH="100%">
+<table width="100%">
     <tr style="width: 100% !important;">
+        <!-- Drag drop icon -->
         <td *ngIf="dragDropIcon" class="dragdrop">
-            <img src="./assets/images/reorder.png" class="dragdropicon">
+            <img src="./assets/images/reorder.png" class="dragdropicon" [style.opacity]="ddIconOpacity()">
         </td>
 
         <!-- Text field -->
-        <td class="text-field-wrapper" [style.width]="editboxWidth + ' !important'">
+        <td class="text-field-wrapper">
             <input class="editable-text-field" *ngIf="editing" type="text" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
             <span *ngIf="!editing" class="display-text-field">
                 {{ currentVal }}
@@ -14,15 +14,15 @@
         </td>
 
         <!-- Controls -->
-        <td [style.width]="controlBoxWidth" class="control-wrapper">
+        <td class="control-wrapper" [style.width]="controlBoxWidth" [style.border-left]="controlBorderStyle()">
             <!-- Edit/Save button-->
-            <button *ngIf="!plusButton" class="icon_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button">
+            <button *ngIf="editButton" class="icon_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button">
                 <i [class]="getEditIconClass()"
                     data-toggle="tooltip" [title]="getTooltip('edit')"></i>
             </button>
 
             <!-- Delete/Undo button-->
-            <button *ngIf="!plusButton" class="icon_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button">
+            <button *ngIf="deleteButton" class="icon_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button">
                 <i [class]="getDelIconClass()"
                     data-toggle="tooltip" [title]="getTooltip('delete')"></i>
             </button>
@@ -31,6 +31,12 @@
             <button *ngIf="plusButton" class="icon_button" type="button" (click)="add()" [disabled]="disableControl" aria-label="Add button">
                 <i class="faa faa-plus"
                     data-toggle="tooltip" [title]="Add"></i>
+            </button>
+
+            <!-- Submit button-->
+            <button *ngIf="submitButton" class="icon_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button">
+                <i class="faa faa-check"
+                    data-toggle="tooltip" [title]="submit"></i>
             </button>
         </td>
     </tr>

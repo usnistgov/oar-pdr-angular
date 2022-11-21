@@ -31,11 +31,14 @@ export class ReferencesComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     currentRef: Reference = {} as Reference;
     currentRefIndex: number = 0;
-    isEditing: boolean = false;
     dataChanged: boolean = false;
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     disableEditing: boolean = false;
-    forceSave: boolean = false;
+    forceReset: boolean = false;
+
+    // "add", "edit" or "normal" mode. In edit mode, "How would you enter reference data?" will not display.
+    // Default is "normal" mode.
+    editMode: string = "normal"; 
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
@@ -71,29 +74,40 @@ export class ReferencesComponent implements OnInit {
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
-    get nonEditing() { return !this.isEditing || this.disableEditing }
+    get isNormal() { return this.editMode=="normal" }
+    get isEditing() { return this.editMode=="edit" }
+    get isAdding() { return this.editMode=="add" }
 
     startEditing() {
         // If is editing, save data to the draft server
-        if(this.isEditing){
+        if(this.isEditing || this.isAdding){
             this.onSave();
-            this.setStatus(false);
+            this.setStatus("normal");
         }else{ // If not editing, enter edit mode
-            this.setStatus(true);
-            this.openEditBlock(); 
+            this.setStatus("edit");
         }
     }
 
-    setStatus(isEditing: boolean) {
-        this.isEditing = isEditing;
-        if(isEditing){
-            this.openEditBlock();
-            //Tell the system who is editing
-            this.lpService.setEditing(this.fieldName);
-        }else{
-            this.editBlockStatus = 'collapsed'
-            //Tell the system nobody is editing so system can display general help text
-            this.lpService.setEditing("");
+    setStatus(editStatus: string = "normal") {
+        this.editMode = editStatus;
+        switch ( this.editMode ) {
+            case "edit":
+                this.openEditBlock();
+                //Tell the system who is editing
+                this.lpService.setEditing(this.fieldName);
+                break;
+            case "add":
+                this.record.references.unshift({} as Reference);
+                this.currentRefIndex = 0;
+                this.currentRef = this.record["references"][0];
+                this.openEditBlock();
+                this.dataChanged = true;
+                break;
+            default: // normal
+                this.editBlockStatus = 'collapsed'
+                //Tell the system nobody is editing so system can display general help text
+                this.lpService.setEditing("");
+                break;
         }
     }
 
@@ -105,20 +119,12 @@ export class ReferencesComponent implements OnInit {
     onSave() {
         this.editBlockStatus = 'collapsed';
         this.updateMatadata();
-        this.setStatus(false);
+        this.setStatus("normal");
     }
 
     onCancel() {
         this.editBlockStatus = 'collapsed';
         this.undoEditing();
-    }
-
-    getEditIconClass() {
-        if(this.isEditing){
-            return "faa faa-check icon_enabled";
-        }else{
-            return "faa faa-pencil icon_enabled";
-        }
     }
 
     updateMatadata() {
@@ -158,7 +164,7 @@ export class ReferencesComponent implements OnInit {
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
-        this.setStatus(false);
+        this.setStatus("normal");
     }
 
     /**
@@ -179,15 +185,15 @@ export class ReferencesComponent implements OnInit {
      * 3. to "URL: " appended by the value of the location property.
      * @param ref   the NERDm reference object
      */
-    getReferenceText(ref){
-        if(ref['citation'] && ref['citation'].trim() != "") 
-            return ref['citation'];
-        if(ref['label'] && ref['label'].trim() != "")
-            return ref['label'];
-        if(ref['location'] && ref['location'].trim() != "")
-            return ref['location'];
-        return " ";
-    }    
+    // getReferenceText(ref){
+    //     if(ref['citation'] && ref['citation'].trim() != "") 
+    //         return ref['citation'];
+    //     if(ref['label'] && ref['label'].trim() != "")
+    //         return ref['label'];
+    //     if(ref['location'] && ref['location'].trim() != "")
+    //         return ref['location'];
+    //     return " ";
+    // }    
 
     dragEntered(event: CdkDragEnter<number>) {
         const drag = event.item;
@@ -236,7 +242,7 @@ export class ReferencesComponent implements OnInit {
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.dataChanged = true;
-        this.setStatus(true);
+        // this.setStatus(true);
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;
@@ -247,26 +253,24 @@ export class ReferencesComponent implements OnInit {
         this.record.references.splice(index,1);
         this.dataChanged = true;
         this.updateMatadata();
-        this.setStatus(true);
+        this.setStatus("edit");
     }
 
     onAdd() {
-        this.record.references.unshift({} as Reference);
-        this.currentRefIndex = 0;
-        this.currentRef = this.record["references"][0];
-        this.setStatus(true);
-        this.openEditBlock();
-        this.dataChanged = true;
+        this.setStatus("add");
+    }
+
+    onCitationChange(action: any, index: number = 0) {
+        if(action.command == "delete")
+            this.removeRef(index);
     }
 
     selectRef(index: number) {
-        if(this.record["references"] && this.record["references"].length > 0){
-            if(this.currentRefIndex != -1)
-                this.forceSave = true;
+        if(this.record["references"] && this.record["references"].length > 0 && !this.isAdding){
+            this.forceReset = (this.currentRefIndex != -1);
 
             this.currentRefIndex = index;
-            this.currentRef = {...this.record["references"][index]};
-            this.forceSave = false;
+            this.currentRef = this.record["references"][index];
         }
     }
 
@@ -297,15 +301,51 @@ export class ReferencesComponent implements OnInit {
     /**
      * When reference data changed, set the flag so 
      */
-    onDataChange(dataChanged: boolean) {
-        this.dataChanged = dataChanged;
+    onDataChange(event) {
+        console.log("event", event);
+        console.log("this.currentRef", this.currentRef);
+        this.dataChanged = event.dataChanged;
     }
 
+    /**
+     * Determine icon class of undo button
+     * If edit mode is normal, display disabled icon.
+     * Otherwise display enabled icon.
+     * @returns undo button icon class
+     */
     undoIconClass() {
-        if(this.nonEditing){
+        if(this.isNormal){
             return "faa faa-undo icon_disabled";
         }else{
             return "faa faa-undo icon_enabled";
+        }
+    }
+
+    /**
+     * Determine icon class of add button
+     * If edit mode is normal, display enabled icon.
+     * Otherwise display disabled icon.
+     * @returns add button icon class
+     */    
+    addIconClass() {
+        if(this.isNormal){
+            return "faa faa-plus icon_enabled";
+        }else{
+            return "faa faa-plus icon_disabled";
+        }
+    }
+
+    /**
+     * Determine icon class of edit button
+     * If edit mode is normal, display edit icon.
+     * Otherwise display check icon.
+     * @returns edit button icon class
+     */   
+    editIconClass() {
+        if(this.isNormal){
+            return "faa faa-pencil icon_enabled";
+        }else{
+            return "faa faa-check icon_enabled";
         }
     }
 }

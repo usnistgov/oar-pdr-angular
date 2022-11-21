@@ -1,34 +1,7 @@
 <div class="references">
-    <div *ngIf="hasDisplayableReferences(); else noReference">
+    <!-- <div *ngIf="hasDisplayableReferences(); else noReference"> -->
         <div class="section-header"><h3><b>References</b></h3></div>
-        <!-- v1 -->
-        <!-- <div class="editable_container">
-            <div class="editable_field" #refs>
-                <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
-                    <div style="margin: 0em 0em .5em 1em;" *ngFor="let ref of record['references']" class="ref-entry">
-                        <span *ngIf="ref.location && !mdupdsvc.isEditMode; else noreflink">
-                          <span class="faa faa-external-link">&nbsp;</span>
-                          <a href={{ref.location}} target="blank">{{ getReferenceText(ref) }}</a>
-                        </span>
-                        <ng-template #noreflink>
-                          <span >{{ getReferenceText(ref) }}</span>
-                        </ng-template>
-                      </div>
-                </div>
-            </div>
-            <div class="editable_field">
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="openEditBlock()" aria-label="edit button">
-                    <i class="faa faa-pencil icon_enabled" data-toggle="tooltip" title="Edit references"></i>
-                </button>
-                <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!updated"
-                    (click)="undoEditing()" aria-label="undo button">
-                    <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"
-                        data-toggle="tooltip" title="Undo authors"></i>
-                </button>
-            </div>
-        </div> -->
 
-        <!-- v2 -->
         <div *ngIf="mdupdsvc.isEditMode; else nonEdit" class="editable_container">
             <div class="editable_field" >
                 <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" [style.background-color]="getRecordBackgroundColor()">
@@ -44,19 +17,24 @@
                                 (cdkDragEntered)="dragEntered($event)"
                                 (cdkDragMoved)="dragMoved($event)"
                                 (cdkDragDropped)="dragDropped($event)"
+                                [cdkDragDisabled]="isAdding || isEditing"
                                 class="ref-row"
                             >
                                 <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
+                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="true" [editButton]="false" [deleteButton]="true" [trashButton]="true" [disableControl]="isAdding || isEditing" (command_out)="onCitationChange($event, i)"></lib-text-edit>
+                                </div>
+
+                                <!-- <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
                                     <table WIDTH="100%">
                                         <tr width="100%" style="width: 10% !important;">
                                             <td width="5%" style="border-right: 1px solid var(--background-light-grey02);width: 5%;">
                                                 <img src="./assets/images/reorder.png" style="width: 20px; margin: 10px">
                                             </td>
                                             <td width="90%" style="text-align: left; width: 90%; border-right: 1px solid var(--background-light-grey02);">
-                                                {{ getReferenceText(reference) }}
+                                                {{ reference['citation'] }}
                                             </td>
                                             <td width="5%">
-                                                <button id="del_ref_button" type="button" 
+                                                <button id="del_ref_button" type="button" [disabled]="isAdding"
                                                 (click)="removeRef(i)" aria-label="delete button">
                                                     <i class="faa faa-trash" 
                                                         data-toggle="tooltip" title="Delete this reference"></i>
@@ -64,44 +42,25 @@
                                             </td>
                                         </tr>
                                     </table>
-                                    <!-- <span class="reorder-icon">
-                                        <img src="./assets/images/reorder.png" style="width: 5%; margin: 10px">
-                                    </span>
-
-                                        
-                                    <span class="reference-box" >
-                                        {{ getReferenceText(reference) }}
-                                    </span>
-
-                                    <span class="control_box">
-                                        <button id="del_ref_button" type="button" 
-                                            (click)="removeRef(i)" aria-label="delete button">
-                                            <i class="faa faa-trash" 
-                                                data-toggle="tooltip" title="Delete this reference"></i>
-                                        </button>
-                                    </span> -->
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="edit-block" [@editExpand]="editBlockStatus">
-                    <!-- <div style="align-items: right; width:100%; padding: 10px 10px 0px 10px;">
-                        <i class="faa faa-arrow-circle-up icon-white" data-toggle="tooltip"
-                                    title="Discard changes" style="float: right;" (click)="editBlockStatus = 'collapsed'"></i>
-                    </div> -->
-        
-                    <lib-single-ref style="width: 100%; padding: 10px;" [ref]="currentRef" [forceSave]="forceSave" (dataChanged)="onDataChange($event)"></lib-single-ref>
+                <div class="edit-block" [@editExpand]="editBlockStatus">        
+                    <lib-single-ref style="width: 100%; padding: 10px;" [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-ref>
                 </div>
             </div>
             <div class="editable_field">
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="onAdd()" aria-label="edit button" [disabled]="disableEditing">
-                    <i class="faa faa-plus icon_enabled" data-toggle="tooltip" title="Edit references"></i>
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding">
+                    <i [class]="addIconClass()" data-toggle="tooltip" title="Add references"></i>
                 </button>
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" aria-label="edit button" [disabled]="disableEditing">
-                    <i [class]="getEditIconClass()" data-toggle="tooltip" title="Edit references"></i>
+
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="startEditing()" aria-label="edit button" [disabled]="disableEditing">
+                    <i [class]="editIconClass()" data-toggle="tooltip" title="Edit references"></i>
                 </button>
+
                 <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="nonEditing"
                     (click)="undoEditing()" aria-label="undo button">
                     <i [class]="undoIconClass()" data-toggle="tooltip" title="Undo authors"></i>
@@ -113,58 +72,15 @@
                 <div style="margin: 0em 0em .5em 1em;" *ngFor="let ref of record['references']" class="ref-entry">
                     <span *ngIf="ref.location; else noreflink">
                         <span class="faa faa-external-link">&nbsp;</span>
-                        <a href={{ref.location}} target="blank">{{ getReferenceText(ref) }}</a>
+                        <a href={{ref.location}} target="blank">{{ ref['citation'] }}</a>
                     </span>
                     <ng-template #noreflink>
-                        <span >{{ getReferenceText(ref) }}</span>
+                        <span >{{ ref['citation'] }}</span>
                     </ng-template>
                 </div>
             </div>
         </ng-template>
-
-        <!-- v1 -->
-        <!-- <div class="edit-block" [@editExpand]="editBlockStatus" [ngStyle]="{'width.px': refs.offsetWidth }">
-            <div style="align-items: right; width:100%; padding: 10px 20px 10px 10px;">
-                <button pButton type="submit" class="p-button-sm btn-labeled control-btn" id="ref-btn-reset" (click)="onCancel()" label="Cancel" [ngStyle]="{'margin-top':'0px','width':'max-content','height': '26px', 'background-color':'var(--nist-blue-default)', 'color': 'white'}" icon="faa faa-remove faa-1x icon-white">
-                </button>
-                <button pButton type="submit" class="p-button-sm btn-labeled control-btn" id="ref-btn-save" (click)="onSave()" label="Save" [ngStyle]="{'margin-top':'0px','width':'max-content','height': '26px', 'background-color':'var(--nist-blue-default)', 'color': 'white'}" icon="faa faa-save faa-1x icon-white">
-                </button>
-                <button pButton type="submit" class="p-button-sm btn-labeled control-btn" id="ref-btn-add" (click)="onAdd()" label="Add" [ngStyle]="{'margin-top':'0px','width':'max-content','height': '26px', 'background-color':'var(--nist-blue-default)', 'color': 'white'}" icon="faa faa-plus faa-1x icon-white">
-                </button>
-            </div>
-            <div style="width: 100%; padding: 1em">
-                <div #dropListContainer class="example-container" cdkDropListGroup>
-                    <div style="width: 100%;" 
-                    *ngFor="let reference of record['references']; let i = index"
-                    cdkDropList
-                    [cdkDropListData]="i"
-                    >
-                        <div 
-                            cdkDrag
-                            [cdkDragData]="i"
-                            (cdkDragEntered)="dragEntered($event)"
-                            (cdkDragMoved)="dragMoved($event)"
-                            (cdkDragDropped)="dragDropped($event)"
-                            [cdkDragDisabled]="editing"
-                            class="ref-row"
-                        >
-                            <span class="reference-box">
-                                <lib-single-ref style="width: 100%; padding: 10px;" [ref]="reference" (editing)="setDragMode($event)"></lib-single-ref>
-                            </span>
-                            <span class="control_box">
-                                <button id="del_ref_button" *ngIf="mdupdsvc.isEditMode" type="button" 
-                                    (click)="removeRef(i)" aria-label="delete button">
-                                    <i class="faa faa-trash" 
-                                        data-toggle="tooltip" title="Delete this reference"></i>
-                                </button>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div> -->
-
-    </div>
+    <!-- </div>
     <ng-template #noReference>
         <div class="editable_field" style="max-width:calc(100% - 4em);" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)"><h3><b>References</b></h3>
         </div>
@@ -181,5 +97,5 @@
                     data-toggle="tooltip" title="Undo authors"></i>
             </button>
         </div>
-    </ng-template>
+    </ng-template> -->
 </div>
