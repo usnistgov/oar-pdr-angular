@@ -105,7 +105,7 @@ export const testdata: {} = {
         ],
         "references": [
             {
-                "refType":"IsDocumentedBy",
+                "refType":"IsSupplementTo",
                 "title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses",
                 "issued":"2020-02",
                 "publishYear":"2002",
@@ -123,7 +123,7 @@ export const testdata: {} = {
                 "inPreparation":"yes"
             },
             {
-                "refType":"IsCitedBy",
+                "refType":"References",
                 "title":"Indentation device forin situRaman spectroscopic and optical studies",
                 "issued":"2012-12",
                 "publishYear":"2012",

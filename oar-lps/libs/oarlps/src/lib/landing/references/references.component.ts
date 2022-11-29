@@ -58,7 +58,7 @@ export class ReferencesComponent implements OnInit {
         public lpService: LandingpageService) { 
 
             this.lpService.watchEditing((section) => {
-                if(section != "" && section != this.fieldName) {
+                if(section != "" && section != this.fieldName && this.dataChanged) {
                     this.onSave();
                 }
             })
@@ -78,55 +78,77 @@ export class ReferencesComponent implements OnInit {
     get isEditing() { return this.editMode=="edit" }
     get isAdding() { return this.editMode=="add" }
 
-    startEditing() {
+    /**
+     * When user clicks on the edit (pencil/check) button, if current mode is editing or adding
+     * save changes and set normal mode. If current mode is normal, set current mode to editing.
+     */
+    toggleEditing() {
         // If is editing, save data to the draft server
         if(this.isEditing || this.isAdding){
             this.onSave();
-            this.setStatus("normal");
+            this.setMode("normal");
         }else{ // If not editing, enter edit mode
-            this.setStatus("edit");
+            this.setMode("edit");
         }
     }
 
-    setStatus(editStatus: string = "normal") {
-        this.editMode = editStatus;
+    /**
+     * Set the GI to different mode
+     * @param editmode edit mode to be set
+     */
+    setMode(editmode: string = "normal") {
+        this.editMode = editmode;
         switch ( this.editMode ) {
             case "edit":
                 this.openEditBlock();
-                //Tell the system who is editing
+                //Broadcast who is editing
                 this.lpService.setEditing(this.fieldName);
                 break;
             case "add":
-                this.record.references.unshift({} as Reference);
-                this.currentRefIndex = 0;
-                this.currentRef = this.record["references"][0];
+                //Append a blank reference to the record and set current reference.
+                this.record.references.push({} as Reference);
+                this.currentRefIndex = this.record.references.length - 1;
+                this.record["references"][this.currentRefIndex].dataChanged = true;
+                this.currentRef = this.record["references"][this.currentRefIndex];
                 this.openEditBlock();
                 this.dataChanged = true;
                 break;
             default: // normal
+                // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
-                //Tell the system nobody is editing so system can display general help text
+                //Broadcast that nobody is editing so system can display general help text
                 this.lpService.setEditing("");
                 break;
         }
     }
 
+    /**
+     * Expand the edit block that user can edit reference data
+     */
     openEditBlock() {
         this.editBlockStatus = 'expanded';
+
+        //Broadcast current edit section so landing page will scroll to the section
         this.lpService.setCurrentSection('references');
     }
 
+    /**
+     * Save changes to the server and set edit mode to "normal"
+     */
     onSave() {
+        // Collapse the edit block
         this.editBlockStatus = 'collapsed';
+
+        // Update reference data
         this.updateMatadata();
-        this.setStatus("normal");
+
+        // Set edit mode to "normal"
+        this.setMode("normal");
     }
 
-    onCancel() {
-        this.editBlockStatus = 'collapsed';
-        this.undoEditing();
-    }
-
+    /**
+     * Update reference data to the server
+     */
     updateMatadata() {
         if(this.dataChanged){
             let updmd = {};
@@ -144,7 +166,7 @@ export class ReferencesComponent implements OnInit {
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
-    undoEditing() {
+    undoChanges() {
         if(this.updated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
@@ -164,7 +186,7 @@ export class ReferencesComponent implements OnInit {
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
-        this.setStatus("normal");
+        this.setMode("normal");
     }
 
     /**
@@ -195,6 +217,9 @@ export class ReferencesComponent implements OnInit {
     //     return " ";
     // }    
 
+    /**
+     * Drag drop function
+     */
     dragEntered(event: CdkDragEnter<number>) {
         const drag = event.item;
         const dropList = event.container;
@@ -214,6 +239,11 @@ export class ReferencesComponent implements OnInit {
         }
     }
     
+    /**
+     * Drag drop function
+     * @param event 
+     * @returns 
+     */
     dragMoved(event: CdkDragMove<number>) {
         if (!this.dropListContainer || !this.dragDropInfo) return;
     
@@ -235,6 +265,9 @@ export class ReferencesComponent implements OnInit {
         this.dropListReceiverElement = receiverElement;
     }
     
+    /**
+     * Drag drop function
+     */
     dragDropped(event: CdkDragDrop<number>) {
         if (!this.dropListReceiverElement) {
           return;
@@ -242,29 +275,43 @@ export class ReferencesComponent implements OnInit {
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.dataChanged = true;
-        // this.setStatus(true);
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;
         this.dragDropInfo = undefined;
     }
 
+    /**
+     * Remove reference and update the server
+     * @param index Index of the reference to be deleted
+     */
     removeRef(index: number) {
         this.record.references.splice(index,1);
         this.dataChanged = true;
         this.updateMatadata();
-        this.setStatus("edit");
     }
 
+    /**
+     * Add an empty reference to the record and expand the edit window.
+     */
     onAdd() {
-        this.setStatus("add");
+        this.setMode("add");
     }
 
+    /**
+     * Handle actions from child component
+     * @param action the action that the child component returned
+     * @param index The index of the reference the action is taking place
+     */
     onCitationChange(action: any, index: number = 0) {
-        if(action.command == "delete")
+        if(action.command.toLowerCase() == "delete")
             this.removeRef(index);
     }
 
+    /**
+     * Set current reference to the selected one
+     * @param index The index of the selected reference
+     */
     selectRef(index: number) {
         if(this.record["references"] && this.record["references"].length > 0 && !this.isAdding){
             this.forceReset = (this.currentRefIndex != -1);
@@ -274,14 +321,27 @@ export class ReferencesComponent implements OnInit {
         }
     }
 
+    /**
+     * Return the style class of a given reference:
+     * If this is the active reference, set border color to blue. Otherwise set border color to grey.
+     * If this reference's data changed, set background color to yellow. Otherwise set to white.
+     * @param index The index of the active reference
+     * @returns 
+     */
     getActiveItemStyle(index: number) {
         if(index == this.currentRefIndex) {
-            return { 'background-color': 'var(--background-light-grey)'};
+            // return { 'background-color': 'var(--background-light-grey)'};
+            return { 'background-color': this.getBackgroundColor(index), 'border': '1px solid var(--active-item)'};
         } else {
-            return {'background-color': this.getBackgroundColor(index)};
+            return {'background-color': this.getBackgroundColor(index), 'border':'1px solid var(--background-light-grey)'};
         }
     }
 
+    /**
+     * Return background color of the given reference based on dataChanged flag of the reference
+     * @param index The index of the target reference
+     * @returns background color
+     */
     getBackgroundColor(index: number){
         if(this.record['references'][index].dataChanged){
             return '#FCF9CD';
@@ -290,6 +350,11 @@ export class ReferencesComponent implements OnInit {
         }
     }
 
+    /**
+     * Retuen background color of the whole record (the container of all references) 
+     * based on the dataChanged flag of the record.
+     * @returns the background color of the whole record
+     */
     getRecordBackgroundColor() {
         if(this.dataChanged){
             return '#FCF9CD';
@@ -299,12 +364,12 @@ export class ReferencesComponent implements OnInit {
     }
 
     /**
-     * When reference data changed, set the flag so 
+     * When reference data changed (child component), set the flag in record level.
+     * Also update the reference data. 
      */
     onDataChange(event) {
-        console.log("event", event);
-        console.log("this.currentRef", this.currentRef);
-        this.dataChanged = event.dataChanged;
+        this.dataChanged = this.dataChanged || event.dataChanged;
+        this.record['references'][this.currentRefIndex] = event.ref;
     }
 
     /**
@@ -314,11 +379,7 @@ export class ReferencesComponent implements OnInit {
      * @returns undo button icon class
      */
     undoIconClass() {
-        if(this.isNormal){
-            return "faa faa-undo icon_disabled";
-        }else{
-            return "faa faa-undo icon_enabled";
-        }
+        return this.dataChanged || this.isEditing? "faa faa-undo icon_enabled" : "faa faa-undo icon_disabled";
     }
 
     /**

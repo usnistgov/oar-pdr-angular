@@ -1,12 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
 import { Reference } from '../reference';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import {
-    CdkDragDrop,
-    CdkDragEnter,
-    CdkDragMove,
-    moveItemInArray,
-} from '@angular/cdk/drag-drop';
+import { HttpClient } from "@angular/common/http";
 
 @Component({
     selector: 'lib-single-ref',
@@ -23,7 +18,7 @@ import {
 export class SingleRefComponent implements OnInit {
     originalRef: Reference = {} as Reference;
     defaultText: string = "Enter citation here";
-    refTypes: string[] = ["IsDocumentedBy","IsCitedBy"];
+    reftype: string = "1";
     
     // Input method. 1 = DOI, 2=Ref data, 3=Citation text
     inputMethod: string = "1"; 
@@ -41,26 +36,25 @@ export class SingleRefComponent implements OnInit {
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
 
-    constructor() { }
+    constructor(private httpClient: HttpClient) { }
 
     ngOnInit(): void {
         if(this.isEditing) this.showAllFields = true;
         if(this.ref) this.originalRef = JSON.parse(JSON.stringify(this.ref));
+
+        this.reftype = this.ref.refType == "IsSupplementTo" ? "1" : "2" ;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
         //Add '${implements OnChanges}' to the class.
-        console.log('changes', changes);
-
         if(changes.editMode && changes.editMode.currentValue == "normal") {
-            console.log("reseting... ");
             this.reset();
         }
 
         if(changes.ref) {
             this.originalRef = JSON.parse(JSON.stringify(this.ref));
-            console.log("this.originalRef", this.originalRef);
+            this.reftype = this.originalRef.refType == "IsSupplementTo" ? "1" : "2" ;
         }
     }
 
@@ -87,7 +81,11 @@ export class SingleRefComponent implements OnInit {
 
         if(updateCitation) this.updateCitation();
 
-        this.dataChanged.emit({"ref": this.ref, "datachanged": true});
+        this.dataChanged.emit({"ref": this.ref, "dataChanged": true});
+    }
+
+    onReftypeChanged(event) {
+        this.ref.refType = event.target.value=="1" ? "IsSupplementTo" : "References";
     }
 
     /**
@@ -96,13 +94,13 @@ export class SingleRefComponent implements OnInit {
      */
     onDoiChange(event) {
         this.ref.doi = event.value;
+        this.httpClient.get("assets/sample-data/sample-reference.json").subscribe(data =>{
+            this.ref = JSON.parse(JSON.stringify(data)) as Reference;
+            this.onChange(false);
+        })
         // Get ref data from backend...
         // ...
         this.showAllFields = true;
-    }
-
-    onCitationChange() {
-
     }
 
     /**
@@ -112,6 +110,10 @@ export class SingleRefComponent implements OnInit {
         this.ref.citation = this.originalRef.citation;
     }
 
+    /**
+     * 
+     * @param index 
+     */
     removeAuthor(index: number) {
         this.ref.authors.splice(index, 1);
         this.onChange(true);
@@ -120,16 +122,26 @@ export class SingleRefComponent implements OnInit {
     setInputMethod(event) {
         var target = event.target;
         this.inputMethod = event.target.value;
-        if(this.useCitationData) {
-            this.citationLocked = true;
-            this.showAllFields = false;
-        }
-        if(this.useRefData || this.useDOI) {
-            this.citationLocked = false;
-            this.showAllFields = true;
+        
+        switch ( this.inputMethod ) {
+            case "1": //useDOI
+                this.showAllFields = false;
+                break;
+            case "2": //useRefData
+                this.citationLocked = false;
+                this.showAllFields = true;
+                break;
+            default: //useCitationData
+                this.citationLocked = true;
+                this.showAllFields = false;
+                break;
         }
     }
 
+    /**
+     * 
+     * @returns Citation lock icon class
+     */
     citationLockClass() {
         if(this.citationLocked) {
             return "faa faa-unlock";

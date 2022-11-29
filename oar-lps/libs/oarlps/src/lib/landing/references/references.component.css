@@ -95,11 +95,6 @@ button {
     display: flex;
     flex-direction: row;
 }
-  
-.edit-block {
-    background-color: var(--background-light-grey);
-    overflow: hidden;
-}
 
 .reference-box {
     width: 90%; 

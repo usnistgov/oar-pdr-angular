@@ -129,7 +129,9 @@ export class StepWizardComponent implements OnInit {
 
     onSubmit(): void {
         // this.router.navigate(['/complete']);
-        window.location.href = 'http://localhost:4202/od/id/test1?editEnabled=true';
+        console.log('this.dataModel', JSON.stringify(this.dataModel));
+        // Submit the request, get the id from server response then launch the landing page
+        // window.location.href = 'http://localhost:4202/od/id/test1?editEnabled=true';
     }
 
     onResize(event: any){

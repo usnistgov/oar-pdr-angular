@@ -1,8 +1,7 @@
 <div class="references">
-    <!-- <div *ngIf="hasDisplayableReferences(); else noReference"> -->
+    <div *ngIf="mdupdsvc.isEditMode; else nonEdit" >
         <div class="section-header"><h3><b>References</b></h3></div>
-
-        <div *ngIf="mdupdsvc.isEditMode; else nonEdit" class="editable_container">
+        <div class="editable_container">
             <div class="editable_field" >
                 <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" [style.background-color]="getRecordBackgroundColor()">
                     <div #dropListContainer class="example-container" cdkDropListGroup>
@@ -23,26 +22,6 @@
                                 <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
                                     <lib-text-edit [textField]="reference.citation" [dragDropIcon]="true" [editButton]="false" [deleteButton]="true" [trashButton]="true" [disableControl]="isAdding || isEditing" (command_out)="onCitationChange($event, i)"></lib-text-edit>
                                 </div>
-
-                                <!-- <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
-                                    <table WIDTH="100%">
-                                        <tr width="100%" style="width: 10% !important;">
-                                            <td width="5%" style="border-right: 1px solid var(--background-light-grey02);width: 5%;">
-                                                <img src="./assets/images/reorder.png" style="width: 20px; margin: 10px">
-                                            </td>
-                                            <td width="90%" style="text-align: left; width: 90%; border-right: 1px solid var(--background-light-grey02);">
-                                                {{ reference['citation'] }}
-                                            </td>
-                                            <td width="5%">
-                                                <button id="del_ref_button" type="button" [disabled]="isAdding"
-                                                (click)="removeRef(i)" aria-label="delete button">
-                                                    <i class="faa faa-trash" 
-                                                        data-toggle="tooltip" title="Delete this reference"></i>
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -57,17 +36,20 @@
                     <i [class]="addIconClass()" data-toggle="tooltip" title="Add references"></i>
                 </button>
 
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="startEditing()" aria-label="edit button" [disabled]="disableEditing">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing">
                     <i [class]="editIconClass()" data-toggle="tooltip" title="Edit references"></i>
                 </button>
 
-                <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="nonEditing"
-                    (click)="undoEditing()" aria-label="undo button">
-                    <i [class]="undoIconClass()" data-toggle="tooltip" title="Undo authors"></i>
+                <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!dataChanged && !isEditing"
+                    (click)="undoChanges()" aria-label="undo button">
+                    <i [class]="undoIconClass()" data-toggle="tooltip" title="Undo"></i>
                 </button>
             </div>
         </div>
-        <ng-template #nonEdit>
+    </div>
+    <ng-template #nonEdit>
+        <div *ngIf="hasDisplayableReferences()">
+            <div class="section-header"><h3><b>References</b></h3></div>
             <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
                 <div style="margin: 0em 0em .5em 1em;" *ngFor="let ref of record['references']" class="ref-entry">
                     <span *ngIf="ref.location; else noreflink">
@@ -79,7 +61,8 @@
                     </ng-template>
                 </div>
             </div>
-        </ng-template>
+        </div>
+    </ng-template>
     <!-- </div>
     <ng-template #noReference>
         <div class="editable_field" style="max-width:calc(100% - 4em);" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)"><h3><b>References</b></h3>

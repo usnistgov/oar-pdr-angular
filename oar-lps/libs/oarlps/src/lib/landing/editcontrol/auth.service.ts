@@ -299,7 +299,7 @@ export class MockAuthService extends AuthService {
      * @param resmd      the original resource metadata 
      * @param userid     the ID of the user; default "anon"
      */
-    constructor(userDetails?: UserDetails, ngenv2?: IEnvironment) {
+    constructor(userDetails?: UserDetails, ngenv2?: IEnvironment, private httpcli?: HttpClient) {
         super();
         if (userDetails === undefined) {
             this._authcred = {
@@ -357,7 +357,7 @@ export class MockAuthService extends AuthService {
         if (!this.resdata[resid]){
             return of<CustomizationService>(null);
         }
-        return of<CustomizationService>(new InMemCustomizationService(this.resdata[resid]));
+        return of<CustomizationService>(new InMemCustomizationService(this.resdata[resid], this.httpcli));
     }
 
     /**
@@ -410,6 +410,6 @@ export function createAuthService(ngenv: IEnvironment, config: AppConfig, httpCl
     if (!ngenv['context'])
         console.warn("Warning: angular environment is missing context data");
     console.log("Using mock AuthService/CustomizationService");
-    return new MockAuthService(undefined, ngenv);
+    return new MockAuthService(undefined, ngenv, httpClient);
 }
 

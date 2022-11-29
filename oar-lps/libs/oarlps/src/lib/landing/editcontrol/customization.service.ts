@@ -211,7 +211,7 @@ export class WebCustomizationService extends CustomizationService {
         // HttpClient.put() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.saveapi + this.resid;
+            let url = this.endpoint + this.saveapi + this.resid + "/data";
             let obs : Observable<Object> = 
                 this.httpcli.put(url, {}, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -280,84 +280,16 @@ export class WebCustomizationService extends CustomizationService {
      *                   failure, ...
      */
     public getDataFiles() : Observable<Object> {
-        const sampleData: NerdmComp[] = 
-        [ 
-            {
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "@type" : [ 
-                    "nrdp:DataFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
-                ]
-            }, 
-            {
-                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "algorithm" : {
-                    "tag" : "sha256",
-                    "@type" : "Thing"
-                },
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
-                "@type" : [ 
-                    "nrdp:ChecksumFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
-                ]
-            }, 
-            {
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "@type" : [ 
-                    "nrdp:DataFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
-                ]
-            }, 
-            {
-                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "algorithm" : {
-                    "tag" : "sha256",
-                    "@type" : "Thing"
-                },
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
-                "@type" : [ 
-                    "nrdp:ChecksumFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
-                ]
-            }, 
-            {
-                "accessURL" : "https://doi.org/10.18434/M37H4G",
-                "@id" : "#doi:10.18434/M37H4G",
-                "@type" : [ 
-                    "nrd:Hidden", 
-                    "dcat:Distribution"
-                ]
-            }
-        ];
-        return of(sampleData);
+        // Read local file for testing and demo purpose
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+
+        // return of(sampleData);
         // To transform the output with proper error handling, we wrap the
         // HttpClient.get() Observable with our own Observable
         //
@@ -385,7 +317,7 @@ export class InMemCustomizationService extends CustomizationService {
      *
      * @param resmd      the original resource metadata 
      */
-    constructor(resmd : Object) {
+    constructor(resmd : Object, private httpcli : HttpClient) {
         super((resmd && resmd['ediid']) ? resmd['ediid'] : "resmd");
         this.origmd= resmd;
 
@@ -422,7 +354,6 @@ export class InMemCustomizationService extends CustomizationService {
      */
     public saveDraft() : Observable<Object> {
         this.origmd = JSON.parse(JSON.stringify(this.resmd));
-        console.log("this.origmd", this.origmd);
         return of<Object>(this.resmd);
     }
 
@@ -430,9 +361,7 @@ export class InMemCustomizationService extends CustomizationService {
      * discard the changes in the draft, reverting to the original metadata
      */
     public discardDraft() : Observable<Object> {
-        console.log("this.origmd", this.origmd);
         this.resmd = JSON.parse(JSON.stringify(this.origmd));
-        console.log("this.resmd.references", this.resmd["references"]);
         return of<Object>(this.resmd);
     }
 
@@ -452,7 +381,6 @@ export class InMemCustomizationService extends CustomizationService {
             this.resmd[prop] = JSON.parse(JSON.stringify(md[prop]));
         }
 
-        console.log("this.origmd", this.origmd);
         return of<Object>(this.resmd);
     }    
 
@@ -463,84 +391,55 @@ export class InMemCustomizationService extends CustomizationService {
      *                   failure, ...
      */
     public getDataFiles() : Observable<Object> {
-        const sampleData: NerdmComp[] = 
-        [ 
-            {
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "@type" : [ 
-                    "nrdp:DataFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
-                ]
-            }, 
-            {
-                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx",
-                "algorithm" : {
-                    "tag" : "sha256",
-                    "@type" : "Thing"
-                },
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_09012017.xlsx.sha256",
-                "@type" : [ 
-                    "nrdp:ChecksumFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
-                ]
-            }, 
-            {
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "@type" : [ 
-                    "nrdp:DataFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/DataFile"
-                ]
-            }, 
-            {
-                "description" : "SHA-256 checksum value for NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx",
-                "algorithm" : {
-                    "tag" : "sha256",
-                    "@type" : "Thing"
-                },
-                "filepath" : "NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
-                "mediaType" : "text/plain",
-                "downloadURL" : "https://s3.amazonaws.com/nist-midas/1856/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
-                "@id" : "cmps/NFRL_LocalizedFireTest_SteelBeam_08112017.xlsx.sha256",
-                "@type" : [ 
-                    "nrdp:ChecksumFile", 
-                    "nrdp:DownloadableFile", 
-                    "dcat:Distribution"
-                ],
-                "_extensionSchemas" : [ 
-                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.2#/definitions/ChecksumFile"
-                ]
-            }, 
-            {
-                "accessURL" : "https://doi.org/10.18434/M37H4G",
-                "@id" : "#doi:10.18434/M37H4G",
-                "@type" : [ 
-                    "nrd:Hidden", 
-                    "dcat:Distribution"
-                ]
+        // Read local file for testing and demo purpose
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
+    private _wrapRespObs(obs : Observable<Object>, subscriber : Subscriber<Object>) : void {
+        obs.subscribe(
+            (jsonbody) => {
+                // if (!jsonbody || !jsonbody['@id'])
+                //     console.warn("Data returned from customization service does not look like a "+
+                //                  "NERDm resource: "+JSON.stringify(jsonbody));
+                subscriber.next(jsonbody);
+            },
+            (httperr) => {   // this will be an HttpErrorResponse
+                let msg = "";
+                let err = null;
+                console.log("httperr.status", httperr.status);
+                if (httperr.status == 401) {
+                    msg += "Authorization Error (401)";
+                    // TODO: can we get at body of message when an error occurs?
+                    // if (httperr.body['message']) msg += ": " + httperr.body['message'];
+                    err = new AuthCustomizationError(msg, httperr.status);
+                }
+                else if (httperr.status == 404) {
+                    msg += "Record Not Found (404)"
+                    // TODO: can we get at body of message when an error occurs?
+                    // if (httperr.body['message']) msg += ": " + httperr.body['message'];
+                    msg += " (Is the service endpoint correct?)"
+                    err = new NotFoundCustomizationError(msg, httperr.status);
+                }
+                else if (httperr.status < 100 && httperr.error) {
+                    msg = httperr.error.message
+                    err = new ConnectionCustomizationError("Service connection error: "+msg)
+                }
+                else {
+                    msg += "Unexpected Customization Error";
+                    if (httperr.status > 0) msg += "(" + httperr.status.toString() + ")";
+                    // TODO: can we get at body of message when an error occurs?
+                    // if (httperr.body['message']) msg += ": " + httperr.body['message'];
+                    err = new SystemCustomizationError(msg, httperr.status);
+                }
+                subscriber.error(err);
             }
-        ];
-        return of(sampleData);        
+        );
     }
 }
 

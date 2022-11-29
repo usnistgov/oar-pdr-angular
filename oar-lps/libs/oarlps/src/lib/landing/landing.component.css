@@ -512,6 +512,11 @@ a:visited {
   text-align: left; 
   vertical-align: top;
 }
+ 
+.edit-block {
+    background-color: var(--background-light-grey);
+    overflow: hidden;
+}
 
 .nist-card {
   padding: 1em;

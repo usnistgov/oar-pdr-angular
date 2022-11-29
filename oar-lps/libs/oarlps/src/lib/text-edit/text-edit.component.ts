@@ -28,7 +28,6 @@ export class TextEditComponent implements OnInit {
     @Output() command_out = new EventEmitter<any>();
 
     constructor() { 
-        console.log("Constrcting ===============")
     }
 
     ngOnInit(): void {
@@ -66,7 +65,6 @@ export class TextEditComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log('changes-text edit', changes);
         if(changes.forceReset && changes.forceReset.currentValue && this.editing){
             this.reset();
         }

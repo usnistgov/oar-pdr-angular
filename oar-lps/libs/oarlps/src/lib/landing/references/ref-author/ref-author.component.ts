@@ -42,30 +42,29 @@ export class RefAuthorComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log("changes - singal ref", changes);
         this.forceReset = true;
         this.editingAuthorIndex = -1;
     }
     
     editAction(action: any, index: number = 0) {
-        switch ( action.command ) {
-            case "Delete":
+        switch ( action.command.toLowerCase() ) {
+            case "delete":
                 this.removeAuthor(index);
                 break;
-            case "Add":
+            case "add":
                 this.newAuthor = action.value;
                 this.addAuthor()
                 break;
-            case "Save":
+            case "save":
                 this.ref["authors"][index] = action.value;
                 this.onChange(true);
                 if(this.editingAuthorIndex == index)
                     this.editingAuthorIndex = -1;
                 break;
-            case "Edit":
+            case "edit":
                 this.editingAuthorIndex = index;
                 break;
-            case "Undo":
+            case "undo":
                 this.editingAuthorIndex = -1;
                 break;                  
             default: 

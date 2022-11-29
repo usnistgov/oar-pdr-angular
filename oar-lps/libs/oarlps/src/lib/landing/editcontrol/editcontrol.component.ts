@@ -212,7 +212,6 @@ export class EditControlComponent implements OnInit, OnChanges {
             (successful) => {
               // User authorized
               if(successful){
-                console.log("Loading draft...");
                 this.statusbar.showMessage("Loading draft...", true)
                 this.mdupdsvc.loadDraft().subscribe(
                     (md) => 

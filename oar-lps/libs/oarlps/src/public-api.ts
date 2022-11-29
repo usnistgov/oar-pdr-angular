@@ -114,3 +114,6 @@ export * from './lib/landing/landingpage.service';
 
 export * from './lib/text-edit/text-edit.module';
 export * from './lib/text-edit/text-edit.component';
+
+export * from './lib/landing/accesspage/accesspage.component';
+export * from './lib/landing/accesspage/accesspage.module';

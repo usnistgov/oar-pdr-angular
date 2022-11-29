@@ -30,7 +30,6 @@ export class VisithomeComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log("this.record", this.record);
     }
 
     /**

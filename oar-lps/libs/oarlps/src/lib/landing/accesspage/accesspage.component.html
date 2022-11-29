@@ -1,0 +1,99 @@
+<div style="width: 100%;" *ngIf="accessPages.length > 0">
+    <b>Data and related material can be found at the following locations:</b>
+    <br>
+    <div *ngIf="mdupdsvc.isEditMode; else nonEdit" class="editable_container">
+        <div class="editable_field" >
+            <div class="apage-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" [style.background-color]="getRecordBackgroundColor()">
+                <div #dropListContainer class="example-container" cdkDropListGroup>
+                    <div style="width: 100%;" 
+                    *ngFor="let apage of accessPages; let i = index"
+                    cdkDropList
+                    [cdkDropListData]="i"
+                    >
+                        <div 
+                            cdkDrag
+                            [cdkDragData]="i"
+                            (cdkDragEntered)="dragEntered($event)"
+                            (cdkDragMoved)="dragMoved($event)"
+                            (cdkDragDropped)="dragDropped($event)"
+                            [cdkDragDisabled]="isAdding || isEditing"
+                            class="ref-row"
+                        >
+                            <div (click)="selectApage(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
+                                <lib-text-edit [textField]="apage.description" [dragDropIcon]="accessPages.length==1?false:true" [editButton]="false" [deleteButton]="true" [trashButton]="true" [disableControl]="isAdding || isEditing" (command_out)="onApageChange($event, i)"></lib-text-edit>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="edit-block" [@editExpand]="editBlockStatus">     
+                <lib-single-apage></lib-single-apage>   
+                <!-- <lib-single-apage style="width: 100%; padding: 10px;" [apage]="currentApage" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-apage> -->
+            </div>
+        </div>
+        <div class="editable_field">
+            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding">
+                <i [class]="addIconClass()" data-toggle="tooltip" title="Add references"></i>
+            </button>
+
+            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="startEditing()" aria-label="edit button" [disabled]="disableEditing">
+                <i [class]="editIconClass()" data-toggle="tooltip" title="Edit references"></i>
+            </button>
+
+            <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="nonEditing"
+                (click)="undoEditing()" aria-label="undo button">
+                <i [class]="undoIconClass()" data-toggle="tooltip" title="Undo authors"></i>
+            </button>
+        </div>
+    </div>
+    <ng-template #nonEdit>
+        <div [ngStyle]="{'margin-top': '10px', 'background-color': apage['backcolor']}"
+        *ngFor="let apage of accessPages" (mouseover)="apage['backcolor'] = '#f2f2f2'"
+        (mouseout)="apage['backcolor'] = 'white'">
+            <div class="indent-content"
+                *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
+                <i class="faa faa-external-link"> <span style="margin-left:0em;">
+                        <span *ngIf="apage['description']; else noAccessTitle">
+                            <a href="{{apage['accessURL']}}" title="{{apage['description']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
+                                                            'Resource title: ' + record.title,
+                                                            apage['accessURL'])">&nbsp;&nbsp;{{apage['title']}}</a>
+                        </span>
+                        <ng-template #noAccessTitle>
+                            <a href="{{apage['accessURL']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
+                                                            'Resource title: ' + record.title,
+                                                            apage['accessURL'])">&nbsp;&nbsp;{{apage['title']}}</a>
+                        </ng-template>
+                    </span></i>
+                <div *ngIf="apage['description']">
+                    <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
+                            class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i class="faa faa-caret-down"
+                            *ngIf="apage[showDesc]"></i> About this link
+                    </div>
+                    <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
+                    </div>
+                </div>
+            </div>
+            <ng-template #RestrictedAccessPage>
+                <div style="padding:10px 20px;">
+                    <a href={{apage.accessURL}} target="_blank">
+                        <button style="margin-top: -6px;" type="button" class="btn btn-primary py-0"
+                            data-toggle="tooltip" data-placement="top" title="{{apage['title']}}"
+                            (click)="googleAnalytics(apage['accessURL'], $event, 'Download Data')"><i
+                                class="faa faa-external-link button_icon"></i>Download Data</button>
+                    </a>
+
+                    <div *ngIf="apage['description']">
+                        <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
+                                class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i
+                                class="faa faa-caret-down" *ngIf="apage[showDesc]"></i> About downloading restricted
+                            public data
+                        </div>
+                        <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </div>
+    </ng-template>
+</div>

@@ -343,7 +343,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
             }
         }
         this.files = [...root.children];
-        console.log('this.files', this.files)
         this.fileCount = count;
         this.updateStatusFromCart();
     }
@@ -820,7 +819,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
     reloadFiles() {
         this.mdupdsvc.loadDataFiles().subscribe( data => {
             let dataFiles: NerdmComp[] = data as NerdmComp[];
-            console.log("dataFiles", dataFiles)
             this.record['components'] = dataFiles;
             this.buildTree(this.record['components']);
 

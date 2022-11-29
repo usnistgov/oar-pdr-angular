@@ -22,6 +22,7 @@ import { DoneModule } from '../done/done.module';
 import { ButtonModule } from 'primeng/button';
 import { VisithomeModule } from '../visithome/visithome.module';
 import { ReferencesModule } from '../references/references.module';
+import { AccesspageModule } from '../accesspage/accesspage.module';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -69,7 +70,8 @@ import { ReferencesModule } from '../references/references.module';
         DoneModule,
         ButtonModule,
         VisithomeModule,
-        ReferencesModule
+        ReferencesModule,
+        AccesspageModule
     ],
     declarations: [
         ResourceDataComponent,

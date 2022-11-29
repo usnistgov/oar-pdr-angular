@@ -189,13 +189,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         });
 
         this.lpService.watchEditing((section) => {
-            console.log("section", section);
-            if(section == "") {
-                this.helpContent = this.helpContent2['general'];
-            }else{
-                this.helpContent = this.helpContent2[section];
-            }
-            console.log("this.helpContent", this.helpContent);
+            this.helpContent = this.helpContent2['general'];
+
+            // if(section == "") {
+            //     this.helpContent = this.helpContent2['general'];
+            // }else{
+            //     this.helpContent = this.helpContent2[section]==""?this.helpContent2['general']:this.helpContent2[section];
+            // }
         })
 
         if (this.editEnabled) {
@@ -232,8 +232,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-        console.log("helpContent2", this.helpContent2['references']);
-
         this.recordLevelMetrics = new RecordLevelMetrics();
         var showError: boolean = true;
         let metadataError = "";

@@ -11,9 +11,11 @@ import { SectionsModule } from './landing/sections/sections.module';
 import { DoneModule } from './landing/done/done.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TextEditModule } from './text-edit/text-edit.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-    declarations: [],
+    declarations: [
+  ],
     imports: [
         CommonModule, 
         FrameModule, 
@@ -25,7 +27,8 @@ import { TextEditModule } from './text-edit/text-edit.module';
         SectionsModule,
         DoneModule,
         DragDropModule,
-        TextEditModule
+        TextEditModule,
+        HttpClientModule
     ],
     providers: [
         GoogleAnalyticsService
