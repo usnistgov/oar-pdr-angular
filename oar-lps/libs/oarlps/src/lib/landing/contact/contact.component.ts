@@ -38,7 +38,7 @@ export class ContactComponent implements OnInit {
             return "";
 
         let email = hasEmail.split(":");
-        if(email.length <= 1)
+        if(email && email.length <= 1)
             return email[0];
         else
             return email[1];
@@ -83,7 +83,8 @@ export class ContactComponent implements OnInit {
                 var postMessage: any = {};
                 postMessage[this.fieldName] = returnValue[this.fieldName];
                 // console.log("postMessage", JSON.stringify(postMessage));
-
+                this.record[this.fieldName] = returnValue[this.fieldName];
+                
                 this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess)

@@ -114,6 +114,8 @@ export class TopicComponent implements OnInit {
             if (returnValue) {
                 var postMessage: any = {};
                 postMessage[this.fieldName] = returnValue[this.fieldName];
+                this.record[this.fieldName] = returnValue[this.fieldName];
+                
                 this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess) {

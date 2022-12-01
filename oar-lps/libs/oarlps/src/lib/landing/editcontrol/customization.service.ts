@@ -74,8 +74,8 @@ export abstract class CustomizationService {
  */
 export class WebCustomizationService extends CustomizationService {
 
-    readonly draftapi : string = "pdr/lp/editor/";
-    readonly saveapi : string = "api/savedrecord/";
+    readonly draftapi : string = "dap/mdsx/";
+    readonly saveapi : string = "dap/mdsx/";
 
     /**
      * construct the customization service
@@ -115,7 +115,7 @@ export class WebCustomizationService extends CustomizationService {
         // HttpClient.get() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.draftapi + this.resid;
+            let url = this.endpoint + this.draftapi + this.resid + "/data";
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -183,7 +183,7 @@ export class WebCustomizationService extends CustomizationService {
         // HttpClient.patch() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.draftapi + this.resid;
+            let url = this.endpoint + this.draftapi + this.resid + "/data";
             let body = JSON.stringify(md);
             let obs : Observable<Object> = 
                 this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -238,7 +238,7 @@ export class WebCustomizationService extends CustomizationService {
         // HttpClient.delete() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.draftapi + this.resid;
+            let url = this.endpoint + this.draftapi + this.resid + "/data";
             console.log("Discard url", url);
             let obs : Observable<Object> = 
                 this.httpcli.delete(url, { headers: { "Authorization": "Bearer " + this.token } });
@@ -265,7 +265,7 @@ export class WebCustomizationService extends CustomizationService {
         // HttpClient.patch() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.draftapi + this.resid;
+            let url = this.endpoint + this.draftapi + this.resid + "/data";
             let body = { "_editStatus": "done" };
             let obs : Observable<Object> = 
                 this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });

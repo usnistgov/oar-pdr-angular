@@ -65,7 +65,7 @@ export class ReferencesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if(this.record && this.record['references'].length > 0) {
+        if(this.record && this.record['references'] && this.record['references'].length > 0) {
             this.currentRef = this.record['references'][0];
 
             //Keep a copy of the record for undo purpose
@@ -408,5 +408,12 @@ export class ReferencesComponent implements OnInit {
         }else{
             return "faa faa-check icon_enabled";
         }
+    }
+
+    getControlBoxWidth() {
+        if(this.record["references"] && this.record["references"].length > 1)
+            return 30;
+        else
+            return 100;
     }
 }

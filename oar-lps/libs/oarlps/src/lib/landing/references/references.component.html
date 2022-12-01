@@ -31,7 +31,7 @@
                     <lib-single-ref style="width: 100%; padding: 10px;" [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-ref>
                 </div>
             </div>
-            <div class="editable_field">
+            <div class="editable_field" [style.width.px]="getControlBoxWidth()">
                 <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding">
                     <i [class]="addIconClass()" data-toggle="tooltip" title="Add references"></i>
                 </button>
@@ -40,7 +40,7 @@
                     <i [class]="editIconClass()" data-toggle="tooltip" title="Edit references"></i>
                 </button>
 
-                <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!dataChanged && !isEditing"
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!dataChanged && !isEditing"
                     (click)="undoChanges()" aria-label="undo button">
                     <i [class]="undoIconClass()" data-toggle="tooltip" title="Undo"></i>
                 </button>

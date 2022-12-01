@@ -121,7 +121,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
-        if (this.mdrec instanceof Object && Object.keys(this.mdrec).length > 0) {
+        if (this.mdrec instanceof Object && Object.keys(this.mdrec) && Object.keys(this.mdrec).length > 0) {
             if (!this.resID)
                 this._resid = this.mdrec['ediid'];
             if (this.originalRecord === null) {
@@ -212,12 +212,14 @@ export class EditControlComponent implements OnInit, OnChanges {
             (successful) => {
               // User authorized
               if(successful){
+                console.log("Loading draft...");
                 this.statusbar.showMessage("Loading draft...", true)
                 this.mdupdsvc.loadDraft().subscribe(
                     (md) => 
                     {
                         if(md)
                         {
+                            console.log("Draft loaded", md);
                             // console.log("Draft loaded:", md);
                             this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
                             this.mdupdsvc.checkUpdatedFields(md as NerdmRes);

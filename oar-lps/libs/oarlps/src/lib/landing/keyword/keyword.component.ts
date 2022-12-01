@@ -67,6 +67,8 @@ export class KeywordComponent implements OnInit {
                 //             returnValue[this.fieldName].substring(0,20) + "....");
                 let updmd = {};
                 updmd[this.fieldName] = returnValue[this.fieldName].split(/\s*,\s*/).filter(kw => kw != '');
+                this.record[this.fieldName] = returnValue[this.fieldName].split(/\s*,\s*/).filter(kw => kw != '');
+
                 this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess)

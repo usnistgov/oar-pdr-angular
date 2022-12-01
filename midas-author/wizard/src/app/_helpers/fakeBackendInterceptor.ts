@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-import { userInfo } from 'os';
-
+// import { userInfo } from 'os';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -25,50 +24,52 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     // const dna4: any  = require('../../assets/science-theme/dna4.json');
     // const dna5: any  = require('../../assets/science-theme/dna5.json');
 
-    // const sampleData: any = require('../../assets/sample1.json');
-    const emptyNerdm: any = require('../../assets/sample-data/nerdm-empty.json');
-    const nerdm: any = require('../../assets/sample-data/nerdm2.json');
-
     // const testdata: any = {
     //     PageSize: 1,
     //     ResultCount: 8,
-    //     ResultData: [sampleData]
+    //     ResultData: [biometricsData1,biometricsData2,biometricsData3,dna1,dna2,dna3,dna4,dna5]
     // }
 
-    const midasRes = {
-        "id": "mdm1:0003",
-        "name": "CoTEM",
-        "acls": {
-          "read": [
-            "anonymous"
-          ],
-          "write": [
-            "anonymous"
-          ],
-          "admin": [
-            "anonymous"
-          ],
-          "delete": [
-            "anonymous"
-          ]
-        },
-        "owner": "anonymous",
-        "data": {
-          "title": "Microscopy of Cobalt Samples"
-        },
-        "meta": {},
-        "curators": [],
-        "created": 1669560885.988901,
-        "createdDate": "2022-11-27T09:54:45",
-        "lastModified": 1669560885.988901,
-        "lastModifiedDate": "2022-11-27T09:54:45",
-        "deactivated": null,
-        "type": "dmp"
+    const wizardResponse = {
+            "id": "test1",
+            "name": "CoTEM",
+            "acls": {
+              "read": [
+                "anonymous"
+              ],
+              "write": [
+                "anonymous"
+              ],
+              "admin": [
+                "anonymous"
+              ],
+              "delete": [
+                "anonymous"
+              ]
+            },
+            "owner": "anonymous",
+            "data": {
+              "title": "Microscopy of Cobalt Samples"
+            },
+            "meta": {},
+            "curators": [],
+            "created": 1669560885.988901,
+            "createdDate": "2022-11-27T09:54:45",
+            "lastModified": 1669560885.988901,
+            "lastModifiedDate": "2022-11-27T09:54:45",
+            "deactivated": null,
+            "type": "dmp"
+        
     }
+
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
-        console.log("request.url +++++++++", request.url);
-        console.log("request.method", request.method);
+      console.log("request.url", request.url);
+
+        // Wizard
+        if (request.url.indexOf('localhost:9091') > -1 && request.method === 'POST') {
+            return of(new HttpResponse({ status: 200, body: wizardResponse }));
+        }
 
         // metrics
         // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {
@@ -133,43 +134,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     //       });
     //   }
 
-    // // authenticate
-    if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
-        let body: any = {
-            userDetails: {
-                userId: 'xyz@nist.gov',
-                userName: 'xyz'
-            },
-            token: 'fake-jwt-token'
-        };
-        console.log("logging in...")
-        return of(new HttpResponse({ status: 200, body }));
-    }
-
-    // midas test data
-    if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'GET') {
-        return of(new HttpResponse({ status: 200, body: emptyNerdm }));
-    }
-
-    if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'DELETE') {
-        return of(new HttpResponse({ status: 200, body: emptyNerdm }));
-    }
-      
-    if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'PATCH') {
-        return of(new HttpResponse({ status: 200, body: emptyNerdm }));
-    }
-
-    if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'GET') {
-        return of(new HttpResponse({ status: 200, body: nerdm }));
-    }
-
-    if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'DELETE') {
-        return of(new HttpResponse({ status: 200, body: nerdm }));
-    }
-      
-    if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'PATCH') {
-        return of(new HttpResponse({ status: 200, body: nerdm }));
-    }
+      // // authenticate
+      // if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
+      //     let body: ApiToken = {
+      //         userId: 'xyz@nist.gov',
+      //         token: 'fake-jwt-token'
+      //     };
+      //     console.log("logging in...")
+      //     return of(new HttpResponse({ status: 200, body }));
+      // }
 
       // return 401 not authorised if token is null or invalid
       // if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {

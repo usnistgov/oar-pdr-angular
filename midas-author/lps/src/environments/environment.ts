@@ -13,8 +13,8 @@ import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: false,
-    useMetadataService: false,
-    useCustomizationService: false
+    useMetadataService: true,
+    useCustomizationService: true
 };
 
 export const config: LPSConfig = {
@@ -26,10 +26,10 @@ export const config: LPSConfig = {
         mdService:   "https://oardev.nist.gov/rmm/",
         taxonomyService: "https://oardev.nist.gov/rmm/taxonomy"
     },
-    mdAPI: "https://oardev.nist.gov/rmm/records/",
+    mdAPI: "http://localhost:9091/midas/dap/mdsx/",
     metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
     // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "https://datapubtest.nist.gov/customization/",
+    customizationAPI: "http://localhost:9091/midas/",
     mode: "dev",
     status: "Dev Version",
     appVersion: "v1.3.X",

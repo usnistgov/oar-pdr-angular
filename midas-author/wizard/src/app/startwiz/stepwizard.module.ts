@@ -9,6 +9,7 @@ import { WizardModule } from 'oarng';
 import { StepWizardComponent } from './stepwizard.component';
 import { RouterModule } from '@angular/router';
 import { ComponentsModule } from './components/components.module';
+import { WizardService } from './services/wizard.service';
 
 @NgModule({
     imports: [
@@ -22,6 +23,9 @@ import { ComponentsModule } from './components/components.module';
     ],
     declarations: [
         StepWizardComponent
+    ],
+    providers: [
+        WizardService
     ],
     exports: [
         StepWizardComponent

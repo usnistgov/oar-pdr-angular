@@ -52,6 +52,8 @@ export class DescriptionComponent implements OnInit {
                 //             returnValue[this.fieldName].substring(0,20) + "....");
                 let updmd = {};
                 updmd[this.fieldName] = returnValue[this.fieldName].split(/\n\s*\n/).filter(desc => desc != '');
+                this.record[this.fieldName] = returnValue[this.fieldName].split(/\n\s*\n/).filter(desc => desc != '');
+                
                 this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess)

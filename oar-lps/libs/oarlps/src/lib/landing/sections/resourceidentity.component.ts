@@ -68,7 +68,7 @@ export class ResourceIdentityComponent implements OnChanges {
     }
 
     recordLoaded() {
-        return this.record && ! (Object.keys(this.record).length === 0);
+        return this.record && !(Object.keys(this.record).length === 0);
     }
 
     /**

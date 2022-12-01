@@ -89,6 +89,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     layoutMode: string = 'horizontal';
     profileMode: string = 'inline';
     md: NerdmRes = null;       // the NERDm resource metadata
+    midasRecord: any = null;    // the new Midas record metadata
     reqId: string;             // the ID that was used to request this page
     inBrowser: boolean = false;
     citetext: string = null;
@@ -274,6 +275,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         (data) => {
             // successful metadata request
             this.md = data;
+            // this.midasRecord = data;
+            console.log("Returned record", this.md)
 
             if (!this.md) {
                 // id not found; reroute
@@ -288,8 +291,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         this.metricsData.hasCurrentMetrics = false;
                         this.showMetrics = true;
                     }else{
-                        if(this.theme == Themes.DEFAULT_THEME)
+                        if(this.theme == Themes.DEFAULT_THEME){
+                            console.log("Getting metrics...");
                             this.getMetrics();
+                        }
+                            
                     }
                 }
 

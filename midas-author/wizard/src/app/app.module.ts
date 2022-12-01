@@ -8,6 +8,8 @@ import { WizardModule } from 'oarng';
 import { OARngModule } from 'oarng';
 import { FrameModule } from 'oarng';
 import { InputTextModule } from "primeng/inputtext";
+import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -20,9 +22,10 @@ import { InputTextModule } from "primeng/inputtext";
         WizardModule,
         InputTextModule,
         OARngModule,
-        FrameModule
+        FrameModule,
+        HttpClientModule
     ],
-    providers: [],
+    providers: [fakeBackendProvider],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

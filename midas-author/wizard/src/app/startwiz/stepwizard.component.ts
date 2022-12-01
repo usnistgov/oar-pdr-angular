@@ -5,6 +5,7 @@ import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
 import { Router } from "@angular/router";
+import { WizardService } from './services/wizard.service';
 
 @Component({
     selector: 'app-wizard',
@@ -29,7 +30,8 @@ export class StepWizardComponent implements OnInit {
         private stepService: StepService,
         private fb: FormBuilder, 
         private cdr: ChangeDetectorRef,
-        private router: Router
+        private router: Router,
+        private wizardService: WizardService
     ) { 
 
     }
@@ -112,8 +114,6 @@ export class StepWizardComponent implements OnInit {
     onPrevStep() {
         if (!this.isFirstStep) {
             this.stepService.moveToPrevStep();
-        } else {
-            this.onSubmit();
         }
     }
 
@@ -130,8 +130,48 @@ export class StepWizardComponent implements OnInit {
     onSubmit(): void {
         // this.router.navigate(['/complete']);
         console.log('this.dataModel', JSON.stringify(this.dataModel));
-        // Submit the request, get the id from server response then launch the landing page
-        // window.location.href = 'http://localhost:4202/od/id/test1?editEnabled=true';
+
+        let id: string;
+        let body = {
+            "name": this.readableRandomStringMaker(5),
+            "data": {
+                "title": "Microscopy of Cobalt Samples"
+            },
+            "meta": {}
+        }
+        body.meta = this.dataModel;
+        // body.meta = {
+        //     "name": "CoTEM6", 
+        //     "data": {
+        //         "title": "Microscopy of Cobalt Samples"
+        //     }, 
+        //     "meta": {
+        //         "resourceType": "software", 
+        //         "softwareLink": "https://github.com/usnistgov/jsont"
+        //     }
+        // }
+
+        this.wizardService.updateMetadata(body)
+        .subscribe(obj => {
+            console.log(obj);
+            id = obj['id'];
+            // this.dataModel = obj.data
+
+            // Submit the request, get the id from server response then launch the landing page
+            let url = 'http://localhost:4202/od/id/' + id + '?editEnabled=true';
+            console.log("Open publishing url", url);
+            window.location.href = url;
+        });
+    }
+
+    /**
+     * Generate random string
+     * @param length Length of the output string
+     * @returns random string
+     */
+    readableRandomStringMaker(length: number) {
+        for (var s=''; s.length < length; s += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.charAt(Math.random()*62|0));
+        return s;
     }
 
     onResize(event: any){

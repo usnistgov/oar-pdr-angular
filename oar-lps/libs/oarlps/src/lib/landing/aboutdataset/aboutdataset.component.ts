@@ -114,7 +114,7 @@ export class AboutdatasetComponent implements OnChanges {
                     suffix
                 ]);
             }
-            if (this.isPartOf.length == 1 && ! this.isPartOf[0][3]) {
+            if (this.isPartOf && this.isPartOf.length == 1 && ! this.isPartOf[0][3]) {
                 this.isPartOf[0][0] = "the";
                 this.isPartOf[0][3] = " collection";
             }

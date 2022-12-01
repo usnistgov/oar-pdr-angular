@@ -48,8 +48,9 @@ export class TitleComponent implements OnInit {
             if (returnValue) {
                 var postMessage: any = {};
                 postMessage[this.fieldName] = returnValue[this.fieldName];
-                // console.log("###DBG updating title: ", JSON.stringify(postMessage));
-
+                console.log("###DBG updating title: ", JSON.stringify(postMessage));
+                this.record['title'] = returnValue[this.fieldName];
+                
                 this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
                     if (updateSuccess)
                         this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);

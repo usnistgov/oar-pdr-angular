@@ -30,6 +30,7 @@ export class MetadataUpdateService {
 
     private mdres: Subject<NerdmRes> = new Subject<NerdmRes>();
     private custsvc: CustomizationService = null;
+    private originalDraftRec: NerdmRes = null;
     private originalRec: NerdmRes = null;
     private origfields: {} = {};   // keeps track of orginal metadata so that they can be undone
     public  EDIT_MODES: any;
@@ -156,7 +157,7 @@ export class MetadataUpdateService {
                     (res) => {
                         // console.log("###DBG  Draft data returned from server:\n  ", res)
                         this.stampUpdateDate();
-                        this.mdres.next(res as NerdmRes);
+                        // this.mdres.next(res as NerdmRes);
                         resolve(true);
                     },
                     (err) => {
@@ -208,9 +209,13 @@ export class MetadataUpdateService {
             return new Promise<boolean>((resolve, reject) => {
                 this.custsvc.discardDraft().subscribe(
                     (res) => {
+                        console.log("Return rec", res)
                         this.origfields = {};
                         this.forgetUpdateDate();
-                        this.originalRec = res as NerdmRes;
+                        // this.originalRec = res as NerdmRes;
+                        console.log('this.originalDraftRec', this.originalDraftRec);
+                        this.originalRec = JSON.parse(JSON.stringify(this.originalDraftRec));
+                        console.log('this.originalRec', this.originalRec);
                         this.mdres.next(this.originalRec as NerdmRes);
                         resolve(true);
                     },
@@ -237,7 +242,9 @@ export class MetadataUpdateService {
                 this.custsvc.updateMetadata(this.origfields[subsetname]).subscribe(
                     (res) => {
                         delete this.origfields[subsetname];
-                        this.mdres.next(res as NerdmRes);
+                        this.originalRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
+                        this.mdres.next(this.originalRec as NerdmRes);
+                        // this.mdres.next(res as NerdmRes);
                         resolve(true);
                     },
                     (err) => {
@@ -277,7 +284,7 @@ export class MetadataUpdateService {
         //Set updated date here so the submit button will lit up if we have something to submit
         let newdate: any;
 
-        if (mdrec._updateDetails != undefined) {
+        if (mdrec && mdrec._updateDetails != undefined && mdrec._updateDetails.length > 0) {
             newdate = new Date(mdrec._updateDetails[mdrec._updateDetails.length - 1]._updateDate);
 
             this.lastUpdate = {
@@ -325,10 +332,13 @@ export class MetadataUpdateService {
             }
             this.custsvc.getDraftMetadata().subscribe(
                 (res) => {
-                  this.mdres.next(res as NerdmRes);
-                  subscriber.next(res as NerdmRes);
-                  subscriber.complete();
-                  if (onSuccess) onSuccess();
+                    if(res) this.originalDraftRec = JSON.parse(JSON.stringify(res));
+                    else this.originalDraftRec = {} as NerdmRes;
+                    // res = {};
+                    this.mdres.next(res as NerdmRes);
+                    subscriber.next(res as NerdmRes);
+                    subscriber.complete();
+                    if (onSuccess) onSuccess();
                 },
                 (err) => {
                   console.log("err", err);

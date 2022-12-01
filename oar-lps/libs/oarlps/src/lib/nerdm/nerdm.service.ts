@@ -56,7 +56,7 @@ export class CachingMetadataService extends MetadataService {
 
         let out$ = this.del.getMetadata(id);
         out$.subscribe(
-            (rcrd) => { this.cacheRecord(id, rcrd); },
+            (rcrd) => { this.cacheRecord(id, rcrd.data); },
             (err) => {
                 if (err instanceof IDNotFound)
                     this.cacheRecord(id, null);
@@ -113,7 +113,7 @@ export class ServerDiskCacheMetadataService extends MetadataService {
                     observer.error(err);
                 else {
                     try {
-                        observer.next(JSON.parse(data));
+                        observer.next(JSON.parse(data).data);
                     } catch (e) {
                         observer.error(new Error(file + ": " + e.message));
                     }

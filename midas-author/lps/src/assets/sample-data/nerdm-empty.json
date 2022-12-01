@@ -1,0 +1,60 @@
+{
+    "@context": [
+
+    ],
+    "_schema": "",
+    "_extensionSchemas": [
+        
+    ],
+    "@type": [],
+    "@id": "ark:/88434/mds0000fbk",
+    "title": "",
+    "contactPoint": {
+        "hasEmail": "mailto:john.smith@nist.gov",
+        "fn": "John Smith"
+    },
+    "modified": "",
+    "issued": "",
+    "ediid": "test1",
+    "landingPage": "",
+    "version": "",
+    "versionHistory": [
+
+    ],
+    "description": [
+
+    ],
+    "keyword": [
+
+    ],
+    "theme": [
+
+    ],
+    "topic": [
+
+    ],
+    "references": [
+
+    ],
+    "accessLevel": "public",
+    "license": "https://www.nist.gov/open/license",
+    "components": [
+
+    ],
+    "publisher": {
+        "@type": "org:Organization",
+        "name": "National Institute of Standards and Technology"
+    },
+    "language": [
+        "en"
+    ],
+    "bureauCode": [
+        "006:55"
+    ],
+    "programCode": [
+        "006:045"
+    ],
+    "_updateDetails": [
+
+    ]
+}

@@ -231,7 +231,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
      */
     cartChanged(){
         this.cartLength = this.globalDataCart.size();
-        if (this.files.length > 0) {
+        if (this.files && this.files.length > 0) {
             setTimeout(() => {
                 this.updateStatusFromCart();
             }, 0);
@@ -249,7 +249,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         let allDld: boolean = true;  // whether all files have been downloaded
         let allstats: boolean[] = [];
         for (let child of nodes) {
-            if (child.children.length > 0) {
+            if (child.children && child.children.length > 0) {
                 allstats = this._updateNodesFromCart(child.children, dc);
                 child.data.isInCart = allstats[0];
                 child.data.downloadStatus=(allstats[1]) ? DownloadStatus.DOWNLOADED : DownloadStatus.NO_STATUS;
@@ -310,7 +310,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 }
             }
             // anscestor node does not exist yet
-            if (levels.length > 1) {
+            if (levels && levels.length > 1) {
                 // haven't found leaf yet
                 let child = { data: makeNodeData(levels[0], tree.data.key, null), children: [] };
                 tree.children.push(child);
@@ -365,6 +365,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * @param targetLevel 
      */
     expandAll(dataFiles: any, expanded: boolean, level: any, targetLevel: any) {
+        if(!dataFiles) return;
+
         let currentLevel = level + 1;
         for (let i = 0; i < dataFiles.length; i++) {
             dataFiles[i].expanded = expanded;
@@ -569,7 +571,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }, 0);
     }
     _addAllWithinToCart(node: TreeNode, cart: DataCart, selected: boolean = false) : void {
-        if (node.children.length > 0) {
+        if (node && node.children && node.children.length > 0) {
             for(let child of node.children) 
                 this._addAllWithinToCart(child, cart, selected);
         }

@@ -5,15 +5,13 @@
             <div class="radio-group">
                 <div class="radio">
                     <label title="Yes, I will be the primary public contact.">
-                        <input type="radio" required name="willUpload" value="true"
-                            formControlName="willUpload">
+                        <input type="radio" required name="willUpload" value="true" (change)="toggleprimaryContact($event)" formControlName="willUpload">
                         Yes
                     </label>
                 </div>
                 <div class="radio">
                     <label title="No, another NIST staff person will be the primary public contact.">
-                        <input type="radio" required name="willUpload" value="false"
-                            formControlName="willUpload">
+                        <input type="radio" required name="willUpload" value="false" (change)="toggleprimaryContact($event)" formControlName="willUpload">
                         No
                     </label>
                 </div>

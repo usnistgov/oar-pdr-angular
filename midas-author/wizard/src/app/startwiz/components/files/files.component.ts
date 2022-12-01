@@ -52,4 +52,9 @@ export class FilesComponent implements OnInit {
     isSbarVisible() {
         return this._sbarvisible
     }
+
+    toggleprimaryContact(evt:any) {
+        var target = evt.target;
+        this.dataModel.willUpload = (target.value==='yes');
+    }
 }
