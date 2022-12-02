@@ -134,12 +134,8 @@ export class StepWizardComponent implements OnInit {
         let id: string;
         let body = {
             "name": this.readableRandomStringMaker(5),
-            "data": {
-                "title": "Microscopy of Cobalt Samples"
-            },
-            "meta": {}
+            "meta": this.dataModel
         }
-        body.meta = this.dataModel;
 
         this.wizardService.updateMetadata(body)
         .subscribe(obj => {

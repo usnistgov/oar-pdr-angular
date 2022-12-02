@@ -106,7 +106,12 @@ export class ReferencesComponent implements OnInit {
                 break;
             case "add":
                 //Append a blank reference to the record and set current reference.
-                this.record.references.push({} as Reference);
+                if(!this.record["references"]){
+                    this.record["references"] = [];
+                }
+
+                this.record["references"].push({} as Reference);
+                
                 this.currentRefIndex = this.record.references.length - 1;
                 this.record["references"][this.currentRefIndex].dataChanged = true;
                 this.currentRef = this.record["references"][this.currentRefIndex];
@@ -404,7 +409,10 @@ export class ReferencesComponent implements OnInit {
      */   
     editIconClass() {
         if(this.isNormal){
-            return "faa faa-pencil icon_enabled";
+            if(this.hasDisplayableReferences())
+                return "faa faa-pencil icon_enabled";
+            else
+                return "faa faa-pencil icon_disabled";
         }else{
             return "faa faa-check icon_enabled";
         }

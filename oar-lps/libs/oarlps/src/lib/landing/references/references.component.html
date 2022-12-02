@@ -36,7 +36,7 @@
                     <i [class]="addIconClass()" data-toggle="tooltip" title="Add references"></i>
                 </button>
 
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences()">
                     <i [class]="editIconClass()" data-toggle="tooltip" title="Edit references"></i>
                 </button>
 
