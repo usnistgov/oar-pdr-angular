@@ -42,4 +42,5 @@ export class ThemesPrefs {
 
 export class AppSettings {
     public static HOMEPAGE_DEFAULT_URL='https://nextcloud-dev.nist.gov';
+    public static FILE_MANAGER_URL='https://nextcloud-dev.nist.gov/index.php/apps/files/?dir=/2618&fileid=4845';
  }

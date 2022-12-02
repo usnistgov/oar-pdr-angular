@@ -332,6 +332,7 @@ export class MetadataUpdateService {
             }
             this.custsvc.getDraftMetadata().subscribe(
                 (res) => {
+                    // if(!res["keyword"]) res["keyword"] = [];
                     if(res) this.originalDraftRec = JSON.parse(JSON.stringify(res));
                     else this.originalDraftRec = {} as NerdmRes;
                     // res = {};

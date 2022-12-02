@@ -64,8 +64,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
-      console.log("request.url", request.url);
-
         // Wizard
         if (request.url.indexOf('localhost:9091') > -1 && request.method === 'POST') {
             return of(new HttpResponse({ status: 200, body: wizardResponse }));

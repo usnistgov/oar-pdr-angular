@@ -72,48 +72,52 @@ export class SearchTopicsComponent implements OnInit {
 
     private arrangeIntoTaxonomyTree(paths) {
         const tree = [];
-        paths.forEach((path) => {
-            var fullpath: string;
-            if (path.parent != null && path.parent != undefined && path.parent != "")
-                fullpath = path.parent + ":" + path.label;
-            else
-                fullpath = path.label;
 
-            const pathParts = fullpath.split(':');
-            let currentLevel = tree; // initialize currentLevel to root
+        if(paths) {
+            paths.forEach((path) => {
+                var fullpath: string;
+                if (path.parent != null && path.parent != undefined && path.parent != "")
+                    fullpath = path.parent + ":" + path.label;
+                else
+                    fullpath = path.label;
 
-            for (var j = 0; j < pathParts.length; j++) {
-                let tempId: string = '';
-                for (var k = 0; k < j + 1; k++) {
-                    tempId = tempId + pathParts[k];
-                    // tempId = tempId + pathParts[k].replace(/ /g, "");
-                    if (k < j) {
-                        tempId = tempId + ": ";
+                const pathParts = fullpath.split(':');
+                let currentLevel = tree; // initialize currentLevel to root
+
+                for (var j = 0; j < pathParts.length; j++) {
+                    let tempId: string = '';
+                    for (var k = 0; k < j + 1; k++) {
+                        tempId = tempId + pathParts[k];
+                        // tempId = tempId + pathParts[k].replace(/ /g, "");
+                        if (k < j) {
+                            tempId = tempId + ": ";
+                        }
                     }
-                }
 
-                // check to see if the path already exists.
-                const existingPath = currentLevel.filter(level => level.data.treeId === tempId);
-                if (existingPath.length > 0) {
-                    // The path to this item was already in the tree, so don't add it again.
-                    // Set the current level to this path's children  
-                    currentLevel = existingPath[0].children;
-                } else {
-                    let newPart = null;
-                    newPart = {
-                        data: {
-                            treeId: tempId,
-                            name: pathParts[j],
-                            researchTopic: tempId,
-                            bkcolor: 'white'
-                        }, children: [],
-                        expanded: false
-                    };
-                    currentLevel.push(newPart);
-                    currentLevel = newPart.children;
-                }
-            };
-        });
+                    // check to see if the path already exists.
+                    const existingPath = currentLevel.filter(level => level.data.treeId === tempId);
+                    if (existingPath.length > 0) {
+                        // The path to this item was already in the tree, so don't add it again.
+                        // Set the current level to this path's children  
+                        currentLevel = existingPath[0].children;
+                    } else {
+                        let newPart = null;
+                        newPart = {
+                            data: {
+                                treeId: tempId,
+                                name: pathParts[j],
+                                researchTopic: tempId,
+                                bkcolor: 'white'
+                            }, children: [],
+                            expanded: false
+                        };
+                        currentLevel.push(newPart);
+                        currentLevel = newPart.children;
+                    }
+                };
+            });
+        }
+        
         return tree;
     }
 

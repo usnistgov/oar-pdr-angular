@@ -45,7 +45,9 @@ export class ContactComponent implements OnInit {
     }
 
     ngOnInit() {
-        if ("hasEmail" in this.record['contactPoint'])
+        // if(this.record && !this.record["keyword"]) this.record["keyword"] = [];
+
+        if (this.record['contactPoint'] && "hasEmail" in this.record['contactPoint'])
             this.isEmail = true;
     }
 

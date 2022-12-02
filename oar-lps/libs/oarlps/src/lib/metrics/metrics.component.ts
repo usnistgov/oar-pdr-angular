@@ -289,10 +289,12 @@ export class MetricsComponent implements OnInit {
      */
     handleSum(files: TreeNode[]){
         this.totalFileSize = 0;
-        files.forEach(child => {
-            const {downloads, fileSize} = this.sumFolder(child);
-            this.totalFileSize += fileSize;
-        })
+        if(files) {
+            files.forEach(child => {
+                const {downloads, fileSize} = this.sumFolder(child);
+                this.totalFileSize += fileSize;
+            })
+        }
     }
 
     /**
@@ -301,7 +303,7 @@ export class MetricsComponent implements OnInit {
      * @returns 
      */
     sumFolder(node: TreeNode){
-        if (node.children.length > 0) {
+        if (node.children && node.children.length > 0) {
             node.children.forEach(child => {
                 const {downloads, fileSize} = this.sumFolder(child);              
                 node.data.success_get += downloads;

@@ -43,7 +43,6 @@ export class SearchresultComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
     }
 
     ngAfterViewInit(): void {

@@ -40,14 +40,14 @@ export class EditControlComponent implements OnInit, OnChanges {
     EDIT_MODES: any;
     screenWidth: number;
     screenSizeBreakPoint: number;
-    fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
+    fileManagerUrl = AppSettings.FILE_MANAGER_URL;
 
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
      * template via [(mdrec)].
      */
     @Input() mdrec: NerdmRes;
-    @Output() mdrecChange = new EventEmitter<NerdmRes>();
+    // @Output() mdrecChange = new EventEmitter<NerdmRes>();
 
     /**
      * the ID that was used to request the landing page
@@ -93,9 +93,10 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.mdupdsvc.subscribe(
             (md) => {
                 if (md && md != this.mdrec) {
+                    if(md && !md["keyword"]) md["keyword"] = [];
                     this.mdrec = md as NerdmRes;
                     this.edstatsvc._setLastUpdated(this.mdupdsvc.lastUpdate);
-                    this.mdrecChange.emit(md as NerdmRes);
+                    // this.mdrecChange.emit(md as NerdmRes);
                 }
             }
         );
@@ -107,17 +108,17 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
-      // set edit mode to view only on init
-      this._setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
-      this.ngOnChanges();
-      this.edstatsvc._watchRemoteStart((remoteObj) => {
-          // To remote start editing, resID need be set otherwise authorizeEditing()
-          // will do nothing and the app won't change to edit mode
-          if (remoteObj.resID) {
-              this.resID = remoteObj.resID;
-              this.startEditing(remoteObj.nologin);
-          }
-      });
+        // set edit mode to view only on init
+        this._setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
+        this.ngOnChanges();
+        this.edstatsvc._watchRemoteStart((remoteObj) => {
+            // To remote start editing, resID need be set otherwise authorizeEditing()
+            // will do nothing and the app won't change to edit mode
+            if (remoteObj.resID) {
+                this.resID = remoteObj.resID;
+                this.startEditing(remoteObj.nologin);
+            }
+        });
     }
 
     ngOnChanges() {
@@ -270,7 +271,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                         // assume a NerdmRes object was returned
                         this.mdrec = md as NerdmRes;
                         this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
-                        this.mdrecChange.emit(md as NerdmRes);
+                        // this.mdrecChange.emit(md as NerdmRes);
                     }else{
                       // If backend didn't return a Nerdm record, just set edit mode to preview
                       console.log("Backend didn't return a Nerdm record after the discard request.")

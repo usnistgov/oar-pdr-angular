@@ -307,6 +307,7 @@ export class FiltersComponent implements OnInit {
         this.searching = true;
         let that = this;
         let urls = (new NERDResource(this.md)).dynamicSearchUrls();
+        console.log("urls", urls)
         for(let i=0; i < urls.length; i++){
             return this.searchService.resolveSearchRequest(urls[i])
             .subscribe(

@@ -67,9 +67,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     }
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
-        console.log("request.url +++++++++", request.url);
-        console.log("request.method", request.method);
-
         // metrics
         // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {
         //     return of(new HttpResponse({ status: 200, body: metricsRecordDetails }));

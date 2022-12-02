@@ -140,22 +140,11 @@ export class StepWizardComponent implements OnInit {
             "meta": {}
         }
         body.meta = this.dataModel;
-        // body.meta = {
-        //     "name": "CoTEM6", 
-        //     "data": {
-        //         "title": "Microscopy of Cobalt Samples"
-        //     }, 
-        //     "meta": {
-        //         "resourceType": "software", 
-        //         "softwareLink": "https://github.com/usnistgov/jsont"
-        //     }
-        // }
 
         this.wizardService.updateMetadata(body)
         .subscribe(obj => {
             console.log(obj);
             id = obj['id'];
-            // this.dataModel = obj.data
 
             // Submit the request, get the id from server response then launch the landing page
             let url = 'http://localhost:4202/od/id/' + id + '?editEnabled=true';

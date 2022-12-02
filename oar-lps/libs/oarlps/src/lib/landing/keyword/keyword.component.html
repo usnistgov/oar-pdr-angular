@@ -10,7 +10,7 @@
               <strong>Subject Keywords:</strong>
               <span class="keywords" contenteditable="false"
                 *ngFor="let keyword of record['keyword']; let i =index">
-                {{ keyword }}<span *ngIf="i < record['keyword'].length-1 ">,</span>
+                {{ keyword }}<span *ngIf="record['keyword'] && i < record['keyword'].length-1 ">,</span>
               </span> &nbsp; &nbsp;
             </div>
           </ng-template>

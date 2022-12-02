@@ -65,7 +65,7 @@ export class AccesspageComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (this.record && this.record[this.fieldName].length > 0){
+        if (this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0){
             this.useMetadata();
             //Keep a copy of the record for undo purpose
             this.orig_record = JSON.parse(JSON.stringify(this.record));

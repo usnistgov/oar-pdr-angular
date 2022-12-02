@@ -4,7 +4,7 @@
     <div *ngIf="displayMode == 'restrict'">Note:  This dataset is designated as restricted public data; this file list will not be shown in the public version of this page.</div>
 
         <!-- Display 'Download all' and 'Add all to cart' buttons and other info -->
-        <div *ngIf="files.length  > 0">
+        <div *ngIf="files && files.length  > 0">
             <div *ngIf="inBrowser; else filesLoading">
                 <div class="flex-container" style="margin-top: 2em;">
                     <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->

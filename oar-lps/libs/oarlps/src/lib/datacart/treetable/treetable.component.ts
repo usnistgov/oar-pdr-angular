@@ -115,7 +115,7 @@ export class CartTreeNode implements TreeNode {
         // find the node corresponding to the given item in the data cart 
         for (let child of this.children) {
             if (child.keyname == levels[0]) {
-                if (levels.length > 1)
+                if (levels && levels.length > 1)
                     return child._upsertNodeFor(levels.slice(1), item);
                 else {
                     child.updateData(item);
@@ -129,7 +129,7 @@ export class CartTreeNode implements TreeNode {
         let child = new CartTreeNode(levels[0], key, item.resTitle || '');
         child.parent = this;
         this.children = [...this.children, child];
-        if (levels.length > 1)
+        if (levels && levels.length > 1)
             return child._upsertNodeFor(levels.slice(1), item);
 
         child.updateData(item);
@@ -158,7 +158,7 @@ export class CartTreeNode implements TreeNode {
         for (let node of this.children) {
             if (node.data.key == key)
                 return node;
-            else if (node.children.length > 0) {
+            else if (node.children && node.children.length > 0) {
                 let out = node.findNode(key);
                 if (out) return out;
             }
@@ -181,7 +181,7 @@ export class CartTreeNode implements TreeNode {
                refreshParent: (TreeNode) => void = null)
         : boolean
     {
-        if (this.children.length == 0 && this.data.cartItem)
+        if (this.children && this.children.length == 0 && this.data.cartItem)
             // only operates on parent nodes
             return true;
 
@@ -189,7 +189,7 @@ export class CartTreeNode implements TreeNode {
         let updated = false;                  // true if any current children were removed (by not
                                               //   being put into newchildren)
         for (let child of this.children) {
-            if (child.children.length > 0) {
+            if (child.children && child.children.length > 0) {
                 if (child.cleanNodes(cart, removing, refreshParent)) 
                     // child is not empty; retain it (otherwise, it will be dropped)
                     newchildren.push(child);
@@ -214,7 +214,7 @@ export class CartTreeNode implements TreeNode {
         }
 
         // false if this node is now empty
-        return this.children.length > 0;
+        return this.children && this.children.length > 0;
     }
 }
 

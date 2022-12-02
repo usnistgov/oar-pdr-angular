@@ -30,21 +30,23 @@ export class ContactPopupComponent implements OnInit {
             this.tempContactPoint = this.contactService.getBlankContact();
         }
 
-        // strip off "mailto:"
-        this.tempContactPoint.hasEmail = this.tempContactPoint.hasEmail.split(":")[1];
-        let i: number;
-        // Putting address lines together
-        if (this.tempContactPoint.address) {
-            this.tempAddress = this.tempContactPoint.address[0];
-            for (i = 1; i < this.tempContactPoint.address.length; i++) {
-                this.tempAddress = this.tempAddress + '\r\n' + this.tempContactPoint.address[i];
+        if(this.tempContactPoint) {
+            // strip off "mailto:"
+            this.tempContactPoint.hasEmail = this.tempContactPoint.hasEmail.split(":")[1];
+            let i: number;
+            // Putting address lines together
+            if (this.tempContactPoint.address) {
+                this.tempAddress = this.tempContactPoint.address[0];
+                for (i = 1; i < this.tempContactPoint.address.length; i++) {
+                    this.tempAddress = this.tempAddress + '\r\n' + this.tempContactPoint.address[i];
+                }
             }
-        }
 
-        if(this.inBrowser){
-          let textArea = document.getElementById("address");
-          if (this.tempContactPoint.address != undefined && this.tempContactPoint.address != null)
-              textArea.style.height = (this.tempContactPoint.address.length * 30).toString() + 'px';;
+            if(this.inBrowser){
+            let textArea = document.getElementById("address");
+            if (this.tempContactPoint.address != undefined && this.tempContactPoint.address != null)
+                textArea.style.height = (this.tempContactPoint.address.length * 30).toString() + 'px';;
+            }
         }
     }
 
@@ -63,6 +65,8 @@ export class ContactPopupComponent implements OnInit {
     *   Save contact info when click on save button in pop up dialog
     */
     saveContactInfo() {
+        if(!this.tempContactPoint) return;
+        
         // Add "mailto:" back
         if (!this.tempContactPoint.hasEmail) {
             if (this.tempContactPoint.hasEmail.split(":")[0] != "mailto")

@@ -170,6 +170,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        // if(this.record && !this.record["keyword"]) this.record["keyword"] = [];
+
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
         });
@@ -301,7 +303,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         let _insertComp = (levels: string[], comp: NerdmComp, tree: TreeNode) => {
             for (let child of tree.children) {
                 if (child.data.name == levels[0]) {
-                    if (levels.length > 1) {
+                    if (levels && levels.length > 1) {
                         return _insertComp(levels.slice(1), comp, child);
                     } else  {
                         child.data = makeNodeData(levels[0], tree.data.key, comp, true);
@@ -526,7 +528,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         for (let node of nodes) {
             if (node.data.key == key)
                 return node;
-            else if (node.children.length > 0) {
+            else if (node.children && node.children.length > 0) {
                 let out = this.findNode(node.children, key);
                 if (out) return out;
             }
@@ -598,7 +600,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
      */
     _areAllInCart(nodes: TreeNode[]) : boolean {
         for (let node of nodes) {
-            if (node.children.length > 0) {
+            if (node.children && node.children.length > 0) {
                 if (! this._areAllInCart(node.children))
                     return false;
             }
