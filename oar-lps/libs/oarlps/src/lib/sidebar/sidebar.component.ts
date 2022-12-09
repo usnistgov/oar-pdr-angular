@@ -15,7 +15,7 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
         })),
         state('sbhidden', style({
             position: 'absolute',
-            right: '-150%',
+            right: '-250%',
             top: "20%",
             bottom: "100%"
         })),

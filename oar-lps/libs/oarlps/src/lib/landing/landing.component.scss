@@ -445,19 +445,11 @@ a:visited {
   border-style: solid;
   border-color: lightgrey;
   border-width: 1px 1px 1px 0px;
-  /* margin-right: .5em; */
+  z-index: 99;
 }
 
-.undo_button {
-  display: table-cell;
-  width: 1.65em;
-  height: 1.65em;
-  /* border-radius: 0 4px 4px 0px; */
-  background-color: rgb(233, 233, 233);
-  vertical-align: top;
-  border-style: solid;
-  border-color: lightgrey;
-  border-width: 1px 1px 1px 0px;
+.edit_button:hover:enabled {
+    border: 1px solid var(--nist-blue-default);
 }
 
 .icon_enabled { 

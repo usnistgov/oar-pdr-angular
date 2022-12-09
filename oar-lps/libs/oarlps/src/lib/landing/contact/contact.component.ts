@@ -9,7 +9,7 @@ import { ContactService } from './contact.service';
 @Component({
     selector: 'app-contact',
     templateUrl: './contact.component.html',
-    styleUrls: ['../landing.component.css']
+    styleUrls: ['../landing.component.scss']
 })
 export class ContactComponent implements OnInit {
     @Input() record: any[];

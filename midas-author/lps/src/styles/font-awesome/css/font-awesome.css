@@ -727,6 +727,22 @@
 .faa-floppy-o:before {
   content: "\f0c7";
 }
+.faa-save-all::before{
+    content: "\f0c7";
+    position:relative;
+    top:0px;
+    left:-2px;
+    background-color:#ddd;
+    opacity: .4;
+}
+.faa-save-all::after {
+    content: "\f0c7";
+    position:relative;
+    top:3px;
+    left:-10px;
+    background-color:white;
+    z-index: 10;
+}
 .faa-square:before {
   content: "\f0c8";
 }
@@ -2339,3 +2355,5 @@
 .faa-arrow-alt-circle-right:before {
   content: "\f35a";
 }
+
+

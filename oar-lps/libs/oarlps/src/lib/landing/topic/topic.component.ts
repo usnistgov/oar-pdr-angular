@@ -9,7 +9,7 @@ import { AppConfig } from '../../config/config';
 @Component({
     selector: 'app-topic',
     templateUrl: './topic.component.html',
-    styleUrls: ['../landing.component.css']
+    styleUrls: ['../landing.component.scss']
 })
 export class TopicComponent implements OnInit {
     nistTaxonomyTopics: any[] = [];

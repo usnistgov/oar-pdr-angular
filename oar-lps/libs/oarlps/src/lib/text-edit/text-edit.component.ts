@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@
 @Component({
   selector: 'lib-text-edit',
   templateUrl: './text-edit.component.html',
-  styleUrls: ['./text-edit.component.css']
+  styleUrls: ['../landing/landing.component.scss', './text-edit.component.css']
 })
 export class TextEditComponent implements OnInit {
     prevVal: string = "";

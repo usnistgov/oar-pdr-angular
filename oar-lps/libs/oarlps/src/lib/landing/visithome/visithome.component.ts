@@ -9,7 +9,7 @@ import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
 @Component({
     selector: 'app-visithome',
     templateUrl: './visithome.component.html',
-    styleUrls: ['./visithome.component.css', '../landing.component.css']
+    styleUrls: ['./visithome.component.css', '../landing.component.scss']
 })
 export class VisithomeComponent implements OnInit {
     @Input() record: any[];

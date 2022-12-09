@@ -7,7 +7,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 @Component({
     selector: 'app-description',
     templateUrl: './description.component.html',
-    styleUrls: ['../landing.component.css', './description.component.css']
+    styleUrls: ['../landing.component.scss', './description.component.css']
 })
 export class DescriptionComponent implements OnInit {
     @Input() record: any[];

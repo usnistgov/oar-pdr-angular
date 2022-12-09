@@ -9,32 +9,36 @@
         <td class="text-field-wrapper">
             <input class="editable-text-field" *ngIf="editing" type="text" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
             <span *ngIf="!editing" class="display-text-field">
-                {{ currentVal }}
+                <div style="padding: 2px 10px;" *ngIf="currentVal && currentVal.trim() != ''; else notext">{{ currentVal }}</div>
+                <ng-template #notext>
+                    <span style="color: grey;">{{placeHolderText}}</span>
+                </ng-template>
+                
             </span>
         </td>
 
         <!-- Controls -->
         <td class="control-wrapper" [style.width]="controlBoxWidth" [style.border-left]="controlBorderStyle()">
             <!-- Edit/Save button-->
-            <button *ngIf="editButton" class="icon_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button">
+            <button *ngIf="editButton" class="edit_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button">
                 <i [class]="getEditIconClass()"
                     data-toggle="tooltip" [title]="getTooltip('edit')"></i>
             </button>
 
             <!-- Delete/Undo button-->
-            <button *ngIf="deleteButton" class="icon_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button">
+            <button *ngIf="deleteButton" class="edit_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button">
                 <i [class]="getDelIconClass()"
                     data-toggle="tooltip" [title]="getTooltip('delete')"></i>
             </button>
 
             <!-- Plus button-->
-            <button *ngIf="plusButton" class="icon_button" type="button" (click)="add()" [disabled]="disableControl" aria-label="Add button">
+            <button *ngIf="plusButton" class="edit_button" type="button" (click)="add()" [disabled]="disableControl" aria-label="Add button">
                 <i class="faa faa-plus"
                     data-toggle="tooltip" [title]="Add"></i>
             </button>
 
             <!-- Submit button-->
-            <button *ngIf="submitButton" class="icon_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button">
+            <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button">
                 <i class="faa faa-check"
                     data-toggle="tooltip" [title]="submit"></i>
             </button>

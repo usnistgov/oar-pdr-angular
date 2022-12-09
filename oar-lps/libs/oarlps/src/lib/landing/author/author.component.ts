@@ -8,7 +8,7 @@ import { AuthorService } from './author.service';
 @Component({
     selector: 'app-author',
     templateUrl: './author.component.html',
-    styleUrls: ['../landing.component.css']
+    styleUrls: ['../landing.component.scss']
 })
 export class AuthorComponent implements OnInit {
     @Input() record: any[];

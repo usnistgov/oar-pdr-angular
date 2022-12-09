@@ -41,7 +41,7 @@
                 <i [class]="editIconClass()" data-toggle="tooltip" title="Edit references"></i>
             </button>
 
-            <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="nonEditing"
+            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="nonEditing"
                 (click)="undoEditing()" aria-label="undo button">
                 <i [class]="undoIconClass()" data-toggle="tooltip" title="Undo authors"></i>
             </button>

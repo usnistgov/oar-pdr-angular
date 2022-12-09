@@ -7,7 +7,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 @Component({
     selector: 'app-title',
     templateUrl: './title.component.html',
-    styleUrls: ['./title.component.css', '../landing.component.css']
+    styleUrls: ['./title.component.css', '../landing.component.scss']
 })
 export class TitleComponent implements OnInit {
     @Input() record: any[];

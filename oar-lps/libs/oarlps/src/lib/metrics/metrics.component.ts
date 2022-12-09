@@ -21,7 +21,7 @@ const DESKTOP_LABEL_LIMIT = 50;
 @Component({
     selector: 'app-metrics',
     templateUrl: './metrics.component.html',
-    styleUrls: ['./metrics.component.css', '../landing/landing.component.css']
+    styleUrls: ['./metrics.component.css', '../landing/landing.component.scss']
 })
 export class MetricsComponent implements OnInit {
 

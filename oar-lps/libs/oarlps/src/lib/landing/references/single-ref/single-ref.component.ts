@@ -6,7 +6,7 @@ import { HttpClient } from "@angular/common/http";
 @Component({
     selector: 'lib-single-ref',
     templateUrl: './single-ref.component.html',
-    styleUrls: ['../../landing.component.css', './single-ref.component.css'],
+    styleUrls: ['../../landing.component.scss', './single-ref.component.css'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -53,8 +53,12 @@ export class SingleRefComponent implements OnInit {
         }
 
         if(changes.ref) {
-            this.originalRef = JSON.parse(JSON.stringify(this.ref));
-            this.reftype = this.originalRef.refType == "IsSupplementTo" ? "1" : "2" ;
+            if(this.ref) {
+                this.originalRef = JSON.parse(JSON.stringify(this.ref));
+                this.reftype = this.originalRef.refType == "IsSupplementTo" ? "1" : "2" ;
+            }else{
+                this.originalRef = undefined;
+            }
         }
     }
 
@@ -86,6 +90,7 @@ export class SingleRefComponent implements OnInit {
 
     onReftypeChanged(event) {
         this.ref.refType = event.target.value=="1" ? "IsSupplementTo" : "References";
+        this.onChange(false);
     }
 
     /**

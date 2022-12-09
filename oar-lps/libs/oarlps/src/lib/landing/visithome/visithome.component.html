@@ -22,7 +22,7 @@
             </div>
 
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode && !inViewMode" >
-                <button class="undo_button" type="button" [disabled]="!updated"
+                <button class="edit_button" type="button" [disabled]="!updated"
                     (click)="undoEditing()" aria-label="undo button">
                     <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"
                         data-toggle="tooltip" title="Undo authors"></i>

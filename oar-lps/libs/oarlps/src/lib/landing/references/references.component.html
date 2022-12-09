@@ -1,8 +1,8 @@
 <div class="references">
-    <div *ngIf="mdupdsvc.isEditMode; else nonEdit" >
+    <div *ngIf="mdupdsvc.isEditMode; else nonEdit">
         <div class="section-header"><h3><b>References</b></h3></div>
-        <div class="editable_container">
-            <div class="editable_field" >
+        <div class="editable_container"  style="width: 100%;">
+            <div class="editable_field" style="width: 100%;">
                 <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" [style.background-color]="getRecordBackgroundColor()">
                     <div #dropListContainer class="example-container" cdkDropListGroup>
                         <div style="width: 100%;" 
@@ -20,31 +20,47 @@
                                 class="ref-row"
                             >
                                 <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
-                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="true" [editButton]="false" [deleteButton]="true" [trashButton]="true" [disableControl]="isAdding || isEditing" (command_out)="onCitationChange($event, i)"></lib-text-edit>
+                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="true" [editButton]="false" [deleteButton]="true" [trashButton]="true" [disableControl]="isAdding || isEditing" [placeHolderText]="placeholder" (command_out)="onCitationChange($event, i)"></lib-text-edit>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="edit-block" [@editExpand]="editBlockStatus">        
-                    <lib-single-ref style="width: 100%; padding: 10px;" [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-ref>
-                </div>
             </div>
             <div class="editable_field" [style.width.px]="getControlBoxWidth()">
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding">
-                    <i [class]="addIconClass()" data-toggle="tooltip" title="Add references"></i>
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding" data-toggle="tooltip" title="Add references">
+                    <i [class]="addIconClass()"></i>
                 </button>
 
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences()">
-                    <i [class]="editIconClass()" data-toggle="tooltip" title="Edit references"></i>
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences()" data-toggle="tooltip" [title]="editBtnTooltip">
+                    <i [class]="editIconClass()"></i>
                 </button>
 
                 <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!dataChanged && !isEditing"
-                    (click)="undoChanges()" aria-label="undo button">
-                    <i [class]="undoIconClass()" data-toggle="tooltip" title="Undo"></i>
+                    (click)="undoChanges()" aria-label="undo button" data-toggle="tooltip" title="Undo all reference changes">
+                    <i [class]="undoIconClass()"></i>
                 </button>
             </div>
+        </div>
+        <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus">  
+            <table style="width: 100%;">
+                <tr  style="width: 100%;">
+                    <td class="edit-block" style="width: calc(100%-30px);">
+                        <lib-single-ref [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-ref>
+                    </td>
+                    <td style="width: 30px;vertical-align: top;">
+                        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurRef()" aria-label="edit button" [disabled]="!dataChanged" data-toggle="tooltip" title="Save references">
+                            <i class="faa faa-save"></i>
+                        </button>
+        
+                        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
+                            (click)="undoCurRefChanges()" aria-label="undo button" data-toggle="tooltip" title="Undo current reference changes">
+                            <i class="faa faa-undo"></i>
+                        </button>
+                    </td>
+                </tr>
+            </table>      
+
         </div>
     </div>
     <ng-template #nonEdit>
@@ -74,7 +90,7 @@
             <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="openEditBlock()" aria-label="edit button" [disabled]="disableEditing">
                 <i class="faa faa-pencil icon_enabled" data-toggle="tooltip" title="Edit references"></i>
             </button>
-            <button class="undo_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!updated || disableEditing"
+            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!updated || disableEditing"
                 (click)="undoEditing()" aria-label="undo button">
                 <i [class]="undoIconClass()"
                     data-toggle="tooltip" title="Undo authors"></i>

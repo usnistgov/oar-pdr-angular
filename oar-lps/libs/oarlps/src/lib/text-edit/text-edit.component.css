@@ -21,8 +21,7 @@
 }
 
 .display-text-field {
-    margin-left: 10px !important;
-    margin-right: 10px !important;
+    padding: 10px 0px !important;
 }
 
 .icon_button {

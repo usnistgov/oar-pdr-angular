@@ -16,7 +16,7 @@ import { Themes, ThemesPrefs } from '../../shared/globals/globals';
     selector:    'pdr-resource-md',
     templateUrl: './resourcemetadata.component.html',
     styleUrls:  [
-        '../landing.component.css'
+        '../landing.component.scss'
     ]
 })
 export class ResourceMetadataComponent implements OnChanges {

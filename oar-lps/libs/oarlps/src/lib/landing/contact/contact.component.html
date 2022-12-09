@@ -45,7 +45,7 @@
             <i class="faa faa-pencil icon_enabled" data-toggle="tooltip"
                 title="Edit contactPoint"></i>
         </button>
-        <button class="undo_button" *ngIf="mdupdsvc.isEditMode && enableEdit" type="button"
+        <button class="edit_button" *ngIf="mdupdsvc.isEditMode && enableEdit" type="button"
             [disabled]="!updated"
             (click)="undoEditing('contactPoint')">
             <i class="faa faa-undo"

@@ -131,6 +131,7 @@ export class MetadataUpdateService {
                 resolve(false);
             });
         }
+
         // establish the original state for this subset of metadata (so that it this update
         // can be undone).
         if (this.originalRec) {

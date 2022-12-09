@@ -59,7 +59,7 @@ import questionhelp from '../../assets/site-constants/question-help.json';
                 "width": "75%"
             })),
             state('mainexpanded', style({
-                "width": "93%"
+                "width": "95%"
             })),
             state('mainfullyexpanded', style({
                 "width": "100%"
@@ -70,10 +70,10 @@ import questionhelp from '../../assets/site-constants/question-help.json';
         ]),
         trigger("togglesbar", [
             state('mainsquished', style({
-                "width": "25%"
+                "width": "22%"
             })),
             state('mainexpanded', style({
-                "width": "5%"
+                "width": "15px"
             })),
             state('mainfullyexpanded', style({
                 "width": "0%"

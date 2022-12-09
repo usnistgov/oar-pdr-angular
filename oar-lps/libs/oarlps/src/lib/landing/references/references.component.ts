@@ -16,7 +16,7 @@ import { Reference } from './reference';
 @Component({
     selector: 'app-references',
     templateUrl: './references.component.html',
-    styleUrls: ['../landing.component.css', './references.component.css'],
+    styleUrls: ['../landing.component.scss', './references.component.css'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -29,9 +29,10 @@ export class ReferencesComponent implements OnInit {
     fieldName: string = 'references';
     tempInput: any = {};
     editBlockStatus: string = 'collapsed';
+    placeholder: string = "Enter reference data below";
+    orderChanged: boolean = false;
     currentRef: Reference = {} as Reference;
     currentRefIndex: number = 0;
-    dataChanged: boolean = false;
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     disableEditing: boolean = false;
     forceReset: boolean = false;
@@ -78,6 +79,21 @@ export class ReferencesComponent implements OnInit {
     get isEditing() { return this.editMode=="edit" }
     get isAdding() { return this.editMode=="add" }
 
+    get editBtnTooltip() { return this.isNormal? "Edit selected reference" : "Save all changes to server" }
+
+    /**
+     * Check if any reference data changed or reference order changed
+     */
+    get dataChanged() {
+        let changed: boolean = false;
+        if(!this.record || !this.record.references || this.record.references.length == 0) return this.orderChanged;
+        for(let i=0; i < this.record.references.length; i++) {
+            changed = changed || this.record.references[i].dataChanged;
+        }
+
+        return changed || this.orderChanged;
+    }
+
     /**
      * When user clicks on the edit (pencil/check) button, if current mode is editing or adding
      * save changes and set normal mode. If current mode is normal, set current mode to editing.
@@ -116,7 +132,6 @@ export class ReferencesComponent implements OnInit {
                 this.record["references"][this.currentRefIndex].dataChanged = true;
                 this.currentRef = this.record["references"][this.currentRefIndex];
                 this.openEditBlock();
-                this.dataChanged = true;
                 break;
             default: // normal
                 // Collapse the edit block
@@ -168,6 +183,11 @@ export class ReferencesComponent implements OnInit {
         }
     }
 
+    saveCurRef() {
+        this.updateMatadata();
+        this.setMode("normal");
+    }
+
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
@@ -187,10 +207,34 @@ export class ReferencesComponent implements OnInit {
             this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
         }
 
-        this.dataChanged = false;
+        this.orderChanged = false;
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+        this.setMode("normal");
+    }
+
+    /**
+     * 
+     */
+    undoCurRefChanges() {
+        if(this.currentRef.dataChanged) {
+            if(this.isAdding) {
+                if(this.record.references.length == 1) {
+                    this.record.references = [];
+                    this.currentRefIndex = 0;
+                }else {
+                    this.record.references.splice(this.currentRefIndex, 1);
+                    this.currentRefIndex = 0;
+                    this.currentRef = this.record.references[this.currentRefIndex];
+                }
+            }else{
+                this.currentRef = JSON.parse(JSON.stringify(this.orig_record.references[this.currentRefIndex]));
+                this.record.references[this.currentRefIndex] = JSON.parse(JSON.stringify(this.orig_record.references[this.currentRefIndex]));
+                this.currentRef.dataChanged = false;
+            }
+
+        }
         this.setMode("normal");
     }
 
@@ -279,7 +323,7 @@ export class ReferencesComponent implements OnInit {
         }
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
-        this.dataChanged = true;
+        this.orderChanged = true;
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;
@@ -292,7 +336,7 @@ export class ReferencesComponent implements OnInit {
      */
     removeRef(index: number) {
         this.record.references.splice(index,1);
-        this.dataChanged = true;
+        this.orderChanged = true;
         this.updateMatadata();
     }
 
@@ -373,8 +417,9 @@ export class ReferencesComponent implements OnInit {
      * Also update the reference data. 
      */
     onDataChange(event) {
-        this.dataChanged = this.dataChanged || event.dataChanged;
+        // this.dataChanged = this.dataChanged || c
         this.record['references'][this.currentRefIndex] = event.ref;
+        this.record['references'][this.currentRefIndex].dataChanged = event.dataChanged;
     }
 
     /**
@@ -395,9 +440,9 @@ export class ReferencesComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "faa faa-plus icon_enabled";
+            return "faa faa-plus faa-lg icon_enabled";
         }else{
-            return "faa faa-plus icon_disabled";
+            return "faa faa-plus faa-lg icon_disabled";
         }
     }
 
@@ -414,14 +459,24 @@ export class ReferencesComponent implements OnInit {
             else
                 return "faa faa-pencil icon_disabled";
         }else{
-            return "faa faa-check icon_enabled";
+            return "faa faa-save-all";
         }
     }
 
+    /**
+     * Return width of the control box
+     * If there are more than one reference, return 30 so the three buttons will align vertically.
+     * If only one reference, return 100 so the three buttons will align horizontally.
+     * @returns width in px
+     */
     getControlBoxWidth() {
         if(this.record["references"] && this.record["references"].length > 1)
             return 30;
         else
             return 100;
+    }
+
+    getRefBoxWidth() {
+        return "calc(100%-" + this.getControlBoxWidth() + 'px)'; 
     }
 }

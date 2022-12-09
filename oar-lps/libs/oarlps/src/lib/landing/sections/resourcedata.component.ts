@@ -15,7 +15,7 @@ import { Themes, ThemesPrefs } from '../../shared/globals/globals';
     templateUrl:   './resourcedata.component.html',
     styleUrls:   [
         './resourcedata.component.css',
-        '../landing.component.css'
+        '../landing.component.scss'
     ],
     animations: [
         trigger(

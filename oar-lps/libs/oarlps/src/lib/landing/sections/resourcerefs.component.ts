@@ -11,7 +11,7 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
     selector:      'pdr-resource-refs',
     templateUrl:   './resourcerefs.component.html',
     styleUrls:   [
-        '../landing.component.css',
+        '../landing.component.scss',
         './resourcerefs.component.css'
     ]
 })

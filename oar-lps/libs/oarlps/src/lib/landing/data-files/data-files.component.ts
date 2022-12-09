@@ -72,7 +72,7 @@ interface DataFileItem {
  * This implementation is based on the TreeTable component from primeng.  
  */
 @Component({
-    styleUrls: ['../landing.component.css', 'data-files.component.css'],
+    styleUrls: ['../landing.component.scss', 'data-files.component.css'],
     selector: 'pdr-data-files',
     templateUrl: `data-files.component.html`,
     providers: [ ],

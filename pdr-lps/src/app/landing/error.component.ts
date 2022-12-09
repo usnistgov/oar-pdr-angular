@@ -6,7 +6,7 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 
 @Component({
-  styleUrls: ['landing.component.css'],
+  styleUrls: ['landing.component.scss'],
   selector: 'error-template',
   template: `
   <div class="grid">

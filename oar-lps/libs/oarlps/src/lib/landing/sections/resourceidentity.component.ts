@@ -16,7 +16,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
     selector:      'pdr-resource-id',
     templateUrl:   './resourceidentity.component.html',
     styleUrls:   [
-        './resourceidentity.component.css', '../landing.component.css'
+        './resourceidentity.component.css', '../landing.component.scss'
     ]
 })
 export class ResourceIdentityComponent implements OnChanges {

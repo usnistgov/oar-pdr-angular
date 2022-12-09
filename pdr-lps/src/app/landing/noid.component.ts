@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  styleUrls: ['landing.component.css'],
+  styleUrls: ['landing.component.scss'],
   selector: 'noid-template',
   template: `
   <div class="grid">

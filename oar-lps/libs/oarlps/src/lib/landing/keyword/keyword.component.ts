@@ -7,7 +7,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 @Component({
     selector: 'app-keyword',
     templateUrl: './keyword.component.html',
-    styleUrls: ['../landing.component.css']
+    styleUrls: ['../landing.component.scss']
 })
 export class KeywordComponent implements OnInit {
     @Input() record: any[];

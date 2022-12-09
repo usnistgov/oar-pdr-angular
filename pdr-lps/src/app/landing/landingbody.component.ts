@@ -32,7 +32,7 @@ import { MetricsData } from "./metrics-data";
     selector:    'pdr-landing-body',
     templateUrl: './landingbody.component.html',
     styleUrls:   [
-        './landing.component.css'
+        './landing.component.scss'
     ]
 })
 export class LandingBodyComponent {

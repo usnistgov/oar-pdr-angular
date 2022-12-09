@@ -1,7 +1,7 @@
 <div style="width: 100%; padding: 0px 20px 20px 20px;">
     <!-- Controls -->
     <div class="add-option" *ngIf="isAdding">
-        <span style="margin-right: 1em;">How would you enter reference data?</span>
+        <span style="margin-right: 1em;">Choose your reference entry method:</span>
         <span style="margin-right: 1em;">
             <input type="radio" value="1" name="inputMethod" id="inputMethod1" [ngModel]="inputMethod" (change)="setInputMethod($event)">
             <label for="inputMethod1"> &nbsp;DOI&nbsp;&nbsp;&nbsp;</label>
@@ -18,7 +18,7 @@
         </span>
     </div>
 
-    <table width="100%" align="center">
+    <table align="center">
         <!-- doi -->
         <tr *ngIf="(isAdding && useDOI) || isEditing">
             <td align="right" style="width: 20% !important;">
@@ -33,7 +33,7 @@
         </tr>
 
         <!-- Reference type -->
-        <tr>
+        <tr style="width: 100%;">
             <td align="right" style="vertical-align:top;width: 20% !important;" >
                 <span>Reference Type:</span>
             </td>
@@ -185,11 +185,11 @@
                 </textarea>
             </td>
             <td style="width: 30px !important;vertical-align: top;">
-                <button class="undo_button" type="button"
+                <button class="edit_button" type="button"
                     (click)="resetCitation()" aria-label="reset button">
                     <i class="faa faa-undo" data-toggle="tooltip" title="Reset citation"></i>
                 </button>
-                <button class="undo_button" type="button" *ngIf="isEditing || !useCitationData"
+                <button class="edit_button" type="button" *ngIf="isEditing || !useCitationData"
                     (click)="citationLocked = !citationLocked" aria-label="reset button">
                     <i [class]="citationLockClass()" data-toggle="tooltip" title="Reset citation"></i>
                 </button>

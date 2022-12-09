@@ -10,7 +10,7 @@ import { Response } from 'express';
  */
 @Component({
     selector: 'not-found',
-    styleUrls: [ '../landing/landing.component.css' ],
+    styleUrls: [ '../landing/landing.component.scss' ],
     template: `
 <div class="card landingcard">
   <div class="grid">

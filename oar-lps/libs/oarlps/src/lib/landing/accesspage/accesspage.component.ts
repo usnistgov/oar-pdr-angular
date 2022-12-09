@@ -16,7 +16,7 @@ import { AccessPage } from './accessPage';
 @Component({
     selector: 'lib-accesspage',
     templateUrl: './accesspage.component.html',
-    styleUrls: ['../landing.component.css', './accesspage.component.css'],
+    styleUrls: ['../landing.component.scss', './accesspage.component.css'],
     animations: [
         trigger('enterAnimation', [
         state('enter', style({height: '0px', opacity: 0})),
