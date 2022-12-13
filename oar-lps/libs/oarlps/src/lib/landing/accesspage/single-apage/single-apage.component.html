@@ -1,1 +1,18 @@
-<p>single-apage works!</p>
+<div style="width: 100%; padding: 0px 20px 20px 20px;">
+    <table align="center">
+        <!-- Title -->
+        <tr *ngIf="isEditing || isAdding">
+            <td align="right">
+                <span>Title:</span>
+            </td>
+            <td colspan="2">
+                <span style="width: 100%">
+                    <span style="display:inline-block;width: 100%;">
+                        <input type="text" [(ngModel)]="accessPage.title" style="height:2em;"
+                        (input)="onChange(true)"/>
+                    </span>
+                </span>
+            </td>
+        </tr>
+    </table>
+</div>

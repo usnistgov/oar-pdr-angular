@@ -1,6 +1,20 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+/**
+ * a representation of a section mode
+ */
+export interface SectionMode {
+    "section": string,
+    "mode": string
+}
+
+export const MODE = {
+    "NORNAL": "normal",
+    "EDIT": "edit",
+    "ADD": "add"
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -18,8 +32,8 @@ export class LandingpageService {
     }
 
     // Broadcasting which section is in edit mode. Other section should push unsaved data to draft server and enter non-edit mode
-    _editing: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    setEditing(section: string){
+    _editing: BehaviorSubject<SectionMode> = new BehaviorSubject<SectionMode>({} as SectionMode);
+    setEditing(section: SectionMode){
         this._editing.next(section);
     }
     public watchEditing(subscriber) {

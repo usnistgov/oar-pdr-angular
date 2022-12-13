@@ -20,7 +20,7 @@
                                 class="ref-row"
                             >
                                 <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
-                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="true" [editButton]="false" [deleteButton]="true" [trashButton]="true" [disableControl]="isAdding || isEditing" [placeHolderText]="placeholder" (command_out)="onCitationChange($event, i)"></lib-text-edit>
+                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="record['references'].length==1?false:true" [editButton]="false" [deleteButton]="true" [trashButton]="true" [disableControl]="isAdding || isEditing" [placeHolderText]="placeholder" (command_out)="onCitationChange($event, i)"></lib-text-edit>
                                 </div>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                     <i [class]="addIconClass()"></i>
                 </button>
 
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences()" data-toggle="tooltip" [title]="editBtnTooltip">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences() || !isNormal" data-toggle="tooltip" [title]="editBtnTooltip">
                     <i [class]="editIconClass()"></i>
                 </button>
 
@@ -60,7 +60,6 @@
                     </td>
                 </tr>
             </table>      
-
         </div>
     </div>
     <ng-template #nonEdit>

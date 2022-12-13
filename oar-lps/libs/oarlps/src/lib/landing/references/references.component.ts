@@ -4,7 +4,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService } from '../landingpage.service';
+import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -12,6 +12,7 @@ import {
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { Reference } from './reference';
+
 
 @Component({
     selector: 'app-references',
@@ -39,7 +40,7 @@ export class ReferencesComponent implements OnInit {
 
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter reference data?" will not display.
     // Default is "normal" mode.
-    editMode: string = "normal"; 
+    editMode: string = MODE.NORNAL; 
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
@@ -58,9 +59,14 @@ export class ReferencesComponent implements OnInit {
         private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
-            this.lpService.watchEditing((section) => {
-                if(section != "" && section != this.fieldName && this.dataChanged) {
-                    this.onSave();
+            this.lpService.watchEditing((sectionMode: SectionMode) => {
+                console.log("Section mode", sectionMode);
+                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if(this.dataChanged){
+                        this.onSave();
+                    }
+
+                    this.setMode(MODE.NORNAL);
                 }
             })
     }
@@ -75,9 +81,9 @@ export class ReferencesComponent implements OnInit {
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
-    get isNormal() { return this.editMode=="normal" }
-    get isEditing() { return this.editMode=="edit" }
-    get isAdding() { return this.editMode=="add" }
+    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isEditing() { return this.editMode==MODE.EDIT }
+    get isAdding() { return this.editMode==MODE.ADD }
 
     get editBtnTooltip() { return this.isNormal? "Edit selected reference" : "Save all changes to server" }
 
@@ -102,9 +108,9 @@ export class ReferencesComponent implements OnInit {
         // If is editing, save data to the draft server
         if(this.isEditing || this.isAdding){
             this.onSave();
-            this.setMode("normal");
+            this.setMode(MODE.NORNAL);
         }else{ // If not editing, enter edit mode
-            this.setMode("edit");
+            this.setMode(MODE.EDIT);
         }
     }
 
@@ -112,15 +118,19 @@ export class ReferencesComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = "normal") {
+    setMode(editmode: string = MODE.NORNAL) {
+        let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
         switch ( this.editMode ) {
-            case "edit":
+            case MODE.EDIT:
                 this.openEditBlock();
                 //Broadcast who is editing
-                this.lpService.setEditing(this.fieldName);
+
+                this.lpService.setEditing(sectionMode);
                 break;
-            case "add":
+            case MODE.ADD:
                 //Append a blank reference to the record and set current reference.
                 if(!this.record["references"]){
                     this.record["references"] = [];
@@ -131,13 +141,14 @@ export class ReferencesComponent implements OnInit {
                 this.currentRefIndex = this.record.references.length - 1;
                 this.record["references"][this.currentRefIndex].dataChanged = true;
                 this.currentRef = this.record["references"][this.currentRefIndex];
+                this.lpService.setEditing(sectionMode);
                 this.openEditBlock();
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
                 //Broadcast that nobody is editing so system can display general help text
-                this.lpService.setEditing("");
+                this.lpService.setEditing(sectionMode);
                 break;
         }
     }
@@ -163,7 +174,7 @@ export class ReferencesComponent implements OnInit {
         this.updateMatadata();
 
         // Set edit mode to "normal"
-        this.setMode("normal");
+        this.setMode(MODE.NORNAL);
     }
 
     /**
@@ -183,9 +194,12 @@ export class ReferencesComponent implements OnInit {
         }
     }
 
+    /**
+     * Save current reference
+     */
     saveCurRef() {
         this.updateMatadata();
-        this.setMode("normal");
+        this.setMode(MODE.NORNAL);
     }
 
     /*
@@ -211,11 +225,11 @@ export class ReferencesComponent implements OnInit {
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
-        this.setMode("normal");
+        this.setMode(MODE.NORNAL);
     }
 
     /**
-     * 
+     * Revert current reference to original
      */
     undoCurRefChanges() {
         if(this.currentRef.dataChanged) {
@@ -235,7 +249,7 @@ export class ReferencesComponent implements OnInit {
             }
 
         }
-        this.setMode("normal");
+        this.setMode(MODE.NORNAL);
     }
 
     /**
@@ -344,7 +358,7 @@ export class ReferencesComponent implements OnInit {
      * Add an empty reference to the record and expand the edit window.
      */
     onAdd() {
-        this.setMode("add");
+        this.setMode(MODE.ADD);
     }
 
     /**
@@ -417,7 +431,6 @@ export class ReferencesComponent implements OnInit {
      * Also update the reference data. 
      */
     onDataChange(event) {
-        // this.dataChanged = this.dataChanged || c
         this.record['references'][this.currentRefIndex] = event.ref;
         this.record['references'][this.currentRefIndex].dataChanged = event.dataChanged;
     }
@@ -459,7 +472,7 @@ export class ReferencesComponent implements OnInit {
             else
                 return "faa faa-pencil icon_disabled";
         }else{
-            return "faa faa-save-all";
+            return "faa faa-pencil icon_disabled";
         }
     }
 

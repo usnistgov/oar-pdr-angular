@@ -117,6 +117,45 @@
         },
         {
             "accessURL": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
+            "description": "Testing access page 01",
+            "title": "Test title 01",
+            "format": {
+                "description": "JPEG formatted images"
+            },
+            "mediaType": "application/zip",
+            "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
+            "filepath": "NIST_SD32_MEDS-I_face.zip",
+            "@type": [
+                "nrdp:AccessPage",
+                "dcat:Distribution"
+            ],
+            "@id": "Test01",
+            "_extensionSchemas": [
+                "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/AccessPage"
+            ]
+        },
+        {
+            "accessURL": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
+            "description": "Testing access page 01",
+            "title": "Test title 02",
+            "format": {
+                "description": "JPEG formatted images"
+            },
+            "mediaType": "application/zip",
+            "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
+            "filepath": "NIST_SD32_MEDS-I_face.zip",
+            "@type": [
+                "nrdp:Hidden",
+                "nrdp:AccessPage",
+                "dcat:Distribution"
+            ],
+            "@id": "Test02",
+            "_extensionSchemas": [
+                "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/AccessPage"
+            ]
+        },
+        {
+            "accessURL": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
             "description": "zip file with html page with jpeg images of faces",
             "title": "Multiple Encounter Dataset(MEDS-I)",
             "format": {

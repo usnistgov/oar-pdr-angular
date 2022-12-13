@@ -8,7 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { SingleRefComponent } from './single-ref/single-ref.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DragdropComponent } from './dragdrop/dragdrop.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { LandingpageService } from '../landingpage.service';
 import { CollapseModule } from '../collapseDirective/collapse.module';
@@ -16,7 +15,7 @@ import { TextEditModule } from '../../text-edit/text-edit.module';
 import { RefAuthorComponent } from './ref-author/ref-author.component';
 
 @NgModule({
-  declarations: [ReferencesComponent, SingleRefComponent, DragdropComponent, RefAuthorComponent],
+  declarations: [ReferencesComponent, SingleRefComponent, RefAuthorComponent],
   imports: [
     CommonModule,
     ToolbarModule,

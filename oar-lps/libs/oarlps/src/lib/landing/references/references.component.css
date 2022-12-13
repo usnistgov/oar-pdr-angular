@@ -79,6 +79,8 @@ width: 95% !important;
     transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
 }
   
+/* End drag drop */
+
 button {
     margin-right: 4px;
 }
