@@ -10,6 +10,7 @@ import { UpdateDetails } from './interfaces';
 import { AuthService, WebAuthService } from './auth.service';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
+import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
 /**
  * a service that receives updates to the resource metadata from update widgets.
@@ -31,7 +32,7 @@ export class MetadataUpdateService {
     private mdres: Subject<NerdmRes> = new Subject<NerdmRes>();
     private custsvc: CustomizationService = null;
     private originalDraftRec: NerdmRes = null;
-    private originalRec: NerdmRes = null;
+    private currentRec: NerdmRes = null;
     private origfields: {} = {};   // keeps track of orginal metadata so that they can be undone
     public  EDIT_MODES: any;
 
@@ -86,12 +87,12 @@ export class MetadataUpdateService {
     }
 
     public setOriginalMetadata(md: NerdmRes) {
-        this.originalRec = JSON.parse(JSON.stringify(md));
+        this.currentRec = JSON.parse(JSON.stringify(md));
         this.mdres.next(md as NerdmRes);
     }
 
     public resetOriginal() {
-      this.mdres.next(this.originalRec as NerdmRes);
+      this.mdres.next(this.currentRec as NerdmRes);
     }
 
     _setCustomizationService(svc: CustomizationService): void {
@@ -124,7 +125,7 @@ export class MetadataUpdateService {
      *             take care of reporting the reason.  This allows the caller in charge of 
      *             getting updates to have its UI react accordingly.
      */
-    public update(subsetname: string, md: {}): Promise<boolean> {
+    public update(subsetname: string, md: {}, id: string = undefined): Promise<boolean> {
         if (!this.custsvc) {
             console.error("Attempted to update without authorization!  Ignoring update.");
             return new Promise<boolean>((resolve, reject) => {
@@ -134,53 +135,78 @@ export class MetadataUpdateService {
 
         // establish the original state for this subset of metadata (so that it this update
         // can be undone).
-        if (this.originalRec) {
-            if (!this.origfields[subsetname])
-                this.origfields[subsetname] = {};
+        let key = id? subsetname + id : subsetname;
+        if (this.currentRec) {
+            if (!this.origfields[key])
+                this.origfields[key] = {};
 
             for (let prop in md) {
-                if (this.origfields[subsetname][prop] === undefined) {
-                    if (this.originalRec[prop] !== undefined) {
-                        this.origfields[subsetname][prop] = this.originalRec[prop];
+                if (this.origfields[key][prop] === undefined) {
+                    if (this.currentRec[prop] !== undefined) {
+                        this.origfields[key][prop] = this.currentRec[prop];
                     } else {
-                        this.origfields[subsetname][prop] = null;   // TODO: problematic; need to clean-up nulls
+                        this.origfields[key][prop] = null;   // TODO: problematic; need to clean-up nulls
                     }
                 }
             }
         }
-
+        console.log('this.origfields', this.origfields);
         // If current data is the same as original (user changed the data back to original), call undo instead. Otherwise do normal update
-        if (JSON.stringify(md[subsetname]) == JSON.stringify(this.origfields[subsetname])) {
-            this.undo(subsetname);
-        } else {
-            return new Promise<boolean>((resolve, reject) => {
-                this.custsvc.updateMetadata(md).subscribe(
-                    (res) => {
-                        // console.log("###DBG  Draft data returned from server:\n  ", res)
-                        this.stampUpdateDate();
-                        // this.mdres.next(res as NerdmRes);
-                        resolve(true);
-                    },
-                    (err) => {
-                        // err will be a subtype of CustomizationError
-                        if (err.type == 'user') {
-                            console.error("Failed to save metadata changes: user error:" + err.message);
-                            this.msgsvc.error(err.message);
-                        }
-                        else {
-                            console.error("Failed to save metadata changes: server/system error:" + err.message);
-                            this.msgsvc.syserror(err.message,
-                                "There was an problem while updating the " + subsetname + ". ");
-                        }
-                        resolve(false);
+        // if (JSON.stringify(md[subsetname]) == JSON.stringify(this.origfields[subsetname])) {
+        //     this.undo(subsetname);
+        // } else {
+        return new Promise<boolean>((resolve, reject) => {
+            this.custsvc.updateMetadata(md, subsetname, id).subscribe(
+                (res) => {
+                    // console.log("###DBG  Draft data returned from server:\n  ", res)
+                    this.stampUpdateDate();
+                    this.updateInMemoryRec(md, subsetname, id);
+                    // this.mdres.next(res as NerdmRes);
+                    resolve(true);
+                },
+                (err) => {
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') {
+                        console.error("Failed to save metadata changes: user error:" + err.message);
+                        this.msgsvc.error(err.message);
                     }
-                );
-            });
-        }
+                    else {
+                        console.error("Failed to save metadata changes: server/system error:" + err.message);
+                        this.msgsvc.syserror(err.message,
+                            "There was an problem while updating the " + subsetname + ". ");
+                    }
+                    resolve(false);
+                }
+            );
+        });
+        // }
     }
 
     /**
-     * undo a previously submitted update by its name
+     * Update saved record for undo purpose
+     * @param res Dataset object, could be Nerdm record or a subset or a particular record of a subset
+     * @param subsetname - optional - subset name
+     * @param id - optional - id of a subset item 
+     */
+    public updateInMemoryRec(res: any, subsetname: string = undefined, id: string = undefined) {
+        if(subsetname == undefined) { // Update the whole record
+            this.currentRec = JSON.parse(JSON.stringify(res));
+        }else if(id == undefined) {
+            this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
+        }else{
+            let index = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
+            if(index >= 0) {
+                this.currentRec[subsetname][index] = JSON.parse(JSON.stringify(res));
+            }else{
+                let newItem = JSON.parse(JSON.stringify(res));
+                newItem["@id"] = id;
+                this.currentRec[subsetname].push(newItem);
+            }
+        }
+    }
+    
+    /**
+     * undo a previously submitted update by its name (load from original)
      * 
      * @param subsetname    the name for the metadata that was used in the call to update() which 
      *                      should be undone.
@@ -190,8 +216,10 @@ export class MetadataUpdateService {
      *             response allows the caller in charge of getting updates to have its UI react
      *             accordingly.
      */
-    public undo(subsetname: string) {
-        if (this.origfields[subsetname] === undefined) {
+    public undo(subsetname: string, id: string = undefined) {
+        let key = id? subsetname + id : subsetname;
+
+        if (!subsetname || this.origfields[key] === undefined) {
             // Nothing to undo!
             console.warn("Undo called on " + subsetname + ": nothing to undo");
             return new Promise<boolean>((resolve, reject) => {
@@ -201,23 +229,32 @@ export class MetadataUpdateService {
 
         // if there are no other updates registered, we will just request that the the draft be
         // deleted on the server.  So is this the only update we have registered?
+
+
         let finalUndo = Object.keys(this.origfields).length == 1 &&
-            this.origfields[subsetname] !== undefined;
+        this.origfields[key] !== undefined;
+        
+        delete this.origfields[key];
 
         if (finalUndo) {
             // Last set to be undone; just delete the draft on the server
             console.log("Last undo; discarding draft on server");
+            this.origfields = {};
+            console.log('this.origfields', this.origfields);
+            this.forgetUpdateDate();
+            // this.currentRec = res as NerdmRes;
+            console.log('this.originalDraftRec', this.originalDraftRec);
+            let tempRef = JSON.parse(JSON.stringify(this.originalDraftRec));
+            console.log('tempRef', tempRef);
+            this.currentRec = {} as NerdmRes;
+            this.currentRec = tempRef;
+            console.log('this.currentRec', this.currentRec);
+            this.mdres.next(this.currentRec as NerdmRes);
+
             return new Promise<boolean>((resolve, reject) => {
                 this.custsvc.discardDraft().subscribe(
                     (res) => {
-                        console.log("Return rec", res)
-                        this.origfields = {};
-                        this.forgetUpdateDate();
-                        // this.originalRec = res as NerdmRes;
-                        console.log('this.originalDraftRec', this.originalDraftRec);
-                        this.originalRec = JSON.parse(JSON.stringify(this.originalDraftRec));
-                        console.log('this.originalRec', this.originalRec);
-                        this.mdres.next(this.originalRec as NerdmRes);
+
                         resolve(true);
                     },
                     (err) => {
@@ -240,11 +277,32 @@ export class MetadataUpdateService {
         else {
             // Other updates are still registered; just undo the specified one
             return new Promise<boolean>((resolve, reject) => {
-                this.custsvc.updateMetadata(this.origfields[subsetname]).subscribe(
+                let md: any;
+                if(id) {
+                    let index = this.originalDraftRec[subsetname].findIndex(x => x["@id"] == id);
+                    if(index >= 0) {
+                        md = this.originalDraftRec[subsetname][index];
+                    }else {
+                        resolve(false);
+                    }
+                }else {
+                    md = this.originalDraftRec[subsetname];
+                }
+
+                //If id is provided, get the record with the id. Otherwise return the whole subset
+                if(id){
+                    let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
+                    console.log('currentElementIndex', currentElementIndex);
+                    this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
+                }else{
+                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
+                }
+                console.log('Returned this.currentRec', this.currentRec);
+                this.mdres.next(this.currentRec as NerdmRes);
+
+                this.custsvc.updateMetadata(md, subsetname, id).subscribe(
                     (res) => {
-                        delete this.origfields[subsetname];
-                        this.originalRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
-                        this.mdres.next(this.originalRec as NerdmRes);
+
                         // this.mdres.next(res as NerdmRes);
                         resolve(true);
                     },
@@ -273,11 +331,11 @@ export class MetadataUpdateService {
      * @param mdrec The Nerdm record to be checked.
      */
     public checkUpdatedFields(mdrec: NerdmRes) {
-        if (mdrec != undefined && this.originalRec != undefined) {
+        if (mdrec != undefined && this.currentRec != undefined) {
             for (let subset in mdrec) {
-                if (this.originalRec[subset] != undefined && JSON.stringify(mdrec[subset]) != JSON.stringify(this.originalRec[subset])) {
+                if (this.currentRec[subset] != undefined && JSON.stringify(mdrec[subset]) != JSON.stringify(this.currentRec[subset])) {
                     this.origfields[subset] = {};
-                    this.origfields[subset][subset] = this.originalRec[subset];
+                    this.origfields[subset][subset] = this.currentRec[subset];
                 }
             }
         }
@@ -303,8 +361,9 @@ export class MetadataUpdateService {
      * undo().
      * @param subsetname    the name for the set of metadata of interest.
      */
-    public fieldUpdated(subsetname: string): boolean {
-        return this.origfields[subsetname] != undefined;
+    public fieldUpdated(subsetname: string, id: string = undefined): boolean {
+        let key = id? subsetname + id : subsetname;
+        return this.origfields[key] != undefined;
     }
 
     /**
@@ -317,6 +376,73 @@ export class MetadataUpdateService {
         } else {
             this.origfields = {};
         }
+    }
+
+    /**
+     * Retrive a subset or a particular item of a subset from memory
+     * @param subsetname the name for the set of metadata of interest.
+     * @param id - optional - the id of the particular subset item of interest.
+     * @param onSuccess - optional - callback function
+     * @returns subset or particular item of the subset
+     */
+    public loadSavedSubsetFromMemory(subsetname: string, id: string = undefined, onSuccess?: () => void): Observable<Object> {
+        console.log("Loading from memory...1", subsetname + ", " + id);
+
+        return new Observable<Object>(subscriber => {
+            let res: any = null;
+            if(subsetname) {
+                if(id) {
+                    res = this.currentRec[subsetname].find(x => x["@id"]==id);
+                }else {
+                    res = this.currentRec[subsetname];
+                }
+            }
+            console.log("res", res);
+            subscriber.next(res);
+            subscriber.complete();
+            if (onSuccess) onSuccess(); 
+        });
+    }
+
+    /**
+     * Retrive a subset or a particular item of a subset from server
+     * @param subsetname the name for the set of metadata of interest.
+     * @param id - optional - the id of the particular subset item of interest.
+     * @param onSuccess - optional - callback function
+     * @returns subset or particular item of the subset
+     */
+    public loadSavedSubsetFromServer(subsetname: string, id: string = undefined, onSuccess?: () => void): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to update without authorization!  Ignoring update.");
+                return;
+            }
+            this.custsvc.getSubset(subsetname, id).subscribe(
+                (res) => {
+                    subscriber.next(res);
+                    subscriber.complete();
+                    if (onSuccess) onSuccess(); 
+                },
+                (err) => {
+                    console.log("err", err);
+                    
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to retrieve draft metadata changes: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+
+                    subscriber.next(null);
+                    subscriber.complete();
+                }
+            )
+        });
     }
 
     /**
@@ -334,8 +460,13 @@ export class MetadataUpdateService {
             this.custsvc.getDraftMetadata().subscribe(
                 (res) => {
                     // if(!res["keyword"]) res["keyword"] = [];
-                    if(res) this.originalDraftRec = JSON.parse(JSON.stringify(res));
-                    else this.originalDraftRec = {} as NerdmRes;
+                    if(res) {
+                        this.originalDraftRec = JSON.parse(JSON.stringify(res));
+                        this.currentRec = JSON.parse(JSON.stringify(res));
+                    }else {
+                        this.originalDraftRec = {} as NerdmRes;
+                        this.currentRec = {} as NerdmRes;
+                    }
                     // res = {};
                     this.mdres.next(res as NerdmRes);
                     subscriber.next(res as NerdmRes);
@@ -395,7 +526,7 @@ export class MetadataUpdateService {
      * customization service.  
      */
     public showOriginalMetadata() {
-        this.mdres.next(this.originalRec);
+        this.mdres.next(this.currentRec);
     }
 
     /**

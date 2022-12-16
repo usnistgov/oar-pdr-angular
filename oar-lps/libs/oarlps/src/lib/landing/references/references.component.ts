@@ -60,8 +60,10 @@ export class ReferencesComponent implements OnInit {
         public lpService: LandingpageService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                console.log("Section mode", sectionMode);
+                console.log("Reference get section mode", sectionMode);
                 if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    console.log("Save changes...");
+
                     if(this.dataChanged){
                         this.onSave();
                     }
@@ -180,17 +182,27 @@ export class ReferencesComponent implements OnInit {
     /**
      * Update reference data to the server
      */
-    updateMatadata() {
-        if(this.dataChanged){
-            let updmd = {};
-            updmd[this.fieldName] = this.record[this.fieldName];
-            this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+    updateMatadata(refid: string = undefined) {
+        if(refid) {    // Update specific reference
+            this.mdupdsvc.update(this.fieldName, this.currentRef, refid).then((updateSuccess) => {
                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                 if (updateSuccess){
                     this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                 }else
                     console.error("acknowledge references update failure");
             });
+        }else{  // Update all references
+            if(this.dataChanged){
+                let updmd = {};
+                updmd[this.fieldName] = this.record[this.fieldName];
+                this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+                    if (updateSuccess){
+                        this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                    }else
+                        console.error("acknowledge references update failure");
+                });
+            }
         }
     }
 
@@ -198,7 +210,8 @@ export class ReferencesComponent implements OnInit {
      * Save current reference
      */
     saveCurRef() {
-        this.updateMatadata();
+        console.log('this.currentRef', this.currentRef);
+        this.updateMatadata(this.currentRef["@id"]);
         this.setMode(MODE.NORNAL);
     }
 
@@ -229,7 +242,7 @@ export class ReferencesComponent implements OnInit {
     }
 
     /**
-     * Revert current reference to original
+     * Revert current reference to saved data
      */
     undoCurRefChanges() {
         if(this.currentRef.dataChanged) {
@@ -243,12 +256,15 @@ export class ReferencesComponent implements OnInit {
                     this.currentRef = this.record.references[this.currentRefIndex];
                 }
             }else{
-                this.currentRef = JSON.parse(JSON.stringify(this.orig_record.references[this.currentRefIndex]));
-                this.record.references[this.currentRefIndex] = JSON.parse(JSON.stringify(this.orig_record.references[this.currentRefIndex]));
-                this.currentRef.dataChanged = false;
+                this.mdupdsvc.loadSavedSubsetFromMemory(this.fieldName, this.currentRef["@id"]).subscribe(
+                    (ref) => {
+                        this.currentRef = JSON.parse(JSON.stringify(ref));
+                        this.record.references[this.currentRefIndex] = JSON.parse(JSON.stringify(this.currentRef));
+                    })                
             }
-
         }
+
+        console.log('this.currentRef', this.currentRef);
         this.setMode(MODE.NORNAL);
     }
 
@@ -338,6 +354,8 @@ export class ReferencesComponent implements OnInit {
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.orderChanged = true;
+        // Update reference data
+        this.updateMatadata();
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;
@@ -366,9 +384,19 @@ export class ReferencesComponent implements OnInit {
      * @param action the action that the child component returned
      * @param index The index of the reference the action is taking place
      */
-    onCitationChange(action: any, index: number = 0) {
-        if(action.command.toLowerCase() == "delete")
-            this.removeRef(index);
+    onReferenceChange(action: any, index: number = 0) {
+        switch ( action.command.toLowerCase() ) {
+            case 'delete':
+                this.removeRef(index);
+                break;
+            case 'restore':
+                console.log("Restore reference index", index)
+                this.mdupdsvc.undo(this.fieldName, this.record["references"][index]["@id"])
+                this.record[this.fieldName][index].dataChanged = false;
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -376,6 +404,13 @@ export class ReferencesComponent implements OnInit {
      * @param index The index of the selected reference
      */
     selectRef(index: number) {
+        if(index != this.currentRefIndex) { // user selected different reference
+            if(this.currentRef.dataChanged) {
+                console.log("this.currentRef dataChanged?", this.currentRef)
+                this.updateMatadata(this.currentRef["@id"]);
+            }
+        }
+
         if(this.record["references"] && this.record["references"].length > 0 && !this.isAdding){
             this.forceReset = (this.currentRefIndex != -1);
 

@@ -25,10 +25,16 @@
                     data-toggle="tooltip" [title]="getTooltip('edit')"></i>
             </button>
 
-            <!-- Delete/Undo button-->
+            <!-- Delete/undoEdit button-->
             <button *ngIf="deleteButton" class="edit_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button">
                 <i [class]="getDelIconClass()"
                     data-toggle="tooltip" [title]="getTooltip('delete')"></i>
+            </button>
+
+            <!-- Restore button-->
+            <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl && !dataChanged" aria-label="Restore button">
+                <i class="faa faa-undo"
+                    data-toggle="tooltip" [title]="getTooltip('restore')"></i>
             </button>
 
             <!-- Plus button-->

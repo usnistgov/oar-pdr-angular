@@ -17,12 +17,13 @@ export class TextEditComponent implements OnInit {
     @Input() editButton: boolean = true; // Default button
     @Input() deleteButton: boolean = true; // Default button
     @Input() plusButton: boolean = false; // If this is true, no edit/remove/undo button
-    @Input() trashButton: boolean = false;
+    @Input() restoreButton: boolean = false;
     @Input() submitButton: boolean = false;
     @Input() placeHolderText: string = "Input text here";
     @Input() disableControl: boolean = false;
     @Input() showBorder: boolean = true; // display the border between textbox and control
     @Input() forceReset: boolean = false;
+    @Input() dataChanged: boolean = false;
 
     //Output actions: "Delete", "Cancel", "Save", etc.
     @Output() command_out = new EventEmitter<any>();
@@ -35,16 +36,16 @@ export class TextEditComponent implements OnInit {
             this.editing = true;
             this.editButton = false;
             this.deleteButton = false;
+            this.restoreButton = false;
             this.dragDropIcon = false;
-            this.trashButton = false;
             this.submitButton = false;
             this.controlBoxWidth = "27px !important";
         } else if(this.submitButton) {
             this.editing = true;
             this.editButton = false;
             this.deleteButton = false;
+            this.restoreButton = false;
             this.dragDropIcon = false;
-            this.trashButton = false;
             this.plusButton = false;
             this.controlBoxWidth = "27px !important";
         }
@@ -54,7 +55,7 @@ export class TextEditComponent implements OnInit {
         if(this.submitButton) buttonCount += 1;
         if(this.editButton) buttonCount += 1;
         if(this.deleteButton) buttonCount += 1;
-        if(this.trashButton) buttonCount += 1;
+        if(this.restoreButton) buttonCount += 1;
 
         this.controlBoxWidth = buttonCount * 29 + "px !important";
         if(this.dragDropIcon) buttonCount += 1;
@@ -110,13 +111,21 @@ export class TextEditComponent implements OnInit {
      * Remove/Undo based on current edit status
      */
     removeUndo() {
-        // If we are editing, undo changes
         if(this.editing){
             this.currentVal = this.prevVal;
-            this.command_out.next({"value":this.currentVal, "command":"Undo"});
-        }else{ // Otherwise, delete this item
+            this.command_out.next({"value":this.currentVal, "command":"UndoEdit"});
+        }else{
             this.command_out.next({"value":this.currentVal, "command":"Delete"});
         }
+        
+        this.editing = false;
+    }
+
+    /**
+     * Restore - tell parent component to restore original value
+     */
+    restore() {
+        this.command_out.next({"value":this.currentVal, "command":"Restore"});
 
         this.editing = false;
     }
@@ -206,6 +215,10 @@ export class TextEditComponent implements OnInit {
 
                 break;
 
+            case 'restore':
+                return "Restore from saved value";
+
+                break;
             default: 
                 return "";
                 break;

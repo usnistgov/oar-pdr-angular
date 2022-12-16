@@ -65,6 +65,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         "deactivated": null,
         "type": "dmp"
     }
+
+    console.log("request", request);
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
         // metrics
@@ -166,6 +168,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       
     if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'PATCH') {
         return of(new HttpResponse({ status: 200, body: nerdm }));
+    }
+
+    if (request.url.indexOf('references/#ref:10.1016/') > -1 && request.method === 'GET') {
+        return of(new HttpResponse({ status: 200, body: nerdm.references[0] }));
     }
 
       // return 401 not authorised if token is null or invalid

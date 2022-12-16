@@ -37,12 +37,20 @@ export abstract class CustomizationService {
     public abstract getDraftMetadata() : Observable<Object>;
 
     /**
+     * Retrive a particular subset from server-side. If particular id is provided, only retrive 
+     * the particular record of the subset
+     * @param subsetname Subset name
+     * @param id (optional) id of a particular subset item
+     */
+    public abstract getSubset(subsetname: string, id: string): Observable<Object>;
+
+    /**
      * update some portion of the resource metadata, and return the full modified 
      * draft.
      * 
      * @param md   an object containing resource properties to be updated.  
      */
-    public abstract updateMetadata(md : Object) : Observable<Object>;
+    public abstract updateMetadata(md : Object, subsetname: string, id: string) : Observable<Object>;
 
     /**
      * commit the changes in the draft to the saved version
@@ -115,7 +123,24 @@ export class WebCustomizationService extends CustomizationService {
         // HttpClient.get() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.draftapi + this.resid + "/data";
+            let url = this.endpoint + this.draftapi + this.resid + "/data"
+            let obs : Observable<Object> = 
+                this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
+            this._wrapRespObs(obs, subscriber);
+        });
+    }
+
+    public getSubset(subsetname: string, id: string = undefined) : Observable<Object> {
+
+        // To transform the output with proper error handling, we wrap the
+        // HttpClient.get() Observable with our own Observable
+        //
+
+        return new Observable<Object>(subscriber => {
+            let url = this.endpoint + this.draftapi + this.resid + "/data/" + subsetname;
+            if(id) url += "/" + id;
+
+            console.log("Get subset request url", url);
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -178,12 +203,17 @@ export class WebCustomizationService extends CustomizationService {
      *                   ConnectionCustomizationError -- if it was not possible to connect to the 
      *                     customization server, even to get back an error response.  
      */
-    public updateMetadata(md : Object) : Observable<Object> {
+    public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined) : Observable<Object> {
         // To transform the output with proper error handling, we wrap the
         // HttpClient.patch() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data";
+            url = subsetname == undefined ? url : url + "/" + subsetname;
+            url = id == undefined ? url : url + "/" + id;
+
+            console.log("Update url", url);
+            
             let body = JSON.stringify(md);
             let obs : Observable<Object> = 
                 this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -373,14 +403,25 @@ export class InMemCustomizationService extends CustomizationService {
      *                   passed the Object representing the full draft metadata record.  On 
      *                   failure, error function is called with an instance of a CustomizationError.
      */
-    public updateMetadata(md : Object) : Observable<Object> {
+    public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined) : Observable<Object> {
         if (! md)
             return throwError(new SystemCustomizationError("No update data provided"));
 
-        for(let prop in md) {
-            this.resmd[prop] = JSON.parse(JSON.stringify(md[prop]));
+        if(subsetname) {
+            if(id) {
+                let index = this.resmd[subsetname].findIndex(x => x["@id"] == id);
+                if(index >= 0) {
+                    this.resmd[subsetname][index] = md;
+                }
+            }else {
+                this.resmd[subsetname] = JSON.parse(JSON.stringify(md));
+            }
+
+        }else{
+            this.resmd = JSON.parse(JSON.stringify(md));
         }
 
+        console.log("this.resmd", this.resmd);
         return of<Object>(this.resmd);
     }    
 
@@ -399,6 +440,27 @@ export class InMemCustomizationService extends CustomizationService {
                 this._wrapRespObs(obs, subscriber);
             });
         });
+    }
+
+    public getSubset(subsetname: string, id: string = undefined) : Observable<Object> {
+
+        // To transform the output with proper error handling, we wrap the
+        // HttpClient.get() Observable with our own Observable
+        //
+
+        if(id){
+            if(this.resmd && this.resmd[subsetname]) {
+                return this.resmd[subsetname].find(x => x["@id"] == id);
+            }else{
+                return of<Object>(null);
+            }
+        }else{
+            if(this.resmd) {
+                return of<Object>(this.resmd[subsetname]);
+            }else{
+                return of<Object>(null);
+            }
+        }
     }
 
     private _wrapRespObs(obs : Observable<Object>, subscriber : Subscriber<Object>) : void {
