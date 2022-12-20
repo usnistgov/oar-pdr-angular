@@ -32,7 +32,7 @@
                     <i [class]="addIconClass()"></i>
                 </button>
 
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="toggleEditing()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences() || !isNormal" data-toggle="tooltip" [title]="editBtnTooltip">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onEdit()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences() || !isNormal" data-toggle="tooltip" [title]="editBtnTooltip">
                     <i [class]="editIconClass()"></i>
                 </button>
 

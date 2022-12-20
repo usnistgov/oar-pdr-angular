@@ -72,6 +72,12 @@ export abstract class CustomizationService {
      * customization service.  
      */
     public abstract getDataFiles() : Observable<Object>;
+
+    /**
+     * retrieve the data files from the server-side 
+     * customization service.  
+     */
+    public abstract add(md: any, subsetname: string) : Observable<Object>;
 }
 
 /**
@@ -212,7 +218,7 @@ export class WebCustomizationService extends CustomizationService {
             url = subsetname == undefined ? url : url + "/" + subsetname;
             url = id == undefined ? url : url + "/" + id;
 
-            console.log("Update url", url);
+            // console.log("Update url", url);
             
             let body = JSON.stringify(md);
             let obs : Observable<Object> = 
@@ -221,6 +227,38 @@ export class WebCustomizationService extends CustomizationService {
         });
     }
   
+    /**
+     * Add whole or portion of a record, and return the full modified record. 
+     *
+     * @return Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full draft metadata record.  On 
+     *                   failure, error function is called with a customized error object, one of 
+     *                   AuthCustomizationError -- if the request is made without being 
+     *                     authenticated or authorized.  This could happen if the user credentials
+     *                     expire during the session. 
+     *                   NotFoundCustomizationError -- if the ID for record that was requested 
+     *                     cannot be found. This should not happen normally.  
+     *                   ConnectionCustomizationError -- if it was not possible to connect to the 
+     *                     customization server, even to get back an error response.  
+     */
+    public add(md : Object, subsetname: string = undefined) : Observable<Object> {
+        // To transform the output with proper error handling, we wrap the
+        // HttpClient.patch() Observable with our own Observable
+        //
+        return new Observable<Object>(subscriber => {
+            let url = this.endpoint + this.draftapi; //  Create a new record
+            if(subsetname) { // Create a new subset
+                url += this.resid + "/data/" + subsetname;
+            }
+            // console.log("Add url", url)
+            
+            let body = JSON.stringify(md);
+            let obs : Observable<Object> = 
+                this.httpcli.post(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+            this._wrapRespObs(obs, subscriber);
+        });
+    }
+
     /**
      * commit the changes in the draft to the saved version
      *
@@ -269,7 +307,7 @@ export class WebCustomizationService extends CustomizationService {
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data";
-            console.log("Discard url", url);
+            // console.log("Discard url", url);
             let obs : Observable<Object> = 
                 this.httpcli.delete(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -421,9 +459,41 @@ export class InMemCustomizationService extends CustomizationService {
             this.resmd = JSON.parse(JSON.stringify(md));
         }
 
-        console.log("this.resmd", this.resmd);
         return of<Object>(this.resmd);
     }    
+
+    /**
+     * Add whole or some portion of the resource metadata, and return the full modified 
+     * record or portion.
+     *
+     * @return Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full draft metadata record.  On 
+     *                   failure, error function is called with an instance of a CustomizationError.
+     */
+    public add(md : Object, subsetname: string = undefined) : Observable<Object> {
+        if (! md)
+            return throwError(new SystemCustomizationError("No update data provided"));
+
+        md["@id"] = this.readableRandomStringMaker(6);
+
+        if(subsetname) {
+            this.resmd[subsetname].push(JSON.parse(JSON.stringify(md)));
+            return of<Object>(JSON.parse(JSON.stringify(md)));
+        }else{
+            this.resmd = JSON.parse(JSON.stringify(md));
+            return of<Object>(this.resmd);
+        }
+    } 
+
+    /**
+     * Generate random string
+     * @param length Length of the output string
+     * @returns random string
+     */
+    readableRandomStringMaker(length: number) {
+        for (var s=''; s.length < length; s += 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.charAt(Math.random()*62|0));
+        return s;
+    }
 
     /**
      * Retrieve the data files in memory.

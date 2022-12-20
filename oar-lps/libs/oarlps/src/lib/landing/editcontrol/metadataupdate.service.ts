@@ -205,12 +205,44 @@ export class MetadataUpdateService {
         }
     }
     
-    add(res: any, subsetname: string = undefined) {
-        if(!subsetname) { // Add the whole record
+    public add(md: any, subsetname: string = undefined) {
+        return new Promise<boolean>((resolve, reject) => {
+            this.custsvc.add(md, subsetname).subscribe(
+                (res) => {
+                    let obj = JSON.parse(res as string);
+                    if(subsetname) {  //Add a subset
+                        if(this.currentRec[subsetname]){
+                            this.currentRec[subsetname].push(obj);
+                        }else{
+                            this.currentRec[subsetname] = [obj];
+                        }
+                    } else {  // Add a record
+                        this.currentRec = obj;
+                    }
 
-        }else{   // Add subset
+                    let key = subsetname + obj['@id'];
+                    this.origfields[key] = {};
+                    this.origfields[key][subsetname] = this.currentRec[subsetname];
 
-        }
+                    this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+                    resolve(true);
+                },
+                (err) => {
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') {
+                        console.error("Failed to undo metadata changes: user error:" + err.message);
+                        this.msgsvc.error(err.message)
+                    }
+                    else {
+                        console.error("Failed to undo metadata changes: server/system error:" +
+                            err.message);
+                        this.msgsvc.syserror(err.message,
+                            "There was an problem while undoing changes to the " + subsetname + ". ")
+                    }
+                    resolve(false);
+                }
+            );
+        });
     }
 
     /**

@@ -64,7 +64,7 @@ export class ReferencesComponent implements OnInit {
                     console.log("Save changes...");
 
                     if(this.dataChanged){
-                        this.onSave();
+                        this.saveCurRef();
                     }
 
                     this.setMode(MODE.NORNAL);
@@ -111,17 +111,10 @@ export class ReferencesComponent implements OnInit {
     }
 
     /**
-     * When user clicks on the edit (pencil/check) button, if current mode is editing or adding
-     * save changes and set normal mode. If current mode is normal, set current mode to editing.
+     * set current mode to editing.
      */
-    toggleEditing() {
-        // If is editing, save data to the draft server
-        if(this.isEditing || this.isAdding){
-            this.onSave();
-            this.setMode(MODE.NORNAL);
-        }else{ // If not editing, enter edit mode
-            this.setMode(MODE.EDIT);
-        }
+    onEdit() {
+        this.setMode(MODE.EDIT);
     }
 
     /**
@@ -176,16 +169,16 @@ export class ReferencesComponent implements OnInit {
     /**
      * Save changes to the server and set edit mode to "normal"
      */
-    onSave() {
-        // Collapse the edit block
-        this.editBlockStatus = 'collapsed';
+    // onSave() {
+    //     // Collapse the edit block
+    //     this.editBlockStatus = 'collapsed';
 
-        // Update reference data
-        this.updateMatadata();
+    //     // Update reference data
+    //     this.updateMatadata();
 
-        // Set edit mode to "normal"
-        this.setMode(MODE.NORNAL);
-    }
+    //     // Set edit mode to "normal"
+    //     this.setMode(MODE.NORNAL);
+    // }
 
     /**
      * Update reference data to the server
@@ -231,16 +224,20 @@ export class ReferencesComponent implements OnInit {
      * Save current reference
      */
     saveCurRef() {
-        console.log('this.currentRef', this.currentRef);
         if(this.isAdding){
             if(this.currentRef.dataChanged){
-                // this.mdupdsvc.add(this.currentRef, this.fieldName).subscribe((returnRef) => {
-
-                // });
+                this.mdupdsvc.add(this.currentRef, this.fieldName).then((success) => {
+                    if (success){
+                        this.currentRef = this.record[this.fieldName].at(-1); // last reference
+                        this.currentRefIndex = this.record[this.fieldName].length - 1;
+                        this.currentRef.dataChanged = false;
+                    }else
+                        console.error("Failed to add reference");
+                        return;
+                });
             }else{  //If no data has been entered, remove this reference
-
+                this.removeRef(this.currentRefIndex);
             }
-
         }else{
             this.updateMatadata(this.currentRef["@id"]);
         }
@@ -424,9 +421,9 @@ export class ReferencesComponent implements OnInit {
             case 'restore':
                 this.mdupdsvc.undo(this.fieldName, this.record["references"][index]["@id"]).then((success) => {
                     if (success) {
-                        this.record[this.fieldName][index].dataChanged = false;
-                        this.currentRef = this.record.references[this.currentRefIndex];
-                        this.forceReset = true;
+                        this.currentRefIndex = 0;
+                        this.currentRef = this.record[this.fieldName][this.currentRefIndex];
+                        this.forceReset = true; // Force reference editor to reset data
                     } else {
                         console.error("Failed to restore reference");
                     }
@@ -443,8 +440,6 @@ export class ReferencesComponent implements OnInit {
      * @param index The index of the selected reference
      */
     selectRef(index: number) {
-        console.log(this.mdupdsvc.fieldUpdated(this.fieldName, this.record["references"][index]['@id']))
-
         if(index != this.currentRefIndex) { // user selected different reference
             if(this.currentRef.dataChanged) {
                 this.updateMatadata(this.currentRef["@id"]);
@@ -514,6 +509,7 @@ export class ReferencesComponent implements OnInit {
     onDataChange(event) {
         this.record['references'][this.currentRefIndex] = JSON.parse(JSON.stringify(event.ref));
         this.record['references'][this.currentRefIndex].dataChanged = event.dataChanged;
+        this.currentRef = this.record['references'][this.currentRefIndex];
     }
 
     /**
