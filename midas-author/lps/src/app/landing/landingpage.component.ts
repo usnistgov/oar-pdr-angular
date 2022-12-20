@@ -276,7 +276,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             // successful metadata request
             this.md = data;
             // this.midasRecord = data;
-            console.log("Returned record", this.md)
 
             if (!this.md) {
                 // id not found; reroute

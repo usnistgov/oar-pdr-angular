@@ -20,7 +20,7 @@
                                 class="ref-row"
                             >
                                 <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
-                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="record['references'].length==1?false:true" [editButton]="false" [deleteButton]="true" [restoreButton]="true" [disableControl]="isAdding || isEditing" [placeHolderText]="placeholder" [dataChanged]="mdupdsvc.fieldUpdated(fieldName)" (command_out)="onReferenceChange($event, i)"></lib-text-edit>
+                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="record['references'].length==1?false:true" [editButton]="false" [deleteButton]="true" [restoreButton]="true" [disableControl]="isAdding || isEditing" [placeHolderText]="placeholder" [dataChanged]="mdupdsvc.fieldUpdated(fieldName, record['references'][i]['@id'])" (command_out)="onReferenceChange($event, i)"></lib-text-edit>
                                 </div>
                             </div>
                         </div>

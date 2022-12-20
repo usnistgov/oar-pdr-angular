@@ -66,7 +66,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         "type": "dmp"
     }
 
-    console.log("request", request);
+    // console.log("request", request);
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
         // metrics

@@ -19,7 +19,6 @@ export class SingleApageComponent implements OnInit {
 
     ngOnInit(): void {
         if(this.accessPage) this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
-        console.log("accessPage00", this.accessPage);
     }
 
     get isEditing() { return this.editMode=="edit" };
@@ -37,7 +36,7 @@ export class SingleApageComponent implements OnInit {
             }else{
                 this.originalApage = undefined;
             }
-            console.log("accessPage01", this.accessPage);
+            // console.log("accessPage01", this.accessPage);
         }
     }
 
@@ -47,7 +46,7 @@ export class SingleApageComponent implements OnInit {
     }
 
     onChange() {
-        console.log("accessPage02", this.accessPage)
+        // console.log("accessPage02", this.accessPage)
         this.accessPage.dataChanged = true;
         this.dataChanged.emit({"accessPage": this.accessPage, "dataChanged": true});
     }

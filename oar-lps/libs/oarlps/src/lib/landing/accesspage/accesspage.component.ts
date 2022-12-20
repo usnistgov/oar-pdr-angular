@@ -63,7 +63,6 @@ export class AccesspageComponent implements OnInit {
                 private sanitizer: DomSanitizer) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
-                    console.log("Section mode", sectionMode);
                     if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
                         if(this.dataChanged){
                             this.onSave();
@@ -133,14 +132,11 @@ export class AccesspageComponent implements OnInit {
             });
             
             this.nonAccessPages = JSON.parse(JSON.stringify(nonAPages));
-            console.log('this.nonAccessPages', this.nonAccessPages);
 
             // If this is a science theme and the collection contains one or more components that contain both AccessPage (or SearchPage) and DynamicSourceSet, we want to remove it from accessPages array since it's already displayed in the search result.
             if(this.theme == this.scienceTheme) 
                 this.accessPages = this.accessPages.filter(cmp => ! cmp['@type'].includes("nrda:DynamicResourceSet"));
         }
-
-        console.log("this.accessPages", this.accessPages);
     }
 
     /**

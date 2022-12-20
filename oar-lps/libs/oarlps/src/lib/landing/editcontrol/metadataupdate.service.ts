@@ -31,8 +31,8 @@ export class MetadataUpdateService {
 
     private mdres: Subject<NerdmRes> = new Subject<NerdmRes>();
     private custsvc: CustomizationService = null;
-    private originalDraftRec: NerdmRes = null;
-    private currentRec: NerdmRes = null;
+    private originalDraftRec: NerdmRes = null;  //
+    private currentRec: NerdmRes = null;    //Current saved record
     private origfields: {} = {};   // keeps track of orginal metadata so that they can be undone
     public  EDIT_MODES: any;
 
@@ -192,7 +192,7 @@ export class MetadataUpdateService {
         if(subsetname == undefined) { // Update the whole record
             this.currentRec = JSON.parse(JSON.stringify(res));
         }else if(id == undefined) {
-            this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
+            this.currentRec[subsetname] = JSON.parse(JSON.stringify(res[subsetname]));
         }else{
             let index = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
             if(index >= 0) {
@@ -205,6 +205,14 @@ export class MetadataUpdateService {
         }
     }
     
+    add(res: any, subsetname: string = undefined) {
+        if(!subsetname) { // Add the whole record
+
+        }else{   // Add subset
+
+        }
+    }
+
     /**
      * undo a previously submitted update by its name (load from original)
      * 
@@ -219,7 +227,7 @@ export class MetadataUpdateService {
     public undo(subsetname: string, id: string = undefined) {
         let key = id? subsetname + id : subsetname;
 
-        if (!subsetname || this.origfields[key] === undefined) {
+        if (!subsetname || !this.origfields) {
             // Nothing to undo!
             console.warn("Undo called on " + subsetname + ": nothing to undo");
             return new Promise<boolean>((resolve, reject) => {
@@ -230,31 +238,28 @@ export class MetadataUpdateService {
         // if there are no other updates registered, we will just request that the the draft be
         // deleted on the server.  So is this the only update we have registered?
 
-
-        let finalUndo = Object.keys(this.origfields).length == 1 &&
-        this.origfields[key] !== undefined;
-        
-        delete this.origfields[key];
+        let finalUndo: boolean = true;
+        if(!id){
+            Object.keys(this.origfields).forEach((fKey) => {
+                finalUndo = finalUndo && (fKey.indexOf(subsetname) >= 0);
+            })
+        }else{
+            finalUndo = Object.keys(this.origfields).length == 1 &&
+            this.origfields[key] !== undefined;
+        }
 
         if (finalUndo) {
             // Last set to be undone; just delete the draft on the server
             console.log("Last undo; discarding draft on server");
             this.origfields = {};
-            console.log('this.origfields', this.origfields);
             this.forgetUpdateDate();
-            // this.currentRec = res as NerdmRes;
-            console.log('this.originalDraftRec', this.originalDraftRec);
-            let tempRef = JSON.parse(JSON.stringify(this.originalDraftRec));
-            console.log('tempRef', tempRef);
-            this.currentRec = {} as NerdmRes;
-            this.currentRec = tempRef;
-            console.log('this.currentRec', this.currentRec);
-            this.mdres.next(this.currentRec as NerdmRes);
+            this.currentRec = JSON.parse(JSON.stringify(this.originalDraftRec));
+            // this.mdres.next(this.currentRec as NerdmRes);
+            this.mdres.next(JSON.parse(JSON.stringify(this.originalDraftRec)) as NerdmRes);
 
             return new Promise<boolean>((resolve, reject) => {
                 this.custsvc.discardDraft().subscribe(
                     (res) => {
-
                         resolve(true);
                     },
                     (err) => {
@@ -292,14 +297,12 @@ export class MetadataUpdateService {
                 //If id is provided, get the record with the id. Otherwise return the whole subset
                 if(id){
                     let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
-                    console.log('currentElementIndex', currentElementIndex);
                     this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
                 }else{
                     this.currentRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
                 }
-                console.log('Returned this.currentRec', this.currentRec);
-                this.mdres.next(this.currentRec as NerdmRes);
-
+                this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+                delete this.origfields[key];
                 this.custsvc.updateMetadata(md, subsetname, id).subscribe(
                     (res) => {
 
@@ -386,8 +389,6 @@ export class MetadataUpdateService {
      * @returns subset or particular item of the subset
      */
     public loadSavedSubsetFromMemory(subsetname: string, id: string = undefined, onSuccess?: () => void): Observable<Object> {
-        console.log("Loading from memory...1", subsetname + ", " + id);
-
         return new Observable<Object>(subscriber => {
             let res: any = null;
             if(subsetname) {
@@ -397,7 +398,7 @@ export class MetadataUpdateService {
                     res = this.currentRec[subsetname];
                 }
             }
-            console.log("res", res);
+
             subscriber.next(res);
             subscriber.complete();
             if (onSuccess) onSuccess(); 

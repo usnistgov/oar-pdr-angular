@@ -60,7 +60,6 @@ export class ReferencesComponent implements OnInit {
         public lpService: LandingpageService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                console.log("Reference get section mode", sectionMode);
                 if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
                     console.log("Save changes...");
 
@@ -82,7 +81,6 @@ export class ReferencesComponent implements OnInit {
         }
     }
 
-    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
     get isNormal() { return this.editMode==MODE.NORNAL }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
@@ -98,8 +96,18 @@ export class ReferencesComponent implements OnInit {
         for(let i=0; i < this.record.references.length; i++) {
             changed = changed || this.record.references[i].dataChanged;
         }
-
+        
         return changed || this.orderChanged;
+    }
+
+    get dataChangedAndUpdated() {
+        let changed: boolean = false;
+
+        for(let i=0; i < this.record.references.length; i++) {
+            changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][i]['@id']);
+        }
+        
+        return changed || this.orderChanged;        
     }
 
     /**
@@ -141,7 +149,7 @@ export class ReferencesComponent implements OnInit {
                 this.record["references"].push({} as Reference);
                 
                 this.currentRefIndex = this.record.references.length - 1;
-                this.record["references"][this.currentRefIndex].dataChanged = true;
+                // this.record["references"][this.currentRefIndex].dataChanged = true;
                 this.currentRef = this.record["references"][this.currentRefIndex];
                 this.lpService.setEditing(sectionMode);
                 this.openEditBlock();
@@ -207,11 +215,36 @@ export class ReferencesComponent implements OnInit {
     }
 
     /**
+     * Check if the given reference is empty
+     * @param ref Reference to be checked
+     */
+    isEmpty(ref: Reference) {
+        if(!ref) return true;
+
+        if(ref["@id"] || (ref.authors && ref.authors.length > 0 ) || ref.doi || ref.label || ref.location || ref.pages || ref.publishYear || ref.refType || ref.title || ref.vol || ref.volNumber)
+            return false;
+        else    
+            return true;
+    }
+
+    /**
      * Save current reference
      */
     saveCurRef() {
         console.log('this.currentRef', this.currentRef);
-        this.updateMatadata(this.currentRef["@id"]);
+        if(this.isAdding){
+            if(this.currentRef.dataChanged){
+                // this.mdupdsvc.add(this.currentRef, this.fieldName).subscribe((returnRef) => {
+
+                // });
+            }else{  //If no data has been entered, remove this reference
+
+            }
+
+        }else{
+            this.updateMatadata(this.currentRef["@id"]);
+        }
+
         this.setMode(MODE.NORNAL);
     }
 
@@ -219,7 +252,7 @@ export class ReferencesComponent implements OnInit {
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoChanges() {
-        if(this.updated){
+        if(this.dataChangedAndUpdated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
                     this.record.references.forEach((ref) => {
@@ -230,9 +263,8 @@ export class ReferencesComponent implements OnInit {
                     console.error("Failed to undo " + this.fieldName + " metadata");
                     return;
             });
-        }else{
-            this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
         }
+        this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
 
         this.orderChanged = false;
         this.currentRefIndex = 0;
@@ -259,12 +291,12 @@ export class ReferencesComponent implements OnInit {
                 this.mdupdsvc.loadSavedSubsetFromMemory(this.fieldName, this.currentRef["@id"]).subscribe(
                     (ref) => {
                         this.currentRef = JSON.parse(JSON.stringify(ref));
+                        this.currentRef.dataChanged = false;
                         this.record.references[this.currentRefIndex] = JSON.parse(JSON.stringify(this.currentRef));
                     })                
             }
         }
 
-        console.log('this.currentRef', this.currentRef);
         this.setMode(MODE.NORNAL);
     }
 
@@ -390,9 +422,16 @@ export class ReferencesComponent implements OnInit {
                 this.removeRef(index);
                 break;
             case 'restore':
-                console.log("Restore reference index", index)
-                this.mdupdsvc.undo(this.fieldName, this.record["references"][index]["@id"])
-                this.record[this.fieldName][index].dataChanged = false;
+                this.mdupdsvc.undo(this.fieldName, this.record["references"][index]["@id"]).then((success) => {
+                    if (success) {
+                        this.record[this.fieldName][index].dataChanged = false;
+                        this.currentRef = this.record.references[this.currentRefIndex];
+                        this.forceReset = true;
+                    } else {
+                        console.error("Failed to restore reference");
+                    }
+                })
+
                 break;
             default:
                 break;
@@ -404,9 +443,10 @@ export class ReferencesComponent implements OnInit {
      * @param index The index of the selected reference
      */
     selectRef(index: number) {
+        console.log(this.mdupdsvc.fieldUpdated(this.fieldName, this.record["references"][index]['@id']))
+
         if(index != this.currentRefIndex) { // user selected different reference
             if(this.currentRef.dataChanged) {
-                console.log("this.currentRef dataChanged?", this.currentRef)
                 this.updateMatadata(this.currentRef["@id"]);
             }
         }
@@ -441,12 +481,16 @@ export class ReferencesComponent implements OnInit {
      * @returns background color
      */
     getBackgroundColor(index: number){
-        if(this.record['references'][index].dataChanged){
-            return '#FCF9CD';
+        // if(this.record['references'][index].dataChanged){
+        if(this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][index]['@id'])){
+            return 'var(--data-changed-saved)';
+        }else if(this.record['references'][index].dataChanged){
+            return 'var(--data-changed)';
         }else{
             return 'white';
         }
     }
+
 
     /**
      * Retuen background color of the whole record (the container of all references) 
@@ -454,8 +498,10 @@ export class ReferencesComponent implements OnInit {
      * @returns the background color of the whole record
      */
     getRecordBackgroundColor() {
-        if(this.dataChanged){
-            return '#FCF9CD';
+        if(this.dataChangedAndUpdated){
+            return 'var(--data-changed-saved)';
+        }else if(this.dataChanged){
+            return 'var(--data-changed)';
         }else{
             return 'white';
         }
@@ -466,7 +512,7 @@ export class ReferencesComponent implements OnInit {
      * Also update the reference data. 
      */
     onDataChange(event) {
-        this.record['references'][this.currentRefIndex] = event.ref;
+        this.record['references'][this.currentRefIndex] = JSON.parse(JSON.stringify(event.ref));
         this.record['references'][this.currentRefIndex].dataChanged = event.dataChanged;
     }
 

@@ -74,6 +74,10 @@ export class TextEditComponent implements OnInit {
             this.prevVal = this.textField;
             this.currentVal = this.textField;
         }
+
+        if(changes.dataSavedToServer) {
+            console.log("Data changed.", changes.dataChanged);
+        }
     }
 
     /**

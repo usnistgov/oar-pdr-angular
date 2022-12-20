@@ -1,3 +1,7 @@
+.table-wraper {
+    width: 100%;
+}
+
 .dragdrop {
     border-right: 1px solid var(--background-light-grey02);
     width: 32px !important;
