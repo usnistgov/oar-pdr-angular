@@ -3,7 +3,7 @@
         <div class="section-header"><h3><b>References</b></h3></div>
         <div class="editable_container"  style="width: 100%;">
             <div class="editable_field" style="width: 100%;">
-                <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" [style.background-color]="getRecordBackgroundColor()">
+                <div class="reference-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                     <div #dropListContainer class="example-container" cdkDropListGroup>
                         <div style="width: 100%;" 
                         *ngFor="let reference of record['references']; let i = index"
@@ -20,7 +20,17 @@
                                 class="ref-row"
                             >
                                 <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
-                                    <lib-text-edit [textField]="reference.citation" [dragDropIcon]="record['references'].length==1?false:true" [editButton]="false" [deleteButton]="true" [restoreButton]="true" [disableControl]="isAdding || isEditing" [placeHolderText]="placeholder" [dataChanged]="mdupdsvc.fieldUpdated(fieldName, record['references'][i]['@id'])" (command_out)="onReferenceChange($event, i)"></lib-text-edit>
+                                    <lib-text-edit 
+                                        [textField]="reference.citation" 
+                                        [dragDropIcon]="record['references'].length==1?false:true" [editButton]="false" 
+                                        [deleteButton]="true" 
+                                        [restoreButton]="true" 
+                                        [disableControl]="isAdding || isEditing" 
+                                        [placeHolderText]="placeholder" 
+                                        [isNew]="reference.isNew" 
+                                        [dataChanged]="mdupdsvc.fieldUpdated(fieldName, record[fieldName][i]['@id'])" 
+                                        (command_out)="onReferenceChange($event, i)">
+                                    </lib-text-edit>
                                 </div>
                             </div>
                         </div>
@@ -28,16 +38,16 @@
                 </div>
             </div>
             <div class="editable_field" [style.width.px]="getControlBoxWidth()">
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding" data-toggle="tooltip" title="Add references">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding" ngbTooltip="Add references">
                     <i [class]="addIconClass()"></i>
                 </button>
 
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onEdit()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences() || !isNormal" data-toggle="tooltip" [title]="editBtnTooltip">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onEdit()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences() || !isNormal" ngbTooltip="Edit references">
                     <i [class]="editIconClass()"></i>
                 </button>
 
                 <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!dataChanged && !isEditing"
-                    (click)="undoChanges()" aria-label="undo button" data-toggle="tooltip" title="Undo all reference changes">
+                    (click)="undoChanges()" aria-label="undo button" ngbTooltip="Undo all reference changes">
                     <i [class]="undoIconClass()"></i>
                 </button>
             </div>
@@ -49,12 +59,12 @@
                         <lib-single-ref [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-ref>
                     </td>
                     <td style="width: 30px;vertical-align: top;">
-                        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurRef()" aria-label="edit button" [disabled]="!dataChanged" data-toggle="tooltip" title="Save references">
+                        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurRef()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save current changes">
                             <i class="faa faa-save"></i>
                         </button>
         
                         <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
-                            (click)="undoCurRefChanges()" aria-label="undo button" data-toggle="tooltip" title="Undo current reference changes">
+                            (click)="undoCurRefChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
                             <i class="faa faa-undo"></i>
                         </button>
                     </td>

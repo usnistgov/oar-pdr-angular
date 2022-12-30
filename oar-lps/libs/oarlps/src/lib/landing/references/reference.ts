@@ -15,5 +15,6 @@ export interface Reference {
     id: string,
     type: string[],
     dataChanged: boolean,
-    isCollapsed: boolean
+    isCollapsed: boolean,
+    isNew: boolean
 }

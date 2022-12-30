@@ -12,6 +12,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DropdownModule } from 'primeng/dropdown';
 import { LandingpageService } from '../landingpage.service';
 import { CollapseModule } from '../collapseDirective/collapse.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [AccesspageComponent, SingleApageComponent],
@@ -25,7 +26,8 @@ import { CollapseModule } from '../collapseDirective/collapse.module';
     DragDropModule,
     DropdownModule,
     CollapseModule,
-    TextEditModule
+    TextEditModule,
+    NgbModule
   ],
   providers: [
     LandingpageService

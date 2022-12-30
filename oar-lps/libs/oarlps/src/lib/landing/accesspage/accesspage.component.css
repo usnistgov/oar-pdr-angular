@@ -3,8 +3,7 @@
 }
 
 .apage-text {
-    padding: 10px;
-    border: 1px solid red;
+    width: 100%;
 }
 
 /* Drag and drop */

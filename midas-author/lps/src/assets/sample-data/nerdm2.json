@@ -106,7 +106,6 @@
             "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
             "filepath": "NIST_SD32_MEDS-I_face.zip",
             "@type": [
-                "nrdp:Hidde",
                 "nrdp:AccessPage",
                 "dcat:Distribution"
             ],

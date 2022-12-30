@@ -3,6 +3,7 @@ import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionPopupComponent } from '../description/description-popup/description-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
 
 @Component({
     selector: 'app-keyword',
@@ -13,9 +14,11 @@ export class KeywordComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     fieldName: string = 'keyword';
+    editMode: string = MODE.NORNAL; 
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-                private ngbModal: NgbModal,     
+                private ngbModal: NgbModal, 
+                public lpService: LandingpageService,    
                 private notificationService: NotificationService)
     { }
 
@@ -40,6 +43,13 @@ export class KeywordComponent implements OnInit {
     }
 
     openModal() {
+        // Broadcast the status change
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = MODE.EDIT;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+        this.lpService.setEditing(sectionMode);
+
         console.log("Opening keyword popup...")
         if (! this.mdupdsvc.isEditMode) return;
 

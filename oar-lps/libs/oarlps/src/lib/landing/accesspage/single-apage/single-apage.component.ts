@@ -25,12 +25,13 @@ export class SingleApageComponent implements OnInit {
     get isAdding() { return this.editMode=="add" };
     
     ngOnChanges(changes: SimpleChanges): void {
+        console.log('changes', changes);
         if(changes.editMode && changes.editMode.currentValue == "normal") {
             this.reset();
         }
 
         if(changes.accessPage) {
-
+            console.log('changes.accessPage', changes.accessPage);
             if(this.accessPage) {
                 this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
             }else{

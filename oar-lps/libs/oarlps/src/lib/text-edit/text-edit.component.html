@@ -33,7 +33,7 @@
                 </button>
 
                 <!-- Restore button-->
-                <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl || !dataChanged" aria-label="Restore button">
+                <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl || !dataChanged || isNew" aria-label="Restore button">
                     <i class="faa faa-undo"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>

@@ -50,7 +50,7 @@ export abstract class CustomizationService {
      * 
      * @param md   an object containing resource properties to be updated.  
      */
-    public abstract updateMetadata(md : Object, subsetname: string, id: string) : Observable<Object>;
+    public abstract updateMetadata(md : Object, subsetname: string, id: string, subsetnameAPI: string) : Observable<Object>;
 
     /**
      * commit the changes in the draft to the saved version
@@ -77,7 +77,7 @@ export abstract class CustomizationService {
      * retrieve the data files from the server-side 
      * customization service.  
      */
-    public abstract add(md: any, subsetname: string) : Observable<Object>;
+    public abstract add(md: any, subsetname: string, subsetnameAPI: string) : Observable<Object>;
 }
 
 /**
@@ -209,13 +209,16 @@ export class WebCustomizationService extends CustomizationService {
      *                   ConnectionCustomizationError -- if it was not possible to connect to the 
      *                     customization server, even to get back an error response.  
      */
-    public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined) : Observable<Object> {
+    public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
         // To transform the output with proper error handling, we wrap the
         // HttpClient.patch() Observable with our own Observable
         //
+
+        if(!subsetnameAPI) subsetnameAPI = subsetname;  // Make it backward compactible
+
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data";
-            url = subsetname == undefined ? url : url + "/" + subsetname;
+            url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
             url = id == undefined ? url : url + "/" + id;
 
             // console.log("Update url", url);
@@ -241,14 +244,16 @@ export class WebCustomizationService extends CustomizationService {
      *                   ConnectionCustomizationError -- if it was not possible to connect to the 
      *                     customization server, even to get back an error response.  
      */
-    public add(md : Object, subsetname: string = undefined) : Observable<Object> {
+    public add(md : Object, subsetname: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
         // To transform the output with proper error handling, we wrap the
         // HttpClient.patch() Observable with our own Observable
         //
+        if(!subsetnameAPI) subsetnameAPI = subsetname;
+        
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi; //  Create a new record
-            if(subsetname) { // Create a new subset
-                url += this.resid + "/data/" + subsetname;
+            if(subsetnameAPI) { // Create a new subset
+                url += this.resid + "/data/" + subsetnameAPI;
             }
             // console.log("Add url", url)
             
@@ -470,7 +475,7 @@ export class InMemCustomizationService extends CustomizationService {
      *                   passed the Object representing the full draft metadata record.  On 
      *                   failure, error function is called with an instance of a CustomizationError.
      */
-    public add(md : Object, subsetname: string = undefined) : Observable<Object> {
+    public add(md : Object, subsetname: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
         if (! md)
             return throwError(new SystemCustomizationError("No update data provided"));
 

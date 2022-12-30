@@ -24,6 +24,7 @@ export class TextEditComponent implements OnInit {
     @Input() showBorder: boolean = true; // display the border between textbox and control
     @Input() forceReset: boolean = false;
     @Input() dataChanged: boolean = false;
+    @Input() isNew: boolean = false;
 
     //Output actions: "Delete", "Cancel", "Save", etc.
     @Output() command_out = new EventEmitter<any>();

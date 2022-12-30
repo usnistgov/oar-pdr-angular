@@ -92,9 +92,9 @@ export class ReferencesComponent implements OnInit {
      */
     get dataChanged() {
         let changed: boolean = false;
-        if(!this.record || !this.record.references || this.record.references.length == 0) return this.orderChanged;
-        for(let i=0; i < this.record.references.length; i++) {
-            changed = changed || this.record.references[i].dataChanged;
+        if(!this.record || !this.record[this.fieldName] || this.record[this.fieldName].length == 0) return this.orderChanged;
+        for(let i=0; i < this.record[this.fieldName].length; i++) {
+            changed = changed || this.record[this.fieldName][i].dataChanged;
         }
         
         return changed || this.orderChanged;
@@ -103,7 +103,7 @@ export class ReferencesComponent implements OnInit {
     get dataChangedAndUpdated() {
         let changed: boolean = false;
 
-        for(let i=0; i < this.record.references.length; i++) {
+        for(let i=0; i < this.record[this.fieldName].length; i++) {
             changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][i]['@id']);
         }
         
@@ -130,20 +130,21 @@ export class ReferencesComponent implements OnInit {
             case MODE.EDIT:
                 this.openEditBlock();
                 //Broadcast who is editing
-
                 this.lpService.setEditing(sectionMode);
                 break;
             case MODE.ADD:
                 //Append a blank reference to the record and set current reference.
-                if(!this.record["references"]){
-                    this.record["references"] = [];
+                if(!this.record[this.fieldName]){
+                    this.record[this.fieldName] = [];
                 }
 
-                this.record["references"].push({} as Reference);
+                let newRef = {} as Reference;
+                newRef["isNew"] = true;
+                this.record[this.fieldName].push(newRef);
                 
                 this.currentRefIndex = this.record.references.length - 1;
-                // this.record["references"][this.currentRefIndex].dataChanged = true;
-                this.currentRef = this.record["references"][this.currentRefIndex];
+                // this.record[this.fieldName][this.currentRefIndex].dataChanged = true;
+                this.currentRef = this.record[this.fieldName][this.currentRefIndex];
                 this.lpService.setEditing(sectionMode);
                 this.openEditBlock();
                 break;
@@ -167,25 +168,11 @@ export class ReferencesComponent implements OnInit {
     }
 
     /**
-     * Save changes to the server and set edit mode to "normal"
-     */
-    // onSave() {
-    //     // Collapse the edit block
-    //     this.editBlockStatus = 'collapsed';
-
-    //     // Update reference data
-    //     this.updateMatadata();
-
-    //     // Set edit mode to "normal"
-    //     this.setMode(MODE.NORNAL);
-    // }
-
-    /**
      * Update reference data to the server
      */
-    updateMatadata(refid: string = undefined) {
+    updateMatadata(ref: Reference = undefined, refid: string = undefined) {
         if(refid) {    // Update specific reference
-            this.mdupdsvc.update(this.fieldName, this.currentRef, refid).then((updateSuccess) => {
+            this.mdupdsvc.update(this.fieldName, ref, refid).then((updateSuccess) => {
                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                 if (updateSuccess){
                     this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
@@ -239,7 +226,7 @@ export class ReferencesComponent implements OnInit {
                 this.removeRef(this.currentRefIndex);
             }
         }else{
-            this.updateMatadata(this.currentRef["@id"]);
+            this.updateMatadata(this.currentRef, this.currentRef["@id"]);
         }
 
         this.setMode(MODE.NORNAL);
@@ -397,6 +384,8 @@ export class ReferencesComponent implements OnInit {
      */
     removeRef(index: number) {
         this.record.references.splice(index,1);
+        console.log("this.record", this.record);
+        console.log("this.currentRef", this.currentRef);
         this.orderChanged = true;
         this.updateMatadata();
     }
@@ -419,7 +408,7 @@ export class ReferencesComponent implements OnInit {
                 this.removeRef(index);
                 break;
             case 'restore':
-                this.mdupdsvc.undo(this.fieldName, this.record["references"][index]["@id"]).then((success) => {
+                this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]["@id"]).then((success) => {
                     if (success) {
                         this.currentRefIndex = 0;
                         this.currentRef = this.record[this.fieldName][this.currentRefIndex];
@@ -442,15 +431,15 @@ export class ReferencesComponent implements OnInit {
     selectRef(index: number) {
         if(index != this.currentRefIndex) { // user selected different reference
             if(this.currentRef.dataChanged) {
-                this.updateMatadata(this.currentRef["@id"]);
+                this.updateMatadata(this.currentRef, this.currentRef["@id"]);
             }
         }
 
-        if(this.record["references"] && this.record["references"].length > 0 && !this.isAdding){
+        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0 && !this.isAdding){
             this.forceReset = (this.currentRefIndex != -1);
 
             this.currentRefIndex = index;
-            this.currentRef = this.record["references"][index];
+            this.currentRef = this.record[this.fieldName][index];
         }
     }
 
@@ -498,7 +487,7 @@ export class ReferencesComponent implements OnInit {
         }else if(this.dataChanged){
             return 'var(--data-changed)';
         }else{
-            return 'white';
+            return 'var(--editable)';
         }
     }
 
@@ -560,7 +549,7 @@ export class ReferencesComponent implements OnInit {
      * @returns width in px
      */
     getControlBoxWidth() {
-        if(this.record["references"] && this.record["references"].length > 1)
+        if(this.record[this.fieldName] && this.record[this.fieldName].length > 1)
             return 30;
         else
             return 100;

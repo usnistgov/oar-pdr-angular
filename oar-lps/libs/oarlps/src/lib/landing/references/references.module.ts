@@ -13,6 +13,7 @@ import { LandingpageService } from '../landingpage.service';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { TextEditModule } from '../../text-edit/text-edit.module';
 import { RefAuthorComponent } from './ref-author/ref-author.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [ReferencesComponent, SingleRefComponent, RefAuthorComponent],
@@ -26,7 +27,8 @@ import { RefAuthorComponent } from './ref-author/ref-author.component';
     DragDropModule,
     DropdownModule,
     CollapseModule,
-    TextEditModule
+    TextEditModule,
+    NgbModule
   ],
   providers: [
     LandingpageService

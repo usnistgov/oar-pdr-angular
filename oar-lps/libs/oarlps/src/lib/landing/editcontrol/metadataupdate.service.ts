@@ -125,7 +125,9 @@ export class MetadataUpdateService {
      *             take care of reporting the reason.  This allows the caller in charge of 
      *             getting updates to have its UI react accordingly.
      */
-    public update(subsetname: string, md: {}, id: string = undefined): Promise<boolean> {
+    public update(subsetname: string, md: {}, id: string = undefined, subsetnameAPI: string = undefined): Promise<boolean> {
+        if(!subsetnameAPI) subsetnameAPI = subsetname;
+
         if (!this.custsvc) {
             console.error("Attempted to update without authorization!  Ignoring update.");
             return new Promise<boolean>((resolve, reject) => {
@@ -143,20 +145,20 @@ export class MetadataUpdateService {
             for (let prop in md) {
                 if (this.origfields[key][prop] === undefined) {
                     if (this.currentRec[prop] !== undefined) {
-                        this.origfields[key][prop] = this.currentRec[prop];
+                        this.origfields[key][prop] = JSON.parse(JSON.stringify(this.currentRec[prop]));
                     } else {
                         this.origfields[key][prop] = null;   // TODO: problematic; need to clean-up nulls
                     }
                 }
             }
         }
-        console.log('this.origfields', this.origfields);
+        
         // If current data is the same as original (user changed the data back to original), call undo instead. Otherwise do normal update
         // if (JSON.stringify(md[subsetname]) == JSON.stringify(this.origfields[subsetname])) {
         //     this.undo(subsetname);
         // } else {
         return new Promise<boolean>((resolve, reject) => {
-            this.custsvc.updateMetadata(md, subsetname, id).subscribe(
+            this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe(
                 (res) => {
                     // console.log("###DBG  Draft data returned from server:\n  ", res)
                     this.stampUpdateDate();
@@ -203,16 +205,18 @@ export class MetadataUpdateService {
                 this.currentRec[subsetname].push(newItem);
             }
         }
+
+        this.mdres.next(this.currentRec as NerdmRes);
     }
     
-    public add(md: any, subsetname: string = undefined) {
+    public add(md: any, subsetname: string = undefined, subsetnameAPI: string = undefined) {
         return new Promise<boolean>((resolve, reject) => {
-            this.custsvc.add(md, subsetname).subscribe(
+            this.custsvc.add(md, subsetname, subsetnameAPI).subscribe(
                 (res) => {
                     let obj = JSON.parse(res as string);
                     if(subsetname) {  //Add a subset
                         if(this.currentRec[subsetname]){
-                            this.currentRec[subsetname].push(obj);
+                            this.currentRec[subsetname] = [...this.currentRec[subsetname], ...[obj]];
                         }else{
                             this.currentRec[subsetname] = [obj];
                         }
@@ -222,7 +226,7 @@ export class MetadataUpdateService {
 
                     let key = subsetname + obj['@id'];
                     this.origfields[key] = {};
-                    this.origfields[key][subsetname] = this.currentRec[subsetname];
+                    this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
 
                     this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                     resolve(true);
@@ -256,9 +260,8 @@ export class MetadataUpdateService {
      *             response allows the caller in charge of getting updates to have its UI react
      *             accordingly.
      */
-    public undo(subsetname: string, id: string = undefined) {
+    public undo(subsetname: string, id: string = undefined, subsetnameAPI: string = undefined) {
         let key = id? subsetname + id : subsetname;
-
         if (!subsetname || !this.origfields) {
             // Nothing to undo!
             console.warn("Undo called on " + subsetname + ": nothing to undo");
@@ -312,32 +315,49 @@ export class MetadataUpdateService {
             });
         }
         else {
+
             // Other updates are still registered; just undo the specified one
             return new Promise<boolean>((resolve, reject) => {
                 let md: any;
-                if(id) {
+                if(id) {  //Undo specific subset item
                     let index = this.originalDraftRec[subsetname].findIndex(x => x["@id"] == id);
                     if(index >= 0) {
                         md = this.originalDraftRec[subsetname][index];
                     }else {
                         resolve(false);
                     }
-                }else {
+
+                    // Locate the current rec because the index may not be the same as in original record
+                    let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
+                    this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
+
+                    // delete specific origfield
+                    delete this.origfields[key];
+                }else {    // unde the whole subset
                     md = this.originalDraftRec[subsetname];
+
+                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
+
+                    //Delete all origfields related to the subset
+                    Object.keys(this.origfields).forEach((fKey) => {
+                        if(fKey.includes(subsetname)) {
+                            delete this.origfields[fKey];
+                        }
+                    })
                 }
 
                 //If id is provided, get the record with the id. Otherwise return the whole subset
-                if(id){
-                    let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
-                    this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
-                }else{
-                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
-                }
-                this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
-                delete this.origfields[key];
-                this.custsvc.updateMetadata(md, subsetname, id).subscribe(
-                    (res) => {
+                // if(id){
+                //     let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
+                //     this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
+                // }else{
+                //     this.currentRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
+                // }
 
+                // delete this.origfields[key];
+                this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe(
+                    (res) => {
+                        this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                         // this.mdres.next(res as NerdmRes);
                         resolve(true);
                     },
@@ -370,7 +390,7 @@ export class MetadataUpdateService {
             for (let subset in mdrec) {
                 if (this.currentRec[subset] != undefined && JSON.stringify(mdrec[subset]) != JSON.stringify(this.currentRec[subset])) {
                     this.origfields[subset] = {};
-                    this.origfields[subset][subset] = this.currentRec[subset];
+                    this.origfields[subset][subset] = JSON.parse(JSON.stringify(this.currentRec[subset]));
                 }
             }
         }
@@ -572,12 +592,14 @@ export class MetadataUpdateService {
     /**
      *  Return field style based on edit mode and data update status
      */
-    getFieldStyle(fieldName : string) {
+    getFieldStyle(fieldName : string, dataChanged: boolean = false) {
         if (this.isEditMode) {
             if (this.fieldUpdated(fieldName)) {
-                return { 'border': '1px solid lightgrey', 'background-color': '#FCF9CD', 'padding-right': '1em', 'cursor': 'pointer' };
-            } else {
-                return { 'border': '1px solid lightgrey', 'background-color': '#e6f2ff', 'padding-right': '1em', 'cursor': 'pointer' };
+                return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
+            } else if(dataChanged){
+                return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed)', 'padding-right': '1em', 'cursor': 'pointer' };
+            }else{
+                return { 'border': '1px solid lightgrey', 'background-color': 'var(--editable)', 'padding-right': '1em', 'cursor': 'pointer' };
             }
         } else {
             return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };

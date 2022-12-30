@@ -22,7 +22,7 @@ export class LandingpageService {
 
     constructor() { }
 
-    //This variable tells the system which section user ia interested (so it can scroll to the section).
+    //This variable tells the system which section user is interested (so it can scroll to the section).
     _currentSection: BehaviorSubject<string> = new BehaviorSubject<string>("top");
     setCurrentSection(val: string){
         this._currentSection.next(val);
