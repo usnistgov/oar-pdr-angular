@@ -3,6 +3,7 @@ import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionPopupComponent } from './description-popup/description-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
 
 @Component({
     selector: 'app-description',
@@ -13,9 +14,11 @@ export class DescriptionComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     fieldName: string = 'description';
+    editMode: string = MODE.NORNAL; 
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-                private ngbModal: NgbModal,                
+                private ngbModal: NgbModal,
+                public lpService: LandingpageService,                  
                 private notificationService: NotificationService)
     { 
     }
@@ -27,6 +30,13 @@ export class DescriptionComponent implements OnInit {
 
     openModal() {
         if (!this.mdupdsvc.isEditMode) return;
+
+        // Broadcast the status change
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = MODE.EDIT;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+        this.lpService.setEditing(sectionMode);
 
         let ngbModalOptions: NgbModalOptions = {
             backdrop: 'static',

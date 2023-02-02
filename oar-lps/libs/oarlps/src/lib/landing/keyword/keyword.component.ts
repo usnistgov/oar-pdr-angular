@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionPopupComponent } from '../description/description-popup/description-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
+import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
 
 @Component({
     selector: 'app-keyword',
@@ -15,12 +15,28 @@ export class KeywordComponent implements OnInit {
     @Input() inBrowser: boolean;   // false if running server-side
     fieldName: string = 'keyword';
     editMode: string = MODE.NORNAL; 
+    placeholder: string = "Enter keywords separated by comma";
+    isEditing: boolean = false;
+    keywords: string = "";
+    originKeywords: string = "";
+    originalRecord: any[];
+    message: string = "";
+    backColor: string = "white";
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal, 
                 public lpService: LandingpageService,    
-                private notificationService: NotificationService)
-    { }
+                private notificationService: NotificationService){ 
+                    this.lpService.watchEditing((sectionMode: SectionMode) => {
+                        if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.isEditing){
+                                this.onSave(false); // Do not refresh help text 
+                            }else{
+                                this.setMode(MODE.NORNAL, false);
+                            }
+                        }
+                    })
+    }
 
     /**
      * a field indicating if this data has beed edited
@@ -40,66 +56,114 @@ export class KeywordComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.originalRecord = JSON.parse(JSON.stringify(this.record));
+        this.getKeywords();
     }
 
-    openModal() {
-        // Broadcast the status change
-        let sectionMode: SectionMode = {} as SectionMode;
-        this.editMode = MODE.EDIT;
-        sectionMode.section = this.fieldName;
-        sectionMode.mode = this.editMode;
-        this.lpService.setEditing(sectionMode);
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes.record){
+            this.originalRecord = JSON.parse(JSON.stringify(this.record));
+            this.getKeywords();
+        }
+    }
 
-        console.log("Opening keyword popup...")
-        if (! this.mdupdsvc.isEditMode) return;
+    getKeywords() {
+        if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
+            this.keywords = this.record[this.fieldName].join(",");
 
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "myCustomModalClass"
-        };
+        if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
+            this.originKeywords = this.originalRecord[this.fieldName].join(",");
+    }
 
-        const modalRef = this.ngbModal.open(DescriptionPopupComponent, ngbModalOptions);
+    startEditing() {
+        this.setMode(MODE.EDIT);
+        this.isEditing = true;
+    }
 
-        let val = "";
-        if (this.record[this.fieldName])
-            val = this.record[this.fieldName].join(', ');
+    cancelEditing() {
+        this.getKeywords();
+        this.setMode(MODE.NORNAL);
+        this.isEditing = false;
+        this.setBackground(this.keywords);
+    }
 
-        modalRef.componentInstance.inputValue = { };
-        modalRef.componentInstance.inputValue[this.fieldName] = val;
-        modalRef.componentInstance['field'] = this.fieldName;
-        modalRef.componentInstance['title'] = 'Keywords';
-        modalRef.componentInstance.message = "Please enter keywords separated by comma (* required).";
+    onSave(refreshHelp: boolean = true) {
+        // Replace line feeds with comma
+        this.keywords = this.keywords.replace(new RegExp("[\r\n]", "gm"), ",");
 
-        modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-            if (returnValue) {
-                // console.log("###DBG  receiving editing output: " +
-                //             returnValue[this.fieldName].substring(0,20) + "....");
-                let updmd = {};
-                updmd[this.fieldName] = returnValue[this.fieldName].split(/\s*,\s*/).filter(kw => kw != '');
-                this.record[this.fieldName] = returnValue[this.fieldName].split(/\s*,\s*/).filter(kw => kw != '');
+        // Replace semicolon with comma
+        this.keywords = this.keywords.replace(new RegExp("[\;]", "gm"), ",");
 
-                this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                    if (updateSuccess)
-                        this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
-                    else
-                        console.error("acknowledge keywords update failure");
-                });
-            }
-        })
+        if(this.keywords != this.originKeywords) {
+
+            let updmd = {};
+            updmd[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
+            this.record[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
+
+            this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+                if (updateSuccess)
+                    this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
+                else
+                    console.error("acknowledge keywords update failure");
+            });
+        }
+
+        this.setMode(MODE.NORNAL, refreshHelp);
+        this.isEditing = false;
+    }
+
+    onKeywordChange(event: any) {
+        this.keywords = event;
+    }
+
+    /**
+     * Set background color based on the status of keywords
+     * if it's the same as original value (nothing changed), set background color to white.
+     * Otherwise set it to light yellow.
+     * @param keywords 
+     */
+    setBackground(keywords: string) {
+        if(keywords != this.originKeywords){
+            this.backColor = 'var(--data-changed)';
+        }else{
+            this.backColor = 'white';
+        }
     }
 
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoEditing() {
+        this.setMode(MODE.NORNAL);
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success)
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
             else
                 console.error("Failed to undo keywords metadata")
         });
+        this.setBackground(this.keywords);
     }
 
+    /**
+     * Set the GI to different mode
+     * @param editmode edit mode to be set
+     */
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = editmode;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+
+        if(refreshHelp){
+            this.lpService.setSectionHelp(sectionHelp);
+        }
+
+        //Broadcast the current section and mode
+        this.lpService.setEditing(sectionMode);        
+    }
 }

@@ -4,7 +4,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
+import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -61,13 +61,11 @@ export class ReferencesComponent implements OnInit {
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
                 if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    console.log("Save changes...");
-
                     if(this.dataChanged){
-                        this.saveCurRef();
+                        this.saveCurRef(false); // Do not refresh help text 
+                    }else{
+                        this.setMode(MODE.NORNAL, false);
                     }
-
-                    this.setMode(MODE.NORNAL);
                 }
             })
     }
@@ -121,16 +119,24 @@ export class ReferencesComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
+
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+
+        if(refreshHelp){
+            this.lpService.setSectionHelp(sectionHelp);
+        }
+            
+
         switch ( this.editMode ) {
             case MODE.EDIT:
                 this.openEditBlock();
-                //Broadcast who is editing
-                this.lpService.setEditing(sectionMode);
                 break;
             case MODE.ADD:
                 //Append a blank reference to the record and set current reference.
@@ -143,18 +149,21 @@ export class ReferencesComponent implements OnInit {
                 this.record[this.fieldName].push(newRef);
                 
                 this.currentRefIndex = this.record.references.length - 1;
-                // this.record[this.fieldName][this.currentRefIndex].dataChanged = true;
+
                 this.currentRef = this.record[this.fieldName][this.currentRefIndex];
-                this.lpService.setEditing(sectionMode);
+                this.currentRef.dataChanged = true;
+                // this.orderChanged = true;
+
                 this.openEditBlock();
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
-                //Broadcast that nobody is editing so system can display general help text
-                this.lpService.setEditing(sectionMode);
                 break;
         }
+
+        //Broadcast the current section and mode
+        this.lpService.setEditing(sectionMode);
     }
 
     /**
@@ -171,27 +180,33 @@ export class ReferencesComponent implements OnInit {
      * Update reference data to the server
      */
     updateMatadata(ref: Reference = undefined, refid: string = undefined) {
-        if(refid) {    // Update specific reference
-            this.mdupdsvc.update(this.fieldName, ref, refid).then((updateSuccess) => {
-                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                if (updateSuccess){
-                    this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
-                }else
-                    console.error("acknowledge references update failure");
-            });
-        }else{  // Update all references
-            if(this.dataChanged){
-                let updmd = {};
-                updmd[this.fieldName] = this.record[this.fieldName];
-                this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+        return new Promise<boolean>((resolve, reject) => {
+            if(refid) {    // Update specific reference
+                this.mdupdsvc.update(this.fieldName, ref, refid).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                        resolve(true);
                     }else
                         console.error("acknowledge references update failure");
+                        resolve(false);
                 });
+            }else{  // Update all references
+                if(this.dataChanged){
+                    let updmd = {};
+                    updmd[this.fieldName] = this.record[this.fieldName];
+                    this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+                        // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+                        if (updateSuccess){
+                            this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                            resolve(true);
+                        }else
+                            console.error("acknowledge references update failure");
+                            resolve(false);
+                    });
+                }
             }
-        }
+        })
     }
 
     /**
@@ -210,11 +225,12 @@ export class ReferencesComponent implements OnInit {
     /**
      * Save current reference
      */
-    saveCurRef() {
+    saveCurRef(refreshHelp: boolean = true) {
         if(this.isAdding){
             if(this.currentRef.dataChanged){
-                this.mdupdsvc.add(this.currentRef, this.fieldName).then((success) => {
-                    if (success){
+                this.mdupdsvc.add(this.currentRef, this.fieldName).subscribe((rec) => {
+                    if (rec){
+                        this.record = JSON.parse(JSON.stringify(rec));
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;
@@ -223,13 +239,14 @@ export class ReferencesComponent implements OnInit {
                         return;
                 });
             }else{  //If no data has been entered, remove this reference
+                console.log("Removing current ref...")
                 this.removeRef(this.currentRefIndex);
             }
         }else{
             this.updateMatadata(this.currentRef, this.currentRef["@id"]);
         }
 
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.NORNAL, refreshHelp);
     }
 
     /*
@@ -274,9 +291,17 @@ export class ReferencesComponent implements OnInit {
             }else{
                 this.mdupdsvc.loadSavedSubsetFromMemory(this.fieldName, this.currentRef["@id"]).subscribe(
                     (ref) => {
-                        this.currentRef = JSON.parse(JSON.stringify(ref));
-                        this.currentRef.dataChanged = false;
-                        this.record.references[this.currentRefIndex] = JSON.parse(JSON.stringify(this.currentRef));
+                        let index = this.record[this.fieldName].findIndex((comp) => comp['@id'] == this.currentRef['@id']);
+
+                        if(index > -1){
+                            this.record[this.fieldName][index] = JSON.parse(JSON.stringify(ref));
+
+                            this.currentRef = JSON.parse(JSON.stringify(ref));
+                            this.currentRef.dataChanged = false;
+                            this.record.references[this.currentRefIndex] = JSON.parse(JSON.stringify(this.currentRef));
+                        }else{
+                            //This should never happen
+                        }
                     })                
             }
         }
@@ -384,8 +409,6 @@ export class ReferencesComponent implements OnInit {
      */
     removeRef(index: number) {
         this.record.references.splice(index,1);
-        console.log("this.record", this.record);
-        console.log("this.currentRef", this.currentRef);
         this.orderChanged = true;
         this.updateMatadata();
     }
@@ -431,10 +454,31 @@ export class ReferencesComponent implements OnInit {
     selectRef(index: number) {
         if(index != this.currentRefIndex) { // user selected different reference
             if(this.currentRef.dataChanged) {
-                this.updateMatadata(this.currentRef, this.currentRef["@id"]);
+                this.updateMatadata(this.currentRef, this.currentRef["@id"]).then((success) => {
+                    if(success){
+                        this.setCurrentPage(index);
+
+                        if(this.editMode==MODE.ADD || this.editMode==MODE.EDIT)
+                            this.editMode = MODE.EDIT;
+                        else    
+                            this.editMode = MODE.NORNAL;
+                    }else{
+                        console.error("Update failed")
+                    }
+                })
+            }else{
+                this.setCurrentPage(index);
             }
         }
 
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic['dragdrop'];
+
+        this.lpService.setSectionHelp(sectionHelp);
+    }
+
+    setCurrentPage(index: number){
         if(this.record[this.fieldName] && this.record[this.fieldName].length > 0 && !this.isAdding){
             this.forceReset = (this.currentRefIndex != -1);
 

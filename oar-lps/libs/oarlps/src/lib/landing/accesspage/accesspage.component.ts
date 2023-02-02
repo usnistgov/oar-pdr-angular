@@ -4,7 +4,7 @@ import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
-import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
+import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -67,10 +67,10 @@ export class AccesspageComponent implements OnInit {
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
                     if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
                         if(this.dataChanged){
-                            this.saveCurApage();
+                            this.saveCurApage(false);  // Do not refresh help text 
+                        }else{
+                            this.setMode(MODE.NORNAL, false);
                         }
-    
-                        this.setMode(MODE.NORNAL);
                     }
                 })
     }
@@ -108,19 +108,21 @@ export class AccesspageComponent implements OnInit {
         return changed || this.orderChanged;        
     }
 
-    startEditing() {
-        // If is editing, save data to the draft server
-        if(this.isEditing || this.isAdding){
-            this.saveCurApage();
-            this.setMode(MODE.NORNAL);
-        }else{ // If not editing, enter edit mode
-            this.setMode(MODE.EDIT);
-        }
-    }
+    // startEditing() {
+    //     // If is editing, save data to the draft server
+    //     if(this.isEditing || this.isAdding){
+    //         this.saveCurApage();
+    //         this.setMode(MODE.NORNAL);
+    //     }else{ // If not editing, enter edit mode
+    //         this.setMode(MODE.EDIT);
+    //     }
+    // }
 
     ngOnChanges(ch : SimpleChanges) {
-        if (ch.record)
+        if (ch.record){
             this.useMetadata();  // initialize internal component data based on metadata
+        }
+            
     }
 
     useMetadata() {
@@ -175,13 +177,15 @@ export class AccesspageComponent implements OnInit {
      * @param index The index of the selected access page
      */
     selectApage(index: number) {
-        console.log("Switch to index", index);
         if(index != this.currentApageIndex) { // user selected different access page
             if(this.currentApage.dataChanged) {
                 this.updateMatadata(this.currentApage, this.currentApage["@id"]).then((success) => {
                     if(success){
-                        console.log("Before set currentApage", JSON.parse(JSON.stringify(this.currentApage)));
                         this.setCurrentPage(index);
+                        if(this.editMode==MODE.ADD || this.editMode==MODE.EDIT)
+                            this.editMode = MODE.EDIT;
+                        else    
+                            this.editMode = MODE.NORNAL;
                     }else{
                         console.error("Update failed")
                     }
@@ -190,16 +194,19 @@ export class AccesspageComponent implements OnInit {
                 this.setCurrentPage(index);
             }
         }
+
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic['dragdrop'];
+
+        this.lpService.setSectionHelp(sectionHelp);        
     }
 
     setCurrentPage(index: number){
-        console.log("set current page to", index);
         if(this.accessPages && this.accessPages.length > 0 && !this.isAdding){
             this.currentApageIndex = index;
             this.currentApage = this.accessPages[index];
-            console.log("currentApage", this.currentApage);
             this.forceReset = (this.currentApageIndex != -1);
-            console.log("forceReset", this.forceReset);
         }
     }
     /**
@@ -303,17 +310,23 @@ export class AccesspageComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+
+        if(refreshHelp){
+            this.lpService.setSectionHelp(sectionHelp);
+        }
+
         switch ( this.editMode ) {
             case MODE.EDIT:
                 this.openEditBlock();
-                //Broadcast who is editing
-                this.lpService.setEditing(sectionMode);
                 break;
             case MODE.ADD:
                 //Append a blank access page to the record and set current access page.
@@ -329,16 +342,17 @@ export class AccesspageComponent implements OnInit {
                 this.currentApageIndex = this.accessPages.length - 1;
                 this.accessPages[this.currentApageIndex].dataChanged = true;
                 this.currentApage = this.accessPages[this.currentApageIndex];
-                this.lpService.setEditing(sectionMode);
+
                 this.openEditBlock();
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
-                //Broadcast that nobody is editing so system can display general help text
-                this.lpService.setEditing(sectionMode);
                 break;
         }
+
+        //Broadcast the current section and mode
+        this.lpService.setEditing(sectionMode);
     }
     
     getBackgroundColor(index: number){
@@ -513,11 +527,19 @@ export class AccesspageComponent implements OnInit {
             }else{
                 this.mdupdsvc.loadSavedSubsetFromMemory(this.fieldName, this.currentApage["@id"]).subscribe(
                     (aPage) => {
-                        console.log("Return page", aPage);
-                        this.currentApage = JSON.parse(JSON.stringify(aPage));
-                        this.currentApage.dataChanged = false;
-
-                        this.record[this.fieldName][this.currentApageIndex] = JSON.parse(JSON.stringify(aPage));
+                        console.log("Loaded page", JSON.parse(JSON.stringify(aPage)));
+                        let index = this.record[this.fieldName].findIndex((comp) => comp['@id'] == this.currentApage['@id']);
+                        
+                        if(index > -1){
+                            this.record[this.fieldName][index] = JSON.parse(JSON.stringify(aPage));
+                            this.currentApageIndex = index;
+                            this.currentApage = JSON.parse(JSON.stringify(aPage));
+                            this.currentApage.dataChanged = false;
+                        }else{
+                            //This should never happen
+                        }
+                        
+                        console.log('this.record', JSON.parse(JSON.stringify(this.record)));
                         this.useMetadata();
                     }
                 )             
@@ -530,13 +552,12 @@ export class AccesspageComponent implements OnInit {
     /**
      * Save current access page
      */
-    saveCurApage() {
+    saveCurApage(refreshHelp: boolean = true) {
         if(this.isAdding){
-            if(this.currentApage.dataChanged){
-                console.log("Saving new access page...")
-                this.mdupdsvc.add(this.currentApage, this.fieldName, this.FieldNameAPI).then((success) => {
-                    if (success){
-                        console.log("this.record after save", this.record);
+            if(!this.emptyRecord(this.currentApageIndex)){
+                this.mdupdsvc.add(this.currentApage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {
+                    if (rec){
+                        this.record = JSON.parse(JSON.stringify(rec));
                         this.accessPages = this.selectAccessPages();
                         this.selectApage(this.accessPages.length - 1);
 
@@ -552,6 +573,10 @@ export class AccesspageComponent implements OnInit {
             this.updateMatadata(this.currentApage, this.currentApage["@id"]);
         }
 
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.NORNAL, refreshHelp);
+    }
+
+    emptyRecord(index: number): boolean {
+        return !(this.accessPages[index].title || this.accessPages[index].description || this.accessPages[index].accessURL);
     }
 }

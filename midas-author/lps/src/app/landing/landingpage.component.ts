@@ -143,7 +143,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     helpContent: any = {
         "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
     }
-    public helpContent2:{} = questionhelp;
+
+    suggustedSections: string[] = ["title", "keyword", "references"];
+    public helpContentAll:{} = questionhelp;
 
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
@@ -188,16 +190,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
         });
-
-        this.lpService.watchEditing((section) => {
-            this.helpContent = this.helpContent2['general'];
-
-            // if(section == "") {
-            //     this.helpContent = this.helpContent2['general'];
-            // }else{
-            //     this.helpContent = this.helpContent2[section]==""?this.helpContent2['general']:this.helpContent2[section];
-            // }
-        })
 
         if (this.editEnabled) {
             this.edstatsvc.watchEditMode((editMode) => {

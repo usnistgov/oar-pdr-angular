@@ -9,11 +9,24 @@ export interface SectionMode {
     "mode": string
 }
 
+export interface SectionHelp {
+    "section": string,
+    "topic": string
+}
+
 export const MODE = {
     "NORNAL": "normal",
     "EDIT": "edit",
     "ADD": "add"
 }
+
+let _helpTopic = {};
+_helpTopic[MODE.NORNAL]  = 'general';
+_helpTopic[MODE.EDIT]  = 'edit';
+_helpTopic[MODE.ADD]  = 'add';
+_helpTopic["dragdrop"]  = 'dragdrop';
+
+export const HelpTopic = _helpTopic;
 
 @Injectable({
   providedIn: 'root'
@@ -38,5 +51,14 @@ export class LandingpageService {
     }
     public watchEditing(subscriber) {
         this._editing.subscribe(subscriber);
+    }
+
+    // Indicate which section help content to display
+    _sectionHelp: BehaviorSubject<SectionHelp> = new BehaviorSubject<SectionHelp>({} as SectionHelp);
+    setSectionHelp(sectionHelp: SectionHelp){
+        this._sectionHelp.next(sectionHelp);
+    }
+    public watchSectionHelp(subscriber) {
+        this._sectionHelp.subscribe(subscriber);
     }
 }

@@ -4,6 +4,7 @@ import { TextEditComponent } from './text-edit.component';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { BrowserModule } from '@angular/platform-browser';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [TextEditComponent],
@@ -11,7 +12,8 @@ import { BrowserModule } from '@angular/platform-browser';
     CommonModule,
     FormsModule,
     ButtonModule,
-    BrowserModule
+    BrowserModule,
+    NgbModule
   ],
   exports: [TextEditComponent]
 })

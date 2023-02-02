@@ -100,7 +100,10 @@ export class SingleRefComponent implements OnInit {
     onDoiChange(event) {
         this.ref.doi = event.value;
         this.httpClient.get("assets/sample-data/sample-reference.json").subscribe(data =>{
+
             this.ref = JSON.parse(JSON.stringify(data)) as Reference;
+
+            this.ref['isNew'] = this.isAdding;
             this.onChange(false);
         })
         // Get ref data from backend...

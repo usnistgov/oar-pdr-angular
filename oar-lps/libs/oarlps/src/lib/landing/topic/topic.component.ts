@@ -5,6 +5,7 @@ import { NotificationService } from '../../shared/notification-service/notificat
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
+import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
 
 @Component({
     selector: 'app-topic',
@@ -21,10 +22,12 @@ export class TopicComponent implements OnInit {
     @Input() inBrowser: boolean;   // false if running server-side
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
     fieldName = 'theme';
+    editMode: string = MODE.NORNAL; 
 
     constructor(public mdupdsvc: MetadataUpdateService,
                 private ngbModal: NgbModal,
                 private cfg: AppConfig,
+                public lpService: LandingpageService, 
                 private notificationService: NotificationService) {
 
             this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
@@ -96,6 +99,14 @@ export class TopicComponent implements OnInit {
         // backdrop: 'static' - the pop up will not be closed 
         //                      when user click outside the dialog window.
         // windowClass: "myCustomModalClass" - pop up dialog styling defined in styles.scss
+
+        // Broadcast the status change
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = MODE.EDIT;
+        sectionMode.section = 'topic';
+        sectionMode.mode = this.editMode;
+        this.lpService.setEditing(sectionMode);
+
         let ngbModalOptions: NgbModalOptions = {
             backdrop: 'static',
             keyboard: false,

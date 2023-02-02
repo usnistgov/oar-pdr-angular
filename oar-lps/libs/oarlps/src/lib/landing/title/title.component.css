@@ -1,4 +1,8 @@
 .title {
-    /* color:#1471AE; */
-    font-size: 20px;
+    width: 100%;
+    margin: 0px; 
+    padding: 0px;
+    font-family: sans-serif !important;
+    font-size: 1.5em;
+    font-weight: bold;
 }

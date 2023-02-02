@@ -3,7 +3,7 @@
         <tr style="width: 100% !important;">
             <!-- Drag drop icon -->
             <td *ngIf="dragDropIcon" class="dragdrop">
-                <img src="./assets/images/reorder.png" class="dragdropicon" [style.opacity]="ddIconOpacity()">
+                <img src="./assets/images/reorder.png" class="dragdropicon" [style.opacity]="ddIconOpacity()" ngbTooltip="Drag and re-position this item" alt="Drag and re-position this item">
             </td>
 
             <!-- Text field -->
@@ -21,31 +21,31 @@
             <!-- Controls -->
             <td class="control-wrapper" [style.width]="controlBoxWidth" [style.border-left]="controlBorderStyle()">
                 <!-- Edit/Save button-->
-                <button *ngIf="editButton" class="edit_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button">
+                <button *ngIf="editButton" class="edit_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button" ngbTooltip="Edit this item">
                     <i [class]="getEditIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
 
                 <!-- Delete/undoEdit button-->
-                <button *ngIf="deleteButton" class="edit_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button">
+                <button *ngIf="deleteButton" class="edit_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button" ngbTooltip="Delete this item">
                     <i [class]="getDelIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('delete')"></i>
                 </button>
 
                 <!-- Restore button-->
-                <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl || !dataChanged || isNew" aria-label="Restore button">
+                <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl || !dataChanged || isNew" aria-label="Restore button" ngbTooltip="Restore from original value">
                     <i class="faa faa-undo"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>
 
                 <!-- Plus button-->
-                <button *ngIf="plusButton" class="edit_button" type="button" (click)="add()" [disabled]="disableControl" aria-label="Add button">
+                <button *ngIf="plusButton" class="edit_button" type="button" (click)="add()" [disabled]="disableControl" aria-label="Add button" ngbTooltip="Add new item">
                     <i class="faa faa-plus"
                         data-toggle="tooltip" [title]="Add"></i>
                 </button>
 
                 <!-- Submit button-->
-                <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button">
+                <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button" ngbTooltip="Submit changes">
                     <i class="faa faa-check"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>

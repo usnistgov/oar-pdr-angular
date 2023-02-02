@@ -4,6 +4,7 @@ import { AuthorPopupComponent } from './author-popup/author-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { AuthorService } from './author.service';
+import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
 
 @Component({
     selector: 'app-author',
@@ -15,9 +16,11 @@ export class AuthorComponent implements OnInit {
     @Input() inBrowser: boolean;   // false if running server-side
     fieldName = 'authors';
     tempInput: any = {};
+    editMode: string = MODE.NORNAL; 
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
+                public lpService: LandingpageService, 
                 private notificationService: NotificationService,
                 private authorService: AuthorService)
     { }
@@ -32,6 +35,13 @@ export class AuthorComponent implements OnInit {
     
     openModal() {
         if (! this.mdupdsvc.isEditMode) return;
+
+        // Broadcast the status change
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = MODE.EDIT;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+        this.lpService.setEditing(sectionMode);
 
         let ngbModalOptions: NgbModalOptions = {
             backdrop: 'static',

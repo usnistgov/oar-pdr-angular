@@ -5,6 +5,7 @@ import { NotificationService } from '../../shared/notification-service/notificat
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { ContactService } from './contact.service';
+import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
 
 @Component({
     selector: 'app-contact',
@@ -15,6 +16,7 @@ export class ContactComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     fieldName = 'contactPoint';
+    editMode: string = MODE.NORNAL; 
 
     tempInput: any = {};
     isEmail = false;
@@ -23,6 +25,7 @@ export class ContactComponent implements OnInit {
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
                 private gaService: GoogleAnalyticsService,
+                public lpService: LandingpageService, 
                 private notificationService: NotificationService,
                 private contactService : ContactService)
     { }
@@ -59,6 +62,13 @@ export class ContactComponent implements OnInit {
     
     openModal() {
         if (! this.mdupdsvc.isEditMode) return;
+
+        // Broadcast the status change
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = MODE.EDIT;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+        this.lpService.setEditing(sectionMode);
 
         let ngbModalOptions: NgbModalOptions = {
             backdrop: 'static',

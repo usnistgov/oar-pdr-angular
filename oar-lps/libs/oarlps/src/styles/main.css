@@ -533,3 +533,7 @@ img {
 .hideLabel {
   display: none;
 }
+
+* {
+    font-family: sans-serif;
+}

@@ -83,6 +83,10 @@ export class LandingBodyComponent {
                 this.description.nativeElement.scrollIntoView({behavior: 'smooth'}); 
                break; 
             } 
+            case "keyword": { 
+                this.description.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+               break; 
+            } 
             case "dataAccess": { 
                 this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'}); 
                break; 
