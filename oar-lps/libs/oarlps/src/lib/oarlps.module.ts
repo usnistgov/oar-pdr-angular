@@ -12,8 +12,6 @@ import { DoneModule } from './landing/done/done.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { TextEditModule } from './text-edit/text-edit.module';
 import { HttpClientModule } from '@angular/common/http';
-import { SimpleTextEditComponent } from './simple-text-edit/simple-text-edit.component';
-import { SimpleTextEditModule } from './simple-text-edit/simple-text-edit.module';
 import { TextareaAutoresizeModule } from './textarea-autoresize/textarea-autoresize.module';
 
 @NgModule({
@@ -32,7 +30,6 @@ import { TextareaAutoresizeModule } from './textarea-autoresize/textarea-autores
         DragDropModule,
         TextEditModule,
         HttpClientModule,
-        SimpleTextEditModule,
         TextareaAutoresizeModule
     ],
     providers: [

@@ -115,9 +115,6 @@ export * from './lib/landing/landingpage.service';
 export * from './lib/text-edit/text-edit.module';
 export * from './lib/text-edit/text-edit.component';
 
-export * from './lib/simple-text-edit/simple-text-edit.component';
-export * from './lib/simple-text-edit/simple-text-edit.module';
-
 export * from  './lib/textarea-autoresize/textarea-autoresize.directive';
 export * from  './lib/textarea-autoresize/textarea-autoresize.module';
 
