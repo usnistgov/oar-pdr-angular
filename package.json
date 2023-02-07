@@ -1,0 +1,30 @@
+{
+    "name": "midas-publishing",
+    "workspaces": [
+        "lib",
+        "oar-lps",
+        "pdr-lps",
+        "midas-author/lps",
+        "midas-author/wizard"
+    ],
+    "scripts": {
+        "build-lib": "npm run build oarng --prefix ./lib",
+        "build-oarlps": "npm run build oarlps --prefix ./oar-lps",
+        "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps",
+        "build-midaslps": "npm run build midas-lps --prefix ./midas-author/lps",
+        "build-all": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./midas-author/wizard",
+        "build-sw": "npm run build step-wizard --prefix ./midas-author/wizard",
+        "start-sw": "npm run start step-wizard --prefix ./midas-author/wizard",
+        "start-pdrlps": "npm run start pdr-lps --prefix ./pdr-lps",
+        "start-midaslps": "npm run start midas-lps --prefix ./midas-author/lps"
+    },
+    "devDependencies": {
+        "@types/node": "^12.11.1",
+        "fs": "0.0.2",
+        "process": "0.11.10",
+        "typescript": "4.5.5"
+    },
+    "dependencies": {
+        "rxjs": "^6.6.7"
+    }
+}

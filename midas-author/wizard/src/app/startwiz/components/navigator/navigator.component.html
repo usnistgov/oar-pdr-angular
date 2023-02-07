@@ -1,0 +1,23 @@
+<div class="navigator-bar">
+    <div class="form-steps-container">
+            <ng-container *ngFor="let step of steps; let i = index;">
+                <div (click)="onStepClick(step)" [ngClass]="getStepClass(step)" *ngIf="step.active" class="step-bubble">
+                    <i *ngIf="currentStep?.stepIndex === step.stepIndex" style="width: 150px; position:relative;" class="faa faa-cog faa-stack-2x large_icon"
+                    aria-hidden="true"></i>
+
+                    <i *ngIf="step.isComplete && currentStep?.stepIndex != step.stepIndex" style="width: 100px; position:relative" class="faa faa-check faa-stack-2x"
+                    aria-hidden="true"></i>
+
+                    <i *ngIf="currentStep?.stepIndex != step.stepIndex && !step.isComplete" style="width: 100px; position:relative" class="faa faa-cog faa-stack-2x"
+                    aria-hidden="true"></i>
+                </div>
+                <div *ngIf="i < steps.length - 1 && step.active" class="step-divider"></div>
+            </ng-container>
+    </div>
+
+    <div class="form-steps-container">
+        <ng-container *ngFor="let step of steps; let i = index;">
+            <div *ngIf="step.active" style="width: 200px;text-align: center;margin-top: 5px;" [ngStyle]="titleStyle(i)">{{ step.title }}</div>
+        </ng-container>
+    </div>
+</div>

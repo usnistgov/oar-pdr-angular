@@ -1,0 +1,23 @@
+<div [ngClass]="{ 'layout-wrapper': true, 'layout-compact': layoutCompact }">
+  <div [ngClass]="{ 'layout-container': false,
+                  'menu-layout-static': (layoutMode=='static' || layoutMode=='horizontal'),
+                  'menu-layout-overlay': (layoutMode=='overlay'),
+                  'menu-layout-horizontal': (layoutMode=='horizontal') }">
+    <div class="topbar clearfix header-background">
+      <div class="header-div">
+        <span [ngStyle]="{'cursor': 'pointer'}" (click)="openRootPage()" title="NIST Public Data Repository"
+          class="header__logo-link" rel="home">
+          <img class="Fleft top_bar" src="./assets/images/nist_logo_reverse.png" alt="NIST Public Data Repository">
+          <span class="Fleft"
+            style="font-weight:bold;line-height: 16.5px;display: table-cell;vertical-align: text-top;color: #FFFFFF;font-size:14px;padding-left: 0.5em">PUBLIC
+            <br> DATA REPOSITORY </span>
+        </span>
+
+        <span *ngIf="appVersion" class="badge" id="appVersion"
+          style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">{{appVersion}}</span>
+        &nbsp;&nbsp;
+        <span *ngIf="status" class="badge" id="appStatus" style="background-color:rgb(0, 114, 114)">{{ status }}</span>
+      </div>
+    </div>
+  </div>
+</div>

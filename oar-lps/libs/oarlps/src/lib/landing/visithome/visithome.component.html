@@ -1,0 +1,34 @@
+<span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
+    <div style="display: table;">
+        <div class="editable_container">
+            <div class="editable_field" [pTooltip]="record[fieldName]" tooltipPosition="bottom" tooltipStyleClass="tooltip-style">
+                <a href={{record[fieldName]}} target="_blank">
+                    <button type="button" pButton type="submit" [disabled]="!inViewMode"
+                        class="home_button p-button p-component ui-button-text-empty"
+                        [ngStyle]="{'background-color': visitHomePageBtnStyle()}"
+                        (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
+                        <i class="faa faa-external-link"
+                            style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
+                        Visit Home Page
+                    </button>
+                </a>
+            </div>
+
+            <div class="editable_field" *ngIf="mdupdsvc.isEditMode && !inViewMode">
+                <button class="edit_button" (click)="openModal()"
+                    aria-label="edit button">
+                    <i class="faa faa-pencil icon_enabled" data-toggle="tooltip" title="Edit landingPage"></i>
+                </button>
+            </div>
+
+            <div class="editable_field" *ngIf="mdupdsvc.isEditMode && !inViewMode" >
+                <button class="edit_button" type="button" [disabled]="!updated"
+                    (click)="undoEditing()" aria-label="undo button">
+                    <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"
+                        data-toggle="tooltip" title="Undo authors"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</span>
+<ng-template #visitHomeOnServer>Visit Home Page</ng-template>

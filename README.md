@@ -104,7 +104,101 @@ command-line options.
 The `npm` tool can be used in the standard way for [Angular projects](https://angular.io/docs) to
 build and test this software.
 
-[detail commands and instructions]
+Detail commands and instructions:
+
+1. Clone this repository and update Angular library
+    
+    After clone the repository, do the following:
+    
+```
+    cd oar-pdr-angular
+    git submodule update --init --recursive
+    cd lib
+    git checkout integration
+```
+
+Now lib folder should have the latest code of oar-lib-angular.
+    
+2. Install packages
+
+    Go to root folder, switch to initial-portal-setup02 branch, then do npm install:
+    
+```    
+    Note: make sure your npm version is 7.0.0 or higher. Use npm -v to check your version. 
+    If not, run npm install -g npm@latest.
+    
+    cd ..
+    git checkout feature/add-lps-lib
+    npm i --legacy-peer-deps
+```    
+    
+3. Build and run your application
+
+You can build Angular library and your application separately or with one command.
+
+To build Angular library:
+
+```    
+    npm run build-lib
+```
+
+Yo build local Angular library:
+
+```
+    npm run build-oarlps
+```
+
+To build and run wizard:
+
+```    
+    npm run build-sw
+    npm run start-sw
+```
+
+To build MIDAS publishing UI application:
+
+```    
+    npm run build-midaslps
+    npm run start-midaslps
+```
+
+To build public landing page:
+
+```    
+    npm run build-pdrlps
+    npm run start-pdrlps
+```
+
+4. Testing your app locally
+
+Wizard:
+
+```
+    http://localhost:4200
+```
+
+Publishing UI:
+    Set the following flags in environment.ts:
+        useMetadataService: false
+        useCustomizationService: false
+
+        editEnabled: true
+
+```
+    http://localhost:4202/od/id/test1?editEnabled=true
+```
+
+Public landing page:
+    Set the following flags in environment.ts:
+        useMetadataService: false
+        useCustomizationService: false
+
+        editEnabled: false
+
+```
+    http://localhost:4201/od/id/test1
+```
+
 
 
 ## Repository Administration

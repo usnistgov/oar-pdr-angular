@@ -1,0 +1,58 @@
+<!-- Make the pop up window look similar to the landingpage with black header bar and blue tool bar -->
+<div class="popup-header-bar">
+    <h2 class="popup-header">{{title}}</h2>
+</div>
+
+<div class="popup-tool-bar">
+    <!-- Buttons are arranged from right to left -->
+
+    <p-toolbar name="toolbar" [style]="{'background':'none','border-width':'0','height':'3em'}">
+        <div class="ui-toolbar-group-left">
+
+        </div>
+        <div class="ui-toolbar-group-right" style="margin-top: -1em;">
+            <!-- Cancel button -->
+            <button pButton type="submit" class="btn-labeled" id="btn-cancel" (click)="cancelChange();" label="Cancel"
+                icon="faa faa-trash faa-1x icon-white" iconPos="left">
+            </button>
+
+            <!-- Save button 
+              -  Will be disabled if input field is empty or all white spaces
+              -->
+            <button pButton type="submit" class="btn-labeled" id="btn-save"
+                [disabled]="inputValue[field].trim()==''"
+                (click)="saveLandingPageURL();" label="Save" icon="faa faa-save faa-1x icon-white" iconPos="left">
+            </button>
+        </div>
+    </p-toolbar>
+</div>
+
+<!-- Content editable div to allow user to edit -->
+<div style="margin: 2em; padding-bottom: 2em;">
+    <div style="width: 100%; border-bottom: 1px solid grey; margin-bottom: 1em;">
+        Enter a new url if you would like to change the current homepage location.
+    </div>
+    <table width="90%" align="left">
+        <tr>
+            <td width="80px">Current:</td>
+            <td>{{originalURL}}</td>
+            <td width="20px"></td>
+        </tr>
+        <tr>
+            <td>New:</td>
+            <td>
+                <input type="text" style="height:2em;" [(ngModel)]="tempReturn"
+                        (input)="onURLChange($event.target.value)" />
+            </td>
+            <td>
+                <button class="clear_button" (click)="clearText()"
+                    aria-label="Clear button">
+                    <i class="faa faa-remove icon_enabled" data-toggle="tooltip" title="Clear text"></i>
+                </button>
+            </td>
+        </tr>
+    </table>
+    <div style="width: 100%; height: .5em;"></div>
+    <div *ngIf="message" id="message">{{message}}</div>
+    <div style="width: 100%; height: 2em;"></div>
+</div>

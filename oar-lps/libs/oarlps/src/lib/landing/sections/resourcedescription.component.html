@@ -1,0 +1,12 @@
+<div class="grid" id="description">
+    <div class="col-12 col-md-12 col-lg-12 col-sm-12">
+        <div class="section-header">
+            <h3 style="display: inline-block;" name="description"><b>{{desctitle}}</b></h3>
+        </div>
+        <div>
+            <app-description [record]="record" [inBrowser]="inBrowser"></app-description>
+        </div>
+        <app-topic [record]="record" [inBrowser]="inBrowser"></app-topic>
+        <app-keyword [record]="record" [inBrowser]="inBrowser" *ngIf="recordType!='Science Theme'"></app-keyword>
+    </div>
+</div>

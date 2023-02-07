@@ -1,0 +1,97 @@
+<!-- edit control panel (visible when editing is enabled) -->
+<pdr-edit-control *ngIf="editEnabled" [inBrowser]="inBrowser" [(mdrec)]="md" [requestID]="requestId"></pdr-edit-control>
+
+<div *ngIf="theme == scienceTheme">
+    <!-- Banner for Science Theme -->
+    <div class="science-theme-banner" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')','margin-bottom':'-1em'}">
+    </div>
+</div>
+
+<div style="margin: 20px 40px 20px 0;">
+    <div *ngIf="!displaySpecialMessage && _showContent">
+        <div *ngIf="md === null && edstatsvc.authorized && !edstatsvc.hasError">
+            <b>Landing page is loading...</b>
+        </div>
+
+        <!-- Menu button and the popup menu (mobile mode only) -->
+        <div style="width: 100%; height: 0px;">
+            <!-- div to keep track of the menu button position -->
+            <div #stickyButton></div>
+
+            <button #menubtn
+                *ngIf="md !== null && inBrowser && mobileMode && !hideToolMenu" 
+                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" 
+                type="button"
+                pButton 
+                icon="faa faa-list" 
+                class="ui-button ui-button-icon-only" 
+                (click)="menu3.togglePopup($event)">
+            </button>
+
+            <tools-menu #menu3  
+                [record]="md" 
+                [isPopup]="true"
+                [appendTo]="body"
+                (toggle_citation)="toggleCitation('small')"
+                (scroll)="goToSection($event)">
+            </tools-menu>
+        </div>
+        <div #stickyMenu></div>
+
+        <div *ngIf="_showData">
+            <!-- landing page content -->
+            <div class="landing-body" [@togglemain]="mainBodyStatus">
+
+                <pdr-landing-body [md]="md" [inBrowser]="inBrowser" [editEnabled]="editEnabled"
+                    [mobileMode]="mobileMode" [metricsData]="metricsData" [showJsonViewer]="showJsonViewer"
+                    [theme]="theme" (dlStatus)="onDownloadStatusChanged($event)">
+                </pdr-landing-body>
+
+            </div>
+        
+            <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
+                <tools-menu *ngIf="inBrowser" #menu2 [record]="md" [isPopup]="false" (toggle_citation)="toggleCitation('large')"
+                    (scroll)="goToSection($event)">
+                </tools-menu>
+                
+                <app-metricsinfo *ngIf="recordType!='Science Theme'" [inBrowser]="inBrowser" [record]="md"
+                    [metricsData]="metricsData" [showMetrics]="showMetrics">
+                </app-metricsinfo>
+
+                <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
+            </div>
+
+            <app-sidebar *ngIf="hideToolMenu" class='normal-sdbar' [record]="md" [ngStyle]="{'top': sidebarY + 'px'}" [@togglesbar]="mainBodyStatus" [helpContentAll]="helpContentAll" (sbarvisible_out)="updateSidebarStatus($event)">
+                <!-- <div style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
+                    <div>Suggestions:</div>
+                    <div *ngFor="let section of suggustedSections" (click)='goToSection(section)' style="cursor: pointer; color: var(--nist-blue-dark3)">
+                        <i>Edit {{section}}</i>
+                    </div>
+                </div> -->
+
+            </app-sidebar>
+
+            <!-- citation pop-up -->
+            <div *ngIf="inBrowser">
+                <citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
+                    (visibleChange)="setCitationVisible($event)">
+                </citation-popup>
+            </div>
+        </div>
+
+        <div *ngIf="mobileMode" style="padding: 0 1.0em;">
+            <app-downloadstatus [inBrowser]="inBrowser" (downloadedKeys)="onBundleDownloadCompleted($event)">
+            </app-downloadstatus>
+        </div>
+    </div>
+</div>
+
+<!-- Show spinner -->
+<div *ngIf="!_showContent">
+    <pdr-done [message]="loadingMessage"></pdr-done>
+</div>
+
+<!-- Display done page -->
+<div [ngStyle]="{'display': displaySpecialMessage? 'block' : 'none'}">
+    <pdr-done [message]='message'></pdr-done>
+</div>

@@ -1,0 +1,28 @@
+<div class="sbar-container" [@togglesbar]="sidebarState">
+    <div style="border-bottom: 1px solid lightgrey;background-color: rgb(248, 248, 248);">
+        <div style="float: right; margin: 0px 5px 5px 5px;">
+            <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i
+                    class="faa faa-times-circle faa-lg" aria-hidden="true"
+                    style="color: orange; cursor: pointer;"></i></a>
+        </div>
+        <div class="help-title">
+            Help
+        </div>
+    </div>
+    <div class="help-frame" [innerHTML]="helpContent">
+    </div>
+    <div style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
+        <div>Suggestions:</div>
+        <div *ngFor="let section of suggustedSections" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
+            <i>Edit {{section}}</i>
+        </div>
+    </div>
+    <!-- <ng-content></ng-content> -->
+</div>
+<div *ngIf="!sbarvisible" style="float:right; margin: 44px 20px 20px 20px;">
+    <a (click)="toggleSbarView()" aria-label="Help"
+    title="{{(sbarvisible) ? 'Close Help' : 'Open Help'}}">
+    <i class="faa faa-question-circle-o faa-lg" aria-hidden="true"
+        style="color: orange; cursor: pointer;"></i>
+    </a>
+</div>

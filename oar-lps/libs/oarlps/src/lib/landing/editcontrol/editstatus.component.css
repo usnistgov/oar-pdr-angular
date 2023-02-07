@@ -1,0 +1,12 @@
+.ec-status-bar {
+    width: 100%;
+    height: fit-content; 
+    font-size: 15px; 
+    background-color: #FCF9CD;
+    padding-right: 2em;
+    padding-top: .3em;
+}
+
+.ec-status-spinner {
+    color: rgb(22, 20, 59);
+}

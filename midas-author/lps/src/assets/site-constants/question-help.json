@@ -1,0 +1,26 @@
+
+    {
+        "general": "<p>Placeholder for <i>general</i> help. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+        "title": {
+            "general": "<p>You are in Title section. Placeholder for general text.",
+            "edit": "<p>You are in Title section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        },
+        "keyword": {
+            "general": "<p>You are in Keyword section. Placeholder for general text.",
+            "add": "<p>You are in Keyword section. Placeholder for 'add' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "edit": "<p>You are in Keyword section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        },
+        "components": {
+            "general": "<p>You are in Access Page section. Placeholder for general text.",
+            "add": "<p>You are in Access Page section. Placeholder for 'add' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "edit": "<p>You are in Access Page section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "dragdrop": "<p>You are in Access Page section. Placeholder for 'dragdrop' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        },
+        "references": {
+            "general": "<p>You are in References section. With this question, you are telling us the <i>references</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "add": "<p>You are in References section. Placeholder for 'add' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "edit": "<p>You are in References section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "dragdrop": "<p>You are in References section. Placeholder for 'dragdrop' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        }
+    }
+

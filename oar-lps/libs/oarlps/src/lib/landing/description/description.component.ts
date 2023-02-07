@@ -1,0 +1,90 @@
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { DescriptionPopupComponent } from './description-popup/description-popup.component';
+import { NotificationService } from '../../shared/notification-service/notification.service';
+import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
+
+@Component({
+    selector: 'app-description',
+    templateUrl: './description.component.html',
+    styleUrls: ['../landing.component.scss', './description.component.css']
+})
+export class DescriptionComponent implements OnInit {
+    @Input() record: any[];
+    @Input() inBrowser: boolean;   // false if running server-side
+    fieldName: string = 'description';
+    editMode: string = MODE.NORNAL; 
+
+    constructor(public mdupdsvc : MetadataUpdateService,        
+                private ngbModal: NgbModal,
+                public lpService: LandingpageService,                  
+                private notificationService: NotificationService)
+    { 
+    }
+
+    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+
+    ngOnInit() {
+    }
+
+    openModal() {
+        if (!this.mdupdsvc.isEditMode) return;
+
+        // Broadcast the status change
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = MODE.EDIT;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+        this.lpService.setEditing(sectionMode);
+
+        let ngbModalOptions: NgbModalOptions = {
+            backdrop: 'static',
+            keyboard: false,
+            windowClass: "myCustomModalClass"
+        };
+
+        const modalRef = this.ngbModal.open(DescriptionPopupComponent, ngbModalOptions);
+
+        let val = "";
+        if (this.record[this.fieldName])
+            val = this.record[this.fieldName].join('\n\n');
+
+        modalRef.componentInstance.inputValue = { };
+        modalRef.componentInstance.inputValue[this.fieldName] = val;
+        modalRef.componentInstance['field'] = this.fieldName;
+        modalRef.componentInstance['title'] = 'Description';
+        modalRef.componentInstance['message'] = 'Separate paragraphs by 2 lines.';
+
+        modalRef.componentInstance.returnValue.subscribe((returnValue) => {
+            if (returnValue) {
+                // console.log("###DBG  receiving editing output: " +
+                //             returnValue[this.fieldName].substring(0,20) + "....");
+                let updmd = {};
+                updmd[this.fieldName] = returnValue[this.fieldName].split(/\n\s*\n/).filter(desc => desc != '');
+                this.record[this.fieldName] = returnValue[this.fieldName].split(/\n\s*\n/).filter(desc => desc != '');
+                
+                this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+                    if (updateSuccess)
+                        this.notificationService.showSuccessWithTimeout("Description updated.", "", 3000);
+                    else
+                        console.error("acknowledge description update failure");
+                });
+            }
+        })
+    }
+
+    /*
+     *  Undo editing. If no more field was edited, delete the record in staging area.
+     */
+    undoEditing() {
+        this.mdupdsvc.undo(this.fieldName).then((success) => {
+            if (success)
+                this.notificationService.showSuccessWithTimeout("Reverted changes to description.", "", 3000);
+            else
+                console.error("Failed to undo description metadata")
+        });
+    }
+
+}

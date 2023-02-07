@@ -1,0 +1,825 @@
+{
+    "_id": {
+        "timestamp": 1640160421,
+        "date": "2021-12-22T08:07:01.000+00:00"
+    },
+    "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.5#",
+    "topic": [
+        {
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+            "tag": "Materials: Composites",
+            "@type": "Concept"
+        },
+        {
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+            "tag": "Nanotechnology: Nanomaterials",
+            "@type": "Concept"
+        }
+    ],
+    "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/PublicDataResource"
+    ],
+    "landingPage": "https://www.nist.gov/mml/materials-measurement-science-division/security-technologies-group/advanced-composites-data-dois",
+    "dataHierarchy": [
+        {
+            "filepath": "1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx"
+        },
+        {
+            "filepath": "1819_CNT-control-flex.xlsx"
+        },
+        {
+            "filepath": "1819_CNT-hygrothermal-flex.xlsx"
+        },
+        {
+            "filepath": "1819_09092015_Al2O3_H2O_Flex_Long HT.xlsx"
+        },
+        {
+            "filepath": "1819_Al_control_flex.xlsx"
+        },
+        {
+            "filepath": "1819_Al_hygro_flex.xlsx"
+        },
+        {
+            "filepath": "1819_Al_hygrothermal_flex.xlsx"
+        },
+        {
+            "filepath": "1819_XRD_control specimens.tif"
+        },
+        {
+            "filepath": "1819_XRD_HT exposure_external surface peaks.tif"
+        },
+        {
+            "filepath": "1819_09092015_CNT_Al2O3_H2O_Flex_Long HT.xlsx"
+        },
+        {
+            "filepath": "1819_CNT-hygro-flex.xlsx"
+        },
+        {
+            "filepath": "1819_Water uptake_Hygro_2_T0_T6 Room Temp 180 days.xlsx"
+        },
+        {
+            "filepath": "1819_FTIR_baselined_compilation.xlsx"
+        },
+        {
+            "filepath": "1819_Water uptake_Short Hygrothermal_2_03232016.xlsx"
+        },
+        {
+            "filepath": "1819_Water uptake_Activation energy calculations.xlsx"
+        },
+        {
+            "filepath": "1819_Water uptake_Long Hygrothermal_T0-T13.xlsx"
+        },
+        {
+            "filepath": "1819_SEM images_Manuscript.pptx"
+        },
+        {
+            "filepath": "1819_Manuscript Data.zip"
+        },
+        {
+            "filepath": "1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_CNT-control-flex.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_CNT-hygrothermal-flex.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_09092015_Al2O3_H2O_Flex_Long HT.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_Al_control_flex.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_Al_hygro_flex.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_Al_hygrothermal_flex.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_XRD_control specimens.tif.sha256"
+        },
+        {
+            "filepath": "1819_XRD_HT exposure_external surface peaks.tif.sha256"
+        },
+        {
+            "filepath": "1819_09092015_CNT_Al2O3_H2O_Flex_Long HT.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_CNT-hygro-flex.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_Water uptake_Hygro_2_T0_T6 Room Temp 180 days.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_FTIR_baselined_compilation.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_Water uptake_Short Hygrothermal_2_03232016.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_Water uptake_Activation energy calculations.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_Water uptake_Long Hygrothermal_T0-T13.xlsx.sha256"
+        },
+        {
+            "filepath": "1819_SEM images_Manuscript.pptx.sha256"
+        },
+        {
+            "filepath": "1819_Manuscript Data.zip.sha256"
+        }
+    ],
+    "title": "Enhanced durability of CNT based hierarchical composites subjected to accelerated aging environments.",
+    "theme": [
+        "Materials: Composites",
+        "Nanotechnology: Nanomaterials"
+    ],
+    "inventory": [
+        {
+            "forCollection": "",
+            "descCount": 37,
+            "childCollections": [],
+            "childCount": 37,
+            "byType": [
+                {
+                    "descCount": 37,
+                    "forType": "dcat:Distribution",
+                    "childCount": 37
+                },
+                {
+                    "descCount": 1,
+                    "forType": "nrdp:AccessPage",
+                    "childCount": 1
+                },
+                {
+                    "descCount": 18,
+                    "forType": "nrdp:ChecksumFile",
+                    "childCount": 18
+                },
+                {
+                    "descCount": 18,
+                    "forType": "nrdp:DataFile",
+                    "childCount": 18
+                },
+                {
+                    "descCount": 36,
+                    "forType": "nrdp:DownloadableFile",
+                    "childCount": 36
+                }
+            ]
+        }
+    ],
+    "programCode": [
+        "006:045"
+    ],
+    "@context": [
+        "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+        {
+            "@base": "ark:/88434/mds004br7h"
+        }
+    ],
+    "status": "available",
+    "description": [
+        "Flexure testing, SEM, FTIR_ATR, Acoustic testing, Electrical testing, XRD, DSC, TGA"
+    ],
+    "language": [
+        "en"
+    ],
+    "bureauCode": [
+        "006:55"
+    ],
+    "contactPoint": {
+        "hasEmail": "mailto:aaron.forster@nist.gov",
+        "fn": "Aaron Forster"
+    },
+    "accessLevel": "public",
+    "@id": "ark:/88434/mds004br7h",
+    "publisher": {
+        "@type": "org:Organization",
+        "name": "National Institute of Standards and Technology"
+    },
+    "keyword": [
+        "polymer nanocomposites",
+        "durability",
+        "environmental aging",
+        "hydrothermal degradation",
+        "fuzzy fiber composites",
+        "CNT-reinforced composites"
+    ],
+    "license": "https://www.nist.gov/open/license",
+    "modified": "2017-02-14",
+    "ediidOriginal": "4883552631EE20FEE0531A570681396D1819",
+    "ediid": "test0",
+    "components": [
+        {
+            "filepath": "1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx",
+            "@id": "cmps/1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_CNT-control-flex.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_CNT-control-flex.xlsx",
+            "@id": "cmps/1819_CNT-control-flex.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_CNT-hygrothermal-flex.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_CNT-hygrothermal-flex.xlsx",
+            "@id": "cmps/1819_CNT-hygrothermal-flex.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_09092015_Al2O3_H2O_Flex_Long HT.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_09092015_Al2O3_H2O_Flex_Long%20HT.xlsx",
+            "@id": "cmps/1819_09092015_Al2O3_H2O_Flex_Long HT.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Al_control_flex.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_Al_control_flex.xlsx",
+            "@id": "cmps/1819_Al_control_flex.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Al_hygro_flex.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_Al_hygro_flex.xlsx",
+            "@id": "cmps/1819_Al_hygro_flex.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Al_hygrothermal_flex.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_Al_hygrothermal_flex.xlsx",
+            "@id": "cmps/1819_Al_hygrothermal_flex.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_XRD_control specimens.tif",
+            "mediaType": "image/tiff",
+            "downloadURL": "https://opendata.nist.gov/1819_XRD_control%20specimens.tif",
+            "@id": "cmps/1819_XRD_control specimens.tif",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_XRD_HT exposure_external surface peaks.tif",
+            "mediaType": "image/tiff",
+            "downloadURL": "https://opendata.nist.gov/1819_XRD_HT%20exposure_external%20surface%20peaks.tif",
+            "@id": "cmps/1819_XRD_HT exposure_external surface peaks.tif",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_09092015_CNT_Al2O3_H2O_Flex_Long HT.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_09092015_CNT_Al2O3_H2O_Flex_Long%20HT.xlsx",
+            "@id": "cmps/1819_09092015_CNT_Al2O3_H2O_Flex_Long HT.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_CNT-hygro-flex.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_CNT-hygro-flex.xlsx",
+            "@id": "cmps/1819_CNT-hygro-flex.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Water uptake_Hygro_2_T0_T6 Room Temp 180 days.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Hygro_2_T0_T6%20Room%20Temp%20180%20days.xlsx",
+            "@id": "cmps/1819_Water uptake_Hygro_2_T0_T6 Room Temp 180 days.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_FTIR_baselined_compilation.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_FTIR_baselined_compilation.xlsx",
+            "@id": "cmps/1819_FTIR_baselined_compilation.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Water uptake_Short Hygrothermal_2_03232016.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Short%20Hygrothermal_2_03232016.xlsx",
+            "@id": "cmps/1819_Water uptake_Short Hygrothermal_2_03232016.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Water uptake_Activation energy calculations.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Activation%20energy%20calculations.xlsx",
+            "@id": "cmps/1819_Water uptake_Activation energy calculations.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Water uptake_Long Hygrothermal_T0-T13.xlsx",
+            "mediaType": "application/vnd.ms-excel",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Long%20Hygrothermal_T0-T13.xlsx",
+            "@id": "cmps/1819_Water uptake_Long Hygrothermal_T0-T13.xlsx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_SEM images_Manuscript.pptx",
+            "mediaType": "application/vnd.ms-powerpoint",
+            "downloadURL": "https://opendata.nist.gov/1819_SEM%20images_Manuscript.pptx",
+            "@id": "cmps/1819_SEM images_Manuscript.pptx",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "filepath": "1819_Manuscript Data.zip",
+            "mediaType": "application/zip",
+            "downloadURL": "https://opendata.nist.gov/1819_Manuscript%20Data.zip",
+            "@id": "cmps/1819_Manuscript Data.zip",
+            "@type": [
+                "nrdp:DataFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/DataFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx.sha256",
+            "@id": "cmps/1819_DSC_TGA_MIT_HT_Hy_all_08082016.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_CNT-control-flex.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_CNT-control-flex.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_CNT-control-flex.xlsx.sha256",
+            "@id": "cmps/1819_CNT-control-flex.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_CNT-hygrothermal-flex.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_CNT-hygrothermal-flex.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_CNT-hygrothermal-flex.xlsx.sha256",
+            "@id": "cmps/1819_CNT-hygrothermal-flex.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_09092015_Al2O3_H2O_Flex_Long HT.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_09092015_Al2O3_H2O_Flex_Long HT.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_09092015_Al2O3_H2O_Flex_Long%20HT.xlsx.sha256",
+            "@id": "cmps/1819_09092015_Al2O3_H2O_Flex_Long HT.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Al_control_flex.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Al_control_flex.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Al_control_flex.xlsx.sha256",
+            "@id": "cmps/1819_Al_control_flex.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Al_hygro_flex.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Al_hygro_flex.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Al_hygro_flex.xlsx.sha256",
+            "@id": "cmps/1819_Al_hygro_flex.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Al_hygrothermal_flex.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Al_hygrothermal_flex.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Al_hygrothermal_flex.xlsx.sha256",
+            "@id": "cmps/1819_Al_hygrothermal_flex.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_XRD_control specimens.tif",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_XRD_control specimens.tif.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_XRD_control%20specimens.tif.sha256",
+            "@id": "cmps/1819_XRD_control specimens.tif.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_XRD_HT exposure_external surface peaks.tif",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_XRD_HT exposure_external surface peaks.tif.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_XRD_HT%20exposure_external%20surface%20peaks.tif.sha256",
+            "@id": "cmps/1819_XRD_HT exposure_external surface peaks.tif.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_09092015_CNT_Al2O3_H2O_Flex_Long HT.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_09092015_CNT_Al2O3_H2O_Flex_Long HT.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_09092015_CNT_Al2O3_H2O_Flex_Long%20HT.xlsx.sha256",
+            "@id": "cmps/1819_09092015_CNT_Al2O3_H2O_Flex_Long HT.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_CNT-hygro-flex.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_CNT-hygro-flex.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_CNT-hygro-flex.xlsx.sha256",
+            "@id": "cmps/1819_CNT-hygro-flex.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Water uptake_Hygro_2_T0_T6 Room Temp 180 days.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Water uptake_Hygro_2_T0_T6 Room Temp 180 days.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Hygro_2_T0_T6%20Room%20Temp%20180%20days.xlsx.sha256",
+            "@id": "cmps/1819_Water uptake_Hygro_2_T0_T6 Room Temp 180 days.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_FTIR_baselined_compilation.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_FTIR_baselined_compilation.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_FTIR_baselined_compilation.xlsx.sha256",
+            "@id": "cmps/1819_FTIR_baselined_compilation.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Water uptake_Short Hygrothermal_2_03232016.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Water uptake_Short Hygrothermal_2_03232016.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Short%20Hygrothermal_2_03232016.xlsx.sha256",
+            "@id": "cmps/1819_Water uptake_Short Hygrothermal_2_03232016.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Water uptake_Activation energy calculations.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Water uptake_Activation energy calculations.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Activation%20energy%20calculations.xlsx.sha256",
+            "@id": "cmps/1819_Water uptake_Activation energy calculations.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Water uptake_Long Hygrothermal_T0-T13.xlsx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Water uptake_Long Hygrothermal_T0-T13.xlsx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Water%20uptake_Long%20Hygrothermal_T0-T13.xlsx.sha256",
+            "@id": "cmps/1819_Water uptake_Long Hygrothermal_T0-T13.xlsx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_SEM images_Manuscript.pptx",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_SEM images_Manuscript.pptx.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_SEM%20images_Manuscript.pptx.sha256",
+            "@id": "cmps/1819_SEM images_Manuscript.pptx.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "description": "SHA-256 checksum value for 1819_Manuscript Data.zip",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            },
+            "filepath": "1819_Manuscript Data.zip.sha256",
+            "mediaType": "text/plain",
+            "downloadURL": "https://opendata.nist.gov/1819_Manuscript%20Data.zip.sha256",
+            "@id": "cmps/1819_Manuscript Data.zip.sha256",
+            "@type": [
+                "nrdp:ChecksumFile",
+                "nrdp:DownloadableFile",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/ChecksumFile"
+            ]
+        },
+        {
+            "accessURL": "https://doi.org/doi:10.18434/M3CS33",
+            "@id": "#10.18434/M3CS33",
+            "@type": [
+                "nrdp:AccessPage",
+                "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+                "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.5#/definitions/AccessPage"
+            ]
+        }
+    ],
+    "@type": [
+        "nrdp:PublicDataResource",
+        "dcat:Dataset"
+    ]
+}

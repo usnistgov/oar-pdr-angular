@@ -1,0 +1,18 @@
+{
+    "refType":"IsSupplementTo",
+    "title":"New reference title",
+    "issued":"2022-12",
+    "publishYear":"2022",
+    "citation":"John, A. B., & Jane, C. A. (2022). New reference title. Journal of testing. 15(20), 12345. doi:10.1016/j.jnoncrysol.2019.119828\n",
+    "label":"Journal of testing",
+    "location":"https://doi.org/test/2022.12345",
+    "@id":"#ref:10.1016/j.jnoncrysol.2019.119828",
+    "@type":["schema:Article"],
+    "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"],
+    "authors":["John, A. B.", "Jane, C. A."],
+    "vol":"15",
+    "volNumber":"20",
+    "pages":"12345",
+    "doi":"test/2022.12345",
+    "inPreparation":"yes"
+}

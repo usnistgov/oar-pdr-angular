@@ -1,0 +1,12 @@
+.sbar-container {
+    width: 80%;
+    margin: -4em 20px 0px 0px;
+    height: fit-content;
+    max-height: 90%;
+    border: 3px solid orange; 
+    border-radius: 10px;
+    background-color:  #f7f7f7;
+    padding: 0px 0px;
+    overflow: auto;
+    position: relative;
+}
