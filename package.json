@@ -1,22 +1,28 @@
 {
-    "name": "midas-publishing",
+    "name": "oar-pdr-angular",
     "workspaces": [
         "lib",
         "oar-lps",
         "pdr-lps",
         "midas-author/lps",
-        "midas-author/wizard"
+        "midas-author/wizard",
+        "pdr-rpa/pdr-rpa-request",
+        "pdr-rpa/pdr-rpa-approve"
     ],
     "scripts": {
         "build-lib": "npm run build oarng --prefix ./lib",
         "build-oarlps": "npm run build oarlps --prefix ./oar-lps",
         "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps",
         "build-midaslps": "npm run build midas-lps --prefix ./midas-author/lps",
+        "build-rpa-request": "npm run build pdr-rpa-request --prefix ./pdr-rpa/pdr-rpa-request",
+        "build-rpa-approve": "npm run build pdr-rpa-approve --prefix ./pdr-rpa/pdr-rpa-approve",
         "build-all": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./midas-author/wizard",
         "build-sw": "npm run build step-wizard --prefix ./midas-author/wizard",
         "start-sw": "npm run start step-wizard --prefix ./midas-author/wizard",
         "start-pdrlps": "npm run start pdr-lps --prefix ./pdr-lps",
-        "start-midaslps": "npm run start midas-lps --prefix ./midas-author/lps"
+        "start-midaslps": "npm run start midas-lps --prefix ./midas-author/lps",
+        "start-rpa-request": "npm run start pdr-rpa-request --prefix ./pdr-rpa/pdr-rpa-request",
+        "start-rpa-approve": "npm run start pdr-rpa-approve --prefix ./pdr-rpa/pdr-rpa-approve"
     },
     "devDependencies": {
         "@types/node": "^12.11.1",
