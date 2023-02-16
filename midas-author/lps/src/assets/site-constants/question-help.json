@@ -2,13 +2,12 @@
     {
         "general": "<p>Placeholder for <i>general</i> help. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
         "title": {
-            "general": "<p>You are in Title section. Placeholder for general text.",
-            "edit": "<p>You are in Title section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+            "general": "<p>Enter a human-readable name for the asset. It should be written in plain language, include sufficient detail to facilitate search and discovery, and be no more than 4,000 characters long.   You are in Title section. Placeholder for general text.",
+            "edit": "<p>Do not copy and paste a related paper’s Title here if it doesn’t sufficiently describe the data as a standalone object. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
         },
         "keyword": {
             "general": "<p>You are in Keyword section. Placeholder for general text.",
-            "add": "<p>You are in Keyword section. Placeholder for 'add' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-            "edit": "<p>You are in Keyword section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+            "add": "<p>Keywords field (required), enter terms that could help both technical and non-technical users  to discover your dataset, up to a maximum of 4,000 characters.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
         },
         "components": {
             "general": "<p>You are in Access Page section. Placeholder for general text.",
