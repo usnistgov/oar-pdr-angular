@@ -1,0 +1,14 @@
+#author-details-outer {
+    text-align: center; 
+    width:100%;
+    margin: 0.5em 0em 1em 0em;
+}
+
+#orcid-warning {
+    color: rgb(212, 103, 0); 
+    font-size: 12px; 
+    margin-right: 3em; 
+    margin-top: -10px; 
+    margin-top: -.7em; 
+    text-align: left;
+}

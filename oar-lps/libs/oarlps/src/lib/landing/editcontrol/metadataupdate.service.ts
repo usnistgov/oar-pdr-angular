@@ -129,7 +129,7 @@ export class MetadataUpdateService {
         console.log("Updating....", subsetname);
         console.log("md", md);
         if(!subsetnameAPI) subsetnameAPI = subsetname;
-
+  
         if (!this.custsvc) {
             console.error("Attempted to update without authorization!  Ignoring update.");
             return new Promise<boolean>((resolve, reject) => {
@@ -434,6 +434,22 @@ export class MetadataUpdateService {
     }
 
     /**
+     * return true if metadata associated with a given name + any id have been updated.  This will return 
+     * false either if the metadata was never updated or if the update was previously undone via 
+     * undo().
+     * @param subsetname    the name for the set of metadata of interest.
+     */
+    public anyFieldUpdated(subsetname: string): boolean {
+        let updated = this.origfields[subsetname];
+
+        Object.keys(this.origfields).forEach((fKey) => {
+            updated = updated || (fKey.indexOf(subsetname) >= 0);
+        })
+
+        return updated;
+    }
+
+    /**
      * Reset the update status of a given field or all fields so fieldUpdated() will return false
      * @param subsetname - optional - the name for the set of metadata of interest.
      */
@@ -607,7 +623,7 @@ export class MetadataUpdateService {
      */
     getFieldStyle(fieldName : string, dataChanged: boolean = false) {
         if (this.isEditMode) {
-            if (this.fieldUpdated(fieldName)) {
+            if (this.anyFieldUpdated(fieldName)) {
                 return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
             } else if(dataChanged){
                 return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed)', 'padding-right': '1em', 'cursor': 'pointer' };
@@ -618,7 +634,6 @@ export class MetadataUpdateService {
             return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
         }
     }
-
 
     /**
      * load files from the file manager.

@@ -163,7 +163,8 @@ export class ReferencesComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        this.lpService.setEditing(sectionMode);
+        if(editmode != MODE.NORNAL)
+            this.lpService.setEditing(sectionMode);
     }
 
     /**
@@ -425,7 +426,7 @@ export class ReferencesComponent implements OnInit {
      * @param action the action that the child component returned
      * @param index The index of the reference the action is taking place
      */
-    onReferenceChange(action: any, index: number = 0) {
+    onReferenceCommand(action: any, index: number = 0) {
         switch ( action.command.toLowerCase() ) {
             case 'delete':
                 this.removeRef(index);
@@ -539,7 +540,7 @@ export class ReferencesComponent implements OnInit {
      * When reference data changed (child component), set the flag in record level.
      * Also update the reference data. 
      */
-    onDataChange(event) {
+    onReferenceChange(event) {
         this.record['references'][this.currentRefIndex] = JSON.parse(JSON.stringify(event.ref));
         this.record['references'][this.currentRefIndex].dataChanged = event.dataChanged;
         this.currentRef = this.record['references'][this.currentRefIndex];

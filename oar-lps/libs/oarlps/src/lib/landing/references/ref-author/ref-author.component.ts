@@ -75,6 +75,10 @@ export class RefAuthorComponent implements OnInit {
         this.forceReset = false;
     }
 
+    /**
+     * Once author info changed, update parent component
+     * @param updateCitation 
+     */
     onChange(updateCitation:boolean = false) {
         this.ref.dataChanged = true;
 

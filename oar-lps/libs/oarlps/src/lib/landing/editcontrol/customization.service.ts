@@ -390,7 +390,7 @@ export class InMemCustomizationService extends CustomizationService {
      *
      * @param resmd      the original resource metadata 
      */
-    constructor(resmd : Object, private httpcli : HttpClient) {
+    constructor(resmd : Object, private httpcli : HttpClient = null) {
         super((resmd && resmd['ediid']) ? resmd['ediid'] : "resmd");
         this.origmd= resmd;
 

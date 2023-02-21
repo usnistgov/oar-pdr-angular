@@ -352,7 +352,8 @@ export class AccesspageComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        this.lpService.setEditing(sectionMode);
+        if(editmode != MODE.NORNAL)
+            this.lpService.setEditing(sectionMode);
     }
     
     getBackgroundColor(index: number){

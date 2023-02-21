@@ -5,14 +5,16 @@ import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TransferState } from '@angular/platform-browser';
+import { IEnvironment } from '../../../environments/ienvironment';
 
 describe('MetricsService', () => {
+    let ienv : IEnvironment;
     let cfg: AppConfig;
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";

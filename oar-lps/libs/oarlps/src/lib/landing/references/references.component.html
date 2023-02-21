@@ -25,14 +25,15 @@
                                 <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
                                     <lib-text-edit 
                                         [textField]="reference.citation" 
-                                        [dragDropIcon]="record['references'].length==1?false:true" [editButton]="false" 
+                                        [dragDropIcon]="record['references'].length==1?false:true" 
+                                        [editButton]="false" 
                                         [deleteButton]="true" 
                                         [restoreButton]="true" 
                                         [disableControl]="isAdding || isEditing" 
                                         [placeHolderText]="placeholder" 
                                         [isNew]="reference.isNew" 
                                         [dataChanged]="mdupdsvc.fieldUpdated(fieldName, record[fieldName][i]['@id'])" 
-                                        (command_out)="onReferenceChange($event, i)">
+                                        (command_out)="onReferenceCommand($event, i)">
                                     </lib-text-edit>
                                 </div>
                             </div>
@@ -65,7 +66,7 @@
                 <tr  style="width: 100%;">
                     <!-- Text edit area -->
                     <td class="edit-block" style="width: calc(100%-30px);">
-                        <lib-single-ref [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-ref>
+                        <lib-single-ref [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onReferenceChange($event)"></lib-single-ref>
                     </td>
 
                     <!-- Control buttons -->

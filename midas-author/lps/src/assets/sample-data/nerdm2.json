@@ -21,6 +21,21 @@
     "ediid": "test1",
     "landingPage": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
     "version": "1.0.1",
+    "authors": [
+        {
+            "@id": "11111111",
+            "familyName": "Doe",
+            "givenName": "John",
+            "fn": "John Doe",
+            "orcid": "0000-0000-0000-0000"
+        },
+        {
+            "@id": "22222222",
+            "familyName": "Smith",
+            "givenName": "Robert",
+            "fn": "Robert Smith"
+        }
+    ],
     "versionHistory": [
         {
             "version": "1.0.0",

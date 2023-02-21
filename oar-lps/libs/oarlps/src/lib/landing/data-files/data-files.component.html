@@ -9,7 +9,7 @@
                 <div class="flex-container" style="margin-top: 2em;">
                     <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
                     <div *ngIf="editEnabled; else editDisabled"
-                        style="flex: 0 0 130px; text-align: left; padding-bottom: 0em;">
+                        style="flex: 0 0 140px; text-align: left; padding-bottom: 0em;">
                         <span><b id="filelist-heading">Files </b> </span>
                         <span class="faa-stack fa-lg icon-download grey-color">
                             <i class="faa faa-circle-thin faa-stack-2x" aria-hidden="true"></i>
@@ -22,7 +22,7 @@
                         </span>
                     </div>
                     <ng-template #editDisabled>
-                        <div style="flex: 0 0 130px; text-align: left; padding-bottom: 0em;">
+                        <div style="flex: 0 0 140px; text-align: left; padding-bottom: 0em;">
                             <span><b id="filelist-heading">Files </b> </span>
                             <a class="faa-stack fa-lg icon-download" *ngIf="!editEnabled"
                                 (click)="downloadAllFiles()"

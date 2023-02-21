@@ -12,11 +12,13 @@ import { CartService } from '../datacart/cart.service';
 import { ToastrModule } from 'ngx-toastr';
 import { NotificationService } from '../shared/notification-service/notification.service';
 import { EditStatusService } from '../landing/editcontrol/editstatus.service';
+import { IEnvironment } from '../../environments/ienvironment';
 
 @Component({ template: '' })
 class DummyComponent {}
 
 describe('HeadbarComponent', () => {
+    let ienv : IEnvironment;
     let component : HeadbarComponent;
     let fixture : ComponentFixture<HeadbarComponent>;
     let cfg : AppConfig;
@@ -25,7 +27,7 @@ describe('HeadbarComponent', () => {
     let ts : TransferState = new TransferState();
 
     it('should display configured information', () => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";
@@ -69,7 +71,7 @@ describe('HeadbarComponent', () => {
     });
 
     it('badges are optional', () => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = undefined;
         cfg.appVersion = undefined;
@@ -106,7 +108,7 @@ describe('HeadbarComponent', () => {
     });
 
     it('displays active cart size', () => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = undefined;
         cfg.appVersion = undefined;

@@ -15,6 +15,7 @@ export class TextEditComponent implements OnInit {
     @Input() textField: string = "";
     @Input() dragDropIcon: boolean = false;
     @Input() editButton: boolean = true; // Default button
+    @Input() editOnlyButton: boolean = false; // Default button
     @Input() deleteButton: boolean = true; // Default button
     @Input() plusButton: boolean = false; // If this is true, no edit/remove/undo button
     @Input() restoreButton: boolean = false;
@@ -55,6 +56,7 @@ export class TextEditComponent implements OnInit {
         if(this.plusButton) buttonCount += 1;
         if(this.submitButton) buttonCount += 1;
         if(this.editButton) buttonCount += 1;
+        if(this.editOnlyButton) buttonCount += 1;
         if(this.deleteButton) buttonCount += 1;
         if(this.restoreButton) buttonCount += 1;
 
@@ -93,6 +95,13 @@ export class TextEditComponent implements OnInit {
             this.editing = true;
             this.command_out.next({"value":this.currentVal, "command":"Edit"});
         }
+    }
+
+    /**
+     * Edit/Save based on current edit status
+     */
+    edit() {
+        this.command_out.next({"value":this.currentVal, "command":"Edit"});
     }
 
     onSave() {
@@ -170,6 +179,18 @@ export class TextEditComponent implements OnInit {
             return "faa faa-check";
         }else{
             return "faa faa-pencil";
+        }
+    }
+
+    /**
+     * Return icon class of edit/save button
+     * @returns icon class
+     */
+    getEditOnlyIconClass() {
+        if(this.editing){
+            return "faa faa-pencil icon_disabled";
+        }else{
+            return "faa faa-pencil icon_enabled";
         }
     }
 
