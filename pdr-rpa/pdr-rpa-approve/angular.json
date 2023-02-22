@@ -78,10 +78,10 @@
                     "builder": "@angular-devkit/build-angular:dev-server",
                     "configurations": {
                         "production": {
-                            "browserTarget": "step-wizard:build:production"
+                            "browserTarget": "pdr-rpa-approve:build:production"
                         },
                         "development": {
-                            "browserTarget": "step-wizard:build:development"
+                            "browserTarget": "pdr-rpa-approve:build:development"
                         }
                     },
                     "defaultConfiguration": "development"
@@ -89,7 +89,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "wizard:build"
+                        "browserTarget": "pdr-rpa-approve:build"
                     }
                 },
                 "test": {

@@ -5,13 +5,8 @@ import { ErrorsModule, NotFoundComponent } from 'oarlps';
 import { AppComponent } from './app.component';
 
 const routes: Routes = [
-    {
-        path: 'rpa',
-        children: [
-            { path: 'request', component: AppComponent }
-        ]
-    },
-    { path: '**', component: NotFoundComponent }
+    {path: 'approve', component: AppComponent},
+    { path: '**', component: NotFoundComponent}
 ];
 
 @NgModule({
@@ -22,7 +17,7 @@ const routes: Routes = [
         }),
         ErrorsModule
     ],
-    exports: [RouterModule]
+    exports: [ RouterModule ]
 })
 export class AppRoutingModule { }
 

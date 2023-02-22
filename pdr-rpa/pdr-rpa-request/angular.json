@@ -35,7 +35,10 @@
                             "../../node_modules/bootstrap/dist/css/bootstrap.css",
                             "../../lib/libs/oarng/src/styles/font-awesome/css/font-awesome.min.css",
                             "../../lib/libs/oarng/src/styles/main.css",
-                            "src/styles.css"
+                            "src/styles.css",
+                            "../../node_modules/primeicons/primeicons.css",
+                            "../../node_modules/primeng/resources/themes/saga-blue/theme.css",
+                            "../../node_modules/primeng/resources/primeng.min.css"
                         ],
                         "scripts": [
                             "../../node_modules/bootstrap/dist/js/bootstrap.js"
@@ -89,7 +92,7 @@
                 "extract-i18n": {
                     "builder": "@angular-devkit/build-angular:extract-i18n",
                     "options": {
-                        "browserTarget": "step-wizard:build"
+                        "browserTarget": "pdr-rpa-request:build"
                     }
                 },
                 "test": {
