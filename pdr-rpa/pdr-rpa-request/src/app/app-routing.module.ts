@@ -2,13 +2,16 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { ErrorsModule, NotFoundComponent } from 'oarlps';
-import { RPARequestFormComponent } from './rpa/components/request-form.component';
-import { RPASMEComponent } from './rpa/components/rpa-sme.component';
-import { RPARoutes } from './rpa/rpa.routing';
+import { AppComponent } from './app.component';
 
 const routes: Routes = [
-    ...RPARoutes,
-    { path: '**',                  component: NotFoundComponent        }
+    {
+        path: 'rpa',
+        children: [
+            { path: 'request', component: AppComponent }
+        ]
+    },
+    { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
@@ -19,7 +22,7 @@ const routes: Routes = [
         }),
         ErrorsModule
     ],
-    exports: [ RouterModule ]
+    exports: [RouterModule]
 })
 export class AppRoutingModule { }
 
