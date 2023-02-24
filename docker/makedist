@@ -1,0 +1,17 @@
+#! /bin/bash
+#
+prog=`basename $0`
+execdir=`dirname $0`
+[ "$execdir" = "" -o "$execdir" = "." ] && execdir=$PWD
+export CODEDIR=`(cd $execdir/.. > /dev/null 2>&1; pwd)`
+export DOCKERDIR=$execdir
+PACKAGE_NAME=oar-pdr-angular
+
+dodockbuild=
+(docker images | grep -qs $PACKAGE_NAME/build) || {
+    echo "${prog}: Docker image $PACKAGE_NAME/build not found; will build."
+    dodockbuild=-d
+}
+
+echo $DOCKERDIR/run.sh $dodockbuild build "$@"
+exec $DOCKERDIR/run.sh $dodockbuild build "$@"
