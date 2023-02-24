@@ -17,7 +17,8 @@ SOURCE_DIR=$PACKAGE_DIR
 
 # Update this list with the names of the individual component names
 # 
-DISTNAMES="midas-lps midas-wizard pdr-lps pdr-rpa-request pdr-rpa-approve"
+# DISTNAMES="midas-lps midas-wizard pdr-lps pdr-rpa-request pdr-rpa-approve"
+DISTNAMES="midas-lps midas-wizard pdr-rpa-request pdr-rpa-approve"
 
 # this is needed because realpath is not on macs
 function realpath {
