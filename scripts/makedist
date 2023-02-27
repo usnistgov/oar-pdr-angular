@@ -136,11 +136,9 @@ npm $npmpfx install --legacy-peer-deps
 echo '+' npm $npmpfx run build-lib
 npm $npmpfx run build-lib
 
-# if need be, build the oar-lps library
-if (echo $build_dist | grep -qse 'midas-author|pdr-lps'); then
-    echo '+' npm $npmpfx run build-oarlps
-    npm $npmpfx run build-oarlps
-fi
+# build the oar-lps library (needed by both rpa apps and pdr-lps)
+echo '+' npm $npmpfx run build-oarlps
+npm $npmpfx run build-oarlps
 
 # build target distributions
 declare -A buildscript
