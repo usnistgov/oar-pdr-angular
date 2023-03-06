@@ -27,7 +27,6 @@ export class DescriptionComponent implements OnInit {
                 private notificationService: NotificationService){
                     
                     this.lpService.watchEditing((sectionMode: SectionMode) => {
-                        console.log("Watching edit status...", sectionMode);
                         if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
                             if(this.isEditing){
                                 this.onSave(false); // Do not refresh help text 
@@ -74,7 +73,9 @@ export class DescriptionComponent implements OnInit {
      * @param keywords 
      */
     setBackground(description: string) {
-        if(description != this.originDescription){
+        if(this.updated){
+            this.backColor = 'var(--data-changed-saved)';
+        }else if(description != this.originDescription){
             this.backColor = 'var(--data-changed)';
         }else{
             this.backColor = 'white';
@@ -96,7 +97,6 @@ export class DescriptionComponent implements OnInit {
     cancelEditing() {
         this.getDescription();
         this.setMode(MODE.NORNAL);
-        this.isEditing = false;
         this.setBackground(this.description);
     }
 
@@ -115,9 +115,10 @@ export class DescriptionComponent implements OnInit {
             //Update server
             this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                if (updateSuccess)
+                if (updateSuccess){
+                    this.setBackground(this.description);
                     this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
-                else
+                }else
                     console.error("acknowledge keywords update failure");
             });
         }
@@ -146,7 +147,9 @@ export class DescriptionComponent implements OnInit {
 
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
-            this.lpService.setEditing(sectionMode);        
+            this.lpService.setEditing(sectionMode);  
+        else
+            this.isEditing = false;      
     }
 
     /**
@@ -161,61 +164,16 @@ export class DescriptionComponent implements OnInit {
         return false;
     }
 
-    // openModal() {
-    //     if (!this.mdupdsvc.isEditMode) return;
-
-    //     // Broadcast the status change
-    //     let sectionMode: SectionMode = {} as SectionMode;
-    //     this.editMode = MODE.EDIT;
-    //     sectionMode.section = this.fieldName;
-    //     sectionMode.mode = this.editMode;
-    //     this.lpService.setEditing(sectionMode);
-
-    //     let ngbModalOptions: NgbModalOptions = {
-    //         backdrop: 'static',
-    //         keyboard: false,
-    //         windowClass: "myCustomModalClass"
-    //     };
-
-    //     const modalRef = this.ngbModal.open(DescriptionPopupComponent, ngbModalOptions);
-
-    //     let val = "";
-    //     if (this.record[this.fieldName])
-    //         val = this.record[this.fieldName].join('\n\n');
-
-    //     modalRef.componentInstance.inputValue = { };
-    //     modalRef.componentInstance.inputValue[this.fieldName] = val;
-    //     modalRef.componentInstance['field'] = this.fieldName;
-    //     modalRef.componentInstance['title'] = 'Description';
-    //     modalRef.componentInstance['message'] = 'Separate paragraphs by 2 lines.';
-
-    //     modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-    //         if (returnValue) {
-    //             // console.log("###DBG  receiving editing output: " +
-    //             //             returnValue[this.fieldName].substring(0,20) + "....");
-    //             let updmd = {};
-    //             updmd[this.fieldName] = returnValue[this.fieldName].split(/\n\s*\n/).filter(desc => desc != '');
-    //             this.record[this.fieldName] = returnValue[this.fieldName].split(/\n\s*\n/).filter(desc => desc != '');
-                
-    //             this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
-    //                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-    //                 if (updateSuccess)
-    //                     this.notificationService.showSuccessWithTimeout("Description updated.", "", 3000);
-    //                 else
-    //                     console.error("acknowledge description update failure");
-    //             });
-    //         }
-    //     })
-    // }
-
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoEditing() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success)
+            if (success){
+                this.setMode(MODE.NORNAL);
+                this.setBackground(this.description);
                 this.notificationService.showSuccessWithTimeout("Reverted changes to description.", "", 3000);
-            else
+            }else
                 console.error("Failed to undo description metadata")
         });
     }

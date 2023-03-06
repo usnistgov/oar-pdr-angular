@@ -8,7 +8,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { SharedModule } from '../../shared/shared.module';
 import { AuthorComponent } from './author.component';
-import { AuthorPopupComponent } from './author-popup/author-popup.component';
 import { AuthorService } from './author.service';
 import { ButtonModule } from 'primeng/button';
 import { AuthorListComponent } from './author-list/author-list.component';
@@ -33,19 +32,19 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         ToastrModule.forRoot()
     ],
     declarations: [
-        AuthorComponent, AuthorPopupComponent, AuthorListComponent, AuthorEditComponent
+        AuthorComponent, AuthorListComponent, AuthorEditComponent
     ],
     providers: [
         AuthorService
     ],
     exports: [
-        AuthorComponent, AuthorPopupComponent, AuthorListComponent, AuthorEditComponent
+        AuthorComponent, AuthorListComponent, AuthorEditComponent
     ]
 })
 export class AuthorModule { }
 
 export {
-    AuthorComponent, AuthorPopupComponent, AuthorService, AuthorListComponent, AuthorEditComponent
+    AuthorComponent, AuthorService, AuthorListComponent, AuthorEditComponent
 };
 
     

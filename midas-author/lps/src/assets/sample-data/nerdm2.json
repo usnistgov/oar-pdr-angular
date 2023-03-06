@@ -12,16 +12,16 @@
     "@type": ["nrdp:PublicDataResource"],
     "@id": "ark:/88434/mds0000fbk",
     "title": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
-    "contactPoint": {
+    "contactPoint2": {
         "hasEmail": "mailto:patricia.flanagan@nist.gov",
         "fn": "Patricia Flanagan"
     },
     "modified": "2019-03-27 12:24:31",
     "issued": "2019-04-05T16:04:26.0",
     "ediid": "test1",
-    "landingPage": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
+    "landingPage2": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
     "version": "1.0.1",
-    "authors": [
+    "authors2": [
         {
             "@id": "11111111",
             "familyName": "Doe",

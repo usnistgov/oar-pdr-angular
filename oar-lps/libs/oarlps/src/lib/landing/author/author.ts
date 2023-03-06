@@ -1,4 +1,5 @@
 export interface Author {
+    "@id": string,
     familyName: string,
     givenName: string,
     middleName: string,

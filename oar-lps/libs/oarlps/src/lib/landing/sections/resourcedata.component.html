@@ -34,10 +34,6 @@
 
     <!-- Access pages -->
     <div id="accessPages">
-        <div style="width: 100%;">
-            <lib-accesspage [record]="record" [theme]="theme"></lib-accesspage>
-        </div>
-        
         <!-- <div *ngIf="accessPages.length > 0">
             <b>Data and related material can be found at the following locations:</b>
             <br>
@@ -89,6 +85,10 @@
                 </ng-template>
             </div>
         </div> -->
+
+        <div style="width: 100%;">
+            <lib-accesspage [record]="record" [theme]="theme"></lib-accesspage>
+        </div>
     </div>
 
     <pdr-data-files *ngIf="theme == defaultTheme" [record]="record" [inBrowser]="inBrowser" [editEnabled]="editEnabled"

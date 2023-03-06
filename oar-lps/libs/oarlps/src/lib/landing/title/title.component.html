@@ -1,17 +1,21 @@
 <div style="width: 100%;max-width: 100%;">
     <div style="display: table;" style="width: 100%;">
         <div class="editable_container" style="width: 100%;">
+            <!-- Display required field indicator -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode">
                 <span *ngIf="mdupdsvc.isEditMode" style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
             </div>
+
+            <!-- No title -->
             <div class="editable_field" *ngIf="!record['title']" [style.cursor]="mdupdsvc.isEditMode ? 'pointer' : 'default'">
                 <span class="title">
                     <h2 [ngStyle]="mdupdsvc.getFieldStyle(fieldName)"><i style="color: #cccccc;">No title set</i></h2>
                 </span>
             </div>
-            <!-- <ng-template #hasTitle> -->
+
+            <!-- Has title -->
             <div class="editable_field" *ngIf="record['title']" style="width: 100%;">
-                <div *ngIf="mdupdsvc.isEditMode && isEditing; else nonEditing" style="width: 100%; ">
+                <div *ngIf="mdupdsvc.isEditMode && isEditing; else nonEditing" style="width: 100%; height: 30px;">
                     <h2 style="width: 100%;">
                         <textarea autocomplete="off" [(ngModel)]='record.title' (ngModelChange)="setBackground($event)" [ngStyle]="{'background-color': backColor}" style="width: 100%;" libTextareaAutoresize></textarea>
                     </h2>
@@ -36,23 +40,18 @@
                     <i class="faa faa-check icon_enabled" data-toggle="tooltip" title="Save keywords"></i>
                 </button>
 
-                <!-- Undo button -->
-                <button class="edit_button" type="button" [disabled]="!updated" *ngIf="!isEditing" 
-                    (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original title">
-                    <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"
-                        data-toggle="tooltip" title="Undo title"></i>
-                </button>
-
-                <!-- Cancel editing button -->
+                <!-- Cancel editing button: cancel current changes -->
                 <button class="edit_button" type="button" *ngIf="isEditing"
                 (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
                     <i class="faa faa-remove" data-toggle="tooltip" title="Cancel editing"></i>
                 </button>   
                 
-                <!-- <button class="edit_button" type="button" 
-                (click)="test()" aria-label="undo button" ngbTooltip="Cancel edit">
-                    <i class="faa faa-eye" data-toggle="tooltip" title="test"></i>
-                </button>   -->
+                <!-- Undo editing button, restore original value -->
+                <button class="edit_button" type="button" [disabled]="!updated" *ngIf="isEditing" 
+                    (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original title">
+                    <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"
+                        data-toggle="tooltip" title="Undo title"></i>
+                </button>
             </div>
         </div>
     </div>

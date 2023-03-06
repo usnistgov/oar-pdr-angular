@@ -1,39 +1,11 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthorPopupComponent } from './author-popup/author-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { AuthorService } from './author.service';
 import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Author } from './author';
-
-const objectsEqual = (o1, o2) => {
-    let match = false
-      if(typeof o1 === 'object' && Object.keys(o1).length > 0) {
-       match = (Object.keys(o1).length === Object.keys(o2).length && Object.keys(o1).every(p => objectsEqual(o1[p], o2[p])))
-      }else {
-       match = (o1 === o2)
-      }
-      return match
-}
-  
-const arraysEqual = (a1, a2) => {
-    let finalMatch = []
-    let itemFound = []
-
-    if(a1.length === a2.length) {
-        finalMatch = []
-        a1.forEach( i1 => {
-        itemFound = []
-        a2.forEach( i2 => { 
-            itemFound.push(objectsEqual(i1, i2)) 
-        })
-            finalMatch.push(itemFound.some( i => i === true))  
-        }) 
-    } 
-    return finalMatch.every(i => i === true)
-}
 
 @Component({
     selector: 'app-author',
@@ -49,7 +21,6 @@ const arraysEqual = (a1, a2) => {
 })
 export class AuthorComponent implements OnInit {
     fieldName = 'authors';
-    tempInput: any = {};
     editMode: string = MODE.NORNAL; 
     originAuthors: any[] = [];
     originalRecord: any[]; //Original record or the record that's previously saved
@@ -138,7 +109,6 @@ export class AuthorComponent implements OnInit {
         sectionHelp.topic = HelpTopic[this.editMode];
 
         if(refreshHelp){
-            console.log('refreshHelp', refreshHelp);
             this.lpService.setSectionHelp(sectionHelp);
         }
             

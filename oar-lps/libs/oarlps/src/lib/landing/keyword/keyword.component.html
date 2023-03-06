@@ -49,13 +49,13 @@
                 <i class="faa faa-check icon_enabled"></i>
             </button>
 
-            <!-- Undo button -->
-            <button class="edit_button" type="button" *ngIf="!isEditing"
+            <!-- Undo button - Restore original keywords -->
+            <button class="edit_button" type="button" *ngIf="isEditing"
                 (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original keywords">
                 <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"></i>
             </button>
 
-            <!-- Cancel editing button -->
+            <!-- Cancel editing button - Undo current changes -->
             <button class="edit_button" type="button" *ngIf="isEditing"
             (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
                 <i class="faa faa-remove"></i>

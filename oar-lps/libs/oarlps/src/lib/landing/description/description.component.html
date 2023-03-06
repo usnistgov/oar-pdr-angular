@@ -38,18 +38,18 @@
                     <i class="faa faa-check icon_enabled" data-toggle="tooltip" title="Save keywords"></i>
                 </button>
     
-                <!-- Undo button -->
-                <button class="edit_button" type="button" *ngIf="!isEditing"
-                    (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original keywords">
-                    <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"
-                        data-toggle="tooltip" title="Undo keyword changes"></i>
-                </button>
-    
                 <!-- Cancel editing button -->
                 <button class="edit_button" type="button" *ngIf="isEditing"
                 (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
                     <i class="faa faa-remove" data-toggle="tooltip" title="Cancel editing"></i>
                 </button>
+
+                <!-- Undo button: restore original value -->
+                <button class="edit_button" type="button" *ngIf="isEditing"
+                    (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original keywords">
+                    <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"
+                        data-toggle="tooltip" title="Undo keyword changes"></i>
+                </button>                
             </div>
         </div>
     </div>

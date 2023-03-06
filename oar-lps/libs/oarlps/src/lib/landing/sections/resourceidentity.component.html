@@ -1,4 +1,4 @@
-<div class="grid" id="identity">
+<div id="identity">
     <div style="width: 100%;">
         <span class="recordType">
             <b>{{recordType}}</b>
@@ -13,10 +13,6 @@
     </div>
     
     <div style="width: 100%;">
-        <div *ngIf="showHomePageLink" style="float: right;height: 30px;margin-top: .5em;">
-            <app-visithome [record]="record" [inBrowser]="inBrowser" [editMode]="editMode" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
-        </div>
-
         <app-author [record]="record" [inBrowser]="inBrowser"></app-author>
 
         <!-- Facilitators -->
@@ -24,7 +20,17 @@
             <app-facilitators [record]="record" [inBrowser]="inBrowser"></app-facilitators>
         </div>
 
-        <app-contact [record]="record" [inBrowser]="inBrowser"></app-contact>
+        <div class="table">
+            <div class="cell left">
+                <!-- <app-contact [record]="record" [inBrowser]="inBrowser"></app-contact> -->
+            </div>
+            <!-- <div *ngIf="showHomePageLink"  class="cell right" style="height: 30px;margin-top: .5em;">
+                <app-visithome [record]="record" [inBrowser]="inBrowser" [editMode]="editMode" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
+            </div> -->
+            <div class="cell right">
+                <!-- <app-visithome [record]="record" [inBrowser]="inBrowser" [inViewMode]="inViewMode" [theme]="theme"></app-visithome> -->
+            </div>
+        </div>
 
         <span>Identifier: </span>
         <span *ngIf="doiUrl"><i> <a href="{{doiUrl}}"

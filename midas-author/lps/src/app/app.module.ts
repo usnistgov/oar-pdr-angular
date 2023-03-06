@@ -34,9 +34,6 @@ import { MetricsModule } from 'oarlps';
 import { ModalComponent } from 'oarlps';
 import { ComboBoxComponent } from 'oarlps';
 import { SearchTopicsComponent } from 'oarlps';
-import { DescriptionPopupComponent } from 'oarlps';
-import { AuthorPopupComponent } from 'oarlps';
-import { ContactPopupComponent } from 'oarlps';
 import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 

@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VisithomePopupComponent } from './visithome-popup.component';
+import { AccesspageListComponent } from './accesspage-list.component';
 
-describe('VisithomePopupComponent', () => {
-  let component: VisithomePopupComponent;
-  let fixture: ComponentFixture<VisithomePopupComponent>;
+describe('AccesspageComponent', () => {
+  let component: AccesspageListComponent;
+  let fixture: ComponentFixture<AccesspageListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ VisithomePopupComponent ]
+      declarations: [ AccesspageListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(VisithomePopupComponent);
+    fixture = TestBed.createComponent(AccesspageListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,81 +1,78 @@
-<div class="editable_container"  style="width: 100%;">
-    <div class="editable_field" style="width: 100%;">
-        <div class="edit_box" [style.background-color]="getRecordBackgroundColor()">
-            <!-- Existing authors -->
-            <div #dropListContainer class="example-container" cdkDropListGroup>
-                <div style="width: 100%;" 
-                *ngFor="let author of record[fieldName]; let i = index"
-                cdkDropList
-                [cdkDropListData]="i"
-                >
-                    <div 
-                        cdkDrag
-                        [cdkDragData]="i"
-                        (cdkDragEntered)="dragEntered($event)"
-                        (cdkDragMoved)="dragMoved($event)"
-                        (cdkDragDropped)="dragDropped($event)"
-                        [cdkDragDisabled]="isAdding || isEditing"
-                        class="author-row"
+<!-- <div style="width: 100%;"> -->
+    <div class="editable_container" style="width: 100%;">
+        <div class="editable_field" style="width: 100%;">
+            <div class="edit_box" [style.background-color]="getRecordBackgroundColor()">
+                <!-- Existing authors -->
+                <div #dropListContainer class="example-container" cdkDropListGroup>
+                    <div style="width: 100%;" 
+                    *ngFor="let author of record[fieldName]; let i = index"
+                    cdkDropList
+                    [cdkDropListData]="i"
                     >
-                        <div (click)="selectAuthor(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
-                            <lib-text-edit 
-                                [textField]="getAuthorName(i)" 
-                                [dragDropIcon]="record[fieldName].length==1?false:true" 
-                                [editButton]="false" 
-                                [editOnlyButton]="true"
-                                [deleteButton]="true" 
-                                [restoreButton]="true" 
-                                [disableControl]="isAdding || isEditing" 
-                                [placeHolderText]="placeholder" 
-                                [isNew]="author.isNew" 
-                                [dataChanged]="mdupdsvc.fieldUpdated(fieldName, author['@id'])" 
-                                (command_out)="onAuthorCommand($event, i)">
-                            </lib-text-edit>
+                        <div 
+                            cdkDrag
+                            [cdkDragData]="i"
+                            (cdkDragEntered)="dragEntered($event)"
+                            (cdkDragMoved)="dragMoved($event)"
+                            (cdkDragDropped)="dragDropped($event)"
+                            [cdkDragDisabled]="isAdding || isEditing"
+                            class="author-row"
+                        >
+                            <div (click)="selectAuthor(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
+                                <lib-text-edit 
+                                    [textField]="getAuthorName(i)" 
+                                    [dragDropIcon]="record[fieldName].length==1?false:true" 
+                                    [editButton]="false" 
+                                    [editOnlyButton]="true"
+                                    [deleteButton]="true" 
+                                    [restoreButton]="true" 
+                                    [disableControl]="isAdding || isEditing" 
+                                    [placeHolderText]="placeholder" 
+                                    [isNew]="author.isNew" 
+                                    [dataChanged]="mdupdsvc.fieldUpdated(fieldName, author['@id'])" 
+                                    (command_out)="onAuthorCommand($event, i)">
+                                </lib-text-edit>
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- Control buttons for drag and drop sectioon -->
+        <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+            <!-- Add button -->
+            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add author">
+                <i [class]="addIconClass()"></i>
+            </button>
+
+            <!-- Undo all changes button -->
+            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="(!authorsChanged && !authorsUpdated) || isEditing || isAdding"
+                (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo all author changes">
+                <i [class]="undoIconClass()"></i>
+            </button> 
+
+            <!-- Hide button - hide edit block -->
+            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isAdding || isEditing"
+                (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                <i class="faa faa-remove"></i>
+            </button> 
+        </div>
     </div>
-
-    <!-- Control buttons for drag and drop sectioon -->
-    <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-        <!-- Add button -->
-        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add author">
-            <i [class]="addIconClass()"></i>
-        </button>
-
-        <!-- Edit button -->
-        <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onEdit()" aria-label="edit button" [disabled]="!isNormal" ngbTooltip="Edit author">
-            <i [class]="editIconClass()"></i>
-        </button> -->
-
-        <!-- Undo all changes button -->
-        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!authorsChanged || isEditing"
-            (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo all author changes">
-            <i [class]="undoIconClass()"></i>
-        </button> 
-
-        <!-- Hide button - hide edit block -->
-        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isAdding || isEditing"
-            (click)="hideEditBlock()" aria-label="undo button" ngbTooltip="Undo all author changes">
-            <i class="faa faa-eye-slash"></i>
-        </button> 
-    </div>
-</div>
+<!-- </div> -->
 
 <!-- This is editing area. Will open up in add or edit mode -->
 <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus">  
     <table style="width: 100%;">
         <tr  style="width: 100%;">
             <!-- Text edit area -->
-            <td class="edit-block" style="width: calc(100%-30px);">
-                <lib-author-edit [author]="currentAuthor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onAutherChange($event)"></lib-author-edit>
+            <td class="edit-block" style="width: calc(100%-60px);">
+                <lib-author-edit [author]="currentAuthor" [backgroundColor]="editAreabackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onAutherChange($event)"></lib-author-edit>
             </td>
 
             <!-- Control buttons -->
-            <td style="width: 30px;vertical-align: top;">
+            <td style="width: 60px;vertical-align: top; white-space: nowrap;">
                 <!-- Save button -->
                 <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save authors">
                     <i class="faa faa-check"></i>

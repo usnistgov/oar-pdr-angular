@@ -126,8 +126,6 @@ export class MetadataUpdateService {
      *             getting updates to have its UI react accordingly.
      */
     public update(subsetname: string, md: {}, id: string = undefined, subsetnameAPI: string = undefined): Promise<boolean> {
-        console.log("Updating....", subsetname);
-        console.log("md", md);
         if(!subsetnameAPI) subsetnameAPI = subsetname;
   
         if (!this.custsvc) {
@@ -193,7 +191,6 @@ export class MetadataUpdateService {
      * @param id - optional - id of a subset item 
      */
     public updateInMemoryRec(res: any, subsetname: string = undefined, id: string = undefined) {
-        console.log("Updating in memory record", res);
         if(subsetname == undefined) { // Update the whole record
             this.currentRec = JSON.parse(JSON.stringify(res));
         }else if(id == undefined) {
@@ -213,14 +210,10 @@ export class MetadataUpdateService {
     }
     
     public add(md: any, subsetname: string = undefined, subsetnameAPI: string = undefined):Observable<Object> {
-        // return new Promise<boolean>((resolve, reject) => {
-        console.log("Adding record", md);
-
         return new Observable<Object>(subscriber => {
             this.custsvc.add(md, subsetname, subsetnameAPI).subscribe(
                 (res) => {
                     let obj = JSON.parse(res as string);
-                    console.log("Returned rec", obj);
                     if(subsetname) {  //Add a subset
                         if(this.currentRec[subsetname]){
                             this.currentRec[subsetname] = [...this.currentRec[subsetname], ...[obj]];
@@ -235,7 +228,6 @@ export class MetadataUpdateService {
                     this.origfields[key] = {};
                     this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
 
-                    console.log("Broadcasting current rec", this.currentRec);
                     this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                     // resolve(true);
                     subscriber.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
@@ -471,7 +463,6 @@ export class MetadataUpdateService {
     public loadSavedSubsetFromMemory(subsetname: string, id: string = undefined, onSuccess?: () => void): Observable<Object> {
         return new Observable<Object>(subscriber => {
             let res: any = null;
-            console.log("Load id", id);
             if(subsetname) {
                 if(id) {
                     res = JSON.parse(JSON.stringify(this.currentRec[subsetname].find(x => x["@id"]==id)));

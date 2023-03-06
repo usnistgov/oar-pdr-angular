@@ -84,9 +84,6 @@ export class TitleComponent implements OnInit {
     }
 
     onSave(refreshHelp: boolean = true) {
-        console.log("this.record['title']", this.record['title']);
-        console.log("this.originalRecord['title']", this.originalRecord['title']);
-
         if(this.record['title'] != this.originalRecord['title']) {
             var postMessage: any = {};
                 postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record['title']));
@@ -102,7 +99,6 @@ export class TitleComponent implements OnInit {
         }
 
         this.setMode(MODE.NORNAL, refreshHelp);
-        this.isEditing = false;
         this.setBackground(this.record['title']);
     }
     
@@ -155,6 +151,8 @@ export class TitleComponent implements OnInit {
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+        else
+            this.isEditing = false;
     }
 
     flash: any;
@@ -187,65 +185,7 @@ export class TitleComponent implements OnInit {
                         borderPattern = true;
                     }, 0);
                 }
-                console.log('this.borderStatus', this.borderStatus)
             }
         }
     }
-
-
-    // openModal() {
-    //     if (!this.mdupdsvc.isEditMode) return;
-
-    //     // Broadcast the status change
-    //     let sectionMode: SectionMode = {} as SectionMode;
-    //     this.editMode = MODE.EDIT;
-    //     sectionMode.section = this.fieldName;
-    //     sectionMode.mode = this.editMode;
-    //     this.lpService.setEditing(sectionMode);
-
-    //     let ngbModalOptions: NgbModalOptions = {
-    //         backdrop: 'static',
-    //         keyboard: false,
-    //         windowClass: "modal-mid"
-    //     };
-
-    //     let val = "";
-    //     if (this.record['title'])
-    //         val = this.record['title'];
-
-    //     const modalRef = this.ngbModal.open(DescriptionPopupComponent, ngbModalOptions);
-
-    //     modalRef.componentInstance.inputValue = {}
-    //     modalRef.componentInstance.inputValue[this.fieldName] = val;
-    //     modalRef.componentInstance['field'] = 'title';
-    //     modalRef.componentInstance['title'] = 'Title';
-
-    //     modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-    //         if (returnValue) {
-    //             var postMessage: any = {};
-    //             postMessage[this.fieldName] = returnValue[this.fieldName];
-    //             console.log("###DBG updating title: ", JSON.stringify(postMessage));
-    //             this.record['title'] = returnValue[this.fieldName];
-                
-    //             this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-    //                 if (updateSuccess)
-    //                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
-    //                 else
-    //                     console.error("acknowledge title update failure");
-    //             });
-    //         }
-    //     });
-    // }
-
-    /*
-     *  Undo editing. If no more field was edited, delete the record in staging area.
-     */
-    // undoEditing() {
-    //     this.mdupdsvc.undo(this.fieldName).then((success) => {
-    //         if (success)
-    //             this.notificationService.showSuccessWithTimeout("Reverted changes to title.", "", 3000);
-    //         else
-    //             console.error("Failed to undo title metadata")
-    //     });
-    // }
 }

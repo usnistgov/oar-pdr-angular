@@ -35,7 +35,6 @@ export class SingleApageComponent implements OnInit {
             }else{
                 this.originalApage = undefined;
             }
-            console.log("accessPage on changes", this.accessPage);
         }
     }
 

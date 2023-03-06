@@ -57,8 +57,6 @@ export class SidebarComponent implements OnInit {
     }
 
     updateHelpContent(sectionHelp: SectionHelp) {
-        console.log("sectionHelp000", sectionHelp);
-        console.log("helpContentAll", this.helpContentAll);
         let generalHelp = this.helpContentAll['general']? this.helpContentAll['general'] : "Default help text.<p>";
 
         this.helpContent = generalHelp;

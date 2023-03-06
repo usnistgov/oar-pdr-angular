@@ -5,10 +5,11 @@ import { AuthorService } from '../author.service';
 @Component({
   selector: 'lib-author-edit',
   templateUrl: './author-edit.component.html',
-  styleUrls: ['./author-edit.component.css']
+  styleUrls: ['../../landing.component.scss', './author-edit.component.css']
 })
 export class AuthorEditComponent implements OnInit {
     @Input() author: Author = {} as Author;
+    @Input() backgroundColor: string = 'var(--editable)';
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
@@ -72,6 +73,7 @@ export class AuthorEditComponent implements OnInit {
      */
     validateOrcid(author)
     {
+        author.dataChanged = true;
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
 
         if(!this.orcid_validation(author.orcid))
