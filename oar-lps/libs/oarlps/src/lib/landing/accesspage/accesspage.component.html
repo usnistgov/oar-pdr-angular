@@ -4,6 +4,10 @@
     </div>
 
     <div class="editable_container" style="padding: 0px;">
+        <div *ngIf="mdupdsvc.isEditMode && (!accessPages || accessPages.length == 0)" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" style="color: var(--disabled-grey-text); padding-left: 10px;">
+            Click edit (pencil) button to add links to relevant websites including software repositories
+        </div>
+
         <div class="editable_field" *ngIf="accessPages && accessPages.length > 0" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" style="padding: 10px; width: calc(100% - 1.65em);" >
             <div [ngStyle]="{'margin-top': i==0? '0px':'10px', 'background-color': apage['backcolor']}"
             *ngFor="let apage of accessPages; let i = index" (mouseover)="apage['backcolor'] = '#f2f2f2'"

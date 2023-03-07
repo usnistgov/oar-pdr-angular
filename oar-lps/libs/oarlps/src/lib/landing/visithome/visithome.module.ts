@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VisithomeComponent } from './visithome.component';
-// import { VisithomeEditComponent } from './visithome-edit/visithome-edit.component';
+import { VisithomeEditComponent } from './visithome-edit/visithome-edit.component';
 import { FormsModule } from '@angular/forms';
 
 import { ToolbarModule } from 'primeng/toolbar';
@@ -13,7 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-    declarations: [ VisithomeComponent ],
+    declarations: [ VisithomeComponent, VisithomeEditComponent ],
     imports: [
         CommonModule,
         ToolbarModule,
@@ -25,11 +25,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         NgbModule
     ],
     exports: [
-        VisithomeComponent
+        VisithomeComponent, VisithomeEditComponent
     ]
 })
 export class VisithomeModule { }
 
 export {
-    VisithomeComponent
+    VisithomeComponent, VisithomeEditComponent
 };

@@ -464,10 +464,14 @@ export class MetadataUpdateService {
         return new Observable<Object>(subscriber => {
             let res: any = null;
             if(subsetname) {
-                if(id) {
-                    res = JSON.parse(JSON.stringify(this.currentRec[subsetname].find(x => x["@id"]==id)));
-                }else {
-                    res = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
+                if(this.currentRec[subsetname] == undefined)
+                    res = undefined;
+                else{
+                    if(id) {
+                        res = JSON.parse(JSON.stringify(this.currentRec[subsetname].find(x => x["@id"]==id)));
+                    }else {
+                        res = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
+                    }
                 }
             }
 

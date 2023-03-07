@@ -82,6 +82,8 @@ export class ContactComponent implements OnInit {
     }
 
     updateOriginal(){
+        console.log("hasContact", this.hasContact);
+        
         if(this.hasContact) {
             this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
             this.currentContact.dataChanged = false;
@@ -116,17 +118,21 @@ export class ContactComponent implements OnInit {
      * based on the dataChanged flag of the record.
      * @returns the background color of the whole record
      */
-    getRecordBackgroundColor() {
-        if(this.mdupdsvc.fieldUpdated(this.fieldName)){
-            this.backgroundColor = 'var(--data-changed-saved)';
-        }else if(this.currentContact.dataChanged){
-            this.backgroundColor = 'var(--data-changed)';
-        }else{
-            this.backgroundColor = 'var(--editable)';
-        }
+    // getRecordBackgroundColor() {
+    //     if(this.mdupdsvc.isEditMode){
+    //         if(this.mdupdsvc.fieldUpdated(this.fieldName)){
+    //             this.backgroundColor = 'var(--data-changed-saved)';
+    //         }else if(this.currentContact.dataChanged){
+    //             this.backgroundColor = 'var(--data-changed)';
+    //         }else{
+    //             this.backgroundColor = 'var(--editable)';
+    //         }
+    //     }else{
+    //         this.backgroundColor = 'white';
+    //     }
 
-        return this.backgroundColor;
-    }
+    //     return this.backgroundColor;
+    // }
 
     /**
      * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
@@ -224,11 +230,12 @@ export class ContactComponent implements OnInit {
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
+                this.currentContact.dataChanged = false;
                 this.setOverflowStyle();
                 break;
         }
 
-        this.getRecordBackgroundColor();
+        // this.getRecordBackgroundColor();
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);

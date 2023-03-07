@@ -27,6 +27,8 @@ export class TitleComponent implements OnInit {
     backColor: string = 'white';
     originalRecord: any[];
     borderStatus: string = "show";
+    placeholder: string = "Please add a title here.";
+    dataChanged: boolean = false;
 
     constructor(public mdupdsvc: MetadataUpdateService,
         private ngbModal: NgbModal,
@@ -80,7 +82,8 @@ export class TitleComponent implements OnInit {
 
         this.setMode(MODE.NORNAL);
         this.isEditing = false;
-        this.setBackground(this.record['title']);
+        // this.setBackground(this.record['title']);
+        this.dataChanged = false;
     }
 
     onSave(refreshHelp: boolean = true) {
@@ -91,29 +94,33 @@ export class TitleComponent implements OnInit {
             console.log("postMessage", postMessage);
             
             this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-                if (updateSuccess)
+                if (updateSuccess){
+                    this.dataChanged = true;
                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
-                else
+                }else
                     console.error("acknowledge title update failure");
             });
-        }
+        }else
+            this.dataChanged = false;
 
         this.setMode(MODE.NORNAL, refreshHelp);
-        this.setBackground(this.record['title']);
+        // this.setBackground(this.record['title']);
+
     }
     
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
-    undoEditing() {
-        this.setMode(MODE.NORNAL);
+    restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success)
+            if (success){
+                this.setMode(MODE.NORNAL);
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            else
+            }else
                 console.error("Failed to undo keywords metadata")
         });
-        this.setBackground(this.record['title']);
+        // this.setBackground(this.record['title']);
+        this.dataChanged = false;
     }
 
     /**
@@ -123,11 +130,7 @@ export class TitleComponent implements OnInit {
      * @param keywords 
      */
     setBackground(title: string) {
-        if(title != this.originalRecord['title']){
-            this.backColor = 'var(--data-changed)';
-        }else{
-            this.backColor = 'white';
-        }
+        this.dataChanged = title != this.originalRecord['title'];
     }
 
     /**

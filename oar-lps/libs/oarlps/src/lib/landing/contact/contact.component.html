@@ -6,12 +6,12 @@
         </div>
 
         <!-- Label -->
-        <div class="editable_field" *ngIf="mdupdsvc.isEditMode || !emptyContact(currentContact)">
+        <div class="editable_field" *ngIf="mdupdsvc.isEditMode || hasContact">
             <span style="margin-right: 0.5em;">Contact:</span>
         </div>
 
         <!-- Has contact -->
-        <div class="editable_field" *ngIf="!emptyContact(currentContact)" style="max-width:calc(100% - 4em);margin-left: 05em;" [style.background-color]="getRecordBackgroundColor()">
+        <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);margin-left: 05em;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, currentContact.dataChanged)">
             <div style="padding-left: 0.5em; padding-right: 0.5em;">
                 <strong>
                     <a *ngIf="hasEmail"

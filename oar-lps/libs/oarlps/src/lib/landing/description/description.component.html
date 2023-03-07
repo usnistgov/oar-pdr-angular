@@ -8,14 +8,12 @@
             <!-- Not editing -->
             <div class="editable_field" style="width:100%;" *ngIf="!isEditing">
                 <div *ngIf="isEmpty; else hasDescription">
-                    <div class="nist-card" *ngIf="mdupdsvc.isEditMode" style="width:inherit;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
+                    <div *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" style="width:inherit;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
                         Click edit (pencil) button to add description.
                     </div>
                 </div>
                 <ng-template #hasDescription>
-                    <div id="recordDescription" class="editable_field" style="max-width:calc(100% - 4em); white-space: pre-wrap" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" (click)="startEditing()">
-                        {{description}}
-                    </div>
+                    <div style="width:inherit; white-space: pre-wrap;padding-left: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" (click)="startEditing()">{{description}}</div>
                 </ng-template>
             </div>
 

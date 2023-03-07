@@ -1,4 +1,4 @@
-<!-- <span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
+<span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
     <div style="display: table;">
         <div class="editable_container">
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode || hasVisitHomeURL" [pTooltip]="record[fieldName]" tooltipPosition="bottom" tooltipStyleClass="tooltip-style">
@@ -33,11 +33,11 @@
         </div>
     </div>
 </span>
-<ng-template #visitHomeOnServer>Visit Home Page</ng-template> -->
+<ng-template #visitHomeOnServer>Visit Home Page</ng-template>
 
 <!-- Visit homepage editor -->
-<!-- <div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle"> -->
-    <!-- <lib-visithome-edit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit> -->
+<div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+    <lib-visithome-edit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit>
     
     <!-- <table style="width: 100%;">
         <tr  style="width: 100%;">
@@ -65,4 +65,4 @@
             </td>          
         </tr>
     </table> -->
-<!-- </div> -->
+</div>

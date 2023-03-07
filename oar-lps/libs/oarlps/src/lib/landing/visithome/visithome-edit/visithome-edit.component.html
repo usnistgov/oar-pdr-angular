@@ -2,7 +2,7 @@
 <table style="width: 100%;">
     <tr  style="width: 100%;">
         <!-- Text edit area -->
-        <!-- <td class="edit-block" style="width: calc(100%-30px);" [style.background-color]="backgroundColor">
+        <td class="edit-block" style="width: calc(100%-30px);" [style.background-color]="backgroundColor">
             <div style="width: 100%;text-align: left;padding: 10px;">
                 <div style="width: 100%;">
                     Enter a new url if you would like to change the current homepage location.
@@ -20,27 +20,27 @@
                     </tr>
                 </table>
             </div>
-        </td> -->
+        </td>
 
         <!-- Control buttons -->
         <td style="width: 30px;vertical-align: top;">
             <!-- Save button -->
-            <!-- <button class="edit_button" type="button" (click)="commandOut('saveURL')" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
+            <button class="edit_button" type="button" (click)="commandOut('saveURL')" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
                 <i class="faa faa-check"></i>
-            </button> -->
+            </button>
     
             <!-- Cancel button -->
-            <!-- <button class="edit_button" type="button"
+            <button class="edit_button" type="button"
                 (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
                 <i class="faa faa-remove"></i>
-            </button> -->
+            </button>
 
             <!-- Restore button -->
-            <!-- <button class="edit_button" type="button"
+            <button class="edit_button" type="button"
             [disabled]="!updated" (click)="commandOut('restoreOriginal')" aria-label="Restore button" ngbTooltip="Restore original URL">
                 <i class="faa faa-undo"
                     [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"></i>
-            </button>                 -->
+            </button>                
         </td>          
     </tr>
 </table>

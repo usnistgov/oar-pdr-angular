@@ -11,7 +11,7 @@
     ],
     "@type": ["nrdp:PublicDataResource"],
     "@id": "ark:/88434/mds0000fbk",
-    "title": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
+    "title2": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
     "contactPoint2": {
         "hasEmail": "mailto:patricia.flanagan@nist.gov",
         "fn": "Patricia Flanagan"
@@ -52,7 +52,7 @@
             "description": "metadata update"
         }
     ],
-    "description": [
+    "description2": [
         "Multiple Encounter Dataset (MEDS-I) is a test corpus organized from an extract of submissions of deceased persons with prior multiple encounters. MEDS is provided to assist the FBI and partner organizations refine tools, techniques, and procedures for face recognition as it supports Next Generation Identification (NGI), forensic comparison, training, and analysis, and face image conformance and inter-agency exchange standards. The MITRE Corporation (MITRE) prepared MEDS in the FBI Data Analysis Support Laboratory (DASL) with support from the FBI Biometric Center of Excellence."
     ],
     "keyword": [
@@ -121,7 +121,7 @@
             "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
             "filepath": "NIST_SD32_MEDS-I_face.zip",
             "@type": [
-                "nrdp:AccessPage",
+                "nrdp:AccessPage1",
                 "dcat:Distribution"
             ],
             "@id": "cmps/NIST_SD32_MEDS-I_face.zip",
@@ -140,7 +140,7 @@
             "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
             "filepath": "NIST_SD32_MEDS-I_face.zip",
             "@type": [
-                "nrdp:AccessPage",
+                "nrdp:AccessPage1",
                 "dcat:Distribution"
             ],
             "@id": "Test01",

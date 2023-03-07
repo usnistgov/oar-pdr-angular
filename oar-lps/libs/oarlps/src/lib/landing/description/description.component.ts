@@ -64,6 +64,8 @@ export class DescriptionComponent implements OnInit {
 
         if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
             this.originDescription = this.originalRecord[this.fieldName].join("\r\n\r\n");
+
+        console.log('this.description', this.description);
     }
 
     /**
@@ -109,13 +111,14 @@ export class DescriptionComponent implements OnInit {
             let updmd = {};
             //Split the string into array using double linefeed as delimiter
             updmd[this.fieldName] = this.description.split(/\r?\n\r?\n/gm).filter(desc => desc != '');
-
+            console.log('updmd[this.fieldName]', updmd[this.fieldName]);
             this.record[this.fieldName] = this.description.split(/\r?\n\r?\n/gm).filter(desc => desc != '');
 
             //Update server
             this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                 if (updateSuccess){
+                    console.log('this.record[this.fieldName]', this.record[this.fieldName]);
                     this.setBackground(this.description);
                     this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
                 }else

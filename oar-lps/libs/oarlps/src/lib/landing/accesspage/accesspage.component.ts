@@ -6,6 +6,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
 import { AccessPage } from './accessPage';
+import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { DomSanitizer } from "@angular/platform-browser";
 
 @Component({
@@ -45,6 +46,7 @@ export class AccesspageComponent implements OnInit {
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
+                private gaService: GoogleAnalyticsService,
                 private sanitizer: DomSanitizer) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
@@ -116,6 +118,8 @@ export class AccesspageComponent implements OnInit {
             if(this.theme == this.scienceTheme) 
                 this.accessPages = this.accessPages.filter(cmp => ! cmp['@type'].includes("nrda:DynamicResourceSet"));
         }
+
+        console.log('this.accessPages', this.accessPages);
     }
     
     getBackgroundColor(){

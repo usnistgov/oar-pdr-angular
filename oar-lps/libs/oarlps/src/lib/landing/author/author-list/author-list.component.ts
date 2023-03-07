@@ -297,8 +297,6 @@ export class AuthorListComponent implements OnInit {
     }
 
     hideEditBlock(refreshHelp: boolean = true) {
-        this.setMode(MODE.NORNAL, refreshHelp);
-
         if(this.record)
             this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
     }

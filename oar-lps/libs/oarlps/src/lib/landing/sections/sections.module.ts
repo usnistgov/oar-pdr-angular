@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NerdmModule } from '../../nerdm/nerdm.module';
 import { TitleModule } from '../title/title.module';
 import { AuthorModule } from '../author/author.module';
-// import { ContactModule } from '../contact/contact.module';
+import { ContactModule } from '../contact/contact.module';
 import { VersionModule } from '../version/version.module';
 import { DescriptionModule } from '../description/description.module';
 import { TopicModule } from '../topic/topic.module';
@@ -20,7 +20,7 @@ import { FacilitatorsModule } from '../facilitators/facilitators.module';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { DoneModule } from '../done/done.module';
 import { ButtonModule } from 'primeng/button';
-// import { VisithomeModule } from '../visithome/visithome.module';
+import { VisithomeModule } from '../visithome/visithome.module';
 import { ReferencesModule } from '../references/references.module';
 import { AccesspageModule } from '../accesspage/accesspage.module';
 
@@ -57,7 +57,7 @@ import { AccesspageModule } from '../accesspage/accesspage.module';
         NerdmModule,
         TitleModule,
         AuthorModule, 
-        // ContactModule, 
+        ContactModule, 
         CollapseModule, 
         VersionModule,
         DescriptionModule, 
@@ -70,7 +70,8 @@ import { AccesspageModule } from '../accesspage/accesspage.module';
         DoneModule,
         ButtonModule,
         ReferencesModule,
-        AccesspageModule
+        AccesspageModule,
+        VisithomeModule
     ],
     declarations: [
         ResourceDataComponent,
