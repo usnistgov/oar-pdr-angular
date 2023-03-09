@@ -2,35 +2,35 @@
     {
         "general": "<p>This window displays <i>General</i> help for creating records. After completing changes and updates to this page, click the Save button at the top right corner of the page.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         "title": {
-            "general": "<p>You are in the Title section<>" ,
-            "edit": "Click the pencil icon and enter a human-readable name for this resource. It should be written in plain language, include sufficient detail to facilitate search and discovery, and be no more than 4,000 characters long. <p> Avoid using the same title as a related paper if it doesn’t sufficiently describe the resource as a standalone object.  <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "general": "<p>Click the pencil icon and enter a human-readable name for this resource. It should be written in plain language, include sufficient detail to facilitate search and discovery. <p> Avoid using the same title as a related paper if it doesn’t sufficiently describe the resource as a standalone object." ,
+            "edit": "Click the pencil icon to edit the title for this resource. It should be written in plain language, include sufficient detail to facilitate search and discovery. <p> Avoid using the same title as a related paper if it doesn’t sufficiently describe the resource as a standalone object.  <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
       },
         "authors": {
-            "general": "<p>You are in <i>Authors</i> section",
-            "add": "<p>To 'add' co-authors for this resource, click the plus '+' sign and enter additional author names, affiliations, and ORCIDs if possible.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "general": "<p>Click the plus '+' sign to enter co-authors for this resource. You may also add author affiliations and ORCIDs in this section.",
+            "add": "<p>Click the plus '+' sign and enter additional author names, affiliations, and ORCIDs if possible.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
             "edit": "<p>To 'edit' authors already listed, click the pencil icon and make changes. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
-            "dragdrop": "<p>To change the order of authors listed, click on the arrow bar on the left of each name,  drag it to the right place in the list, and release the mouse button to drop it in place. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "dragdrop": "<p>To change the order of authors listed, click on the arrow bar on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
       },
         "description": {
-            "general": "<p>You are in <i>Description<i> section",
-            "add": "<p>Click the pencil icon and enter a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "general": "<p>Click the pencil icon and enter a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource.",
+            "add": "<p>Click the pencil icon to add the description of your resource. If using part of the abstract of a related publication, ensure the text is relevant to this discrete resource. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
             "edit": "<p>Click the pencil icon to make changes to existing text.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         },
         "keywords": {
-            "general": "<p>You are in <i>Keywords</i> section",
-            "add": "<p>Click the pencil icon to add subject terms that could help both technical and non-technical users to discover this resource. Separated by commas, up to a maximum of 4,000 characters.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "general": "<p>Click the pencil icon to add <i>keywords,</i> subject terms that help both technical and non-technical users to discover this resource. Separate the terms with commas. You may enter up to a maximum of 4,000 characters",
+            "add": "<p>Click the pencil icon to enter additional subject terms. Separate the terms with commas.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
 },
         "components": {
             "general": "<p>You are in <i>Data Access</i> section. In this section you can edit the title and description for links to relevant websites.",
-            "add": "<p>Click the plus '+' sign and enter additional relevant links <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-            "edit": "<p>The title, and descriptions of each link are editable. They should be short and descriptive of the file itself<p> For example: A zip file from 'Marshmello Test Results' might be titled 'Zip Folder with Marshmello Test Results Data Files'; and the description could read 'Zip folder containing 12 date separated csv files of the results from preschool Marshmello Tests.'",
+            "add": "<p>Click the plus '+' sign to enter additional relevant links <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "edit": "<p>Click the pencil icon to edit the title, and descriptions of each link. Each should be short and descriptive of the file itself.<p> For example: A zip file from 'Marshmello Test Results' might be titled 'Zip Folder with Marshmello Test Results Data Files'; and the description could read 'Zip folder containing 12 date separated csv files of the results from preschool Marshmello Tests.'",
             "dragdrop": "<p>To change the order of links listed, click on the arrow bar on the left of each link, drag it to the right place in the list, and release the mouse button to drop it in place.<p>"
         },
         "references": {
-            "general": "<p>You are in <i>References</i> section where you can add references or citations related to this resource. You may wish to include links to multiple types of resources here -- for example, a related publication or a software package. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-            "add": "<p>Click the plus '+' sign to add the URI of a related resources<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "general": "<p>You are in <i>References</i> section where you can add references or citations related to this resource. You may wish to include links to multiple types of resources -- such as a related publication or a software package. <p> <i>[Other Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "add": "<p>Click the plus '+' sign to add the URI of a related resource.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
             "edit": "<p>Click the pencil icon to  make changes to existing references listed here. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-            "dragdrop": "<p>To change the order of References listed, click on the arrow bar on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "dragdrop": "<p>To change the order of references listed, click on the arrow bar on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         }
     }
 
