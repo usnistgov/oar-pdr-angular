@@ -21,7 +21,7 @@
     height:2em;
     padding-left: 5px;
     width: calc(100% - 10px) !important;
-    background-color: #e6f2ff;
+    /* background-color: #e6f2ff; */
 }
 
 .display-text-field {

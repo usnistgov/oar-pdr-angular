@@ -20,6 +20,7 @@ export class DescriptionComponent implements OnInit {
     originDescription: string = "";
     originalRecord: any[]; //Original record or the record that's previously saved
     backColor: string = "white";
+    resource: string = "resource";
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,

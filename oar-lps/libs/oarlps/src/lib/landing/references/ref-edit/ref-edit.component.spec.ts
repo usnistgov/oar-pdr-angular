@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SingleRefComponent } from './single-ref.component';
+import { RefEditComponent } from './ref-edit.component';
 
 describe('SingleRefComponent', () => {
-  let component: SingleRefComponent;
-  let fixture: ComponentFixture<SingleRefComponent>;
+  let component: RefEditComponent;
+  let fixture: ComponentFixture<RefEditComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SingleRefComponent ]
+      declarations: [ RefEditComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SingleRefComponent);
+    fixture = TestBed.createComponent(RefEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

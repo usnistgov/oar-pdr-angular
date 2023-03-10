@@ -281,6 +281,10 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
     /**
      * Build data file tree. Exclude .sha files.
+     * Only count files with following condition:
+     * 1. Has filepath attribute;
+     * 2. "@type" does not have ":Hidden" and ":ChecksumFile"
+     * 3. "@type" must end with "File".
      */
     buildTree(comps: NerdmComp[]) : void {
         if (! this.record['components'])
@@ -324,6 +328,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 return child;
             }
         }
+
         let insertComp = (comp: NerdmComp, root: TreeNode) => {
             let levels = comp.filepath.split('/');
             return _insertComp(levels, comp, root);
@@ -334,17 +339,21 @@ export class DataFilesComponent implements OnInit, OnChanges {
         let root: TreeNode = { data: { name: '', key: '' }, children: [] };
         let node: TreeNode = null;
 
-        // Filter out sha files
+        // Filter out hidden, sha or files without "File" in "@type" field
         for (let comp of comps) {
             if (comp.filepath && comp['@type'].filter(tp => tp.includes(':Hidden')).length == 0 &&
                 comp['@type'].filter(tp => tp.includes(':ChecksumFile')).length == 0)
-            {
+            {  
                 node = insertComp(comp, root);
-                if (node.data.comp['@type'].filter(tp => tp.endsWith("File")).length > 0) 
+                console.log("node1", node);
+                if (node.data.comp['@type'].filter(tp => tp.endsWith("File")).length > 0) {
+                    console.log("node2", node);
                     count++;
+                } 
             }
         }
         this.files = [...root.children];
+        console.log("this.files", this.files);
         this.fileCount = count;
         this.updateStatusFromCart();
     }

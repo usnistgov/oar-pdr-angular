@@ -121,4 +121,4 @@ export * from  './lib/textarea-autoresize/textarea-autoresize.module';
 export * from './lib/landing/accesspage/accesspage.component';
 export * from './lib/landing/accesspage/accesspage.module';
 export * from './lib/landing/accesspage/accesspage-list/accesspage-list.component';
-export * from './lib/landing/accesspage/single-apage/single-apage.component';
+export * from './lib/landing/accesspage/accesspage-edit/accesspage-edit.component';

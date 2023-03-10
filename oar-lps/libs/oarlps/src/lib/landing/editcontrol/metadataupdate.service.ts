@@ -616,14 +616,24 @@ export class MetadataUpdateService {
     /**
      *  Return field style based on edit mode and data update status
      */
-    getFieldStyle(fieldName : string, dataChanged: boolean = false) {
+    getFieldStyle(fieldName : string, dataChanged: boolean = false, id: string = undefined) {
         if (this.isEditMode) {
-            if (this.anyFieldUpdated(fieldName)) {
-                return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
-            } else if(dataChanged){
-                return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed)', 'padding-right': '1em', 'cursor': 'pointer' };
+            if(!id){
+                if (this.anyFieldUpdated(fieldName)) {
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
+                } else if(dataChanged){
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed)', 'padding-right': '1em', 'cursor': 'pointer' };
+                }else{
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--editable)', 'padding-right': '1em', 'cursor': 'pointer' };
+                }
             }else{
-                return { 'border': '1px solid lightgrey', 'background-color': 'var(--editable)', 'padding-right': '1em', 'cursor': 'pointer' };
+                if(this.fieldUpdated(fieldName, id)){
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
+                }else if(dataChanged){
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed)', 'padding-right': '1em', 'cursor': 'pointer' };
+                }else{
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--editable)', 'padding-right': '1em', 'cursor': 'pointer' };
+                }                
             }
         } else {
             return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };

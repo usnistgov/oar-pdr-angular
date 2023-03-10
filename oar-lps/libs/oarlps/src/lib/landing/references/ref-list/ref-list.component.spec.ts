@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SingleApageComponent } from './single-apage.component';
+import { RefListComponent } from './ref-list.component';
 
-describe('SingleApageComponent', () => {
-  let component: SingleApageComponent;
-  let fixture: ComponentFixture<SingleApageComponent>;
+describe('RefListComponent', () => {
+  let component: RefListComponent;
+  let fixture: ComponentFixture<RefListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SingleApageComponent ]
+      declarations: [ RefListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SingleApageComponent);
+    fixture = TestBed.createComponent(RefListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

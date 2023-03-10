@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccesspageListComponent } from './accesspage-list/accesspage-list.component';
-import { SingleApageComponent } from './single-apage/single-apage.component';
+import { AccesspageEditComponent } from './accesspage-edit/accesspage-edit.component';
 import { TextEditModule } from '../../text-edit/text-edit.module';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastrModule } from 'ngx-toastr';
@@ -16,7 +16,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccesspageComponent } from './accesspage.component';
 
 @NgModule({
-  declarations: [SingleApageComponent, AccesspageComponent, AccesspageListComponent],
+  declarations: [AccesspageEditComponent, AccesspageComponent, AccesspageListComponent],
   imports: [
     CommonModule,
     ToolbarModule,

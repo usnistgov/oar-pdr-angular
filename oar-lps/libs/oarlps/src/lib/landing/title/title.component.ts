@@ -76,7 +76,6 @@ export class TitleComponent implements OnInit {
     cancelEditing() {
         //Replace title with saved value
         this.mdupdsvc.loadSavedSubsetFromMemory(this.fieldName).subscribe(title => {
-            console.log("Load from memory", title);
             this.record['title'] = title;
         })
 
@@ -90,8 +89,6 @@ export class TitleComponent implements OnInit {
         if(this.record['title'] != this.originalRecord['title']) {
             var postMessage: any = {};
                 postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record['title']));
-
-            console.log("postMessage", postMessage);
             
             this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
                 if (updateSuccess){

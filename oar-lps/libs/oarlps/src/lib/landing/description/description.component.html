@@ -8,8 +8,8 @@
             <!-- Not editing -->
             <div class="editable_field" style="width:100%;" *ngIf="!isEditing">
                 <div *ngIf="isEmpty; else hasDescription">
-                    <div *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" style="width:inherit;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
-                        Click edit (pencil) button to add description.
+                    <div *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" style="width:inherit;color: var(--disabled-grey-text); padding: 10px; height: 4em; vertical-align: top;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
+                        Describe this {{resource}}.
                     </div>
                 </div>
                 <ng-template #hasDescription>

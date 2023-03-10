@@ -1,0 +1,8 @@
+.label {
+    margin-right: 5px;
+}
+
+td:first-child { 
+    width: 20% ;
+    max-width: 200px;
+}

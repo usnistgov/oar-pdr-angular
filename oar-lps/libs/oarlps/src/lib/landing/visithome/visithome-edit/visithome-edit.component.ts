@@ -42,6 +42,10 @@ export class VisithomeEditComponent implements OnInit {
         this.dataChangedOutput.emit({"visitHomeURL": this.visitHomeURL, "action": "dataChanged"});
     }
 
+    /**
+     * Emit command to parent component
+     * @param cmd command
+     */
     commandOut(cmd: string) {
         this.cmdOutput.emit({"command": cmd});
     }

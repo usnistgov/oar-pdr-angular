@@ -110,6 +110,10 @@ export class AccesspageListComponent implements OnInit {
         return changed || this.orderChanged;        
     }
 
+    /**
+     * Hide this edit block
+     * @param refreshHelp indicates if the help text needs be refreshed
+     */
     hideEditBlock(refreshHelp: boolean = true) {
         this.setMode(MODE.NORNAL, refreshHelp);
 
@@ -251,6 +255,23 @@ export class AccesspageListComponent implements OnInit {
     onDataChange(event) {
         this.accessPages[this.currentApageIndex] = JSON.parse(JSON.stringify(event.accessPage));
         this.accessPages[this.currentApageIndex].dataChanged = event.dataChanged;
+    }
+
+    /**
+     * Handle commands from child component
+     * @param cmd command from child component
+     */
+    onCommandChanged(cmd) {
+        switch(cmd.command) {
+            case 'saveCurrentChanges':
+                this.saveCurApage();
+                break;
+            case 'undoCurrentChanges':
+                this.undoCurApageChanges();
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -404,7 +425,7 @@ export class AccesspageListComponent implements OnInit {
      * @returns edit button icon class
      */   
     editIconClass() {
-        if(this.isNormal){
+        if(this.isNormal && this.accessPages.length > 0){
             return "faa faa-pencil icon_enabled";
         }else{
             return "faa faa-pencil icon_disabled";
@@ -452,7 +473,7 @@ export class AccesspageListComponent implements OnInit {
      * @returns undo button icon class
      */
     undoIconClass() {
-        return this.dataChanged || this.isEditing? "faa faa-undo icon_enabled" : "faa faa-undo icon_disabled";
+        return !this.dataChanged || this.isEditing || this.isAdding? "faa faa-undo icon_disabled" : "faa faa-undo icon_enabled";
     }
 
     // Drag drop functions

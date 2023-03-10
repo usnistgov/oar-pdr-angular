@@ -84,7 +84,7 @@ export class AccesspageComponent implements OnInit {
             if (! cmp['title']) cmp['title'] = cmp['accessURL'];
 
             cmp['showDesc'] = false;
-            cmp['backcolor'] = this.getBackgroundColor();
+            cmp['backcolor'] = this.getStyle();
             return cmp;
         });
     }
@@ -118,17 +118,17 @@ export class AccesspageComponent implements OnInit {
             if(this.theme == this.scienceTheme) 
                 this.accessPages = this.accessPages.filter(cmp => ! cmp['@type'].includes("nrda:DynamicResourceSet"));
         }
-
-        console.log('this.accessPages', this.accessPages);
     }
     
-    getBackgroundColor(){
-        if(this.mdupdsvc.fieldUpdated(this.fieldName)){
-            return 'var(--data-changed-saved)';
-        }else if(this.dataChanged){
-            return 'var(--data-changed)';
+    /**
+     * Get the section style based on different modes
+     * @returns div style
+     */
+    getStyle(){
+        if(this.mdupdsvc.isEditMode){
+            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged);
         }else{
-            return 'rgba(255, 255, 255, 0)';
+            return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
         }
     }
 
