@@ -23,5 +23,5 @@ export DOCKERDIR=$CODEDIR/docker
 $DOCKERDIR/dockbuild.sh
 # Run the main makedist in the dockerdir
 
-echo "***** Run makedist for oar-pdr-angular"
-exec $DOCKERDIR/makedist editable
+echo "######## Run makedist.docker for oar-pdr-angular $@"
+exec $DOCKERDIR/makedist "$@"
