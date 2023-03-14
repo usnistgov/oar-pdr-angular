@@ -182,16 +182,6 @@ if wordin wizard $comptypes; then
                        "${args[@]}" "${angargs[@]}"
         docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/wizard build \
                        "${args[@]}" "${angargs[@]}"
-    elif [ -n "$docmds" ]; then
-        echo '+' docker run --rm $volopt "${dargs[@]}" --cap-add=SYS_ADMIN \
-                        oar-pdr/angtest $docmds "${args[@]}" "${angargs[@]}"
-        if wordin shell $docmds; then
-            exec docker run -ti --rm $volopt "${dargs[@]}" --cap-add=SYS_ADMIN \
-                        oar-pdr/angtest $docmds "${args[@]}" "${angargs[@]}"
-        else
-            docker run --rm $volopt "${dargs[@]}" --cap-add=SYS_ADMIN \
-                   oar-pdr/angtest $docmds "${args[@]}" "${angargs[@]}"
-        fi
     fi
 fi
 
@@ -206,19 +196,9 @@ if wordin editable $comptypes; then
 
     if [ "$docmds" == "build" ]; then
         # build only
-        echo '+' docker run --rm $volopt "${dargs[@]}" oar-pdr/editable build \
+        echo '+' docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/editable build \
                        "${args[@]}" "${angargs[@]}"
-        docker run --rm $volopt "${dargs[@]}" oar-pdr/editable build \
+        docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/editable build \
                        "${args[@]}" "${angargs[@]}"
-    elif [ -n "$docmds" ]; then
-        echo '+' docker run --rm $volopt "${dargs[@]}" --cap-add=SYS_ADMIN \
-                        oar-pdr/editable $docmds "${args[@]}" "${angargs[@]}"
-        if wordin shell $docmds; then
-            exec docker run -ti --rm $volopt "${dargs[@]}" --cap-add=SYS_ADMIN \
-                        oar-pdr/editable $docmds "${args[@]}" "${angargs[@]}"
-        else
-            docker run --rm $volopt "${dargs[@]}" --cap-add=SYS_ADMIN \
-                   oar-pdr/editable $docmds "${args[@]}" "${angargs[@]}"
-        fi
     fi
 fi
