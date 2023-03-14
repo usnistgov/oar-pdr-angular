@@ -126,16 +126,6 @@ set +x
 version=`cat VERSION | awk '{print $2}'`
 vers4fn=`echo $version | perl -pe 's#[/ ]+#_#g'`
 
-build_ang=
-
-for dist in $build_dist; do
-    if (echo $angular_dists | grep -qs :${dist}:); then
-        build_ang="$build_ang $dist" 
-    fi
-done
-
-
-
 build_wizard=
 build_editable=
 for dist in $build_dist; do
