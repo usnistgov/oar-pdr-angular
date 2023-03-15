@@ -127,11 +127,10 @@ mkdir -p $DIST_DIR $BUILD_DIR
 #
 # don't reset the version unnecessarily as it may have been done by makedist
 # # 
-# [ -z "$VERSION" -a -f "$PACKAGE_DIR/VERSION" ] || {
-#     echo '+' $execdir/setversion.sh $VERSION
-#     $execdir/setversion.sh $VERSION
-# }
-
+[ -z "$VERSION" -a -f "$PACKAGE_DIR/VERSION" ] || {
+    echo '+' $execdir/setversion.sh $VERSION
+    $execdir/setversion.sh $VERSION
+}
 
 echo "********************** 1"
 [ -n "$PACKAGE_NAME" ] || PACKAGE_NAME=`cat $PACKAGE_DIR/VERSION | awk '{print $1}'`
