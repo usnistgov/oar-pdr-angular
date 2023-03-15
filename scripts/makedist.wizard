@@ -53,7 +53,7 @@ execdir=`realpath $execdir`
 PACKAGE_DIR=`dirname $execdir`
 DIST_DIR=$PACKAGE_DIR/dist
 SOURCE_DIR=$PACKAGE_DIR
-BUILD_DIR=$SOURCE_DIR/dist
+BUILD_DIR=$SOURCE_DIR/midas-author/wizard/dist
 
 # Update this list with the names of the individual component names
 # 

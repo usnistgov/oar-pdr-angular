@@ -53,7 +53,7 @@ execdir=`realpath $execdir`
 PACKAGE_DIR=`dirname $execdir`
 DIST_DIR=$PACKAGE_DIR/dist
 SOURCE_DIR=$PACKAGE_DIR
-BUILD_DIR=$SOURCE_DIR/dist
+BUILD_DIR=$SOURCE_DIR/midas-author/lps/dist
 
 # Update this list with the names of the individual component names
 # 
@@ -114,6 +114,7 @@ done
 
 # true ${DIST_DIR:=$SOURCE_DIR/dist}
 DIST_DIR=`realpath $DIST_DIR`
+echo "mkdir -p $DIST_DIR $BUILD_DIR"
 mkdir -p $DIST_DIR $BUILD_DIR
 
 
@@ -171,7 +172,7 @@ echo "Build lps lib"
 npm run build-oarlps
  
 # echo "Build wizard"
-# npm run build-sw
+npm run build-sw
  
 echo "Build publishing UI"
 npm run build-midaslps
