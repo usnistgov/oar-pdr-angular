@@ -1,3 +1,4 @@
+<app-header titleLn1="PDR" titleLn2="Request Form"></app-header>
 <div #rpaForm class="rpdform-main-wrapper">
   <div class="rpdform-form-wrapper">
 
@@ -149,7 +150,7 @@
 
           <div class="pdform-mb-3 country-dropdown-menu">
               <label for="country" class="rpdform-form-label required"> Country </label>
-              <p-dropdown name="country" id="country" [options]="countries" optionLabel="name" [filter]="true"
+              <!-- <p-dropdown name="country" id="country" [options]="countries" optionLabel="name" [filter]="true"
                   filterBy="name" [showClear]="true" placeholder="Select a Country" formControlName="country">
                   <ng-template pTemplate="selectedItem">
                       <div class="country-item country-item-value" *ngIf="selectedCountry">
@@ -161,7 +162,9 @@
                           <div>{{ country.name }}</div>
                       </div>
                   </ng-template>
-              </p-dropdown>
+              </p-dropdown> -->
+              <p-dropdown name="country" id="country" [options]="countries" [filter]="true"
+              filterBy="name" [showClear]="true" placeholder="Select a Country" optionLabel="name" formControlName="country"></p-dropdown>
           </div>
           <div class="divider"></div>
 
@@ -253,6 +256,14 @@
                   provided all information I will not receive the dataset.
               </label>
           </div>
+
+          <div class="divider"></div>
+          
+          <div class="rpdform-mb-3">
+            <re-captcha
+                formControlName="recaptcha">
+            </re-captcha>
+          </div>
           <div class="divider"></div>
 
           <button class="rpdform-btn" type="submit">Submit</button>
@@ -264,6 +275,8 @@
                   </ul>
               </ng-template>
           </p-messages> -->
+          
+          
       </form>
   </div>
 </div>
@@ -272,3 +285,4 @@
 <div class="progress-spinner" *ngIf="displayProgressSpinner">
   <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8" animationDuration=".5s" ></p-progressSpinner>
 </div>
+<app-footer></app-footer>

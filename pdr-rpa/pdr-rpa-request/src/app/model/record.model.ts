@@ -9,6 +9,7 @@ export interface UserInfo {
   productTitle?: string;
   subject: string;
   description: string;
+  recaptcha: string;
 }
 
 export interface Record {

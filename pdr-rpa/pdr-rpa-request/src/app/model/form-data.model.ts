@@ -7,10 +7,11 @@ export interface RequestFormData {
     address2: string;
     address3: string;
     stateOrProvince: string;
-    zipCode: number;
+    zipCode: string;
     country: string;
-    receiveEmails: string;
+    receiveEmails: boolean;
     purposeOfUse: string;
+    recaptcha: string;
 }
   
   

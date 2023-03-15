@@ -44,20 +44,22 @@ export class AppComponent {
         termsAndConditionsAgreenement: new FormControl(false, [Validators.required]),
         disclaimerAgreenement: new FormControl(false, [Validators.required]),
         vettingAgreenement: new FormControl(false, [Validators.required]),
+        recaptcha: new FormControl(false, [Validators.required]),
     });
 
-
     countries: Country[];
-    selectedCountry: string;
+    selectedCountry: Country;
     items: SelectItem[];
-    item: string;
-
+    item: SelectItem;
     domparser = new DOMParser();
+    recaptchaApiKey: string;
 
-    constructor(private route: ActivatedRoute, 
-        private messageService: MessageService, 
-        private configService: ConfigurationService, 
-        private rpaService: RPAService) { }
+    constructor(private route: ActivatedRoute,
+        private messageService: MessageService,
+        private configService: ConfigurationService,
+        private rpaService: RPAService) {
+
+    }
 
     ngOnInit() {
         this.route.queryParams.subscribe(params => {
@@ -141,6 +143,7 @@ export class AppComponent {
         this.displayProgressSpinner = true;
         if (!this.requestForm.valid) {
             this.isFormValid = false;
+            this.displayProgressSpinner = false;
             this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Invalid form. Check if any required fields (*) are missing.' });
         } else {
             const requestFormData = {} as RequestFormData;
@@ -154,8 +157,10 @@ export class AppComponent {
             requestFormData.address3 = this.requestForm.controls.address3.value;
             requestFormData.stateOrProvince = this.requestForm.controls.stateOrProvince.value;
             requestFormData.zipCode = this.requestForm.controls.zipCode.value;
-            requestFormData.country = this.requestForm.controls.country.value.name;
+            requestFormData.country = this.requestForm.controls.country.value;
             requestFormData.receiveEmails = this.requestForm.controls.receiveEmails.value;
+            requestFormData.recaptcha = this.requestForm.controls.recaptcha.value;
+
 
             let userInfo = this.makeUserInfo(requestFormData);
             // create a new record
@@ -167,7 +172,6 @@ export class AppComponent {
                 this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Your request was submitted successfully! You will receive a confirmation email shortly.' });
                 // this.router.navigate(['/rpa/request']);
             });
-
         }
     }
 
@@ -185,15 +189,9 @@ export class AppComponent {
         userInfo.productTitle = this.selectedDataset.name;
         userInfo.subject = "RPA: " + this.selectedDataset.ediid;
         userInfo.description = "Product Title:\n" + this.selectedDataset.name + "\n\n Purpose of Use: \n" + requestFormData.purposeOfUse;
+        userInfo.recaptcha = requestFormData.recaptcha;
         return userInfo;
     }
-
-    // onChangeDataset(event) {
-    //   this.configService.getFormTemplate(this.selectedDataset.formTemplate).subscribe(template => {
-    //     this.selectedFormTemplate = template;
-    //     console.log("selectedDataset:", this.selectedDataset)
-    //   });
-    // }
 
     getFormErrors(form: AbstractControl) {
         if (form instanceof FormControl) {
