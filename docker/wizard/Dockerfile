@@ -60,14 +60,14 @@ RUN grep -Pqs ":$devuid:\d+:" /etc/passwd || \
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod a+rx /usr/local/bin/entrypoint.sh
 
-VOLUME /dev/oar-midas-portal
+VOLUME /dev/oar-pdr-angular
 VOLUME /app/dist
 
-RUN mkdir -p /dev/oar-midas-portal /app && chmod a+rwx /app
-WORKDIR /dev/oar-midas-portal
+RUN mkdir -p /dev/oar-pdr-angular /app && chmod a+rwx /app
+WORKDIR /dev/oar-pdr-angular
 
-ENV CODEDIR /dev/oar-midas-portal
-ENV DOCKERDIR /dev/oar-midas-portal/docker
+ENV CODEDIR /dev/oar-pdr-angular
+ENV DOCKERDIR /dev/oar-pdr-angular/docker
 ENV DEVUID $devuid
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
