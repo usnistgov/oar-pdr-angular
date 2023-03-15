@@ -14,7 +14,7 @@ import { RPAService } from './service/rpa.service';
 export class AppComponent {
   recordId: string;
   status: string;
-  statusDate: string;
+  statusDate: string = "";
   record: Record;
   loaded: boolean = false;
   displayProgressSpinner: boolean = false;
@@ -40,7 +40,13 @@ export class AppComponent {
         this.rpaService.getRecord(this.recordId).subscribe(data => {
           this.record = data.record;
           this.status = this.record.userInfo.approvalStatus;
-          this.statusDate = this.status.replace("Approved_", "");
+          if (this.status.includes("Approved")){
+            this.statusDate = this.status.replace("Approved_", "");
+          }
+          if (this.status.includes("Declined")) {
+            this.statusDate = this.status.replace("Declined_", "");
+          }
+          
           this.loaded = true;
           console.log(this.record)
         });
@@ -54,12 +60,18 @@ export class AppComponent {
    */
   onApprove(): void {
     this.displayProgressSpinner = true;
-    this.rpaService.approveRequest(this.recordId).subscribe(data => {
-      this.displayProgressSpinner = false;
-      console.log("Approved!\n", data)
-      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was approved successfully!' });
-      location.reload();
+    this.rpaService.approveRequest(this.recordId).subscribe({
+      next: (data) =>{
+        this.displayProgressSpinner = false;
+        console.log("Approved!\n", data)
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was approved successfully!' });
+        location.reload();
+       },
+      error: (err) => {
+        this.displayProgressSpinner = false;
+      },
     });
+    
   }
 
   /**
@@ -67,12 +79,18 @@ export class AppComponent {
    */
   onDecline(): void {
     this.displayProgressSpinner = true;
-    this.rpaService.declineRequest(this.recordId).subscribe(data => {
-      this.displayProgressSpinner = false;
-      console.log("Declined!\n", data)
-      this.statusDate = data.approvalStatus.replace("Approved_", "");
-      this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was declined successfully!' });
-      location.reload();
-    });
+    this.rpaService.declineRequest(this.recordId).subscribe(
+    {
+      next: (data) => {
+          this.displayProgressSpinner = false;
+          console.log("Declined!\n", data)
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was declined successfully!' });
+          location.reload();
+      },
+      error: (err) => {
+        this.displayProgressSpinner = false;
+      }
+    }
+    );
   }
 }

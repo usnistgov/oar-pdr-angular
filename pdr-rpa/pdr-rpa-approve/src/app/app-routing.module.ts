@@ -5,7 +5,12 @@ import { ErrorsModule, NotFoundComponent } from 'oarlps';
 import { AppComponent } from './app.component';
 
 const routes: Routes = [
-    {path: 'approve', component: AppComponent},
+    {
+        path: 'rpa',
+        children: [
+            { path: 'approve', component: AppComponent }
+        ]
+    },
     { path: '**', component: NotFoundComponent}
 ];
 

@@ -15,6 +15,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
+import { FrameModule } from 'oarng';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
     UnescapeHTMLPipe
   ],
   imports: [
+    FrameModule,
     BrowserModule, 
     FormsModule, 
     PanelModule, 

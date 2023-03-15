@@ -1,3 +1,4 @@
+<app-header titleLn1="PDR" titleLn2="SME Approval"></app-header>
 <div class="rpdform-main-wrapper">
   <ng-template [ngIf]="loaded && status.toLowerCase().includes('pending')">
       <div class="rpdform-form-wrapper">
@@ -18,7 +19,7 @@
               decline this request as soon as possible. Thank you!
           </div>
           <button class="rpdform-btn success" (click)="onApprove()">Approve</button>
-          <button class="rpdform-btn ml-4 danger" (click)="onDecline()">Decline</button>
+          <button class="rpdform-btn ms-4 danger" (click)="onDecline()">Decline</button>
       </div>
   </ng-template>
   <ng-template [ngIf]="loaded && status.toLowerCase().includes('approved')">
@@ -63,3 +64,4 @@
 <div class="progress-spinner" *ngIf="displayProgressSpinner">
   <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8" animationDuration=".5s" ></p-progressSpinner>
 </div>
+<app-footer></app-footer>

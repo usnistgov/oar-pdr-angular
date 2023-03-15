@@ -4,25 +4,28 @@ import { Observable, throwError } from "rxjs";
 import { catchError, retry } from "rxjs/operators";
 import { formatDate } from '@angular/common';
 import { ApprovalResponse, Record, RecordWrapper, UserInfo } from "../model/record";
+import { environment } from "../../environments/environment";
 
 @Injectable()
 export class RPAService {
 
-    baseUrl = 'http://localhost:9090/rpa';
+    baseUrl: string;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient) {
+        this.baseUrl = environment.requestHandlerUrl;
+     }
 
     // Http Options
     httpOptions = {
         headers: new HttpHeaders({
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         }),
     };
 
     public getRecord(recordId: string): Observable<RecordWrapper> {
         return this.http
         .get<RecordWrapper>(
-            this.baseUrl + "/" + recordId, 
+            this.baseUrl + "/request/accepted/" + recordId, 
             this.httpOptions)
             .pipe(retry(1), catchError(this.handleError));
     }
@@ -31,7 +34,7 @@ export class RPAService {
         console.log("User Info", userInfo);
         return this.http
             .post<Record>(
-                this.baseUrl,
+                this.baseUrl + "/request/form",
                 JSON.stringify({ "userInfo": userInfo }),
                 this.httpOptions
             )
@@ -40,7 +43,7 @@ export class RPAService {
 
     public approveRequest(recordId: string): Observable<ApprovalResponse> {
         return this.http
-                .patch<ApprovalResponse>(this.baseUrl + "/" + recordId, 
+                .patch<ApprovalResponse>(this.baseUrl + "/request/accepted/" + recordId, 
                 {"Approval_Status__c":`Approved_${formatDate(Date.now(),'yyyy-MM-dd h:mm a','en-US')}`}, 
                 this.httpOptions)
                 .pipe(catchError(this.handleError));
@@ -48,7 +51,7 @@ export class RPAService {
 
     public declineRequest(recordId: string): Observable<ApprovalResponse> {
         return this.http
-                .patch<ApprovalResponse>(this.baseUrl + "/" + recordId, 
+                .patch<ApprovalResponse>(this.baseUrl + "/request/accepted/" + recordId, 
                 {"Approval_Status__c":`Declined_${formatDate(Date.now(),'yyyy-MM-dd h:mm a','en-US')}`}, 
                 this.httpOptions)
                 .pipe(catchError(this.handleError));

@@ -89,9 +89,6 @@
     resize: none;
 }
 
-#email.rpdform-form-input  {
- margin: 8px 0px;
-}
 
 .rpdform-form-input:focus {
     border-color: #1E6BA1;
@@ -203,11 +200,11 @@ svg {
   }
 
 .danger {
-    background-color:	#DC3545;
+    background-color:	#cd2026;
 }
 
 .success {
-    background-color: #22C55E;
+    background-color: #2e8540 ;
 }
 
 :host ::ng-deep .p-dropdown {
