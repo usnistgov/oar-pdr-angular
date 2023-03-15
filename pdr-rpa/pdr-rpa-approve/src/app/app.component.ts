@@ -56,7 +56,7 @@ export class AppComponent {
   }
 
   /**
-   * Approve rpa request and display success message
+   * Approve rpa request and display message
    */
   onApprove(): void {
     this.displayProgressSpinner = true;
@@ -75,7 +75,7 @@ export class AppComponent {
   }
 
   /**
-   * Decline rpa request and display success message
+   * Decline rpa request and display message
    */
   onDecline(): void {
     this.displayProgressSpinner = true;

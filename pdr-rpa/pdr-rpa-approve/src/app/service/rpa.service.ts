@@ -22,6 +22,14 @@ export class RPAService {
         }),
     };
 
+    /**
+    * Retrieve a record. 
+    * This send a HTTP GET request to the distribution service.
+    *
+    * @param recordId - The ID of the record to retrieve
+    * @returns The requested record
+    *
+    */
     public getRecord(recordId: string): Observable<RecordWrapper> {
         return this.http
         .get<RecordWrapper>(
@@ -30,17 +38,14 @@ export class RPAService {
             .pipe(retry(1), catchError(this.handleError));
     }
 
-    public createRecord(userInfo: UserInfo): Observable<Record> {
-        console.log("User Info", userInfo);
-        return this.http
-            .post<Record>(
-                this.baseUrl + "/request/form",
-                JSON.stringify({ "userInfo": userInfo }),
-                this.httpOptions
-            )
-            .pipe(catchError(this.handleError));
-    }
-
+    /**
+    * Approve a request. 
+    * This send a HTTP PATCH request to the distribution service to update the record status.
+    *
+    * @param recordId - The ID of the record to update
+    * @returns The new record status
+    *
+    */
     public approveRequest(recordId: string): Observable<ApprovalResponse> {
         return this.http
                 .patch<ApprovalResponse>(this.baseUrl + "/request/accepted/" + recordId, 
@@ -49,6 +54,14 @@ export class RPAService {
                 .pipe(catchError(this.handleError));
     }
 
+    /**
+    * Decline a request. 
+    * This send a HTTP PATCH request to the distribution service to update the record status.
+    *
+    * @param recordId - The ID of the record to update
+    * @returns The new record status
+    *
+    */
     public declineRequest(recordId: string): Observable<ApprovalResponse> {
         return this.http
                 .patch<ApprovalResponse>(this.baseUrl + "/request/accepted/" + recordId, 
