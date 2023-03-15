@@ -11,19 +11,19 @@
 
 # The parent should be an ancestor image of the operational container
 # 
-FROM debian:buster-slim
+FROM debian:bullseye-slim
 
 RUN sed -e '/buster-updates/ s/^deb/#deb/' /etc/apt/sources.list \
     > /tmp/sources.list && mv /tmp/sources.list /etc/apt/sources.list
 RUN apt-get update && \
     apt-get install -y --no-install-recommends zip wget ca-certificates git xz-utils \
-                                               gnupg python
+                                               gnupg python3
 
 COPY node-sha256.txt /tmp
-RUN cd /tmp && wget https://nodejs.org/dist/v18.9.1/node-v18.9.1-linux-x64.tar.xz \
+RUN cd /tmp && wget https://nodejs.org/dist/v16.17.1/node-v16.17.1-linux-x64.tar.xz \
             && sha256sum -c node-sha256.txt
-RUN cd /usr/local && tar xJf /tmp/node-v18.9.1-linux-x64.tar.xz \
-                  && ln -s node-v18.9.1-linux-x64 node          \
+RUN cd /usr/local && tar xJf /tmp/node-v16.17.1-linux-x64.tar.xz \
+                  && ln -s node-v16.17.1-linux-x64 node          \
                   && cd bin                                     \
                   && ln -s ../node/bin/node node                \
                   && ln -s ../node/bin/npm  npm                 \
@@ -60,14 +60,14 @@ RUN grep -Pqs ":$devuid:\d+:" /etc/passwd || \
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod a+rx /usr/local/bin/entrypoint.sh
 
-VOLUME /dev/oar-pdr-angular
+VOLUME /dev/oar-midas-portal
 VOLUME /app/dist
 
-RUN mkdir -p /dev/oar-pdr-angular /app && chmod a+rwx /app
-WORKDIR /dev/oar-pdr-angular
+RUN mkdir -p /dev/oar-midas-portal /app && chmod a+rwx /app
+WORKDIR /dev/oar-midas-portal
 
-ENV CODEDIR /dev/oar-pdr-angular
-ENV DOCKERDIR /dev/oar-pdr-angular/docker
+ENV CODEDIR /dev/oar-midas-portal
+ENV DOCKERDIR /dev/oar-midas-portal/docker
 ENV DEVUID $devuid
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
