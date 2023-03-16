@@ -91,7 +91,7 @@ export class AppComponent {
      * @param ediid the dataset ID
      */
     getSelectedDataset(ediid: string): Observable<Dataset | undefined> {
-        return this.getDatasets('config.yaml').pipe(
+        return this.getDatasets().pipe(
             map(datasets => datasets.find(dataset => dataset.ediid == ediid))
         );
     }
@@ -101,7 +101,7 @@ export class AppComponent {
      * @param ediid the dataset ID
      */
     setSelecetedDataset(ediid: string) {
-        this.configService.getDatasets('config.yaml').subscribe(datasets => {
+        this.configService.getDatasets().subscribe(datasets => {
             console.log("Datasets", datasets);
             this.selectedDataset = datasets.find(dataset => {
                 return dataset.ediid === ediid;
@@ -118,8 +118,8 @@ export class AppComponent {
      * Get the list of datasets from the config file
      * @param filename config file name
      */
-    getDatasets(filename: string): Observable<Dataset[]> {
-        return this.configService.getDatasets(filename);
+    getDatasets(): Observable<Dataset[]> {
+        return this.configService.getDatasets();
     }
 
 

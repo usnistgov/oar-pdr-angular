@@ -7,6 +7,7 @@ import { Country } from "../model/country.model";
 import { FormTemplate } from "../model/form-template.model";
 import { Dataset } from "../model/dataset.model";
 import { Secrets } from "../model/secrets.model";
+import { environment } from "../../environments/environment";
 
 
 @Injectable(
@@ -18,20 +19,21 @@ export class ConfigurationService {
     secrets: Secrets;
 
     constructor(private http: HttpClient) {
+        this.configUrl = environment.configUrl;
     }
 
     public getConfig() {
         return this.http.get<any>(this.configUrl);
     }
 
-    public getDatasets(filename: string): Observable<Dataset[]> {
+    public getDatasets(): Observable<Dataset[]> {
         const subject = new Subject<Dataset[]>();
 
         const headers = new HttpHeaders({
             'Access-Control-Allow-Origin': '*',
         })
 
-        this.http.get(`assets/${filename}`, { responseType: 'text', headers: headers }).subscribe(response => {
+        this.http.get(this.configUrl, { responseType: 'text', headers: headers }).subscribe(response => {
             let config = parse(response);
             subject.next(config.datasets);
         });
