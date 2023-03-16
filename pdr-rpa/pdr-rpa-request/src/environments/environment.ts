@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   requestHandlerUrl: 'http://localhost:9090/od/ds/rpa',
-  secretsFile: 'assets/secrets.json'
+  configUrl: 'assets/datasets.yaml',
+  secretsFile: 'assets/secrets.json',
 };
 
 /*

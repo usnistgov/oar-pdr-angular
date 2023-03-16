@@ -1,3 +1,4 @@
 export const environment = {
-  production: true
+  production: true,
+  requestHandlerUrl: 'http://data.nist.gov/od/ds/rpa'
 };
