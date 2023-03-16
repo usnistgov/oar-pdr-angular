@@ -23,7 +23,7 @@ import { ConfigurationService } from './service/config.service';
 export class AppComponent {
     queryId: string = "<EMPTY_EDIID>";
     datasets: Dataset[] = [];
-    selectedDataset: Dataset;
+    selectedDataset: Dataset | undefined;
     selectedFormTemplate: FormTemplate;
     isFormValid = true;
     displayProgressSpinner = false;
@@ -90,7 +90,7 @@ export class AppComponent {
      * Fetch dataset from config file using the dataset EDIID we extract from the url
      * @param ediid the dataset ID
      */
-    getSelectedDataset(ediid: string): Observable<Dataset> {
+    getSelectedDataset(ediid: string): Observable<Dataset | undefined> {
         return this.getDatasets('config.yaml').pipe(
             map(datasets => datasets.find(dataset => dataset.ediid == ediid))
         );
@@ -107,7 +107,7 @@ export class AppComponent {
                 return dataset.ediid === ediid;
             });
             console.log("selectedDataset= ", this.selectedDataset);
-            this.configService.getFormTemplate(this.selectedDataset.formTemplate).subscribe(template => {
+            this.configService.getFormTemplate(this.selectedDataset!.formTemplate).subscribe(template => {
                 this.selectedFormTemplate = template;
                 console.log(template);
             })
@@ -130,7 +130,7 @@ export class AppComponent {
     getFormTemplate(dataset: Dataset) {
         this.configService.getFormTemplate(dataset.formTemplate).subscribe(template => {
             this.selectedFormTemplate = template;
-            console.log("template", this.selectedDataset.formTemplate);
+            console.log("template", this.selectedDataset!.formTemplate);
         });
     }
 
@@ -186,14 +186,14 @@ export class AppComponent {
         userInfo.country = requestFormData.country;
         userInfo.receiveEmails = requestFormData.receiveEmails ? "True" : "False";
         userInfo.approvalStatus = "Pending";
-        userInfo.productTitle = this.selectedDataset.name;
-        userInfo.subject = "RPA: " + this.selectedDataset.ediid;
-        userInfo.description = "Product Title:\n" + this.selectedDataset.name + "\n\n Purpose of Use: \n" + requestFormData.purposeOfUse;
+        userInfo.productTitle = this.selectedDataset!.name;
+        userInfo.subject = "RPA: " + this.selectedDataset!.ediid;
+        userInfo.description = "Product Title:\n" + this.selectedDataset!.name + "\n\n Purpose of Use: \n" + requestFormData.purposeOfUse;
         userInfo.recaptcha = requestFormData.recaptcha;
         return userInfo;
     }
 
-    getFormErrors(form: AbstractControl) {
+    getFormErrors(form: AbstractControl | null) {
         if (form instanceof FormControl) {
             // Return FormControl errors or null
             return form.errors ?? null;
@@ -204,7 +204,7 @@ export class AppComponent {
             const formErrors = groupErrors ? [groupErrors] : [];
             Object.keys(form.controls).forEach(key => {
                 // Recursive call of the FormGroup fields
-                const error = this.getFormErrors(form.get(key));
+                const error = this.getFormErrors(form!.get(key));
                 if (error !== null) {
                     // Only add error if not null
                     formErrors.push({
