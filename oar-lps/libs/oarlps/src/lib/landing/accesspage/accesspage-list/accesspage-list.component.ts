@@ -38,7 +38,7 @@ export class AccesspageListComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     placeholder: string = "Enter access page data below";
     fieldName: string = 'components';
-    FieldNameAPI: string = 'nonfileComponents';
+    FieldNameAPI: string = 'pdr:see';
     orig_aPages: NerdmComp[] = null; // Keep a copy of original access pages for undo purpose
     orig_record: NerdmRes = null; // Keep a copy of original record for update purpose
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
@@ -180,6 +180,8 @@ export class AccesspageListComponent implements OnInit {
      * @param index The index of the selected access page
      */
     selectApage(index: number) {
+        if(this.isAdding || this.isEditing) return;
+        
         if(index != this.currentApageIndex) { // user selected different access page
             if(this.currentApage.dataChanged) {
                 this.updateMatadata(this.currentApage, this.currentApage["@id"]).then((success) => {
@@ -292,10 +294,56 @@ export class AccesspageListComponent implements OnInit {
         this.undoAllApageChanges();
     }
 
+
+    /**
+     * Save current access page
+     */
+    saveCurApage(refreshHelp: boolean = true) {
+        let postMessage = {};
+        this.record[this.fieldName] = JSON.parse(JSON.stringify([this.accessPages, this.nonAccessPages]));
+        postMessage[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
+
+        postMessage[this.fieldName].forEach(page => {
+            delete page.showDesc;
+            delete page.backcolor;
+            delete page.dataChanged;
+        })
+
+        if(this.isAdding){
+            if(!this.emptyRecord(this.currentApageIndex)){
+                this.mdupdsvc.add(postMessage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {
+                    if (rec){
+                        console.log("Return access pages", rec);
+                        this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
+                        this.accessPages = this.selectAccessPages();
+                        this.selectApage(this.accessPages.length - 1);
+
+                        this.currentApage.dataChanged = false;
+                    }else
+                        console.error("Failed to add reference");
+                        return;
+                });
+            }else{  //If no data has been entered, remove this reference
+                this.removeAccessPage(this.currentApageIndex);
+            }
+        }else{
+            this.updateMatadata(this.currentApage, this.currentApage["@id"]);
+        }
+
+        this.setMode(MODE.NORNAL, refreshHelp);
+    }
+
     updateMatadata(comp: NerdmComp = undefined, compId: string = undefined) {
         return new Promise<boolean>((resolve, reject) => {
             if(compId) {   // Update specific access page
-                this.mdupdsvc.update(this.fieldName, comp, compId, this.FieldNameAPI).then((updateSuccess) => {
+                console.log("Updating specific access page", compId);
+                console.log("comp", comp);
+                let postMessage = JSON.parse(JSON.stringify(comp));
+                delete postMessage.showDesc;
+                delete postMessage.backcolor;
+                delete postMessage.dataChanged;
+                console.log("postMessage", postMessage);
+                this.mdupdsvc.update(this.fieldName, postMessage, compId, this.FieldNameAPI).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
@@ -307,6 +355,7 @@ export class AccesspageListComponent implements OnInit {
                 });
             }else{  // Update all access page
                 if(this.dataChanged){
+                    console.log("Updating all access pages");
                     let updmd = {};
                     this.record[this.fieldName] = JSON.parse(JSON.stringify([this.accessPages, this.nonAccessPages]));
                     updmd[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
@@ -568,32 +617,6 @@ export class AccesspageListComponent implements OnInit {
         this.setMode(MODE.NORNAL);
     }
 
-    /**
-     * Save current access page
-     */
-    saveCurApage(refreshHelp: boolean = true) {
-        if(this.isAdding){
-            if(!this.emptyRecord(this.currentApageIndex)){
-                this.mdupdsvc.add(this.currentApage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {
-                    if (rec){
-                        this.record = JSON.parse(JSON.stringify(rec));
-                        this.accessPages = this.selectAccessPages();
-                        this.selectApage(this.accessPages.length - 1);
-
-                        this.currentApage.dataChanged = false;
-                    }else
-                        console.error("Failed to add reference");
-                        return;
-                });
-            }else{  //If no data has been entered, remove this reference
-                this.removeAccessPage(this.currentApageIndex);
-            }
-        }else{
-            this.updateMatadata(this.currentApage, this.currentApage["@id"]);
-        }
-
-        this.setMode(MODE.NORNAL, refreshHelp);
-    }
 
     emptyRecord(index: number): boolean {
         return !(this.accessPages[index].title || this.accessPages[index].description || this.accessPages[index].accessURL);

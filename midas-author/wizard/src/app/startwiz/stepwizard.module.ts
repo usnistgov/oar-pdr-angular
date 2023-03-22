@@ -10,6 +10,7 @@ import { StepWizardComponent } from './stepwizard.component';
 import { RouterModule } from '@angular/router';
 import { ComponentsModule } from './components/components.module';
 import { WizardService } from './services/wizard.service';
+import { AppConfig } from './services/config-service.service';
 
 @NgModule({
     imports: [
@@ -25,7 +26,7 @@ import { WizardService } from './services/wizard.service';
         StepWizardComponent
     ],
     providers: [
-        WizardService
+        WizardService, AppConfig
     ],
     exports: [
         StepWizardComponent

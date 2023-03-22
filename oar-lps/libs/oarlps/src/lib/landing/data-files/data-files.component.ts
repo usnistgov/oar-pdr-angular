@@ -136,7 +136,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     editMode: string;
     mobileMode: boolean = false;
     hashCopied: boolean = false;
-    fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
+    fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -167,6 +167,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }
         
         this.EDIT_MODES = LandingConstants.editModes;
+        this.fileManagerUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
     }
 
     ngOnInit() {
@@ -345,15 +346,12 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 comp['@type'].filter(tp => tp.includes(':ChecksumFile')).length == 0)
             {  
                 node = insertComp(comp, root);
-                console.log("node1", node);
                 if (node.data.comp['@type'].filter(tp => tp.endsWith("File")).length > 0) {
-                    console.log("node2", node);
                     count++;
                 } 
             }
         }
         this.files = [...root.children];
-        console.log("this.files", this.files);
         this.fileCount = count;
         this.updateStatusFromCart();
     }

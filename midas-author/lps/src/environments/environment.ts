@@ -26,10 +26,11 @@ export const config: LPSConfig = {
         mdService:   "https://oardev.nist.gov/rmm/",
         taxonomyService: "https://oardev.nist.gov/rmm/taxonomy"
     },
-    mdAPI: "http://localhost:9091/midas/dap/mdsx/",
+    mdAPI: "http://localhost:9091/midas/dap/mds3/",
     metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
     // customizationAPI: "https://testdata.nist.gov/customization/",
     customizationAPI: "http://localhost:9091/midas/",
+    fileManagerAPI: "https://nextcloud-dev.nist.gov",
     mode: "dev",
     status: "Dev Version",
     appVersion: "v1.3.X",

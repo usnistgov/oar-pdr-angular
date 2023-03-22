@@ -1,24 +1,24 @@
-import { Component, OnInit, Input, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
+import { NerdmRes, NERDResource } from '../../../nerdm/nerdm';
+import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../../landingpage.service';
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
-import { TemplateBindingParseResult, preserveWhitespacesDefault } from '@angular/compiler';
-import { AppConfig } from '../../../config/config';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
 
 export const ROW_COLOR = '#1E6BA1';
 
 @Component({
-  selector: 'app-search-topics',
-  templateUrl: './search-topics.component.html',
-  styleUrls: ['./search-topics.component.css']
+  selector: 'lib-topic-edit',
+  templateUrl: './topic-edit.component.html',
+  styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
 })
-export class SearchTopicsComponent implements OnInit {
-    @Input() inputValue: any;
-    @Input() field: any;
-    @Input() title?: string;
-    @Output() returnValue: EventEmitter<any> = new EventEmitter();
+export class TopicEditComponent implements OnInit {
+    fieldName = 'theme';
+    editMode: string = MODE.NORNAL; 
+    dataChanged: boolean = false;
 
     isVisible: boolean = true;
     scrollTop: number = 0;
@@ -27,32 +27,62 @@ export class SearchTopicsComponent implements OnInit {
     taxonomyList: any[];
     taxonomyTree: TreeNode[] = [];
     toggle: Boolean = true;  
+    originalNistTaxonomyTopics: any[] = [];
+
+    @Input() record: NerdmRes = null;
+    @Input() inBrowser: boolean;
+    @Input() nistTaxonomyTopics: any[] = [];
+    @Output() dataChangedOutput: EventEmitter<any> = new EventEmitter();
+    @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
     @ViewChild('panel', { read: ElementRef }) public panel: ElementRef<any>;
     @ViewChild('panel0', { read: ElementRef, static: true }) public panel0: ElementRef<any>;
 
+
     constructor(
+        public mdupdsvc: MetadataUpdateService,
         private taxonomyListService: TaxonomyListService,
-        private msgsvc: UserMessageService,
-        public activeModal: NgbActiveModal) { }
+        private notificationService: NotificationService,
+        private msgsvc: UserMessageService) { }
 
-    ngOnInit() {
+    ngOnInit(): void {
+        //Clone this.nistTaxonomyTopics
+        this.cloneArray(this.nistTaxonomyTopics, this.originalNistTaxonomyTopics);
+
         this.taxonomyListService.get(0).subscribe((result) => {
-        if (result != null && result != undefined)
-            this.buildTaxonomyTree(result);
-
-        this.taxonomyList = [];
-        for (var i = 0; i < result.length; i++) {
-            this.taxonomyList.push({ "taxonomy": result[i].label });
-        }
-
-        this.setTreeVisible(true);
-
+            if (result != null && result != undefined)
+                this.buildTaxonomyTree(result);
+    
+            this.taxonomyList = [];
+            for (var i = 0; i < result.length; i++) {
+                this.taxonomyList.push({ "taxonomy": result[i].label });
+            }
+    
+            this.setTreeVisible(true);
+    
         }, (err) => {
             console.error("Failed to load taxonomy terms from server: "+err.message);
             this.msgsvc.warn("Failed to load taxonomy terms; you may have problems editing the "+
                             "topics assigned to this record.");
         });
+    }
+
+    /**
+     * a field indicating if this data has beed edited
+     */
+    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+
+    get isEditing() { return this.editMode==MODE.EDIT }
+
+    get isNormal() { return this.editMode==MODE.NORNAL }
+
+    cloneArray(sourceArray: any[], targetArray: any[]) {
+        if(!sourceArray) 
+            targetArray = sourceArray;
+        else{
+            targetArray = [];
+            sourceArray.forEach(val => targetArray.push(val));
+        }
     }
 
     /*
@@ -120,12 +150,46 @@ export class SearchTopicsComponent implements OnInit {
         return tree;
     }
 
-    /* 
-    *   Save contact info when click on save button in pop up dialog
-    */
-    saveTopic() {
-        this.returnValue.emit(this.inputValue);
-        this.activeModal.close('Close click');
+    undoCurrentChanges() {
+        //Revert this.nistTaxonomyTopics
+        this.cloneArray(this.originalNistTaxonomyTopics ,this.nistTaxonomyTopics);  
+        this.cmdOutput.emit({"command": 'undoCurrentChanges'});
+        this.dataChanged = false;
+    }
+
+    /*
+     *  Restore original value. If no more field was edited, delete the record in staging area.
+     */
+    restoreOriginal() {
+        this.mdupdsvc.undo(this.fieldName).then((success) => {
+            if (success){
+                this.commandOut('restoreOriginal');
+                this.dataChanged = false;
+                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
+            }else
+                console.error("Failed to undo landingpage metadata")
+        });
+    }
+
+    /**
+     * Save topics.
+     * @param refreshHelp Indicates if help content needs be refreshed.
+     */
+    onSave(refreshHelp: boolean = true) {
+        let postMessage: any = {};
+
+        postMessage[this.fieldName] = this.nistTaxonomyTopics;
+        this.record[this.fieldName] = this.nistTaxonomyTopics;
+        
+        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+            if (updateSuccess) {
+                this.dataChanged = false;
+                this.commandOut('saveTopics');
+                this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
+            } else
+                console.error("acknowledge topic update failure");
+        });
     }
 
     /**
@@ -133,25 +197,26 @@ export class SearchTopicsComponent implements OnInit {
      */
     deleteTopic(index: number) {
         this.setTreeVisible(true);
-        this.searchAndExpandTaxonomyTree(this.inputValue[this.field][index], false);
-        this.inputValue[this.field] = this.inputValue[this.field].filter(topic => topic != this.inputValue[this.field][index]);
+        this.searchAndExpandTaxonomyTree(this.nistTaxonomyTopics[index], false);
+        this.nistTaxonomyTopics = this.nistTaxonomyTopics.filter(topic => topic != this.nistTaxonomyTopics[index]);
         this.refreshTopicTree();
+        this.dataChanged = true;
     }
-
+    
     /**
      * Update the topic list
      */
     updateTopics(rowNode: any) {
         this.toggle = false;
-        const existingTopic = this.inputValue[this.field].filter(topic => topic == rowNode.node.data.researchTopic);
+        const existingTopic = this.nistTaxonomyTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
-        this.inputValue[this.field].push(rowNode.node.data.researchTopic);
-
-        // Reset search text box
-        if (this.searchText != "") {
-            this.searchText = "";
-            this.onSearchTextChange();
-        }
+            this.nistTaxonomyTopics.push(rowNode.node.data.researchTopic);
+            this.dataChanged = true;
+            // Reset search text box
+            if (this.searchText != "") {
+                this.searchText = "";
+                this.onSearchTextChange();
+            }
         }
     }
 
@@ -160,7 +225,7 @@ export class SearchTopicsComponent implements OnInit {
     */
     getTopicColor(rowNode: any) {
         // console.log("this.tempTopics", this.tempTopics);
-        const existingTopic = this.inputValue[this.field].filter(topic => topic == rowNode.node.data.researchTopic);
+        const existingTopic = this.nistTaxonomyTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length <= 0) {
         return ROW_COLOR;
         } else {
@@ -172,7 +237,7 @@ export class SearchTopicsComponent implements OnInit {
     *   Set cursor type
     */
     getTopicCursor(rowNode: any) {
-        const existingTopic = this.inputValue[this.field].filter(topic0 => topic0 == rowNode.node.data.researchTopic);
+        const existingTopic = this.nistTaxonomyTopics.filter(topic0 => topic0 == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length <= 0)
         return 'pointer';
         else
@@ -411,4 +476,31 @@ export class SearchTopicsComponent implements OnInit {
             }
         },250)
     }
+
+    /**
+     * Retuen background color of the whole record (the container of all authors) 
+     * based on the dataChanged flag of the record.
+     * @returns the background color of the whole record
+     */
+    get backgroundColor() {
+        let bkgroundColor = 'var(--editable)';
+
+        if(this.dataChanged){
+            bkgroundColor = 'var(--data-changed)';
+        }else if(this.updated){
+            bkgroundColor = 'var(--data-changed-saved)';
+        }else if(this.isEditing){
+            bkgroundColor = 'white';
+        }
+
+        return bkgroundColor;
+    }   
+    
+    /**
+     * Emit command to parent component
+     * @param cmd command
+     */
+    commandOut(cmd: string) {
+        this.cmdOutput.emit({"command": cmd});
+    }    
 }

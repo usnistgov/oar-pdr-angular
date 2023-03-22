@@ -1,0 +1,7 @@
+{
+    "MIDASAPI":  "http://localhost:9091/midas/",
+    "PDRAPI":  "http://localhost:4202/od/id/",
+    "LANDING": "http://oardev.nist.gov/rmm/",
+    "GACODE": "not-set",
+    "APPVERSION": "1.3.0"
+}

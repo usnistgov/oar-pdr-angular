@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
 import { Router } from "@angular/router";
 import { WizardService } from './services/wizard.service';
+import { AppConfig, Config } from './services/config-service.service';
 
 @Component({
     selector: 'app-wizard',
@@ -23,17 +24,21 @@ export class StepWizardComponent implements OnInit {
     currentStepSub!: Subscription;
     onSoftware: boolean = false;
     bodyHeight: number = 550;
+    confValues: Config;
+    private PDRAPI: string;
 
     fgSteps!: FormGroup;
 
-    constructor(
-        private stepService: StepService,
-        private fb: FormBuilder, 
-        private cdr: ChangeDetectorRef,
-        private router: Router,
-        private wizardService: WizardService
-    ) { 
+    constructor(private stepService: StepService,
+                private fb: FormBuilder, 
+                private cdr: ChangeDetectorRef,
+                private router: Router,
+                private wizardService: WizardService,
+                private appConfig: AppConfig) { 
 
+            this.confValues = this.appConfig.getConfig();
+            this.PDRAPI = this.confValues.PDRAPI;
+            console.log('this.PDRAPI', this.PDRAPI);
     }
 
     ngOnInit(): void {
@@ -143,9 +148,10 @@ export class StepWizardComponent implements OnInit {
             id = obj['id'];
 
             // Submit the request, get the id from server response then launch the landing page
-            let url = 'http://localhost:4202/od/id/' + id + '?editEnabled=true';
+            let url = this.PDRAPI + id + '?editEnabled=true';
             console.log("Open publishing url", url);
-            window.location.href = url;
+            // window.location.href = url;
+            window.open(url, "_blank");
         });
     }
 

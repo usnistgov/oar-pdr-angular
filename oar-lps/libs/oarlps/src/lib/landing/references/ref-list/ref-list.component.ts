@@ -90,7 +90,9 @@ export class RefListComponent implements OnInit {
      */
     get dataChanged() {
         let changed: boolean = false;
-        if(!this.record || !this.record[this.fieldName] || this.record[this.fieldName].length == 0) return this.orderChanged;
+        if(!this.record || !this.record[this.fieldName] || this.record[this.fieldName].length == 0) 
+            return this.orderChanged;
+
         for(let i=0; i < this.record[this.fieldName].length; i++) {
             changed = changed || this.record[this.fieldName][i].dataChanged;
         }
@@ -101,8 +103,10 @@ export class RefListComponent implements OnInit {
     get dataChangedAndUpdated() {
         let changed: boolean = false;
 
-        for(let i=0; i < this.record[this.fieldName].length; i++) {
-            changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][i]['@id']);
+        if(this.record && this.record[this.fieldName]) {
+            for(let i=0; i < this.record[this.fieldName].length; i++) {
+                changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][i]['@id']);
+            }
         }
         
         return changed || this.orderChanged;        
@@ -227,11 +231,16 @@ export class RefListComponent implements OnInit {
      * Save current reference
      */
     saveCurRef(refreshHelp: boolean = true) {
+        console.log("this.currentRef", this.currentRef);
         if(this.isAdding){
             if(this.currentRef.dataChanged){
-                this.mdupdsvc.add(this.currentRef, this.fieldName).subscribe((rec) => {
+                var postMessage: any = {};
+                postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+
+                this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
-                        this.record = JSON.parse(JSON.stringify(rec));
+                        console.log("Return ref", rec);
+                        this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;

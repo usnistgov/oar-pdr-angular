@@ -168,7 +168,7 @@ export class AuthorListComponent implements OnInit {
      * @param updateCitation 
      */
     onOrderChange() {
-        this.updateMatadata().then((success) => {
+        this.updateMetadata().then((success) => {
             if(success){
                 this.orderChanged = true;
             }else{
@@ -202,36 +202,52 @@ export class AuthorListComponent implements OnInit {
      * Save current author to the server
      */    
     saveCurrentAuthor(refreshHelp: boolean = true) {
-        if(this.currentAuthor.dataChanged){
-            this.updateMatadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
-                if(success){
+        let postMessage: any = {}; 
+
+        if(this.isAdding) {  // Temp disable this function
+            postMessage[this.fieldName] = [];
+            this.record[this.fieldName].forEach(author => {
+                postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
+            });
+
+            this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
+                if (rec){
+                    console.log("Return authors", rec);
+                    this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
+                    this.currentAuthor = this.record[this.fieldName].at(-1); // last author
+                    this.currentAuthorIndex = this.record[this.fieldName].length - 1;
+                    this.currentAuthor.dataChanged = false;
                     this.setMode(MODE.NORNAL, refreshHelp);
-                }else{
-                    console.error("Update failed")
-                }
+                }else
+                    console.error("Failed to add author");
+                    return;
             })
         }else{
-            this.setMode(MODE.NORNAL, refreshHelp);
+            if(this.currentAuthor.dataChanged){
+                this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
+                    if(success){
+                        this.setMode(MODE.NORNAL, refreshHelp);
+                    }else{
+                        console.error("Update failed")
+                    }
+                })
+            }else{
+                this.setMode(MODE.NORNAL, refreshHelp);
+            }
         }
-    }
 
-    /**
-     * Save authors to the server
-     */
-    saveAuthors() {
-        this.editBlockStatus = 'collapsed';
     }
 
     /**
      * Update author data to the server
      */
-    updateMatadata(author: Author = undefined, id: string = undefined) {
+    updateMetadata(author: Author = undefined, id: string = undefined) {
         let lAuthors = [];
         var postMessage: any = {};
 
         return new Promise<boolean>((resolve, reject) => {
             // Only update certain author
-            if(id) {
+            if(id) {  
                 let foundAuthor = this.record[this.fieldName].find(element => element['@id'].trim() == id.trim());
                 if(foundAuthor) {
                     foundAuthor = JSON.parse(JSON.stringify(author));
@@ -254,7 +270,7 @@ export class AuthorListComponent implements OnInit {
                     postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
                 });
 
-                this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+                this.mdupdsvc.update(this.fieldName, postMessage, id).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Authors updated.", "", 3000);
@@ -370,8 +386,7 @@ export class AuthorListComponent implements OnInit {
             // this.editingAuthorIndex = 0;
         }
 
-        if(!this.isAdding)
-            this.updateMatadata();
+        this.updateMetadata();
     }
 
     /**
@@ -432,7 +447,7 @@ export class AuthorListComponent implements OnInit {
         if(index != this.currentAuthorIndex) { // user selected different author
             // If current author changed but not updated to the server, update first
             if(this.currentAuthor["dataChanged"] && !this.authorUpdated(this.currentAuthorIndex)) {
-                this.updateMatadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
+                this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
                     if(success){
                         this.setCurrentAuthor(index);
 

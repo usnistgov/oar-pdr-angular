@@ -47,7 +47,7 @@
             </div>
         </div>
         <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isEditing"
-            (click)="onEdit()">
+            (click)="startEditing()">
             <i [class]="editIconClass()" data-toggle="tooltip"
                 title="Edit contactPoint"></i>
         </button>

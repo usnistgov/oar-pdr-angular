@@ -88,8 +88,8 @@ export abstract class CustomizationService {
  */
 export class WebCustomizationService extends CustomizationService {
 
-    readonly draftapi : string = "dap/mdsx/";
-    readonly saveapi : string = "dap/mdsx/";
+    readonly draftapi : string = "dap/mds3/";
+    readonly saveapi : string = "dap/mds3/";
 
     /**
      * construct the customization service
@@ -213,21 +213,46 @@ export class WebCustomizationService extends CustomizationService {
         // To transform the output with proper error handling, we wrap the
         // HttpClient.patch() Observable with our own Observable
         //
-
+        let body: string;
         if(!subsetnameAPI) subsetnameAPI = subsetname;  // Make it backward compactible
 
-        return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.draftapi + this.resid + "/data";
-            url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
-            url = id == undefined ? url : url + "/" + id;
+        if(!id){
+            return new Observable<Object>(subscriber => {
+                console.log("post message", md);
+                let url = this.endpoint + this.draftapi + this.resid + "/data";
+                url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
 
-            // console.log("Update url", url);
-            
-            let body = JSON.stringify(md);
-            let obs : Observable<Object> = 
-                this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
-            this._wrapRespObs(obs, subscriber);
-        });
+                // console.log("Update url", url);
+                if(subsetname)
+                    body = JSON.stringify(md[subsetname]);
+                else
+                    body = JSON.stringify(md);
+
+                console.log("body", body);
+                let obs : Observable<Object> = 
+                    this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+                this._wrapRespObs(obs, subscriber);
+            });
+        }else{
+            return new Observable<Object>(subscriber => {
+                let url = this.endpoint + this.draftapi + this.resid + "/data";
+                url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
+                url = id == undefined ? url : url + "/" + id;
+
+                // console.log("Update url", url);
+                console.log("md", md);
+                // if(subsetname)
+                //     body = JSON.stringify(md[subsetname]);
+                // else
+                    body = JSON.stringify(md);
+
+                console.log("body", body);
+                let obs : Observable<Object> = 
+                    this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+                this._wrapRespObs(obs, subscriber);
+            });
+        }
+
     }
   
     /**
@@ -251,15 +276,16 @@ export class WebCustomizationService extends CustomizationService {
         if(!subsetnameAPI) subsetnameAPI = subsetname;
         
         return new Observable<Object>(subscriber => {
-            let url = this.endpoint + this.draftapi; //  Create a new record
+            let url = this.endpoint + this.draftapi + this.resid + "/data/"; //  Create a new record
             if(subsetnameAPI) { // Create a new subset
-                url += this.resid + "/data/" + subsetnameAPI;
+                url += subsetnameAPI;
             }
-            // console.log("Add url", url)
+            console.log("Add url", url)
             
-            let body = JSON.stringify(md);
+            let body = JSON.stringify(md[subsetname]);
+            console.log("body", body)
             let obs : Observable<Object> = 
-                this.httpcli.post(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+                this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
         });
     }

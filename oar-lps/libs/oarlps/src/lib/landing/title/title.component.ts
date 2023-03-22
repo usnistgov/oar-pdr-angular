@@ -86,9 +86,9 @@ export class TitleComponent implements OnInit {
     }
 
     onSave(refreshHelp: boolean = true) {
-        if(this.record['title'] != this.originalRecord['title']) {
+        if(this.record['title'] != this.originalRecord[this.fieldName]) {
             var postMessage: any = {};
-                postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record['title']));
+                postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
             
             this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
                 if (updateSuccess){

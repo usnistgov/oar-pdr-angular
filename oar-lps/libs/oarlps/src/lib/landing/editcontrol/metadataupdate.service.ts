@@ -160,7 +160,7 @@ export class MetadataUpdateService {
         return new Promise<boolean>((resolve, reject) => {
             this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe(
                 (res) => {
-                    // console.log("###DBG  Draft data returned from server:\n  ", res)
+                    console.log("###DBG  Draft data returned from server:\n  ", res)
                     this.stampUpdateDate();
                     this.updateInMemoryRec(md, subsetname, id);
                     // this.mdres.next(res as NerdmRes);
@@ -213,24 +213,32 @@ export class MetadataUpdateService {
         return new Observable<Object>(subscriber => {
             this.custsvc.add(md, subsetname, subsetnameAPI).subscribe(
                 (res) => {
-                    let obj = JSON.parse(res as string);
-                    if(subsetname) {  //Add a subset
-                        if(this.currentRec[subsetname]){
-                            this.currentRec[subsetname] = [...this.currentRec[subsetname], ...[obj]];
-                        }else{
-                            this.currentRec[subsetname] = [obj];
-                        }
-                    } else {  // Add a record
-                        this.currentRec = JSON.parse(JSON.stringify(obj));
-                    }
+                    console.log("Return obj from add", res);
+                    // let obj = JSON.parse(res as string);
+                    let obj = res as Object[];
+                    // if(subsetname) {  //Add a subset
+                    //     if(this.currentRec[subsetname]){
+                    //         this.currentRec[subsetname] = [...this.currentRec[subsetname], ...[obj]];
+                    //     }else{
+                    //         this.currentRec[subsetname] = [obj];
+                    //     }
+                    // } else {  // Add a record
+                    //     this.currentRec = JSON.parse(JSON.stringify(obj));
+                    // }
+                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
 
-                    let key = subsetname + obj['@id'];
-                    this.origfields[key] = {};
-                    this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
+                    obj.forEach(sub => {
+                        let key = subsetname + sub['@id'];
+                        this.origfields[key] = {};
+                        this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
+                    })
+                    // let key = subsetname + obj['@id'];
+                    // this.origfields[key] = {};
+                    // this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
 
                     this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                     // resolve(true);
-                    subscriber.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+                    subscriber.next(JSON.parse(JSON.stringify(this.currentRec[subsetname])));
                     subscriber.complete();
                 },
                 (err) => {

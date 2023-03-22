@@ -158,11 +158,12 @@ export class KeywordComponent implements OnInit {
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoEditing() {
-        this.setMode(MODE.NORNAL);
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success)
+            if (success){
+                this.setMode(MODE.NORNAL);
+
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            else
+            }else
                 console.error("Failed to undo keywords metadata")
         });
         this.setBackground();

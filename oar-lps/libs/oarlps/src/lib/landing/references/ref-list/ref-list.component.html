@@ -23,7 +23,7 @@
                             <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
                                 <lib-text-edit 
                                     [textField]="reference.citation" 
-                                    [dragDropIcon]="record['references'].length==1?false:true" 
+                                    [dragDropIcon]="true" 
                                     [editButton]="false" 
                                     [deleteButton]="true" 
                                     [restoreButton]="true" 

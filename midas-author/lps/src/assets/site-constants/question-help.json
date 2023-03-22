@@ -26,6 +26,11 @@
             "add": "<p>You are in Description section. Placeholder for 'add' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
             "edit": "<p>You are in Description section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
         },
+        "theme":{
+            "general": "<p>You are in General Research Topics section. Placeholder for general text.",
+            "add": "<p>You are in General Research Topics section. Placeholder for 'add' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "edit": "<p>You are in General Research Topics section. Placeholder for 'edit' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        },
         "keyword": {
             "general": "<p>You are in Keyword section. Placeholder for general text.",
             "add": "<p>You are in Keyword section. Placeholder for 'add' help text... <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",

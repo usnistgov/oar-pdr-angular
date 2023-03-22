@@ -18,7 +18,7 @@
     },
     "modified": "2019-03-27 12:24:31",
     "issued": "2019-04-05T16:04:26.0",
-    "ediid": "test1",
+    "ediid": "test2",
     "landingPage2": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
     "version": "1.0.1",
     "authors2": [
@@ -55,7 +55,7 @@
     "description2": [
         "Multiple Encounter Dataset (MEDS-I) is a test corpus organized from an extract of submissions of deceased persons with prior multiple encounters. MEDS is provided to assist the FBI and partner organizations refine tools, techniques, and procedures for face recognition as it supports Next Generation Identification (NGI), forensic comparison, training, and analysis, and face image conformance and inter-agency exchange standards. The MITRE Corporation (MITRE) prepared MEDS in the FBI Data Analysis Support Laboratory (DASL) with support from the FBI Biometric Center of Excellence."
     ],
-    "keyword": [
+    "keyword2": [
         "face",
         "biometrics",
         "forensic"
@@ -70,7 +70,7 @@
             "tag": "Information Technology: Biometrics"
         }
     ],
-    "references": [
+    "references2": [
         {
             "refType":"IsSupplementTo",
             "title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses",

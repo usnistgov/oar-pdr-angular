@@ -151,7 +151,7 @@ export class ContactComponent implements OnInit {
         } 
     }
 
-    onEdit() {
+    startEditing() {
         if(this.record[this.fieldName])
             this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
         else
@@ -249,13 +249,24 @@ export class ContactComponent implements OnInit {
      * Save current contact to the server
      */    
     saveCurrentContact(refreshHelp: boolean = true) {
-        this.updateMatadata(this.currentContact).then((success) => {
-            if(success){
-                this.setMode(MODE.NORNAL, refreshHelp);
-            }else{
-                console.error("Update failed")
-            }
-        })
+        var postMessage: any = {};
+        postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.currentContact));
+        console.log('postMessage', postMessage);
+        
+        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            if (updateSuccess){
+                this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
+            }else
+                console.error("acknowledge title update failure");
+        });
+
+        // this.updateMatadata(this.currentContact).then((success) => {
+        //     if(success){
+        //         this.setMode(MODE.NORNAL, refreshHelp);
+        //     }else{
+        //         console.error("Update failed")
+        //     }
+        // })
     }
 
     /**

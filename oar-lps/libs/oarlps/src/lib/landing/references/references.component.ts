@@ -59,11 +59,14 @@ export class ReferencesComponent implements OnInit {
     }
 
     resetOrigin() {
-        if(this.record && this.record['references'] && this.record['references'].length > 0) {
+        // if(this.record && this.record['references'] && this.record['references'].length > 0) {
+        if(this.record){
             // this.currentRef = this.record['references'][0];
 
             //Keep a copy of the record for undo purpose
             this.orig_record = JSON.parse(JSON.stringify(this.record));
+        }else{
+            this.orig_record = undefined;
         }
     }
 
