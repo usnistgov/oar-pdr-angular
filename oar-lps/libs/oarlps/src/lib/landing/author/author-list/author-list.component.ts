@@ -28,7 +28,8 @@ export class AuthorListComponent implements OnInit {
     currentAuthorIndex: number = 0;
     currentAuthor: Author; // for drag drop
     // currentEditingAuthor: Author // for editing
-    originalRecord: any = {};
+    savedRecord: any = {}; // Previously saved record
+    originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
     // forceReset: boolean = false;
     newAuthor: Author = {} as Author;
     fieldName = 'authors';
@@ -69,6 +70,8 @@ export class AuthorListComponent implements OnInit {
 
     ngOnInit(): void {
         this.updateOriginal();
+
+        this.originalRecord = JSON.parse(JSON.stringify(this.record));
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -156,7 +159,7 @@ export class AuthorListComponent implements OnInit {
                 this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
             }
             
-            this.originalRecord[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+            this.savedRecord[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
         }else{
             this.currentAuthorIndex = -1;
             this.currentAuthor = {} as Author;
@@ -305,7 +308,7 @@ export class AuthorListComponent implements OnInit {
         if(this.isAdding) {
             this.removeAuthor(this.currentAuthorIndex);
         }else{
-            this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName][this.currentAuthorIndex]));
+            this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(this.savedRecord[this.fieldName][this.currentAuthorIndex]));
         }
 
         this.editBlockStatus = 'collapsed';
@@ -559,16 +562,22 @@ export class AuthorListComponent implements OnInit {
                 this.removeAuthor(index);
                 break;    
             case 'restore':
-                this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
-                    if (success) {
-                        this.record[this.fieldName][index]['dataChanged'] = false;
-                        // this.currentAuthorIndex = 0;
-                        // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-                        this.forceReset = true; // Force author editor to reset data
-                    } else {
-                        console.error("Failed to restore authors");
-                    }
-                })
+                // If this is a new item, delete it. Otherwise, restore original value
+                if(this.originalRecord[this.fieldName][index] && this.originalRecord[this.fieldName][index]['@id']){
+                    this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
+                        if (success) {
+                            this.record[this.fieldName][index]['dataChanged'] = false;
+                            // this.currentAuthorIndex = 0;
+                            // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+                            this.forceReset = true; // Force author editor to reset data
+                        } else {
+                            console.error("Failed to restore authors");
+                        }
+                    })
+                }else{
+                    console.log("Removing author", index)
+                    this.removeAuthor(index);
+                }
 
                 break;
             default:

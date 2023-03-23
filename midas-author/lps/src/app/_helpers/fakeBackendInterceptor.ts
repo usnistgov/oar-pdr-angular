@@ -178,15 +178,27 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
 
-        if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'DELETE') {
+        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PUT') {
+            let requestBody = JSON.parse(request.body)
+            if(Array.isArray(requestBody)) {
+                requestBody.forEach(item => {
+                    if(!item['@id']){
+                        item['@id'] = this.readableRandomStringMaker(6);
+                    }
+                })
+            }
+            return of(new HttpResponse({ status: 200, body: requestBody }));
+        }        
+
+        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
         
-        if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'PATCH') {
-            return of(new HttpResponse({ status: 200, body: nerdm }));
+        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PATCH') {
+            return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
-        if (request.url.indexOf('midas/dap/mdsx/test2/data/references') > -1 && request.method === 'POST') {
+        if (request.url.indexOf('midas/dap/mds3/test2/data/references') > -1 && request.method === 'POST') {
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);

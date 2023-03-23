@@ -295,9 +295,10 @@ export class MetadataUpdateService {
             this.origfields[key] !== undefined;
         }
 
+        finalUndo = false; // Server discard function is not available yet
         if (finalUndo) {
             // Last set to be undone; just delete the draft on the server
-            console.log("Last undo; discarding draft on server");
+            console.log("Last undo; discarding draft on server. Restore original:", this.originalDraftRec);
             this.origfields = {};
             this.forgetUpdateDate();
             this.currentRec = JSON.parse(JSON.stringify(this.originalDraftRec));
@@ -305,7 +306,8 @@ export class MetadataUpdateService {
             this.mdres.next(JSON.parse(JSON.stringify(this.originalDraftRec)) as NerdmRes);
 
             return new Promise<boolean>((resolve, reject) => {
-                this.custsvc.discardDraft().subscribe(
+                //PUT original record to the server
+                this.custsvc.updateMetadata(this.originalDraftRec, null, null, null).subscribe(
                     (res) => {
                         resolve(true);
                     },
@@ -323,7 +325,27 @@ export class MetadataUpdateService {
                         }
                         resolve(false);
                     }
-                );
+                )
+
+                // this.custsvc.discardDraft().subscribe(
+                //     (res) => {
+                //         resolve(true);
+                //     },
+                //     (err) => {
+                //         // err will be a subtype of CustomizationError
+                //         if (err.type == 'user') {
+                //             console.error("Failed to undo metadata changes: user error:" + err.message);
+                //             this.msgsvc.error(err.message)
+                //         }
+                //         else {
+                //             console.error("Failed to undo metadata changes: server/system error:" +
+                //                 err.message);
+                //             this.msgsvc.syserror(err.message,
+                //                 "There was an problem while undoing changes to the " + subsetname + ". ")
+                //         }
+                //         resolve(false);
+                //     }
+                // );
             });
         }
         else {
@@ -345,7 +367,7 @@ export class MetadataUpdateService {
 
                     // delete specific origfield
                     delete this.origfields[key];
-                }else {    // unde the whole subset
+                }else {    // undo the whole subset
                     md = this.originalDraftRec[subsetname];
 
                     this.currentRec[subsetname] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname]));
@@ -367,8 +389,12 @@ export class MetadataUpdateService {
                 // }
 
                 // delete this.origfields[key];
-                this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe(
+                console.log("Undo changes", md);
+                let postMessage = {};
+                postMessage[subsetname] = md;
+                this.custsvc.updateMetadata(postMessage, subsetname, id, subsetnameAPI).subscribe(
                     (res) => {
+                        console.log("Returned record from undo", res);
                         this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                         // this.mdres.next(res as NerdmRes);
                         resolve(true);
