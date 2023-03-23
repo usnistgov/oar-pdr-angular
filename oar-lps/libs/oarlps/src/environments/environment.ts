@@ -13,6 +13,7 @@ import { LPSConfig } from '../lib/config/config';
 
 export const context = {
     production: false,
+    configEndpoint: "assets/config.json",          // set to "assets/config.json"
     useMetadataService: false,
     useCustomizationService: false
 };
