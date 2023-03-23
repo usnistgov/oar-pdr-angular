@@ -1,8 +1,11 @@
 import { Inject, InjectionToken } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
 import { TransferState, makeStateKey, StateKey } from '@angular/platform-browser';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import * as proc from 'process';
 import * as fs from 'fs';
+import { Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 import { AppConfig, LPSConfig } from './config';
 import * as ngenv from '../../environments/environment';
@@ -66,6 +69,82 @@ export abstract class ConfigService {
 }
 
 /**
+ * A ConfigService that pulls it data from a remote URL
+ * 
+ * This service is intended for use in production mode when running 
+ * client-only in the browser.  
+ */
+export class RemoteFileConfigService extends ConfigService {
+    private source : string = "remote-file";
+    private defMode : string = "prod";
+    private config : AppConfig|null = null;
+
+    /**
+     * construct the service
+     * @param endpoint  the remote endpoint to retrieve the JSON-encoded configuration from.
+     *                  This can be given as a relative URL.
+     */
+    constructor(private endpoint: string, private httpClient: HttpClient, prefetch: boolean = true) {
+        super();
+        console.log("Will load configuration data from remote file ("+this.endpoint+")");
+    }
+
+    /**
+     * load the AppConfig with the given data
+     */
+    load(data: any) : void {
+        this.config = new AppConfig(data as LPSConfig);
+        this.config["source"] = this.source;
+        this.config["ready"] = true;
+        if (! this.config["env"])
+            this.config["env"] = this.defMode;
+        console.log("Remote configuration loaded for env="+this.config["env"])
+    }
+
+    /**
+     * fetch and load the configuration data so that it is ready for retrieval
+     */
+    fetch(http: HttpClient, endpoint: string = null) : Observable<any> {
+        if (! endpoint)
+            endpoint = this.endpoint;
+
+        return this.httpClient.get<any>(endpoint, {responseType: 'json'}).pipe(
+            catchError(this._handleFetchError)
+        ).pipe( tap(cfg => (this.load(cfg))) );
+    }
+
+    private _handleFetchError(error: HttpErrorResponse) {
+        if (error.status === 0) {
+            // A client-side or network error occurred.
+            console.error('Error connecting for configuration: ', error.error);
+        } else {
+            // The backend returned an unsuccessful response code.
+            // The response body may contain clues as to what went wrong.
+            console.error(`Server error ${error.status} while retrieving configuration: `, error.error)
+        }
+        // Return an observable with a user-facing error message.
+        return throwError(() => new Error('Failed to retrieve configuration from server (see console)'));
+    }
+
+    /**
+     * return an AppConfig instance that is appropriate for the runtime 
+     * context.  This will asynchronously return an AppConfig rather than a 
+     * Promise.  
+     */
+    getConfig() : AppConfig {
+        if (! this.config)
+            // this shouldn't happen
+            return new AppConfig({
+                source: "remote-pending",
+                locations: { orgHome: "" },
+                ready: false
+            } as LPSConfig);
+
+        return this.config;
+    }
+}
+
+/**
  * A ConfigService that pulls it data from the environmental context
  * that Angular builds into the app.  
  * 
@@ -85,11 +164,10 @@ export class AngularEnvironmentConfigService extends ConfigService {
      * @param cache    the TransferState instance for the application.  If we are on the server,
      *                 getConfig() will cache the configuration to the TransferState object.
      */
-    constructor(
-        private ienv : IEnvironment,
-        private platid : object, 
-        private cache : TransferState) {
-
+    constructor(private ienv : IEnvironment,
+                private platid : object, 
+                private cache : TransferState)
+    {
         super();
         this.ngenv = ienv;
     }
@@ -255,7 +333,8 @@ export class TransferStateConfigService extends ConfigService {
  *                    explicitly by some other means.  (This hook is intended for future 
  *                    ways of loading the configuration data on the server.)
  */
-export function newConfigService(ngenv: IEnvironment, platid : Object, cache : TransferState, cfgdata? : LPSConfig)
+export function newConfigService(ngenv: IEnvironment, platid : Object, cache : TransferState,
+                                 httpcli?: HttpClient, cfgdata? : LPSConfig)
     : ConfigService
 {
     if (cache.hasKey(CONFIG_TS_KEY))
@@ -265,12 +344,17 @@ export function newConfigService(ngenv: IEnvironment, platid : Object, cache : T
     if (isPlatformServer(platid) && cfgdata)
         // this means we're on the server in production-like mode
         // this will stash the data into the TransferState
-        return new ServerLoadedConfigService(cfgdata, cache)
+        return new ServerLoadedConfigService(cfgdata, cache);
 
     if (isPlatformServer(platid) && proc.env["PDR_CONFIG_FILE"])
         // this means we're on the server in production-like mode
         // this will stash the data into the TransferState
-        return new ServerFileConfigService(proc.env["PDR_CONFIG_FILE"], cache)
+        return new ServerFileConfigService(proc.env["PDR_CONFIG_FILE"], cache);
+
+    if (ngenv.context.configEndpoint)
+        // this means that the configuration data should be retrieved from remote
+        // URL that returns an LPSConfig object in JSON format
+        return new RemoteFileConfigService(ngenv.context.configEndpoint, httpcli);
 
     // This is the default intended for a development context
     // this will stash the data into the TransferState

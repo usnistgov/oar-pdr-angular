@@ -12,6 +12,7 @@ import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: true,
+    configEndpoint: "assets/config.json",
     useMetadataService: false,
     useCustomizationService: true
 };
