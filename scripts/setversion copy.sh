@@ -1,4 +1,5 @@
 #! /bin/bash
+
 #
 # setversion.sh:  build all docker images in this directory
 #
@@ -37,4 +38,4 @@ fi
     bash "$PACKAGE_DIR/scripts/inject_version.sh" $version $PACKAGE_NAME
 }
 
-echo "TESTING *** $PACKAGE_NAME $version"
+# echo $PACKAGE_NAME $version
