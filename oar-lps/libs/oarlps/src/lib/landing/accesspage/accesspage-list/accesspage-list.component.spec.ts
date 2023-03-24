@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SingleRefComponent } from './single-ref.component';
+import { AccesspageListComponent } from './accesspage-list.component';
 
-describe('SingleRefComponent', () => {
-  let component: SingleRefComponent;
-  let fixture: ComponentFixture<SingleRefComponent>;
+describe('AccesspageComponent', () => {
+  let component: AccesspageListComponent;
+  let fixture: ComponentFixture<AccesspageListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SingleRefComponent ]
+      declarations: [ AccesspageListComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SingleRefComponent);
+    fixture = TestBed.createComponent(AccesspageListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

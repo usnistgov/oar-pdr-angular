@@ -2,11 +2,12 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, 
 import { Reference } from '../reference';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { HttpClient } from "@angular/common/http";
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 
 @Component({
-    selector: 'lib-single-ref',
-    templateUrl: './single-ref.component.html',
-    styleUrls: ['../../landing.component.scss', './single-ref.component.css'],
+    selector: 'lib-ref-edit',
+    templateUrl: './ref-edit.component.html',
+    styleUrls: ['../../landing.component.scss', './ref-edit.component.css'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -15,10 +16,11 @@ import { HttpClient } from "@angular/common/http";
         ])
     ]
 })
-export class SingleRefComponent implements OnInit {
+export class RefEditComponent implements OnInit {
     originalRef: Reference = {} as Reference;
     defaultText: string = "Enter citation here";
     reftype: string = "1";
+    fieldName: string = 'references';
     
     // Input method. 1 = DOI, 2=Ref data, 3=Citation text
     inputMethod: string = "1"; 
@@ -35,8 +37,9 @@ export class SingleRefComponent implements OnInit {
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
+    @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
-    constructor(private httpClient: HttpClient) { }
+    constructor(private httpClient: HttpClient, public mdupdsvc : MetadataUpdateService) { }
 
     ngOnInit(): void {
         if(this.isEditing) this.showAllFields = true;
@@ -81,6 +84,7 @@ export class SingleRefComponent implements OnInit {
     }
 
     onChange(updateCitation:boolean = false) {
+        console.log("this.ref", this.ref);
         this.ref.dataChanged = true;
 
         if(updateCitation) this.updateCitation();
@@ -240,5 +244,11 @@ export class SingleRefComponent implements OnInit {
         // }
     }
 
-
+    /**
+     * Emit command to parent component
+     * @param cmd command
+     */
+    commandOut(cmd: string) {
+        this.cmdOutput.emit({"command": cmd});
+    }  
 }

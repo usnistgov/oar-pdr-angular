@@ -10,8 +10,10 @@ import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { AppConfig } from '../../config/config'
 import { NerdmRes } from '../../nerdm/nerdm';
 import { testdata } from '../../../environments/environment';
+import { IEnvironment } from '../../../environments/ienvironment';
 
 describe('ToolMenuComponent', () => {
+    let ienv : IEnvironment;
     let component : ToolMenuComponent;
     let fixture : ComponentFixture<ToolMenuComponent>;
     let cfg : AppConfig;
@@ -19,7 +21,7 @@ describe('ToolMenuComponent', () => {
     let ts : TransferState = new TransferState();
 
     let setupComponent = function(popup : boolean, md : NerdmRes) {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         
         component = null;

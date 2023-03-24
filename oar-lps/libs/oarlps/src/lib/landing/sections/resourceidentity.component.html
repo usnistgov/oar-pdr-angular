@@ -1,11 +1,5 @@
-<div class="grid" id="identity">
-    <div class="col-12 col-md-12 col-lg-12 col-sm-12">
-        <!-- <div *ngIf="mdupdsvc.isEditMode" style="margin-bottom: 10px;">
-            <a href={{fileManagerUrl}} target="_blank">
-                <button pButton type="submit" class="p-button-sm green-btn" id="btn-fm" label="Manage Files" icon="faa faa-external-link faa-1x icon-white" iconPos="left">
-                </button>
-            </a>
-        </div> -->
+<div id="identity">
+    <div style="width: 100%;">
         <span class="recordType">
             <b>{{recordType}}</b>
             <span *ngIf="recordType=='Science Theme'" class="badge version"> Beta</span>
@@ -16,16 +10,27 @@
           <i style="font-size: smaller;">Part of {{isPartOf[0]}} <a href="{{isPartOf[1]}}"
              title="view collection">{{isPartOf[2]}}</a> {{isPartOf[3]}}</i>
         </div>
+    </div>
+    
+    <div style="width: 100%;">
         <app-author [record]="record" [inBrowser]="inBrowser"></app-author>
 
         <!-- Facilitators -->
         <div *ngIf="theme == scienceTheme" style="width: 100%;" [ngStyle]="{'margin-bottom': record.creators? '15px' : '1.5em'}">
             <app-facilitators [record]="record" [inBrowser]="inBrowser"></app-facilitators>
         </div>
-    </div>
-    
-    <div class="col-8 col-md-8 col-lg-8 col-sm-12">
-        <app-contact [record]="record" [inBrowser]="inBrowser"></app-contact>
+
+        <div class="table">
+            <div class="cell left">
+                <app-contact [record]="record" [inBrowser]="inBrowser"></app-contact>
+            </div>
+            <!-- <div *ngIf="showHomePageLink"  class="cell right" style="height: 30px;margin-top: .5em;">
+                <app-visithome [record]="record" [inBrowser]="inBrowser" [editMode]="editMode" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
+            </div> -->
+            <div class="cell right">
+                <app-visithome [record]="record" [inBrowser]="inBrowser" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
+            </div>
+        </div>
 
         <span>Identifier: </span>
         <span *ngIf="doiUrl"><i> <a href="{{doiUrl}}"
@@ -50,26 +55,6 @@
             </div>
         </div>
         <pdr-version [record]="record"></pdr-version>
-    </div>
-
-    <div class="col-4 col-md-4 col-lg-4 col-sm-12">
-        <div *ngIf="showHomePageLink" style="float: right;width: 100%;height: 30px;">
-            <!-- <span *ngIf="inBrowser; else visitHomeOnServer">
-                <a href={{record.landingPage}} target="_blank">
-                    <button type="button" pButton type="submit" [disabled]="!inViewMode"
-                        class="home_button p-button p-component ui-button-text-empty"
-                        [ngStyle]="{'background-color': visitHomePageBtnStyle()}"
-                        (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
-                        <i class="faa faa-external-link"
-                            style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
-                        Visit Home Page
-                    </button>
-                </a> 
-            </span>
-            <ng-template #visitHomeOnServer>Visit Home Page</ng-template> -->
-
-            <app-visithome [record]="record" [inBrowser]="inBrowser" [editMode]="editMode" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
-        </div>
     </div>
 </div>
 

@@ -1,88 +1,35 @@
 <div class="references">
     <!-- Edit mode -->
     <div *ngIf="mdupdsvc.isEditMode; else nonEdit">
-        <div class="section-header"><h3><b>References</b></h3></div>
-        <div class="editable_container"  style="width: 100%;">
-            <div class="editable_field" style="width: 100%;">
-                <!-- Drag and drop reference list-->
-                <div class="reference-text edit_box" [style.background-color]="getRecordBackgroundColor()">
-                    <div style="margin-left: 10px;"><i>Use this area to add references to papers and datasets</i></div>
-                    <div #dropListContainer class="example-container" cdkDropListGroup>
-                        <div style="width: 100%;" 
-                        *ngFor="let reference of record['references']; let i = index"
-                        cdkDropList
-                        [cdkDropListData]="i"
-                        >
-                            <div 
-                                cdkDrag
-                                [cdkDragData]="i"
-                                (cdkDragEntered)="dragEntered($event)"
-                                (cdkDragMoved)="dragMoved($event)"
-                                (cdkDragDropped)="dragDropped($event)"
-                                [cdkDragDisabled]="isAdding || isEditing"
-                                class="ref-row"
-                            >
-                                <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
-                                    <lib-text-edit 
-                                        [textField]="reference.citation" 
-                                        [dragDropIcon]="record['references'].length==1?false:true" [editButton]="false" 
-                                        [deleteButton]="true" 
-                                        [restoreButton]="true" 
-                                        [disableControl]="isAdding || isEditing" 
-                                        [placeHolderText]="placeholder" 
-                                        [isNew]="reference.isNew" 
-                                        [dataChanged]="mdupdsvc.fieldUpdated(fieldName, record[fieldName][i]['@id'])" 
-                                        (command_out)="onReferenceChange($event, i)">
-                                    </lib-text-edit>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- Control buttons for drag and drop sectioon -->
-            <div class="editable_field" [style.width.px]="getControlBoxWidth()">
-                <!-- Add button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="disableEditing || isEditing || isAdding" ngbTooltip="Add references">
-                    <i [class]="addIconClass()"></i>
-                </button>
+        <div class="section-header">
+            <h3><b>References</b></h3>
+        </div>
 
-                <!-- Edit button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onEdit()" aria-label="edit button" [disabled]="disableEditing || !hasDisplayableReferences() || !isNormal" ngbTooltip="Edit references">
+        <div class="editable_container">
+            <!-- <ng-template #hasReferences> -->
+            <div class="editable_field" style="width: 100%;padding: 10px;" [ngStyle]="getStyle()">
+                <div *ngIf="mdupdsvc.isEditMode" style="margin-bottom: 10px;">
+                    Add references to papers and other datasets.
+                </div>
+
+                <div *ngFor="let ref of record['references']" class="ref-entry">
+                    <span *ngIf="ref.location; else noreflink">
+                        <span class="faa faa-external-link">&nbsp;</span>
+                        <a href={{ref.location}} target="blank">{{ ref['citation'] }}</a>
+                    </span>
+                    <ng-template #noreflink>
+                        <span >{{ ref['citation'] }}</span>
+                    </ng-template>
+                </div>
+            </div>        
+            <!-- </ng-template> -->
+            
+            <!-- Control buttons -->
+            <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;width: 1.65em;">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="onEdit()" aria-label="edit button" [disabled]="isEditing">
                     <i [class]="editIconClass()"></i>
                 </button>
-
-                <!-- Undo all changes button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="!dataChanged && !isEditing"
-                    (click)="undoChanges()" aria-label="undo button" ngbTooltip="Undo all reference changes">
-                    <i [class]="undoIconClass()"></i>
-                </button>
             </div>
-        </div>
-        <!-- This is editing area. Will open up in add or edit mode -->
-        <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus">  
-            <table style="width: 100%;">
-                <tr  style="width: 100%;">
-                    <!-- Text edit area -->
-                    <td class="edit-block" style="width: calc(100%-30px);">
-                        <lib-single-ref [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)"></lib-single-ref>
-                    </td>
-
-                    <!-- Control buttons -->
-                    <td style="width: 30px;vertical-align: top;">
-                        <!-- Save button -->
-                        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurRef()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save current changes">
-                            <i class="faa faa-check"></i>
-                        </button>
-        
-                        <!-- Cancel button -->
-                        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
-                            (click)="undoCurRefChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                            <i class="faa faa-remove"></i>
-                        </button>
-                    </td>
-                </tr>
-            </table>      
         </div>
     </div>
     <!-- Normal/preview mode -->
@@ -103,3 +50,9 @@
         </div>
     </ng-template>
 </div>
+
+<div style="width: 100%;" *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" [style.overflow] = "overflowStyle">
+    <lib-ref-list [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)"></lib-ref-list>
+</div>
+
+

@@ -59,7 +59,7 @@ export class ResourceIdentityComponent implements OnChanges {
      * Decide if currently in view only mode
      */
     get inViewMode() {
-        return this.editMode == this.EDIT_MODES.VIEWONLY_MODE;
+        return this.editMode == this.EDIT_MODES.VIEWONLY_MODE || this.editMode == this.EDIT_MODES.PREVIEW_MODE;
     }
 
     ngOnChanges(changes: SimpleChanges) {

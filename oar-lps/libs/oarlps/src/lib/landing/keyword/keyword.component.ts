@@ -19,7 +19,7 @@ export class KeywordComponent implements OnInit {
     isEditing: boolean = false;
     keywords: string = "";
     originKeywords: string = "";
-    originalRecord: any[];
+    originalRecord: any[]; //Original record or the record that's previously saved
     message: string = "";
     backColor: string = "white";
 
@@ -60,6 +60,10 @@ export class KeywordComponent implements OnInit {
         this.getKeywords();
     }
 
+    /**
+     * If record changed, update originalRecord to keep track on previous saved record
+     * @param changes 
+     */
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.record){
             this.originalRecord = JSON.parse(JSON.stringify(this.record));
@@ -67,6 +71,9 @@ export class KeywordComponent implements OnInit {
         }
     }
 
+    /**
+     * Update keywords and original keywords from the record
+     */
     getKeywords() {
         if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
             this.keywords = this.record[this.fieldName].join(",");
@@ -75,30 +82,50 @@ export class KeywordComponent implements OnInit {
             this.originKeywords = this.originalRecord[this.fieldName].join(",");
     }
 
+    /**
+     * Start editing keywords. Set this section in edit mode and broadcast the status so other section will auto save
+     * and the help side bar can update the info.
+     */
     startEditing() {
         this.setMode(MODE.EDIT);
         this.isEditing = true;
     }
 
+    /**
+     * Cancel current editing. Set this section to normal mode. Restore keywords from previously saved ones.
+     */
     cancelEditing() {
         this.getKeywords();
         this.setMode(MODE.NORNAL);
         this.isEditing = false;
-        this.setBackground(this.keywords);
+        this.setBackground();
     }
 
+    keywordChanges() {
+        let keywordChanged = this.record[this.fieldName].filter(x => !this.originalRecord[this.fieldName].includes(x));
+        let keywordChanged2 = this.originalRecord[this.fieldName].filter(x => !this.record[this.fieldName].includes(x));
+
+        return (keywordChanged.length > 0 || keywordChanged2.length > 0);
+    }
+
+    /**
+     * Save keywords.
+     * @param refreshHelp Indicates if help content needs be refreshed.
+     */
     onSave(refreshHelp: boolean = true) {
-        // Replace line feeds with comma
-        this.keywords = this.keywords.replace(new RegExp("[\r\n]", "gm"), ",");
+        // Trim items 
+        this.record[this.fieldName] = this.record[this.fieldName].map(element => {
+            return element.trim();
+        });
+        // remove duplicates
+        this.record[this.fieldName] = this.record[this.fieldName].filter((item, index)=> this.record[this.fieldName].indexOf(item) === index);
 
-        // Replace semicolon with comma
-        this.keywords = this.keywords.replace(new RegExp("[\;]", "gm"), ",");
-
-        if(this.keywords != this.originKeywords) {
-
+        if(this.keywordChanges()) {
             let updmd = {};
-            updmd[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
-            this.record[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
+            // updmd[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
+            // this.record[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
+
+            updmd[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
 
             this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
@@ -113,18 +140,14 @@ export class KeywordComponent implements OnInit {
         this.isEditing = false;
     }
 
-    onKeywordChange(event: any) {
-        this.keywords = event;
-    }
-
     /**
      * Set background color based on the status of keywords
      * if it's the same as original value (nothing changed), set background color to white.
      * Otherwise set it to light yellow.
      * @param keywords 
      */
-    setBackground(keywords: string) {
-        if(keywords != this.originKeywords){
+    setBackground() {
+        if(this.keywordChanges()){
             this.backColor = 'var(--data-changed)';
         }else{
             this.backColor = 'white';
@@ -135,14 +158,15 @@ export class KeywordComponent implements OnInit {
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoEditing() {
-        this.setMode(MODE.NORNAL);
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success)
+            if (success){
+                this.setMode(MODE.NORNAL);
+
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            else
+            }else
                 console.error("Failed to undo keywords metadata")
         });
-        this.setBackground(this.keywords);
+        this.setBackground();
     }
 
     /**
@@ -164,6 +188,7 @@ export class KeywordComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        this.lpService.setEditing(sectionMode);        
+        if(editmode != MODE.NORNAL)
+            this.lpService.setEditing(sectionMode);        
     }
 }

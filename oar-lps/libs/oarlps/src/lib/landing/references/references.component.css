@@ -8,8 +8,12 @@
 
 .refModalClass .modal-dialog {
     max-width: 1920px !important;
-  }
+}
   
+.ref-entry {
+    margin: 0px 0px .5em 0px;
+}
+
 .refModalClass > .c {
 max-width: 1490px !important;
 min-width: 571px !important;   

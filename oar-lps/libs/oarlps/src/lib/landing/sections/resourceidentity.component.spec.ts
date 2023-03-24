@@ -11,16 +11,21 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { config, testdata } from '../../../environments/environment';
-
+import { config, testdata, context } from '../../../environments/environment';
+import { IEnvironment } from '../../../environments/ienvironment';
 import * as _ from 'lodash-es';
 
 describe('ResourceIdentityComponent', () => {
+    let ienv : IEnvironment;
+    ienv.config = config;
+    ienv.testdata = testdata;
+    ienv.context = context;
+
     let component : ResourceIdentityComponent;
     let fixture : ComponentFixture<ResourceIdentityComponent>;
     let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
-    let authsvc : AuthService = new MockAuthService()
+    let authsvc : AuthService = new MockAuthService(null, ienv);
 
     let makeComp = function() {
         TestBed.configureTestingModule({

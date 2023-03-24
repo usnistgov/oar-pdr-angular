@@ -38,6 +38,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // const sampleData: any = require('../../assets/sample1.json');
         const emptyNerdm: any = require('../../assets/sample-data/nerdm-empty.json');
         const nerdm: any = require('../../assets/sample-data/nerdm2.json');
+        const taxonomy: any = require('../../assets/sample-data/taxonomy-list.json');
 
         // const testdata: any = {
         //     PageSize: 1,
@@ -76,7 +77,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             "type": "dmp"
         }
 
-        // console.log("request", request);
+        console.log("request", request);
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
             // metrics
@@ -142,6 +143,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //       });
         //   }
 
+        //======
         // // authenticate
         if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
             let body: any = {
@@ -156,31 +158,88 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         // midas test data
-        if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'GET') {
-            return of(new HttpResponse({ status: 200, body: emptyNerdm }));
+        // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'GET') {
+        //     return of(new HttpResponse({ status: 200, body: emptyNerdm }));
+        // }
+
+        // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'DELETE') {
+        //     return of(new HttpResponse({ status: 200, body: emptyNerdm }));
+        // }
+        
+        // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'PATCH') {
+        //     return of(new HttpResponse({ status: 200, body: emptyNerdm }));
+        // }
+
+        if (request.url.indexOf('/rmm/taxonomy') > -1 && request.method === 'GET') {
+            return of(new HttpResponse({ status: 200, body: taxonomy }));
         }
 
-        if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'DELETE') {
-            return of(new HttpResponse({ status: 200, body: emptyNerdm }));
+        if (request.url.indexOf('data/theme') > -1 && request.method === 'PUT') {
+            return of(new HttpResponse({ status: 200, body: request.body }));
+        }
+
+        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'GET') {
+            return of(new HttpResponse({ status: 200, body: nerdm }));
+        }
+
+        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PUT') {
+            let requestBody = JSON.parse(request.body)
+            if(Array.isArray(requestBody)) {
+                requestBody.forEach(item => {
+                    if(!item['@id']){
+                        item['@id'] = this.readableRandomStringMaker(6);
+                    }
+                })
+            }
+            return of(new HttpResponse({ status: 200, body: requestBody }));
+        }        
+
+        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
+            return of(new HttpResponse({ status: 200, body: nerdm }));
         }
         
-        if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'PATCH') {
+        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PATCH') {
+            return of(new HttpResponse({ status: 200, body: request.body }));
+        }
+
+        if (request.url.indexOf('midas/dap/mds3/test2/data/references') > -1 && request.method === 'POST') {
+            let body: any = request.body as any;
+            let obj = JSON.parse(body);
+            obj["@id"] = this.readableRandomStringMaker(6);
+            console.log("request body", obj);
+
+            return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
+        }
+
+//      Empty record
+
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'GET') {
             return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         }
 
-        if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'GET') {
-            return of(new HttpResponse({ status: 200, body: nerdm }));
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PUT') {
+            let requestBody = JSON.parse(request.body)
+            if(Array.isArray(requestBody)) {
+                requestBody.forEach(item => {
+                    if(typeof item === 'object'){
+                        if(!item['@id']){
+                            item['@id'] = this.readableRandomStringMaker(6);
+                        }
+                    }
+                })
+            }
+            return of(new HttpResponse({ status: 200, body: requestBody }));
+        }        
+
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'DELETE') {
+            return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         }
 
-        if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'DELETE') {
-            return of(new HttpResponse({ status: 200, body: nerdm }));
-        }
-        
-        if (request.url.indexOf('midas/dap/mdsx/test2') > -1 && request.method === 'PATCH') {
-            return of(new HttpResponse({ status: 200, body: nerdm }));
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PATCH') {
+            return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
-        if (request.url.indexOf('midas/dap/mdsx/test2/data/references') > -1 && request.method === 'POST') {
+        if (request.url.indexOf('midas/dap/mds3/test1/data/references') > -1 && request.method === 'POST') {
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);
@@ -189,28 +248,30 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
         }
 
-        if (request.url.indexOf('references/#ref:10.1016/') > -1 && request.method === 'GET') {
-            return of(new HttpResponse({ status: 200, body: nerdm.references[0] }));
-        }
 
-        if (request.url.indexOf('midas/dap/mdsx/test2/data/nonfileComponents') > -1 && request.method === 'POST') {
-            let body: any = request.body as any;
-            let obj = JSON.parse(body);
-            obj["@id"] = this.readableRandomStringMaker(6);
-            console.log("request body", obj);
+        // if (request.url.indexOf('references/#ref:10.1016/') > -1 && request.method === 'GET') {
+        //     return of(new HttpResponse({ status: 200, body: nerdm.references[0] }));
+        // }
 
-            return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
-        }
+        // if (request.url.indexOf('midas/dap/mdsx/test2/data/nonfileComponents') > -1 && request.method === 'POST') {
+        //     let body: any = request.body as any;
+        //     let obj = JSON.parse(body);
+        //     obj["@id"] = this.readableRandomStringMaker(6);
+        //     console.log("request body", obj);
 
-        if (request.url.indexOf('midas/dap/mdsx/test2/data/references') > -1 && request.method === 'POST') {
-            let body: any = request.body as any;
-            let obj = JSON.parse(body);
-            obj["@id"] = this.readableRandomStringMaker(6);
-            console.log("request body", obj);
+        //     return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
+        // }
 
-            return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
-        }
+        // if (request.url.indexOf('midas/dap/mdsx/test2/data/references') > -1 && request.method === 'POST') {
+        //     let body: any = request.body as any;
+        //     let obj = JSON.parse(body);
+        //     obj["@id"] = this.readableRandomStringMaker(6);
+        //     console.log("request body", obj);
 
+        //     return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
+        // }
+
+        //======
         // return 401 not authorised if token is null or invalid
         //   if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
         //       let body: ApiToken = {

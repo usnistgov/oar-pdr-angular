@@ -8,6 +8,9 @@ import { TextEditModule } from '../../text-edit/text-edit.module';
 import { KeywordComponent } from './keyword.component';
 import { TextareaAutoresizeModule } from '../../textarea-autoresize/textarea-autoresize.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChipsModule } from 'primeng/chips';
+import { ChipModule } from "primeng/chip";
+import { TagModule } from 'primeng/tag';
 
 /**
  * module that provide support for rendering and managing a resource's list of 
@@ -21,6 +24,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         TextEditModule,
         TextareaAutoresizeModule,
         NgbModule,
+        ChipsModule,
+        ChipModule,
+        TagModule,
         ToastrModule.forRoot()
     ],
     declarations: [

@@ -31,3 +31,23 @@
 #ispartof {
     margin: -8px 0 10px 0;
 }
+
+.table {
+    display: table;
+    width: 100%;
+    margin: 0px;
+}
+
+.cell {
+    display: table-cell;
+}
+
+.right {
+    width: 50%;
+    text-align: right;
+}
+
+.left {
+    width: 50%;
+    vertical-align: top;
+}

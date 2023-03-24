@@ -8,21 +8,23 @@ import { Location } from '@angular/common';
 import { AppConfig } from '../../config/config'
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
+import { IEnvironment } from '../../../environments/ienvironment';
 
 describe('TaxonomyListService', () => {
-  let cfg : AppConfig;
-  let plid : Object = "browser";
-  let ts : TransferState = new TransferState();
+    let ienv : IEnvironment;
+    let cfg : AppConfig;
+    let plid : Object = "browser";
+    let ts : TransferState = new TransferState();
 
-  it('should be created', () => {
-    cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+    it('should be created', () => {
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
 
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule, RouterModule, RouterTestingModule],
-      providers: [Location,{ provide: AppConfig, useValue: cfg}]
-    })
+        TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule, RouterModule, RouterTestingModule],
+        providers: [Location,{ provide: AppConfig, useValue: cfg}]
+        })
 
-    const service: TaxonomyListService = TestBed.inject(TaxonomyListService);
-    expect(service).toBeTruthy();
-  });
+        const service: TaxonomyListService = TestBed.inject(TaxonomyListService);
+        expect(service).toBeTruthy();
+    });
 });
