@@ -161,7 +161,9 @@ export class MetadataUpdateService {
             this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe(
                 (res) => {
                     console.log("###DBG  Draft data returned from server:\n  ", res)
+                    console.log("stampUpdateDate...");
                     this.stampUpdateDate();
+                    console.log("updateInMemoryRec...");
                     this.updateInMemoryRec(md, subsetname, id);
                     // this.mdres.next(res as NerdmRes);
                     resolve(true);
@@ -191,6 +193,7 @@ export class MetadataUpdateService {
      * @param id - optional - id of a subset item 
      */
     public updateInMemoryRec(res: any, subsetname: string = undefined, id: string = undefined) {
+        console.log("Updateing res", res);
         if(subsetname == undefined) { // Update the whole record
             this.currentRec = JSON.parse(JSON.stringify(res));
         }else if(id == undefined) {
@@ -205,7 +208,7 @@ export class MetadataUpdateService {
                 this.currentRec[subsetname].push(newItem);
             }
         }
-
+        console.log("this.currentRec", this.currentRec);
         this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
     }
     

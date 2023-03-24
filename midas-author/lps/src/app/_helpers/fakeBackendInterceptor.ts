@@ -211,6 +211,44 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
         }
 
+//      Empty record
+
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'GET') {
+            return of(new HttpResponse({ status: 200, body: emptyNerdm }));
+        }
+
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PUT') {
+            let requestBody = JSON.parse(request.body)
+            if(Array.isArray(requestBody)) {
+                requestBody.forEach(item => {
+                    if(typeof item === 'object'){
+                        if(!item['@id']){
+                            item['@id'] = this.readableRandomStringMaker(6);
+                        }
+                    }
+                })
+            }
+            return of(new HttpResponse({ status: 200, body: requestBody }));
+        }        
+
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'DELETE') {
+            return of(new HttpResponse({ status: 200, body: emptyNerdm }));
+        }
+
+        if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PATCH') {
+            return of(new HttpResponse({ status: 200, body: request.body }));
+        }
+
+        if (request.url.indexOf('midas/dap/mds3/test1/data/references') > -1 && request.method === 'POST') {
+            let body: any = request.body as any;
+            let obj = JSON.parse(body);
+            obj["@id"] = this.readableRandomStringMaker(6);
+            console.log("request body", obj);
+
+            return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
+        }
+
+
         // if (request.url.indexOf('references/#ref:10.1016/') > -1 && request.method === 'GET') {
         //     return of(new HttpResponse({ status: 200, body: nerdm.references[0] }));
         // }

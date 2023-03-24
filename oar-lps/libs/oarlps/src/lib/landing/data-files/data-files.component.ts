@@ -137,6 +137,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
+    fieldName: string = 'components';
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -835,14 +836,18 @@ export class DataFilesComponent implements OnInit, OnChanges {
             this.record['components'] = dataFiles;
             this.buildTree(this.record['components']);
 
-            // Update backend
-            this.mdupdsvc.update('components', dataFiles).then((updateSuccess) => {
-                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                if (updateSuccess)
-                    this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
-                else
-                    console.error("acknowledge description update failure");
-            });
+            // var postMessage: any = {};
+            // postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+            // console.log('postMessage', postMessage);
+
+            // // Update backend
+            // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            //     console.log("###DBG  update sent; success: "+updateSuccess.toString());
+            //     if (updateSuccess)
+            //         this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
+            //     else
+            //         console.error("acknowledge description update failure");
+            // });
 
         })
     }
