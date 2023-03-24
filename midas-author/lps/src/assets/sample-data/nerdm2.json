@@ -11,17 +11,17 @@
     ],
     "@type": ["nrdp:PublicDataResource"],
     "@id": "ark:/88434/mds0000fbk",
-    "title2": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
-    "contactPoint2": {
+    "title": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
+    "contactPoint": {
         "hasEmail": "mailto:patricia.flanagan@nist.gov",
         "fn": "Patricia Flanagan"
     },
     "modified": "2019-03-27 12:24:31",
     "issued": "2019-04-05T16:04:26.0",
     "ediid": "test2",
-    "landingPage2": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
+    "landingPage": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
     "version": "1.0.1",
-    "authors2": [
+    "authors": [
         {
             "@id": "11111111",
             "familyName": "Doe",
@@ -52,10 +52,10 @@
             "description": "metadata update"
         }
     ],
-    "description2": [
+    "description": [
         "Multiple Encounter Dataset (MEDS-I) is a test corpus organized from an extract of submissions of deceased persons with prior multiple encounters. MEDS is provided to assist the FBI and partner organizations refine tools, techniques, and procedures for face recognition as it supports Next Generation Identification (NGI), forensic comparison, training, and analysis, and face image conformance and inter-agency exchange standards. The MITRE Corporation (MITRE) prepared MEDS in the FBI Data Analysis Support Laboratory (DASL) with support from the FBI Biometric Center of Excellence."
     ],
-    "keyword2": [
+    "keyword": [
         "face",
         "biometrics",
         "forensic"
@@ -70,7 +70,7 @@
             "tag": "Information Technology: Biometrics"
         }
     ],
-    "references2": [
+    "references": [
         {
             "refType":"IsSupplementTo",
             "title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses",

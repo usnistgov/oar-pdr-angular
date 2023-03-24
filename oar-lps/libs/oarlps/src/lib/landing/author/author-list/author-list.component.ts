@@ -563,7 +563,7 @@ export class AuthorListComponent implements OnInit {
                 break;    
             case 'restore':
                 // If this is a new item, delete it. Otherwise, restore original value
-                if(this.originalRecord[this.fieldName][index] && this.originalRecord[this.fieldName][index]['@id']){
+                if(this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName][index] && this.originalRecord[this.fieldName][index]['@id']){
                     this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
                         if (success) {
                             this.record[this.fieldName][index]['dataChanged'] = false;

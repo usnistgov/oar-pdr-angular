@@ -210,7 +210,9 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * Restrict and preview mode: hide the whole block -- restrict_preview
      */
     get displayMode() {
-        if(!this.editEnabled || this.record['accessLevel'] === 'public') {
+        if(this.editEnabled){
+            return "normal";
+        }else if(!this.editEnabled || this.record['accessLevel'] === 'public') {
             return "normal";
         }else if(this.record['accessLevel'] === 'restricted public' && this.editMode != this.EDIT_MODES.PREVIEW_MODE) {
             return "restrict";

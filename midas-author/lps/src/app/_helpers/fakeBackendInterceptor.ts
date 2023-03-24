@@ -174,6 +174,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return of(new HttpResponse({ status: 200, body: taxonomy }));
         }
 
+        if (request.url.indexOf('data/theme') > -1 && request.method === 'PUT') {
+            return of(new HttpResponse({ status: 200, body: request.body }));
+        }
+
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'GET') {
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
