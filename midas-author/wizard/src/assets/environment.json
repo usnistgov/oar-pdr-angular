@@ -1,5 +1,5 @@
 {
-    "MIDASAPI":  "http://localhost:9091/midas/",
+    "MIDASAPI":  "https://mdsdev.nist.gov/midas/",
     "PDRAPI":  "https://mdsdev.nist.gov/dapui/edit/od/id/",
     "LANDING": "http://oardev.nist.gov/rmm/",
     "GACODE": "not-set",
