@@ -836,18 +836,18 @@ export class DataFilesComponent implements OnInit, OnChanges {
             this.record['components'] = dataFiles;
             this.buildTree(this.record['components']);
 
-            // var postMessage: any = {};
-            // postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-            // console.log('postMessage', postMessage);
+            var postMessage: any = {};
+            postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+            console.log('postMessage', postMessage);
 
-            // // Update backend
-            // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-            //     console.log("###DBG  update sent; success: "+updateSuccess.toString());
-            //     if (updateSuccess)
-            //         this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
-            //     else
-            //         console.error("acknowledge description update failure");
-            // });
+            // Update backend
+            this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+                console.log("###DBG  update sent; success: "+updateSuccess.toString());
+                if (updateSuccess)
+                    this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
+                else
+                    console.error("acknowledge description update failure");
+            });
 
         })
     }
