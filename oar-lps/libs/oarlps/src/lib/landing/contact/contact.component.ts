@@ -255,6 +255,7 @@ export class ContactComponent implements OnInit {
         
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             if (updateSuccess){
+                this.setMode(MODE.NORNAL, refreshHelp);
                 this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
             }else
                 console.error("acknowledge title update failure");

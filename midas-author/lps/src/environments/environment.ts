@@ -45,7 +45,8 @@ export const config: LPSConfig = {
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,
-    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/"  
+    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/",
+    portalAPI: "https://mdsdev.nist.gov/portal/landing"  
 }
 
 export const testdata: {} = {
