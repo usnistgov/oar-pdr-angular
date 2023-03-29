@@ -11,7 +11,6 @@ export interface RequestFormData {
     country: string;
     receiveEmails: boolean;
     purposeOfUse: string;
-    recaptcha: string;
 }
   
   

@@ -157,15 +157,14 @@ export class AppComponent {
             requestFormData.address3 = this.requestForm.controls.address3.value;
             requestFormData.stateOrProvince = this.requestForm.controls.stateOrProvince.value;
             requestFormData.zipCode = this.requestForm.controls.zipCode.value;
-            requestFormData.country = this.requestForm.controls.country.value;
+            requestFormData.country = this.requestForm.controls.country.value.name;
             requestFormData.receiveEmails = this.requestForm.controls.receiveEmails.value;
-            requestFormData.recaptcha = this.requestForm.controls.recaptcha.value;
 
-
+            let recaptcha = this.requestForm.controls.recaptcha.value;
             let userInfo = this.makeUserInfo(requestFormData);
             // create a new record
             // make a call to the request handler in distribution service
-            this.rpaService.createRecord(userInfo).subscribe((data: {}) => {
+            this.rpaService.createRecord(userInfo, recaptcha).subscribe((data: {}) => {
                 // todo: messages - add a link to return to the landing page of the dataset
                 // https://data.nist.gov/od/id/{ediid}
                 this.displayProgressSpinner = false;
@@ -187,9 +186,8 @@ export class AppComponent {
         userInfo.receiveEmails = requestFormData.receiveEmails ? "True" : "False";
         userInfo.approvalStatus = "Pending";
         userInfo.productTitle = this.selectedDataset!.name;
-        userInfo.subject = "RPA: " + this.selectedDataset!.ediid;
+        userInfo.subject = this.selectedDataset!.ediid;
         userInfo.description = "Product Title:\n" + this.selectedDataset!.name + "\n\n Purpose of Use: \n" + requestFormData.purposeOfUse;
-        userInfo.recaptcha = requestFormData.recaptcha;
         return userInfo;
     }
 

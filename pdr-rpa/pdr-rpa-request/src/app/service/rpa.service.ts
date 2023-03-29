@@ -45,29 +45,16 @@ export class RPAService {
     * @returns The created record
     *
     */
-    public createRecord(userInfo: UserInfo): Observable<Record> {
-        console.log("User Info", userInfo);
+    public createRecord(userInfo: UserInfo, recaptcha: String): Observable<Record> {
+        console.log("User Info:" + JSON.stringify(userInfo));
         return this.http
             .post<Record>(
                 this.baseUrl + "/request/form",
-                JSON.stringify({ "userInfo": userInfo }),
+                JSON.stringify({ "userInfo": userInfo, "recaptcha": recaptcha }),
                 this.httpOptions
             )
             .pipe(catchError(this.handleError));
     }
-
-
-    // Function to test recaptcha is working
-    // public verifyRecaptcha(token: string): Observable<RecaptchaResponse> {
-    //     console.log("Recaptcha Token", token);
-    //     return this.http
-    //         .post<RecaptchaResponse>(
-    //             this.baseUrl + "/recaptcha/verify",
-    //             token,
-    //             this.httpOptions
-    //         )
-    //         .pipe(catchError(this.handleError));
-    // }
 
     // Error handling
     private handleError(error: any) {
