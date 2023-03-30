@@ -317,7 +317,8 @@ export class MockAuthService extends AuthService {
                 token: 'fake jwt token'
             }
         }
-
+        console.log("ngenv2", ngenv2);
+        
         if (!ngenv2.testdata)
             throw new Error("No test data encoded into angular environment");
         if (Object.keys(ngenv2.testdata).length < 0)

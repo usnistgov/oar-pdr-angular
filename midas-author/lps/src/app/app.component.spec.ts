@@ -14,14 +14,17 @@ import { AngularEnvironmentConfigService } from 'oarlps';
 import { CartService } from 'oarlps';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import { IEnvironment } from '../environments/ienvironment';
+import * as environment from '../environments/environment';
 
 describe('AppComponent', () => {
     let cfg: AppConfig;
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
+    let ienv : IEnvironment;
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(environment,plid, ts)).getConfig() as AppConfig;
 
         TestBed.configureTestingModule({
 

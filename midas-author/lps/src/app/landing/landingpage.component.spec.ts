@@ -23,8 +23,9 @@ import { TestDataService } from 'oarlps';
 import { GoogleAnalyticsService } from 'oarlps';
 import * as mock from '../testing/mock.services';
 import {RouterTestingModule} from "@angular/router/testing";
-import { testdata } from 'oarlps';
+import * as environment from '../../environments/environment';
 import { CommonFunctionService } from "oarlps";
+import { IEnvironment } from '../../environments/ienvironment';
 
 describe('LandingPageComponent', () => {
     let component : LandingPageComponent;
@@ -37,7 +38,8 @@ describe('LandingPageComponent', () => {
     let mds : MetadataService;
     let route : ActivatedRoute;
     let router : Router;
-    let authsvc : AuthService = new MockAuthService()
+    let authsvc : AuthService = new MockAuthService();
+    let ienv : IEnvironment;
     // let title : mock.MockTitle;
 
     let routes : Routes = [
@@ -46,13 +48,13 @@ describe('LandingPageComponent', () => {
     ];
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";
         cfg.editEnabled = false;
 
-        nrd10 = testdata['test1'];
+        nrd10 = environment.testdata['test1'];
         /*
         nrd = {
             "@type": [ "nrd:SRD", "nrdp:DataPublication", "nrdp:DataPublicResource" ],
