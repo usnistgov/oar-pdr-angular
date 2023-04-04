@@ -16,15 +16,31 @@
         "build-sw": "npm run build step-wizard --prefix ./midas-author/wizard",
         "start-sw": "npm run start step-wizard --prefix ./midas-author/wizard",
         "start-pdrlps": "npm run start pdr-lps --prefix ./pdr-lps",
-        "start-midaslps": "npm run start midas-lps --prefix ./midas-author/lps"
+        "start-midaslps": "npm run start midas-lps --prefix ./midas-author/lps",
+        "test": "npm run test:midasauthor && npm run test:wizard && test:oarlps && test:pdrlps",
+        "test:midasauthor": "jest --config ./midas-author/lps/jest.config.js",
+        "test:wizard": "jest --config ./midas-author/wizard/jest.config.js",
+        "test:oarlps": "jest --config ./oar-lps/libs/oarlps/jest.config.js",
+        "test:pdrlps": "jest --config ./pdr-lps/jest.config.js"
     },
     "devDependencies": {
+        "@types/jest": "^29.5.0",
         "@types/node": "^12.11.1",
         "fs": "0.0.2",
+        "jest": "^29.5.0",
+        "jest-preset-angular": "^13.0.1",
         "process": "0.11.10",
+        "ts-jest": "^29.0.5",
         "typescript": "4.5.5"
     },
     "dependencies": {
         "rxjs": "^6.6.7"
+    },
+    "jest": {
+        "preset": "jest-preset-angular",
+        "setupTestFrameworkScriptFile": "<rootDir>/setupJest.ts",
+        "transformIgnorePatterns": [
+            "<rootDir>/node_modules/(?!lodash-es)"
+        ]
     }
 }
