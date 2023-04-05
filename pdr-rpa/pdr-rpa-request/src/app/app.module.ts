@@ -26,16 +26,28 @@ import { Secrets } from './model/secrets.model';
 import { tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 
-// Factory method to use with the APP_INITIALIZER provider to initially inject the app with secrets
+/**
+ * The secretsLoadingFactory function returns a function that, when called, 
+ * sends an HTTP GET request to the secrets URL and loads the secrets into the ConfigurationService. 
+ * 
+ * @param configService 
+ * @returns 
+ */
 function secretsLoadingFactory(configService: ConfigurationService): () => Observable<Secrets> {
-    return () => configService.loadSecrets(environment.secretsFile).pipe(
+    return () => configService.loadSecrets(environment.secretsUrl).pipe(
         tap(secrets => {
             configService.secrets = secrets;
         })
     );
 }
 
-// Factory method to use with the RECAPTCHA_SETTINGS provider to inject the app with the recaptcha site key
+/**
+ * The recaptchaApiKeyFactory function returns an object with the Recaptcha site key 
+ * that is obtained from the ConfigurationService.
+ * 
+ * @param configService 
+ * @returns 
+ */
 function recaptchaApiKeyFactory(configService: ConfigurationService): RecaptchaSettings {
     return { siteKey: configService.secrets.recaptchaApiKey };
 }
@@ -69,12 +81,14 @@ function recaptchaApiKeyFactory(configService: ConfigurationService): RecaptchaS
     ],
     providers: [
         {
+            // run the secretsLoadingFactory function before the app starts
             provide: APP_INITIALIZER,
             useFactory: secretsLoadingFactory,
             deps: [ConfigurationService],
             multi: true
         },
         {
+            // provide the Recaptcha site key to the Recaptcha module.
             provide: RECAPTCHA_SETTINGS,
             useFactory: recaptchaApiKeyFactory,
             deps: [ConfigurationService]
