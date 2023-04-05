@@ -4,6 +4,11 @@
     font-family: sans-serif;
 }
 
+body {
+  background-color: #e3f7fd;
+  padding: 0;
+}
+
 :root {
     /* Colors */
     --science-theme-background-default: #008097;
