@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { TransferState } from '@angular/platform-browser';
 import { ActivatedRoute, Router, Routes } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 
@@ -48,7 +48,8 @@ describe('LandingPageComponent', () => {
     ];
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+        console.log('environment', environment);
+        cfg = (new AngularEnvironmentConfigService(environment, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";
@@ -73,7 +74,7 @@ describe('LandingPageComponent', () => {
     let setupComponent = function() {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientTestingModule, BrowserAnimationsModule, LandingPageModule, 
+                HttpClientTestingModule, NoopAnimationsModule, LandingPageModule, 
                 RouterTestingModule.withRoutes(routes), 
                 ToastrModule.forRoot({
                     toastClass: 'toast toast-bootstrap-compatibility-fix'

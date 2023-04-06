@@ -3,5 +3,6 @@ module.exports = {
     ...baseConfig,
     moduleNameMapper: {
         "^lodash-es$": "lodash"
-    }
+    },
+    globalSetup: 'jest-preset-angular/global-setup'
 };

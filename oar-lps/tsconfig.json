@@ -9,6 +9,7 @@
     "declaration": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
+    "emitDecoratorMetadata": true, 
     "target": "es2015",
     "resolveJsonModule": true,
     "esModuleInterop": true,
@@ -28,7 +29,11 @@
       ],
       "rxjs/*": [
         "./node_modules/rxjs/*"
-      ]
-    }
+      ],
+      "@angular/*": ["node_modules/@angular/*"]
+    },
+    "types": [
+        "jest", "node"
+    ]
   }
 }

@@ -11,6 +11,7 @@ import {
 import { UserDetails } from './interfaces';
 import { deepCopy } from '../../config/config.service';
 import { IEnvironment } from '../../../environments/ienvironment';
+import * as environment from '../../../environments/environment';
 
 /**
  * a container for authorization and authentication information that is obtained
@@ -316,6 +317,10 @@ export class MockAuthService extends AuthService {
                 userDetails: userDetails,
                 token: 'fake jwt token'
             }
+        }
+
+        if(ngenv2 == undefined){
+            ngenv2 = environment;
         }
         console.log("ngenv2", ngenv2);
         

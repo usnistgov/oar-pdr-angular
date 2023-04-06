@@ -8,6 +8,7 @@
         "midas-author/wizard"
     ],
     "scripts": {
+        "postinstall": "ngcc --properties es2015 module",
         "build-lib": "npm run build oarng --prefix ./lib",
         "build-oarlps": "npm run build oarlps --prefix ./oar-lps",
         "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps",
@@ -17,11 +18,12 @@
         "start-sw": "npm run start step-wizard --prefix ./midas-author/wizard",
         "start-pdrlps": "npm run start pdr-lps --prefix ./pdr-lps",
         "start-midaslps": "npm run start midas-lps --prefix ./midas-author/lps",
-        "test": "npm run test:midasauthor && npm run test:wizard && test:oarlps && test:pdrlps",
-        "test:midasauthor": "jest --config ./midas-author/lps/jest.config.js",
-        "test:wizard": "jest --config ./midas-author/wizard/jest.config.js",
-        "test:oarlps": "jest --config ./oar-lps/libs/oarlps/jest.config.js",
-        "test:pdrlps": "jest --config ./pdr-lps/jest.config.js"
+        "test": "jest",
+        "testall": "npm run test:midasauthor && npm run test:wizard && test:oarlps && test:pdrlps",
+        "test:midasauthor": "jest --config ./midas-author/lps/jest.config.js --watchAll",
+        "test:wizard": "jest --config ./midas-author/wizard/jest.config.js --silent",
+        "test:oarlps": "jest --config ./oar-lps/libs/oarlps/jest.config.js --watchAll",
+        "test:pdrlps": "jest --config ./pdr-lps/jest.config.js --silent"
     },
     "devDependencies": {
         "@types/jest": "^29.5.0",
@@ -38,7 +40,9 @@
     },
     "jest": {
         "preset": "jest-preset-angular",
-        "setupTestFrameworkScriptFile": "<rootDir>/setupJest.ts",
+        "setupFilesAfterEnv": [
+            "<rootDir>/jest.base.setup.ts"
+        ],
         "transformIgnorePatterns": [
             "<rootDir>/node_modules/(?!lodash-es)"
         ]
