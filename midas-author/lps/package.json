@@ -45,10 +45,5 @@
         "fs": false,
         "proc": false,
         "process": false
-    },
-    "jest": {
-        "transformIgnorePatterns": [
-            "<rootDir>/node_modules/(?!lodash-es)"
-        ]
     }
 }

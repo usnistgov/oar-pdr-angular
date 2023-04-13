@@ -24,6 +24,7 @@ describe('AppComponent', () => {
     let ienv : IEnvironment;
 
     beforeEach(waitForAsync(() => {
+        debugger;
         cfg = (new AngularEnvironmentConfigService(environment,plid, ts)).getConfig() as AppConfig;
 
         TestBed.configureTestingModule({
@@ -36,6 +37,7 @@ describe('AppComponent', () => {
     }));
 
     it('should create the app', waitForAsync(() => {
+        debugger;
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.debugElement.componentInstance;
 

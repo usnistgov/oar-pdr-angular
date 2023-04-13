@@ -24,7 +24,8 @@ describe('LandingBodyComponent', () => {
     let cfg : AppConfig = new AppConfig(environment.config);
     let authsvc : AuthService = new MockAuthService(undefined, environment);
     let record1 : NerdmRes = environment.testdata['test1'];
-
+    debugger;
+    
     let makeComp = function() {
         TestBed.configureTestingModule({
             imports: [ HttpClientModule, SectionsModule, RouterTestingModule ],
@@ -53,6 +54,7 @@ describe('LandingBodyComponent', () => {
     }));
 
     it('should create', () => {
+        debugger;
       expect(component).toBeTruthy();
     });
 

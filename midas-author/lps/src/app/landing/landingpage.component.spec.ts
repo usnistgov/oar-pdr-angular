@@ -28,6 +28,7 @@ import { CommonFunctionService } from "oarlps";
 import { IEnvironment } from '../../environments/ienvironment';
 
 describe('LandingPageComponent', () => {
+    debugger;
     let component : LandingPageComponent;
     let fixture : ComponentFixture<LandingPageComponent>;
     let cfg : AppConfig;
@@ -54,6 +55,7 @@ describe('LandingPageComponent', () => {
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";
         cfg.editEnabled = false;
+        debugger;
 
         nrd10 = environment.testdata['test1'];
         /*
@@ -99,6 +101,7 @@ describe('LandingPageComponent', () => {
     }
 
     it("should set title bar", function() {
+        debugger;
         setupComponent();
         expect(component.getDocumentTitle()).toBe("PDR: "+nrd10.title);
     });

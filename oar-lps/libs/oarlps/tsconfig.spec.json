@@ -1,15 +1,17 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "../../../tsconfig.json",
-  "compilerOptions": {
-    "emitDecoratorMetadata": true,
-    "outDir": "../../out-tsc/spec",
-    "types": [
-      "jest"
+    "extends": "../../../tsconfig.json",
+    "compilerOptions": {
+        "emitDecoratorMetadata": true,
+        "outDir": "../../out-tsc/spec",
+        "types": [
+        "jest"
+        ]
+    },
+    "files": [
+    ],
+    "include": [
+        "**/*.spec.ts",
+        "**/*.d.ts"
     ]
-  },
-  "include": [
-    "**/*.spec.ts",
-    "**/*.d.ts"
-  ]
 }

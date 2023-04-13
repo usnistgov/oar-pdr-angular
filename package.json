@@ -20,9 +20,9 @@
         "start-midaslps": "npm run start midas-lps --prefix ./midas-author/lps",
         "test": "jest",
         "testall": "npm run test:midasauthor && npm run test:wizard && test:oarlps && test:pdrlps",
-        "test:midasauthor": "jest --config ./midas-author/lps/jest.config.js --watchAll",
+        "test:midasauthor": "jest --config ./midas-author/lps/jest.config.js --silent",
         "test:wizard": "jest --config ./midas-author/wizard/jest.config.js --silent",
-        "test:oarlps": "jest --config ./oar-lps/libs/oarlps/jest.config.js --watchAll",
+        "test:oarlps": "jest --config ./oar-lps/libs/oarlps/jest.config.js --silent",
         "test:pdrlps": "jest --config ./pdr-lps/jest.config.js --silent"
     },
     "devDependencies": {
@@ -37,14 +37,5 @@
     },
     "dependencies": {
         "rxjs": "^6.6.7"
-    },
-    "jest": {
-        "preset": "jest-preset-angular",
-        "setupFilesAfterEnv": [
-            "<rootDir>/jest.base.setup.ts"
-        ],
-        "transformIgnorePatterns": [
-            "<rootDir>/node_modules/(?!lodash-es)"
-        ]
     }
 }

@@ -1,4 +1,4 @@
-const baseConfig = require('./jest.base.config');
+const baseConfig = require('../../../jestx.base.config2');
 module.exports = {
     ...baseConfig,
     moduleNameMapper: {
