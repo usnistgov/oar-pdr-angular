@@ -92,37 +92,6 @@
             "browserTarget": "pdr-lps:build"
           }
         },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "main": "src/test.ts",
-            "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
-            "scripts": [],
-            "styles": [
-              "src/styles/main.css",
-              "../node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "../node_modules/primeng/resources/primeng.css",
-              "../node_modules/primeicons/primeicons.css",
-              "src/styles/font-awesome/css/font-awesome.min.css",
-              "src/styles.scss",
-              "../node_modules/ngx-toastr/toastr.css"
-            ],
-            "assets": [
-              {
-                "glob": "src/assets/images/favicon.ico",
-                "input": "src/",
-                "output": "/"
-              },
-              {
-                "glob": "**/*",
-                "input": "src/assets",
-                "output": "/assets"
-              }
-            ]
-          }
-        },
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {

@@ -6,7 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": ["node"]
+    "types": ["jest","node"]
   },
   "exclude": [
     "src/test.ts",

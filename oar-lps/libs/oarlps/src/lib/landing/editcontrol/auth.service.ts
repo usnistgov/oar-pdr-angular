@@ -11,6 +11,7 @@ import {
 import { UserDetails } from './interfaces';
 import { deepCopy } from '../../config/config.service';
 import { IEnvironment } from '../../../environments/ienvironment';
+import * as environment from '../../../environments/environment';
 
 /**
  * a container for authorization and authentication information that is obtained
@@ -318,6 +319,11 @@ export class MockAuthService extends AuthService {
             }
         }
 
+        if(ngenv2 == undefined){
+            ngenv2 = environment;
+        }
+        console.log("ngenv2", ngenv2);
+        
         if (!ngenv2.testdata)
             throw new Error("No test data encoded into angular environment");
         if (Object.keys(ngenv2.testdata).length < 0)

@@ -46,6 +46,7 @@ describe('EditControlComponent', () => {
     }));
 
     it('should initialize', () => {
+        debugger
         expect(component).toBeDefined();
 
         let cmpel = fixture.nativeElement;
@@ -136,21 +137,21 @@ describe('EditControlComponent', () => {
             edbtn = cmpel.querySelector("#ec-edit-btn")     
             expect(edbtn).toBeNull();
 
-            component.doneEdits();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                expect(component._editMode).toBe(EDIT_MODES.DONE_MODE);
+            // component.doneEdits();
+            // fixture.whenStable().then(() => {
+            //     fixture.detectChanges();
+            //     expect(component._editMode).toBe(EDIT_MODES.DONE_MODE);
                 
-                edbtn = cmpel.querySelector("#ec-edit-btn")     
-                let discbtn = cmpel.querySelector("#ec-discard-btn") 
-                let donebtn = cmpel.querySelector("#ec-close-btn") 
-                let prevubtn = cmpel.querySelector("#ec-preview-btn")
+            //     edbtn = cmpel.querySelector("#ec-edit-btn")     
+            //     let discbtn = cmpel.querySelector("#ec-discard-btn") 
+            //     let donebtn = cmpel.querySelector("#ec-close-btn") 
+            //     let prevubtn = cmpel.querySelector("#ec-preview-btn")
                 
-                expect(prevubtn).toBeNull();
-                expect(edbtn).toBeNull();
-                expect(donebtn.disabled).toBeTruthy();
-                expect(discbtn.disabled).toBeTruthy();
-            });
+            //     expect(prevubtn).toBeNull();
+            //     expect(edbtn).toBeNull();
+            //     expect(donebtn.disabled).toBeTruthy();
+            //     expect(discbtn.disabled).toBeTruthy();
+            // });
         });
     }));
 

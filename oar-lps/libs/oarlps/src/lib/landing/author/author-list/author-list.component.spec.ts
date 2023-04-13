@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuthorListComponent } from './author-list.component';
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { UserMessageService } from '../../../frame/usermessage.service';
 
 describe('AuthorListComponent', () => {
   let component: AuthorListComponent;
@@ -8,7 +10,8 @@ describe('AuthorListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AuthorListComponent ]
+      declarations: [ AuthorListComponent ],
+      providers: [ MetadataUpdateService, UserMessageService ]
     })
     .compileComponents();
   });
