@@ -1,0 +1,31 @@
+<div id="contact-details-outer" [style.background-color]="backgroundColor">
+    <table width="90%" align="center">
+
+        <!-- Full name to display in the landing page
+          - Red * means this is a required field.
+          - By default, full name is Given Name + Middle Name + Family Name. But user can it to whatever they want. Once user changes this field, the lock at the right side will be locked. Click on the lock will toggle the lock. If it's locked, user can change the value. When it's unlocked, the default value will display.
+          -->
+        <tr>
+            <td width="15%" align="right">
+                <span style="margin-right: .5em;white-space: nowrap;" data-toggle="tooltip" title="This field is required"><span
+                        style="color:red;">*</span> Name:</span>
+            </td>
+            <td align="left">
+                <input type="text" [(ngModel)]="contact.fn"
+                    style="width: 100%;height: 1.5em;margin: 3px 10px;"
+                    (input)="onFullNameChange($event.target.value)" />
+            </td>
+        </tr>
+
+        <!-- Email -->
+        <tr>
+            <td align="right">
+                <span style="margin-right: .5em;" data-toggle="tooltip" title="This field is recommended"><span
+                        style="color:green;">*</span> Email:</span>
+            </td>
+            <td align="left">
+                <input type="text" [(ngModel)]="email" id="email-input" (input)="onEmailChange($event.target.value)" placeholder="name@company.com" style="width: 100%;height: 1.5em;margin: 3px 10px;"/>
+            </td>
+        </tr>
+    </table>
+</div>

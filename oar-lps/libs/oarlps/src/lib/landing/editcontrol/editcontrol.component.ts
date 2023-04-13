@@ -41,6 +41,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     screenWidth: number;
     screenSizeBreakPoint: number;
     fileManagerUrl = AppSettings.FILE_MANAGER_URL;
+    portalURL: string;
 
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
@@ -105,6 +106,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.edstatsvc._setAuthorized(this.isAuthorized());
         this.edstatsvc._setUserID(this.authsvc.userID);
         this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "768");
+        this.portalURL = this.cfg.get("portalAPI", "https://mdsdev.nist.gov/portal/landing");
     }
 
     ngOnInit() {
@@ -328,23 +330,24 @@ export class EditControlComponent implements OnInit, OnChanges {
      * Tell backend that the editing is done
      */
     public doneEdits(): void {
-      if (this._custsvc){
-        this._custsvc.doneEditing().subscribe(
-          (res) => {
-            // console.log("Done edit return:", res);
-            this.mdupdsvc.forgetUpdateDate();
-            this.mdupdsvc.fieldReset();
-            this._setEditMode(this.EDIT_MODES.DONE_MODE);
-          },
-          (err) => {
-            if (err.type == "user")
-              this.msgsvc.error(err.message);
-            else {
-              this.msgsvc.syserror("error during save: " + err.message);
-            }
-          }
-        );
-      }
+        window.open(this.portalURL, "_blank");
+    //   if (this._custsvc){
+    //     this._custsvc.doneEditing().subscribe(
+    //       (res) => {
+    //         // console.log("Done edit return:", res);
+    //         this.mdupdsvc.forgetUpdateDate();
+    //         this.mdupdsvc.fieldReset();
+    //         this._setEditMode(this.EDIT_MODES.DONE_MODE);
+    //       },
+    //       (err) => {
+    //         if (err.type == "user")
+    //           this.msgsvc.error(err.message);
+    //         else {
+    //           this.msgsvc.syserror("error during save: " + err.message);
+    //         }
+    //       }
+    //     );
+    //   }
     }
 
     /**

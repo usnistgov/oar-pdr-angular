@@ -18,8 +18,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { TreeTableModule } from 'primeng/treetable';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { IEnvironment } from '../../../environments/ienvironment';
 
 describe('DataFilesComponent', () => {
+  let ienv : IEnvironment;
   let component: DataFilesComponent;
   let fixture: ComponentFixture<DataFilesComponent>;
   let cfg: AppConfig;
@@ -30,7 +32,7 @@ describe('DataFilesComponent', () => {
     let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
     dc._forget();
 
-    cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+    cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
     cfg.locations.pdrSearch = "https://goob.nist.gov/search";
     cfg.status = "Unit Testing";
     cfg.appVersion = "2.test";

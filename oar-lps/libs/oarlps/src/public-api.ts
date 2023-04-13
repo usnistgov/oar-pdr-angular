@@ -42,8 +42,8 @@ export * from './lib/landing/nerdm.component';
 
 export * from './lib/landing/topic/topic-popup/search-topics.component';
 export * from './lib/landing/description/description-popup/description-popup.component';
-export * from './lib/landing/author/author-popup/author-popup.component';
-export * from './lib/landing/contact/contact-popup/contact-popup.component';
+
+// export * from './lib/landing/contact/contact-popup/contact-popup.component';
 export * from './lib/landing/author/author.service';
 export * from './lib/landing/author/author.module';
 
@@ -120,3 +120,6 @@ export * from  './lib/textarea-autoresize/textarea-autoresize.module';
 
 export * from './lib/landing/accesspage/accesspage.component';
 export * from './lib/landing/accesspage/accesspage.module';
+export * from './lib/landing/accesspage/accesspage-list/accesspage-list.component';
+export * from './lib/landing/accesspage/accesspage-edit/accesspage-edit.component';
+export * from './lib/shared/testdata-service/testDataService';

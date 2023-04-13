@@ -13,8 +13,10 @@ import { TreeModule } from 'primeng/tree';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { testdata } from '../../../environments/environment';
+import { IEnvironment } from '../../../environments/ienvironment';
 
 describe('SearchresultComponent', () => {
+    let ienv : IEnvironment;
     let component: SearchresultComponent;
     let fixture: ComponentFixture<SearchresultComponent>;
     let cfg : AppConfig;
@@ -23,7 +25,7 @@ describe('SearchresultComponent', () => {
     let nrd1 = testdata['test1'];
 
     beforeEach(async () => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
 
         await TestBed.configureTestingModule({

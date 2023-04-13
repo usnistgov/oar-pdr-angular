@@ -1,22 +1,36 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { AuthorPopupComponent } from './author-popup/author-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { AuthorService } from './author.service';
-import { LandingpageService, SectionMode, MODE } from '../landingpage.service';
+import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
+import { Author } from './author';
 
 @Component({
     selector: 'app-author',
     templateUrl: './author.component.html',
-    styleUrls: ['../landing.component.scss']
+    styleUrls: ['../landing.component.scss'],
+    animations: [
+        trigger('editExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ])
+    ]
 })
 export class AuthorComponent implements OnInit {
+    fieldName = 'authors';
+    editMode: string = MODE.NORNAL; 
+    originAuthors: any[] = [];
+    originalRecord: any[]; //Original record or the record that's previously saved
+    authors: Author[] = [];
+    editBlockStatus: string = 'collapsed';
+    isEditing: boolean = false;
+    overflowStyle: string = 'hidden';
+
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
-    fieldName = 'authors';
-    tempInput: any = {};
-    editMode: string = MODE.NORNAL; 
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
@@ -28,123 +42,94 @@ export class AuthorComponent implements OnInit {
     /**
      * a field indicating if this data has beed edited
      */
-    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get updated() { return this.mdupdsvc.anyFieldUpdated(this.fieldName); }
+
 
     ngOnInit() {
+        this.originalRecord = JSON.parse(JSON.stringify(this.record));
+        this.getAuthors();
     }
     
-    openModal() {
-        if (! this.mdupdsvc.isEditMode) return;
+    /**
+     * If record changed, update originalRecord to keep track on previous saved record
+     * @param changes 
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes.record){
+            this.originalRecord = JSON.parse(JSON.stringify(this.record));
+            this.getAuthors();
+        }
+    }
 
-        // Broadcast the status change
+    /**
+     * Update keywords and original keywords from the record
+     */
+    getAuthors() {
+        if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
+            this.authors = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+
+        if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
+            this.originAuthors = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName]));
+    }
+
+    onEdit() {
+        this.isEditing = true;
+        this.setMode(MODE.EDIT);
+    }
+
+    /**
+     * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
+     * will be cut off. But if overflow style is visible, the animation is not working.
+     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
+     * Then tooltip will not be cut off. 
+     */
+    setOverflowStyle() {
+        if(this.editBlockStatus == 'collapsed') {
+            this.overflowStyle = 'hidden';
+        }else {
+            this.overflowStyle = 'hidden';
+            setTimeout(() => {
+                this.overflowStyle = 'visible';
+            }, 1000);
+        } 
+    }
+
+    /**
+     * Set the GI to different mode
+     * @param editmode edit mode to be set
+     */
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
-        this.editMode = MODE.EDIT;
+        this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-        this.lpService.setEditing(sectionMode);
 
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "myCustomModalClass"
-        };
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
 
-        var tempauthors = [];
-        if (this.record[this.fieldName] != undefined && this.record[this.fieldName].length > 0)
-            this.tempInput[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-        else {
-            tempauthors.push(this.authorService.getBlankAuthor());
-            this.tempInput[this.fieldName] = tempauthors;
+        if(refreshHelp){
+            this.lpService.setSectionHelp(sectionHelp);
+        }
+            
+        switch ( this.editMode ) {
+            case MODE.EDIT:
+                this.editBlockStatus = "expanded";
+                this.setOverflowStyle();
+                this.isEditing = true;
+                break;
+
+            default: // normal
+                // Collapse the edit block
+                this.editBlockStatus = 'collapsed'
+                this.setOverflowStyle();
+                this.isEditing = false;
+                break;
         }
 
-        for (var author in this.tempInput[this.fieldName]) 
-        {
-            this.tempInput.authors[author]['isCollapsed'] = false;
-            this.tempInput.authors[author]['fnLocked'] = false;
-            this.tempInput.authors[author]['originalIndex'] = author;
-            this.tempInput.authors[author]['dataChanged'] = false;
-            this.tempInput.authors[author]['orcidValid'] = true;
-            // For affiliation, we will convert subunits into a string for editing purpose.
-            // After the value return, we will convert it back to array
-            if(this.tempInput.authors[author]['affiliation'])
-            {
-                for(let i in this.tempInput.authors[author]['affiliation'])
-                {
-                    if(this.tempInput.authors[author]['affiliation'][i]['subunits'])
-                    {
-                        if(this.tempInput.authors[author]['affiliation'][i]['subunits'] instanceof Array)
-                        {
-                            this.tempInput.authors[author]['affiliation'][i]['subunits'] = this.tempInput.authors[author]['affiliation'][i]['subunits'].join(',');
-                        }
-                    }                    
-                }
-
-            }
-        }
-
-        const modalRef = this.ngbModal.open(AuthorPopupComponent, ngbModalOptions);
-
-        modalRef.componentInstance.inputValue = this.tempInput;
-        modalRef.componentInstance['field'] = this.fieldName;
-        modalRef.componentInstance['title'] = this.fieldName.toUpperCase();
-
-        modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-            if (returnValue) {
-                var authors: any[] = [];
-                var postMessageDetail: any = {};
-                var postMessage: any = {};
-                var properties = ['affiliation', 'familyName', 'fn', 'givenName', 'middleName', 'orcid'];
-                var reyurnAuthors = returnValue[this.fieldName];
-
-                for(let author of reyurnAuthors) {
-                    postMessageDetail = {};
-                    for(let prop in author)
-                    {
-                        if(properties.indexOf(prop) > -1) // Filter temp fields
-                        {
-                            if(properties.indexOf('affiliation') > -1) // Convert subunits back to array
-                            {
-                                if(author['affiliation'])
-                                {
-                                    for(let j in author['affiliation'])
-                                    {
-                                        if(author['affiliation'][j]['subunits'] != null && author['affiliation'][j]['subunits'] != undefined)
-                                        {
-                                            if(!(author['affiliation'][j]['subunits'] instanceof Array))
-                                            {
-                                                if(author['affiliation'][j]['subunits'].trim() == '')
-                                                {
-                                                    delete author['affiliation'][j]['subunits'];
-                                                }else{
-                                                    author['affiliation'][j]['subunits'] = JSON.parse(JSON.stringify(author['affiliation'][j]['subunits'].split(/\s*,\s*/).filter(su => su != '')));
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                                
-                            postMessageDetail[prop] = JSON.parse(JSON.stringify(author[prop]));
-
-                        }
-                    }
-
-                    authors.push(postMessageDetail);
-                }
-
-                postMessage[this.fieldName] = JSON.parse(JSON.stringify(authors));
-                // console.log("postMessage", postMessage);
-                this.record[this.fieldName] = JSON.parse(JSON.stringify(authors));
-                
-                this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                    if (updateSuccess)
-                        this.notificationService.showSuccessWithTimeout("Authors updated.", "", 3000);
-                    else
-                        console.error("acknowledge author update failure");
-                });
-            }
-        })
+        //Broadcast the current section and mode
+        if(editmode != MODE.NORNAL)
+            this.lpService.setEditing(sectionMode);
     }
 
     /*
@@ -152,14 +137,17 @@ export class AuthorComponent implements OnInit {
      */
     undoEditing() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success)
+            if (success){
+                this.setMode();
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            else
-                console.error("Failed to undo keywords metadata")
+            }else
+                console.error("Failed to undo keywords metadata");
         });
     }
 
-
+    /**
+     * Expand author details for non-edit mode
+     */
     clicked = false;
     expandClick() {
         this.clicked = !this.clicked;
@@ -175,4 +163,24 @@ export class AuthorComponent implements OnInit {
             return subunites;
         }
     }
+
+    /**
+     * Handle requests from child component
+     * @param dataChanged parameter passed from child component
+     */
+    onAuthorChange(dataChanged: any) {
+        switch(dataChanged.action) {
+            case 'hideEditBlock':
+                this.isEditing = false;
+                this.overflowStyle = 'hidden';
+                this.editBlockStatus = 'collapsed';
+                break;
+            case 'dataChanged':
+
+                break;
+            default:
+                break;
+        }
+    }
+
 }

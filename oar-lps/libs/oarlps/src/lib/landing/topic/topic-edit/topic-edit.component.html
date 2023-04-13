@@ -1,0 +1,99 @@
+<table style="width: 100%;">
+    <tr  style="width: 100%;">
+        <!-- Text edit area -->
+        <td class="edit-block" style="width: calc(100%-30px);" >
+            <div style="width: 100%;text-align: left;padding: 10px;">
+
+                <!-- Selected topics -->
+                <div style="width:90%; margin: 1em auto 1em auto;">
+                    <table width="100%" align="center">
+                        <tr class="selected-topic-header">
+                            <td class="selected-topic-header">
+                                <span>Selected topics:</span>
+                            </td>
+                            <td width="50px">
+                            </td>
+                        </tr>
+                        <tr *ngFor="let topic of nistTaxonomyTopics; let i = index; trackBy: trackByFn" align="top"
+                            style="border-bottom:1pt solid black;" height="2em" [style.background-color]="backgroundColor">
+                            <td style="padding-left: 2em;">
+                                <span (click)="searchAndExpandTaxonomyTree(topic, true)"
+                                    style="color: #1E6BA1; cursor: pointer;">{{topic}}</span>
+                            </td>
+                            <td width="50px">
+                                <i class="faa faa-trash" (click)="deleteTopic(i)"
+                                    style="float: right;cursor: pointer;color:grey; margin: .5em;" data-toggle="tooltip"
+                                    title="Delete affiliation"></i>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- Topic search 
+                -  Once user start typing in this input field, the taxonomy list below will be filtered.
+                -->
+                <div style="width:90%; margin: 1em auto 0em auto;">
+                    <input type="text" style="height:35px;background-color: #E7FFFE;" [(ngModel)]="searchText"
+                        (input)="onSearchTextChange()" placeholder="Type here to filter topics" />
+                </div>
+
+                <!-- Taxonomy list to select -->
+                <div class="selected-topic-header" style="width:90%; margin: 0em auto 0em auto;">
+                    <span>Select topic(s) from the NIST research taxonomy (Double click
+                        on name to select; scroll down to see more):</span>
+
+                    <!-- Reset button to reset the taxonomy list to it's original state:
+                    - Display only first level
+                    - No filtering
+                    -->
+                    <i class="faa faa-recycle reset" (click)="showAllTopics()" data-toggle="tooltip" title="Reset"></i>
+                </div>
+                <div style="clear: both;"></div>
+                <div #panel0
+                    style="width:90%; margin: 0em auto 2em auto; height: 50vh; overflow-y: scroll; border: 1px solid lightgrey;">
+
+                    <div style="margin: .5em 1em .5em 1em;">
+                        <p-treeTable *ngIf="isVisible" [value]="taxonomyTree" styleClass="p-treetable-sm">
+                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
+                                <tr (dblclick)="updateTopics(rowNode)" (click)="openPopup($event,op5)">
+                                    <td (mouseover)="setHighlight(rowData)" (mouseout)="setHighlight('')"
+                                        [ngStyle]="{'background-color': rowBackColor(rowData), 'display': rowVisibility(rowData), 'cursor': getTopicCursor(rowNode)}">
+                                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                                        <span [ngStyle]="{'color': rowColor(rowNode)}">{{rowData.name}}</span>
+                                    </td>
+                                </tr>
+                            </ng-template>
+                        </p-treeTable>
+                    </div>
+                </div>
+            </div>
+        </td>
+
+        <!-- Control buttons -->
+        <td style="width: 90px;vertical-align: top;">
+            <!-- Save button -->
+            <button class="edit_button" type="button" (click)="onSave()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
+                <i class="faa faa-check"></i>
+            </button>
+    
+            <!-- Cancel button -->
+            <button class="edit_button" type="button"
+                (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
+                <i class="faa faa-remove"></i>
+            </button>
+
+            <!-- Restore button -->
+            <button class="edit_button" type="button"
+            [disabled]="!updated" (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
+                <i class="faa faa-undo"
+                    [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"></i>
+            </button>                
+        </td>          
+    </tr>
+</table>
+
+<p-overlayPanel class="fileDialog" #op5 [baseZIndex]=9999 [dismissable]="true" [showCloseIcon]="false" [style]="{'display':'inline-block','position':'absolute','left':'0','top':'20%'}" [appendTo]="'body'">
+    <div>
+        Double-click on theme to select.
+    </div>
+</p-overlayPanel>

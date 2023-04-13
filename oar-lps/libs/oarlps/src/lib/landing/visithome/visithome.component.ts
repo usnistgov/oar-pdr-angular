@@ -1,15 +1,23 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { VisithomePopupComponent } from './visithome-popup/visithome-popup.component';
 import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
+import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 @Component({
     selector: 'app-visithome',
     templateUrl: './visithome.component.html',
-    styleUrls: ['./visithome.component.css', '../landing.component.scss']
+    styleUrls: ['./visithome.component.css', '../landing.component.scss'],
+    animations: [
+        trigger('editExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ])
+    ]
 })
 export class VisithomeComponent implements OnInit {
     @Input() record: any[];
@@ -19,17 +27,51 @@ export class VisithomeComponent implements OnInit {
 
     fieldName = 'landingPage';
     scienceTheme = Themes.SCIENCE_THEME;
-    
+    // backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
+    editMode: string = MODE.NORNAL; 
+    visitHomeURL: string = "";
+    dataChanged: boolean = false;
+    originalRecord: any = {};
+    editBlockStatus: string = 'collapsed';
+    overflowStyle: string = 'hidden';
+
     constructor(
         public mdupdsvc : MetadataUpdateService,        
-        private ngbModal: NgbModal,
+        public lpService: LandingpageService, 
         private notificationService: NotificationService,
         private gaService: GoogleAnalyticsService) { 
 
-        
+            this.lpService.watchEditing((sectionMode: SectionMode) => {
+                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if(this.isEditing && this.dataChanged){
+                        this.saveVisitHomeURL(false); // Do not refresh help text 
+                    }
+                    this.setMode(MODE.NORNAL,false);
+                }
+            })
     }
 
     ngOnInit(): void {
+        this.updateOriginal();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes.record) {
+            setTimeout(() => {
+                this.updateOriginal();
+            }, 0);
+        }
+    }
+
+    updateOriginal(){
+        this.visitHomeURL = "";
+
+        if(this.hasVisitHomeURL) {
+            this.visitHomeURL = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+            this.dataChanged = false;
+
+            this.originalRecord[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+        }
     }
 
     /**
@@ -37,46 +79,191 @@ export class VisithomeComponent implements OnInit {
      */
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
 
-    openModal() {
-        if (!this.mdupdsvc.isEditMode) return;
+    get isEditing() { return this.editMode==MODE.EDIT }
 
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "myCustomModalClass"
-        };
+    get isNormal() { return this.editMode==MODE.NORNAL }
 
-        const modalRef = this.ngbModal.open(VisithomePopupComponent, ngbModalOptions);
+    get hasVisitHomeURL() {
+        if(!this.record) return false;
+        else return this.isExternalHomePage(this.record[this.fieldName]);
+    }
 
-        modalRef.componentInstance.inputValue = { };
-        modalRef.componentInstance.inputValue[this.fieldName] = this.record[this.fieldName];
-        modalRef.componentInstance['field'] = this.fieldName;
-        modalRef.componentInstance['title'] = 'Landingpage URL';
-        modalRef.componentInstance['message'] = '';
+    /**
+     * return true if the given URL does not appear to be a PDR-generated home page URL.
+     * Note that if the input URL is not a string, false is returned.  
+     */
+    public isExternalHomePage(url : string) : boolean {
+        if (! url)
+            return false;
+        let pdrhomeurl = /^https?:\/\/(\w+)(\.\w+)*\/od\/id\//
+        return ((url.match(pdrhomeurl)) ? false : true);
+    }
 
-        modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-            if (returnValue) {
-                console.log("returnValue[this.fieldName]", returnValue[this.fieldName]);
-                this.record[this.fieldName] = returnValue[this.fieldName];
-                this.mdupdsvc.update(this.fieldName, returnValue[this.fieldName]).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                    if (updateSuccess)
-                        this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
-                    else
-                        console.error("Updating " + this.fieldName + " failed.");
-                });
-            }
-        })
+    /**
+     * Determind the edit icon class based on current editing status
+     * @returns icon class of the edit button
+     */
+    editIconClass() {
+        if(this.isEditing){
+            return "faa faa-pencil icon_disabled";
+        }else{
+            return "faa faa-pencil icon_enabled"
+        }
+    }
+
+    /**
+     * Handle requests from child component
+     * @param dataChanged parameter passed from child component
+     */
+    onDataChange(dataChanged: any) {
+        switch(dataChanged.action) {
+            case 'dataChanged':
+                this.record[this.fieldName] = dataChanged.visitHomeURL;
+                this.visitHomeURL = dataChanged.visitHomeURL;
+                this.dataChanged = true;
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Handle commands from child component
+     * @param cmd command from child component
+     */
+    onCommandChanged(cmd) {
+        switch(cmd.command) {
+            case 'saveURL':
+                this.saveVisitHomeURL();
+                break;
+            case 'undoCurrentChanges':
+                this.undoCurrentChanges();
+                break;
+            case 'restoreOriginal':
+                this.restoreOriginal();
+                break;
+            default:
+                break;
+        }
+    }
+
+    onEdit() {
+        this.visitHomeURL = this.record[this.fieldName];
+
+        this.setMode(MODE.EDIT);
+    }
+
+    /**
+     * Unde current changes on Visit Home URL
+     */
+    undoCurrentChanges() {
+        if(this.originalRecord[this.fieldName] == undefined) {
+            this.record[this.fieldName] = undefined;
+            this.visitHomeURL = "";
+        }else{
+            this.record[this.fieldName] = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName]));
+            this.visitHomeURL = this.record[this.fieldName];
+        }
+
+        this.setMode();
+    }
+
+    saveVisitHomeURL(refreshHelp: boolean = true) {
+        this.record[this.fieldName] = this.visitHomeURL;
+        let postMessage: any = {};
+        postMessage[this.fieldName] = this.visitHomeURL;;
+
+        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            if (updateSuccess){
+                this.setMode(MODE.NORNAL, refreshHelp);
+
+                this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
+            }else
+                console.error("Updating " + this.fieldName + " failed.");
+        });        
+    }
+
+    /**
+     * Retuen background color of the whole record (the container of all authors) 
+     * based on the dataChanged flag of the record.
+     * @returns the background color of the whole record
+     */
+    get backgroundColor() {
+        let bkgroundColor = 'var(--editable)';
+
+        if(this.updated){
+            bkgroundColor = 'var(--data-changed-saved)';
+        }else if(this.dataChanged){
+            bkgroundColor = 'var(--data-changed)';
+        }
+
+        return bkgroundColor;
+    }
+
+    /**
+     * Set the GI to different mode
+     * @param editmode edit mode to be set
+     */
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = editmode;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+
+        if(refreshHelp){
+            this.lpService.setSectionHelp(sectionHelp);
+        }
+            
+        switch ( this.editMode ) {
+            case MODE.EDIT:
+                this.editBlockStatus = 'expanded';
+                this.setOverflowStyle();
+                break;
+ 
+            default: // normal
+                // Collapse the edit block
+                this.editBlockStatus = 'collapsed';
+                this.dataChanged = false;
+                this.setOverflowStyle();
+                break;
+        }
+
+        //Broadcast the current section and mode
+        if(editmode != MODE.NORNAL)
+            this.lpService.setEditing(sectionMode);
+    }
+
+    /**
+     * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
+     * will be cut off. But if overflow style is visible, the animation is not working.
+     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
+     * Then tooltip will not be cut off. 
+     */    
+    setOverflowStyle() {
+        if(this.editBlockStatus == 'collapsed') {
+            this.overflowStyle = 'hidden';
+        }else {
+            this.overflowStyle = 'hidden';
+            setTimeout(() => {
+                this.overflowStyle = 'visible';
+            }, 1000);
+        } 
     }
 
     /*
-     *  Undo editing. If no more field was edited, delete the record in staging area.
+     *  Restore original value. If no more field was edited, delete the record in staging area.
      */
-    undoEditing() {
+    restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success)
+            if (success){
+                this.setMode();
+
                 this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
-            else
+            }else
                 console.error("Failed to undo landingpage metadata")
         });
     }

@@ -10,6 +10,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TopicComponent } from './topic.component';
 import { SearchTopicsComponent } from './topic-popup/search-topics.component';
 import { ButtonModule } from 'primeng/button';
+import { TopicEditComponent } from './topic-edit/topic-edit.component';
 
 /**
  * module that provide support for rendering and managing a resource's list of 
@@ -26,7 +27,7 @@ import { ButtonModule } from 'primeng/button';
         ToastrModule.forRoot()
     ],
     declarations: [
-        TopicComponent, SearchTopicsComponent
+        TopicComponent, SearchTopicsComponent, TopicEditComponent
     ],
     providers: [
     ],

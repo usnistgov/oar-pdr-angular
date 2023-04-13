@@ -1,0 +1,27 @@
+#author-details-outer {
+    text-align: center; 
+    width:100%;
+    padding: 0.5em;
+    margin-bottom: .5em;
+}
+
+#orcid-warning {
+    color: rgb(212, 103, 0); 
+    font-size: 12px; 
+    margin-right: 3em; 
+    margin-left: 1em; 
+    /* margin-top: -.7em;  */
+    text-align: left;
+}
+
+.text-input {
+    margin: 3px 10px;
+    height:2em;
+    width: 100%;
+}
+
+.text-input-right-button {
+    margin: 3px 10px;
+    height:2em;
+    width: calc(100% - 3em);
+}

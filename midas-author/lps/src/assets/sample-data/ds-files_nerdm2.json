@@ -1,0 +1,580 @@
+[
+    {
+      "@id": "cmps/CHAL-AMB2022-05-MS submission template.csv",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "CHAL-AMB2022-05-MS submission template.csv",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/CHAL-AMB2022-05-MS%20submission%20template.csv",
+      "mediaType": "text/csv",
+      "size": 2354,
+      "checksum": {
+        "hash": "eb671d4c2079ad33de171eafb5b5e1ce1b6fe51a37df15b3f05b2c7b5161cdde",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/2618_README.txt",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "2618_README.txt",
+      "downloadURL": "https://data.nist.gov/od/ds/mds2-2618/2618_README.txt",
+      "mediaType": "text/plain",
+      "description": "Main README file describing dataset contents and description",
+      "title": "README for Dataset",
+      "size": 13863,
+      "checksum": {
+        "hash": "9ef7203e88d1ed29d7d5577ec89c3cf73094e69a06e1e74dc0e34393d7caf15a",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data README.pdf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data README.pdf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data%20README.pdf",
+      "mediaType": "application/pdf",
+      "size": 123361,
+      "checksum": {
+        "hash": "cfd6da8bb99bf3a75b0117603661bc2a892ec2efbe7b1e8cf63f8b96acb28929",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Orientation README.pdf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Orientation README.pdf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Orientation%20README.pdf",
+      "mediaType": "application/pdf",
+      "size": 463825,
+      "checksum": {
+        "hash": "4d64974c7b064c469935c95ea9999f7141dc66e0c1b732da88084de8a6e49424",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered%20Data",
+      "@type": [
+        "nrdp:Subcollection"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/Subcollection"
+      ],
+      "filepath": "Registered Data"
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_EBSD_DRAFT_20220406.xdmf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_EBSD_DRAFT_20220406.xdmf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_EBSD_DRAFT_20220406.xdmf",
+      "mediaType": "application/octet-stream",
+      "size": 5182,
+      "checksum": {
+        "hash": "3a627593b14e38f6ae95ef37279774f95b9283e55c89332db6cc6cf76c69b904",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_aggregation_OM7Aligned.json",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_aggregation_OM7Aligned.json",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_aggregation_OM7Aligned.json",
+      "mediaType": "application/json",
+      "size": 1869,
+      "checksum": {
+        "hash": "492f54ede974a1328d95a2e83baca16eb2126053e341909197b9e393afdf6baf",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_OM7Aligned_DRAFT_20220406.dream3d",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_OM7Aligned_DRAFT_20220406.dream3d",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_OM7Aligned_DRAFT_20220406.dream3d",
+      "mediaType": "application/octet-stream",
+      "size": 69626039,
+      "checksum": {
+        "hash": "04d92af179161437de751ae1bc007d8a681325ec62663a1ab25373a577540090",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_BSE2_DRAFT_20220406.dream3d",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_BSE2_DRAFT_20220406.dream3d",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_BSE2_DRAFT_20220406.dream3d",
+      "mediaType": "application/octet-stream",
+      "size": 18017625,
+      "checksum": {
+        "hash": "26bb1980cf2b0d40cf761a6e74612fceb6b6d9ea83bceb11d353e0b645216e64",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_BSE1_DRAFT_20220406.dream3d",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_BSE1_DRAFT_20220406.dream3d",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_BSE1_DRAFT_20220406.dream3d",
+      "mediaType": "application/octet-stream",
+      "size": 18017608,
+      "checksum": {
+        "hash": "b09e1c23e2d81a8720ceda31ccefb50ed3352206755a1d847feed4a110101717",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_OM7Aligned_DRAFT_20220406.xdmf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_OM7Aligned_DRAFT_20220406.xdmf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_OM7Aligned_DRAFT_20220406.xdmf",
+      "mediaType": "application/octet-stream",
+      "size": 986,
+      "checksum": {
+        "hash": "309faf0ee8db3fcac6f3f660e70c42a676a1b8f7979fd9624e5fa39142aa62f2",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/Slice179 View.pvsm",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/Slice179 View.pvsm",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/Slice179%20View.pvsm",
+      "mediaType": "application/octet-stream",
+      "size": 478499,
+      "checksum": {
+        "hash": "ab08668ff2e8e5316118ea7592447abb3506d8bcc22f9930b43fefd7fa64f73a",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_BSE1_DRAFT_20220406.xdmf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_BSE1_DRAFT_20220406.xdmf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_BSE1_DRAFT_20220406.xdmf",
+      "mediaType": "application/octet-stream",
+      "size": 959,
+      "checksum": {
+        "hash": "179b25c14f64ff5cd7d32fc36d19bca0c311d0df537e0b3d9c89498e6ba95274",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_EBSD_DRAFT_20220406.dream3d",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_EBSD_DRAFT_20220406.dream3d",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_EBSD_DRAFT_20220406.dream3d",
+      "mediaType": "application/octet-stream",
+      "size": 53487944,
+      "checksum": {
+        "hash": "652f8b05c3692380af8cdfccb0a23f34e33759d1d2b64cc7db84c707bdb8e1f5",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_aggregation_BSE2.json",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_aggregation_BSE2.json",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_aggregation_BSE2.json",
+      "mediaType": "application/json",
+      "size": 1913,
+      "checksum": {
+        "hash": "4b3dd8a28dcbb87323fd4a58b4eca39d3a0416ccfbfb0df14fd1d674c2851aac",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_BSE2_DRAFT_20220406.xdmf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_BSE2_DRAFT_20220406.xdmf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_BSE2_DRAFT_20220406.xdmf",
+      "mediaType": "application/octet-stream",
+      "size": 959,
+      "checksum": {
+        "hash": "051ed648e6afa0fe85427db0e37934f4cb93987925ac714839b9e634d1c94b41",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_aggregation_BSE1.json",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_aggregation_BSE1.json",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_aggregation_BSE1.json",
+      "mediaType": "application/json",
+      "size": 1896,
+      "checksum": {
+        "hash": "fee0482c5011152e32a1bb96e188744f67de0400c9eb393ff3fad1989499f927",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Registered Data/slice179_aggregation_EBSD.json",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Registered Data/slice179_aggregation_EBSD.json",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Registered%20Data/slice179_aggregation_EBSD.json",
+      "mediaType": "application/json",
+      "size": 6568,
+      "checksum": {
+        "hash": "195967cecc9b9587ed24bcd4a7b65fa37c4972deb60a48b027f0bd7e6a4a3428",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original%20Data",
+      "@type": [
+        "nrdp:Subcollection"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/Subcollection"
+      ],
+      "filepath": "Original Data"
+    },
+    {
+      "@id": "cmps/Original Data/1179.tif",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/1179.tif",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/1179.tif",
+      "mediaType": "image/tiff",
+      "size": 69620168,
+      "checksum": {
+        "hash": "b80aa9dd436ed5a73fe533889ee77ba4a3a5d0b36c528149f292b599124c2f89",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data/LEROY_0113_EBSD_1_Section_179_IPFY.bmp",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/LEROY_0113_EBSD_1_Section_179_IPFY.bmp",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/LEROY_0113_EBSD_1_Section_179_IPFY.bmp",
+      "mediaType": "image/example",
+      "title": "EBSD Map of Section 179, Orientation IPFY",
+      "size": 1689054,
+      "checksum": {
+        "hash": "a94c587ac455e8669621de04e85cd817c6359dd4590595943fc9c424d5b519e4",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data/LEROY_0113_EBSD_1_Section_179_DI.ctf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/LEROY_0113_EBSD_1_Section_179_DI.ctf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/LEROY_0113_EBSD_1_Section_179_DI.ctf",
+      "mediaType": "application/octet-stream",
+      "size": 37538755,
+      "checksum": {
+        "hash": "d7485aa191756239c69359c1e44a0a6424f9c7d03c28c29fda92b02f5862e42f",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data/LEROY_0113_EBSD_1_Section_179.ctf",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/LEROY_0113_EBSD_1_Section_179.ctf",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/LEROY_0113_EBSD_1_Section_179.ctf",
+      "mediaType": "application/octet-stream",
+      "size": 32155168,
+      "checksum": {
+        "hash": "5f825537996676fcec09c7917482af15693dfe8ea28337096aa4abf72ae2ca24",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data/LEROY_0113_EBSD_1_Section_179_IPFX.bmp",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/LEROY_0113_EBSD_1_Section_179_IPFX.bmp",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/LEROY_0113_EBSD_1_Section_179_IPFX.bmp",
+      "mediaType": "image/example",
+      "format": {
+        "description": "Bitmap"
+      },
+      "title": "EBSD Map of Section 179",
+      "size": 1689054,
+      "checksum": {
+        "hash": "8f38628dc9c4e6819c8489fdd4043f6836cf6d1d49d2d15209b7555e011958ff",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data/LEROY_0113_EBSD_1_Section_179_IPFZ.bmp",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/LEROY_0113_EBSD_1_Section_179_IPFZ.bmp",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/LEROY_0113_EBSD_1_Section_179_IPFZ.bmp",
+      "mediaType": "image/example",
+      "title": "EBSD Map of Section 179, Oriented IPFZ",
+      "size": 1689054,
+      "checksum": {
+        "hash": "989294db7d7e9d904ef6be857d4c3e78c3e3a79c407e9b01141301167d76bd79",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data/LEROY_0113_BSE_1_179.tif",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/LEROY_0113_BSE_1_179.tif",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/LEROY_0113_BSE_1_179.tif",
+      "mediaType": "image/tiff",
+      "size": 8388730,
+      "checksum": {
+        "hash": "4a81043753843770cac9e011e769d44b4aa6d056fdd2d4e9575c17a6f93b2b3c",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/Original Data/LEROY_0113_BSE_2_179.tif",
+      "@type": [
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "Original Data/LEROY_0113_BSE_2_179.tif",
+      "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2618/Original%20Data/LEROY_0113_BSE_2_179.tif",
+      "mediaType": "image/tiff",
+      "size": 9627394,
+      "checksum": {
+        "hash": "bbe0e8c19ff1429b37cfdb67b4527a4f8b7a8352846053e2ca9cc9b85de1a956",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    }
+]

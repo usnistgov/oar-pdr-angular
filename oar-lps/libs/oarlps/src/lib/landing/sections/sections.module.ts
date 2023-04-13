@@ -69,9 +69,9 @@ import { AccesspageModule } from '../accesspage/accesspage.module';
         SearchresultModule,
         DoneModule,
         ButtonModule,
-        VisithomeModule,
         ReferencesModule,
-        AccesspageModule
+        AccesspageModule,
+        VisithomeModule
     ],
     declarations: [
         ResourceDataComponent,

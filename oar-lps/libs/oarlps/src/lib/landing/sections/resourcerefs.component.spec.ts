@@ -33,7 +33,6 @@ describe('ResourceRefsComponent', () => {
         makeComp();
         component.inBrowser = true;
         component.record = JSON.parse(JSON.stringify(rec));
-        component.ngOnChanges({});
         fixture.detectChanges();
     }));
 
@@ -41,8 +40,6 @@ describe('ResourceRefsComponent', () => {
         expect(component).toBeTruthy();
         let cmpel = fixture.nativeElement;
         expect(cmpel.querySelector("#references")).toBeTruthy();
-
-        expect(component.hasDisplayableReferences()).toBeTruthy();
 
         // has a section heading
         let el = cmpel.querySelector("h3");
@@ -57,10 +54,7 @@ describe('ResourceRefsComponent', () => {
     it('should suppress for empty list', () => {
         expect(component).toBeTruthy();
         component.record['references'] = [];
-        component.ngOnChanges({});
         fixture.detectChanges();
-        
-        expect(component.hasDisplayableReferences()).toBeFalsy();
 
         let cmpel = fixture.nativeElement;
         expect(cmpel.querySelector("#references")).toBeTruthy();
@@ -73,7 +67,6 @@ describe('ResourceRefsComponent', () => {
         // remove the locations from the two reference
         component.record['references'][0]['location'] = null;
         delete component.record['references'][1].location;
-        component.ngOnChanges({});
         fixture.detectChanges();
 
         expect(component).toBeTruthy();
@@ -86,22 +79,5 @@ describe('ResourceRefsComponent', () => {
         expect(els.length).toBe(2);
         els = cmpel.querySelectorAll("a");
         expect(els.length).toBe(0);
-    });
-
-    it('getReferenceText()', () => {
-        expect(component).toBeTruthy();
-        let ref = { 'location': 'http://example.com/doc.txt' }
-        expect(component.getReferenceText(ref)).toBe('http://example.com/doc.txt');
-        ref['label'] = 'an explanation'
-        expect(component.getReferenceText(ref)).toBe('an explanation');
-        ref['citation'] = 'Me 2001, The Explanation';
-        expect(component.getReferenceText(ref)).toBe('Me 2001, The Explanation');
-        delete ref['location'];
-        expect(component.getReferenceText(ref)).toBe('Me 2001, The Explanation');
-        delete ref['label'];
-        expect(component.getReferenceText(ref)).toBe('Me 2001, The Explanation');
-        ref['label'] = 'drivel'
-        delete ref['citation']
-        expect(component.getReferenceText(ref)).toBe('drivel');
     });
 });

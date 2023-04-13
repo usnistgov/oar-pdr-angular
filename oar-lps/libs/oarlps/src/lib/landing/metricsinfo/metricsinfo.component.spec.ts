@@ -4,8 +4,10 @@ import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
 import { MetricsinfoComponent } from './metricsinfo.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { IEnvironment } from '../../../environments/ienvironment';
 
 describe('MetricsinfoComponent', () => {
+    let ienv : IEnvironment;
   let component: MetricsinfoComponent;
   let fixture: ComponentFixture<MetricsinfoComponent>;
   let cfg: AppConfig;
@@ -13,7 +15,7 @@ describe('MetricsinfoComponent', () => {
   let ts: TransferState = new TransferState();
 
   beforeEach(waitForAsync(() => {
-    cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+    cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
 
     TestBed.configureTestingModule({
       declarations: [ MetricsinfoComponent ],

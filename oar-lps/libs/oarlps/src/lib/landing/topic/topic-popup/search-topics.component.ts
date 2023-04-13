@@ -59,7 +59,6 @@ export class SearchTopicsComponent implements OnInit {
         *   build taxonomy tree
         */
     buildTaxonomyTree(result: any) {
-        console.log("result", result);
         let allTaxonomy: any = result;
         var tempTaxonomyTree = {}
         if (result != null && result != undefined) {
@@ -137,7 +136,6 @@ export class SearchTopicsComponent implements OnInit {
         this.searchAndExpandTaxonomyTree(this.inputValue[this.field][index], false);
         this.inputValue[this.field] = this.inputValue[this.field].filter(topic => topic != this.inputValue[this.field][index]);
         this.refreshTopicTree();
-        console.log('this.inputValue.length', this.inputValue[this.field].length);
     }
 
     /**

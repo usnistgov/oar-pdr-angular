@@ -12,7 +12,7 @@
     <div class="help-frame" [innerHTML]="helpContent">
     </div>
     <div style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
-        <div>Suggestions:</div>
+        <div>Next Steps:</div>
         <div *ngFor="let section of suggustedSections" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
             <i>Edit {{section}}</i>
         </div>

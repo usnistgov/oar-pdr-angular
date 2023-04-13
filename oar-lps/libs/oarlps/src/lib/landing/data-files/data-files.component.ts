@@ -136,7 +136,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
     editMode: string;
     mobileMode: boolean = false;
     hashCopied: boolean = false;
-    fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
+    fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
+    fieldName: string = 'components';
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -167,6 +168,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }
         
         this.EDIT_MODES = LandingConstants.editModes;
+        this.fileManagerUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
     }
 
     ngOnInit() {
@@ -209,7 +211,9 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * Restrict and preview mode: hide the whole block -- restrict_preview
      */
     get displayMode() {
-        if(!this.editEnabled || this.record['accessLevel'] === 'public') {
+        if(this.editEnabled){
+            return "normal";
+        }else if(!this.editEnabled || this.record['accessLevel'] === 'public') {
             return "normal";
         }else if(this.record['accessLevel'] === 'restricted public' && this.editMode != this.EDIT_MODES.PREVIEW_MODE) {
             return "restrict";
@@ -281,6 +285,10 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
     /**
      * Build data file tree. Exclude .sha files.
+     * Only count files with following condition:
+     * 1. Has filepath attribute;
+     * 2. "@type" does not have ":Hidden" and ":ChecksumFile"
+     * 3. "@type" must end with "File".
      */
     buildTree(comps: NerdmComp[]) : void {
         if (! this.record['components'])
@@ -324,6 +332,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 return child;
             }
         }
+
         let insertComp = (comp: NerdmComp, root: TreeNode) => {
             let levels = comp.filepath.split('/');
             return _insertComp(levels, comp, root);
@@ -334,14 +343,15 @@ export class DataFilesComponent implements OnInit, OnChanges {
         let root: TreeNode = { data: { name: '', key: '' }, children: [] };
         let node: TreeNode = null;
 
-        // Filter out sha files
+        // Filter out hidden, sha or files without "File" in "@type" field
         for (let comp of comps) {
             if (comp.filepath && comp['@type'].filter(tp => tp.includes(':Hidden')).length == 0 &&
                 comp['@type'].filter(tp => tp.includes(':ChecksumFile')).length == 0)
-            {
+            {  
                 node = insertComp(comp, root);
-                if (node.data.comp['@type'].filter(tp => tp.endsWith("File")).length > 0) 
+                if (node.data.comp['@type'].filter(tp => tp.endsWith("File")).length > 0) {
                     count++;
+                } 
             }
         }
         this.files = [...root.children];
@@ -826,14 +836,18 @@ export class DataFilesComponent implements OnInit, OnChanges {
             this.record['components'] = dataFiles;
             this.buildTree(this.record['components']);
 
-            // Update backend
-            this.mdupdsvc.update('components', dataFiles).then((updateSuccess) => {
-                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                if (updateSuccess)
-                    this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
-                else
-                    console.error("acknowledge description update failure");
-            });
+            // var postMessage: any = {};
+            // postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+            // console.log('postMessage', postMessage);
+
+            // // Update backend
+            // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            //     console.log("###DBG  update sent; success: "+updateSuccess.toString());
+            //     if (updateSuccess)
+            //         this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
+            //     else
+            //         console.error("acknowledge description update failure");
+            // });
 
         })
     }
