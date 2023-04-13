@@ -13,17 +13,19 @@ import { UserMessageService } from 'oarlps';
 import { AuthService, WebAuthService, MockAuthService } from 'oarlps';
 import { GoogleAnalyticsService } from 'oarlps';
 import { CartService } from 'oarlps';
-
-import { config, testdata } from 'oarlps';
+import * as environment from '../../environments/environment';
 import { MetricsData } from "./metrics-data";
+import { AngularEnvironmentConfigService } from 'oarlps';
+import { TransferState } from '@angular/platform-browser';
 
 describe('LandingBodyComponent', () => {
     let component: LandingBodyComponent;
     let fixture: ComponentFixture<LandingBodyComponent>;
-    let cfg : AppConfig = new AppConfig(config);
-    let record1 : NerdmRes = testdata['test1'];
-    let authsvc : AuthService = new MockAuthService()
-
+    let cfg : AppConfig = new AppConfig(environment.config);
+    let authsvc : AuthService = new MockAuthService(undefined, environment);
+    let record1 : NerdmRes = environment.testdata['test1'];
+    debugger;
+    
     let makeComp = function() {
         TestBed.configureTestingModule({
             imports: [ HttpClientModule, SectionsModule, RouterTestingModule ],
@@ -39,7 +41,7 @@ describe('LandingBodyComponent', () => {
         fixture = TestBed.createComponent(LandingBodyComponent);
         component = fixture.componentInstance;
     }
-
+  
     beforeEach(waitForAsync(() => {
         makeComp();
         component.inBrowser = true;
@@ -50,6 +52,11 @@ describe('LandingBodyComponent', () => {
         component.editEnabled = false;
         fixture.detectChanges();
     }));
+
+    it('should create', () => {
+        debugger;
+      expect(component).toBeTruthy();
+    });
 
     it('should initialize', () => {
         expect(component).toBeTruthy();
@@ -69,12 +76,14 @@ describe('LandingBodyComponent', () => {
         expect(title.textContent).toEqual("Description");
 
         sect = cmpel.querySelector("#dataAccess")
+        console.log("sect", sect);
         expect(sect).toBeTruthy();
         title = sect.querySelector("h3");
         expect(title).toBeTruthy();
         expect(title.textContent).toEqual("Data Access");
 
         sect = cmpel.querySelector("#references")
+        console.log("sect", sect);
         expect(sect).toBeTruthy();
         title = sect.querySelector("h3");
         expect(title).toBeTruthy();
@@ -87,5 +96,6 @@ describe('LandingBodyComponent', () => {
         expect(title).toBeTruthy();
         expect(title.textContent).toEqual("About This Dataset");
 
-    });
+    });    
 });
+

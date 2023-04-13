@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, Inject, PLATFORM_ID, HostListener, ElementRef } from '@angular/core';
-import { userInfo } from 'os';
+// import { userInfo } from 'os';
 import { CommonFunctionService } from '../shared/common-function/common-function.service';
 import { ActivatedRoute } from '@angular/router';
 import { MetricsService } from '../shared/metrics-service/metrics.service';
