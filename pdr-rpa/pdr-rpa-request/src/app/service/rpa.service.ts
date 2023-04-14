@@ -2,7 +2,9 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import { catchError, retry, tap } from "rxjs/operators";
+
 import { Record, RecordWrapper, UserInfo } from "../model/record.model";
+import { ConfigurationService } from './config.service';
 import { environment } from "../../environments/environment";
 
 /**
@@ -16,9 +18,9 @@ export class RPAService {
     private readonly REQUEST_FORM_PATH = "/request/form";
     baseUrl: string;
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private configSvc: ConfigurationService) {
         // Get the base URL from the environment
-        this.baseUrl = environment.requestHandlerUrl;
+        this.baseUrl = this.configSvc.getConfig().baseUrl;
     }
 
     // Http Options
