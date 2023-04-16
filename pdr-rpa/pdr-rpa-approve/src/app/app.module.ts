@@ -15,31 +15,34 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
+import { ServiceModule } from './service/service.module';
 import { FrameModule } from 'oarng';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    UnescapeHTMLPipe
-  ],
-  imports: [
-    FrameModule,
-    BrowserModule, 
-    FormsModule, 
-    PanelModule, 
-    MessagesModule, 
-    MessageModule, 
-    DropdownModule, 
-    CardModule, 
-    ChipModule, 
-    ButtonModule, 
-    ProgressSpinnerModule, 
-    OverlayPanelModule,
-    AppRoutingModule,
-    HttpClientModule,
-    RouterModule.forRoot([])
-  ],
-  providers: [],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        UnescapeHTMLPipe
+    ],
+    imports: [
+        FrameModule,
+        BrowserModule, 
+        FormsModule, 
+        PanelModule, 
+        MessagesModule, 
+        MessageModule, 
+        DropdownModule, 
+        CardModule, 
+        ChipModule, 
+        ButtonModule, 
+        ProgressSpinnerModule, 
+        OverlayPanelModule,
+        AppRoutingModule,
+        HttpClientModule,
+
+        ServiceModule,
+        RouterModule.forRoot([])
+    ],
+    providers: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }
