@@ -3,7 +3,9 @@ import { Injectable } from "@angular/core";
 import { Observable, throwError } from "rxjs";
 import { catchError, retry } from "rxjs/operators";
 import { formatDate } from '@angular/common';
+
 import { ApprovalResponse, Record, RecordWrapper, UserInfo } from "../model/record";
+import { ConfigurationService } from './config.service';
 import { environment } from "../../environments/environment";
 
 @Injectable()
@@ -11,9 +13,10 @@ export class RPAService {
 
     baseUrl: string;
 
-    constructor(private http: HttpClient) {
-        this.baseUrl = environment.requestHandlerUrl;
-     }
+    constructor(private http: HttpClient, private configSvc: ConfigurationService) {
+        // Get the base URL from the environment
+        this.baseUrl = this.configSvc.getConfig().baseUrl;
+    }
 
     // Http Options
     httpOptions = {

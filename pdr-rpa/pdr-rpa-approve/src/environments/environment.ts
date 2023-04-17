@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  requestHandlerUrl: 'http://localhost:8083/od/ds/rpa'
+  configUrl: 'assets/config.json'
 };
 
 /*

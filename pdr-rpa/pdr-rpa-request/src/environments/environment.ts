@@ -4,10 +4,9 @@
 
 export const environment = {
   production: false,
-  requestHandlerUrl: 'http://localhost:8083/od/ds/rpa',
-  configUrl: 'assets/datasets.yaml',
+  datasetsConfigUrl: 'assets/datasets.yaml',
   countriesUrl: 'assets/countries.json',
-  secretsUrl: 'assets/secrets.json',
+  configUrl: 'assets/config.json',
   debug: false
 };
 
