@@ -1,17 +1,22 @@
 #! /bin/bash
 #
+# docker/makedist -- make all components from this repo via the docker containers
+#                    defined in the docker directory.
+#
+# Usage: docker/makedist [--dist-dir=DIR] [python|angular]
+#
+# where:
+#   --dist-dir=DIR     write component distributions to the given directory
+#                      (instead of the default directory, dist)
+#   python             build only the python-based distributions
+#   angular            build only the angular-based distributions
+#   java               build only the java-based distributions 
+#
+echo "############ makedist in docker  $@ "
 prog=`basename $0`
 execdir=`dirname $0`
 [ "$execdir" = "" -o "$execdir" = "." ] && execdir=$PWD
 export CODEDIR=`(cd $execdir/.. > /dev/null 2>&1; pwd)`
 export DOCKERDIR=$execdir
-PACKAGE_NAME=oar-pdr-angular
 
-dodockbuild=
-(docker images | grep -qs $PACKAGE_NAME/build) || {
-    echo "${prog}: Docker image $PACKAGE_NAME/build not found; will build."
-    dodockbuild=-d
-}
-
-echo $DOCKERDIR/run.sh $dodockbuild build "$@"
-exec $DOCKERDIR/run.sh $dodockbuild build "$@"
+exec $DOCKERDIR/run.sh build "$@"

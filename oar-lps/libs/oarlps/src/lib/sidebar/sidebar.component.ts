@@ -51,9 +51,6 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        console.log("General help", this.helpContentAll['general']);
-
-
         this.lpService.watchSectionHelp((sectionHelp) => {
             this.updateHelpContent(sectionHelp);
         })
@@ -64,14 +61,16 @@ export class SidebarComponent implements OnInit {
 
         this.helpContent = generalHelp;
         if(sectionHelp.section) {
+            // Add general help of the section first
             if(this.helpContentAll[sectionHelp.section]){
                 if(this.helpContentAll[sectionHelp.section]['general']) {
                     this.helpContent = this.helpContentAll[sectionHelp.section]['general']+ "<p>";
                 }
             }
 
+            // Add topic help
             if(sectionHelp.topic) {
-                if(sectionHelp.topic != 'general' && this.helpContentAll[sectionHelp.section][sectionHelp.topic]){
+                if(sectionHelp.topic != 'general' && this.helpContentAll[sectionHelp.section] && this.helpContentAll[sectionHelp.section][sectionHelp.topic]){
                     this.helpContent += this.helpContentAll[sectionHelp.section][sectionHelp.topic];
                 }
             }
@@ -103,6 +102,5 @@ export class SidebarComponent implements OnInit {
         this.sidebarState = this.sbarvisible? 'sbvisible' : 'sbhidden';
         this.sbarvisible_out.next(this.sbarvisible);
         this.chref.detectChanges();
-        console.log("toggling view: " + this.sbarvisible);
     }
 }

@@ -53,3 +53,9 @@ import 'zone.js';  // Included with Angular CLI.
 // import 'intl/locale-data/jsonp/en';
 
 (window as any).global = window;
+
+if (!('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent))) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2';
+    document.head.appendChild(script);
+}

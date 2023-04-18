@@ -1,6 +1,5 @@
 import { of, throwError } from 'rxjs';
 import { CustomizationService, InMemCustomizationService } from './customization.service';
-
 import { testdata } from '../../../environments/environment';
 
 describe('InMemCustomizationService', () => {
@@ -25,7 +24,7 @@ describe('InMemCustomizationService', () => {
 
     it('updates metadata', () => {
         let md = null;
-        svc.updateMetadata({'goober': "gurn", 'title': "Dr."}).subscribe(
+        svc.updateMetadata({'goober': "gurn", 'title': "Dr."}, undefined, undefined, undefined).subscribe(
             (res) => { md = res; },
             (err) => { throw err; }
         );
@@ -36,7 +35,7 @@ describe('InMemCustomizationService', () => {
 
     it('discards updated metadata', () => {
         let md = null;
-        svc.updateMetadata({'goober': "gurn", 'title': "Dr."}).subscribe(
+        svc.updateMetadata({'goober': "gurn", 'title': "Dr."}, undefined, undefined, undefined).subscribe(
             (res) => { md = res; },
             (err) => { throw err; }
         );
@@ -55,7 +54,7 @@ describe('InMemCustomizationService', () => {
 
     it('saves metadata', () => {
         let md = null;
-        svc.updateMetadata({'goober': "gurn", 'title': "Dr."}).subscribe(
+        svc.updateMetadata({'goober': "gurn", 'title': "Dr."}, undefined, undefined, undefined).subscribe(
             (res) => { md = res; },
             (err) => { throw err; }
         );
@@ -71,7 +70,7 @@ describe('InMemCustomizationService', () => {
         expect(md['accessLevel']).toBe("public");
         expect(md['goober']).toBe("gurn");
 
-        svc.updateMetadata({'accessLevel': "private"}).subscribe(
+        svc.updateMetadata({'accessLevel': "private"}, undefined, undefined, undefined).subscribe(
             (res) => { md = res; },
             (err) => { throw err; }
         );

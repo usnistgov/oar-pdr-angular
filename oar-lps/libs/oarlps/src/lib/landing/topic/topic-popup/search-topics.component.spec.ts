@@ -14,8 +14,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { UserMessageService } from '../../../frame/usermessage.service';
+import { IEnvironment } from '../../../../environments/ienvironment';
 
 describe('SearchTopicsComponent', () => {
+    let ienv : IEnvironment;
     let component: SearchTopicsComponent;
     let fixture: ComponentFixture<SearchTopicsComponent>;
     let tempTopics: any;
@@ -31,7 +33,7 @@ describe('SearchTopicsComponent', () => {
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-      cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+      cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
       cfg.locations.pdrSearch = "https://goob.nist.gov/search";
       cfg.status = "Unit Testing";
       cfg.appVersion = "2.test";

@@ -13,6 +13,7 @@ import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: false,
+    configEndpoint: null,          // set to "assets/config.json" to pull from server
     useMetadataService: true,
     useCustomizationService: true
 };
@@ -26,10 +27,13 @@ export const config: LPSConfig = {
         mdService:   "https://oardev.nist.gov/rmm/",
         taxonomyService: "https://oardev.nist.gov/rmm/taxonomy"
     },
-    mdAPI: "http://localhost:9091/midas/dap/mdsx/",
+    // mdAPI: "http://localhost:9091/midas/dap/mds3/",
+    mdAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
     metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
     // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "http://localhost:9091/midas/",
+    // customizationAPI: "http://localhost:9091/midas/",
+    customizationAPI: "https://mdsdev.nist.gov/midas/",
+    fileManagerAPI: "https://nextcloud-dev.nist.gov",
     mode: "dev",
     status: "Dev Version",
     appVersion: "v1.3.X",
@@ -41,7 +45,8 @@ export const config: LPSConfig = {
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,
-    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/"  
+    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/",
+    portalAPI: "https://mdsdev.nist.gov/portal/landing"  
 }
 
 export const testdata: {} = {

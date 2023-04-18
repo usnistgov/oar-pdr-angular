@@ -11,8 +11,10 @@ import { ToastrModule } from 'ngx-toastr';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
+import { IEnvironment } from '../../../environments/ienvironment';
 
 describe('TitleComponent', () => {
+    let ienv : IEnvironment;
     let component: TitleComponent;
     let fixture: ComponentFixture<TitleComponent>;
     let cfg: AppConfig;
@@ -21,7 +23,7 @@ describe('TitleComponent', () => {
     let authsvc : AuthService = new MockAuthService(undefined);
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";

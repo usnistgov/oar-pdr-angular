@@ -61,13 +61,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             "type": "dmp"
         
     }
-
+    console.log("request.url", request.url);
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
         // Wizard
-        if (request.url.indexOf('localhost:9091') > -1 && request.method === 'POST') {
-            return of(new HttpResponse({ status: 200, body: wizardResponse }));
-        }
+        // if (request.url.indexOf('localhost:9091') > -1 && request.method === 'POST') {
+        //     return of(new HttpResponse({ status: 200, body: wizardResponse }));
+        // }
 
         // metrics
         // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {
