@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { Country } from './model/country.model';
 import { Dataset } from './model/dataset.model';
 import { RequestFormData } from './model/form-data.model';
@@ -35,7 +35,6 @@ export class AppComponent {
     items: SelectItem[];
     item: SelectItem;
     domparser = new DOMParser();
-    recaptchaApiKey: string;
 
     constructor(private route: ActivatedRoute,
         private messageService: MessageService,
@@ -57,9 +56,14 @@ export class AppComponent {
                 this.queryId = params['ediid'];
                 this.setSelecetedDataset(this.queryId);
             }
+            // Load countries list for use with dropdown menu
+
+
         });
-        // Load countries list for use with dropdown menu
-        this.loadCountries();
+        this.loadCountries().subscribe((data) => {
+            if (environment.debug) console.log("loaded countries", this.countries);
+        });
+
     }
 
     /**
@@ -101,12 +105,19 @@ export class AppComponent {
 
     /**
   * Load the countries list to use with the dropdown menu
+  * 
+  * @returns Observable containing list of countries
   */
-    loadCountries(): void {
-        this.configService.getCountries().subscribe((data) => {
-            this.countries = data;
-            if (environment.debug) console.log(this.countries);
-        });
+    loadCountries(): Observable<Country[]> {
+        return this.configService.getCountries().pipe(
+            tap((data) => {
+                this.countries = data;
+            }),
+            catchError((error) => {
+                console.error(error);
+                return of([]); // Return an empty array to prevent any further errors
+            })
+        );
     }
 
     /**

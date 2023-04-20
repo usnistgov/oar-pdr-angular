@@ -3,38 +3,26 @@
 <div class="container p-0 shadow my-5 bg-white rounded">
     <div class="row">
         <div class="col">
-          <div class="rpa-form-title d-flex align-items-center justify-content-center flex-column" style="height: 250px;">
-            <h1 class="rpa-form-title text-white">Restricted Public Data (Access Request Form)</h1>
-            
-          </div>
+            <div class="rpa-form-title d-flex align-items-center justify-content-center flex-column"
+                style="height: 250px;">
+                <h1 class="rpa-form-title text-white">Restricted Public Data (Access Request Form)</h1>
+
+            </div>
         </div>
-      </div>
+    </div>
     <div #rpaForm class="rpdform-main-wrapper ">
         <div class="rpdform-form-wrapper">
 
-            <!-- <label for="datasetsDropdown" class="rpdform-form-label">
-          Select a datatset:
-      </label>
-      <p-dropdown [options]="datasets" [(ngModel)]="selectedDataset" optionLabel="name"
-          (onChange)="onChangeDataset($event)" autoWidth="false" [style]="{'width':'100%'}"></p-dropdown>
-      <div class="divider"></div> -->
-
-            <div *ngIf="selectedDataset === undefined" class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+            <div *ngIf="selectedDataset === undefined"
+                class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
                 <h1 class="mb-5 oops-text">Oops! No dataset found.</h1>
-                <!-- <h3 class="text-blue mb-3" >No Dataset found</h3> -->
                 <img src="assets/doggo_404.png" alt="Not Found" style="max-width: 150%; max-height: 150%;">
-                
-              </div>
-            <!-- <p-messages severity="warn" *ngIf="selectedDataset === undefined">
-                <ng-template pTemplate>
-                    <i class="pi pi-info-circle"></i>
-                    <span class="ml-2">Unknown dataset with ediid=<span style="color:red">{{queryId}}</span></span>
-                </ng-template>
-            </p-messages> -->
+
+            </div>
 
             <form [formGroup]="requestForm" (ngSubmit)="submitForm()" *ngIf="selectedDataset && selectedFormTemplate">
                 <div class="rpdform-form-title">
-                    
+
                     <div *ngIf=""></div>
 
                     <p-messages severity="warn">
@@ -58,24 +46,8 @@
                         you
                         provide.
                     </div>
-                    <!-- <h4 id="terms_and_conditions" class="rpdform-form-terms-title">Terms and Conditions</h4> -->
-                    <!-- <div class="rpdform-form-text">
-                  <p>By submitting this form and receiving the dataset, you hereby agree to be bound by the following
-                      terms and conditions:</p>
-                  <ol class="rpdform-form-terms-list">
-                      <li>The Receiving Entity shall insert the following statement in any product, report,
-                          publication,
-                          presentation, and/or other document that references the data: This product contains or makes
-                          use of the restricted data made available by... </li>
-                      <li>No further distribution of the data without express written permission from NIST. Instead,
-                          third
-                          parties should be directed to the NIST Face Challenges website to download the dataset
-                          directly.
-                      </li>
-                      <li>Comply with the licensing terms of the dataset.</li>
-                  </ol>
-              </div> -->
-                    <rpd-request-form-terms [terms]="selectedDataset.terms"></rpd-request-form-terms>
+
+                    <app-request-form-terms [terms]="selectedDataset.terms"></app-request-form-terms>
                 </div>
 
 
@@ -85,28 +57,23 @@
                     </label>
                     <input type="text" name="fullName" id="fullName" class="rpdform-form-input"
                         placeholder="Your Full Name" formControlName="fullName" />
-                        <div *ngIf="requestForm.get('fullName').invalid && (requestForm.get('fullName').dirty || requestForm.get('fullName').touched)"
-                            class="alert alert-danger">
+                    <div *ngIf="requestForm.get('fullName').invalid && (requestForm.get('fullName').dirty || requestForm.get('fullName').touched)"
+                        class="alert alert-danger">
                         <div *ngIf="requestForm.get('fullName').errors.required">
                             Full Name is required.
                         </div>
                         <div *ngIf="requestForm.get('fullName').errors.minlength">
                             Full Name must be at least 2 characters long.
                         </div>
-                        </div>
+                    </div>
                 </div>
-                <!-- <div>
-                  <label for="lastname" class="rpdform-form-label required"> Last name </label>
-                  <input type="text" name="lastname" id="lastname" class="rpdform-form-input"
-                      placeholder="Your Last Name" formControlName="lastname" />
-              </div> -->
 
                 <div class="rpdform-input-flex">
                     <div>
                         <label for="email" class="rpdform-form-label required"> Email </label>
                         <input type="email" name="email" id="email" class="rpdform-form-input"
                             placeholder="Your Company (NOT Personal) Email" formControlName="email" />
-                        <div *ngIf="requestForm.controls.email.invalid && (requestForm.controls.email.dirty || requestForm.controls.email.touched)" 
+                        <div *ngIf="requestForm.controls.email.invalid && (requestForm.controls.email.dirty || requestForm.controls.email.touched)"
                             class="alert alert-danger">
                             <ng-container *ngIf="requestForm.controls.email.errors.email">
                                 Email is not valid.
@@ -183,19 +150,7 @@
 
                 <div class="pdform-mb-3 country-dropdown-menu">
                     <label for="country" class="rpdform-form-label required"> Country </label>
-                    <!-- <p-dropdown name="country" id="country" [options]="countries" optionLabel="name" [filter]="true"
-                  filterBy="name" [showClear]="true" placeholder="Select a Country" formControlName="country">
-                  <ng-template pTemplate="selectedItem">
-                      <div class="country-item country-item-value" *ngIf="selectedCountry">
-                          <div>{{ selectedCountry.name }}</div>
-                      </div>
-                  </ng-template>
-                  <ng-template let-country pTemplate="item">
-                      <div class="country-item">
-                          <div>{{ country.name }}</div>
-                      </div>
-                  </ng-template>
-              </p-dropdown> -->
+
                     <p-dropdown name="country" id="country" [options]="countries" [filter]="true" filterBy="name"
                         [showClear]="true" placeholder="Select a Country" optionLabel="name"
                         formControlName="country"></p-dropdown>
@@ -297,8 +252,8 @@
 
                 <div class="divider"></div>
 
-                <div class="rpdform-mb-3">
-                    <re-captcha formControlName="recaptcha">
+                <div id="#recaptchaDiv" class="rpdform-mb-3">
+                    <re-captcha  class="recaptcha" formControlName="recaptcha">
                     </re-captcha>
                 </div>
                 <div class="divider"></div>

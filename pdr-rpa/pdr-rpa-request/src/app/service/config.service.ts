@@ -1,7 +1,7 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { parse } from 'yaml';
-import { Observable, Subject, throwError } from "rxjs";
+import { BehaviorSubject, Observable, Subject, of, throwError } from "rxjs";
 import { catchError, tap } from "rxjs/operators";
 import { Country } from "../model/country.model";
 import { FormTemplate } from "../model/form-template.model";
@@ -14,13 +14,17 @@ import { environment } from "../../environments/environment";
  * It loads the configuration from a given file and provides access to it
  * throughout the app.
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+})
 export class ConfigurationService {
 
     datasetsConfigUrl = 'assets/datasets.yaml';
     countriesUrl = 'assets/countries.json';
     configUrl = 'assets/config.json';
-    config : Configuration = null;
+    config: Configuration | null = null;
+
+    private configSubject = new BehaviorSubject<Configuration>({ baseUrl: '/', recaptchaApiKey: '' });
 
     constructor(private http: HttpClient) {
         this.datasetsConfigUrl = environment.datasetsConfigUrl;
@@ -28,32 +32,44 @@ export class ConfigurationService {
         this.countriesUrl = environment.countriesUrl;
     }
 
-    loadConfig(data: any) : void {
+    loadConfig(data: any): void {
         this.config = data as Configuration;
-        console.log("app configuration loaded");
+        if (environment.debug) console.log("app configuration loaded. ", this.config);
     }
+    
 
     /**
      * Get the configuration object from the config URL.
      * @returns An observable containing the configuration object.
      */
-    public fetchConfig(configURL: string = null): Observable<any> {
-        if (! configURL)
+    public fetchConfig(configURL: string | null = null): Observable<any> {
+        if (environment.debug) console.log("fetching configuration using http");
+        if (!configURL)
             configURL = this.configUrl;
-        return this.http.get<Configuration>(configURL, {responseType: "json"}).pipe(
-            catchError(this.handleError)
-        ).pipe( tap(cfg => (this.loadConfig(cfg))) );
+        return this.http.get<Configuration>(configURL, { responseType: "json" }).pipe(
+            catchError(this.handleError),
+            tap(cfg => {
+                // this.loadConfig(cfg);
+                console.log("cfg=", cfg);
+                this.config = cfg as Configuration;
+                this.configSubject.next(this.config);
+            })
+        );
     }
+    
 
     /**
-     * return the (already loaded) configuration data.  It is expected that when this 
+     * Return the (already loaded) configuration data.  It is expected that when this 
      * method is call that the configuration was already fetched (via fetchConfg()) at 
      * application start-up.  
      */
     public getConfig(): Configuration {
-        if (! this.config) 
-            return { baseUrl: "/", recaptchaApiKey: "" } as Configuration;
-        return this.config;
+        return this.config ?? { baseUrl: "/", recaptchaApiKey: "" } as Configuration;
+    }
+
+    // Return Observable<Configuration> (async version of getConfig() above)
+    public getConfigAsObservable(): Observable<Configuration> {
+        return this.configSubject.asObservable();
     }
 
     /**
@@ -95,8 +111,11 @@ export class ConfigurationService {
      * Get the list of countries from the countries JSON file.
      * @returns An observable containing the list of countries.
      */
-    public getCountries(): Observable<Country[]> {
-        return this.http.get<Country[]>(this.countriesUrl).pipe(catchError(this.handleError));
+    public getCountries(countriesUrl: string | null = null): Observable<Country[]> {
+        if (environment.debug) console.log("fetching countries list");
+        if (!countriesUrl)
+            countriesUrl = this.countriesUrl;
+        return this.http.get<Country[]>(countriesUrl).pipe(catchError(this.handleError));
     }
 
     /**

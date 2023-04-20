@@ -1,6 +1,5 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { PanelModule } from 'primeng/panel';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -16,14 +15,14 @@ import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { ButtonModule } from "primeng/button";
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { PanelModule } from 'primeng/panel';
+
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FrameModule } from 'oarng';
 import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from 'ng-recaptcha';
-import { ServiceModule, ConfigurationService } from './service/service.module';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { environment } from '../environments/environment';
+import { ServiceModule, ConfigurationService, RPAService } from './service/service.module';
+import { RequestFormTermsComponent } from './components/request-form-terms/request-form-terms.component';
 
 /**
  * The recaptchaApiKeyFactory function returns an object with the Recaptcha site key 
@@ -38,7 +37,8 @@ function recaptchaApiKeyFactory(configService: ConfigurationService): RecaptchaS
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        RequestFormTermsComponent
     ],
     imports: [
         FrameModule,
@@ -61,7 +61,6 @@ function recaptchaApiKeyFactory(configService: ConfigurationService): RecaptchaS
         OverlayPanelModule,
         RecaptchaModule,
         RecaptchaFormsModule,
-
         ServiceModule,
         RouterModule.forRoot([])
     ],
