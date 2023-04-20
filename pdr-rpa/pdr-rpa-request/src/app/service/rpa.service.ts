@@ -11,7 +11,9 @@ import { environment } from "../../environments/environment";
  * Service responsible for submitting requests to the RPA request handler.
  * It provides functions to fetch a record and create a new record.
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root',
+   })
 export class RPAService {
 
     private readonly REQUEST_ACCEPTED_PATH = "/request/accepted";
@@ -20,7 +22,10 @@ export class RPAService {
 
     constructor(private http: HttpClient, private configSvc: ConfigurationService) {
         // Get the base URL from the environment
-        this.baseUrl = this.configSvc.getConfig().baseUrl;
+        this.configSvc.getConfigAsObservable().subscribe(config => {
+            this.baseUrl = this.configSvc.getConfig().baseUrl;
+            if (environment.debug) console.log("baseUrl =", this.baseUrl );
+        });
     }
 
     // Http Options
@@ -70,8 +75,9 @@ export class RPAService {
     public createRecord(userInfo: UserInfo, recaptcha: String): Observable<Record> {
         if (environment.debug) {
             console.log("User Info:" + JSON.stringify(userInfo, null, 2));
+            
         }
-
+        
         // Send HTTP POST request to create a new record
         let request = this.http.post<Record>(
             this.baseUrl + this.REQUEST_FORM_PATH,
