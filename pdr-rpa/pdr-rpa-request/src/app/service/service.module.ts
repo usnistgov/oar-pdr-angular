@@ -13,10 +13,10 @@ export function configFetcherFactory(configSvc: ConfigurationService) {
 @NgModule({
     providers: [
         HttpClient,
-        ConfigurationService,
         RPAService,
+        ConfigurationService,
         { provide: APP_INITIALIZER, useFactory: configFetcherFactory,
-          deps: [ ConfigurationService ], multi: true }
+          deps: [ ConfigurationService, RPAService], multi: true },
     ]
 })
 export class ServiceModule { }
