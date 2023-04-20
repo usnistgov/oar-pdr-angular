@@ -13,7 +13,7 @@
         "build-oarlps": "npm run build oarlps --prefix ./oar-lps",
         "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps",
         "build-midaslps": "npm run build midas-lps --prefix ./midas-author/lps",
-        "build-all": "npm run build-lib && npm run build-oarlps && npm run build-pdrlps && npm run build-midaslps && npm run build-sw",
+        "build-all": "npm run build-lib; npm run build-oarlps; npm run build-sw; npm run build-midaslps",
         "build-sw": "npm run build step-wizard --prefix ./midas-author/wizard",
         "start-sw": "npm run start step-wizard --prefix ./midas-author/wizard",
         "start-pdrlps": "npm run start pdr-lps --prefix ./pdr-lps",
