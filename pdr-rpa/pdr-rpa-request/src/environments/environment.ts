@@ -7,7 +7,7 @@ export const environment = {
   datasetsConfigUrl: 'assets/datasets.yaml',
   countriesUrl: 'assets/countries.json',
   configUrl: 'assets/config.json',
-  debug: false
+  debug: true
 };
 
 /*
