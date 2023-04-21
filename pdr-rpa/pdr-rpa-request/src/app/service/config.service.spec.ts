@@ -4,6 +4,8 @@ import { ConfigurationService } from './config.service';
 import { Dataset } from '../model/dataset.model';
 import { Country } from '../model/country.model';
 import { Configuration } from '../model/config.model';
+import { FormTemplate } from '../model/form-template.model';
+
 
 describe('ConfigurationService', () => {
     let service: ConfigurationService;
@@ -33,23 +35,47 @@ describe('ConfigurationService', () => {
     /**
      * Unit test for the fetchConfig() from the ConfigurationService. 
      * The fetchConfig() method makes an HTTP GET request to retrieve configuration data from the server.
+     * 
+     * Note: we use the the promise which is cleaner and simpler.
      */
-    it('should fetch configuration', () => {
-        // Subscribe to fetchConfig()
-        service.fetchConfig().subscribe((config) => {
-            // Expect the received configuration to match the mockConfig data
-            expect(config).toEqual(mockConfig);
+    it('should fetch configuration', async () => {
+        // The purpose of the timeout is to allow the fetchConfig() method to be called,
+        // and for the HTTP request to be made, before the mock response is provided.
+        // Without this timeout, the mock response might be sent before the HTTP request is made, 
+        // which will result in an assertion error.
+        setTimeout(() => {
+            // Set up the http mock to return the mock response
+            const req = httpMock.expectOne('assets/config.json');
+            // Checks the request method used to see if it was a GET.
+            expect(req.request.method).toBe('GET');
+            // This provides mock configuration data as a response to the HTTP request.
+            // This is what triggers the test's subscription to receive the mock configuration data.
+            // It also closes the 
+            req.flush(mockConfig);
         });
 
-        // Expect fetchConfig() to make an HTTP GET request to 'assets/config.json'.
-        const req = httpMock.expectOne('assets/config.json');
-        // Checks the request method used to see if it was a GET.
-        expect(req.request.method).toBe('GET');
-        // This provides mock configuration data as a response to the HTTP request.
-        // This is what triggers the test's subscription to receive the mock configuration data.
-        // It also closes the 
-        req.flush(mockConfig);
+        // Use async/await syntax to wait for the fetchConfig() method to complete its asynchronous operation
+        const config = await service.fetchConfig().toPromise();
+        // Assert
+        expect(config).toEqual(mockConfig);
     });
+
+    it('should fetch configuration v2 (with promise)', async () => {
+        // Create a promise. This will pause the test until the promise is resolved using await.
+        const configPromise = service.fetchConfig().toPromise();
+        // By the time the HTTP request is expected, the configPromise has already been created.
+        const req = httpMock.expectOne('assets/config.json');
+        expect(req.request.method).toBe('GET');
+        // Set the HTTP response
+        req.flush(mockConfig);
+
+        // Wait for fetchConfig() to finish, which will hang on HttpClient.get() to finish
+        const config = await configPromise;
+
+        // Assert
+        expect(config).toEqual(mockConfig);
+    });
+
 
     // getConfig() returns a default configuration object when config is null.
     it('should return default configuration when config is null', () => {
@@ -57,12 +83,13 @@ describe('ConfigurationService', () => {
         expect(service.getConfig()).toEqual({ baseUrl: "/", recaptchaApiKey: "" });
     });
 
+
     // getDatasets() returns the correct data.
-    it('should return the list of datasets', () => {
+    it('should return the list of datasets', async () => {
         const mockResponse = `
           datasets:
             - name: dataset1
-              ediid: 1
+              ediid: '1'
               description: description1
               url: url1
               terms:
@@ -71,7 +98,7 @@ describe('ConfigurationService', () => {
               requiresApproval: true
               formTemplate: formTemplate1
             - name: dataset2
-              ediid: 2
+              ediid: '2'
               description: description2
               url: url2
               terms:
@@ -101,79 +128,102 @@ describe('ConfigurationService', () => {
             }
         ];
 
-        service.getDatasets().subscribe((datasets: Dataset[]) => {
-            expect(datasets).toEqual(expectedDatasets);
-        });
+        const getDatasetsPromise = service.getDatasets().toPromise();
+
+        const req = httpMock.expectOne('assets/datasets.yaml');
+        expect(req.request.method).toEqual('GET');
+        req.flush(mockResponse);
+
+        const datasets = await getDatasetsPromise;
+
+        expect(datasets).toEqual(expectedDatasets);
+    });
+
+    // getFormTemplate() returns the correct form template.
+    it('should return the form template with the specified name', async () => {
+        const formName = 'demo';
+        const formTemplate: FormTemplate = {
+            id: formName,
+            disclaimers: ['some disclaimer here.'],
+            agreements: [
+                'term 1.',
+                'term 2.',
+                'term 3.'
+            ],
+            blockedEmails: [],
+            blockedCountries: []
+        };
+
+        const mockResponse = `
+        formTemplates:
+        - id: demo
+          disclaimers: 
+            - some disclaimer here.
+          agreements: 
+            - term 1.
+            - term 2.
+            - term 3.
+          blockedEmails: []
+          blockedCountries: []
+        - id: no-disclaimer
+          disclaimers: 
+          agreements: 
+            - term 1.
+            - term 2.
+          blockedEmails:
+            - email 1
+            - email 2
+          blockedCountries:
+            - Country 1
+            - Country 2
+        `;
+
+        const getFormTemplatePromise = service.getFormTemplate(formName).toPromise();
 
         const req = httpMock.expectOne('assets/datasets.yaml');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
-    });
 
-    // getFormTemplate() returns the correct form template.
-    it('should return the form template with the specified name', () => {
-        const mockFormTemplates = {
-            formTemplates: [
-                {
-                    id: 'template1',
-                    disclaimers: ['disclaimer1'],
-                    agreements: ['agreement1'],
-                    blockedEmails: ['blockedEmail1'],
-                    blockedCountries: ['blockedCountry1']
-                },
-                {
-                    id: 'template2',
-                    disclaimers: ['disclaimer2'],
-                    agreements: ['agreement2'],
-                    blockedEmails: ['blockedEmail2'],
-                    blockedCountries: ['blockedCountry2']
-                }
-            ]
-        };
-
-        const formTemplateName = 'template1';
-        const mockMatchingTemplate = mockFormTemplates.formTemplates[0];
-
-        service.getFormTemplate(formTemplateName).subscribe((formTemplate) => {
-            expect(formTemplate).toEqual(mockMatchingTemplate);
-        });
-
-        const req = httpMock.expectOne('assets/datasets.yaml');
-        expect(req.request.method).toBe('GET');
-        req.flush({ formTemplates: mockFormTemplates });
+        const formTemplateResponse = await getFormTemplatePromise;
+        expect(formTemplateResponse).toEqual(formTemplate);
     });
 
     // getCountries() returns the correct data.
-    it('should get countries', () => {
+    it('should get countries', async () => {
         const mockCountries: Country[] = [
             { name: 'United States', code: 'US' },
             { name: 'Canada', code: 'CA' },
             { name: 'Mexico', code: 'MX' }
         ];
 
-        service.getCountries().subscribe((countries) => {
-            expect(countries).toEqual(mockCountries);
-        });
+        const getCountriesPromise = service.getCountries().toPromise();
 
         const req = httpMock.expectOne('assets/countries.json');
         expect(req.request.method).toBe('GET');
         req.flush(mockCountries);
+
+        const countries = await getCountriesPromise;
+
+        expect(countries).toEqual(mockCountries);
     });
 
     // getCountries() returns error if invalid url
-    it('should throw an error for invalid countries URL', () => {
+    it('should throw an error for invalid countries URL', async () => {
         const invalidUrl = 'invalid-url';
         const errorMessage = `Error Code: 404\nMessage: Http failure response for ${invalidUrl}: 404 Not Found`;
-      
-        service.getCountries(invalidUrl).subscribe({
-          error: (err) => {
-            expect(err.message).toBe(errorMessage);
-          }
-        });
-      
+
+        const getCountriesPromise = service.getCountries(invalidUrl).toPromise();
+
         const req = httpMock.expectOne(invalidUrl);
         expect(req.request.method).toBe('GET');
         req.flush(errorMessage, { status: 404, statusText: 'Not Found' });
+
+        try {
+          await getCountriesPromise;
+          fail('Expected promise to be rejected and error to be thrown');
+        } catch (error) {
+          expect(error()).toBe(errorMessage);
+        }
       });
       
 });

@@ -2,7 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { parse } from 'yaml';
 import { BehaviorSubject, Observable, Subject, of, throwError } from "rxjs";
-import { catchError, tap } from "rxjs/operators";
+import { catchError, map, tap } from "rxjs/operators";
 import { Country } from "../model/country.model";
 import { FormTemplate } from "../model/form-template.model";
 import { Dataset } from "../model/dataset.model";
@@ -36,7 +36,6 @@ export class ConfigurationService {
         this.config = data as Configuration;
         if (environment.debug) console.log("app configuration loaded. ", this.config);
     }
-    
 
     /**
      * Get the configuration object from the config URL.
@@ -56,7 +55,7 @@ export class ConfigurationService {
             })
         );
     }
-    
+
 
     /**
      * Return the (already loaded) configuration data.  It is expected that when this 
@@ -77,16 +76,16 @@ export class ConfigurationService {
      * @returns An observable containing the list of datasets.
      */
     public getDatasets(): Observable<Dataset[]> {
-        const subject = new Subject<Dataset[]>();
-
-
-        // parse the YAML file and extract the datasets
-        this.http.get(this.datasetsConfigUrl, { responseType: 'text' }).subscribe(response => {
-            const config = parse(response);
-            subject.next(config.datasets);
-        });
-
-        return subject.asObservable();
+        return this.http.get(this.datasetsConfigUrl, { responseType: 'text' }).pipe(
+            map(response => {
+                const config = parse(response);
+                return config.datasets;
+            }),
+            catchError(error => {
+                const message = `Failed to fetch datasets: ${error.message}`;
+                return throwError(new Error(message));
+            })
+        );
     }
 
     /**
@@ -95,16 +94,17 @@ export class ConfigurationService {
      * @returns An observable containing the form template.
      */
     public getFormTemplate(formName: string): Observable<FormTemplate> {
-        const subject = new Subject<FormTemplate>();
-
-        // parse the YAML file and extract the matching form template
-        this.http.get(this.datasetsConfigUrl, { responseType: 'text' }).subscribe(response => {
-            const config = parse(response);
-            const matchingTemplate = config.formTemplates.find(template => template.id === formName);
-            subject.next(matchingTemplate);
-        });
-
-        return subject.asObservable();
+        return this.http.get(this.datasetsConfigUrl, { responseType: 'text' }).pipe(
+            map(response => {
+                const config = parse(response);
+                const formTemplates = Array.isArray(config.formTemplates) ? config.formTemplates : [];
+                const matchingTemplate = formTemplates.find(template => template.id === formName);
+                return matchingTemplate;
+            }),
+            catchError(error => {
+                return throwError(error);
+            })
+        );
     }
 
     /**
