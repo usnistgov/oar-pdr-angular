@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { APP_INITIALIZER, Component } from '@angular/core';
+import { APP_INITIALIZER } from '@angular/core';
 
 import { ConfigurationService } from './config.service';
 import { Dataset } from '../model/dataset.model';
@@ -93,7 +93,7 @@ describe('ConfigurationService', () => {
         expect(actualConfig).toBeDefined();
         expect(actualConfig.baseUrl).toEqual(mockConfig.baseUrl);
         expect(actualConfig.recaptchaApiKey).toEqual(mockConfig.recaptchaApiKey);
-      });
+    });
 
 
     // getDatasets() returns the correct data.
@@ -231,18 +231,19 @@ describe('ConfigurationService', () => {
         req.flush(errorMessage, { status: 404, statusText: 'Not Found' });
 
         try {
-          await getCountriesPromise;
-          fail('Expected promise to be rejected and error to be thrown');
+            await getCountriesPromise;
+            fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-          expect(error()).toBe(errorMessage);
+            expect(error()).toBe(errorMessage);
         }
-      });
-      
+    });
+
 });
 
 describe('ConfgirationService via ServiceModule', () => {
-    let svc: ConfigurationService = null;
+    let svc: ConfigurationService;
     let initToken: any;
+    let httpMock: HttpTestingController;
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
@@ -250,7 +251,7 @@ describe('ConfgirationService via ServiceModule', () => {
         });
 
         svc = TestBed.inject(ConfigurationService);
-        let httpMock = TestBed.inject(HttpTestingController);
+        httpMock = TestBed.inject(HttpTestingController);
 
         let req = httpMock.expectOne('assets/config.json');
         req.flush({
@@ -259,6 +260,11 @@ describe('ConfgirationService via ServiceModule', () => {
         });
 
         initToken = TestBed.inject(APP_INITIALIZER);
+        // await initToken;
+    });
+
+    afterEach(() => {
+        httpMock.verify();
     });
 
     it('fetches config data', () => {
