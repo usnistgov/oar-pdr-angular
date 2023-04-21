@@ -19,7 +19,7 @@ import { environment } from '../environments/environment';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css'],
-    providers: [MessageService, RPAService, ConfigurationService]
+    providers: [MessageService]
 })
 export class AppComponent {
     queryId: string;
