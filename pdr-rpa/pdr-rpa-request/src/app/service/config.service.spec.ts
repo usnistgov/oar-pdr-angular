@@ -1,11 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { APP_INITIALIZER, Component } from '@angular/core';
+
 import { ConfigurationService } from './config.service';
 import { Dataset } from '../model/dataset.model';
 import { Country } from '../model/country.model';
 import { Configuration } from '../model/config.model';
 import { FormTemplate } from '../model/form-template.model';
-
+import { ServiceModule } from "./service.module";
 
 describe('ConfigurationService', () => {
     let service: ConfigurationService;
@@ -237,3 +239,33 @@ describe('ConfigurationService', () => {
       });
       
 });
+
+describe('ConfgirationService via ServiceModule', () => {
+    let svc: ConfigurationService = null;
+    let initToken: any;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule, ServiceModule]
+        });
+
+        svc = TestBed.inject(ConfigurationService);
+        let httpMock = TestBed.inject(HttpTestingController);
+
+        let req = httpMock.expectOne('assets/config.json');
+        req.flush({
+            baseUrl: "http://localhost:4201/",
+            recaptchaApiKey: "X"
+        });
+
+        initToken = TestBed.inject(APP_INITIALIZER);
+    });
+
+    it('fetches config data', () => {
+        let config: Configuration = svc.getConfig();
+        expect(config.baseUrl).toBe("http://localhost:4201/");
+        expect(config.recaptchaApiKey).toBeTruthy();
+    });
+
+});
+
