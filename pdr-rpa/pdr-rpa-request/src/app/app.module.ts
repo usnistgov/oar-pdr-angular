@@ -1,4 +1,4 @@
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 
@@ -20,20 +20,10 @@ import { PanelModule } from 'primeng/panel';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FrameModule } from 'oarng';
-import { RECAPTCHA_SETTINGS, RecaptchaFormsModule, RecaptchaModule, RecaptchaSettings } from 'ng-recaptcha';
-import { ServiceModule, ConfigurationService, RPAService } from './service/service.module';
+import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+import { ServiceModule } from './service/service.module';
 import { RequestFormTermsComponent } from './components/request-form-terms/request-form-terms.component';
 
-/**
- * The recaptchaApiKeyFactory function returns an object with the Recaptcha site key 
- * that is obtained from the ConfigurationService.
- * 
- * @param configService 
- * @returns 
- */
-function recaptchaApiKeyFactory(configService: ConfigurationService): RecaptchaSettings {
-    return { siteKey: configService.getConfig().recaptchaApiKey };
-}
 
 @NgModule({
     declarations: [
@@ -64,14 +54,7 @@ function recaptchaApiKeyFactory(configService: ConfigurationService): RecaptchaS
         ServiceModule,
         RouterModule.forRoot([])
     ],
-    providers: [
-        {
-            // provide the Recaptcha site key to the Recaptcha module.
-            provide: RECAPTCHA_SETTINGS,
-            useFactory: recaptchaApiKeyFactory,
-            deps: [ConfigurationService, APP_INITIALIZER]
-        }
-    ],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
