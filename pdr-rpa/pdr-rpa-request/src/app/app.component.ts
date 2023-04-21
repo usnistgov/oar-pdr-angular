@@ -24,8 +24,8 @@ import { environment } from '../environments/environment';
 export class AppComponent {
     queryId: string;
     datasets: Dataset[] = [];
-    selectedDataset: Dataset | undefined;
-    selectedFormTemplate: FormTemplate;
+    selectedDataset: Dataset | null | undefined;
+    selectedFormTemplate: FormTemplate | null| undefined;
     isFormValid = true;
     displayProgressSpinner = false;
     errors = [];

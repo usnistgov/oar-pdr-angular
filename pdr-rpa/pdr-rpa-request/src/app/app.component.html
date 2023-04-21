@@ -13,8 +13,8 @@
     <div #rpaForm class="rpdform-main-wrapper ">
         <div class="rpdform-form-wrapper">
 
-            <div *ngIf="selectedDataset === undefined"
-                class="d-flex flex-column justify-content-center align-items-center" style="height: 200px;">
+            <div *ngIf="!selectedDataset"
+                class="d-flex flex-column justify-content-center align-items-center not-found-container" style="height: 200px;">
                 <h1 class="mb-5 oops-text">Oops! No dataset found.</h1>
                 <img src="assets/doggo_404.png" alt="Not Found" style="max-width: 150%; max-height: 150%;">
 

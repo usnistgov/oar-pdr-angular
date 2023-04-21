@@ -125,7 +125,6 @@ describe('AppComponent', () => {
   it('should extract ediid from query params', () => {
     fixture.detectChanges();
     expect(component.queryId).toBe('123');
-    // You can also check that the setSelecetedDataset() method was called with the expected value
   });
 
   it('should get datasets', () => {
@@ -162,14 +161,24 @@ describe('AppComponent', () => {
     expect(header).toBeTruthy();
   });
 
-  it('should display image when selectedDataset is undefined', () => {
-    const imgElement = fixture.nativeElement.querySelector('img');
-    expect(imgElement).toBeTruthy();
+  it('should render the div element when selectedDataset is null', () => {
+    component.selectedDataset = null;
+    fixture.detectChanges();
+    const divElement = fixture.nativeElement.querySelector('div');
+    expect(divElement).toBeTruthy();
+    expect(divElement.textContent).toContain('Oops! No dataset found.');
+  });
+
+  it('should not render the div element when selectedDataset is defined', () => {
+    component.selectedDataset = mockDatasets[0];
+    fixture.detectChanges();
+    const divElement = fixture.nativeElement.querySelector('.not-found-container');
+    expect(divElement).toBeFalsy();
   });
 
   it('should not display form when selectedDataset is undefined or selectedFormTemplate is undefined', () => {
-    component.selectedDataset;
-    component.selectedFormTemplate;
+    component.selectedDataset = null;
+    component.selectedFormTemplate = null;
     fixture.detectChanges();
     const formElement = fixture.debugElement.query(By.css('form'));
     expect(formElement).toBeNull();
