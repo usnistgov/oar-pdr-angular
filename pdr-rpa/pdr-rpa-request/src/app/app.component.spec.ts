@@ -164,9 +164,11 @@ describe('AppComponent', () => {
   it('should render the div element when selectedDataset is null', () => {
     component.selectedDataset = null;
     fixture.detectChanges();
-    const divElement = fixture.nativeElement.querySelector('div');
+    const divElement = fixture.nativeElement.querySelector('.not-found-container');
     expect(divElement).toBeTruthy();
     expect(divElement.textContent).toContain('Oops! No dataset found.');
+    const imgElement = fixture.nativeElement.querySelector('img');
+    expect(imgElement).toBeTruthy();
   });
 
   it('should not render the div element when selectedDataset is defined', () => {
