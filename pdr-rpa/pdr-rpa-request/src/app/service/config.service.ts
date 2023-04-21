@@ -48,14 +48,11 @@ export class ConfigurationService {
         return this.http.get<Configuration>(configURL, { responseType: "json" }).pipe(
             catchError(this.handleError),
             tap(cfg => {
-                // this.loadConfig(cfg);
-                console.log("cfg=", cfg);
                 this.config = cfg as Configuration;
                 this.configSubject.next(this.config);
             })
         );
     }
-
 
     /**
      * Return the (already loaded) configuration data.  It is expected that when this 
@@ -64,11 +61,6 @@ export class ConfigurationService {
      */
     public getConfig(): Configuration {
         return this.config ?? { baseUrl: "/", recaptchaApiKey: "" } as Configuration;
-    }
-
-    // Return Observable<Configuration> (async version of getConfig() above)
-    public getConfigAsObservable(): Observable<Configuration> {
-        return this.configSubject.asObservable();
     }
 
     /**
@@ -102,7 +94,8 @@ export class ConfigurationService {
                 return matchingTemplate;
             }),
             catchError(error => {
-                return throwError(error);
+                const message = `Failed to fetch form template: ${error.message}`;
+                return throwError(new Error(message));
             })
         );
     }

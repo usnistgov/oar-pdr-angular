@@ -32,9 +32,6 @@ describe('RPAService', () => {
         configService.loadConfig(expectedConfig);
         // Mock getConfig() method to return a dummy configuration
         jest.spyOn(configService, 'getConfig').mockReturnValue(expectedConfig);
-        // Mock getConfigAsObservable() method to return an Observable of a dummy configuration
-        jest.spyOn(ConfigurationService.prototype, 'getConfigAsObservable')
-            .mockReturnValue(of(expectedConfig));
 
     });
 
@@ -44,7 +41,6 @@ describe('RPAService', () => {
 
     it('should have a baseUrl', () => {
         expect(service.baseUrl).toBeDefined();
-        // expect(service.baseUrl).toBe('https://oardev.nist.gov/od/ds/rpa');
         expect(service.baseUrl).toBe('/');
     });
 

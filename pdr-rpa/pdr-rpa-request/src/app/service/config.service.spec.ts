@@ -74,6 +74,8 @@ describe('ConfigurationService', () => {
 
         // Assert
         expect(config).toEqual(mockConfig);
+        // Additional check using config getter
+        expect(service.getConfig()).toEqual(mockConfig);
     });
 
 
@@ -82,6 +84,14 @@ describe('ConfigurationService', () => {
         service.config = null;
         expect(service.getConfig()).toEqual({ baseUrl: "/", recaptchaApiKey: "" });
     });
+
+    it('should return configuration object', () => {
+        service.config = mockConfig;
+        const actualConfig = service.getConfig();
+        expect(actualConfig).toBeDefined();
+        expect(actualConfig.baseUrl).toEqual(mockConfig.baseUrl);
+        expect(actualConfig.recaptchaApiKey).toEqual(mockConfig.recaptchaApiKey);
+      });
 
 
     // getDatasets() returns the correct data.

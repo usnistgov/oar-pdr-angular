@@ -21,13 +21,10 @@ export class RPAService {
     baseUrl: string;
 
     constructor(private http: HttpClient, private configSvc: ConfigurationService) {
-        // Get the base URL from the environment
-        this.configSvc.getConfigAsObservable().subscribe(config => {
-            this.baseUrl = this.configSvc.getConfig().baseUrl;
-            if (environment.debug) console.log("baseUrl =", this.baseUrl );
-        });
-    }
+        this.baseUrl = configSvc.getConfig().baseUrl
+        console.log("baseUrl =", this.baseUrl );
 
+    }
     // Http Options
     httpOptions = {
         headers: new HttpHeaders({
