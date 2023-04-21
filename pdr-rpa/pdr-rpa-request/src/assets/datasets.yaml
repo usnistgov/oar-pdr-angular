@@ -162,14 +162,16 @@ formTemplates:
     - I agree to the defined terms and conditions of this dataset.
     - I have read and understood the disclaimer set out above.
     - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST. I represent that I have provided all requested information. I understand that if I have not provided all information I will not receive the dataset.
-  blacklist:
-    emails:
-    countries:
+  blockedEmails: []
+  blockedCountries: []
 - id: no-disclaimer
   disclaimers: 
   agreements: 
     - I agree to the defined terms and conditions of this dataset.
     - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST. I represent that I have provided all requested information. I understand that if I have not provided all information I will not receive the dataset.
-  blacklist:
-    emails:
-    countries:
+  blockedEmails:
+    - email 1
+    - email 2
+  blockedCountries:
+    - Country 1
+    - Country 2
