@@ -344,7 +344,7 @@ export class MyService {
 }
 ```
 
-This service has a method called getData() that takes a URL as input and returns an Observable that emits the response from the HTTP GET request. The `HttpClient` is injected into the service's constructor and used to make the HTTP request.
+This service has a method called getData() that returns an Observable that emits the response from the HTTP GET request. The `HttpClient` is injected into the service's constructor and used to make the HTTP request.
 
 To unit test this service, we would use this typical structure:
 
@@ -559,6 +559,8 @@ describe("MyComponent", () => {
   });
 });
 ```
+
+### Links
 
 You can find more information about testing Angular with Jest in the official documentations:
 
