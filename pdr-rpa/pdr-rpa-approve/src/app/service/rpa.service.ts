@@ -4,13 +4,18 @@ import { Observable, throwError } from "rxjs";
 import { catchError, retry } from "rxjs/operators";
 import { formatDate } from '@angular/common';
 
-import { ApprovalResponse, Record, RecordWrapper, UserInfo } from "../model/record";
+import { ApprovalResponse, RecordWrapper } from "../model/record";
 import { ConfigurationService } from './config.service';
-import { environment } from "../../environments/environment";
 
+/**
+ * Service responsible for update the status of the RPA records.
+ * It provides functions to fetch a record and update the status of an existing record.
+ */
 @Injectable()
 export class RPAService {
 
+    private readonly REQUEST_ACCEPTED_PATH = "/request/accepted/";
+    // the base URL of the RPA request handler service
     baseUrl: string;
 
     constructor(private http: HttpClient, private configSvc: ConfigurationService) {
@@ -34,11 +39,9 @@ export class RPAService {
     *
     */
     public getRecord(recordId: string): Observable<RecordWrapper> {
-        return this.http
-        .get<RecordWrapper>(
-            this.baseUrl + "/request/accepted/" + recordId, 
-            this.httpOptions)
-            .pipe(retry(1), catchError(this.handleError));
+        const url = this.getRecordUrl(recordId);
+        const headers = { ...this.httpOptions };
+        return this.http.get<RecordWrapper>(url, headers).pipe(retry(1), catchError(this.handleError));
     }
 
     /**
@@ -50,11 +53,11 @@ export class RPAService {
     *
     */
     public approveRequest(recordId: string): Observable<ApprovalResponse> {
-        return this.http
-                .patch<ApprovalResponse>(this.baseUrl + "/request/accepted/" + recordId, 
-                {"Approval_Status__c":`Approved_${formatDate(Date.now(),'yyyy-MM-dd h:mm a','en-US')}`}, 
-                this.httpOptions)
-                .pipe(catchError(this.handleError));
+        const approvalStatus = `Approved_${formatDate(Date.now(), 'yyyy-MM-dd h:mm a', 'en-US')}`;
+        const url = this.getRecordUrl(recordId);
+        const payload = this.getApprovalPayload(approvalStatus);
+        const headers = { ...this.httpOptions };
+        return this.http.patch<ApprovalResponse>(url, payload, headers).pipe(catchError(this.handleError));
     }
 
     /**
@@ -66,11 +69,31 @@ export class RPAService {
     *
     */
     public declineRequest(recordId: string): Observable<ApprovalResponse> {
-        return this.http
-                .patch<ApprovalResponse>(this.baseUrl + "/request/accepted/" + recordId, 
-                {"Approval_Status__c":`Declined_${formatDate(Date.now(),'yyyy-MM-dd h:mm a','en-US')}`}, 
-                this.httpOptions)
-                .pipe(catchError(this.handleError));
+        const approvalStatus = `Declined_${formatDate(Date.now(), 'yyyy-MM-dd h:mm a', 'en-US')}`;
+        const url = this.getRecordUrl(recordId);
+        const payload = this.getApprovalPayload(approvalStatus);
+        const headers = { ...this.httpOptions };
+        return this.http.patch<ApprovalResponse>(url, payload, headers).pipe(catchError(this.handleError));
+    }
+
+    /**
+     * Builds the URL for a record with the given ID, using the base URL stored in this service.
+     *
+     * @param recordId - The ID of the record to build the URL for.
+     * @returns The URL string for the specified record.
+     */
+    private getRecordUrl(recordId: string): string {
+        return `${this.baseUrl}${this.REQUEST_ACCEPTED_PATH}${recordId}`;
+    }
+
+    /**
+     * Builds the payload object for an approval request with the specified approval status.
+     *
+     * @param approvalStatus - The approval status to set in the payload object.
+     * @returns The payload object with the specified approval status.
+     */
+    private getApprovalPayload(approvalStatus: string): any {
+        return { "Approval_Status__c": approvalStatus };
     }
 
     // Error handling

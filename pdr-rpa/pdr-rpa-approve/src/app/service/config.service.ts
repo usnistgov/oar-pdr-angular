@@ -15,25 +15,25 @@ import { environment } from "../../environments/environment";
 export class ConfigurationService {
 
     configUrl = environment.configUrl;
-    config : Configuration = null;
+    config: Configuration | null = null;
 
     constructor(private http: HttpClient) { }
 
-    loadConfig(data: any) : void {
+    loadConfig(data: any): void {
         this.config = data as Configuration;
-        console.log("app configuration loaded");
+        if (environment.debug) console.log("app configuration loaded");
     }
 
     /**
      * Get the configuration object from the config URL.
      * @returns An observable containing the configuration object.
      */
-    public fetchConfig(configURL: string = null): Observable<any> {
-        if (! configURL)
-            configURL = this.configUrl;
-        return this.http.get<Configuration>(configURL, {responseType: "json"}).pipe(
-            catchError(this.handleError)
-        ).pipe( tap(cfg => (this.loadConfig(cfg))) );
+    public fetchConfig(configURL: string | null = null): Observable<Configuration> {
+        const url = configURL ?? this.configUrl;
+        return this.http.get<Configuration>(url, { responseType: 'json' }).pipe(
+            catchError(this.handleError),
+            tap(cfg => this.loadConfig(cfg))
+        );
     }
 
     /**
@@ -42,9 +42,7 @@ export class ConfigurationService {
      * application start-up.  
      */
     public getConfig(): Configuration {
-        if (! this.config) 
-            return { baseUrl: "/" } as Configuration;
-        return this.config;
+        return this.config ?? { baseUrl: '/' };
     }
 
     /**
