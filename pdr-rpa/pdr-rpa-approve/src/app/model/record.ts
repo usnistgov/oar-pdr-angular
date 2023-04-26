@@ -12,7 +12,7 @@ export interface UserInfo {
   }
   
   export interface Record {
-    is: string;
+    id: string;
     caseNum: string
     userInfo: UserInfo
   }
