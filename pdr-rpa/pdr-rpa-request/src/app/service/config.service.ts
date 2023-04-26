@@ -34,7 +34,7 @@ export class ConfigurationService {
 
     loadConfig(data: any): void {
         this.config = data as Configuration;
-        if (environment.debug) console.log("app configuration loaded. ", this.config);
+        if (environment.debug) console.log(`[${this.constructor.name}] app configuration loaded.`, this.config);
     }
 
     /**
@@ -42,9 +42,9 @@ export class ConfigurationService {
      * @returns An observable containing the configuration object.
      */
     public fetchConfig(configURL: string | null = null): Observable<any> {
-        if (environment.debug) console.log("fetching configuration using http");
         if (!configURL)
-            configURL = this.configUrl;
+        configURL = this.configUrl;
+        if (environment.debug) console.log(`[${this.constructor.name}] fetching configuration using http from "${configURL}"`);
         return this.http.get<Configuration>(configURL, { responseType: "json" }).pipe(
             catchError(this.handleError),
             tap(cfg => {
@@ -60,7 +60,7 @@ export class ConfigurationService {
      * application start-up.  
      */
     public getConfig(): Configuration {
-        return this.config ?? { baseUrl: "/", recaptchaApiKey: "" } as Configuration;
+        return this.config ?? { baseUrl: "/", recaptchaApiKey: "" };
     }
 
     /**
@@ -105,9 +105,9 @@ export class ConfigurationService {
      * @returns An observable containing the list of countries.
      */
     public getCountries(countriesUrl: string | null = null): Observable<Country[]> {
-        if (environment.debug) console.log("fetching countries list");
         if (!countriesUrl)
-            countriesUrl = this.countriesUrl;
+        countriesUrl = this.countriesUrl;
+        if (environment.debug) console.log(`[${this.constructor.name}] fetching countries list from "${countriesUrl}"`);
         return this.http.get<Country[]>(countriesUrl).pipe(catchError(this.handleError));
     }
 
@@ -125,7 +125,7 @@ export class ConfigurationService {
             // Get server-side error
             errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
         }
-        window.alert(errorMessage);
+        // window.alert(errorMessage);
         return throwError(() => {
             return errorMessage;
         });

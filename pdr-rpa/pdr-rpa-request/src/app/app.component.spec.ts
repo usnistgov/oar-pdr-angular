@@ -70,9 +70,7 @@ const mockFormTemplate = { id: 'template1', disclaimers: [], agreements: [], blo
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
-  let activatedRoute: ActivatedRoute;
   let mockConfigService: any;
-  let service: ConfigurationService;
 
   beforeEach(async () => {
     mockConfigService = {
@@ -112,8 +110,6 @@ describe('AppComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-    activatedRoute = TestBed.inject(ActivatedRoute);
-    service = TestBed.inject(ConfigurationService);
     fixture.detectChanges();
   });
 
@@ -127,22 +123,22 @@ describe('AppComponent', () => {
     expect(component.queryId).toBe('123');
   });
 
-  it('should get datasets', () => {
-    component.getDatasets().subscribe((data) => {
-      expect(data).toEqual([]);
-      expect(mockConfigService.getDatasets).toHaveBeenCalled();
-    });
+  it('should get datasets', async () => {
+    const datatsets = await component.getDatasets().toPromise();
+    expect(mockConfigService.getDatasets).toHaveBeenCalled();
+    expect(datatsets).toEqual(mockDatasets);
   });
 
-  it('should load countries', () => {
+  it('should load countries', async () => {
     const countries = [
       { name: 'United States', code: 'US' },
       { name: 'Canada', code: 'CA' },
       { name: 'Mexico', code: 'MX' }
     ];
-    component.loadCountries().subscribe(() => {
-      expect(component.countries).toEqual(countries);
-    });
+
+    await component.loadCountries().toPromise();
+    expect(mockConfigService.getCountries).toHaveBeenCalled();
+    expect(component.countries).toEqual(countries);
   });
 
   // TODO: this test keeps failing as it doesn't recognize the recaptcha element.

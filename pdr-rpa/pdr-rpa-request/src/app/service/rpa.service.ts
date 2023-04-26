@@ -13,16 +13,18 @@ import { environment } from "../../environments/environment";
  */
 @Injectable({
     providedIn: 'root',
-   })
+})
 export class RPAService {
 
-    private readonly REQUEST_ACCEPTED_PATH = "/request/accepted";
-    private readonly REQUEST_FORM_PATH = "/request/form";
+    // private readonly DS_RPA_PATH = "/od/ds/rpa";
+    private readonly REQUEST_ACCEPTED_PATH = "/request/accepted/";
+    private readonly REQUEST_FORM_PATH = "/request/form/";
+    // the base URL of the RPA request handler service
     baseUrl: string;
 
     constructor(private http: HttpClient, private configSvc: ConfigurationService) {
         this.baseUrl = configSvc.getConfig().baseUrl
-        console.log("baseUrl =", this.baseUrl );
+        if (environment.debug) console.log(`[${this.constructor.name}] baseUrl = ${this.baseUrl}`);
 
     }
     // Http Options
@@ -41,18 +43,17 @@ export class RPAService {
      * @throws An error if the request fails
      */
     public getRecord(recordId: string): Observable<RecordWrapper> {
+        const url = this.getRecordUrl(recordId);
+        const headers = { ...this.httpOptions };
+
         // Send HTTP GET request to fetch a record
-        let request = this.http.get<RecordWrapper>(
-            this.baseUrl + this.REQUEST_ACCEPTED_PATH + "/" + recordId,
-            this.httpOptions
-        );
+        let request = this.http.get<RecordWrapper>(url, headers);
 
         if (environment.debug) {
             request = request.pipe(
-                tap((data: RecordWrapper) => console.log('getRecord response:', data))
+                tap((data: RecordWrapper) => console.log(`[${this.constructor.name}] getRecord response:`, data))
             );
         }
-
         // Retry HTTP request once on failure, and handle any errors
         return request.pipe(
             retry(1),
@@ -70,21 +71,18 @@ export class RPAService {
      * @throws An error if the request fails
      */
     public createRecord(userInfo: UserInfo, recaptcha: String): Observable<Record> {
-        if (environment.debug) {
-            console.log("User Info:" + JSON.stringify(userInfo, null, 2));
-            
-        }
-        
+        if (environment.debug) console.log(`[${this.constructor.name}] User Info:\n${JSON.stringify(userInfo, null, 2)}`);
+
+        const url = this.getCreateRecordUrl();
+        const payload = JSON.stringify({ "userInfo": userInfo, "recaptcha": recaptcha });
+        const headers = { ...this.httpOptions };
+
         // Send HTTP POST request to create a new record
-        let request = this.http.post<Record>(
-            this.baseUrl + this.REQUEST_FORM_PATH,
-            JSON.stringify({ "userInfo": userInfo, "recaptcha": recaptcha }),
-            this.httpOptions
-        );
+        let request = this.http.post<Record>(url, payload, headers);
 
         if (environment.debug) {
             request = request.pipe(
-                tap((data: Record) => console.log('Created Record:', + JSON.stringify(data, null, 2)))
+                tap((data: Record) => console.log(`[${this.constructor.name}] Created Record:\n${JSON.stringify(data, null, 2)}`))
             );
         }
 
@@ -92,6 +90,28 @@ export class RPAService {
         return request.pipe(
             catchError(this.handleError)
         );
+    }
+
+
+    /**
+     * Get the URL for retrieving a record.
+     * @param recordId The ID of the record to retrieve.
+     * @returns The URL for retrieving the record.
+     */
+    private getRecordUrl(recordId: string): string {
+        // baseUrl = https://oardev.nist.gov/od/ds/rpa
+        // return new URL(`${this.REQUEST_ACCEPTED_PATH}${recordId}`, this.baseUrl).toString();
+        // Note: new URL() this strips the baseUrl from any appended path
+        return `${this.baseUrl}${this.REQUEST_ACCEPTED_PATH}${recordId}`;
+    }
+
+    /**
+     * Get the URL for creating a new record.
+     * @returns The URL for creating a new record.
+     */
+    private getCreateRecordUrl(): string {
+        // baseUrl = https://oardev.nist.gov/od/ds/rpa
+        return `${this.baseUrl}${this.REQUEST_FORM_PATH}`;
     }
 
     /**

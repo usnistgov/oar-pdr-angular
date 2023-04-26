@@ -5,7 +5,6 @@ import { ConfigurationService } from './config.service';
 import { RecordWrapper } from '../model/record.model';
 import { Record } from '../model/record.model';
 import { UserInfo } from '../model/record.model';
-import { of } from 'rxjs';
 import { Configuration } from '../model/config.model';
 import { HttpClient } from '@angular/common/http';
 
@@ -18,40 +17,33 @@ describe('RPAService', () => {
         recaptchaApiKey: 'my-api-key'
     };
 
-    const REQUEST_ACCEPTED_PATH = "/request/accepted";
-    const REQUEST_FORM_PATH = "/request/form";
+    const REQUEST_ACCEPTED_PATH = "/request/accepted/";
+    const REQUEST_FORM_PATH = "/request/form/";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
             providers: [RPAService, ConfigurationService]
         });
-        service = TestBed.inject(RPAService);
         httpMock = TestBed.inject(HttpTestingController);
         configService = TestBed.inject(ConfigurationService);
         configService.loadConfig(expectedConfig);
         // Mock getConfig() method to return a dummy configuration
         jest.spyOn(configService, 'getConfig').mockReturnValue(expectedConfig);
-
+        // Assign the service instance to the variable declared at the top
+        service = new RPAService(TestBed.inject(HttpClient), configService);
     });
 
     afterEach(() => {
         httpMock.verify();
     });
 
-    it('should have a baseUrl', () => {
+    it('should have the correct baseUrl', () => {
         expect(service.baseUrl).toBeDefined();
-        expect(service.baseUrl).toBe('/');
-    });
-
-    it('should return the configuration as an observable', () => {
-        expect(service.baseUrl).toBeDefined();
-        // Create an isolated instance of RPAService
-        service = new RPAService(TestBed.inject(HttpClient), configService);
         expect(service.baseUrl).toBe('https://oardev.nist.gov/od/ds/rpa');
     });
 
-    it('should fetch record using HTTP GET request', () => {
+    it('should fetch record using HTTP GET request', async () => {
         const mockRecordId = '123';
         const mockRecordWrapper: RecordWrapper = {
             record: {
@@ -72,18 +64,21 @@ describe('RPAService', () => {
             }
         };
 
-        // Make HTTP GET request to fetch a record
-        service.getRecord(mockRecordId).subscribe((recordWrapper: RecordWrapper) => {
-            expect(recordWrapper).toEqual(mockRecordWrapper);
-        });
+        let getRecordPromise = service.getRecord(mockRecordId).toPromise();
 
-        const request = httpMock.expectOne(`${service.baseUrl}${REQUEST_ACCEPTED_PATH}/${mockRecordId}`);
+        const url = `${service.baseUrl}${REQUEST_ACCEPTED_PATH}${mockRecordId}`;
+        const request = httpMock.expectOne(url);
         expect(request.request.method).toBe('GET');
         request.flush(mockRecordWrapper);
+
+        // Make HTTP GET request to fetch a record
+        const recordWrapper = await getRecordPromise;
+
+        expect(recordWrapper).toEqual(mockRecordWrapper);
     });
 
 
-    it('should create a new record using HTTP POST request', () => {
+    it('should create a new record using HTTP POST request', async () => {
         const mockUserInfo: UserInfo = {
             fullName: 'John Doe',
             organization: 'NIST',
@@ -104,34 +99,41 @@ describe('RPAService', () => {
             userInfo: mockUserInfo
         };
 
-        // Make HTTP POST request to create a new record
-        service.createRecord(mockUserInfo, mockRecaptcha).subscribe((record: Record) => {
-            expect(record).toEqual(mockRecord);
-        });
+        let createRecordPromise = service.createRecord(mockUserInfo, mockRecaptcha).toPromise();
 
-        const request = httpMock.expectOne(`${service.baseUrl}${REQUEST_FORM_PATH}`);
+        const url = `${service.baseUrl}${REQUEST_FORM_PATH}`;
+        const request = httpMock.expectOne(url);
         expect(request.request.method).toBe('POST');
         expect(request.request.body).toEqual(JSON.stringify({ userInfo: mockUserInfo, recaptcha: mockRecaptcha }));
         request.flush(mockRecord);
+
+        const record = await createRecordPromise;
+        expect(record).toEqual(mockRecord);
     });
 
     // test HTTP error handling
-    it('should handle HTTP errors', () => {
-        const errorResponse = { status: 404, statusText: 'Not Found' };
+    it('should handle HTTP errors when getRecord() fails', async () => {
         const recordId = '1';
+        
+        let getRecordPromise = service.getRecord(recordId).toPromise();
 
-        service.getRecord(recordId).subscribe(
-            () => fail('should have failed with the 404 error'),
-            (error) => {
-                expect(error.status).toEqual(404);
-                expect(error.statusText).toEqual('Not Found');
-            }
-        );
-
-        const req = httpMock.expectOne(`${service.baseUrl}${REQUEST_ACCEPTED_PATH}/${recordId}`);
+        const url = `${service.baseUrl}${REQUEST_ACCEPTED_PATH}${recordId}`;
+        const req = httpMock.expectOne(url);
         expect(req.request.method).toBe('GET');
+        
+        const errorResponse = { status: 404, statusText: 'Not Found' };
+        const errorMessage = `Error Code: 404\nMessage: Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/1: 404 Not Found`;
+        req.flush(errorMessage, errorResponse);
 
-        req.flush(errorResponse);
+        // Mock the second retry
+        httpMock.expectOne(url).flush(errorMessage, errorResponse);
+
+        try {
+            await getRecordPromise;
+            fail('Expected promise to be rejected and error to be thrown');
+        } catch (error) {
+            expect(error()).toBe(errorMessage);
+        }
     });
 
 });
