@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import "primeicons/primeicons.css";
 
 :root {
     /* Colors */
@@ -16,6 +17,6 @@
     --nist-blue-light: #197dc0;
     --background-light-grey: #eeeeee;
     --white: #fff;
-
+    --default-red: #e31c3d;
     font-family: sans-serif;
 }
