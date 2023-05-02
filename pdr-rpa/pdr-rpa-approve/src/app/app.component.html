@@ -78,7 +78,7 @@
 
 
                 </div>
-                <button class="rpdform-btn me-4 success" (click)="onApprove()">Approve</button>
+                <button class="rpdform-btn me-4 success-alt" (click)="onApprove()">Approve</button>
                 <button class="rpdform-btn danger" (click)="onDecline()">Decline</button>
             </div>
         </ng-template>
@@ -105,7 +105,7 @@
                         </tr>
                         <tr>
                             <td><b>Requester's Email:</b></td>
-                            <td>{{record?.userInfo.email}}</td>
+                            <td><a [href]="'mailto:' + record?.userInfo.email">{{record?.userInfo.email}}</a></td>
                         </tr>
                         <tr>
                             <td><b>Organization:</b></td>
@@ -149,7 +149,7 @@
                         </tr>
                         <tr>
                             <td><b>Requester's Email:</b></td>
-                            <td>{{record?.userInfo.email}}</td>
+                            <td><a [href]="'mailto:' + record?.userInfo.email">{{record?.userInfo.email}}</a></td>
                         </tr>
                         <tr>
                             <td><b>Organization:</b></td>
@@ -167,7 +167,7 @@
                 </table>
 
                 <div class="divider"></div>
-                <button class="rpdform-btn success" (click)="onApprove()">Approve</button>
+                <button class="rpdform-btn success-alt" (click)="onApprove()">Approve</button>
             </div>
         </ng-template>
     </div>
