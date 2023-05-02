@@ -1,4 +1,18 @@
 datasets:
+  - name: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set
+    ediid: ark:/88434/mds2-2909
+    description: "The images and values in this dataset are used to ensure conformance with ISO/IEC 29794-4, which may be purchased from https://www.iso.org/standard/62791.html. Values were computed with NIST's NFIQ 2 software, https://github.com/usnistgov/NFIQ2. When compiling the NIST NFIQ 2 source code or developing their own alternate implementation of quality metrics contained within ISO/IEC 29794-4, Annex A of the standard requires that the developer ensure that software generate values within 1% of these values when using these images as input."
+    url: https://data.nist.gov/od/id/mds2-2909
+    terms:
+      - The database is to be used for biometrics related research, development and training.
+      - The database will not be further distributed, published, copied, or disseminated externally by you or your organization in any way or form whatsoever, whether for profit or not.
+      - If you are accepting the agreement on behalf of an organization, you may distribute the database only internally to other organization members that agree to these terms, including that the use of the database is limited to biometrics related research, development and training. Subsets of the database may be used for purposes consistent with the terms of this Agreement.
+      - You agree that there shall not be any attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database shall be deleted by you or your organization and no copies retained.
+      - "The researcher, at NIST's sole option, may be notified periodically when new data sets are available. Such information may also be posted on the relevant NIST website."
+      - You agree to acknowledge the Nail to Nail Fingerprint Capture Challenge in any publication of results generated using the data from NIST Special Database 302.
+    requiresApproval: true
+    formTemplate: demo
   - name: NIST Reseach Dataset (version 1)
     ediid: 849E1CC6FBE2C4C7E053B3570681FE987034
     description: NIST Special Database 18 is being distributed for use in development and testing of automated mugshot identification systems. The database consists of a total of 3248 images of variable size using PNG formatting with metadata TXT files corresponding to each per image. There are images of 1573 individuals (cases) 1495 male and 78 female. The database contains both <a href=https://www.nist.gov/property-fieldsection/faceimg>front and side</a> (profile) views when available. Separating front views and profiles, there are 131 cases with two or more front views and 1418 with only one front view. Profiles have 89 cases with two or more profiles and 1268 with only one profile. Cases with both fronts and profiles have 89 cases with two or more of both fronts and profiles, 27 with two or more fronts and one profile, and 1217 with only one front and one profile.<br><br>This NIST Special Database has the following features:<ul><li>3248 segmented 8-bit gray scale mugshot images (varying sizes) of 1573 individuals</li><li>1333 cases with both front and profile views (see statistics above)</li><li>131 cases with two or more front views and 89 cases with two or more profiles</li><li>images scanned at 19.7 pixels per mm</li></ul><br><br>Suitable for automated mugshot identification research, the database can be used for:<ul><li>algorithm development</li><li>system training and testing</li></ul>
