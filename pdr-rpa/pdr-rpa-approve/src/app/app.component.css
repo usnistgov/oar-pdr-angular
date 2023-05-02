@@ -7,7 +7,7 @@
 }
 
 .rpdform-form-title {
-    background-color: var(--nist-blue-default) !important;
+    background-color: var(--nist-blue-default);
     height: 150px;
     color: white;
 }
@@ -16,6 +16,15 @@
     font-weight: 600;
     font-size: 28px;
     line-height: 34px;
+}
+
+.bg-approved {
+    /* background-color: var(--nist-green-default); */
+    background-color: #03C988;
+}
+
+.bg-declined {
+    background-color: var(--default-red);
 }
 
 .rpdform-relative {
