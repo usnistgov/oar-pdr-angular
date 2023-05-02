@@ -1,9 +1,23 @@
 <app-header titleLn1="PDR" titleLn2="SME Approval"></app-header>
-<div class="container p-0 shadow my-5 bg-white rounded" >
+
+<div class="container p-0 shadow my-5 bg-white rounded">
+     <!-- progress spinner when submitting form -->
+     <div class="progress-spinner" *ngIf="displayProgressSpinner">
+        <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8"
+            animationDuration=".5s"></p-progressSpinner>
+    </div>
     <div class="row">
         <div class="col">
-            <div *ngIf="record" class="rpdform-form-title d-flex align-items-center justify-content-center flex-column">
-                <h2 class="text-uppercase">Pending Approval</h2>
+            <div *ngIf="loaded" class="rpdform-form-title d-flex align-items-center justify-content-center flex-column"
+                [ngClass]="{
+                'bg-approved': status.toLowerCase().includes('approved'),
+                'bg-declined': status.toLowerCase().includes('declined')
+            }">
+                <h2 class="text-uppercase">
+                    {{status.toLowerCase().includes('pending') ? 'Pending Approval' :
+                    status.toLowerCase().includes('approved') ? 'Request Approved' :
+                    status.toLowerCase().includes('declined') ? 'Request Declined' : 'Unknown Status'}}
+                </h2>
                 <div class="case-number-text">Case Number: {{record?.caseNum}}</div>
 
             </div>
@@ -11,6 +25,11 @@
     </div>
     <!-- <div class="testing">Hello this is a test</div> -->
     <div class="rpdform-main-wrapper">
+        <div *ngIf="recordNotFound" class="d-flex align-items-center justify-content-center flex-column">
+            <i class="pi pi-exclamation-triangle" style="font-size: 5rem; color: 'var(--default-red)'"></i>
+            <h3 class="case-number-text">Ooops! Something went wrong.</h3>
+            <!-- <p class="error-hint-text">Error: {{errorHintText}}</p> -->
+        </div>
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('pending')">
             <div class="rpdform-form-wrapper">
                 <!-- <h3 class="mb-4">Pending approval - Case Number: {{record?.caseNum}} </h3> -->
@@ -52,11 +71,12 @@
                     <div class="divider"></div>
                     <div class="rpdform-status-message">
                         <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
-                        This request is still <b>{{record?.userInfo.approvalStatus.toLowerCase()}}</b>. Please approve or 
+                        This request is still <b>{{record?.userInfo.approvalStatus.toLowerCase()}}</b>. Please approve
+                        or
                         decline this request as soon as possible.
                     </div>
-                    
-                    
+
+
                 </div>
                 <button class="rpdform-btn me-4 success" (click)="onApprove()">Approve</button>
                 <button class="rpdform-btn danger" (click)="onDecline()">Decline</button>
@@ -97,17 +117,19 @@
                         </tr>
                         <tr>
                             <td><b>Description:</b></td>
-                            <td><br>{{record?.userInfo.description | unescapehtml}}</td>
+                            <td>{{record?.userInfo.description | unescapehtml}}</td>
                         </tr>
                     </tbody>
                 </table>
 
                 <div class="divider"></div>
+
+                <button class="rpdform-btn danger" (click)="onDecline()">Decline</button>
             </div>
         </ng-template>
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('declined')">
             <div class="rpdform-form-wrapper">
-                <h3 class="mb-4">Request declined </h3>
+                <h3 class="mb-4">This request has been declined.</h3>
                 <div>This request has been declined on {{statusDate | date:'long'}}. Following are details about this
                     request:</div>
                 <div class="divider"></div>
@@ -139,7 +161,7 @@
                         </tr>
                         <tr>
                             <td><b>Description:</b></td>
-                            <td><br>{{record?.userInfo.description | unescapehtml}}</td>
+                            <td>{{record?.userInfo.description | unescapehtml}}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -151,10 +173,6 @@
     </div>
     <p-messages [enableService]="true"></p-messages>
 
-    <!-- progress spinner when submitting form -->
-    <div class="progress-spinner" *ngIf="displayProgressSpinner">
-        <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8"
-            animationDuration=".5s"></p-progressSpinner>
-    </div>
+   
 </div>
 <app-footer></app-footer>
