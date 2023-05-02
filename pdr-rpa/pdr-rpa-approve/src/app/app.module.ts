@@ -17,6 +17,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
 import { ServiceModule } from './service/service.module';
 import { FrameModule } from 'oarng';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -38,7 +39,7 @@ import { FrameModule } from 'oarng';
         OverlayPanelModule,
         AppRoutingModule,
         HttpClientModule,
-
+        BrowserAnimationsModule,
         ServiceModule,
         RouterModule.forRoot([])
     ],
