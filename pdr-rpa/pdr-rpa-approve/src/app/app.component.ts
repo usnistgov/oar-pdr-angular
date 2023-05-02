@@ -4,8 +4,8 @@ import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Record } from './model/record';
 import { RPAService } from './service/rpa.service';
-import { catchError, filter, pluck, switchMap, tap } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
+import { catchError, filter, finalize, pluck, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Component({
@@ -21,7 +21,7 @@ export class AppComponent {
   record: Record;
   loaded: boolean = false;
   displayProgressSpinner: boolean = false;
-
+  recordNotFound = false;
   constructor(
     private route: ActivatedRoute,
     private rpaService: RPAService,
@@ -32,6 +32,7 @@ export class AppComponent {
    * Init the component state based on the record id retrieved from the route query params.
    */
   ngOnInit(): void {
+    this.displayProgressSpinner = true;
     this.status = "pending";
     this.route.queryParams.pipe(
       // Extract the 'id' property from the query parameters
@@ -56,6 +57,8 @@ export class AppComponent {
       catchError(error => {
         if (environment.debug) console.log(`[${this.constructor.name}] Error in onInit(): ${error}`);
         // Return an empty observable to prevent the error from propagating further
+        this.recordNotFound = true;
+        this.displayProgressSpinner = false
         return EMPTY;
       })
     ).subscribe();
@@ -80,29 +83,29 @@ export class AppComponent {
   /**
    * Approve the RPA request for the current record and displays a success message.
    * Reload the page after the request has been approved.
-*/
+  */
   onApprove(): void {
     // Display loading spinner
     this.displayProgressSpinner = true;
     // Send HTTP request to approve the user request
-    this.rpaService.approveRequest(this.recordId).subscribe({
-      next: (data) => {
+    this.rpaService.approveRequest(this.recordId).pipe(
+      tap(data => {
         if (environment.debug) console.log(`[${this.constructor.name}] Record ${this.recordId} approved by SME`);
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was approved successfully!' });
-        location.reload();
-        // Navigate to the current route again to refresh the page
-        // this.router.navigate([this.router.url]);
-      },
-      error: (error) => {
+      }),
+      catchError(error => {
         if (environment.debug) console.error(`[${this.constructor.name}] Error approving requestt: ${error}`);
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error approving this request.' });
-      },
-      complete: () => {
+        return throwError(error);
+      }),
+      finalize(() => {
         // Hide loading spinner
         this.displayProgressSpinner = false;
-      },
-    });
+        location.reload();
+      })
+    ).subscribe();
   }
+
 
   /**
    * Decline the RPA request for the current record and displays a success message.
@@ -128,6 +131,7 @@ export class AppComponent {
         complete: () => {
           // Hide loading spinner
           this.displayProgressSpinner = false;
+          location.reload();
         },
       }
     );
