@@ -18,7 +18,7 @@ export class RPAService {
 
     // private readonly DS_RPA_PATH = "/od/ds/rpa";
     private readonly REQUEST_ACCEPTED_PATH = "/request/accepted/";
-    private readonly REQUEST_FORM_PATH = "/request/form/";
+    private readonly REQUEST_FORM_PATH = "/request/form";
     // the base URL of the RPA request handler service
     baseUrl: string;
 
