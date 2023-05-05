@@ -6,7 +6,7 @@ import { Country } from './model/country.model';
 import { Dataset } from './model/dataset.model';
 import { RequestFormData } from './model/form-data.model';
 import { FormTemplate } from './model/form-template.model';
-import { UserInfo } from './model/record.model';
+import { Record, UserInfo } from './model/record.model';
 
 import { MessageService } from 'primeng/api';
 import { SelectItem } from 'primeng/api';
@@ -25,7 +25,7 @@ export class AppComponent {
     queryId: string;
     datasets: Dataset[] = [];
     selectedDataset: Dataset | null | undefined;
-    selectedFormTemplate: FormTemplate | null| undefined;
+    selectedFormTemplate: FormTemplate | null | undefined;
     isFormValid = true;
     displayProgressSpinner = false;
     errors = [];
@@ -149,7 +149,7 @@ export class AppComponent {
    */
     submitForm(): void {
         this.beforeSubmitForm();
-
+        this.displayProgressSpinner = true;
         // If the form is invalid, display an error message
         if (!this.requestForm.valid) {
             // Get any validation errors in the form
@@ -170,16 +170,30 @@ export class AppComponent {
             this.rpaService.createRecord(userInfo, recaptcha)
                 .pipe(
                     catchError((error: any) => {
-                        if (environment.debug) console.error(error);
-                        this.displayProgressSpinner = false; // stop spinner when error
-                        return throwError(error);
+                        this.handleFailedSubmission(error);
+                        return of(null);
                     })
-                ).subscribe((data: {}) => {
-                    this.handleSuccessfulSubmission(data);
+                ).subscribe((data: Record | null) => {
+                    if (data !== null) {
+                        this.handleSuccessfulSubmission(data);
+                    }
                 });
+
         }
     }
 
+    private handleFailedSubmission(error: any) {
+        if (environment.debug) console.log(`[${this.constructor.name}] Error sending request`, error().message);
+        // stop spinner when error
+        this.displayProgressSpinner = false;
+        // display messageß
+        const message = {
+            severity: 'error',
+            summary: '',
+            detail: 'There was an error sending this request. Please contact <a href="datasupport@nist.gov">datasupport@nist.gov</a>'
+        }
+        this.messageService.add(message);
+    }
     /**
      * Prepare form submission
      */
@@ -199,9 +213,8 @@ export class AppComponent {
         // let errorsText = this.getErrorsText(validationErrors);
         const message = {
             severity: 'error',
-            summary: 'Error',
+            summary: '',
             detail: errorMessage, //+ messages.join(','),
-            escape: false // don't escape html
         };
         this.messageService.add(message);
         setTimeout(() => this.messageService.clear(), 10000);
@@ -252,8 +265,6 @@ export class AppComponent {
         requestFormData.address1 = formControls.address1.value;
         requestFormData.address2 = formControls.address2.value;
         requestFormData.address3 = formControls.address3.value;
-        requestFormData.stateOrProvince = formControls.stateOrProvince.value;
-        requestFormData.zipCode = formControls.zipCode.value;
         requestFormData.country = formControls.country.value.name;
         requestFormData.receiveEmails = formControls.receiveEmails.value;
 
@@ -269,7 +280,7 @@ export class AppComponent {
         // Remove spinner layer
         this.displayProgressSpinner = false;
         // Display success message
-        const message = { severity: 'success', summary: 'Success', detail: 'Your request was submitted successfully! You will receive a confirmation email shortly.' };
+        const message = { severity: 'success', summary: '', detail: 'Your request was submitted successfully! You will receive a confirmation email shortly.' };
         this.messageService.add(message);
         setTimeout(() => this.messageService.clear(), 5000); // dismiss success message after few seconds
         // Empty form
@@ -290,10 +301,37 @@ export class AppComponent {
         userInfo.approvalStatus = "Pending";
         userInfo.productTitle = this.selectedDataset!.name;
         userInfo.subject = this.selectedDataset!.ediid;
-        userInfo.description = "Product Title:\n" + this.selectedDataset!.name + "\n\n Purpose of Use: \n" + requestFormData.purposeOfUse;
+        userInfo.description = this.buildDescriptionString(this.selectedDataset!, requestFormData);
         return userInfo;
     }
 
+    /**
+     * Builds a description string for a record based on the selected dataset and form data.
+     * The description includes the product title, purpose of use, and address information.
+     *
+     * @param selectedDataset The selected dataset.
+     * @param requestFormData The form data from which to extract the address information.
+     * @returns The formatted description string.
+     */
+    private buildDescriptionString(selectedDataset: Dataset, requestFormData: any): string {
+        // Use filter to extract non empty address lines from the form data
+        const addressLines = [
+            requestFormData.address1,
+            requestFormData.address2,
+            requestFormData.address3,
+        ].filter(line => line !== '');
+
+        // Concatenate address lines into a single string with line breaks
+        let address = addressLines.join('\n');
+
+        return `Product Title: ${selectedDataset?.name}\n\n` +
+            `Purpose of Use: ${requestFormData.purposeOfUse}\n\n` +
+            `Address:\n${address}`;
+    }
+
+    /**
+     * Initializes the request form with the necessary form controls and validators.
+     */
     private initRequestForm(): void {
         this.requestForm = new FormGroup({
             fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
@@ -302,10 +340,8 @@ export class AppComponent {
             organization: new FormControl("", [Validators.required]),
             purposeOfUse: new FormControl("", [Validators.required]),
             address1: new FormControl("", [Validators.required]),
-            address2: new FormControl("", [Validators.required]),
-            address3: new FormControl(""),
-            stateOrProvince: new FormControl(""),
-            zipCode: new FormControl(""),
+            address2: new FormControl(""),
+            address3: new FormControl("", [Validators.required]),
             country: new FormControl("", [Validators.required]),
             receiveEmails: new FormControl(false),
             termsAndConditionsAgreenement: new FormControl(false, [
@@ -316,6 +352,7 @@ export class AppComponent {
             recaptcha: new FormControl(false, [Validators.required]),
         });
     }
+
     /**
      * Utility method that takes an AbstractControl or null and returns any validation errors that are present in the control or its child controls.
      * @param form the form to check
@@ -345,4 +382,26 @@ export class AppComponent {
             return Object.keys(formErrors).length > 0 ? formErrors : null;
         }
     }
+
+    /** 
+     * Fills out the request form with default values
+     * for testing purposes.
+     * */
+    private onFillOut() {
+        this.requestForm.setValue({
+          fullName: "YOUR NAME",
+          email: "your@email.here",
+          phone: "123-456-7890",
+          organization: "YOUR ORG",
+          purposeOfUse: "Research purposes for a publication",
+          address1: "100 Bureau Drive",
+          address2: "",
+          address3: "Gaithersburg, MD, 20899",
+          receiveEmails: false,
+          termsAndConditionsAgreenement: true,
+          disclaimerAgreenement: true,
+          vettingAgreenement: true,
+          recaptcha: false // Skip the recaptcha control
+        });
+      }
 }
