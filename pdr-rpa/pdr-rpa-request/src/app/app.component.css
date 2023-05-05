@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,600;1,100;1,300;1,400;1,500;1,600&display=swap');
+
+:host {
+    font-family: 'Poppins', sans-serif !important;
+}
+
 .rpa-form-title {
     background-color: #1E6BA1;
 }
@@ -172,6 +178,30 @@
     background-color: var(--nist-blue-default);
     color: white;
 }
+
+.rpdform-btn-fill-form {
+  background-color: white; 
+  transition-duration: 0.3s;
+  font-size: 16px;
+  padding: 14px 25px;
+  border: none;
+  font-weight: 500;
+  color: black;
+  cursor: pointer;
+  margin-top: 48px;
+  min-width: 200px;
+  border-radius: 100px;
+  text-transform: uppercase;
+  color: #666666; /* Change to medium gray */
+  border: 2px solid #666666; /* Change to medium gray */
+  align-self: center;
+}
+
+.rpdform-btn-fill-form:hover{
+    background-color: #666666; /* Change to medium gray */
+    color: white;
+}
+
 
 .disclaimer-text {
     font-style: italic;

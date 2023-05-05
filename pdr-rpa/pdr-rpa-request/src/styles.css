@@ -1,8 +1,8 @@
 @import "~ngx-toastr/toastr.css";
 
-* {
+/* * {
     font-family: sans-serif;
-}
+} */
 
 body {
   background-color: #e3f7fd;
