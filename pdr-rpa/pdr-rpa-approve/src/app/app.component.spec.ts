@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
+import { AppComponent, RecordDescription } from './app.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RPAService } from './service/rpa.service';
 import { MessageService } from 'primeng/api';
@@ -121,5 +121,32 @@ describe('AppComponent', () => {
     expect(mockRPAService.declineRequest).toHaveBeenCalledWith('ark:123');
   });
 
+  describe('parseDescription', () => {
+    it('should extract fields from a valid description string', () => {
+      const description = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set' +
+        '\n\nPurpose of Use: Research purposes for a publication' +
+        '\n\nAddress:\n100 Bureau Drive\nGaithersburg, MD, 20899';
+      const expected: RecordDescription = {
+        title: 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set',
+        purpose: 'Research purposes for a publication',
+        address: '100 Bureau Drive, Gaithersburg, MD, 20899',
+      };
+      component.parseDescription(description);
+      expect(component.recordDescription).toEqual(expected);
+
+    });
+
+    it('should return empty fields for an invalid description string', () => {
+      const description = 'This is not a valid description';
+      const expected: RecordDescription = {
+        title: '',
+        purpose: '',
+        address: '',
+      };
+      component.parseDescription(description);
+      expect(component.recordDescription).toEqual(expected);
+
+    });
+  });
 });
 
