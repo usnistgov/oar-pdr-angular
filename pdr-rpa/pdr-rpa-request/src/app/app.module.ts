@@ -23,7 +23,7 @@ import { FrameModule } from 'oarng';
 import { RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
 import { ServiceModule } from './service/service.module';
 import { RequestFormTermsComponent } from './components/request-form-terms/request-form-terms.component';
-
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     declarations: [
@@ -47,6 +47,7 @@ import { RequestFormTermsComponent } from './components/request-form-terms/reque
         CardModule,
         ChipModule,
         ButtonModule,
+        ToastModule,
         ProgressSpinnerModule,
         OverlayPanelModule,
         RecaptchaModule,
