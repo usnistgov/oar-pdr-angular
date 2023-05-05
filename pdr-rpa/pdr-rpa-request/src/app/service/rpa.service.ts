@@ -128,10 +128,10 @@ export class RPAService {
         } else {
             // Get server-side error
             errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+            if (environment.debug) console.log(errorMessage)
         }
-        window.alert(errorMessage);
         return throwError(() => {
-            return errorMessage;
+            return error.error;
         });
     }
 }

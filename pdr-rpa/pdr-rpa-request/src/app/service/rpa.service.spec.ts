@@ -18,7 +18,7 @@ describe('RPAService', () => {
     };
 
     const REQUEST_ACCEPTED_PATH = "/request/accepted/";
-    const REQUEST_FORM_PATH = "/request/form/";
+    const REQUEST_FORM_PATH = "/request/form";
 
     beforeEach(() => {
         TestBed.configureTestingModule({
