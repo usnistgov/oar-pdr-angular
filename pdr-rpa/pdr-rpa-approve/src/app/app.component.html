@@ -8,7 +8,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <div *ngIf="loaded" class="rpdform-form-title d-flex align-items-center justify-content-center flex-column"
+            <div *ngIf="loaded" class="rpdform-form-title d-flex align-items-center justify-content-center flex-column rounded-top"
                 [ngClass]="{
                 'bg-approved': status.toLowerCase().includes('approved'),
                 'bg-declined': status.toLowerCase().includes('declined')
@@ -39,7 +39,7 @@
                         <tbody>
                             <tr>
                                 <td><b>Case Number:</b></td>
-                                <td>{{record?.caseNum}}</td>
+                                <td><span style="background-color: #f2f2f2; padding: 4px; border-radius: 5px;">{{record?.caseNum}}</span></td>
                             </tr>
                             <tr>
                                 <td><b>Requester's Full Name:</b></td>
@@ -54,21 +54,23 @@
                                 <td><a [href]="'mailto:' + record?.userInfo.email">{{record?.userInfo.email}}</a></td>
                             </tr>
                             <tr>
-                                <td><b>Organization:</b></td>
-                                <td>{{record?.userInfo.organization}}</td>
-                            </tr>
-                            <tr>
                                 <td><b>Country:</b></td>
                                 <td>{{record?.userInfo.country}}</td>
                             </tr>
                             <tr>
                                 <td><b>Description:</b></td>
-                                <td>{{record?.userInfo.description}}</td>
+                                <td><div class="record-description-container">
+                                    <div class="record-description-title"><span>Product Title: </span>{{recordDescription.title}}</div>
+                                    <div class="record-description-purpose"><span>Purpose of Use: </span>{{recordDescription.purpose}}</div>
+                                    <div class="record-description-address"><span>Requester's Address: </span>{{recordDescription.address}}</div>
+                                  </div>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
 
                     <div class="divider"></div>
+                    <hr class="custom-hr">
                     <div class="rpdform-status-message">
                         <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
                         This request is still <b>{{record?.userInfo.approvalStatus.toLowerCase()}}</b>. Please approve
@@ -86,7 +88,7 @@
 
             <div class="rpdform-form-wrapper">
                 <h3 class="mb-4">Request approved </h3>
-                <div>This request has been approved on {{statusDate | date:'long'}}. Following are details about this
+                <div>This request has been approved on <strong>{{statusDate | date:'long'}}</strong>. Following are details about this
                     request:</div>
                 <div class="divider"></div>
                 <table>
@@ -117,7 +119,7 @@
                         </tr>
                         <tr>
                             <td><b>Description:</b></td>
-                            <td>{{record?.userInfo.description | unescapehtml}}</td>
+                            <td><span id="record-description"></span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -130,7 +132,7 @@
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('declined')">
             <div class="rpdform-form-wrapper">
                 <h3 class="mb-4">This request has been declined.</h3>
-                <div>This request has been declined on {{statusDate | date:'long'}}. Following are details about this
+                <div>This request has been declined on <strong>{{statusDate | date:'long'}}</strong>. Following are details about this
                     request:</div>
                 <div class="divider"></div>
                 <table>
@@ -161,11 +163,13 @@
                         </tr>
                         <tr>
                             <td><b>Description:</b></td>
-                            <td>{{record?.userInfo.description | unescapehtml}}</td>
+                            <!-- <td><span style="white-space: pre-wrap;">{{record?.userInfo.description}}</span></td> -->
+                            <td [innerHTML]="record?.userInfo.description"></td>
                         </tr>
                     </tbody>
                 </table>
 
+                
                 <div class="divider"></div>
                 <button class="rpdform-btn success-alt" (click)="onApprove()">Approve</button>
             </div>
