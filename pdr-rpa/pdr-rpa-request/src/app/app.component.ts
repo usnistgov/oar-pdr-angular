@@ -301,7 +301,7 @@ export class AppComponent {
         userInfo.approvalStatus = "Pending";
         userInfo.productTitle = this.selectedDataset!.name;
         userInfo.subject = this.selectedDataset!.ediid;
-        userInfo.description = this.buildDescriptionString(this.selectedDataset!, requestFormData);
+        userInfo.description = this.buildDescriptionString(userInfo.productTitle, requestFormData);
         return userInfo;
     }
 
@@ -309,11 +309,10 @@ export class AppComponent {
      * Builds a description string for a record based on the selected dataset and form data.
      * The description includes the product title, purpose of use, and address information.
      *
-     * @param selectedDataset The selected dataset.
-     * @param requestFormData The form data from which to extract the address information.
+     * @param productTitle The product tile to use.
      * @returns The formatted description string.
      */
-    private buildDescriptionString(selectedDataset: Dataset, requestFormData: any): string {
+    buildDescriptionString(productTitle: string, requestFormData: any): string {
         // Use filter to extract non empty address lines from the form data
         const addressLines = [
             requestFormData.address1,
@@ -324,7 +323,7 @@ export class AppComponent {
         // Concatenate address lines into a single string with line breaks
         let address = addressLines.join('\n');
 
-        return `Product Title: ${selectedDataset?.name}\n\n` +
+        return `Product Title: ${productTitle}\n\n` +
             `Purpose of Use: ${requestFormData.purposeOfUse}\n\n` +
             `Address:\n${address}`;
     }
