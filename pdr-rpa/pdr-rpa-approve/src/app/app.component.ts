@@ -12,7 +12,7 @@ import { environment } from '../environments/environment';
  * Interface used to store product title, purpose of use, and address 
  * for parsing purposes.
  */
-interface RecordDescription {
+export interface RecordDescription {
   title: string;
   purpose: string;
   address: string;
@@ -62,7 +62,7 @@ export class AppComponent {
       tap(record => {
         this.record = record;
         this.parseApprovalStatus(this.record);
-        this.parseDescription(this.record);
+        this.parseDescription(this.record.userInfo.description);
         this.loaded = true;
       }),
       // Catche and logs any errors that occur
@@ -83,8 +83,7 @@ export class AppComponent {
    * 
    * @param record The Record object to parse the user info description from.
    */
-  private parseDescription(record: Record) {
-    const description = record.userInfo.description;
+  parseDescription(description: string) {
     // Define regex
 
     // This matches the string 'Product Title:' at the start of a line ^,
