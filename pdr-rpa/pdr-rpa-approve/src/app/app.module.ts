@@ -18,6 +18,7 @@ import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
 import { ServiceModule } from './service/service.module';
 import { FrameModule } from 'oarng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastModule } from 'primeng/toast';
 
 @NgModule({
     declarations: [
@@ -35,6 +36,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         CardModule, 
         ChipModule, 
         ButtonModule, 
+        ToastModule,
         ProgressSpinnerModule, 
         OverlayPanelModule,
         AppRoutingModule,
