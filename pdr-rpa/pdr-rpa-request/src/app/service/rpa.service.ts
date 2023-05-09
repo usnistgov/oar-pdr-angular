@@ -120,18 +120,26 @@ export class RPAService {
      * @param error - The error object
      * @returns An observable that emits an error
      */
+    // Error handling
     private handleError(error: any) {
         let errorMessage = '';
+        let errorCode = '';
+
         if (error.error instanceof ErrorEvent) {
             // Get client-side error
             errorMessage = error.error.message;
+            errorCode = 'CLIENT_ERROR';
         } else {
             // Get server-side error
-            errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-            if (environment.debug) console.log(errorMessage)
+            errorMessage = error.message;
+            errorCode = error.status ? `SERVER_ERROR_${error.status}` : 'SERVER_ERROR';
         }
-        return throwError(() => {
-            return error.error;
-        });
+
+        const messageError = {
+            code: errorCode,
+            message: errorMessage
+        };
+
+        return throwError(() => messageError);
     }
 }
