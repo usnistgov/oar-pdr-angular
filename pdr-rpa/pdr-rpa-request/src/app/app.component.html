@@ -243,13 +243,14 @@
                       <div style="font-size: 12px;">(Demo only)</div>
                     </button> -->
                 </div>
-                <p-messages [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [enableService]="true"
-                    [escape]="false"></p-messages>
+                
+                <!-- <p-messages [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [enableService]="true"
+                    [escape]="false"></p-messages> -->
             </form>
         </div>
     </div>
 </div>
-
+<p-toast></p-toast>
 <!-- progress spinner when submitting form -->
 <div class="progress-spinner" *ngIf="displayProgressSpinner">
     <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8"
