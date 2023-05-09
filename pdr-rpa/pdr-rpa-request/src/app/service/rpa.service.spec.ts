@@ -122,7 +122,8 @@ describe('RPAService', () => {
         expect(req.request.method).toBe('GET');
         
         const errorResponse = { status: 404, statusText: 'Not Found' };
-        const errorMessage = `Error Code: 404\nMessage: Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/1: 404 Not Found`;
+        const errorMessage = "Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/1: 404 Not Found"
+        
         req.flush(errorMessage, errorResponse);
 
         // Mock the second retry
@@ -132,7 +133,9 @@ describe('RPAService', () => {
             await getRecordPromise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error()).toBe(errorMessage);
+            // expect(error()).toBe(errorMessage);
+            expect(error().code).toBe('SERVER_ERROR_404');
+            expect(error().message).toBe(errorMessage);
         }
     });
 

@@ -77,7 +77,7 @@ describe('RPAService', () => {
         expect(req.request.method).toBe('GET');
 
         const errorResponse = { status: 404, statusText: 'Not Found' };
-        const errorMessage = `Error Code: 404\nMessage: Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/123: 404 Not Found`;
+        const errorMessage = "Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/123: 404 Not Found";
         req.flush(errorMessage, errorResponse);
 
         // Mock the second retry
@@ -87,7 +87,8 @@ describe('RPAService', () => {
             await getRecordPromise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error()).toBe(errorMessage);
+            expect(error().code).toBe("SERVER_ERROR_404");
+            expect(error().message).toBe(errorMessage);
         }
     });
 
@@ -117,15 +118,15 @@ describe('RPAService', () => {
         expect(req.request.method).toBe('PATCH');
 
         const errorResponse = { status: 500, statusText: 'Internal Server Error' };
-        const errorMessage = `Error Code: 500\nMessage: Http failure response for` +
-            ` https://oardev.nist.gov/od/ds/rpa/request/accepted/123: 500 Internal Server Error`;
+        const errorMessage = "Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/123: 500 Internal Server Error";
         req.flush(errorMessage, errorResponse);
 
         try {
             await promise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error()).toBe(errorMessage);
+            expect(error().code).toBe("SERVER_ERROR_500");
+            expect(error().message).toBe(errorMessage);
         }
     });
 
@@ -155,15 +156,15 @@ describe('RPAService', () => {
         expect(req.request.method).toBe('PATCH');
 
         const errorResponse = { status: 500, statusText: 'Internal Server Error' };
-        const errorMessage = `Error Code: 500\nMessage: Http failure response for` +
-            ` https://oardev.nist.gov/od/ds/rpa/request/accepted/123: 500 Internal Server Error`;
+        const errorMessage = "Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/123: 500 Internal Server Error";
         req.flush(errorMessage, errorResponse);
 
         try {
             await promise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error()).toBe(errorMessage);
+            expect(error().code).toBe("SERVER_ERROR_500");
+            expect(error().message).toBe(errorMessage);
         }
     });
 
