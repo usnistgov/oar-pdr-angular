@@ -93,7 +93,7 @@ describe('RPAService', () => {
 
     it('should call PATCH method with correct parameters', async () => {
         const recordId = '123';
-        const expectedResponse: ApprovalResponse = { "recordId": recordId, approvalStatus: 'Approved' };
+        const expectedResponse: ApprovalResponse = { "recordId": recordId, approvalStatus: 'Approved_2023-05-08 3:14 PM' };
 
         const promise = service.approveRequest(recordId).toPromise();
 
@@ -131,7 +131,7 @@ describe('RPAService', () => {
 
     it('should call PATCH method with correct parameters', async () => {
         const recordId = '123';
-        const expectedResponse: ApprovalResponse = { "recordId": recordId, approvalStatus: 'Declined' };
+        const expectedResponse: ApprovalResponse = { "recordId": recordId, approvalStatus: 'Declined_2023-05-08 3:14 PM' };
 
         const promise = service.declineRequest(recordId).toPromise();
 

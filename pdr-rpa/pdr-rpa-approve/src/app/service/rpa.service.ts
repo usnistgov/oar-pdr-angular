@@ -53,7 +53,7 @@ export class RPAService {
     *
     */
     public approveRequest(recordId: string): Observable<ApprovalResponse> {
-        const approvalStatus = `Approved_${formatDate(Date.now(), 'yyyy-MM-dd h:mm a', 'en-US')}`;
+        const approvalStatus = "Approved";
         const url = this.getRecordUrl(recordId);
         const payload = this.getApprovalPayload(approvalStatus);
         const headers = { ...this.httpOptions };
@@ -69,7 +69,7 @@ export class RPAService {
     *
     */
     public declineRequest(recordId: string): Observable<ApprovalResponse> {
-        const approvalStatus = `Declined_${formatDate(Date.now(), 'yyyy-MM-dd h:mm a', 'en-US')}`;
+        const approvalStatus = "Declined";
         const url = this.getRecordUrl(recordId);
         const payload = this.getApprovalPayload(approvalStatus);
         const headers = { ...this.httpOptions };
