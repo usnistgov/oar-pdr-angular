@@ -140,24 +140,22 @@ export class AppComponent {
     this.rpaService.approveRequest(this.recordId).pipe(
       catchError(error => {
         if (environment.debug) console.error(`[${this.constructor.name}] Error approving request:`, error());
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error approving this request.' });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error approving this request.', life: 5000 });
         return throwError(error); // re-throw the error to be caught by the subscribing function
       })
     )
       .subscribe(
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was approving by SME!`);
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was approved successfully!' });
-          // Navigate to the current route again to refresh the page
-          // this.router.navigate([this.router.url]);
           this.displayProgressSpinner = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was approved successfully!', life: 5000 }); 
           setTimeout(() => {
-            this.messageService.clear();
-            this.reloadPage();
-          }, 5000); // dismiss success message after few seconds
+            location.reload();
+          }, 3000); // dismiss success message after few seconds
         }
       );
   }
+
 
   /**
    * Decline the RPA request for the current record and displays a success message.
@@ -171,44 +169,20 @@ export class AppComponent {
       .pipe(
         catchError(error => {
           if (environment.debug) console.error(`[${this.constructor.name}] Error declining request:`, error());
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error declining this request.' });
+          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error declining this request.', life: 5000 });
           return throwError(error); // re-throw the error to be caught by the subscribing function
         })
       )
       .subscribe(
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was declined by SME!`);
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was declined successfully!' });
-          // Navigate to the current route again to refresh the page
-          // this.router.navigate([this.router.url]);
           this.displayProgressSpinner = false;
+          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was declined successfully!', life: 5000 });
           setTimeout(() => {
-            this.messageService.clear();
-            this.reloadPage();
-          }, 5000); // dismiss success message after few seconds
-          
+            location.reload();
+          }, 3000); // dismiss success message after few seconds
+
         }
       );
-
   }
-
-
-  /**
-   * Reloads the current route by navigating to the root URL with `skipLocationChange` set to `true`, 
-   * which prevents the new URL from being added to the browser's history stack, 
-   * then navigating to the current route URL.
-   *
-   * @remarks
-   * This method is equivalent to calling `location.reload()` in JavaScript.
-   *
-   * @returns A `Promise` that resolves when the page has been reloaded.
-   */
-  private reloadPage() {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate([this.router.url]);
-    });
-  }
-
-
-
 }
