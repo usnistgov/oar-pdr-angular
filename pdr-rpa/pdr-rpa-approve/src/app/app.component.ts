@@ -9,12 +9,11 @@ import { EMPTY, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
 /**
- * Interface used to store product title, purpose of use, and address 
+ * Interface used to store product title, and address 
  * for parsing purposes.
  */
 export interface RecordDescription {
   title: string;
-  purpose: string;
   address: string;
 }
 
@@ -78,7 +77,7 @@ export class AppComponent {
 
   /**
    * Parses the description from a Record object to extract
-   * the product title, the purpose of use, and the address. 
+   * the product title, and the address. 
    * Sets the extracted values in the recordDescription object.
    * 
    * @param record The Record object to parse the user info description from.
@@ -92,11 +91,6 @@ export class AppComponent {
     // m flag enables multiline matching, not just the start end end of the description.
     const titleRegex = /^Product Title:\s*(.*)$/m;
 
-    // This matches the string Purpose of Use: at the start of a line ^, 
-    // followed by any number of whitespace characters \s*, 
-    // and then matches any characters (.*) until the end of the line $.
-    const purposeRegex = /^Purpose of Use:\s*(.*)$/m;
-
     // This matches the string Address: at the start of a line ^,
     // followed by any number of whitespace characters \s*, 
     // and then matches any characters (including newlines) ([\s\S]*) until the end of the line $.
@@ -104,17 +98,14 @@ export class AppComponent {
     
     // Returns match result
     const titleMatch = titleRegex.exec(description);
-    const purposeMatch = purposeRegex.exec(description);
     const addressMatch = addressRegex.exec(description);
     
     // Assigns matched values if found, otherwise assigns an empty string.
     const title = titleMatch ? titleMatch[1] : '';
-    const purpose = purposeMatch ? purposeMatch[1] : '';
     const address = addressMatch ? addressMatch[1].split('\n').join(', ') : '';
 
     this.recordDescription = {
       title,
-      purpose,
       address,
     };
 

@@ -204,14 +204,12 @@ describe('buildDescriptionString', () => {
     it('should build a correct description string', () => {
         const productTitle = 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set';
         const requestFormData = {
-            purposeOfUse: 'Research purposes for a publication',
             address1: '100 Bureau Drive',
             address2: '123',
             address3: 'Gaithersburg, MD, 20899',
         };
 
         const expectedDescription = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\n' +
-            'Purpose of Use: Research purposes for a publication\n\n' +
             'Address:\n100 Bureau Drive\n123\nGaithersburg, MD, 20899';
 
         const actualDescription = component.buildDescriptionString(productTitle, requestFormData);
@@ -222,14 +220,12 @@ describe('buildDescriptionString', () => {
     it('should handle empty address lines', () => {
         const productTitle = 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set';
         const requestFormData = {
-            purposeOfUse: 'Research purposes for a publication',
             address1: '100 Bureau Drive',
             address2: '',
             address3: 'Gaithersburg, MD, 20899',
         };
 
         const expectedDescription = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\n' +
-            'Purpose of Use: Research purposes for a publication\n\n' +
             'Address:\n100 Bureau Drive\nGaithersburg, MD, 20899';
 
         const actualDescription = component.buildDescriptionString(productTitle, requestFormData);

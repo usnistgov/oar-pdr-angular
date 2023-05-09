@@ -261,7 +261,6 @@ export class AppComponent {
         requestFormData.email = formControls.email.value;
         requestFormData.phone = formControls.phone.value;
         requestFormData.organization = formControls.organization.value;
-        requestFormData.purposeOfUse = formControls.purposeOfUse.value;
         requestFormData.address1 = formControls.address1.value;
         requestFormData.address2 = formControls.address2.value;
         requestFormData.address3 = formControls.address3.value;
@@ -307,7 +306,7 @@ export class AppComponent {
 
     /**
      * Builds a description string for a record based on the selected dataset and form data.
-     * The description includes the product title, purpose of use, and address information.
+     * The description includes the product title, and address information.
      *
      * @param productTitle The product tile to use.
      * @returns The formatted description string.
@@ -324,7 +323,6 @@ export class AppComponent {
         let address = addressLines.join('\n');
 
         return `Product Title: ${productTitle}\n\n` +
-            `Purpose of Use: ${requestFormData.purposeOfUse}\n\n` +
             `Address:\n${address}`;
     }
 
@@ -337,7 +335,6 @@ export class AppComponent {
             email: new FormControl("", [Validators.required, Validators.email]),
             phone: new FormControl(""),
             organization: new FormControl("", [Validators.required]),
-            purposeOfUse: new FormControl("", [Validators.required]),
             address1: new FormControl("", [Validators.required]),
             address2: new FormControl(""),
             address3: new FormControl("", [Validators.required]),
@@ -392,7 +389,6 @@ export class AppComponent {
           email: "your@email.here",
           phone: "123-456-7890",
           organization: "YOUR ORG",
-          purposeOfUse: "Research purposes for a publication",
           address1: "100 Bureau Drive",
           address2: "",
           address3: "Gaithersburg, MD, 20899",

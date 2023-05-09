@@ -61,7 +61,6 @@
                                 <td><b>Description:</b></td>
                                 <td><div class="record-description-container">
                                     <div class="record-description-title"><span>Product Title: </span>{{recordDescription.title}}</div>
-                                    <div class="record-description-purpose"><span>Purpose of Use: </span>{{recordDescription.purpose}}</div>
                                     <div class="record-description-address"><span>Requester's Address: </span>{{recordDescription.address}}</div>
                                   </div>
                                 </td>
@@ -74,8 +73,7 @@
                     <div class="rpdform-status-message">
                         <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
                         This request is still <b>{{record?.userInfo.approvalStatus.toLowerCase()}}</b>. Please approve
-                        or
-                        decline this request as soon as possible.
+                        or decline this request as soon as possible.
                     </div>
 
 
@@ -119,7 +117,11 @@
                         </tr>
                         <tr>
                             <td><b>Description:</b></td>
-                            <td><span id="record-description"></span></td>
+                            <td><div class="record-description-container">
+                                <div class="record-description-title"><span>Product Title: </span>{{recordDescription.title}}</div>
+                                <div class="record-description-address"><span>Requester's Address: </span>{{recordDescription.address}}</div>
+                              </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -163,8 +165,11 @@
                         </tr>
                         <tr>
                             <td><b>Description:</b></td>
-                            <!-- <td><span style="white-space: pre-wrap;">{{record?.userInfo.description}}</span></td> -->
-                            <td [innerHTML]="record?.userInfo.description"></td>
+                            <td><div class="record-description-container">
+                                <div class="record-description-title"><span>Product Title: </span>{{recordDescription.title}}</div>
+                                <div class="record-description-address"><span>Requester's Address: </span>{{recordDescription.address}}</div>
+                              </div>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
