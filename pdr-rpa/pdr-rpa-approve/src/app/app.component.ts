@@ -33,7 +33,6 @@ export class AppComponent {
   recordNotFound = false;
   recordDescription: RecordDescription;
   constructor(
-    private router: Router,
     private route: ActivatedRoute,
     private rpaService: RPAService,
     private messageService: MessageService
