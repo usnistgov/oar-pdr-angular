@@ -32,7 +32,6 @@
         </div>
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('pending')">
             <div class="rpdform-form-wrapper">
-                <!-- <h3 class="mb-4">Pending approval - Case Number: {{record?.caseNum}} </h3> -->
                 <div>You have received a request with the following information:
                     <div class="divider"></div>
                     <table class="pending-table">
@@ -85,7 +84,6 @@
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('approved')">
 
             <div class="rpdform-form-wrapper">
-                <h3 class="mb-4">Request approved </h3>
                 <div>This request has been approved on <strong>{{statusDate | date:'long'}}</strong>. Following are details about this
                     request:</div>
                 <div class="divider"></div>
@@ -93,7 +91,7 @@
                     <tbody>
                         <tr>
                             <td><b>Case Number:</b></td>
-                            <td>{{record?.caseNum}}</td>
+                            <td><span style="background-color: #f2f2f2; padding: 4px; border-radius: 5px;">{{record?.caseNum}}</span></td>
                         </tr>
                         <tr>
                             <td><b>Requester's Full Name:</b></td>
@@ -133,7 +131,6 @@
         </ng-template>
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('declined')">
             <div class="rpdform-form-wrapper">
-                <h3 class="mb-4">This request has been declined.</h3>
                 <div>This request has been declined on <strong>{{statusDate | date:'long'}}</strong>. Following are details about this
                     request:</div>
                 <div class="divider"></div>
@@ -141,7 +138,7 @@
                     <tbody>
                         <tr>
                             <td><b>Case Number:</b></td>
-                            <td>{{record?.caseNum}}</td>
+                            <td><span style="background-color: #f2f2f2; padding: 4px; border-radius: 5px;">{{record?.caseNum}}</span></td>
                         </tr>
                         <tr>
                             <td><b>Requester's Full Name:</b></td>
@@ -180,8 +177,11 @@
             </div>
         </ng-template>
     </div>
-    <p-messages [enableService]="true"></p-messages>
+    
+    <!-- <p-messages [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [enableService]="true"
+                    [escape]="false"></p-messages> -->
 
    
 </div>
+<p-toast></p-toast>
 <app-footer></app-footer>
