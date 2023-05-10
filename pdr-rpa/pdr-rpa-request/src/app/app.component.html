@@ -238,19 +238,35 @@
 
                 <div class="d-flex justify-content-between">
                     <button class="rpdform-btn mb-4" type="submit">Submit</button>
-                    <!-- <button class="rpdform-btn-fill-form mb-4 me-4" type="button"  (click)="onFillOut()">
-                      Fill out form
-                      <div style="font-size: 12px;">(Demo only)</div>
-                    </button> -->
+                    <button class="rpdform-btn-fill-form mb-4 me-4" type="button" (click)="onFillOut()">
+                        Fill out form
+                        <div style="font-size: 12px;">(Demo only)</div>
+                    </button>
                 </div>
-                
+
                 <!-- <p-messages [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [enableService]="true"
                     [escape]="false"></p-messages> -->
             </form>
         </div>
     </div>
 </div>
-<p-toast></p-toast>
+<p-toast position="bottom-center">
+    <ng-template let-message pTemplate="message">
+        <div class="flex flex-column" style="flex: 1">
+            <div class="text-center">
+                <i class="pi 
+                {{ message.severity === 'error' ? 'pi-times-circle' :
+                   message.severity === 'warning' ? 'pi-exclamation-triangle' :
+                   message.severity === 'info' ? 'pi-info-circle' :
+                   'pi-check-circle'
+                }}
+                " style="font-size: 3rem"></i>
+                <h4>{{message.summary}}</h4>
+                <p [innerHTML]="message.detail"></p>
+            </div>
+        </div>
+    </ng-template>
+</p-toast>
 <!-- progress spinner when submitting form -->
 <div class="progress-spinner" *ngIf="displayProgressSpinner">
     <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8"

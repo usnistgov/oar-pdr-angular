@@ -190,7 +190,8 @@ export class AppComponent {
         const message = {
             severity: 'error',
             summary: '',
-            detail: 'There was an error sending this request. Please contact <a href="datasupport@nist.gov">datasupport@nist.gov</a>'
+            detail: 'There was an error sending this request.<br>Please contact <a href="datasupport@nist.gov">datasupport@nist.gov</a>',
+            life: 5000
         }
         this.messageService.add(message);
     }
@@ -215,9 +216,9 @@ export class AppComponent {
             severity: 'error',
             summary: '',
             detail: errorMessage, //+ messages.join(','),
+            life: 5000
         };
         this.messageService.add(message);
-        setTimeout(() => this.messageService.clear(), 10000);
     }
 
 
@@ -279,9 +280,13 @@ export class AppComponent {
         // Remove spinner layer
         this.displayProgressSpinner = false;
         // Display success message
-        const message = { severity: 'success', summary: '', detail: 'Your request was submitted successfully! You will receive a confirmation email shortly.' };
+        const message = {
+            severity: 'success', 
+            summary: '', 
+            detail: 'Your request was submitted successfully.<br>You will receive a confirmation email shortly.',
+            life: 5000
+        };
         this.messageService.add(message);
-        setTimeout(() => this.messageService.clear(), 5000); // dismiss success message after few seconds
         // Empty form
         this.requestForm.reset();
     }
@@ -387,16 +392,16 @@ export class AppComponent {
         this.requestForm.setValue({
           fullName: "YOUR NAME",
           email: "your@email.here",
-          phone: "123-456-7890",
-          organization: "YOUR ORG",
-          address1: "100 Bureau Drive",
-          address2: "",
-          address3: "Gaithersburg, MD, 20899",
-          receiveEmails: false,
-          termsAndConditionsAgreenement: true,
-          disclaimerAgreenement: true,
-          vettingAgreenement: true,
-          recaptcha: false // Skip the recaptcha control
+            phone: "123-456-7890",
+            organization: "YOUR ORG",
+            address1: "100 Bureau Drive",
+            address2: "",
+            address3: "Gaithersburg, MD, 20899",
+            receiveEmails: false,
+            termsAndConditionsAgreenement: true,
+            disclaimerAgreenement: true,
+            vettingAgreenement: true,
+            recaptcha: false // Skip the recaptcha control
         });
-      }
+    }
 }
