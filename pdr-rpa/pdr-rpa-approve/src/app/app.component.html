@@ -1,6 +1,6 @@
 <app-header titleLn1="PDR" titleLn2="SME Approval"></app-header>
 
-<div class="container p-0 shadow my-5 bg-white rounded">
+<div class="container p-0 shadow my-2 bg-white rounded">
      <!-- progress spinner when submitting form -->
      <div class="progress-spinner" *ngIf="displayProgressSpinner">
         <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8"
@@ -66,9 +66,6 @@
                             </tr>
                         </tbody>
                     </table>
-
-                    <div class="divider"></div>
-                    <hr class="custom-hr">
                     <div class="rpdform-status-message">
                         <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
                         This request is still <b>{{record?.userInfo.approvalStatus.toLowerCase()}}</b>. Please approve
@@ -124,7 +121,10 @@
                     </tbody>
                 </table>
 
-                <div class="divider"></div>
+                <div class="rpdform-status-message">
+                    <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
+                    To cancel the requester's access to the data, please click decline.
+                </div>
 
                 <button class="rpdform-btn danger" (click)="onDecline()">Decline</button>
             </div>
@@ -171,8 +171,10 @@
                     </tbody>
                 </table>
 
-                
-                <div class="divider"></div>
+                <div class="rpdform-status-message">
+                    <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
+                    To override this decline, please click approve.
+                </div>
                 <button class="rpdform-btn success-alt" (click)="onApprove()">Approve</button>
             </div>
         </ng-template>

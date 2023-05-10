@@ -15,7 +15,7 @@
 
 .rpdform-form-title {
     background-color: var(--nist-blue-default);
-    height: 150px;
+    height: 120px;
     color: white;
 }
 
@@ -54,8 +54,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 70vh;
-    padding: 48px;
+    min-height: 65vh;
+    padding: 16px;
 }
 
 .rpdform-form-wrapper {
@@ -163,17 +163,13 @@
     font-weight: 500;
     color: black;
     cursor: pointer;
-    margin-top: 48px;
+    margin-top: 16px;
     min-width: 200px;
     border-radius: 100px;
     text-transform: uppercase;
 }
 
 
-
-.rpdform-status-message {
-    margin-top: 48px;
-}
 
 svg {
     color: 1E6BA1;
@@ -306,7 +302,7 @@ td {
     min-width: 250px;
     margin-right: 20px;
     margin-bottom: 20px;
-    height: 40px; 
+    height: 16px; 
     vertical-align: top;
     text-align: left;
 }
@@ -330,15 +326,16 @@ td {
   }
   
   .record-description-title,
-  .record-description-purpose,
   .record-description-address {
-    margin-bottom: 2rem;
+    margin-bottom: 16px;
   }
   
   .record-description-title span,
-  .record-description-purpose span,
   .record-description-address span {
     font-weight: bold;
   }
   
   
+  .rpdform-status-message {
+    margin-top: 16px;
+  }

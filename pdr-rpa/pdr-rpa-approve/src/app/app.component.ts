@@ -146,7 +146,6 @@ export class AppComponent {
       .subscribe(
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was approving by SME!`);
-          this.displayProgressSpinner = false;
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was approved successfully!', life: 5000 }); 
           setTimeout(() => {
             location.reload();
@@ -175,7 +174,7 @@ export class AppComponent {
       .subscribe(
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was declined by SME!`);
-          this.displayProgressSpinner = false;
+          
           this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was declined successfully!', life: 5000 });
           setTimeout(() => {
             location.reload();
