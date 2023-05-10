@@ -383,25 +383,4 @@ export class AppComponent {
             return Object.keys(formErrors).length > 0 ? formErrors : null;
         }
     }
-
-    /** 
-     * Fills out the request form with default values
-     * for testing purposes.
-     * */
-    private onFillOut() {
-        this.requestForm.setValue({
-          fullName: "YOUR NAME",
-          email: "your@email.here",
-            phone: "123-456-7890",
-            organization: "YOUR ORG",
-            address1: "100 Bureau Drive",
-            address2: "",
-            address3: "Gaithersburg, MD, 20899",
-            receiveEmails: false,
-            termsAndConditionsAgreenement: true,
-            disclaimerAgreenement: true,
-            vettingAgreenement: true,
-            recaptcha: false // Skip the recaptcha control
-        });
-    }
 }
