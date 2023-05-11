@@ -105,12 +105,12 @@
                         Organization Address Line 1
                     </label>
                     <input type="text" name="address1" id="address1" class="rpdform-form-input"
-                        placeholder="100 Bureau Drive" formControlName="address1" />
+                        placeholder="123 Main St." formControlName="address1" />
                 </div>
 
                 <div class="rpdform-mb-3">
                     <label for="address2" class="rpdform-form-label">
-                        Organization Address Line 2
+                        Organization Address Line 2 (Optional)
                     </label>
                     <input type="text" name="address2" id="address2" class="rpdform-form-input"
                         placeholder="Mailstop 1234" formControlName="address2" />
@@ -121,7 +121,7 @@
                         Organization Address Line 3
                     </label>
                     <input type="text" name="address3" id="address3" class="rpdform-form-input"
-                        placeholder="Gaithersburg, MD 20899" formControlName="address3" />
+                        placeholder="City, XY, 12345" formControlName="address3" />
                 </div>
 
                 <div class="pdform-mb-3 country-dropdown-menu">
@@ -150,12 +150,12 @@
                                 </span>
                             </div>
                         </div>
-                        I would like to receive email notifications.
+                        I would like to subscribe to email notifications.
                     </label>
                 </div>
                 <div class="divider"></div>
                 <div class="rpdform-mb-3 disclaimer-box" *ngIf="selectedFormTemplate">
-                    <label for="disclaimer" class="rpdform-form-label required"
+                    <label for="disclaimer" class="rpdform-form-label"
                         *ngIf="selectedFormTemplate.disclaimers">
                         Disclaimers
                     </label>
@@ -165,7 +165,7 @@
                 </div>
 
                 <div class="rpdform-checkbox-wrapper">
-                    <label for="termsCheckbox" class="rpdform-checkbox-label required">
+                    <label for="termsCheckbox" class="rpdform-checkbox-label">
                         <div class="rpdform-relative">
                             <input type="checkbox" id="termsCheckbox" name="termsCheckbox"
                                 class="rpdform-input-checkbox" formControlName="termsAndConditionsAgreenement" />
@@ -180,11 +180,12 @@
                                 </span>
                             </div>
                         </div>
-                        I agree to the defined terms and conditions of this dataset.
+                        <span class="required">I agree to the defined terms and conditions of this dataset.</span>
+                        
                     </label>
                 </div>
                 <div class="rpdform-checkbox-wrapper">
-                    <label for="disclaimerCheckbox" class="rpdform-checkbox-label required">
+                    <label for="disclaimerCheckbox" class="rpdform-checkbox-label">
                         <div class="rpdform-relative">
                             <input type="checkbox" id="disclaimerCheckbox" name="disclaimerCheckbox"
                                 formControlName="disclaimerAgreenement" class="rpdform-input-checkbox" />
@@ -199,11 +200,12 @@
                                 </span>
                             </div>
                         </div>
-                        I have read and understood the disclaimer set out above.
+                        <span class="required">I have read and understood the disclaimer set out above.</span>
+                        
                     </label>
                 </div>
-                <div class="rpdform-checkbox-wrapper">
-                    <label for="vettingCheckbox" class="rpdform-checkbox-label required">
+                <div class="rpdform-checkbox-wrapper ">
+                    <label for="vettingCheckbox" class="rpdform-checkbox-label">
                         <div class="rpdform-relative">
                             <input type="checkbox" id="vettingCheckbox" name="vettingCheckbox"
                                 class="rpdform-input-checkbox" formControlName="vettingAgreenement" />
@@ -218,11 +220,12 @@
                                 </span>
                             </div>
                         </div>
-                        I acknowledge that all requests are reviewed by a NIST employee or other individual acting
-                        on behalf
-                        of NIST. I represent that I have provided all requested information. I understand that if I
-                        have not
-                        provided all information I will not receive the dataset.
+                        <span class="required">I acknowledge that all requests are reviewed by a NIST employee or other individual acting
+                            on behalf
+                            of NIST. I represent that I have provided all requested information. I understand that if I
+                            have not
+                            provided all information I will not receive the dataset.</span>
+                        
                     </label>
                 </div>
 
