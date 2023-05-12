@@ -14,6 +14,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { RPAService } from './service/rpa.service';
 import { ConfigurationService } from './service/config.service';
 import { environment } from '../environments/environment';
+import { CustomValidators } from './validators/custom-validators';
 
 @Component({
     selector: 'app-root',
@@ -281,8 +282,8 @@ export class AppComponent {
         this.displayProgressSpinner = false;
         // Display success message
         const message = {
-            severity: 'success', 
-            summary: '', 
+            severity: 'success',
+            summary: '',
             detail: 'Your request was submitted successfully.<br>You will receive a confirmation email shortly.',
             life: 5000
         };
@@ -335,9 +336,12 @@ export class AppComponent {
      * Initializes the request form with the necessary form controls and validators.
      */
     private initRequestForm(): void {
+
+        let emailBlacklist = this.getEmailBlacklist();
+
         this.requestForm = new FormGroup({
-            fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50)]),
-            email: new FormControl("", [Validators.required, Validators.email]),
+            fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
+            email: new FormControl("", [Validators.required, Validators.email, CustomValidators.blacklisted(emailBlacklist.patterns, emailBlacklist.emails, emailBlacklist.domains)]),
             phone: new FormControl(""),
             organization: new FormControl("", [Validators.required]),
             address1: new FormControl("", [Validators.required]),
@@ -350,8 +354,21 @@ export class AppComponent {
             ]),
             disclaimerAgreenement: new FormControl(false, [Validators.required]),
             vettingAgreenement: new FormControl(false, [Validators.required]),
+            accessAgreement: new FormControl(false, [Validators.required]),
             recaptcha: new FormControl(false, [Validators.required]),
         });
+    }
+
+    /**
+     * Retrieves the email blacklist configuration.
+     * @returns The email blacklist configuration object.
+     */
+    private getEmailBlacklist(): any {
+        return {
+            patterns: ['test', '123'],
+            emails: ['john.doe@example.com', 'jane.doe@example.com'],
+            domains: ['example.com', 'test.com']
+        };
     }
 
     /**
