@@ -87,12 +87,12 @@
                                 Point of contact email is required.
                             </ng-container>
                             <ng-container *ngIf="requestForm.controls.email.errors.blacklisted">
-                                Point of contact email provided is not accepted.
+                                Point of contact email provided must be from your organization.
                             </ng-container>
                         </div>
                     </div>
                     <div>
-                        <label for="phone" class="rpdform-form-label">Point of Contact Phone Number </label>
+                        <label for="phone" class="rpdform-form-label required">Point of Contact Phone Number </label>
                         <input type="text" name="phone" id="phone" class="rpdform-form-input"
                             placeholder="Your Work (NOT Personal) Phone Number" formControlName="phone" />
                     </div>

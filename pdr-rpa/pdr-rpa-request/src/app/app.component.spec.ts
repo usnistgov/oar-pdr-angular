@@ -149,7 +149,7 @@ describe('AppComponent', () => {
   //   // const captchaComponent = element.componentInstance as RecaptchaComponent;
   //   // expect(captchaComponent.siteKey).toEqual('test-site-key');
   // });
-  
+
   it('should have the app-footer and app-header components', () => {
     const footer = fixture.debugElement.query(By.css('app-footer'));
     expect(footer).toBeTruthy();
@@ -200,39 +200,43 @@ describe('AppComponent', () => {
     expect(progressSpinnerElement).toBeTruthy();
   });
 
-describe('buildDescriptionString', () => {
+  describe('buildDescriptionString', () => {
     it('should build a correct description string', () => {
-        const productTitle = 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set';
-        const requestFormData = {
-            address1: '100 Bureau Drive',
-            address2: '123',
-            address3: 'Gaithersburg, MD, 20899',
-        };
+      const productTitle = 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set';
+      const requestFormData = {
+        address1: '100 Bureau Drive',
+        address2: '123',
+        address3: 'Gaithersburg, MD, 20899',
+        phone: '123-456-7890'
+      };
 
-        const expectedDescription = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\n' +
-            'Address:\n100 Bureau Drive\n123\nGaithersburg, MD, 20899';
+      const expectedDescription = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\n' +
+        'Phone Number: 123-456-7890\n\n' +
+        'Address:\n100 Bureau Drive\n123\nGaithersburg, MD, 20899';
 
-        const actualDescription = component.buildDescriptionString(productTitle, requestFormData);
+      const actualDescription = component.buildDescriptionString(productTitle, requestFormData);
 
-        expect(actualDescription).toBe(expectedDescription);
+      expect(actualDescription).toBe(expectedDescription);
     });
 
     it('should handle empty address lines', () => {
-        const productTitle = 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set';
-        const requestFormData = {
-            address1: '100 Bureau Drive',
-            address2: '',
-            address3: 'Gaithersburg, MD, 20899',
-        };
+      const productTitle = 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set';
+      const requestFormData = {
+        address1: '100 Bureau Drive',
+        address2: '',
+        address3: 'Gaithersburg, MD, 20899',
+        phone: '123-456-7890'
+      };
 
-        const expectedDescription = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\n' +
-            'Address:\n100 Bureau Drive\nGaithersburg, MD, 20899';
+      const expectedDescription = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\n' +
+        'Phone Number: 123-456-7890\n\n' +
+        'Address:\n100 Bureau Drive\nGaithersburg, MD, 20899';
 
-        const actualDescription = component.buildDescriptionString(productTitle, requestFormData);
+      const actualDescription = component.buildDescriptionString(productTitle, requestFormData);
 
-        expect(actualDescription).toBe(expectedDescription);
+      expect(actualDescription).toBe(expectedDescription);
     });
-});
+  });
 
-  
+
 });

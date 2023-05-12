@@ -329,6 +329,7 @@ export class AppComponent {
         let address = addressLines.join('\n');
 
         return `Product Title: ${productTitle}\n\n` +
+             `Phone Number: ${requestFormData.phone}\n\n` +
             `Address:\n${address}`;
     }
 
@@ -342,7 +343,7 @@ export class AppComponent {
         this.requestForm = new FormGroup({
             fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
             email: new FormControl("", [Validators.required, Validators.email, CustomValidators.blacklisted(emailBlacklist.patterns, emailBlacklist.emails, emailBlacklist.domains)]),
-            phone: new FormControl(""),
+            phone: new FormControl("", [Validators.required]),
             organization: new FormControl("", [Validators.required]),
             address1: new FormControl("", [Validators.required]),
             address2: new FormControl(""),
@@ -367,7 +368,7 @@ export class AppComponent {
         return {
             patterns: ['test', '123'],
             emails: ['john.doe@example.com', 'jane.doe@example.com'],
-            domains: ['example.com', 'test.com']
+            domains: ['gmail.com', 'test.com']
         };
     }
 

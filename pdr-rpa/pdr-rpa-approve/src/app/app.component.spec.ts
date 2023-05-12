@@ -110,23 +110,25 @@ describe('AppComponent', () => {
   it('should call onApprove()', async () => {
     component.recordId = 'ark:123';
     component.onApprove();
-    expect(component.displayProgressSpinner).toEqual(false);
+    expect(component.displayProgressSpinner).toEqual(true);
     expect(mockRPAService.approveRequest).toHaveBeenCalledWith('ark:123');
   });
 
   it('should call onDecline()', () => {
     component.recordId = 'ark:123';
     component.onDecline();
-    expect(component.displayProgressSpinner).toEqual(false);
+    expect(component.displayProgressSpinner).toEqual(true);
     expect(mockRPAService.declineRequest).toHaveBeenCalledWith('ark:123');
   });
 
   describe('parseDescription', () => {
     it('should extract fields from a valid description string', () => {
-      const description = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set' +
-        '\n\nAddress:\n100 Bureau Drive\nGaithersburg, MD, 20899';
+      const description = 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\n' +
+        'Phone Number: 123-456-7890\n\n' +
+        'Address:\n100 Bureau Drive\nGaithersburg, MD, 20899';
       const expected: RecordDescription = {
         title: 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set',
+        phone: '123-456-7890',
         address: '100 Bureau Drive, Gaithersburg, MD, 20899',
       };
       component.parseDescription(description);
@@ -138,6 +140,7 @@ describe('AppComponent', () => {
       const description = 'This is not a valid description';
       const expected: RecordDescription = {
         title: '',
+        phone: '',
         address: '',
       };
       component.parseDescription(description);

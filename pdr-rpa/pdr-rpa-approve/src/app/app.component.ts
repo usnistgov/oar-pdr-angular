@@ -14,6 +14,7 @@ import { environment } from '../environments/environment';
  */
 export interface RecordDescription {
   title: string;
+  phone: string;
   address: string;
 }
 
@@ -91,6 +92,12 @@ export class AppComponent {
     // m flag enables multiline matching, not just the start end end of the description.
     const titleRegex = /^Product Title:\s*(.*)$/m;
 
+    // This matches the string 'Phone Number:' at the start of a line ^,
+    // followed by any number of whitespace characters \s*, 
+    // and then matches one or more digits, whitespace characters, or hyphens. 
+    // This allows the formats '123-456-7890', '123 456 7890', or '1234567890' until the end of the line $.
+    const phoneRegex = /^Phone Number:\s*([\d\s-]+)$/m;
+
     // This matches the string Address: at the start of a line ^,
     // followed by any number of whitespace characters \s*, 
     // and then matches any characters (including newlines) ([\s\S]*) until the end of the line $.
@@ -98,14 +105,17 @@ export class AppComponent {
 
     // Returns match result
     const titleMatch = titleRegex.exec(description);
+    const phoneMatch = phoneRegex.exec(description);
     const addressMatch = addressRegex.exec(description);
 
     // Assigns matched values if found, otherwise assigns an empty string.
     const title = titleMatch ? titleMatch[1] : '';
+    const phone = phoneMatch ? phoneMatch[1].trim() : '';
     const address = addressMatch ? addressMatch[1].split('\n').join(', ') : '';
 
     this.recordDescription = {
       title,
+      phone,
       address,
     };
 
