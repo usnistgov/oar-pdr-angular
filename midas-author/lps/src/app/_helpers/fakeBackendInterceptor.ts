@@ -47,39 +47,67 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // }
 
         const midasRes = {
-            "id": "mdm1:0003",
-            "name": "CoTEM",
+            "id": "mds3:0001",
+            "name": "firsttest",
             "acls": {
-            "read": [
+              "read": [
                 "anonymous"
-            ],
-            "write": [
+              ],
+              "write": [
                 "anonymous"
-            ],
-            "admin": [
+              ],
+              "admin": [
                 "anonymous"
-            ],
-            "delete": [
+              ],
+              "delete": [
                 "anonymous"
-            ]
+              ]
             },
             "owner": "anonymous",
-            "data": {
-            "title": "Microscopy of Cobalt Samples"
-            },
-            "meta": {},
-            "curators": [],
-            "created": 1669560885.988901,
-            "createdDate": "2022-11-27T09:54:45",
-            "lastModified": 1669560885.988901,
-            "lastModifiedDate": "2022-11-27T09:54:45",
             "deactivated": null,
-            "type": "dmp"
+            "status": {
+              "created": 1678804311.8563082,
+              "state": "edit",
+              "action": "create",
+              "since": 1678804311.8570614,
+              "modified": 1678804311.9115264,
+              "message": "",
+              "createdDate": "2023-03-14T14:31:51",
+              "modifiedDate": "2023-03-14T14:31:51",
+              "sinceDate": "2023-03-14T14:31:51"
+            },
+            "data": {
+              "@id": "ark:/88434/mds3-0001",
+              "title": "",
+              "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+              "@type": [
+                "nrdp:PublicDataResource",
+                "dcat:Resource"
+              ],
+              "doi": "doi:10.18434/mds3-0001",
+              "author_count": 0,
+              "file_count": 0,
+              "nonfile_count": 0,
+              "reference_count": 0
+            },
+            "meta": {
+              "resourceType": "software",
+              "creatorisContact": true
+            },
+            "curators": [
+              
+            ],
+            "type": "dap"
         }
 
         console.log("request", request);
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
+            if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
+                // console.log("Getting forensics")
+                return of(new HttpResponse({ status: 200, body: midasRes }));
+            }
+
             // metrics
             // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {
             //     return of(new HttpResponse({ status: 200, body: metricsRecordDetails }));

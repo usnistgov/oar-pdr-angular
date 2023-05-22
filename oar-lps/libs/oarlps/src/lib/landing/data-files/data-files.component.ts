@@ -15,6 +15,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AppSettings } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 
 declare var _initAutoTracker: Function;
 
@@ -137,7 +138,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
-    fieldName: string = 'components';
+    fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -200,6 +201,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
             this.dataCartStatus = DataCartStatus.openCartStatus();
         }
+        
         if (this.record)
             this.useMetadata();
     }

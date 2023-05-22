@@ -25,10 +25,12 @@
                 </ng-template>                
             </div>
 
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode && !inViewMode">
-                <button class="edit_button" (click)="onEdit()" aria-label="edit button" ngbTooltip="Edit URL">
+            <div class="editable_field" *ngIf="mdupdsvc.isEditMode && !inViewMode" style="margin-left: 5px;">
+                <!-- <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
                     <i [class]="editIconClass()"></i>
-                </button>
+                </button> -->
+
+                <i class="faa faa-pencil icon_enabled" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" title="Edit URL" ngbTooltip="edit URL" aria-label="edit URL" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
             </div>
         </div>
     </div>

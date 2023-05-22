@@ -11,8 +11,9 @@
         </div>
 
         <!-- Has contact -->
-        <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);margin-left: 05em;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, currentContact.dataChanged)">
-            <div style="padding-left: 0.5em; padding-right: 0.5em;">
+        <!-- <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);margin-left: 05em;border: 1px solid red;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, currentContact.dataChanged, undefined, false)"> -->
+        <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);">
+            <div style="padding-right: 0.5em;">
                 <strong>
                     <a *ngIf="hasEmail"
                         href="{{currentContact.hasEmail}}" target="_top">
@@ -46,11 +47,12 @@
                 </div>
             </div>
         </div>
-        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isEditing"
+        <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isEditing"
             (click)="startEditing()">
             <i [class]="editIconClass()" data-toggle="tooltip"
                 title="Edit contactPoint"></i>
-        </button>
+        </button> -->
+        <i class="faa faa-pencil icon_enabled" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit contact" ngbTooltip="edit contact" aria-label="edit contact" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
     </div>
 </div>
 

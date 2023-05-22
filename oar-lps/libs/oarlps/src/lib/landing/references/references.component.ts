@@ -4,9 +4,9 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { Reference } from './reference';
-
 
 @Component({
     selector: 'app-references',
@@ -40,9 +40,19 @@ export class ReferencesComponent implements OnInit {
         public lpService: LandingpageService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.editBlockStatus == 'expanded')
-                    this.setMode(MODE.NORNAL, false);
+
+
+                if(sectionMode){
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.editBlockStatus == 'expanded')
+                            this.setMode(MODE.NORNAL, false);
+                        }
+                    }else{
+                        if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                            this.startEditing();
+                        }
+                    }
                 }
             })
     }
@@ -93,7 +103,7 @@ export class ReferencesComponent implements OnInit {
     /**
      * set current mode to editing.
      */
-    onEdit() {
+    startEditing() {
         this.setMode(MODE.EDIT);
     }
 
@@ -117,7 +127,7 @@ export class ReferencesComponent implements OnInit {
      */
     getStyle(){
         if(this.mdupdsvc.isEditMode){
-            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged);
+            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged, undefined, this.isEditing);
         }else{
             return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
         }

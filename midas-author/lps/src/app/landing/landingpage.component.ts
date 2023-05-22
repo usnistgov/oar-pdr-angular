@@ -30,6 +30,7 @@ import { Themes, ThemesPrefs } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { LandingpageService } from 'oarlps';
 import questionhelp from '../../assets/site-constants/question-help.json';
+import wordMapping from '../../assets/site-constants/word-mapping.json';
 
 /**
  * A component providing the complete display of landing page content associated with 
@@ -140,12 +141,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     sidebarStartY: number = 160;
     sidebarY: number = 160;
 
-    helpContent: any = {
-        "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
-    }
+    // helpContent: any = {
+    //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
+    // }
+
+    wordMpping: any = wordMapping;
+    resourceType: string = "resource";
 
     suggustedSections: string[] = ["title", "keyword", "references"];
     public helpContentAll:{} = questionhelp;
+    helpContentUpdated: boolean = false;
 
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
@@ -207,8 +212,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
             this.mdupdsvc.subscribe(
                 (md) => {
-                    if (md && md != this.md) 
+                    if (md && md != this.md) {
                         this.md = md as NerdmRes;
+                    }
+
+                    if(md && !this.helpContentUpdated){
+                        this.updateHelpContent();
+                    }
 
                     this.showData();
                 }
@@ -344,6 +354,31 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
             }
         });
+    }
+
+    /**
+     * Update help content
+     */
+    updateHelpContent() {
+        //Read meta from Midas record
+        this.mdupdsvc.loadMetaData().subscribe( midasrec => {
+            if(midasrec["meta"].resourceType != undefined) {
+                this.wordMpping["resource"] = midasrec["meta"].resourceType;
+                this.resourceType = midasrec["meta"].resourceType;
+
+                //Broadcast resource type
+                this.lpService.setResourceType(this.resourceType);
+
+                //Update helpContentAll
+                let keys = Object.keys(this.wordMpping);
+                keys.forEach(key => {
+                    this.helpContentAll = JSON.parse(JSON.stringify(this.helpContentAll).replace(new RegExp(key, 'g'), this.wordMpping[key]));
+                })  
+                
+                //Only update help content once
+                this.helpContentUpdated = true;
+            }
+        })
     }
 
     /**
@@ -573,6 +608,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         // set the document title
         this.setDocumentTitle();
         this.mdupdsvc.setOriginalMetadata(this.md);
+
         this.showData();
     }
 

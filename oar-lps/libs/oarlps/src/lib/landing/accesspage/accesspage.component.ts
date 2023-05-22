@@ -4,10 +4,12 @@ import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
 import { AccessPage } from './accessPage';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { DomSanitizer } from "@angular/platform-browser";
+import * as globals from '../../shared/globals/globals';
 
 @Component({
     selector: 'lib-accesspage',
@@ -29,7 +31,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class AccesspageComponent implements OnInit {
     accessPages: NerdmComp[] = [];
     editBlockStatus: string = 'collapsed';
-    fieldName: string = 'components';
+    fieldName: string = SectionPrefs.getFieldName(Sections.ACCESS_PAGES);
     editMode: string = MODE.NORNAL; 
     orig_record: any[]; //Original record or the record that's previously saved
     overflowStyle: string = 'hidden';
@@ -50,9 +52,17 @@ export class AccesspageComponent implements OnInit {
                 private sanitizer: DomSanitizer) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
-                    if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                        if(this.editBlockStatus == 'expanded')
-                            this.setMode(MODE.NORNAL, false);
+                    if(sectionMode){
+                        if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                            if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                                if(this.editBlockStatus == 'expanded')
+                                    this.setMode(MODE.NORNAL, false);
+                            }
+                        }else{
+                            if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                                this.startEditing();
+                            }
+                        }
                     }
                 })
     }
@@ -84,7 +94,7 @@ export class AccesspageComponent implements OnInit {
             if (! cmp['title']) cmp['title'] = cmp['accessURL'];
 
             cmp['showDesc'] = false;
-            cmp['backcolor'] = this.getStyle();
+            cmp['backcolor'] = this.getStyle()['background-color'];
             return cmp;
         });
     }
@@ -126,13 +136,13 @@ export class AccesspageComponent implements OnInit {
      */
     getStyle(){
         if(this.mdupdsvc.isEditMode){
-            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged);
+            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged, undefined, this.isEditing);
         }else{
             return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
         }
     }
 
-    onEdit() {
+    startEditing() {
         this.setMode(MODE.EDIT)
     }
 

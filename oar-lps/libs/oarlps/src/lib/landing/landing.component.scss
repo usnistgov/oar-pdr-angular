@@ -453,7 +453,6 @@ a:visited {
 }
 
 .icon_enabled { 
-  cursor: pointer;
   color: black;
   font-size: 1em;
 }
@@ -494,15 +493,18 @@ a:visited {
 }
 
 .editable_container {
-  display: table-row;
+//   display: table-row;
   text-align: left; 
   vertical-align: top;
 }
 
 .editable_field {
-  display: table-cell; 
+//   display: table-cell; 
+    // float: left;
+    display: inline-block;
   text-align: left; 
   vertical-align: top;
+  width: fit-content;
 }
  
 .edit-block {
@@ -539,8 +541,11 @@ a:visited {
 
 .edit_box {
     border: 1px solid lightgrey;
-    padding: 10px 16px 10px 10px;
+    // padding: 10px 16px 10px 10px;
+    padding-left: 10px;
+    padding-right: 10px;
     cursor: pointer;
+    min-height: 1.65em;
 }
 
 .indent-content {

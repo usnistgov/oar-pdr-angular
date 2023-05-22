@@ -1,11 +1,11 @@
 <div class="references">
     <!-- <div class="section-header"><h3><b>References</b></h3></div> -->
     <div class="editable_container"  style="width: 100%;">
-        <div class="editable_field" style="width: 100%;">
+        <div class="editable_field" style="width: calc(100% - 100px);">
             <!-- Drag and drop reference list-->
             <div class="reference-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                 <!-- <div style="margin-left: 10px;"><i>Use this area to add references to papers and datasets</i></div> -->
-                <div #dropListContainer class="example-container" cdkDropListGroup>
+                <div *ngIf="record['references'] && record['references'].length > 0; else noReference" #dropListContainer class="example-container" cdkDropListGroup>
                     <div style="width: 100%;" 
                     *ngFor="let reference of record['references']; let i = index"
                     cdkDropList
@@ -26,6 +26,7 @@
                                     [dragDropIcon]="true" 
                                     [editButton]="false" 
                                     [deleteButton]="true" 
+                                    [editOnlyButton]="true"
                                     [restoreButton]="true" 
                                     [disableControl]="isAdding || isEditing" 
                                     [placeHolderText]="placeholder" 
@@ -37,23 +38,26 @@
                         </div>
                     </div>
                 </div>
+                <ng-template #noReference>
+                    Click on plus sign to add links.
+                </ng-template>
             </div>
         </div>
         <!-- Control buttons for drag and drop sectioon -->
-        <div class="editable_field" [style.width.px]="getControlBoxWidth()">
+        <div class="editable_field" style="white-space: nowrap;">
             <!-- Add button -->
             <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add references">
                 <i [class]="addIconClass()"></i>
             </button>
 
             <!-- Edit button -->
-            <button class="edit_button" type="button" (click)="onEdit()" aria-label="edit button" [disabled]="!hasDisplayableReferences() || !isNormal" ngbTooltip="Edit references">
+            <!-- <button class="edit_button" type="button" (click)="onEdit()" aria-label="edit button" [disabled]="!hasDisplayableReferences() || !isNormal" ngbTooltip="Edit references">
                 <i [class]="editIconClass()"></i>
-            </button>
+            </button> -->
 
             <!-- Undo all changes button -->
             <button class="edit_button" type="button" [disabled]="!dataChanged || isEditing || isAdding"
-                (click)="undoChanges()" aria-label="undo button" ngbTooltip="Undo all reference changes">
+                (click)="undoAllChangesConfirmation()" aria-label="undo button" ngbTooltip="Undo all reference changes">
                 <i [class]="undoIconClass()"></i>
             </button>
 

@@ -9,15 +9,18 @@
                 <table width="100%" align="left">
                     <tr>
                         <td>
-                            <textarea autocomplete="off" [(ngModel)]='visitHomeURL' (ngModelChange)="onURLChange($event)" style="width: 100%;margin: 10px 10px 10px 0px; padding: 5px;height: fit-content;" libTextareaAutoresize></textarea>
+                            <textarea autocomplete="off" [(ngModel)]='visitHomeURL' (ngModelChange)="onURLChange($event)" style="width: 100%;margin: 10px 10px 0px 0px; padding: 5px;height: fit-content;" libTextareaAutoresize></textarea>
                         </td>
-                        <td width="30px" align="right" style="vertical-align:top">
+                        <td width="30px" align="right" style="vertical-align:top;">
                             <button class="edit_button" style="margin: 10px 0px 0px 2px" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
                                 <i class="faa faa-remove icon_enabled"></i>
                             </button>
                         </td>
                     </tr>
                 </table>
+                <div *ngIf="msg != ''" style="color: red;">
+                    {{msg}}
+                </div>
             </div>
         </td>
 

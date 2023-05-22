@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionPopupComponent } from '../description/description-popup/description-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-keyword',
@@ -13,7 +14,10 @@ import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '.
 export class KeywordComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
-    fieldName: string = 'keyword';
+
+    @ViewChild('keyword') keywordElement: ElementRef;
+    
+    fieldName: string = SectionPrefs.getFieldName(Sections.KEYWORDS);
     editMode: string = MODE.NORNAL; 
     placeholder: string = "Enter keywords separated by comma";
     isEditing: boolean = false;
@@ -28,13 +32,23 @@ export class KeywordComponent implements OnInit {
                 public lpService: LandingpageService,    
                 private notificationService: NotificationService){ 
                     this.lpService.watchEditing((sectionMode: SectionMode) => {
-                        if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                            if(this.isEditing){
-                                this.onSave(false); // Do not refresh help text 
-                            }else{
-                                this.setMode(MODE.NORNAL, false);
+                        if( sectionMode ) {
+                            if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                                if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                                    if(this.isEditing){
+                                        this.onSave(false); // Do not refresh help text 
+                                    }else{
+                                        this.setMode(MODE.NORNAL, false);
+                                    }
+                                }
+                            }else { // Request from side bar, if not edit mode, start editing
+                                if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                                    this.startEditing();
+                                }
                             }
                         }
+
+
                     })
     }
 
@@ -42,6 +56,14 @@ export class KeywordComponent implements OnInit {
      * a field indicating if this data has beed edited
      */
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+
+    get keywordWidth() {
+        if(this.isEditing){
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 400px)', 'height':'fit-content'};
+        }else{
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 360px)'};
+        }
+    }
 
     /**
      * a field indicating whether there are no keywords are set.  
@@ -89,6 +111,12 @@ export class KeywordComponent implements OnInit {
     startEditing() {
         this.setMode(MODE.EDIT);
         this.isEditing = true;
+
+        setTimeout(()=>{ // this is not working, will get back to it later
+            if(this.keywordElement) {
+                this.keywordElement["el"].nativeElement.focus();
+            }
+        },0);  
     }
 
     /**

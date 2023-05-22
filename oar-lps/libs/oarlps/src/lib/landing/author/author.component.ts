@@ -1,11 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { AuthorService } from './author.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Author } from './author';
+import * as globals from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-author',
@@ -20,7 +22,7 @@ import { Author } from './author';
     ]
 })
 export class AuthorComponent implements OnInit {
-    fieldName = 'authors';
+    fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     editMode: string = MODE.NORNAL; 
     originAuthors: any[] = [];
     originalRecord: any[]; //Original record or the record that's previously saved
@@ -36,8 +38,20 @@ export class AuthorComponent implements OnInit {
                 private ngbModal: NgbModal,
                 public lpService: LandingpageService, 
                 private notificationService: NotificationService,
-                private authorService: AuthorService)
-    { }
+                private authorService: AuthorService) { 
+
+        this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if( sectionMode ) {
+                if(sectionMode.sender == globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
+                     // Request from side bar, if not edit mode, start editing
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                        this.startEditing();
+                    }
+                }
+            }
+
+        })
+    }
 
     /**
      * a field indicating if this data has beed edited
@@ -62,7 +76,7 @@ export class AuthorComponent implements OnInit {
     }
 
     /**
-     * Update keywords and original keywords from the record
+     * Update authors and original authors from the record
      */
     getAuthors() {
         if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
@@ -72,9 +86,9 @@ export class AuthorComponent implements OnInit {
             this.originAuthors = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName]));
     }
 
-    onEdit() {
+    startEditing(refreshHelp: boolean = true) {
         this.isEditing = true;
-        this.setMode(MODE.EDIT);
+        this.setMode(MODE.EDIT, refreshHelp);
     }
 
     /**

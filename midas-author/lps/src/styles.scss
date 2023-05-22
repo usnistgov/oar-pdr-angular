@@ -15,6 +15,7 @@
     --nist-green-default: #257a2d;
     --nist-green-dark: #1c6022;
     --nist-green-light: #6bad73;
+    --nist-green-lighter: #99cc33;
     --nist-blue-default: #12659c;
     --nist-blue-dark: #0c4870;
     --nist-blue-light: #197dc0;
@@ -32,6 +33,8 @@
     --tag-blue: #c0e6ff;
     --disabled-grey: #bababa;
     --disabled-grey-text: #6c6c6c;
+    --warning: #cc3300;
+    --alert: #ffcc00;
 }
 
 .myCustomModalClass .modal-dialog {
@@ -279,4 +282,10 @@ a {
     width:160px !important; 
     height: 2.5em !important; 
     margin: 0em .5em .5em 0em !important; 
+}
+
+:focus {
+    outline: 2px solid #00aaff;
+    box-shadow:0 0 3px #00aaff;
+	outline-offset: -2px;
 }

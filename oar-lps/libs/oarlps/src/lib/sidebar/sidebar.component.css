@@ -10,3 +10,11 @@
     overflow: auto;
     position: relative;
 }
+
+.subtitle {
+    padding-left: 0px;
+}
+
+.steps {
+    padding-left: 20px;
+}

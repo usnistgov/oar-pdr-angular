@@ -1,5 +1,5 @@
-<div class="editable_container" style="width: 100%;padding: 20px;" >
-    <div class="editable_field" style="width: 100%;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, ref.dataChanged, ref['@id'])">
+<div class="editable_container" style="width: 100%;" >
+    <div class="editable_field" style="width: calc(100% - 100px);" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, ref.dataChanged, ref['@id'])">
         <div style="width: 100%; padding: 0px 20px 20px 20px;">
             <!-- Controls -->
             <div class="add-option" *ngIf="isAdding">

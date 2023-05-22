@@ -7,12 +7,12 @@
 
         <div class="editable_container">
             <!-- <ng-template #hasReferences> -->
-            <div class="editable_field" style="width: 100%;padding: 10px;" [ngStyle]="getStyle()">
-                <div *ngIf="mdupdsvc.isEditMode" style="margin-bottom: 10px;">
+            <div class="editable_field" style="max-width: calc(100% - 35px); margin-right: 5px;">
+                <div *ngIf="mdupdsvc.isEditMode && (!record['references'] || record['references'].length == 0)"  [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" style="margin-bottom: 10px; padding-left: 10px;">
                     Add references to papers and other datasets.
                 </div>
 
-                <div *ngFor="let ref of record['references']" class="ref-entry">
+                <div [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" *ngFor="let ref of record['references']" style="padding-left: 10px; padding-top: 5px;min-height: 1.65em;">
                     <span *ngIf="ref.location; else noreflink">
                         <span class="faa faa-external-link">&nbsp;</span>
                         <a href={{ref.location}} target="blank">{{ ref['citation'] }}</a>
@@ -26,9 +26,11 @@
             
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;width: 1.65em;">
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="onEdit()" aria-label="edit button" [disabled]="isEditing">
+                <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" aria-label="edit button" [disabled]="isEditing">
                     <i [class]="editIconClass()"></i>
-                </button>
+                </button> -->
+
+                <i class="faa faa-pencil icon_enabled" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit references" ngbTooltip="edit references" aria-label="edit references" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
             </div>
         </div>
     </div>
@@ -37,7 +39,7 @@
         <div *ngIf="hasDisplayableReferences()">
             <div class="section-header"><h3><b>References</b></h3></div>
             <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
-                <div style="margin: 0em 0em .5em 1em;" *ngFor="let ref of record['references']" class="ref-entry">
+                <div style="margin: 0em 0em .5em 1em;" *ngFor="let ref of record['references']">
                     <span *ngIf="ref.location; else noreflink">
                         <span class="faa faa-external-link">&nbsp;</span>
                         <a href={{ref.location}} target="blank">{{ ref['citation'] }}</a>

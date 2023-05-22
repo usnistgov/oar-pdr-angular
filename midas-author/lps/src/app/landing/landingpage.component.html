@@ -61,7 +61,7 @@
                 <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
             </div>
 
-            <app-sidebar *ngIf="hideToolMenu" class='normal-sdbar' [record]="md" [ngStyle]="{'top': sidebarY + 'px'}" [@togglesbar]="mainBodyStatus" [helpContentAll]="helpContentAll" (sbarvisible_out)="updateSidebarStatus($event)">
+            <app-sidebar *ngIf="hideToolMenu" class='normal-sdbar' [record]="md" [ngStyle]="{'top': sidebarY + 'px'}" [@togglesbar]="mainBodyStatus" [helpContentAll]="helpContentAll" [resourceType]="resourceType" (sbarvisible_out)="updateSidebarStatus($event)" (scroll)="goToSection($event)">
                 <!-- <div style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
                     <div>Suggestions:</div>
                     <div *ngFor="let section of suggustedSections" (click)='goToSection(section)' style="cursor: pointer; color: var(--nist-blue-dark3)">

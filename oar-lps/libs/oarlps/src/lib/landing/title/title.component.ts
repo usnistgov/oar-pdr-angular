@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionPopupComponent } from '../description/description-popup/description-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-title',
@@ -21,7 +22,10 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 export class TitleComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
-    fieldName: string = 'title';
+
+    @ViewChild('title') titleElement: ElementRef;
+
+    fieldName: string = SectionPrefs.getFieldName(Sections.TITLE);
     editMode: string = MODE.NORNAL; 
     isEditing: boolean = false;
     backColor: string = 'white';
@@ -35,26 +39,33 @@ export class TitleComponent implements OnInit {
         public lpService: LandingpageService, 
         private notificationService: NotificationService) {
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.isEditing){
-                        this.onSave(false); // Do not refresh help text 
-                    }else{
-                        this.setMode(MODE.NORNAL, false);
+                if( sectionMode ) {
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.isEditing){
+                                this.onSave(false); // Do not refresh help text 
+                            }else{
+                                this.setMode(MODE.NORNAL, false);
+                            }
+                        }
+                    }else { // Request from side bar, if not edit mode, start editing
+                        if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                            this.startEditing();
+                        }
                     }
                 }
+
             })
     }
 
-    test() {
-        // if(this.borderStatus == "show") this.borderStatus = "hide";
-        // else this.borderStatus = "show";
-        this.flashBorder(false);
-        setTimeout(() => {
-            this.flashBorder(true);
-        }, 10000);
-    }
-
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get titleWidth() {
+        if(this.isEditing){
+            return {'width': 'calc(100% - 100px)', 'height':'fit-content'};
+        }else{
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 40px)'};
+        }
+    }
 
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
@@ -68,9 +79,16 @@ export class TitleComponent implements OnInit {
         }
     }
 
-    startEditing() {
-        this.setMode(MODE.EDIT);
+    startEditing(refreshHelp: boolean = true) {
         this.isEditing = true;
+        this.setMode(MODE.EDIT, refreshHelp);
+
+        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            if(this.titleElement) {
+                const textArea = this.titleElement.nativeElement as HTMLTextAreaElement;
+                textArea.focus();
+            }
+        },0);  
     }
 
     cancelEditing() {
@@ -94,13 +112,17 @@ export class TitleComponent implements OnInit {
                 if (updateSuccess){
                     this.dataChanged = true;
                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
+                    this.setMode(MODE.NORNAL, refreshHelp);
                 }else
                     console.error("acknowledge title update failure");
             });
-        }else
+        }else{
             this.dataChanged = false;
+            this.setMode(MODE.NORNAL, refreshHelp);
+        }
+            
 
-        this.setMode(MODE.NORNAL, refreshHelp);
+        
         // this.setBackground(this.record['title']);
 
     }
@@ -137,14 +159,15 @@ export class TitleComponent implements OnInit {
     setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
+        sectionMode.sender = this.fieldName;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
         if(refreshHelp){
+            let sectionHelp: SectionHelp = {} as SectionHelp;
+            sectionHelp.section = this.fieldName;
+            sectionHelp.topic = HelpTopic[this.editMode];
+
             this.lpService.setSectionHelp(sectionHelp);
         }
 

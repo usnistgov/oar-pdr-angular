@@ -4,7 +4,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../../landingpage.service';
+import { LandingpageService, HelpTopic } from '../../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -12,12 +13,12 @@ import {
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { Reference } from '../reference';
-
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'lib-ref-list',
     templateUrl: './ref-list.component.html',
-    styleUrls: ['../../landing.component.scss', './ref-list.component.css'],
+    styleUrls: ['../../landing.component.scss', '../references.component.css', './ref-list.component.css'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -37,6 +38,9 @@ export class RefListComponent implements OnInit {
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
 
+    // For warning pop up
+    modalRef: any;
+
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter reference data?" will not display.
     // Default is "normal" mode.
     editMode: string = MODE.NORNAL; 
@@ -55,17 +59,25 @@ export class RefListComponent implements OnInit {
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-        private ngbModal: NgbModal,                
+        private modalService: NgbModal,              
         private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.dataChanged){
-                        this.saveCurRef(false); // Do not refresh help text 
+                if( sectionMode ) {
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.dataChanged){
+                                this.saveCurRef(false); // Do not refresh help text 
+                            }else{
+                                this.setMode(MODE.NORNAL, false);
+                            }
+                        }
                     }else{
-                        this.setMode(MODE.NORNAL, false);
-                    }
+                            if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                                this.onAdd();
+                            }
+                        }
                 }
             })
     }
@@ -266,10 +278,11 @@ export class RefListComponent implements OnInit {
         if(this.dataChangedAndUpdated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
-                    this.record.references.forEach((ref) => {
-                        ref.dataChanged = false;
-                    });
-
+                    if(this.record && this.record.references){
+                        this.record.references.forEach((ref) => {
+                            ref.dataChanged = false;
+                        });
+                    }
                 }else
                     console.error("Failed to undo " + this.fieldName + " metadata");
                     return;
@@ -437,6 +450,10 @@ export class RefListComponent implements OnInit {
      */
     onReferenceCommand(action: any, index: number = 0) {
         switch ( action.command.toLowerCase() ) {
+            case 'edit':
+                this.selectRef(index);
+                this.onEdit();
+                break;
             case 'delete':
                 this.removeRef(index);
                 break;
@@ -641,4 +658,27 @@ export class RefListComponent implements OnInit {
             this.dataCommand.next({"data": this.record[this.fieldName], "action": "hideEditBlock"});
     }
 
+    /**
+     * Undo all changes
+     */
+    undoAllChangesConfirmation(){
+        var message = 'This will undo all reference changes.';
+
+        this.modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true });
+        this.modalRef.componentInstance.title = 'Please confirm';
+        this.modalRef.componentInstance.btnOkText = 'Confirm';
+        this.modalRef.componentInstance.btnCancelText = 'Cancel';
+        this.modalRef.componentInstance.message = message;
+        this.modalRef.componentInstance.showWarningIcon = true;
+        this.modalRef.componentInstance.showCancelButton = true;
+
+        this.modalRef.result.then((result) => {
+            if ( result ) {
+                this.undoChanges();
+            }else{
+                console.log("User changed mind.");
+            }
+        }, (reason) => {
+        });
+    }    
 }

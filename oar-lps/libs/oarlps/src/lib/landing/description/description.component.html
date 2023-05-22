@@ -4,31 +4,39 @@
 <div style="width: 100%;">
     <div style="display: table; margin-bottom: 1em;width:100%;">
         <div class="editable_container" style="width:100%;">
-            <span *ngIf="mdupdsvc.isEditMode" style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
-            <!-- Not editing -->
-            <div class="editable_field" style="width:100%;" *ngIf="!isEditing">
-                <div *ngIf="isEmpty; else hasDescription">
-                    <div *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" style="width:inherit;color: var(--disabled-grey-text); padding: 10px; height: 4em; vertical-align: top;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
-                        Describe this {{resource}}.
-                    </div>
-                </div>
-                <ng-template #hasDescription>
-                    <div style="width:inherit; white-space: pre-wrap;padding-left: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)" (click)="startEditing()">{{description}}</div>
-                </ng-template>
+            <div class="editable_field" *ngIf="mdupdsvc.isEditMode">
+                <span style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
             </div>
 
-            <!-- Editing -->
-            <div class="editable_field" style="width:100%;" *ngIf="isEditing">
-                <textarea autocomplete="off" [(ngModel)]='description' (ngModelChange)="setBackground($event)" style="width: 100%;margin: 0px; padding: 0px;" [ngStyle]="{'background-color': backColor}" libTextareaAutoresize></textarea>
+            <div class="editable_field" [ngStyle]="descWidth">
+                <!-- Not editing -->
+                <div style="width:fit-content" *ngIf="!isEditing">
+                    <div *ngIf="isEmpty; else hasDescription">
+                        <div *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" style="width:inherit;color: var(--disabled-grey-text); " [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+                            Describe this {{resource}}.
+                        </div>
+                    </div>
+                    <ng-template #hasDescription>
+                        <div style="width:inherit; white-space: pre-wrap;padding-left: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)" (click)="startEditing()">{{description}}</div>
+                    </ng-template>
+                </div>
+
+                <!-- Editing -->
+                <div style="width:100%;" *ngIf="isEditing">
+                    <!-- <textarea #desc autocomplete="off" [placeholder]="placeholder" [(ngModel)]='description' (ngModelChange)="setBackground($event)" style="width: 100%;margin: 0px; padding: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" libTextareaAutoresize></textarea> -->
+
+                    <textarea #desc autocomplete="off" [(ngModel)]='description' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="{'background-color': backColor}" style="width: 100%;cursor: text !important; min-height: 6em;" libTextareaAutoresize></textarea>
+                </div>
             </div>
 
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
                 <!-- Edit button -->
-                <button class="edit_button" type="button" (click)="startEditing()" *ngIf="!isEditing"
+                <!-- <button class="edit_button" type="button" (click)="startEditing()" *ngIf="!isEditing"
                     aria-label="edit button" ngbTooltip="edit keywords">
                     <i class="faa faa-pencil icon_enabled" data-toggle="tooltip" title="Edit keywords"></i>
-                </button>
+                </button> -->
+                <i class="faa faa-pencil icon_enabled" (click)="startEditing()" *ngIf="!isEditing" title="Edit keywords" ngbTooltip="edit keywords" aria-label="edit keywords" style="cursor: pointer;"></i>
     
                 <!-- Save button -->
                 <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing"

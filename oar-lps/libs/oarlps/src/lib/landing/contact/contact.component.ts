@@ -6,7 +6,8 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { ContactService } from './contact.service';
 import { Contact } from './contact';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-contact',
@@ -23,7 +24,7 @@ import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '.
 export class ContactComponent implements OnInit {
     currentContact: Contact = {} as Contact;
     originalRecord: any = {};
-    fieldName = 'contactPoint';
+    fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
     editMode: string = MODE.NORNAL; 
 
     tempInput: any = {};
@@ -43,11 +44,19 @@ export class ContactComponent implements OnInit {
                 private contactService : ContactService)
     {
         this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                if(this.isEditing && this.currentContact.dataChanged){
-                    this.saveCurrentContact(false); // Do not refresh help text 
+            if(sectionMode){
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        if(this.isEditing && this.currentContact.dataChanged){
+                            this.saveCurrentContact(false); // Do not refresh help text 
+                        }
+                        this.hideEditBlock(false);
+                    }
+                }else{
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                        this.startEditing();
+                    }
                 }
-                this.hideEditBlock(false);
             }
         })
     }

@@ -1,24 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-/**
- * a representation of a section mode
- */
-export interface SectionMode {
-    "section": string,
-    "mode": string
-}
-
-export interface SectionHelp {
-    "section": string,
-    "topic": string
-}
-
-export const MODE = {
-    "NORNAL": "normal",
-    "EDIT": "edit",
-    "ADD": "add"
-}
+import { SectionMode, SectionHelp, MODE } from '../shared/globals/globals';
 
 let _helpTopic = {};
 _helpTopic[MODE.NORNAL]  = 'general';
@@ -61,4 +43,13 @@ export class LandingpageService {
     public watchSectionHelp(subscriber) {
         this._sectionHelp.subscribe(subscriber);
     }
+
+    // Indicate which section help content to display
+    _resourceType: BehaviorSubject<string> = new BehaviorSubject<string>("resource");
+    setResourceType(resourceType: string){
+        this._resourceType.next(resourceType);
+    }
+    public watchResourceType(subscriber) {
+        this._resourceType.subscribe(subscriber);
+    }    
 }

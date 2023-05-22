@@ -74,6 +74,12 @@ export abstract class CustomizationService {
     public abstract getDataFiles() : Observable<Object>;
 
     /**
+     * retrieve the metadata from the server-side 
+     * customization service.  
+     */
+    public abstract getMidasMeta() : Observable<Object>;
+
+    /**
      * retrieve the data files from the server-side 
      * customization service.  
      */
@@ -399,6 +405,24 @@ export class WebCustomizationService extends CustomizationService {
         //     this._wrapRespObs(obs, subscriber);
         // });
     }
+
+
+    /**
+     * Retrieve the data files from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getMidasMeta() : Observable<Object> {
+        let url = this.endpoint + this.draftapi + this.resid + "/meta";
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get(url).subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
 }
 
 /**
@@ -538,6 +562,23 @@ export class InMemCustomizationService extends CustomizationService {
             let obs : Observable<Object>;
             this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
                 obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
+    /**
+     * Retrieve the data files from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getMidasMeta() : Observable<Object> {
+        let url = "https://mdsdev.nist.gov/midas/dap/mds3/mds3:0001/meta";
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get("url").subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
                 this._wrapRespObs(obs, subscriber);
             });
         });

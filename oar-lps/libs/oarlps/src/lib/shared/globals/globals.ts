@@ -43,4 +43,88 @@ export class ThemesPrefs {
 export class AppSettings {
     public static HOMEPAGE_DEFAULT_URL='https://nextcloud-dev.nist.gov';
     public static FILE_MANAGER_URL='https://nextcloud-dev.nist.gov/index.php/apps/files/?dir=/2618&fileid=4845';
- }
+}
+
+/**
+ * This is the infostruction a section or side bar will broadcast when edit mode changes. 
+ * sender: the name of the section who sent the message (including side bar)
+ * section: the name (Nerdm field name) of the section who sent the message. Most of time it's the same as sender. But when sender is side bar, the section will be the actual section name.
+ * mode: the edit mode of this section. 
+ */
+export interface SectionMode {
+    "sender": string, 
+    "section": string,
+    "mode": string
+}
+
+export interface SectionHelp {
+    "section": string,
+    "topic": string
+}
+
+export const MODE = {
+    "NORNAL": "normal",
+    "EDIT": "edit",
+    "ADD": "add"
+}
+
+//For display purpose
+export class Sections {
+    static readonly DEFAULT_SECTION = 'Title';
+    static readonly TITLE = 'Title';
+    static readonly ACCESS_PAGES = 'Access Pages';
+    static readonly DESCRIPTION = 'Description';
+    static readonly TOPICS = 'Research Topics';
+    static readonly KEYWORDS = 'Keywords';
+    static readonly IDENTITY = 'Iidentity';
+    static readonly ABOUT = 'About';
+    static readonly REFERENCES = 'References';
+    static readonly DATA_ACCESS = 'Data Access';
+    static readonly AUTHORS = 'Authors';   
+    static readonly FACILITATORS = 'Facilitators';  
+    static readonly SIDEBAR = 'Sidebar'; 
+    static readonly CONTACT = 'Contact';
+    static readonly VISIT_HOME_PAGE = 'Visit Home Page';
+}
+
+//_fieldName is the field name in Nerdm record
+let _fieldName = {};
+_fieldName[Sections.DEFAULT_SECTION] = "title";
+_fieldName[Sections.TITLE] = "title";
+_fieldName[Sections.ACCESS_PAGES] = "components";
+_fieldName[Sections.DESCRIPTION] = "description";
+_fieldName[Sections.TOPICS] = "theme";
+_fieldName[Sections.KEYWORDS] = "keyword";
+_fieldName[Sections.IDENTITY] = "identity";
+_fieldName[Sections.AUTHORS] = "identity";
+_fieldName[Sections.FACILITATORS] = "identity";
+_fieldName[Sections.ABOUT] = "about";
+_fieldName[Sections.REFERENCES] = "references";
+_fieldName[Sections.AUTHORS] = "authors";
+_fieldName[Sections.DATA_ACCESS] = "dataAccess";
+_fieldName[Sections.FACILITATORS] = "facilitators";
+_fieldName[Sections.SIDEBAR] = "sidebar";
+_fieldName[Sections.CONTACT] = "contactPoint";
+_fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";
+
+export class SectionPrefs {
+    private static readonly _lSectionID = _fieldName;
+
+    public static getFieldName(section: string) {
+        if(! _fieldName || _fieldName == '') {
+            return SectionPrefs._lSectionID[Sections.DEFAULT_SECTION]
+        }
+
+        if(! SectionPrefs._lSectionID[section]) {
+            return SectionPrefs._lSectionID[Themes.DEFAULT_THEME]
+        }
+
+        return SectionPrefs._lSectionID[section]
+    }
+}
+
+export class ResourceType {
+    static readonly RESOURCE = 'resource';
+    static readonly SOFTWARE = 'software';
+    static readonly DATA = 'data';
+}

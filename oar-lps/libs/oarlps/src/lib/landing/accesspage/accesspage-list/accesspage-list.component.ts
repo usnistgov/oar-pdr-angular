@@ -4,7 +4,8 @@ import { Themes, ThemesPrefs } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../../landingpage.service';
+import { LandingpageService, HelpTopic } from '../../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -66,14 +67,23 @@ export class AccesspageListComponent implements OnInit {
                 private sanitizer: DomSanitizer) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
-                    if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                        if(this.dataChanged){
-                            this.saveCurApage(false);  // Do not refresh help text 
-                        }
+                    if( sectionMode ) {
+                        if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                            if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                                if(this.dataChanged){
+                                    this.saveCurApage(false);  // Do not refresh help text 
+                                }
 
-                        if(this.editBlockStatus == 'expanded')
-                            this.hideEditBlock(false);
+                                if(this.editBlockStatus == 'expanded')
+                                    this.hideEditBlock(false);
+                            }
+                        }else{
+                                if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                                    this.onAdd();
+                                }
+                            }
                     }
+
                 })
     }
 
@@ -180,7 +190,7 @@ export class AccesspageListComponent implements OnInit {
      * @param index The index of the selected access page
      */
     selectApage(index: number) {
-        if(this.isAdding || this.isEditing) return;
+        // if(this.isAdding || this.isEditing) return;
         
         if(index != this.currentApageIndex) { // user selected different access page
             if(this.currentApage.dataChanged) {
@@ -221,6 +231,10 @@ export class AccesspageListComponent implements OnInit {
      */
     onApageChange(action: any, index: number = 0) {
         switch ( action.command.toLowerCase() ) {
+            case 'edit':
+                this.selectApage(index);
+                this.setMode('edit');
+                break;
             case 'delete':
                 this.removeAccessPage(index);
                 break;
@@ -249,6 +263,15 @@ export class AccesspageListComponent implements OnInit {
         this.accessPages.splice(index,1);
         this.orderChanged = true;
         this.updateMatadata();
+
+        // If no access page available, update section help to display next steps 
+        if(this.accessPages.length == 0){
+            let sectionHelp: SectionHelp = {} as SectionHelp;
+            sectionHelp.section = this.fieldName;
+            sectionHelp.topic = HelpTopic[this.editMode];
+    
+            this.lpService.setSectionHelp(sectionHelp);
+        }
     }
 
     /**

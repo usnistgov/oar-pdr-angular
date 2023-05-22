@@ -1,12 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SearchTopicsComponent } from './topic-popup/search-topics.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-topic',
@@ -28,8 +29,11 @@ export class TopicComponent implements OnInit {
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
+
+    @ViewChild('topic') topicElement: ElementRef;
+    
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
-    fieldName = 'theme';
+    fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     editMode: string = MODE.NORNAL; 
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
@@ -44,11 +48,19 @@ export class TopicComponent implements OnInit {
             this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.isEditing && this.dataChanged){
-                        this.onSave(false); // Do not refresh help text 
+                if( sectionMode ) {
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.isEditing && this.dataChanged){
+                                this.onSave(false); // Do not refresh help text 
+                            }
+                            this.setMode(MODE.NORNAL,false);
+                        }
+                    }else { // Request from side bar, if not edit mode, start editing
+                        if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                            this.startEditing();
+                        }
                     }
-                    this.setMode(MODE.NORNAL,false);
                 }
             })        
     }
@@ -71,6 +83,14 @@ export class TopicComponent implements OnInit {
         }
     }
 
+    get topicWidth() {
+        if(this.isEditing){
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 400px)', 'height':'fit-content'};
+        }else{
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 360px)'};
+        }
+    }
+
     ngOnInit() {
         this.updateResearchTopics();
     }
@@ -88,6 +108,10 @@ export class TopicComponent implements OnInit {
      * and the help side bar can update the info.
      */
     startEditing() {
+        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            this.topicElement.nativeElement.focus();
+        },0);  
+
         this.setMode(MODE.EDIT);
     }
 
@@ -97,6 +121,20 @@ export class TopicComponent implements OnInit {
      */
     onSave(refreshHelp: boolean = true) {
         this.updateResearchTopics();
+
+        var postMessage: any = {};
+        postMessage[this.fieldName] = this.record[this.fieldName];
+        
+        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+            if (updateSuccess) {
+                this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
+
+                this.updateResearchTopics();
+            } else
+                console.error("acknowledge topic update failure");
+        });
+
         this.setMode();
         this.dataChanged = false;
     }
@@ -105,10 +143,19 @@ export class TopicComponent implements OnInit {
      * Cancel current editing. Set this section to normal mode. Restore topics from previously saved ones.
      */
     cancelEditing() {
-        // this.updateResearchTopics();
-        this.setMode(MODE.NORNAL);
-        this.dataChanged = false;
-        // this.setBackground();
+        this.mdupdsvc.undo(this.fieldName).then((success) => {
+            if (success) {
+                this.setMode(MODE.NORNAL);
+                this.dataChanged = false;
+                this.notificationService.showSuccessWithTimeout("Reverted changes to research topic.", "", 3000);
+
+                this.updateResearchTopics();
+            } else
+                console.error("Failed to undo research topic")
+        });
+        this.updateResearchTopics();
+        // this.setMode(MODE.NORNAL);
+        // this.dataChanged = false;
     }
 
     /**

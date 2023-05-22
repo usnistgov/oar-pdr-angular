@@ -1,9 +1,10 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionPopupComponent } from './description-popup/description-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-description',
@@ -13,7 +14,10 @@ import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '.
 export class DescriptionComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
-    fieldName: string = 'description';
+
+    @ViewChild('desc') descElement: ElementRef;
+    
+    fieldName: string = SectionPrefs.getFieldName(Sections.DESCRIPTION);
     editMode: string = MODE.NORNAL; 
     isEditing: boolean = false;
     description: string = "";
@@ -21,24 +25,40 @@ export class DescriptionComponent implements OnInit {
     originalRecord: any[]; //Original record or the record that's previously saved
     backColor: string = "white";
     resource: string = "resource";
+    placeholder: string = "Please add description here.";
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
                 public lpService: LandingpageService,                  
                 private notificationService: NotificationService){
                     
-                    this.lpService.watchEditing((sectionMode: SectionMode) => {
-                        if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                            if(this.isEditing){
-                                this.onSave(false); // Do not refresh help text 
-                            }else{
-                                this.setMode(MODE.NORNAL, false);
+                this.lpService.watchEditing((sectionMode: SectionMode) => {
+                    if( sectionMode ) {
+                        if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                            if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                                if(this.isEditing){
+                                    this.onSave(false); // Do not refresh help text 
+                                }else{
+                                    this.setMode(MODE.NORNAL, false);
+                                }
+                            }
+                        }else { // Request from side bar, if not edit mode, start editing
+                            if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                                this.startEditing();
                             }
                         }
-                    })
+                    }
+                })
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get descWidth() {
+        if(this.isEditing){
+            return {'width': 'calc(100% - 100px)', 'height':'fit-content'};
+        }else{
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 40px)'};
+        }
+    }
 
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
@@ -90,8 +110,13 @@ export class DescriptionComponent implements OnInit {
      * and the help side bar can update the info.
      */
     startEditing() {
-        this.setMode(MODE.EDIT);
+        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            const textArea = this.descElement.nativeElement as HTMLTextAreaElement;
+            textArea.focus();
+        },0);  
+
         this.isEditing = true;
+        this.setMode(MODE.EDIT);
     }
 
     /**

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../../nerdm/nerdm';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../../landingpage.service';
+import { LandingpageService, HelpTopic } from '../../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';

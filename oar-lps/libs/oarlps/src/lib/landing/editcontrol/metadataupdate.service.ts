@@ -298,7 +298,7 @@ export class MetadataUpdateService {
             this.origfields[key] !== undefined;
         }
 
-        finalUndo = false; // Server discard function is not available yet
+        // finalUndo = false; // Server discard function is not available yet
         if (finalUndo) {
             // Last set to be undone; just delete the draft on the server
             console.log("Last undo; discarding draft on server. Restore original:", this.originalDraftRec);
@@ -652,9 +652,13 @@ export class MetadataUpdateService {
 
     /**
      *  Return field style based on edit mode and data update status
+     * If no edit mode was provided, this.isEditMode will be used
      */
-    getFieldStyle(fieldName : string, dataChanged: boolean = false, id: string = undefined) {
-        if (this.isEditMode) {
+    getFieldStyle(fieldName : string, dataChanged: boolean = false, id: string = undefined, editmode: boolean = undefined) {
+        let editMode: boolean;
+        editMode = editmode == undefined? this.isEditMode : editmode;
+
+        if (editMode) {
             if(!id){
                 if (this.anyFieldUpdated(fieldName)) {
                     return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
@@ -717,5 +721,47 @@ export class MetadataUpdateService {
                 }
             );
         });
-    }       
+    }   
+    
+    /**
+     * load metadata from the server.
+     */
+    public loadMetaData(): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to update without authorization!  Ignoring update.");
+                return;
+            }
+            console.log("Loading metadata from server");
+            this.custsvc.getMidasMeta().subscribe(
+                (res) => {
+                  subscriber.next(res);
+                  subscriber.complete();
+                },
+                (err) => {
+                  console.log("err", err);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    // handle 404
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to retrieve metadata: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to retrieve metadata: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            );
+        });
+    }      
 }

@@ -3,11 +3,11 @@
         <b>Data and related material can be found at the following locations:</b>
     </div> -->
     <div style="width: 100%;">
-        <div class="editable_container" style="width: 100%;">
-            <div class="editable_field" style="width: 100%;">
+        <div class="editable_container" style="width: 100%; margin-bottom: .5em;">
+            <div class="editable_field" style="width: calc(100% - 100px);">
                 <div class="apage-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                     <!-- <div style="margin-left: 10px;"><i>Use this area to add links to relevant websites including software repositories</i></div> -->
-                    <div #dropListContainer class="example-container" cdkDropListGroup>
+                    <div *ngIf="accessPages && accessPages.length > 0; else noAccessPage" #dropListContainer class="example-container" cdkDropListGroup>
                         <div style="width: 100%;" 
                         *ngFor="let apage of accessPages; let i = index"
                         cdkDropList
@@ -28,6 +28,7 @@
                                         [dragDropIcon]="accessPages.length==1?false:true" [editButton]="false" 
                                         [deleteButton]="true" 
                                         [restoreButton]="true" 
+                                        [editOnlyButton]="true"
                                         [trashButton]="true" 
                                         [disableControl]="isAdding || isEditing" 
                                         [placeHolderText]="placeholder" 
@@ -39,6 +40,10 @@
                             </div>
                         </div>
                     </div>
+                    <ng-template #noAccessPage>
+                        Click on plus sign to add links.
+                    </ng-template>
+                    
                 </div>
             </div>
             <div class="editable_field" style="white-space: nowrap;">
@@ -48,9 +53,9 @@
                 </button>
 
                 <!-- Edit button -->
-                <button class="edit_button" type="button" (click)="setMode('edit')" aria-label="edit button" [disabled]="!isNormal || accessPages.length==0" ngbTooltip="Edit access page">
+                <!-- <button class="edit_button" type="button" (click)="setMode('edit')" aria-label="edit button" [disabled]="!isNormal || accessPages.length==0" ngbTooltip="Edit access page">
                     <i [class]="editIconClass()"></i>
-                </button>
+                </button> -->
 
                 <!-- Restore original value-->
                 <button class="edit_button" type="button" [disabled]="!dataChanged || isEditing || isAdding"

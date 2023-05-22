@@ -1,7 +1,7 @@
 <!-- <div style="width: 100%;"> -->
     <div class="editable_container" style="width: 100%;">
-        <div class="editable_field" style="width: 100%;">
-            <div class="edit_box" [style.background-color]="getRecordBackgroundColor()">
+        <div class="editable_field" style="width: calc(100% - 90px); min-height: 1.65em;" [style.background-color]="getRecordBackgroundColor()">
+            <div class="edit_box" >
                 <!-- Existing authors -->
                 <div #dropListContainer class="example-container" cdkDropListGroup>
                     <div style="width: 100%;" 

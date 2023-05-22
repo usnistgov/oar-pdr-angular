@@ -4,8 +4,9 @@ import { NotificationService } from '../../shared/notification-service/notificat
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-visithome',
@@ -25,7 +26,7 @@ export class VisithomeComponent implements OnInit {
     @Input() inViewMode: boolean;
     @Input() theme: string;
 
-    fieldName = 'landingPage';
+    fieldName = SectionPrefs.getFieldName(Sections.VISIT_HOME_PAGE);
     scienceTheme = Themes.SCIENCE_THEME;
     // backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
     editMode: string = MODE.NORNAL; 
@@ -42,11 +43,19 @@ export class VisithomeComponent implements OnInit {
         private gaService: GoogleAnalyticsService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.isEditing && this.dataChanged){
-                        this.saveVisitHomeURL(false); // Do not refresh help text 
+                if(sectionMode){
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.isEditing && this.dataChanged){
+                                this.saveVisitHomeURL(false); // Do not refresh help text 
+                            }
+                            this.setMode(MODE.NORNAL,false);
+                        }
+                    }else{
+                        if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                            this.startEditing();
+                        }
                     }
-                    this.setMode(MODE.NORNAL,false);
                 }
             })
     }
@@ -147,7 +156,7 @@ export class VisithomeComponent implements OnInit {
         }
     }
 
-    onEdit() {
+    startEditing() {
         this.visitHomeURL = this.record[this.fieldName];
 
         this.setMode(MODE.EDIT);

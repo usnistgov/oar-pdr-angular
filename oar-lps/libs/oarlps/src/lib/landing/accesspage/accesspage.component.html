@@ -1,11 +1,11 @@
-<div style="display: table; width: 100%;">
-    <div *ngIf="accessPages && accessPages.length > 0" style="width:100%">
+<div style="display: table; width: 100%; margin-bottom: .5em;">
+    <div *ngIf="accessPages && accessPages.length > 0" style="width:100%; margin-bottom: .5em;">
         <b>Data and related material can be found at the following locations:</b>
     </div>
 
     <div class="editable_container" style="padding: 0px;">
-        <div class="editable_field" [ngStyle]="getStyle()" style="padding: 10px; width: calc(100% - 1.65em);" >
-            <div *ngIf="mdupdsvc.isEditMode" style="margin-bottom: .5em;">
+        <div class="editable_field" [ngStyle]="getStyle()" style="max-width: calc(100% - 1.65em);" >
+            <div *ngIf="mdupdsvc.isEditMode">
                 Add links to relevant websites including software repositories.
             </div>
 
@@ -62,10 +62,11 @@
         </div>
 
         <!-- Control buttons -->
-        <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;width: 1.65em;">
-            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="onEdit()" aria-label="edit button" [disabled]="isEditing">
+        <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+            <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="onEdit()" aria-label="edit button" [disabled]="isEditing">
                 <i [class]="editIconClass()"></i>
-            </button>
+            </button> -->
+            <i class="faa faa-pencil icon_enabled" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit access page links" ngbTooltip="edit access page links" aria-label="edit access page links" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
         </div>
     </div>
 </div>

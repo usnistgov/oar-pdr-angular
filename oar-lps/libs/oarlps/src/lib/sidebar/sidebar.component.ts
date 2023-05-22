@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
-import { LandingpageService, SectionHelp } from '../landing/landingpage.service';
+import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs } from '../shared/globals/globals';
 
 @Component({
   selector: 'app-sidebar',
@@ -32,7 +33,11 @@ export class SidebarComponent implements OnInit {
     sbarvisible : boolean = true;
     sidebarState: string = 'sbvisible';
     helpContent: string = "";
-    suggustedSections: string[] = [];
+    suggustedSections: any = {};
+    fieldName: string = "sidebar";
+    // required: string[] = [];
+    // recommended: string[] = [];
+    // niceToHave: string[] = [];
 
     // helpContent: any = {
     //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
@@ -40,8 +45,12 @@ export class SidebarComponent implements OnInit {
 
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: string = "";
+    @Input() resourceType: string = "resource";
     @Output() sbarvisible_out = new EventEmitter<boolean>();
     // @Output() section = new EventEmitter<string>();
+
+    // signal for scrolling to a section within the page
+    @Output() scroll = new EventEmitter<string>();
 
     constructor(private chref: ChangeDetectorRef,
                 public lpService: LandingpageService,
@@ -78,18 +87,30 @@ export class SidebarComponent implements OnInit {
             this.helpContent = generalHelp;
         }   
 
-        this.suggustedSections = this.sidebarService.getSuggestions(this.record);
-
+        this.suggustedSections = this.sidebarService.getSuggestions(this.record, this.resourceType);
+        // this.required = this.suggustedSections['required'];
+        // this.recommended = this.suggustedSections['recommended'];
+        // this.niceToHave = this.suggustedSections['niceToHave'];
     }
 
     gotoSection(section: string) {
+        let sectionID = SectionPrefs.getFieldName(section);
         let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = section;
+        sectionHelp.section = sectionID;
         sectionHelp.topic = "general";
 
-        this.lpService.setCurrentSection(section);
+        let sectionMode: SectionMode = {} as SectionMode;
+        sectionMode.sender = this.fieldName;
+        sectionMode.section = sectionID;
+        sectionMode.mode = MODE.EDIT;
+
+        this.lpService.setCurrentSection(sectionID);
         this.updateHelpContent(sectionHelp);
-        // this.section.next(section);
+
+        this.lpService.setEditing(sectionMode);
+        // this.section.next(sectionID);
+
+        this.scroll.emit(sectionID);
     }
 
     /**

@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 
 import { MetadataUpdateService } from './metadataupdate.service';
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
+import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, ResourceType } from '../../shared/globals/globals';
+import { LandingpageService } from '../landingpage.service';
 
 /**
  * A panel inside the EditControlComponent that displays information about the status of 
@@ -29,6 +32,10 @@ export class EditStatusComponent implements OnInit {
     messageColor : string = "black";
     EDIT_MODES: any;
     _editmode: string;
+    contentStatusColer: string = "var(--nist-green-default);"
+    resourceType: string = "resource";
+
+    @Input() mdrec: NerdmRes;
 
     /**
      * construct the component
@@ -36,7 +43,10 @@ export class EditStatusComponent implements OnInit {
      * @param mdupdsvc    the MetadataUpdateService that is receiving updates.  This will be 
      *                    used to be alerted when updates have been made.
      */
-    constructor(public mdupdsvc : MetadataUpdateService, public edstatsvc: EditStatusService) {
+    constructor(
+        public mdupdsvc : MetadataUpdateService, 
+        public edstatsvc: EditStatusService,
+        public lpService: LandingpageService) {
 
         this.EDIT_MODES = LandingConstants.editModes;
         this.mdupdsvc.updated.subscribe((details) => { 
@@ -50,6 +60,13 @@ export class EditStatusComponent implements OnInit {
           if(this._editmode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE)
             this.showMessage("", false);
         });
+
+        this.lpService.watchResourceType((resourceType: string) => {
+            this.resourceType = resourceType;
+
+            if(this.mdrec)
+                this.setContentStatusColor(this.mdrec);
+        })
     }
 
     /**
@@ -73,8 +90,71 @@ export class EditStatusComponent implements OnInit {
     }
 
     ngOnInit() {
+        if(this.mdrec)
+            this.setContentStatusColor(this.mdrec);
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+        //Add '${implements OnChanges}' to the class.
+        if(this.mdrec) this.setContentStatusColor(this.mdrec);
+    }
+    
+    public setContentStatusColor(record: NerdmRes) {
+        let required: boolean = false;
+        let recommended: boolean = false;
+        let niceToHave: boolean = false;
+        
+            // Required fields
+            if(!record[SectionPrefs.getFieldName(Sections.TITLE)]) 
+                required = true;
+    
+            if(!record[SectionPrefs.getFieldName(Sections.DESCRIPTION)] || record[SectionPrefs.getFieldName(Sections.DESCRIPTION)].length == 0) 
+                required = true;
+    
+            if(!record[SectionPrefs.getFieldName(Sections.TOPICS)] || record[SectionPrefs.getFieldName(Sections.TOPICS)].length == 0) 
+                required = true;
+    
+            if(!record[SectionPrefs.getFieldName(Sections.KEYWORDS)] || record[SectionPrefs.getFieldName(Sections.KEYWORDS)].length == 0) 
+                required = true;
+    
+            // Recommended fields
+            if(!record[SectionPrefs.getFieldName(Sections.AUTHORS)] || record[SectionPrefs.getFieldName(Sections.AUTHORS)].length == 0) 
+                recommended = true;
+    
+            if(!record[SectionPrefs.getFieldName(Sections.CONTACT)]) 
+                recommended = true;
+    
+            if(!record[SectionPrefs.getFieldName(Sections.VISIT_HOME_PAGE)]) 
+                recommended = true;
+    
+            let accessPages: NerdmComp[] = (new NERDResource(record)).selectAccessPages();
+    
+            // If resource type is "software", access page links are recommended. Otherwise they are nice to have.
+            if(!accessPages || accessPages.length == 0) {
+                if(this.resourceType == ResourceType.SOFTWARE) {
+                    recommended = true;
+                }else{
+                    niceToHave = true;
+                }
+            }
+    
+            // Nice to have fields
+            if(!record[SectionPrefs.getFieldName(Sections.REFERENCES)] || record[SectionPrefs.getFieldName(Sections.REFERENCES)].length == 0) 
+                niceToHave = true;
+    
+
+            // Set color
+            if(required){
+                this.contentStatusColer = "var(--warning)";
+            }else if(recommended) {
+                this.contentStatusColer = "var(--alert)";
+            }else if(niceToHave) {
+                this.contentStatusColer = "var(--nist-green-lighter)";
+            }else{
+                this.contentStatusColer = "var(--nist-green-default)";
+            }
+    }
     /**
      * Display an arbitrary message
      */
