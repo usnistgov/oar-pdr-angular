@@ -7,10 +7,10 @@
             "seealso": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         },
         "authors": {
-            "general": "Click the plus '+' sign to enter co-authors for this resource. <p> To 'edit' authors already listed, click the pencil icon and make changes.",
-            "add": "<p>You may also add author names, affiliations, and ORCIDs if available<p>" 
-            "edit": "<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
-            "dragdrop": "<p>To change the order of authors listed, click on the arrow bar on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "general": "This section should list all authors or collaborators who's work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>CRediT Contributor Roles Taxonomy</a>. Please add affiliations and ORCIDs as available.",
+            "add": "Click the plus '+' sign to enter co-authors for this resource." 
+            "edit": "To 'edit' authors already listed, click the pencil icon and make changes.<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
+            "dragdrop": "<p>To change the order of authors listed, click on the arrow bar on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
         },
         "contactPoint": {
             "general": "<p>Enter the name of the NIST contact who can answer customer questions about your this resource.",
