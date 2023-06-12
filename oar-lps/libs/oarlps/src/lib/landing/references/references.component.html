@@ -26,11 +26,9 @@
             
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;width: 1.65em;">
-                <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" aria-label="edit button" [disabled]="isEditing">
-                    <i [class]="editIconClass()"></i>
-                </button> -->
 
-                <i class="faa faa-pencil icon_enabled" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit references" ngbTooltip="edit references" aria-label="edit references" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
+                <i class="faa faa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit references" ngbTooltip="edit references" aria-label="edit references" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
+             
             </div>
         </div>
     </div>

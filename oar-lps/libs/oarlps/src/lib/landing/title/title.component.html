@@ -29,7 +29,7 @@
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
                 <!-- Edit button -->
-                <i class="faa faa-pencil icon_enabled" (click)="startEditing()" *ngIf="!isEditing" title="Edit title" ngbTooltip="edit title" aria-label="edit title" style="cursor: pointer;"></i>
+                <i class="faa faa-pencil icon_enabled link-icon" (click)="startEditing()" *ngIf="!isEditing" title="Edit title" ngbTooltip="edit title" aria-label="edit title" style="cursor: pointer;"></i>
 
                 <!-- Save button -->
                 <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing"

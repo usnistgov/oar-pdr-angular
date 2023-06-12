@@ -85,6 +85,7 @@ export class Sections {
     static readonly SIDEBAR = 'Sidebar'; 
     static readonly CONTACT = 'Contact';
     static readonly VISIT_HOME_PAGE = 'Visit Home Page';
+    static readonly DOI = 'DOI';
 }
 
 //_fieldName is the field name in Nerdm record
@@ -106,6 +107,7 @@ _fieldName[Sections.FACILITATORS] = "facilitators";
 _fieldName[Sections.SIDEBAR] = "sidebar";
 _fieldName[Sections.CONTACT] = "contactPoint";
 _fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";
+_fieldName[Sections.DOI] = "doi";
 
 export class SectionPrefs {
     private static readonly _lSectionID = _fieldName;

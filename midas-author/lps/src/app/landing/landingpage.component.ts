@@ -138,8 +138,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     private _sbarvisible : boolean = true;
     sidebarVisible: boolean = true;
     mainBodyStatus: string = "mainsquished";
-    sidebarStartY: number = 160;
-    sidebarY: number = 160;
+    sidebarStartY: number = 100;
+    sidebarY: number = 100;
 
     // helpContent: any = {
     //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
@@ -468,8 +468,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.windowScrolled = (window.pageYOffset > this.menuPosition);
 
         this.sidebarY = this.sidebarStartY - window.pageYOffset;
-        
-        this.sidebarY = this.sidebarY > 10 ? this.sidebarY : 10;
+        // this.sidebarY = this.sidebarY > 10 ? this.sidebarY : 10;
+        this.sidebarY = this.sidebarY < -80 ? -80 : this.sidebarY;
     }
 
     /**

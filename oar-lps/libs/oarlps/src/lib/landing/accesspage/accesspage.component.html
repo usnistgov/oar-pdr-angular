@@ -66,7 +66,8 @@
             <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="onEdit()" aria-label="edit button" [disabled]="isEditing">
                 <i [class]="editIconClass()"></i>
             </button> -->
-            <i class="faa faa-pencil icon_enabled" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit access page links" ngbTooltip="edit access page links" aria-label="edit access page links" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
+            <i class="faa faa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit access page links" ngbTooltip="edit access page links" aria-label="edit access page links" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
+              
         </div>
     </div>
 </div>

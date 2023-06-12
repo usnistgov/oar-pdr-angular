@@ -157,6 +157,16 @@ export class DescriptionComponent implements OnInit {
     }
 
     /**
+     * Refresh the help text
+     */
+    refreshHelpText(){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+        this.lpService.setSectionHelp(sectionHelp);
+    }
+
+    /**
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
@@ -166,12 +176,8 @@ export class DescriptionComponent implements OnInit {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
         if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
+            this.refreshHelpText();
         }
 
         //Broadcast the current section and mode

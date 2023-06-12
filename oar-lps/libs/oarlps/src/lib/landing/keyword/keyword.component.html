@@ -46,7 +46,7 @@
                 <i class="faa faa-pencil icon_enabled"></i>
             </button> -->
 
-            <i class="faa faa-pencil icon_enabled" (click)="startEditing()" *ngIf="!isEditing" title="Edit keyword" ngbTooltip="edit keyword" aria-label="edit keyword" style="cursor: pointer;"></i>
+            <i class="faa faa-pencil icon_enabled link-icon" (click)="startEditing()" *ngIf="!isEditing" title="Edit keyword" ngbTooltip="edit keyword" aria-label="edit keyword" style="cursor: pointer;"></i>
 
             <!-- Save button -->
             <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing"
