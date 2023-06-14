@@ -326,12 +326,14 @@ td {
   }
   
   .record-description-title,
-  .record-description-address {
+  .record-description-address,
+  .record-description-phone {
     margin-bottom: 16px;
   }
   
   .record-description-title span,
-  .record-description-address span {
+  .record-description-address span,
+  .record-description-phone span {
     font-weight: bold;
   }
   
