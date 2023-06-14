@@ -1,0 +1,205 @@
+<div *ngIf="currentDataset" class="container" style="margin: 0 auto">
+    <h2 class="form-title">{{ title }}</h2>
+    
+    <div class="alert alert-warning alert-dismissible fade show required-fields-alert mt-3" role="alert">
+      <ul class="list-group ms-4">
+        <li class="mb-2">
+          Required fields are marked with an asterisk (<span style="color: red">*</span>).
+        </li>
+        <li class="mb-2">
+          Please use Latin characters only. Fields containing non-Latin characters will be invalid.
+        </li>
+      </ul>
+      <button type="button" class="close m-0 p-1" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true"><i class="bi bi-x"></i></span>
+      </button>
+    </div>
+    <h4>Dataset: {{currentDataset.name}}</h4>
+    <div class="welcome-message mt-4" [innerHTML]="welcomeMessage" style="font-size: 11pt;"></div>
+    <div *ngIf="currentDataset.terms && currentDataset.terms.length > 0" class="mt-2">
+      <div id="terms-header">
+      <label
+        class="form-label pt-0 pb-0 mt-3 mb-0"
+        data-toggle="collapse"
+        data-target="#terms"
+        aria-expanded="true"
+        aria-controls=""
+        (click)="toggleIcon('terms')"
+      >
+        Terms and Conditions <i [class]="iconClasses['terms']"></i>
+      </label>
+    </div>
+  
+    <div id="terms" class="collapse show" aria-labelledby="terms-header" style="font-size: 11pt;">
+      <div class="alert ps-4">
+        <ul class="list-group">
+          <li class="mb-1" *ngFor="let term of currentDataset.terms">
+            {{ term }}
+          </li>
+        </ul>
+      </div>
+    </div>
+    </div>
+    
+    <form [formGroup]="myForm" class="mt-2">
+      <div *ngFor="let field of formFields" class="form-group">
+        <ng-container [ngSwitch]="field.type" class="default-input">
+          <label
+            *ngIf="field.type !== 'checkbox' && field.type !== 'disclaimer'"
+            [for]="field.name"
+            class="form-label"
+          >
+            {{ field.label }}
+            <span
+              class="required"
+              *ngIf="field.validators && field.validators.includes('required')"
+              >*</span
+            >
+          </label>
+          <input
+            *ngSwitchCase="'text'"
+            autocomplete="off"
+            type="text"
+            [class]="field.styles.class"
+            [id]="field.styles.id"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || ''"
+          />
+          <input
+            *ngSwitchCase="'email'"
+            type="email"
+            autocomplete="off"
+            [class]="'form-control ' + field.styles.class"
+            [id]="field.styles.id"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || ''"
+          />
+          <textarea
+            *ngSwitchCase="'textarea'"
+            type="text"
+            autocomplete="off"
+            rows="3"
+            style="resize: none"
+            [class]="'form-control ' + field.styles.class"
+            [id]="field.styles.id"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || ''"
+          ></textarea>
+          <select
+            required
+            *ngSwitchCase="'select'"
+            [class]="field.styles.class"
+            [id]="field.styles.id"
+            [formControlName]="field.name"
+          >
+            <option
+              value="{{ option.value }}"
+              *ngFor="let option of field.options"
+              [ngStyle]="{ color: option.value === '' ? 'gray' : '' }"
+            >
+              <span>{{ option.label }}</span>
+            </option>
+          </select>
+          <div *ngSwitchCase="'checkbox'" class="form-check">
+            <input
+              type="checkbox"
+              [class]="'form-check-input ' + field.styles.class"
+              [id]="field.styles.id"
+              [formControlName]="field.name"
+            />
+            <label [for]="field.styles.id" class="form-check-label">{{
+              field.label
+            }}<span
+            class="required"
+            *ngIf="field.validators && field.validators.includes('requiredTrue')"
+            >*</span
+          ></label>
+          </div>
+          <div *ngSwitchCase="'phone'">
+            <input
+              type="tel"
+              [class]="field.styles.class"
+              [id]="field.name"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder"
+            />
+          </div>
+  
+          <div *ngSwitchCase="'organization'">
+            <input
+              type="text"
+              [class]="field.styles.class"
+              [id]="field.styles.id"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder || ''"
+            />
+          </div>
+          <div *ngSwitchCase="'address'">
+            <input
+              type="text"
+              [class]="field.styles.class"
+              [id]="field.styles.id"
+              [formControlName]="field.name"
+              [placeholder]="field.placeholder || ''"
+            />
+          </div>
+          <div *ngSwitchCase="'disclaimer'">
+            <div [id]="field.styles.id + 'heading'">
+              <label
+                class="form-label pt-0 pb-0 mt-0 mb-0"
+                data-toggle="collapse"
+                [attr.data-target]="'#' + field.styles.id"
+                aria-expanded="true"
+                [attr.aria-controls]="field.styles.id"
+                (click)="toggleIcon(field.styles.id)"
+              >
+                {{ field.label }}
+                <i [class]="iconClasses[field.styles.id]"></i>
+              </label>
+            </div>
+  
+            <div
+              [id]="field.styles.id"
+              [class]="'collapse show ' + field.styles.class"
+              [attr.aria-labelledby]="field.styles.id + 'heading'"
+            >
+              <div class="alert alert-dark">
+                {{ field.text }}
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <div
+          *ngIf="
+            myForm.controls[field.name].invalid &&
+            (myForm.controls[field.name].dirty ||
+              myForm.controls[field.name].touched)
+          "
+          class="text-danger"
+        >
+          <div
+            *ngFor="let error of myForm.controls[field.name].errors | keyvalue"
+          >
+           {{ field.errorMessages[error.key] }}
+          </div>
+        </div>
+      </div>
+      <div class="d-flex justify-content-between">
+        <button
+          type="button"
+          class="btn btn-success shadow-md mt-5 me-4 text-uppercase submit-button"
+          [disabled]="myForm.invalid"
+          (click)="onSubmit()"
+        >
+          Submit
+        </button>
+        <button
+          class="btn mt-5 btn-outline-secondary shadow-md fill-out-form-btn text-uppercase"
+          (click)="generateDefaultValues()"
+        >
+          Fill<br /><span>(DEMO ONLY)</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  

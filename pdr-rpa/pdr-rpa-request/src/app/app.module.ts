@@ -24,11 +24,13 @@ import { RECAPTCHA_BASE_URL, RecaptchaFormsModule, RecaptchaModule } from 'ng-re
 import { ServiceModule } from './service/service.module';
 import { RequestFormTermsComponent } from './components/request-form-terms/request-form-terms.component';
 import { ToastModule } from 'primeng/toast';
+import { DynamicFormComponent } from './components/dynamic-form/dynamic-form.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        RequestFormTermsComponent
+        RequestFormTermsComponent,
+        DynamicFormComponent
     ],
     imports: [
         FrameModule,

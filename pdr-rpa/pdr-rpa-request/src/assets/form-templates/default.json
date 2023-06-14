@@ -1,0 +1,266 @@
+{
+    "title": "RPA Dynamic Form",
+    "welcomeMessage": "Thank you for your interest in this dataset. More information about this dataset can be found on the <a href='${dataset_link}'>dataset's homepage</a>. If you are a qualified researcher and you would like a copy of the dataset for your work, please fill out all fields below. A temporary link to the dataset will be sent to the email address you provide.",
+    "fields": [
+        {
+            "name": "full_name",
+            "label": "Full name",
+            "type": "text",
+            "validators": [
+                "required",
+                "latinOnly"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "name"
+            },
+            "errorMessages": {
+                "required": "Full name is required.",
+                "nonLatin": "Use Latin characters only."
+            },
+            "placeholder": "Enter your full name"
+        },
+        {
+            "name": "email",
+            "label": "Work Email Address",
+            "type": "email",
+            "validators": [
+                "required",
+                "email",
+                "blacklist"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "email"
+            },
+            "errorMessages": {
+                "required": "Work email is required.",
+                "email": "Invalid work email address.",
+                "blacklisted": "The email provided is not an organization email."
+            },
+            "placeholder": "Enter your work email address"
+        },
+        {
+            "name": "country",
+            "label": "Country",
+            "type": "select",
+            "options": [
+                {
+                    "value": "",
+                    "label": "--Select Country--"
+                },
+                {
+                    "value": "United States",
+                    "label": "United States"
+                },
+                {
+                    "value": "Canada",
+                    "label": "Canada"
+                },
+                {
+                    "value": "Mexico",
+                    "label": "Mexico"
+                },
+                {
+                    "value": "Brazil",
+                    "label": "Brazil"
+                }
+            ],
+            "validators": [
+                "required"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "country"
+            },
+            "errorMessages": {
+                "required": "Country is required."
+            }
+        },
+        {
+            "name": "phone",
+            "label": "Phone number",
+            "type": "phone",
+            "validators": [
+                "required"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "phone"
+            },
+            "errorMessages": {
+                "required": "Phone number is required."
+            },
+            "placeholder": "Enter your work phone number"
+        },
+        {
+            "name": "organization",
+            "label": "Organization",
+            "type": "organization",
+            "validators": [
+                "required"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "organization"
+            },
+            "errorMessages": {
+                "required": "Organization is required."
+            },
+            "placeholder": "Enter your organization name"
+        },
+        {
+            "name": "address",
+            "label": "Address line 1",
+            "type": "address",
+            "validators": [
+                "required"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "address"
+            },
+            "errorMessages": {
+                "required": "Address line 1 is required."
+            },
+            "placeholder": "100 Bureau Drive"
+        },
+        {
+            "name": "address2",
+            "label": "Address line 2",
+            "type": "address",
+            "validators": [],
+            "styles": {
+                "class": "form-control",
+                "id": "address2"
+            },
+            "errorMessages": {},
+            "placeholder": "Mailbox 1234"
+        },
+        {
+            "name": "address3",
+            "label": "Address line 3",
+            "type": "address",
+            "validators": [
+                "required"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "address3"
+            },
+            "errorMessages": {
+                "required": "Address line 3 is required."
+            },
+            "placeholder": "Gaithersburg, MD, 20899"
+        },
+        {
+            "name": "purposeOfUse",
+            "label": "Purpose of Use",
+            "type": "textarea",
+            "validators": [
+                "required"
+            ],
+            "styles": {
+                "class": "form-control",
+                "id": "purpose-of-use"
+            },
+            "errorMessages": {
+                "required": "Purpose of use is required."
+            },
+            "placeholder": "Enter the reason why you want this data..."
+        },
+        {
+            "name": "disclaimer1",
+            "label": "Personal Information Disclaimer 1",
+            "type": "disclaimer",
+            "text": "This form collects your name, email, phone number, organization, and address for the purpose of contacting you about the status of your request. Your information will not be shared with any third-party organizations.",
+            "validators": [],
+            "styles": {
+                "class": "form-custom-disclaimer",
+                "id": "disclaimer1"
+            },
+            "errorMessages": {}
+        },
+        {
+            "name": "disclaimer2",
+            "label": "Personal Information Disclaimer 2",
+            "type": "disclaimer",
+            "text": "By submitting this form, you agree to allow us to contact you regarding your application status and provide updates. Your personal information will be kept confidential and will not be shared with any third-party organizations.",
+            "validators": [],
+            "styles": {
+                "class": "form-custom-disclaimer",
+                "id": "disclaimer2"
+            },
+            "errorMessages": {}
+        },
+        {
+            "name": "checkbox",
+            "label": "I agree to the terms and conditions.",
+            "type": "checkbox",
+            "validators": [
+                "requiredTrue"
+            ],
+            "styles": {
+                "class": "form-check-input",
+                "id": "checkbox"
+            },
+            "errorMessages": {
+                "required": "You must agree to the terms and conditions."
+            }
+        },
+        {
+            "name": "checkbox2",
+            "label": "I agree to the terms and conditions outlined in the disclaimer(s) above.",
+            "type": "checkbox",
+            "validators": [
+                "requiredTrue"
+            ],
+            "styles": {
+                "class": "form-check-input",
+                "id": "checkbox2"
+            },
+            "errorMessages": {
+                "required": "You must agree to this to the disclaimer."
+            }
+        },
+        {
+            "name": "checkbox3",
+            "label": "I certify that I will not distribute or share this data with anyone else without prior permission from the data owner.",
+            "type": "checkbox",
+            "validators": [
+                "requiredTrue"
+            ],
+            "styles": {
+                "class": "form-check-input",
+                "id": "checkbox3"
+            },
+            "errorMessages": {
+                "required": "You must agree to this."
+            }
+        },
+        {
+            "name": "checkbox4",
+            "label": "I accept the agreement on behalf of all members of the listed organization who will be provided access to the database and warrant that I, my organization and the organization's members, if any, will abide by the terms of this agreement.",
+            "type": "checkbox",
+            "validators": [
+                "requiredTrue"
+            ],
+            "styles": {
+                "class": "form-check-input",
+                "id": "checkbox4"
+            },
+            "errorMessages": {
+                "required": "You must agree to this."
+            }
+        }
+    ],
+    "blacklists": {
+        "email": {
+            "patterns": [],
+            "emails": [],
+            "domains": [
+                "gmail.com"
+            ]
+        }
+    }
+}

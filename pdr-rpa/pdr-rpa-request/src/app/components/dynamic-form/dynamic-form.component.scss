@@ -1,0 +1,164 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 11pt;
+  }
+  .form-title {
+    font-weight: 700;
+  }
+  
+  .form-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  
+  ::ng-deep .welcome-message {
+    a {
+      color: var(--bayern-blue);
+      text-decoration: none;
+    }
+  
+    a:visited {
+      text-decoration: none;
+    }
+  
+    a:hover {
+      text-decoration: underline;
+    }
+  
+    a:active {
+      text-decoration: underline;
+    }
+  }
+  
+  .required-field-message {
+    color: var(--danger-color);
+    font-size: 1rem;
+    margin: 0;
+  }
+  
+  .form-label {
+    color: var(--bayern-blue);
+    margin-bottom: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 10px;
+  }
+  
+  
+  .text-danger {
+    color: var(--danger-color);
+    font-size: 9pt;
+    margin-top: 5px;
+  }
+  
+  span.required {
+    color: var(--danger-color);
+    margin-left: 5px;
+  }
+  
+  .fill-out-form-btn {
+    line-height: 1;
+    height: 48px;
+    padding: 0;
+    border-radius: 999px;
+  }
+  
+  .btn-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .btn-primary:active {
+    background-color: var(--bayern-blue);
+    border-color: var(--bayern-blue);
+  }
+  
+  .btn-primary:disabled {
+    background-color: var(--dark-color);
+    border-color: var(--dark-color);
+    cursor: not-allowed;
+  }
+  
+  .btn-success {
+    height: 48px;
+    background-color: var(--tropical-rainforest);
+    border-color: var(--tropical-rainforest);
+    width: 150px;
+    border-radius: 999px;
+  }
+  
+  .btn-success:hover {
+    background-color: var(--jungle-green);
+    border-color: var(--jungle-green);
+  }
+  
+  .btn-success:active {
+    background-color: var(--tropical-rainforest);
+    border-color: var(--tropical-rainforest);
+  }
+  
+  .btn-success:disabled {
+    background-color: var(--dark-color);
+    border-color: var(--dark-color);
+    cursor: not-allowed !important;
+  }
+  
+  ::-webkit-input-placeholder {
+    font-size: 14px; /* replace with desired font size */
+  }
+  
+  :-moz-placeholder {
+    font-size: 14px; /* replace with desired font size */
+  }
+  
+  ::-moz-placeholder {
+    font-size: 14px; /* replace with desired font size */
+  }
+  
+  :-ms-input-placeholder {
+    font-size: 14px; /* replace with desired font size */
+  }
+  .form-control {
+    font-size: 14px;
+  }
+  
+  select {
+    appearance: none;
+    font-size: 14px;
+  }
+  select:invalid {
+    color: gray;
+  }
+  select option {
+    color: black;
+  }
+  
+  .form-check {
+    font-size: 14px;
+  }
+  
+  ::ng-deep .form-check-input:checked {
+    background-color: var(--bayern-blue); /* Change to your desired color */
+    border-color: var(--bayern-blue); /* Change to your desired color */
+    outline-color: var(--bayern-blue);
+  }
+  
+  .fill-out-form-btn {
+    min-width: 180px;
+  }
+  
+  .required-fields-alert {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 24px;
+  }
+  
+  .btn.disabled, .btn:disabled, fieldset:disabled .btn {
+    pointer-events: auto;
+  }

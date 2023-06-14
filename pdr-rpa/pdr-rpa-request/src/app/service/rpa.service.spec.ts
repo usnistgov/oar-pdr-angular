@@ -133,7 +133,6 @@ describe('RPAService', () => {
             await getRecordPromise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            // expect(error()).toBe(errorMessage);
             expect(error().code).toBe('SERVER_ERROR_404');
             expect(error().message).toBe(errorMessage);
         }
