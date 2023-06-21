@@ -2,8 +2,8 @@
     {   
         "general": "<p>This window displays <i>General</i> help for creating records. After completing changes and updates to this page, click the Save button at the top right corner of the page.",
         "title": {
-            "general": "<p>The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p> Avoid using the same title as a related paper if it doesn’t sufficiently describe the resource as a standalone object.",
-            "edit": "<p>Click the pencil icon and enter a human-readable name for this resource"
+            "general": "Click the pencil icon and enter a human-readable name for this resource. The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p> Avoid using the same title as a related paper if it doesn’t sufficiently describe the resource as a standalone object.",
+            "edit": "Click the check mark to save changes<p>Click the 'x' to cancel edits"
             "seealso": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         },
         "authors": {
