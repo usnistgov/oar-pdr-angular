@@ -1,6 +1,6 @@
 
     {   
-        "general": "<p>This window displays <i>General</i> help for creating records. After completing changes and updates to this page, click the Save button at the top right corner of the page.",
+        "general": "<p>This window displays <i>General</i> help for creating records. Clicking the Pencil icon will allow you to edit each field. Clicking the '+' will add a new section to the field. After completing changes and updates to this page, click the Save button at the top right corner of the page.",
         "title": {
             "general": "Click the pencil icon and enter a human-readable name for this resource. The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p> Avoid using the same title as a related paper if it doesn’t sufficiently describe the resource as a standalone object.",
             "edit": "Click the check mark to save changes<p>Click the 'x' to cancel edits"
