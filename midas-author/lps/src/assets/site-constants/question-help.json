@@ -1,52 +1,52 @@
 
     {   
-        "general": "<p>This window displays <i>General</i> help for creating records. After completing changes and updates to this page, click the Save button at the top right corner of the page.",
+        "general": "This screen allows you to enter the information for creating your publication.  On this page, you can:<ul><li>Click on a pencil icon next to the item you want to enter or update a piece of information,</li><li>Click the Preview to see how this page will look to the public with your changes so far, or </li></li>Save button above to save the changes to your draft and come back to this later.</li></ul>",
         "title": {
-            "general": "<p>The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p> Avoid using the same title as a related paper if it doesn’t sufficiently describe the resource as a standalone object.",
-            "edit": "<p>Click the pencil icon and enter a human-readable name for this resource"
+            "general": "The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p> If this publication can be considered a supplement to a literature publication, consider using the same title with an extra annotation, like ': Supplementary Data'.",
+            "edit": "Type the title into the input box and then click the check icon to save.",
             "seealso": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         },
         "authors": {
             "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>CRediT Contributor Roles Taxonomy</a>. Add affiliations and ORCIDs as available.",
-            "add": "Click the plus '+' sign to enter co-authors for this resource." 
+            "add": "Click the plus '+' sign to enter co-authors for this resource.",
             "edit": "To 'edit' authors already listed, click the pencil icon and make changes.<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
-            "dragdrop": "<p>To change the order of authors listed, click on the arrow bar on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
+            "dragdrop": "To change the order of authors listed, click on the arrow bar on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
         },
         "contactPoint": {
             "general": "Enter the name of the NIST contact who can respond to customer questions about this resource.",
-           "add": "<p>Click the plus '+' sign to enter a contact for this resource.<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-            "edit": "<p>To 'edit' contact a point already listed, click the pencil icon and make changes <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+           "add": "Click the plus '+' sign to enter a contact for this resource.<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "edit": "To 'edit' contact a point already listed, click the pencil icon and make changes <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
         },
         "landingPage": {
             "general": "The Home Page is the users' entry point for a resource. It provides contextual information and access to the resource itself (i.e. download links for data). Importantly, the DOI (digital object identifier) will point to this URL. <p> If you wish for this NIST Public Data Repository page to your Home Page, leave this box blank. If you would like to point to another page enter the URL here.",
           "add": "Click the plus '+' sign to enter a Home Page URL for this resource.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-            "edit": "<p>To edit this field, click on the pencil icon and make changes.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+            "edit": "To edit this field, click on the pencil icon and make changes.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
         },
         "description": {
-            "general": "<p>This field is for a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource.",
-            "edit": "<p>Click the pencil icon to add the description of your resource. If using part of the abstract of a related publication, ensure the text is relevant to this discrete resource. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "general": "This field is for a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource.",
+            "edit": "Click the pencil icon to add the description of your resource. If using part of the abstract of a related publication, ensure the text is relevant to this discrete resource. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         },
         "theme":{
-            "general": "<p>You are in Research Topics section where you can select topics from the NIST Research Taxonomy. Select one or more topics that your dataset falls under. ",
-            "add": "<p>Click the pencil icon to select topics for this resource. Click on the arrows to view subtopics. Double-click on a topic to select it for your resource. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-            "edit": "<p>To edit your Research Topics selections, click on the pencil icon and make changes.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+            "general": "You are in Research Topics section where you can select topics from the NIST Research Taxonomy. Select one or more topics that your dataset falls under. ",
+            "add": "Click the pencil icon to select topics for this resource. Click on the arrows to view subtopics. Double-click on a topic to select it for your resource. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "edit": "To edit your Research Topics selections, click on the pencil icon and make changes.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
         },
         "keyword": {
-            "general": "<p>Add <i>keywords,</i> or subject terms that help both technical and non-technical users to discover this resource. Separate the terms with commas. You may enter up to a maximum of 4,000 characters",
-            "add": "<p>Click the pencil icon to add keywords. Separate the terms with commas.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-            "edit": "<p>Click the pencil icon to edit your keywords or enter additional keywords. Separate the terms with commas.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "general": "Add <i>keywords,</i> or subject terms that help both technical and non-technical users to discover this resource. Separate the terms with commas. You may enter up to a maximum of 4,000 characters",
+            "add": "Click the pencil icon to add keywords. Separate the terms with commas.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "edit": "Click the pencil icon to edit your keywords or enter additional keywords. Separate the terms with commas.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         },
         "components": {
-            "general": "<p>You are in the Data Access section. Enter URLs for sites with related information on this resource, e.g. a GitHub repository. Each entry requires the URL, the 'Link text' or Title, and information 'About this link' or a description. Note: this area is not for links to files. To upload and link files use the 'Files' button below.",
-            "add": "<p>Click the pencil icon and then the plus '+' sign to enter URLs to sites with information related to this resource. Separate each URL with a comma. When all URLS are entered, click the check sign next to the entry box to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-            "edit": "<p>Click the pencil icon to add, remove, or edit entries.",
-            "dragdrop": "<p>To change the order of URLs listed, click on the arrow bar on the left of each link, drag it to the right place in the list, and release the mouse button to drop it in place.<p>"
+            "general": "You are in the Data Access section. Enter URLs for sites with related information on this resource, e.g. a GitHub repository. Each entry requires the URL, the 'Link text' or Title, and information 'About this link' or a description. Note: this area is not for links to files. To upload and link files use the 'Files' button below.",
+            "add": "Click the pencil icon and then the plus '+' sign to enter URLs to sites with information related to this resource. Separate each URL with a comma. When all URLS are entered, click the check sign next to the entry box to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+            "edit": "Click the pencil icon to add, remove, or edit entries.",
+            "dragdrop": "To change the order of URLs listed, click on the arrow bar on the left of each link, drag it to the right place in the list, and release the mouse button to drop it in place.<p>"
         },
         "references": {
-            "general": "<p>You are in <i>References</i> section where you can add references or citations related to this resource. You may wish to include links to multiple types of resources such as a related publication or a software package. <p> <i>[Other Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-            "add": "<p>Click the pencil icon and then the plus sign '+' to add the URI of a related resource. Separate each Reference URL with a comma. When all References are entered, click the check sign next to the entry box to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-            "edit": "<p>Click the pencil icon to  make changes to existing References listed here. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-            "dragdrop": "<p>To change the order of references listed, click on the arrow bar on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+            "general": "You are in <i>References</i> section where you can add references or citations related to this resource. You may wish to include links to multiple types of resources such as a related publication or a software package. <p> <i>[Other Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "add": "Click the pencil icon and then the plus sign '+' to add the URI of a related resource. Separate each Reference URL with a comma. When all References are entered, click the check sign next to the entry box to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "edit": "Click the pencil icon to  make changes to existing References listed here. <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+            "dragdrop": "To change the order of references listed, click on the arrow bar on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
         }
     }
 
