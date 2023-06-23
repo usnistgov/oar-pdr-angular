@@ -1,6 +1,6 @@
 
     {   
-        "general": "This screen allows you to enter the information for creating your publication.  On this page, you can:<ul><li>Click on a pencil icon next to the item you want to enter or update a piece of information,</li><li>Click the Preview to see how this page will look to the public with your changes so far, or </li></li>Save button above to save the changes to your draft and come back to this later.</li></ul>",
+        "general": "This screen allows you to enter the information for creating your publication.  On this page, you can:<ul><li>Click on a pencil icon next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul>",
         "title": {
             "general": "The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p> If this publication can be considered a supplement to a literature publication, consider using the same title with an extra annotation, like ': Supplementary Data'.",
             "edit": "Type the title into the input box and then click the check icon to save.",
