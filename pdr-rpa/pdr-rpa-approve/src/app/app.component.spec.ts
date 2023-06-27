@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RPAService } from './service/rpa.service';
 import { MessageService } from 'primeng/api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ConfigurationService } from './service/config.service';
-import { Configuration } from './model/config.model';
+import { ConfigurationService } from 'oarng';
+import { RPAConfiguration } from './model/config.model';
 import { of } from 'rxjs';
 import { ApprovalResponse, Record, RecordWrapper } from './model/record';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
@@ -15,7 +15,7 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let rpaService: RPAService;
 
-  const mockConfig: Configuration = {
+  const mockConfig: RPAConfiguration = {
     baseUrl: 'https://example.com',
   };
 
