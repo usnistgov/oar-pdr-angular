@@ -5,7 +5,7 @@ import { catchError, retry } from "rxjs/operators";
 import { formatDate } from '@angular/common';
 
 import { ApprovalResponse, RecordWrapper } from "../model/record";
-import { ConfigurationService } from './config.service';
+import { ConfigurationService } from 'oarng';
 
 /**
  * Service responsible for update the status of the RPA records.
@@ -20,7 +20,7 @@ export class RPAService {
 
     constructor(private http: HttpClient, private configSvc: ConfigurationService) {
         // Get the base URL from the environment
-        this.baseUrl = this.configSvc.getConfig().baseUrl;
+        this.baseUrl = this.configSvc.getConfig()['baseUrl'];
     }
 
     // Http Options

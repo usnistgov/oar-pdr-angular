@@ -3,8 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 
 import { RPAService } from './rpa.service';
-import { ConfigurationService } from './config.service';
+import { ConfigModule, ConfigurationService, CONFIG_URL, RELEASE_INFO } from 'oarng';
 import { ApprovalResponse, RecordWrapper } from '../model/record';
+import { RELEASE } from '../../environments/release-info';
+import { environment } from '../../environments/environment';
 
 describe('RPAService', () => {
     let service: RPAService;
@@ -15,7 +17,12 @@ describe('RPAService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [RPAService, ConfigurationService]
+            providers: [
+                { provide: RELEASE_INFO, useValue: RELEASE },
+                { provide: CONFIG_URL, useValue: environment.configUrl },
+                ConfigurationService,
+                RPAService
+            ]
         });
         service = TestBed.inject(RPAService);
         httpMock = TestBed.inject(HttpTestingController);
@@ -31,6 +38,7 @@ describe('RPAService', () => {
     });
 
     it('should be created', () => {
+        expect(configService).toBeTruthy();
         expect(service).toBeTruthy();
     });
 
@@ -87,8 +95,8 @@ describe('RPAService', () => {
             await getRecordPromise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error().code).toBe("SERVER_ERROR_404");
-            expect(error().message).toBe(errorMessage);
+            expect(error.code).toBe("SERVER_ERROR_404");
+            expect(error.message).toBe(errorMessage);
         }
     });
 
@@ -125,8 +133,8 @@ describe('RPAService', () => {
             await promise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error().code).toBe("SERVER_ERROR_500");
-            expect(error().message).toBe(errorMessage);
+            expect(error.code).toBe("SERVER_ERROR_500");
+            expect(error.message).toBe(errorMessage);
         }
     });
 
@@ -163,8 +171,8 @@ describe('RPAService', () => {
             await promise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error().code).toBe("SERVER_ERROR_500");
-            expect(error().message).toBe(errorMessage);
+            expect(error.code).toBe("SERVER_ERROR_500");
+            expect(error.message).toBe(errorMessage);
         }
     });
 

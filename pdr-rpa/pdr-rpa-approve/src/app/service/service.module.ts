@@ -1,24 +1,19 @@
 import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { ConfigurationService } from './config.service';
+import { ConfigModule, CONFIG_URL, RELEASE_INFO } from 'oarng';
 import { RPAService } from './rpa.service';
-
-export function configFetcherFactory(configSvc: ConfigurationService) {
-    return () => { 
-        return configSvc.fetchConfig().toPromise();
-    };
-}
+import { environment } from '../../environments/environment';
+import { RELEASE } from '../../environments/release-info';
 
 @NgModule({
+    imports: [ ConfigModule ],
     providers: [
-        HttpClient,
-        ConfigurationService,
-        RPAService,
-        { provide: APP_INITIALIZER, useFactory: configFetcherFactory,
-          deps: [ ConfigurationService ], multi: true }
+        { provide: RELEASE_INFO, useValue: RELEASE },
+        { provide: CONFIG_URL, useValue: environment.configUrl },
+        RPAService
     ]
 })
 export class ServiceModule { }
 
-export { ConfigurationService, RPAService }
+export { RPAService }
