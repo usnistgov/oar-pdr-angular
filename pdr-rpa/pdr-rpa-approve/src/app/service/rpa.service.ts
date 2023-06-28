@@ -15,13 +15,13 @@ import { ConfigurationService } from 'oarng';
 export class RPAService {
 
     private readonly REQUEST_ACCEPTED_PATH = "/request/accepted/";
-    // the base URL of the RPA request handler service
-    baseUrl: string;
 
-    constructor(private http: HttpClient, private configSvc: ConfigurationService) {
-        // Get the base URL from the environment
-        this.baseUrl = this.configSvc.getConfig()['baseUrl'];
-    }
+    constructor(private http: HttpClient, private configSvc: ConfigurationService) { }
+
+    /**
+     * the baseURL for the RPA remote service
+     */
+    get baseUrl(): string { return this.configSvc.getConfig()['baseUrl'] }
 
     // Http Options
     httpOptions = {
