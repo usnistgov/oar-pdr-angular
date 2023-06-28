@@ -21,10 +21,10 @@ import { Dataset } from './model/dataset.model';
 import { By } from '@angular/platform-browser';
 
 import { RECAPTCHA_SETTINGS, RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
-import { Configuration } from './model/config.model';
+import { RPAConfiguration } from './model/config.model';
 import { RecaptchaComponent } from 'ng-recaptcha';
 
-const mockConfig: Configuration = {
+const mockConfig: RPAConfiguration = {
   baseUrl: 'https://example.com',
   recaptchaApiKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI',
 };
