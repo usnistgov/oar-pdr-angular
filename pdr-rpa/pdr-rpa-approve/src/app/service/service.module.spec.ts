@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient } from '@angular/common/http';
 
 import { ServiceModule, RPAService } from './service.module';
+import { ConfigurationService } from 'oarng';
 import { ApprovalResponse, RecordWrapper } from '../model/record';
 
 describe('ServiceModule', () => {
@@ -26,6 +27,11 @@ describe('ServiceModule', () => {
 
     it('baseURL is correctly set', () => {
         expect(service.baseUrl).toEqual("http://goober.net/");
+    });
+
+    it('configURL has been set correctly', () => {
+        let cfgsvc: ConfigurationService = TestBed.inject(ConfigurationService);
+        expect(cfgsvc.configUrl).toBe('assets/config.json');
     });
 
 });

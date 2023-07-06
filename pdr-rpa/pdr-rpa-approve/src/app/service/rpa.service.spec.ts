@@ -1,9 +1,11 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { RPAService } from './rpa.service';
-import { ConfigModule, ConfigurationService, CONFIG_URL, RELEASE_INFO } from 'oarng';
+import {
+    ConfigModule, ConfigurationService, CONFIG_URL, RELEASE_INFO, Credentials
+} from 'oarng';
 import { ApprovalResponse, RecordWrapper } from '../model/record';
 import { RELEASE } from '../../environments/release-info';
 import { environment } from '../../environments/environment';
@@ -16,30 +18,47 @@ describe('RPAService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule],
+            imports: [ HttpClientTestingModule ],
             providers: [
-                { provide: RELEASE_INFO, useValue: RELEASE },
+//                { provide: RELEASE_INFO, useValue: RELEASE },
                 { provide: CONFIG_URL, useValue: environment.configUrl },
                 ConfigurationService,
                 RPAService
             ]
         });
-        service = TestBed.inject(RPAService);
         httpMock = TestBed.inject(HttpTestingController);
         configService = TestBed.inject(ConfigurationService);
+        service = TestBed.inject(RPAService);
+
         // mock getConfig() method to return a dummy configuration
         jest.spyOn(configService, 'getConfig').mockReturnValue({ baseUrl: 'https://oardev.nist.gov/od/ds/rpa' });
-        // Assign the service instance to the variable declared at the top
-        service = new RPAService(TestBed.inject(HttpClient), configService);
     });
 
     afterEach(() => {
         httpMock.verify();
     });
 
+    it('getHttpOptions', () => {
+        let opts = service.getHttpOptions();
+        expect(opts.headers instanceof HttpHeaders).toBeTruthy();
+        expect(opts.headers.get("Content-Type")).toEqual("application/json");
+        expect(opts.headers.get("Authorization")).toBeNull();
+
+        let creds: Credentials = {
+            userId: "jqp1",
+            userAttributes: {},
+            token: "goob"
+        };
+        opts = service.getHttpOptions(creds);
+        expect(opts.headers instanceof HttpHeaders).toBeTruthy();
+        expect(opts.headers.get("Content-Type")).toEqual("application/json");
+        expect(opts.headers.get("Authorization")).toEqual("Bearer goob");
+    });
+
     it('should be created', () => {
         expect(configService).toBeTruthy();
         expect(service).toBeTruthy();
+        expect(service.baseUrl).toBe("https://oardev.nist.gov/od/ds/rpa")
     });
 
     it('should get a record by ID', async () => {

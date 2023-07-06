@@ -4,8 +4,9 @@ import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Record } from './model/record';
 import { RPAService } from './service/rpa.service';
-import { catchError, filter, finalize, pluck, switchMap, tap } from 'rxjs/operators';
-import { EMPTY, throwError } from 'rxjs';
+import { AuthenticationService, Credentials } from 'oarng';
+import { catchError, filter, finalize, pluck, switchMap, tap, map } from 'rxjs/operators';
+import { Observable, EMPTY, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
 /**
@@ -16,6 +17,18 @@ export interface RecordDescription {
   title: string;
   phone: string;
   address: string;
+}
+
+/**
+ * A specialized Error indicating a error originating with from client action/inaction; the 
+ * message is assumed to be one directed at the user (rather than the programmer) and can be 
+ * displayed in the application in some way.
+ */
+class ClientError extends Error {
+  constructor(msg: string) {
+    super(msg);
+    Object.setPrototypeOf(this, ClientError.prototype);
+  }
 }
 
 @Component({
@@ -33,10 +46,13 @@ export class AppComponent {
   displayProgressSpinner: boolean = false;
   recordNotFound = false;
   recordDescription: RecordDescription;
+  _creds: Credentials|null = null;
+    
   constructor(
     private route: ActivatedRoute,
     private rpaService: RPAService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authService: AuthenticationService
   ) { }
 
   /**
@@ -45,29 +61,33 @@ export class AppComponent {
   ngOnInit(): void {
     this.displayProgressSpinner = true;
     this.status = "pending";
-    this.route.queryParams.pipe(
-      // Extract the 'id' property from the query parameters
-      pluck('id'),
-      // Filter out undefined and null recordId values
-      filter(recordId => !!recordId),
-      // Set recordId
-      tap(id => this.recordId = id),
+    this.authenticate().pipe(
+      tap(recordId => this.recordId = recordId),
+
+      // Retrieve the record from the RPA service
+      switchMap(recordId => this.rpaService.getRecord(recordId as string)),
+
+      // Extract the 'record' property from the RecordWrapper
       // Hide the progress spinner
       tap(() => this.displayProgressSpinner = false),
-      // Retrieve the record from the RPA service
-      switchMap(recordId => this.rpaService.getRecord(recordId)),
-      // Extract the 'record' property from the RecordWrapper
       pluck('record'),
+
       // Update the component state with the retrieved record
       tap(record => {
-        this.record = record;
+        this.record = record as Record;
         this.parseApprovalStatus(this.record);
         this.parseDescription(this.record.userInfo.description);
         this.loaded = true;
       }),
-      // Catche and logs any errors that occur
+
+      // Catch and log any errors that occur
       catchError(error => {
-        if (environment.debug) console.log(`[${this.constructor.name}] Error in onInit(): ${error()}`);
+        console.error("App init failed: "+error.message);
+        if (error instanceof ClientError)
+          alert("Unable to open request: "+error.message);
+        else
+          alert("Unable to open request due to internal error; try reloading page.")
+
         // Return an empty observable to prevent the error from propagating further
         this.recordNotFound = true;
         this.displayProgressSpinner = false
@@ -75,6 +95,29 @@ export class AppComponent {
       })
     ).subscribe();
   }
+
+    /**
+     * ensure that the user is authenticated.  The returned Observable won't provide a value until 
+     * authentication process completes successfully.
+     * @return Observable<string> -- an Observable to the ID of the request to be approved
+     *                  authentication is complete.  
+     */
+    authenticate() : Observable<string> {
+        return this.authService.getCredentials().pipe(
+            // cache the credentials
+            tap(c => this._creds = c),
+
+            // get the requested record ID
+            switchMap(c => this.route.queryParams),
+            map(params => {
+                if (!this._creds || !this._creds.token)
+                    throwError(new ClientError("Authentication failed.  (Try reloading this URL.)"));
+                if (! params['id'])
+                    throwError(new ClientError("No request identifier provided!"))
+                return params['id']
+            })
+        );
+    }
 
   /**
    * Parses the description from a Record object to extract
