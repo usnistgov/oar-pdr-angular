@@ -25,10 +25,8 @@ export class ConfigurationService extends BaseConfigurationService {
     countriesUrl: string = environment.countriesUrl;
     config: RPAConfiguration | null = null;
 
-    private configSubject = new BehaviorSubject<RPAConfiguration>({ baseUrl: '/', recaptchaApiKey: '' });
-
     constructor(http: HttpClient) {
-        super(http, environment.configUrl, RELEASE);
+        super(http, RELEASE, environment.configUrl);
     }
 
     /**
