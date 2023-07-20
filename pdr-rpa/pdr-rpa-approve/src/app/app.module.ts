@@ -15,8 +15,10 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
+import { ConfigModule, CONFIG_URL, RELEASE_INFO, FrameModule, AuthModule } from 'oarng';
+import { environment } from '../environments/environment';
+import { RELEASE } from '../environments/release-info';
 import { ServiceModule } from './service/service.module';
-import { FrameModule } from 'oarng';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastModule } from 'primeng/toast';
 
@@ -42,10 +44,14 @@ import { ToastModule } from 'primeng/toast';
         AppRoutingModule,
         HttpClientModule,
         BrowserAnimationsModule,
+        AuthModule,
         ServiceModule,
         RouterModule.forRoot([])
     ],
-    providers: [],
+    providers: [
+        { provide: RELEASE_INFO, useValue: RELEASE },
+        { provide: CONFIG_URL, useValue: environment.configUrl }
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

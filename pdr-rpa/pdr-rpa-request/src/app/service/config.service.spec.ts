@@ -5,7 +5,7 @@ import { APP_INITIALIZER } from '@angular/core';
 import { ConfigurationService } from './config.service';
 import { Dataset } from '../model/dataset.model';
 import { Country } from '../model/country.model';
-import { Configuration } from '../model/config.model';
+import { RPAConfiguration } from '../model/config.model';
 import { FormTemplate } from '../model/form-template.model';
 import { ServiceModule } from "./service.module";
 
@@ -13,7 +13,7 @@ describe('ConfigurationService', () => {
     let service: ConfigurationService;
     let httpMock: HttpTestingController;
     // Mock configuration object
-    const mockConfig: Configuration = {
+    const mockConfig: RPAConfiguration = {
         baseUrl: 'https://oardev.nist.gov/od/ds/rpa',
         recaptchaApiKey: 'my-api-key'
     };
@@ -84,7 +84,7 @@ describe('ConfigurationService', () => {
     // getConfig() returns a default configuration object when config is null.
     it('should return default configuration when config is null', () => {
         service.config = null;
-        expect(service.getConfig()).toEqual({ baseUrl: "/", recaptchaApiKey: "" });
+        expect(service.getConfig()).toEqual({ });
     });
 
     it('should return configuration object', () => {
@@ -234,7 +234,7 @@ describe('ConfigurationService', () => {
             await getCountriesPromise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            expect(error()).toBe(errorMessage);
+            expect(error).toBe(errorMessage);
         }
     });
 
@@ -268,7 +268,7 @@ describe('ConfgirationService via ServiceModule', () => {
     });
 
     it('fetches config data', () => {
-        let config: Configuration = svc.getConfig();
+        let config: RPAConfiguration = svc.getConfig() as RPAConfiguration;
         expect(config.baseUrl).toBe("http://localhost:4201/");
         expect(config.recaptchaApiKey).toBeTruthy();
     });

@@ -4,8 +4,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RPAService } from './service/rpa.service';
 import { MessageService } from 'primeng/api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ConfigurationService } from './service/config.service';
-import { Configuration } from './model/config.model';
+import { ConfigurationService, AuthenticationService, MockAuthenticationService } from 'oarng';
+import { RPAConfiguration } from './model/config.model';
 import { of } from 'rxjs';
 import { ApprovalResponse, Record, RecordWrapper } from './model/record';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
@@ -15,7 +15,7 @@ describe('AppComponent', () => {
   let fixture: ComponentFixture<AppComponent>;
   let rpaService: RPAService;
 
-  const mockConfig: Configuration = {
+  const mockConfig: RPAConfiguration = {
     baseUrl: 'https://example.com',
   };
 
@@ -62,6 +62,7 @@ describe('AppComponent', () => {
           useValue: { queryParams: of({ id: 'ark:123' }) }, // <-- mock ActivatedRoute
         },
         { provide: ConfigurationService, useValue: mockConfigService },
+        { provide: AuthenticationService, useClass: MockAuthenticationService },
         { provide: RPAService, useValue: mockRPAService },
         MessageService,
       ],
@@ -81,8 +82,15 @@ describe('AppComponent', () => {
   });
 
   it('should extract recordId from query params', () => {
-    fixture.detectChanges();
+    component.ngOnInit();
     expect(component.recordId).toBe('ark:123');
+  });
+
+  it('should extract user credentials', () => {
+    component.ngOnInit();
+    expect(component._creds.userId).toBe('anon');
+    expect(component._creds.userAttributes.userLastName).toBe('Public');
+    expect(component._creds.token).toBe('fake jwt token');
   });
 
   it('should fetch the record and set the status', async () => {

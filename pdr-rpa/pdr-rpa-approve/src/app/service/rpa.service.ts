@@ -5,7 +5,7 @@ import { catchError, retry } from "rxjs/operators";
 import { formatDate } from '@angular/common';
 
 import { ApprovalResponse, RecordWrapper } from "../model/record";
-import { ConfigurationService } from './config.service';
+import { ConfigurationService, Credentials } from 'oarng';
 
 /**
  * Service responsible for update the status of the RPA records.
@@ -15,19 +15,22 @@ import { ConfigurationService } from './config.service';
 export class RPAService {
 
     private readonly REQUEST_ACCEPTED_PATH = "/request/accepted/";
-    // the base URL of the RPA request handler service
-    baseUrl: string;
 
-    constructor(private http: HttpClient, private configSvc: ConfigurationService) {
-        // Get the base URL from the environment
-        this.baseUrl = this.configSvc.getConfig().baseUrl;
-    }
+    constructor(private http: HttpClient, private configSvc: ConfigurationService) { }
+
+    /**
+     * the baseURL for the RPA remote service
+     */
+    get baseUrl(): string { return this.configSvc.getConfig()['baseUrl'] }
 
     // Http Options
-    httpOptions = {
-        headers: new HttpHeaders({
-            'Content-Type': 'application/json'
-        }),
+    getHttpOptions(creds?: Credentials): {headers: HttpHeaders} {
+        let hdrs = {
+            'Content-Type': 'application/json',
+        };
+        if (creds)
+            hdrs["Authorization"] = "Bearer "+creds.token;
+        return { headers: new HttpHeaders(hdrs) };
     };
 
     /**
@@ -38,9 +41,9 @@ export class RPAService {
     * @returns The requested record
     *
     */
-    public getRecord(recordId: string): Observable<RecordWrapper> {
+    public getRecord(recordId: string, creds?: Credentials): Observable<RecordWrapper> {
         const url = this.getRecordUrl(recordId);
-        const headers = { ...this.httpOptions };
+        const headers = this.getHttpOptions(creds);
         return this.http.get<RecordWrapper>(url, headers).pipe(retry(1), catchError(this.handleError));
     }
 
@@ -52,11 +55,11 @@ export class RPAService {
     * @returns The new record status
     *
     */
-    public approveRequest(recordId: string): Observable<ApprovalResponse> {
+    public approveRequest(recordId: string, creds?: Credentials): Observable<ApprovalResponse> {
         const approvalStatus = "Approved";
         const url = this.getRecordUrl(recordId);
         const payload = this.getApprovalPayload(approvalStatus);
-        const headers = { ...this.httpOptions };
+        const headers = this.getHttpOptions(creds);
         return this.http.patch<ApprovalResponse>(url, payload, headers).pipe(catchError(this.handleError));
     }
 
@@ -68,11 +71,11 @@ export class RPAService {
     * @returns The new record status
     *
     */
-    public declineRequest(recordId: string): Observable<ApprovalResponse> {
+    public declineRequest(recordId: string, creds?: Credentials): Observable<ApprovalResponse> {
         const approvalStatus = "Declined";
         const url = this.getRecordUrl(recordId);
         const payload = this.getApprovalPayload(approvalStatus);
-        const headers = { ...this.httpOptions };
+        const headers = this.getHttpOptions(creds);
         return this.http.patch<ApprovalResponse>(url, payload, headers).pipe(catchError(this.handleError));
     }
 

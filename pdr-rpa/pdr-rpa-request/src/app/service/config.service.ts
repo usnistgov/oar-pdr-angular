@@ -6,8 +6,10 @@ import { catchError, map, tap } from "rxjs/operators";
 import { Country } from "../model/country.model";
 import { FormTemplate } from "../model/form-template.model";
 import { Dataset } from "../model/dataset.model";
-import { Configuration } from "../model/config.model";
+import { RPAConfiguration } from "../model/config.model";
+import { ConfigurationService as BaseConfigurationService } from 'oarng';
 import { environment } from "../../environments/environment";
+import { RELEASE } from '../../environments/release-info';
 
 /**
  * Service responsible for providing configuration data for the application.
@@ -17,50 +19,14 @@ import { environment } from "../../environments/environment";
 @Injectable({
     providedIn: 'root',
 })
-export class ConfigurationService {
+export class ConfigurationService extends BaseConfigurationService {
+    
+    datasetsConfigUrl: string = environment.datasetsConfigUrl;
+    countriesUrl: string = environment.countriesUrl;
+    config: RPAConfiguration | null = null;
 
-    datasetsConfigUrl = 'assets/datasets.yaml';
-    countriesUrl = 'assets/countries.json';
-    configUrl = 'assets/config.json';
-    config: Configuration | null = null;
-
-    private configSubject = new BehaviorSubject<Configuration>({ baseUrl: '/', recaptchaApiKey: '' });
-
-    constructor(private http: HttpClient) {
-        this.datasetsConfigUrl = environment.datasetsConfigUrl;
-        this.configUrl = environment.configUrl;
-        this.countriesUrl = environment.countriesUrl;
-    }
-
-    loadConfig(data: any): void {
-        this.config = data as Configuration;
-        if (environment.debug) console.log(`[${this.constructor.name}] app configuration loaded.`, this.config);
-    }
-
-    /**
-     * Get the configuration object from the config URL.
-     * @returns An observable containing the configuration object.
-     */
-    public fetchConfig(configURL: string | null = null): Observable<any> {
-        if (!configURL)
-        configURL = this.configUrl;
-        if (environment.debug) console.log(`[${this.constructor.name}] fetching configuration using http from "${configURL}"`);
-        return this.http.get<Configuration>(configURL, { responseType: "json" }).pipe(
-            catchError(this.handleError),
-            tap(cfg => {
-                this.config = cfg as Configuration;
-                this.configSubject.next(this.config);
-            })
-        );
-    }
-
-    /**
-     * Return the (already loaded) configuration data.  It is expected that when this 
-     * method is call that the configuration was already fetched (via fetchConfg()) at 
-     * application start-up.  
-     */
-    public getConfig(): Configuration {
-        return this.config ?? { baseUrl: "/", recaptchaApiKey: "" };
+    constructor(http: HttpClient) {
+        super(http, RELEASE, environment.configUrl);
     }
 
     /**
@@ -109,26 +75,6 @@ export class ConfigurationService {
         countriesUrl = this.countriesUrl;
         if (environment.debug) console.log(`[${this.constructor.name}] fetching countries list from "${countriesUrl}"`);
         return this.http.get<Country[]>(countriesUrl).pipe(catchError(this.handleError));
-    }
-
-    /**
-     * Handle the HTTP errors.
-     * @param error The error object.
-     * @returns An observable containing the error message.
-     */
-    private handleError(error: any) {
-        let errorMessage = '';
-        if (error.error instanceof ErrorEvent) {
-            // Get client-side error
-            errorMessage = error.error.message;
-        } else {
-            // Get server-side error
-            errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-        }
-        // window.alert(errorMessage);
-        return throwError(() => {
-            return errorMessage;
-        });
     }
 }
 

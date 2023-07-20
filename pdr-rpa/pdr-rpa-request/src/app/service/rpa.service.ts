@@ -19,14 +19,14 @@ export class RPAService {
     // private readonly DS_RPA_PATH = "/od/ds/rpa";
     private readonly REQUEST_ACCEPTED_PATH = "/request/accepted/";
     private readonly REQUEST_FORM_PATH = "/request/form";
-    // the base URL of the RPA request handler service
-    baseUrl: string;
 
-    constructor(private http: HttpClient, private configSvc: ConfigurationService) {
-        this.baseUrl = configSvc.getConfig().baseUrl
-        if (environment.debug) console.log(`[${this.constructor.name}] baseUrl = ${this.baseUrl}`);
+    constructor(private http: HttpClient, private configSvc: ConfigurationService) { }
 
-    }
+    /**
+     * the baseURL for the RPA remote service
+     */
+    get baseUrl(): string { return this.configSvc.getConfig()['baseUrl'] }
+
     // Http Options
     httpOptions = {
         headers: new HttpHeaders({

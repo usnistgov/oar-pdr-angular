@@ -1,18 +1,20 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
+
 import { RPAService } from './rpa.service';
 import { ConfigurationService } from './config.service';
 import { RecordWrapper } from '../model/record.model';
 import { Record } from '../model/record.model';
 import { UserInfo } from '../model/record.model';
-import { Configuration } from '../model/config.model';
-import { HttpClient } from '@angular/common/http';
+import { RPAConfiguration } from '../model/config.model';
+import { environment } from '../../environments/environment';
 
 describe('RPAService', () => {
     let service: RPAService;
     let httpMock: HttpTestingController;
     let configService: ConfigurationService;
-    const expectedConfig: Configuration = {
+    const expectedConfig: RPAConfiguration = {
         baseUrl: 'https://oardev.nist.gov/od/ds/rpa',
         recaptchaApiKey: 'my-api-key'
     };
@@ -23,7 +25,10 @@ describe('RPAService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule],
-            providers: [RPAService, ConfigurationService]
+            providers: [
+                ConfigurationService,
+                RPAService
+            ]
         });
         httpMock = TestBed.inject(HttpTestingController);
         configService = TestBed.inject(ConfigurationService);
@@ -133,9 +138,9 @@ describe('RPAService', () => {
             await getRecordPromise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            // expect(error()).toBe(errorMessage);
-            expect(error().code).toBe('SERVER_ERROR_404');
-            expect(error().message).toBe(errorMessage);
+            // expect(error).toBe(errorMessage);
+            expect(error.code).toBe('SERVER_ERROR_404');
+            expect(error.message).toBe(errorMessage);
         }
     });
 
