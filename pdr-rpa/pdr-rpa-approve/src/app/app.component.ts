@@ -82,9 +82,9 @@ export class AppComponent {
 
       // Catch and log any errors that occur
       catchError(error => {
-        console.error("App init failed: "+error.message);
+        console.error("App init failed: "+error);
         if (error instanceof ClientError)
-          alert("Unable to open request: "+error.message);
+          alert("Unable to open request: "+error);
         else
           alert("Unable to open request due to internal error; try reloading page.")
 
