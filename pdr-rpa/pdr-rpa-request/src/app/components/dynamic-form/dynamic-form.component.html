@@ -14,12 +14,12 @@
         <span aria-hidden="true"><i class="bi bi-x"></i></span>
       </button>
     </div>
-    <h4>Dataset: {{currentDataset.name}}</h4>
+    <h4 class="mt-3 p-1 text-white bg-dark">Dataset: {{currentDataset.name}}</h4>
     <div class="welcome-message mt-4" [innerHTML]="welcomeMessage" style="font-size: 11pt;"></div>
     <div *ngIf="currentDataset.terms && currentDataset.terms.length > 0" class="mt-2">
       <div id="terms-header">
       <label
-        class="form-label pt-0 pb-0 mt-3 mb-0"
+        class="form-label pt-0 pb-0 mt-3 mb-0 text-primary"
         data-toggle="collapse"
         data-target="#terms"
         aria-expanded="true"
@@ -41,7 +41,7 @@
     </div>
     </div>
     
-    <form [formGroup]="myForm" class="mt-2">
+    <form [formGroup]="myForm" class="mt-4 ">
       <div *ngFor="let field of formFields" class="form-group">
         <ng-container [ngSwitch]="field.type" class="default-input">
           <label
@@ -52,6 +52,7 @@
             {{ field.label }}
             <span
               class="required"
+              style="color: red"
               *ngIf="field.validators && field.validators.includes('required')"
               >*</span
             >
@@ -111,6 +112,7 @@
               field.label
             }}<span
             class="required"
+            style="color: red"
             *ngIf="field.validators && field.validators.includes('requiredTrue')"
             >*</span
           ></label>
@@ -146,7 +148,7 @@
           <div *ngSwitchCase="'disclaimer'">
             <div [id]="field.styles.id + 'heading'">
               <label
-                class="form-label pt-0 pb-0 mt-0 mb-0"
+                class="form-label pt-0 pb-0 mt-0 mb-0 text-primary"
                 data-toggle="collapse"
                 [attr.data-target]="'#' + field.styles.id"
                 aria-expanded="true"
