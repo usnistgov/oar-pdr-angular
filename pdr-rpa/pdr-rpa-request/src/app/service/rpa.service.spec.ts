@@ -126,19 +126,24 @@ describe('RPAService', () => {
         const req = httpMock.expectOne(url);
         expect(req.request.method).toBe('GET');
         
-        const errorResponse = { status: 404, statusText: 'Not Found' };
+    
         const errorMessage = "Http failure response for https://oardev.nist.gov/od/ds/rpa/request/accepted/1: 404 Not Found"
         
-        req.flush(errorMessage, errorResponse);
+        const errorResponse = { 
+            error: new ErrorEvent('Network error', { message: errorMessage }),
+            status: 404, 
+            statusText: 'Not Found' 
+        };
+        
+        req.flush(errorResponse.error.message, errorResponse);
 
         // Mock the second retry
-        httpMock.expectOne(url).flush(errorMessage, errorResponse);
+        httpMock.expectOne(url).flush(errorResponse.error.message, errorResponse);
 
         try {
             await getRecordPromise;
             fail('Expected promise to be rejected and error to be thrown');
         } catch (error) {
-            // expect(error).toBe(errorMessage);
             expect(error.code).toBe('SERVER_ERROR_404');
             expect(error.message).toBe(errorMessage);
         }

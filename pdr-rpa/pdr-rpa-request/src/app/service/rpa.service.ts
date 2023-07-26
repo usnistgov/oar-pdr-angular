@@ -1,11 +1,13 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Observable, throwError } from "rxjs";
-import { catchError, retry, tap } from "rxjs/operators";
 
 import { Record, RecordWrapper, UserInfo } from "../model/record.model";
 import { ConfigurationService } from './config.service';
 import { environment } from "../../environments/environment";
+import { Observable } from "rxjs";
+import { catchError, throwError } from 'rxjs';
+import { tap } from "rxjs/operators";
+import { retry } from 'rxjs/operators';
 
 /**
  * Service responsible for submitting requests to the RPA request handler.
@@ -140,6 +142,6 @@ export class RPAService {
             message: errorMessage
         };
 
-        return throwError(() => messageError);
+        return throwError(messageError);
     }
 }

@@ -119,6 +119,6 @@ export class RPAService {
             message: errorMessage
         };
 
-        return throwError(() => messageError);
+        return throwError(messageError);
     }
 }

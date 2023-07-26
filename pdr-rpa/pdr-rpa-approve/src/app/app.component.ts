@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Record } from './model/record';
 import { RPAService } from './service/rpa.service';
 import { AuthenticationService, Credentials } from 'oarng';
-import { catchError, filter, finalize, pluck, switchMap, tap, map } from 'rxjs/operators';
+import { catchError, pluck, switchMap, map, tap } from 'rxjs/operators';
 import { Observable, EMPTY, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
@@ -41,12 +41,13 @@ export class AppComponent {
   recordId: string;
   status: string;
   statusDate: string = "";
+  smeEmail: string = "";
   record: Record;
   loaded: boolean = false;
   displayProgressSpinner: boolean = false;
   recordNotFound = false;
   recordDescription: RecordDescription;
-  _creds: Credentials|null = null;
+  _creds: Credentials;
     
   constructor(
     private route: ActivatedRoute,
@@ -103,21 +104,21 @@ export class AppComponent {
      *                  authentication is complete.  
      */
     authenticate() : Observable<string> {
-        return this.authService.getCredentials().pipe(
-            // cache the credentials
-            tap(c => this._creds = c),
-
-            // get the requested record ID
-            switchMap(c => this.route.queryParams),
-            map(params => {
-                if (!this._creds || !this._creds.token)
-                    throwError(new ClientError("Authentication failed.  (Try reloading this URL.)"));
-                if (! params['id'])
-                    throwError(new ClientError("No request identifier provided!"))
-                return params['id']
-            })
-        );
-    }
+      return this.authService.getCredentials().pipe(
+          // cache the credentials
+          tap(c => this._creds = c),
+  
+          // get the requested record ID
+          switchMap(c => this.route.queryParams),
+          map((params: any) => {
+              if (!this._creds || !this._creds.token)
+                  return throwError(new ClientError("Authentication failed. (Try reloading this URL.)"));
+              if (! params['id'])
+                  return throwError(new ClientError("No request identifier provided!"))
+              return params['id']
+          })
+      );
+  }
 
   /**
    * Parses the description from a Record object to extract
@@ -167,18 +168,27 @@ export class AppComponent {
 
   /**
    * Parse the approval status of the record and update the component state with the
-   * status and status date.
+   * status, status date, and email. If the status is "Pending", the date and email will be undefined.
    * 
    * @param record - The record to parse the approval status of.
    */
   private parseApprovalStatus(record: Record): void {
-    this.status = record.userInfo.approvalStatus;
-    if (this.status.includes("Approved")) {
-      this.statusDate = this.status.replace("Approved_", "");
-    } else if (this.status.includes("Declined")) {
-      this.statusDate = this.status.replace("Declined_", "");
+    let statusParts = record.userInfo.approvalStatus.split("_");
+
+    this.status = statusParts[0];
+
+    if(this.status === "Pending") {
+        this.statusDate = "";
+        this.smeEmail = "";
+    } else if (statusParts.length === 3) {
+        this.statusDate = statusParts[1];
+        this.smeEmail = statusParts[2];
+    } else {
+      // Handle unexpected format
+      throw new ClientError("Unexpected approval status format");
     }
   }
+
 
 
   /**

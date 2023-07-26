@@ -28,7 +28,7 @@ describe('AppComponent', () => {
       email: 'john.doe@nist.gob',
       receiveEmails: 'Yes',
       country: 'United States',
-      approvalStatus: 'Approved_2023-04-25T10:00:00.000Z',
+      approvalStatus: 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov',
       productTitle: 'example title',
       subject: 'example subject',
       description: 'example description'
@@ -46,11 +46,11 @@ describe('AppComponent', () => {
       getRecord: jest.fn().mockReturnValue(of({ "record": mockRecord } as RecordWrapper)),
       approveRequest: jest.fn().mockReturnValue(of({
         recordId: '123',
-        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z'
+        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov'
       } as ApprovalResponse)),
       declineRequest: jest.fn().mockReturnValue(of({
         recordId: '123',
-        approvalStatus: 'Declined_2023-04-25T10:00:00.000Z'
+        approvalStatus: 'Declined_2023-04-25T10:00:00.000Z_sme@nist.gov'
       } as ApprovalResponse))
     };
 
@@ -88,9 +88,9 @@ describe('AppComponent', () => {
 
   it('should extract user credentials', () => {
     component.ngOnInit();
-    expect(component._creds.userId).toBe('anon');
-    expect(component._creds.userAttributes.userLastName).toBe('Public');
-    expect(component._creds.token).toBe('fake jwt token');
+    expect(component._creds!.userId).toBe('anon');
+    expect(component._creds!.userAttributes.userLastName).toBe('Public');
+    expect(component._creds!.token).toBe('fake jwt token');
   });
 
   it('should fetch the record and set the status', async () => {
@@ -103,7 +103,7 @@ describe('AppComponent', () => {
         email: 'john.doe@nist.gob',
         receiveEmails: 'Yes',
         country: 'United States',
-        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z',
+        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov',
         productTitle: 'example title',
         subject: 'example subject',
         description: 'example description'
@@ -111,8 +111,9 @@ describe('AppComponent', () => {
     };
 
     expect(component.record).toBeTruthy();
-    expect(component.status).toEqual('Approved_2023-04-25T10:00:00.000Z');
+    expect(component.status).toEqual('Approved');
     expect(component.statusDate).toEqual('2023-04-25T10:00:00.000Z');
+    expect(component.smeEmail).toEqual('sme@nist.gov');
   });
 
   it('should call onApprove()', async () => {
