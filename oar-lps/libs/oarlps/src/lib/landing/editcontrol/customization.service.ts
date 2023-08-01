@@ -415,6 +415,7 @@ export class WebCustomizationService extends CustomizationService {
      */
     public getMidasMeta() : Observable<Object> {
         let url = this.endpoint + this.draftapi + this.resid + "/meta";
+        console.log("getMidasMeta url", url)
         return new Observable<Object>(subscriber => {
             let obs : Observable<Object>;
             this.httpcli.get(url).subscribe(data =>{

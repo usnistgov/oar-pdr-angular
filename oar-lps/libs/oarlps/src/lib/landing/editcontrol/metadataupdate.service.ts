@@ -443,7 +443,7 @@ export class MetadataUpdateService {
             newdate = new Date(mdrec._updateDetails[mdrec._updateDetails.length - 1]._updateDate);
 
             this.lastUpdate = {
-                'userDetails': this.authsvc.userDetails,
+                'userAttributes': this.authsvc.userAttributes,
                 '_updateDate': newdate.toLocaleString()
             }
         } else {
@@ -621,7 +621,7 @@ export class MetadataUpdateService {
      */
     public stampUpdateDate(): UpdateDetails {
         this.lastUpdate = {
-            'userDetails': this.authsvc.userDetails,
+            'userAttributes': this.authsvc.userAttributes,
             '_updateDate': this.datePipe.transform(new Date(), "MMM d, y, h:mm:ss a")
         }
         return this.lastUpdate;

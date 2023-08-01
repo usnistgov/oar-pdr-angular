@@ -173,17 +173,30 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         //======
         // // authenticate
-        if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
+        if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
             let body: any = {
                 userDetails: {
                     userId: 'xyz@nist.gov',
-                    userName: 'xyz'
+                    userName: 'xyz',
+                    userLastName: 'anon',
+                    userEmail: "anon@email.com"
                 },
                 token: 'fake-jwt-token'
             };
             console.log("logging in...")
             return of(new HttpResponse({ status: 200, body }));
         }
+
+        // return 401 not authorised if token is null or invalid
+        // if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+        //     console.log("Returning 401 ...")
+        //     throw new HttpErrorResponse(
+        //             {"status": 401}
+        //     );
+        // }
+
+        
+
 
         // midas test data
         // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'GET') {

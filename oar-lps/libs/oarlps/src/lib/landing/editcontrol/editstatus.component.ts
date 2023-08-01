@@ -172,7 +172,7 @@ export class EditStatusComponent implements OnInit {
         case this.EDIT_MODES.EDIT_MODE:
             // We are editing the metadata (and are logged in)
             if (this._updateDetails)
-                this.showMessage("Edited by " + this._updateDetails.userDetails.userName + " " + this._updateDetails.userDetails.userLastName + " on " + this._updateDetails._updateDate);
+                this.showMessage("Edited by " + this._updateDetails.userAttributes.userName + " " + this._updateDetails.userAttributes.userLastName + " on " + this._updateDetails._updateDate);
             else
                 this.showMessage('');
           break;

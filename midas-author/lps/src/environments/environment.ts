@@ -27,8 +27,8 @@ export const config: LPSConfig = {
         mdService:   "https://oardev.nist.gov/rmm/",
         taxonomyService: "https://oardev.nist.gov/rmm/taxonomy"
     },
-    // mdAPI: "http://localhost:9091/midas/dap/mds3/",
-    mdAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
+    mdAPI: "http://localhost:9091/midas/dap/mds3/",
+    // mdAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
     metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
     // customizationAPI: "https://testdata.nist.gov/customization/",
     customizationAPI: "http://localhost:9091/midas/",

@@ -4,9 +4,29 @@ import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { WizardService } from './services/wizard.service';
 import { AppConfig, Config } from './services/config-service.service';
+import { AuthenticationService, Credentials } from 'oarng';
+
+export class AuthStatus {
+    static readonly AUTHORIZED = 'Authorized';
+    static readonly AUTHENTICATED = 'Authenticated';
+    static readonly NOTLOGIN = 'NotLoggedIn';
+    static readonly AUTHORIZING = 'Authorizing';
+}
+
+/**
+ * A specialized Error indicating a error originating with from client action/inaction; the 
+ * message is assumed to be one directed at the user (rather than the programmer) and can be 
+ * displayed in the application in some way.
+ */
+class ClientError extends Error {
+    constructor(msg: string) {
+      super(msg);
+      Object.setPrototypeOf(this, ClientError.prototype);
+    }
+}
 
 @Component({
     selector: 'app-wizard',
@@ -29,26 +49,79 @@ export class StepWizardComponent implements OnInit {
 
     fgSteps!: FormGroup;
 
+    authStatus: string = AuthStatus.AUTHORIZING;
+    resid: string = "Wizard";
+    authMessage: string = "Authorizing...";
+
+    _creds: Credentials|null = null;
+
     constructor(private stepService: StepService,
                 private fb: FormBuilder, 
                 private cdr: ChangeDetectorRef,
                 private router: Router,
                 private wizardService: WizardService,
-                private appConfig: AppConfig) { 
+                private appConfig: AppConfig,
+                private route: ActivatedRoute,
+                private authService: AuthenticationService) { 
 
             this.confValues = this.appConfig.getConfig();
             this.PDRAPI = this.confValues.PDRAPI;
             console.log('this.PDRAPI', this.PDRAPI);
     }
 
+    get isAuthorized() {
+        return this.authStatus == AuthStatus.AUTHORIZED;
+    }
+
+    get isAuthenticated() {
+        return this.authStatus == AuthStatus.AUTHENTICATED;
+    }
+
+    get notLoggedin() {
+        return this.authStatus == AuthStatus.NOTLOGIN;
+    }
+
+    get authorizing() {
+        return this.authStatus == AuthStatus.AUTHORIZING;
+    }
+
     ngOnInit(): void {
-        this.reset();
+        this.authorizeEditing();
+    }
 
-        this.currentStepSub = this.stepService.getCurrentStep().subscribe((step: StepModel) => {
-            this.currentStep = step;
-        });
+    /**
+     * 
+     */
+    authorizeEditing() {
+        this.authService.getCredentials().subscribe({
+            next: (creds) =>{
+                if (creds && creds.token) {
+                    this._creds = creds;
+                    this.wizardService.setToken(creds.token);
+                    this.authStatus = AuthStatus.AUTHORIZED;
 
-        this.bodyHeight = window.innerHeight - 150;
+                    this.reset();
+
+                    this.currentStepSub = this.stepService.getCurrentStep().subscribe((step: StepModel) => {
+                        this.currentStep = step;
+                    });
+            
+                    this.bodyHeight = window.innerHeight - 150;
+                }
+                else if (creds && creds.userAttributes && creds.userId) {
+                    // the user is authenticated but not authorized
+                    this.authStatus = AuthStatus.AUTHENTICATED;
+                }
+                else {
+                    // the user is not authenticated!
+                    this.authStatus = AuthStatus.NOTLOGIN;
+                }
+            },
+            error: (err) => {
+                this.authStatus = AuthStatus.NOTLOGIN;
+                this.authMessage = err['message'];
+            }
+        })
     }
 
     formGroupReset() {

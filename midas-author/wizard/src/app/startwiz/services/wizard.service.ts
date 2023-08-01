@@ -21,11 +21,17 @@ export class WizardService {
                     this.MIDASAPI = this.confValues.MIDASAPI;
                 }
 
+    setToken(token: string){
+        this.token = token;
+    }
+
     public updateMetadata(md : Object) : Observable<any> {
-        // To transform the output with proper error handling, we wrap the
-        // HttpClient.patch() Observable with our own Observable
-        // //
-        // return of({"id":"12345"});
+        if(this.token == "") {
+            let err = "You are not authorized to edit this record.";
+            console.log(err);
+            return new Observable<string>(subscriber=>{ subscriber.error(err)});
+        } 
+
         let url = this.MIDASAPI + this.saveapi;
         let body = JSON.stringify(md);
 
@@ -33,15 +39,5 @@ export class WizardService {
         console.log("body", body);
 
         return this.httpcli.post(url, body, { headers: { "Authorization": "Bearer " + this.token } });
-
-
-        // return new Observable<Object>(subscriber => {
-        //     let url = this.endpoint + this.saveapi + this.resid;
-        //     let body = JSON.stringify(md);
-        //     let obs : Observable<Object> = 
-        //         this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
-
-        //     this._wrapRespObs(obs, subscriber);
-        // });
     }
 }

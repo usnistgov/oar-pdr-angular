@@ -1,15 +1,10 @@
 import { Injectable, ViewChild, PLATFORM_ID, APP_ID, Inject, Directive } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { makeStateKey, TransferState } from '@angular/platform-browser';
-// import 'rxjs/add/operator/map';
-// import 'rxjs/add/operator/catch';
-// import 'rxjs/add/observable/throw';
-import { catchError, map } from 'rxjs/operators';
-import 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';
-import { tap } from 'rxjs/operators';
 import { isPlatformServer } from '@angular/common';
 import { MessageBarComponent } from '../../frame/messagebar.component';
 import { BehaviorSubject } from 'rxjs';
@@ -104,7 +99,7 @@ export class SearchService {
                             this.transferState.set(recordid_KEY, record);
                         }
                     }),
-                    catchError((err: Response, caught: Observable<any[]>) => {
+                    catchError((err) => {
                         // console.log(err);
                         if (err !== undefined) {
                             console.error("Failed to retrieve data for id=" + recordid + "; error status=" + err.status);
@@ -116,10 +111,11 @@ export class SearchService {
     
                             if (err.status == 0) {
                                 console.warn("Possible causes: Unable to trust site cert, CORS restrictions, ...");
-                                return Observable.throw('Unknown error requesting data for id=' + recordid);
+                                err.message = 'Unknown error requesting data for id=' + recordid;
+                                return throwError(() => err);
                             }
                         }
-                        return Observable.throw(caught);
+                        return throwError(() => err);
                     })
                 )
         }

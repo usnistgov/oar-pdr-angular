@@ -56,7 +56,7 @@ export class AppConfig {
                 this.confValues.PDRAPI = (resp as Config)['PDRAPI'];
                 this.confValues.GACODE = (resp as Config)['GACODE'];
                 this.confValues.APPVERSION = (resp as Config)['APPVERSION'];
-                // console.log("In Browser read environment variables: " + JSON.stringify(this.confValues));
+                console.log("In Browser read environment variables: " + JSON.stringify(this.confValues));
                 },
                 err => {
                 console.log("ERROR IN CONFIG :" + JSON.stringify(err));
@@ -76,7 +76,7 @@ export class AppConfig {
     }
 
     getConfig() {
-    // console.log(" ****** In Browser 3: "+ JSON.stringify(this.confValues));
+    console.log(" ****** In Browser 3: "+ JSON.stringify(this.confValues));
         return this.confValues;
     }
 
