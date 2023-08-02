@@ -157,7 +157,7 @@ echo "********************** 5"
 
 echo "Install dependencies"
 npm i --legacy-peer-deps
-npm i rxjs@6.6.7 --legacy-peer-deps
+# npm i rxjs@6.6.7 --legacy-peer-deps
  
 echo "Build general lib"
 npm run build-lib
