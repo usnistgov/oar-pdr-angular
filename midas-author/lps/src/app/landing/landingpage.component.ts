@@ -362,9 +362,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     updateHelpContent() {
         //Read meta from Midas record
         this.mdupdsvc.loadMetaData().subscribe( midasrec => {
-            if(midasrec["meta"].resourceType != undefined) {
-                this.wordMpping["resource"] = midasrec["meta"].resourceType;
-                this.resourceType = midasrec["meta"].resourceType;
+            if(midasrec["resourceType"] != undefined) {
+                this.wordMpping["resource"] = midasrec["resourceType"];
+                this.resourceType = midasrec["resourceType"];
 
                 //Broadcast resource type
                 this.lpService.setResourceType(this.resourceType);
