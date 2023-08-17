@@ -62,7 +62,7 @@ export class StepWizardComponent implements OnInit {
                 private wizardService: WizardService,
                 private appConfig: AppConfig,
                 private route: ActivatedRoute,
-                private authService: AuthenticationService) { 
+                public authService: AuthenticationService) { 
 
             this.confValues = this.appConfig.getConfig();
             this.PDRAPI = this.confValues.PDRAPI;

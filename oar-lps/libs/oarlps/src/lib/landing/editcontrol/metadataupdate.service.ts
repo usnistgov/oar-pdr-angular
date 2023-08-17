@@ -194,10 +194,11 @@ export class MetadataUpdateService {
      */
     public updateInMemoryRec(res: any, subsetname: string = undefined, id: string = undefined) {
         console.log("Updateing res", res);
-        if(subsetname == undefined) { // Update the whole record
+        if(!subsetname) { // Update the whole record
             this.currentRec = JSON.parse(JSON.stringify(res));
-        }else if(id == undefined) {
-            this.currentRec[subsetname] = JSON.parse(JSON.stringify(res[subsetname]));
+        }else if(!id) {
+            if(res[subsetname]) 
+                this.currentRec[subsetname] = JSON.parse(JSON.stringify(res[subsetname]));
         }else{
             let index = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
             if(index >= 0) {

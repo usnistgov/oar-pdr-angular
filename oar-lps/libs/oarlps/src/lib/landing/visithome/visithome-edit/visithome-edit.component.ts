@@ -48,11 +48,16 @@ export class VisithomeEditComponent implements OnInit {
      * @param cmd command
      */
     commandOut(cmd: string) {
-        if(this.isValidUrl(this.visitHomeURL)){
+        if(cmd != 'saveURL') {
             this.msg = "";
             this.cmdOutput.emit({"command": cmd});
-        }else{
-            this.msg = "Please enter a valid url.";
+        }else {
+            if(this.isValidUrl(this.visitHomeURL)){
+                this.msg = "";
+                this.cmdOutput.emit({"command": cmd});
+            }else{
+                this.msg = "Please enter a valid url.";
+            }
         }
     }
 

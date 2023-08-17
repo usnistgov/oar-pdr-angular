@@ -97,8 +97,8 @@ export class HorizontalBarchartComponent implements OnInit {
 
         var maxTextWidth = 0;
         var labels = this.chart.selectAll(".label").data(this.data).text((d) => `${d[0]}`);
-        labels.each(function() {
-            maxTextWidth = Math.max(maxTextWidth, this.getComputedTextLength());
+        labels.each((d) => {
+            maxTextWidth = Math.max(maxTextWidth, d.getComputedTextLength());
         }).remove();
 
         return maxTextWidth;

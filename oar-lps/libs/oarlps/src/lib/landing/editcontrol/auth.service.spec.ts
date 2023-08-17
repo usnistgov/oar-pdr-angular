@@ -1,56 +1,73 @@
-// import { async, TestBed } from '@angular/core/testing';
-// import { HttpClientModule, HttpClient } from '@angular/common/http';
-// import { TransferState } from '@angular/platform-browser';
-// import { of, throwError } from 'rxjs';
+import { async, TestBed } from '@angular/core/testing';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TransferState } from '@angular/platform-browser';
+import { of, throwError } from 'rxjs';
+import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { AuthService, WebAuthService, MockAuthService, createAuthService } from './auth.service';
+import { CustomizationService } from './customization.service';
+import { AppConfig } from '../../config/config';
+import { AngularEnvironmentConfigService } from '../../config/config.service';
+import { testdata, config } from '../../../environments/environment';
+import { UserMessageService } from '../../frame/usermessage.service';
+import * as env from '../../../environments/environment';
+import { DatePipe } from '@angular/common';
+import { ToastrModule } from 'ngx-toastr';
+import { AuthModule, AuthenticationService, OARAuthenticationService } from 'oarng';
 
-// import { AuthService, WebAuthService, MockAuthService, createAuthService } from './auth.service';
-// import { CustomizationService } from './customization.service';
-// import { AppConfig } from '../../config/config';
-// import { AngularEnvironmentConfigService } from '../../config/config.service';
+describe('WebAuthService', () => {
 
-// import { testdata, config } from '../../../environments/environment';
+    let rec = testdata['test1'];
+    let cfg: AppConfig;
+    let plid: Object = "browser";
+    let ts: TransferState = new TransferState();
+    let authsvc: AuthService = new MockAuthService(undefined);
+    let svc: AuthenticationService;
 
-// describe('WebAuthService', () => {
+    beforeEach(() => {
+        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
+        cfg.status = "Unit Testing";
+        cfg.appVersion = "2.test";
 
-//     let rec = testdata['test1'];
-//     let cfg = new AppConfig(config);
-//     let svc : WebAuthService = null;
+        TestBed.configureTestingModule({
+        imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
+        providers: [ 
+            MetadataUpdateService, 
+            AuthenticationService,
+            DatePipe,
+            { provide: AppConfig, useValue: cfg },
+            { provide: AuthService, useValue: authsvc },
+            UserMessageService ]
+        });
+        svc = TestBed.inject(AuthenticationService);
+    });
 
-//     beforeEach(() => {
-//         TestBed.configureTestingModule({
-//             imports: [ HttpClientModule ]
-//         });
-//         svc = new WebAuthService(cfg, TestBed.inject(HttpClient));
-//     });
+    it('init state', () => {
+        expect(svc).toBeTruthy();
+    });
+});
 
-//     it('init state', () => {
-//         expect(svc.userID).toBeNull();
-//         expect(svc.endpoint).toBe(cfg.get('customizationAPI'));
-//         expect(svc.authToken).toBeNull();
-//         expect(svc.isAuthorized()).toBeFalsy();
-//     });
-// });
+describe('MockAuthService', () => {
 
-// describe('MockAuthService', () => {
+    let rec = testdata['test1'];
+    let svc : MockAuthService = null;
 
-//     let rec = testdata['test1'];
-//     let svc : MockAuthService = null;
+    beforeEach(() => {
+        svc = new MockAuthService();
+    });
 
-//     beforeEach(() => {
-//         svc = new MockAuthService();
-//     });
+    it('init state', () => {
+        expect(svc.userID).toBe("anon");
+        expect(svc.isAuthorized()).toBeTruthy();
+    });
 
-//     it('init state', () => {
-//         expect(svc.userID).toBe("anon");
-//         expect(svc.isAuthorized()).toBeTruthy();
-//     });
-
-//     it('authorizeEditing()', async () => {
-//         let custsvc : CustomizationService = await svc.authorizeEditing(rec.ediid).toPromise();
-//         expect(custsvc).toBeTruthy();
-//         expect(await custsvc.getDraftMetadata().toPromise()).toEqual(rec);
-//     });
-// });
+    // it('authorizeEditing()', async () => {
+    //     let custsvc : CustomizationService = await svc.authorizeEditing(rec.ediid).toPromise();
+    //     expect(custsvc).toBeTruthy();
+    //     expect(await custsvc.getDraftMetadata().toPromise()).toEqual(rec);
+    // });
+});
 
 // describe('createAuthService()', () => {
 //     let httpcli : HttpClient = null;

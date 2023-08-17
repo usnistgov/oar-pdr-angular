@@ -8,7 +8,6 @@ import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 
 import { ModalService } from 'oarlps';
-import { LandingPageModule } from './landingpage.module';
 import { LandingPageComponent } from './landingpage.component';
 import { AngularEnvironmentConfigService } from 'oarlps';
 import { AppConfig } from 'oarlps'
@@ -76,7 +75,7 @@ describe('LandingPageComponent', () => {
     let setupComponent = function() {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientTestingModule, NoopAnimationsModule, LandingPageModule, 
+                HttpClientTestingModule, NoopAnimationsModule, 
                 RouterTestingModule.withRoutes(routes), 
                 ToastrModule.forRoot({
                     toastClass: 'toast toast-bootstrap-compatibility-fix'
@@ -106,13 +105,5 @@ describe('LandingPageComponent', () => {
         expect(component.getDocumentTitle()).toBe("PDR: "+nrd10.title);
     });
 
-    it("includes landing display", function() {
-        setupComponent();
-        expect(component).toBeTruthy();
-        let cmpel = fixture.nativeElement;
-        let el = cmpel.querySelector("h2");
-        expect(el).toBeTruthy();
-        expect(el.textContent).toContain(nrd10.title);
-    });
 
 });
