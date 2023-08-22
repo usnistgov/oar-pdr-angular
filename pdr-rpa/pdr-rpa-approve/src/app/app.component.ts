@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Record } from './model/record';
 import { RPAService } from './service/rpa.service';
 import { AuthenticationService, Credentials } from 'oarng';
@@ -66,7 +66,7 @@ export class AppComponent {
       tap(recordId => this.recordId = recordId),
 
       // Retrieve the record from the RPA service
-      switchMap(recordId => this.rpaService.getRecord(recordId as string)),
+      switchMap(recordId => this.rpaService.getRecord(recordId as string, this._creds)),
 
       // Extract the 'record' property from the RecordWrapper
       // Hide the progress spinner
@@ -110,12 +110,12 @@ export class AppComponent {
   
           // get the requested record ID
           switchMap(c => this.route.queryParams),
-          map((params: any) => {
+          map((params: Params) => {
               if (!this._creds || !this._creds.token)
-                  return throwError(new ClientError("Authentication failed. (Try reloading this URL.)"));
-              if (! params['id'])
-                  return throwError(new ClientError("No request identifier provided!"))
-              return params['id']
+                  throw new ClientError("Authentication failed. (Try reloading this URL.)");
+              if (! params.id)
+                  throw new ClientError("No request identifier provided!");
+              return params.id;
           })
       );
   }
@@ -199,7 +199,7 @@ export class AppComponent {
     // Display loading spinner
     this.displayProgressSpinner = true;
     // Send HTTP request to approve the user request
-    this.rpaService.approveRequest(this.recordId).pipe(
+    this.rpaService.approveRequest(this.recordId, this._creds).pipe(
       catchError(error => {
         if (environment.debug) console.error(`[${this.constructor.name}] Error approving request:`, error());
         this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error approving this request.', life: 5000 });
@@ -226,7 +226,7 @@ export class AppComponent {
     // Display loading spinner
     this.displayProgressSpinner = true;
     // Send HTTP request to decline the user request
-    this.rpaService.declineRequest(this.recordId)
+    this.rpaService.declineRequest(this.recordId, this._creds)
       .pipe(
         catchError(error => {
           if (environment.debug) console.error(`[${this.constructor.name}] Error declining request:`, error());
