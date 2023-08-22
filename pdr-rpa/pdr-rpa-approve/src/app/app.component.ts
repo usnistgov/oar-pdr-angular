@@ -177,7 +177,7 @@ export class AppComponent {
 
     this.status = statusParts[0];
 
-    if(this.status === "Pending") {
+    if(this.status === "pending") {
         this.statusDate = "";
         this.smeEmail = "";
     } else if (statusParts.length === 3) {
