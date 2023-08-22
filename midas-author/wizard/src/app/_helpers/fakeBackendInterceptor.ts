@@ -133,15 +133,28 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     //   }
 
       // // authenticate
-      // if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
-      //     let body: ApiToken = {
-      //         userId: 'xyz@nist.gov',
-      //         token: 'fake-jwt-token'
-      //     };
-      //     console.log("logging in...")
-      //     return of(new HttpResponse({ status: 200, body }));
-      // }
+      if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
+          let body: any = {
+              userId: 'xyz@nist.gov',
+              token: 'fake-jwt-token'
+          };
+          console.log("logging in...")
+          return of(new HttpResponse({ status: 200, body }));
+      }
 
+      if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+        let body: any = {
+            userDetails: {
+                userId: 'xyz@nist.gov',
+                userName: 'xyz',
+                userLastName: 'anon',
+                userEmail: "anon@email.com"
+            },
+            token: 'fake-jwt-token'
+        };
+        console.log("logging in...")
+        return of(new HttpResponse({ status: 200, body }));
+    }
       // return 401 not authorised if token is null or invalid
       // if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
       //     let body: ApiToken = {
@@ -158,15 +171,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       //     );
       // }
 
-      // if (request.url.endsWith('/auth/token') && request.method === 'GET') {
-      //     let body: ApiToken = {
-      //         userId: '1234',
-      //         token: 'fake-jwt-token'
-      //     };
-      //     console.log("getting token...")
-      //     // window.alert('Click ok to login');
-      //     return of(new HttpResponse({ status: 200, body }));
-      // }
+    //   if (request.url.endsWith('/auth/token') && request.method === 'GET') {
+    //       let body: ApiToken = {
+    //           userId: '1234',
+    //           token: 'fake-jwt-token'
+    //       };
+    //       console.log("getting token...")
+    //       // window.alert('Click ok to login');
+    //       return of(new HttpResponse({ status: 200, body }));
+    //   }
 
       // if (request.url.endsWith('/saml-sp/auth/token') && request.method === 'GET') {
       //   let body: ApiToken = {
