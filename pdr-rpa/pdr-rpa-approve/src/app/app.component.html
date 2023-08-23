@@ -82,8 +82,8 @@
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('approved')">
 
             <div class="rpdform-form-wrapper">
-                <div>This request has been approved on <strong>{{statusDate | date:'long'}}</strong>. Following are details about this
-                    request:</div>
+                <div>This request has been approved on <strong>{{statusDate | date:'long'}}</strong> by 
+                    {{ smeEmail.split('.')[0] | capitalize }} {{ smeEmail.split('.')[1].split('@')[0] | capitalize }} ({{smeEmail}}). Following are details about this request:</div>
                 <div class="divider"></div>
                 <table>
                     <tbody>
@@ -129,8 +129,8 @@
         </ng-template>
         <ng-template [ngIf]="loaded && status.toLowerCase().includes('declined')">
             <div class="rpdform-form-wrapper">
-                <div>This request has been declined on <strong>{{statusDate | date:'long'}}</strong>. Following are details about this
-                    request:</div>
+                <div>This request has been declined on <strong>{{statusDate | date:'long'}}</strong> by 
+                    {{ smeEmail.split('.')[0] | capitalize }} {{ smeEmail.split('.')[1].split('@')[0] | capitalize }} ({{smeEmail}}). Following are details about this request:</div>
                 <div class="divider"></div>
                 <table>
                     <tbody>
