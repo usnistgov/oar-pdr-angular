@@ -115,6 +115,7 @@ export class AuthorComponent implements OnInit {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[this.editMode];
+
         this.lpService.setSectionHelp(sectionHelp);
     }
 

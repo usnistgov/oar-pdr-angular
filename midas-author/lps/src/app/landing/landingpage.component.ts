@@ -57,8 +57,8 @@ import wordMapping from '../../assets/site-constants/word-mapping.json';
     animations: [
         trigger("togglemain", [
             state('mainsquished', style({
-                "width": "75%"
-            })),
+                "width": "{{lps_width}}"}), {params: {lps_width: '450px'}}
+            ),
             state('mainexpanded', style({
                 "width": "95%"
             })),
@@ -71,8 +71,8 @@ import wordMapping from '../../assets/site-constants/word-mapping.json';
         ]),
         trigger("togglesbar", [
             state('mainsquished', style({
-                "width": "22%"
-            })),
+                "width": "{{help_width}}"}), {params: {help_width: '250px'}}
+            ),
             state('mainexpanded', style({
                 "width": "15px"
             })),
@@ -126,7 +126,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     windowScrolled: boolean = false;
     btnPosition: number = 20;
     menuPosition: number = 20;
-    // menuBottom: string = "1em";
+    topBarHeight: number = 150;
+    bottomBarHeight: number = 170;
     showMetrics: boolean = false;
     recordType: string = "";
     imageURL: string;
@@ -138,9 +139,28 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     private _sbarvisible : boolean = true;
     sidebarVisible: boolean = true;
     mainBodyStatus: string = "mainsquished";
-    sidebarStartY: number = 100;
-    sidebarY: number = 100;
+    sidebarStartY: number = 200;
+    sidebarY: number = 200;
+    sidebarHeight: number = 400;
 
+    // For help (sidebar)
+    helpWidth: number = 300;
+    helpMode: string = "normal";
+    helpMaxWidth: number = 500;
+    helpMinWidth: number = 200;
+
+    // For the split bar between landing page body and help box
+    splitterHeight: number = 500;
+    mouse: any = {x:0, y:0};
+    mouseDragging: boolean = false;
+    prevMouseX: number = 0;
+    prevHelpWidth: number = 0;
+    lpsWidth: number = 500;
+    helpToggler: string = 'expanded';
+    splitterPaddingTop: number = 0;
+    pageYOffset: number = 0;
+
+    scrollMaxHeight: number;
     // helpContent: any = {
     //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
     // }
@@ -160,7 +180,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     @ViewChild('stickyButton') btnElement: ElementRef;
     @ViewChild('stickyMenu') menuElement: ElementRef;
-    @ViewChild('test') test: ElementRef;
+    @ViewChild('lpscontent') lpscontent: ElementRef;
 
     /**
      * create the component.
@@ -186,6 +206,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService) 
     {
+        // Init the size of landing page body and the help box 
+        this.updateScreenSize();
+
         this.reqId = this.route.snapshot.paramMap.get('id');
         this.inBrowser = isPlatformBrowser(platformId);
         this.editEnabled = cfg.get('editEnabled', false) as boolean;
@@ -208,6 +231,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
                 
                 this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE);
+                if(this.hideToolMenu) {
+                    this.mainBodyStatus = "mainsquished";
+                }
             });
 
             this.mdupdsvc.subscribe(
@@ -228,6 +254,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this._showContent = showContent;
             });
         }
+    }
+
+    get showSplitter() {
+        return (this.mainBodyStatus == "mainsquished") && !this.mobileMode;
     }
 
     /**
@@ -462,14 +492,21 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     @HostListener("window:scroll", [])
     onWindowScroll() {
+        this.scrollMaxHeight = document.body.scrollHeight - window.innerHeight;
+
         if(this.mobileMode)
             this.windowScrolled = (window.pageYOffset > this.btnPosition);
         else
             this.windowScrolled = (window.pageYOffset > this.menuPosition);
 
         this.sidebarY = this.sidebarStartY - window.pageYOffset;
-        // this.sidebarY = this.sidebarY > 10 ? this.sidebarY : 10;
-        this.sidebarY = this.sidebarY < -80 ? -80 : this.sidebarY;
+        this.sidebarY = this.sidebarY < 0 ? 0 : this.sidebarY;
+
+        this.updateSidbarHeight();
+        this.updateSplitterHeight();
+        
+        this.splitterPaddingTop += window.pageYOffset - this.pageYOffset;
+        this.pageYOffset = window.pageYOffset;
     }
 
     /**
@@ -541,10 +578,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * apply housekeeping after view has been initialized
      */
     ngAfterViewInit() {
+        this.sidebarHeight = window.innerHeight - 250;
+
         if(this.inBrowser) {
             //Set the position of the sticky menu (or menu button)
             setTimeout(() => {
                 this.setMenuPosition();
+                this.updateScreenSize();
             }, 0);
         }
 
@@ -553,6 +593,24 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
             window.history.replaceState({}, '', '/od/id/' + this.reqId);
         }
+    }
+
+    /**
+     * Update the height of the help box
+     */
+    updateSidbarHeight() {
+        // The height of the help box
+        // should be windows inner height minus the height of the remaining of the top bar 
+        // minus the visible height of the bottom bar minus margin (50)
+
+        let visibleTopBarHeight = this.topBarHeight - window.pageYOffset + 50;
+        visibleTopBarHeight = visibleTopBarHeight > 0 ? visibleTopBarHeight : 0;
+        console.log('visibleTopBarHeight', visibleTopBarHeight);
+
+        let visibleBottomBarHeight = this.bottomBarHeight - this.scrollMaxHeight + window.pageYOffset;
+        visibleBottomBarHeight = visibleBottomBarHeight > 0 ? visibleBottomBarHeight : 0;
+
+        this.sidebarHeight = window.innerHeight - visibleTopBarHeight - visibleBottomBarHeight - 50;
     }
 
     /**
@@ -588,9 +646,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     showData() : void{
-        if (this.md != null)
+        if (this.md != null) {
             this._showData = true;
-        else
+            this.updateScreenSize();
+        }else
             this._showData = false;
     }
 
@@ -748,5 +807,75 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             else    
                 this.mainBodyStatus = "mainexpanded";
         }
+    }
+
+    /**
+     *  Following functions detect screen size
+     */
+    @HostListener("window:resize", [])
+        public onResize() {
+            this.updateScreenSize();
+    }
+
+    private updateScreenSize() {
+        setTimeout(() => {
+            if(this.inBrowser){
+                this.helpMaxWidth = window.innerWidth / 2;
+                this.sidebarHeight = window.innerHeight - this.topBarHeight - 50;
+                this.pageYOffset = window.pageYOffset;
+                this.updateSplitterHeight();
+                this.splitterPaddingTop = (window.innerHeight - this.topBarHeight) / 2 - 100;
+                this.helpWidth = window.innerWidth * 0.37;
+                this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth;
+
+                this.setLpsWidth(this.helpWidth);
+                this.prevHelpWidth = this.helpWidth;
+            }
+        }, 0);
+    }
+
+
+    setLpsWidth(helpWidth: number) {
+        this.lpsWidth = window.innerWidth - helpWidth - 140;
+    }
+
+    updateSplitterHeight() {
+        if(this.lpscontent){
+            this.splitterHeight = this.lpscontent.nativeElement.offsetHeight;
+        }
+    }
+
+    // The following mouse functions handle drag action
+    @HostListener('window:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent){
+        this.mouse = {
+            x: event.clientX,
+            y: event.clientY
+        }
+
+        if(this.mouseDragging) {
+            let diff = this.mouse.x - this.prevMouseX;
+            this.helpWidth = this.prevHelpWidth - diff;
+            this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth > this.helpMaxWidth? this.helpMaxWidth : this.helpWidth;
+
+            this.updateSidbarHeight();
+            this.setLpsWidth(this.helpWidth);
+            this.updateSplitterHeight();
+
+            this.prevMouseX = this.mouse.x;
+            this.prevHelpWidth = this.helpWidth;
+        }
+    }
+
+    onMousedown(event) {
+        this.prevMouseX = this.mouse.x;
+        this.mouseDragging = true;
+
+
+    }
+
+    @HostListener('window:mouseup', ['$event'])
+    onMouseUp(event) {
+        this.mouseDragging = false;
     }
 }

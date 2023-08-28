@@ -71,7 +71,7 @@ export class AuthorListComponent implements OnInit {
                                 }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
                                     this.saveCurrentAuthor(false); // Do not refresh help text 
                                 }
-                                this.hideEditBlock(false);
+                                this.hideEditBlock();
                             }
                         }else{
                             if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
@@ -334,9 +334,15 @@ export class AuthorListComponent implements OnInit {
         this.editMode = MODE.NORNAL;
     }
 
-    hideEditBlock(refreshHelp: boolean = true) {
-        if(this.record)
+
+    /**
+     * Hide the edit block
+     */
+    hideEditBlock() {
+        if(this.record){
             this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
+        }
+
     }
 
     /**
@@ -486,11 +492,11 @@ export class AuthorListComponent implements OnInit {
             }
         }
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic['dragdrop'];
+        // let sectionHelp: SectionHelp = {} as SectionHelp;
+        // sectionHelp.section = this.fieldName;
+        // sectionHelp.topic = HelpTopic['dragdrop'];
 
-        this.lpService.setSectionHelp(sectionHelp);
+        // this.lpService.setSectionHelp(sectionHelp);
     }
 
     setCurrentAuthor(index: number){

@@ -40,8 +40,7 @@
 
         <div *ngIf="_showData">
             <!-- landing page content -->
-            <div class="landing-body" [@togglemain]="mainBodyStatus">
-
+            <div #lpscontent class="landing-body" [@togglemain]="{value:mainBodyStatus, params:{lps_width: lpsWidth + 'px'}}" [ngStyle]="{'width': lpsWidth + 'px'}">
                 <pdr-landing-body [md]="md" [inBrowser]="inBrowser" [editEnabled]="editEnabled"
                     [mobileMode]="mobileMode" [metricsData]="metricsData" [showJsonViewer]="showJsonViewer"
                     [theme]="theme" (dlStatus)="onDownloadStatusChanged($event)">
@@ -61,14 +60,13 @@
                 <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
             </div>
 
-            <app-sidebar *ngIf="hideToolMenu" class='normal-sdbar' [record]="md" [ngStyle]="{'top': sidebarY + 'px'}" [@togglesbar]="mainBodyStatus" [helpContentAll]="helpContentAll" [resourceType]="resourceType" (sbarvisible_out)="updateSidebarStatus($event)" (scroll)="goToSection($event)">
-                <!-- <div style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
-                    <div>Suggestions:</div>
-                    <div *ngFor="let section of suggustedSections" (click)='goToSection(section)' style="cursor: pointer; color: var(--nist-blue-dark3)">
-                        <i>Edit {{section}}</i>
-                    </div>
-                </div> -->
+            <!-- Drag bar to resize the help box -->
+            <div *ngIf="showSplitter" class="splitter" (mousedown)="onMousedown($event)" (mouseup)="onMouseUp($event)" [ngStyle]="{'height': splitterHeight + 'px','padding-top': splitterPaddingTop + 'px'}">
+                <div id="separator" style="opacity: .3;">||</div>
+            </div>
 
+            <!-- The help box at the right side -->
+            <app-sidebar *ngIf="hideToolMenu" class='normal-sdbar' [record]="md" [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}" [@togglesbar]="{value: mainBodyStatus, params:{help_width: helpWidth + 'px'}}" [helpContentAll]="helpContentAll" [resourceType]="resourceType" (sbarvisible_out)="updateSidebarStatus($event)" (scroll)="goToSection($event)">
             </app-sidebar>
 
             <!-- citation pop-up -->

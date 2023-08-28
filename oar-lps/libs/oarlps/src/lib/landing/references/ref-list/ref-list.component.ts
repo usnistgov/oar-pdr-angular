@@ -515,11 +515,11 @@ export class RefListComponent implements OnInit {
             }
         }
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic['dragdrop'];
+        // let sectionHelp: SectionHelp = {} as SectionHelp;
+        // sectionHelp.section = this.fieldName;
+        // sectionHelp.topic = HelpTopic['dragdrop'];
 
-        this.lpService.setSectionHelp(sectionHelp);
+        // this.lpService.setSectionHelp(sectionHelp);
     }
 
     setCurrentPage(index: number){

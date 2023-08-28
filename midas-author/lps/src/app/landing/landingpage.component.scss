@@ -14,9 +14,7 @@
 .landing-body {
     display: inline-block;
     border: 0px;
-    width: 100%;
-    margin: 1em 1em 1em 2em;
-    z-index: 99;
+    margin: 1em 0em 1em 2em;
 }
 
 .landing-body h3 {
@@ -74,8 +72,7 @@
 
 .normal-sdbar {
     position: fixed;
-    right: 0px;
-    height: 80vh;
+    right: 40px;
 }
 
 .sticky-sdbar {
@@ -147,3 +144,15 @@
     top: 0px;
     bottom: 0px;
 }
+
+.splitter {
+    display: inline-block;
+    width: 12px;
+    font-size:x-large;
+    cursor: col-resize;
+    background-color: var(--background-light-grey);
+    z-index: 99;
+    margin-left: 20px;
+    vertical-align: top;
+}
+
