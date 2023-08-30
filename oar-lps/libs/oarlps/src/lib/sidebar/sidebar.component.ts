@@ -96,16 +96,15 @@ export class SidebarComponent implements OnInit {
                     if(this.helpContentAll[sectionHelp.section][sectionHelp.topic])
                         this.helpContent += this.helpContentAll[sectionHelp.section][sectionHelp.topic] + "<p><p>";
 
-                    if(this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]])
+                    if(sectionHelp.topic == HelpTopic[MODE.ADD] && this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]])
                         this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]] + "<p><p>";
                 }
-
-                // if(sectionHelp.topic != MODE.NORNAL){
-                //     this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic[MODE.ADD]] + "<p><p>";
-
-                //     this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic[MODE.EDIT]] + "<p><p>";
-                // }
             }
+
+            // Add "see also" if available
+            if(this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]])
+                        this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]] + "<p><p>";
+            
         }else {
             this.helpContent = generalHelp;
         }   

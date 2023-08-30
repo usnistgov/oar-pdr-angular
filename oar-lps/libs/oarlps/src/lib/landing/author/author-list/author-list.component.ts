@@ -69,7 +69,7 @@ export class AuthorListComponent implements OnInit {
                                     this.undoCurAuthorChanges();
                                 //If is adding or editing and something changed, save it
                                 }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
-                                    this.saveCurrentAuthor(false); // Do not refresh help text 
+                                    this.saveCurrentAuthor(false, true); // Do not refresh help text 
                                 }
                                 this.hideEditBlock();
                             }
@@ -99,7 +99,7 @@ export class AuthorListComponent implements OnInit {
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
 
@@ -205,20 +205,20 @@ export class AuthorListComponent implements OnInit {
     }
 
     onAdd() {
-        this.setMode(MODE.ADD);
+        this.setMode(MODE.ADD, true, MODE.EDIT);
     }
 
     onEdit(index) {
         this.currentAuthor = JSON.parse(JSON.stringify(this.record[this.fieldName][index]));
         setTimeout(() => {
-            this.setMode(MODE.EDIT);
+            this.setMode(MODE.EDIT, true, MODE.EDIT);
         }, 0);
     }
 
     /**
      * Save current author to the server
      */    
-    saveCurrentAuthor(refreshHelp: boolean = true) {
+    saveCurrentAuthor(refreshHelp: boolean = true, closeAll: boolean = false) {
         let postMessage: any = {}; 
 
         if(this.isAdding) {  // Temp disable this function
@@ -234,7 +234,11 @@ export class AuthorListComponent implements OnInit {
                     this.currentAuthor = this.record[this.fieldName].at(-1); // last author
                     this.currentAuthorIndex = this.record[this.fieldName].length - 1;
                     this.currentAuthor.dataChanged = false;
-                    this.setMode(MODE.NORNAL, refreshHelp);
+
+                    if(closeAll)
+                        this.setMode(MODE.NORNAL, refreshHelp);
+                    else
+                        this.setMode(MODE.LIST, refreshHelp, MODE.ADD);
                 }else
                     console.error("Failed to add author");
                     return;
@@ -243,7 +247,10 @@ export class AuthorListComponent implements OnInit {
             if(this.currentAuthor.dataChanged){
                 this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
                     if(success){
-                        this.setMode(MODE.NORNAL, refreshHelp);
+                        if(closeAll)
+                            this.setMode(MODE.NORNAL, refreshHelp);
+                        else
+                            this.setMode(MODE.ADD, refreshHelp, MODE.ADD);
                     }else{
                         console.error("Update failed")
                     }
@@ -307,7 +314,7 @@ export class AuthorListComponent implements OnInit {
     undoAllChanges() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode();
+                this.setMode(MODE.NORNAL, true, MODE.ADD);
                 this.orderChanged = false;
                 this.forceReset = true;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
@@ -330,8 +337,12 @@ export class AuthorListComponent implements OnInit {
             this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(this.savedRecord[this.fieldName][this.currentAuthorIndex]));
         }
 
-        this.editBlockStatus = 'collapsed';
-        this.editMode = MODE.NORNAL;
+        // this.editBlockStatus = 'collapsed';
+
+        // Back to add mode
+        // this.editMode = MODE.NORNAL;
+        // this.refreshHelpText(MODE.ADD);
+        this.setMode(MODE.LIST, true, MODE.ADD)
     }
 
 
@@ -382,24 +393,6 @@ export class AuthorListComponent implements OnInit {
             return "faa faa-pencil icon_disabled";
         }
     }
-
-    // editAction(action: any, index: number = 0) {
-    //     switch ( action.command.toLowerCase() ) {
-    //         case "delete":
-    //             this.removeAuthor(index);
-    //             break;
-
-    //         case "undo":
-    //             this.editingAuthorIndex = -1;
-    //             break;                  
-
-    //         default: 
-    //             // 
-    //             break;
-    //     }
-
-    //     this.forceReset = false;
-    // }
 
     removeAuthor(index: number) {
         this.record[this.fieldName].splice(index, 1);
@@ -509,24 +502,40 @@ export class AuthorListComponent implements OnInit {
     }
 
     /**
+     * Refresh the help text
+     */
+    refreshHelpText(help_topic: string = MODE.EDIT){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[help_topic];
+
+        this.lpService.setSectionHelp(sectionHelp);
+    }
+
+    /**
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
         if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
+            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
+            this.refreshHelpText(help_topic);
         }
             
         switch ( this.editMode ) {
+            case MODE.LIST:
+                this.editBlockStatus = 'collapsed';
+
+                // Back to add mode
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.ADD);
+                }
+                break;
             case MODE.EDIT:
                 this.openEditBlock();
                 break;
@@ -548,7 +557,6 @@ export class AuthorListComponent implements OnInit {
 
                 this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
                 this.currentAuthor.dataChanged = false;
-                // this.orderChanged = true;
 
                 this.openEditBlock();
                 break;

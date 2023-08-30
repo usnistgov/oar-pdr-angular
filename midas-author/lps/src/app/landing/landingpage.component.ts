@@ -161,10 +161,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     pageYOffset: number = 0;
 
     scrollMaxHeight: number;
-    // helpContent: any = {
-    //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
-    // }
-
     wordMpping: any = wordMapping;
     resourceType: string = "resource";
 
@@ -605,7 +601,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         let visibleTopBarHeight = this.topBarHeight - window.pageYOffset + 50;
         visibleTopBarHeight = visibleTopBarHeight > 0 ? visibleTopBarHeight : 0;
-        console.log('visibleTopBarHeight', visibleTopBarHeight);
 
         let visibleBottomBarHeight = this.bottomBarHeight - this.scrollMaxHeight + window.pageYOffset;
         visibleBottomBarHeight = visibleBottomBarHeight > 0 ? visibleBottomBarHeight : 0;

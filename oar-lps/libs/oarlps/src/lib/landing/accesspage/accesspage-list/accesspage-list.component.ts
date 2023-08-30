@@ -93,7 +93,7 @@ export class AccesspageListComponent implements OnInit {
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
 
@@ -289,7 +289,7 @@ export class AccesspageListComponent implements OnInit {
     onCommandChanged(cmd) {
         switch(cmd.command) {
             case 'saveCurrentChanges':
-                this.saveCurApage();
+                this.saveCurApage(true, MODE.LIST);
                 break;
             case 'undoCurrentChanges':
                 this.undoCurApageChanges();
@@ -321,7 +321,7 @@ export class AccesspageListComponent implements OnInit {
     /**
      * Save current access page
      */
-    saveCurApage(refreshHelp: boolean = true) {
+    saveCurApage(refreshHelp: boolean = true, editmode: string = MODE.NORNAL) {
         let postMessage = {};
         this.record[this.fieldName] = JSON.parse(JSON.stringify([this.accessPages, this.nonAccessPages]));
         postMessage[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
@@ -353,7 +353,7 @@ export class AccesspageListComponent implements OnInit {
             this.updateMatadata(this.currentApage, this.currentApage["@id"]);
         }
 
-        this.setMode(MODE.NORNAL, refreshHelp);
+        this.setMode(editmode, refreshHelp, editmode);
     }
 
     updateMatadata(comp: NerdmComp = undefined, compId: string = undefined) {
@@ -399,24 +399,40 @@ export class AccesspageListComponent implements OnInit {
     }
 
     /**
+     * Refresh the help text
+     */
+    refreshHelpText(help_topic: string = MODE.EDIT){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[help_topic];
+
+        this.lpService.setSectionHelp(sectionHelp);
+    }
+
+    /**
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
         if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
+            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
+            this.refreshHelpText(help_topic);
         }
 
         switch ( this.editMode ) {
+            case MODE.LIST:
+                this.editBlockStatus = 'collapsed';
+
+                // Back to add mode
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.ADD);
+                }
+                break;
             case MODE.EDIT:
                 this.openEditBlock();
                 break;
@@ -637,7 +653,7 @@ export class AccesspageListComponent implements OnInit {
             }
 
         }
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.LIST);
     }
 
 

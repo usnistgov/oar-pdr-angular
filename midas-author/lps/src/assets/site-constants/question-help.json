@@ -10,7 +10,7 @@
         "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>Credit Contributor Roles Taxonomy</a>. Add affiliations and ORCIDs as available. Click <i class='faa faa-plus'></i> to input authors",
         "add": "Click <i class='faa faa-check'></i> to save. Click <i class='faa faa-pencil'></i> to make edits.",
         "edit": "Click <i class='faa faa-check'></i> to save changes.<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
-        "dragdrop": "To change the order of authors listed, click on <span style='border: solid 1px red'><img src='./assets/images/reorder_s.png'><span> on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
+        "dragdrop": "To change the order of authors listed, click on <img src='./assets/images/reorder_s.png'> on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
     },
     "contactPoint": {
         "general": "Review the name of the NIST contact listed who will respond to questions about this resource. To edit this contact, click <i class='faa faa-pencil'></i>",
@@ -40,7 +40,7 @@
         "general": "You are in the Data Access section. Enter URLs for sites with related information on this resource, e.g. a GitHub repository. Each entry requires the URL, the 'Link text' or Title, and information 'About this link' or a description. Note: this area is not for links to files. To upload and link files use the 'Files' button below.",
         "add": "Click <i class='faa faa-plus'></i> to enter URLs to sites with information related to this resource. Separate each URL with a comma. When all URLS are entered, click <i class='faa faa-check'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
         "edit": "Click <i class='faa faa-plus'></i> to add, <i class='faa faa-trash'></i> to remove, or <i class='faa faa-pencil'></i> to edit entries.",
-        "dragdrop": "To change the order of URLs listed, click on the arrow bar on the left of each link, drag it to the right place in the list, and release the mouse button to drop it in place.<p><p>"
+        "dragdrop": "To change the order of URLs listed, click on <img src='./assets/images/reorder_s.png'> on the left of each link, drag it to the right place in the list, and release the mouse button to drop it in place.<p><p>"
     },
     "references": {
         "general": "You are in <i>References</i> section where you can add references or citations related to this resource. You may wish to include links to multiple types of resources such as a related publication or a software package. <p><p> <i>[Other Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",

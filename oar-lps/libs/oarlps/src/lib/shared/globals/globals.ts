@@ -67,6 +67,7 @@ export interface SectionHelp {
 
 export const MODE = {
     "NORNAL": "normal",
+    "LIST": "list",
     "EDIT": "edit",
     "ADD": "add"
 }

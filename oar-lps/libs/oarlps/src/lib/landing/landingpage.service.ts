@@ -7,6 +7,7 @@ _helpTopic[MODE.NORNAL]  = 'general';
 _helpTopic[MODE.EDIT]  = 'edit';
 _helpTopic[MODE.ADD]  = 'add';
 _helpTopic["dragdrop"]  = 'dragdrop';
+_helpTopic["seealso"]  = 'seealso';
 
 export const HelpTopic = _helpTopic;
 

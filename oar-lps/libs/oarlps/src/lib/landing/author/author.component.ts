@@ -88,7 +88,7 @@ export class AuthorComponent implements OnInit {
 
     startEditing(refreshHelp: boolean = true) {
         this.isEditing = true;
-        this.setMode(MODE.EDIT, refreshHelp);
+        this.setMode(MODE.ADD, refreshHelp, MODE.ADD);
     }
 
     /**
@@ -111,10 +111,10 @@ export class AuthorComponent implements OnInit {
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText(help_topic: string = MODE.EDIT){
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
+        sectionHelp.topic = HelpTopic[help_topic];
 
         this.lpService.setSectionHelp(sectionHelp);
     }
@@ -123,18 +123,19 @@ export class AuthorComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
         if(refreshHelp){
-            this.refreshHelpText();
+            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
+            this.refreshHelpText(help_topic);
         }
             
         switch ( this.editMode ) {
-            case MODE.EDIT:
+            case MODE.ADD:
                 this.editBlockStatus = "expanded";
                 this.setOverflowStyle();
                 this.isEditing = true;

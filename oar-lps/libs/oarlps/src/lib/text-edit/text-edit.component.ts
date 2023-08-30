@@ -187,7 +187,7 @@ export class TextEditComponent implements OnInit {
      * @returns icon class
      */
     getEditOnlyIconClass() {
-        if(this.editing){
+        if(this.editing || this.disableControl){
             return "faa faa-pencil icon_disabled";
         }else{
             return "faa faa-pencil icon_enabled";
