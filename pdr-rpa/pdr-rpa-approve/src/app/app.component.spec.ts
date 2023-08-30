@@ -120,15 +120,30 @@ describe('AppComponent', () => {
     component.recordId = 'ark:123';
     component.onApprove();
     expect(component.displayProgressSpinner).toEqual(true);
-    expect(mockRPAService.approveRequest).toHaveBeenCalledWith('ark:123');
+    expect(mockRPAService.approveRequest).toHaveBeenCalledWith(
+      'ark:123',
+      {
+        "token": "fake jwt token",
+        "userAttributes": { "userLastName": "Public", "userName": "John" },
+        "userId": "anon"
+      }
+    );
   });
 
   it('should call onDecline()', () => {
     component.recordId = 'ark:123';
     component.onDecline();
     expect(component.displayProgressSpinner).toEqual(true);
-    expect(mockRPAService.declineRequest).toHaveBeenCalledWith('ark:123');
+    expect(mockRPAService.declineRequest).toHaveBeenCalledWith(
+      'ark:123',
+      {
+        "token": "fake jwt token",
+        "userAttributes": { "userLastName": "Public", "userName": "John" },
+        "userId": "anon"
+      }
+    );
   });
+
 
   describe('parseDescription', () => {
     it('should extract fields from a valid description string', () => {
