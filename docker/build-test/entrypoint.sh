@@ -15,8 +15,8 @@ op=$1
 shift
 case "$op" in
     build|makedist)
-        echo '+' scripts/makedist.wizard "$@"
-        $CODEDIR/scripts/makedist.wizard "$@"
+        echo '+' scripts/makedist "$@"
+        $CODEDIR/scripts/makedist "$@"
         ;;
     shell)
         exec /bin/bash

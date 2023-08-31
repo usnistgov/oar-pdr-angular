@@ -3,7 +3,7 @@
 # docker/makedist -- make all components from this repo via the docker containers
 #                    defined in the docker directory.
 #
-# Usage: docker/makedist [--dist-dir=DIR] [python|angular]
+# Usage: docker/makedist [--dist-dir=DIR] [angular | DISTNAME ...]
 #
 # where:
 #   --dist-dir=DIR     write component distributions to the given directory
