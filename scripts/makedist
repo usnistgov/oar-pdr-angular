@@ -73,7 +73,7 @@ pdr_rpa_names="pdr-rpa-request pdr-rpa-approve"
 DISTNAMES="$midas_author_names"
 declare -A APPSRCDIR=(                        \
     [midas-author-wizard]=midas-author/wizard \
-    [midas-author-lps]=midas-author/wizard    \
+    [midas-author-lps]=midas-author/lps       \
     [pdr-rpa-request]=pdr-rpa/pdr-rpa-request \
     [pdr-rpa-approve]=pdr-rpa/pdr-rpa-approve \
 )
