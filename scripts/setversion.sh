@@ -37,4 +37,3 @@ fi
     bash "$PACKAGE_DIR/scripts/inject_version.sh" $version $PACKAGE_NAME
 }
 
-echo "TESTING *** $PACKAGE_NAME $version"
