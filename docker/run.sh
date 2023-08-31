@@ -12,6 +12,8 @@ os=`uname`
 SED_RE_OPT=r
 [ "$os" != "Darwin" ] || SED_RE_OPT=E
 
+avail_dists="wizard editable"
+
 function usage {
     cat <<EOF
 
@@ -19,15 +21,13 @@ $prog - build and optionally test the software in this repo via docker
 
 SYNOPSIS
   $prog [-d|--docker-build] [--dist-dir DIR] [CMD ...] 
-        [DISTNAME|python|angular|java ...] 
+        [DISTNAME|angular ...] 
         
 
 ARGS:
-  python    apply commands to just the python distributions
-  angular   apply commands to just the angular distributions
-  java      apply commands to just the java distributions
+  angular   apply commands to all available angular distributions
 
-DISTNAMES:  pdr-lps, pdr-publish, customization-api
+DISTNAMES:  editable, wizard, pdr-lps
 
 CMDs:
   build     build the software
@@ -105,16 +105,14 @@ while [ "$1" != "" ]; do
         -*)
             args=(${args[@]} $1)
             ;;
-        python|wizard|editable|java)
-            comptypes="$comptypes $1"
-            ;;
-        wizard)
-            wordin wizard $comptypes || comptypes="$comptypes wizard"
+        wizard|editable)
+            wordin $1 $comptypes || comptypes="$comptypes $1"
             angargs=(${args[@]} $1)
             ;;
-        editable)
+        angular)
             wordin editable $comptypes || comptypes="$comptypes editable"
-            angargs=(${args[@]} $1)
+            wordin wizard $comptypes || comptypes="$comptypes wizard"
+            angargs=(${args[@]} editable wizard)
             ;;
         build|install|test|shell)
             cmds="$cmds $1"
@@ -131,10 +129,10 @@ done
 [ -z "${testcl[@]}" ] || {
     dargs=(${dargs[@]} --env OAR_TEST_INCLUDE=\"${testcl[@]}\")
 }
-echo "*** TEST"
+
 comptypes=`echo $comptypes`
 cmds=`echo $cmds`
-[ -n "$comptypes" ] || comptypes="pdr-lps"
+[ -n "$comptypes" ] || comptypes=$avail_dists
 [ -n "$cmds" ] || cmds="build"
 echo "run.sh: Running docker commands [$cmds] on [$comptypes]"
 
@@ -144,7 +142,6 @@ volopt="-v ${codedir}:/dev/oar-pdr-angular"
 # check to see if we need to build the docker images; this can't detect
 # changes requiring re-builds.
 # 
-echo "*** TEST 2"
 if [ -z "$dodockbuild" ]; then
     if wordin wizard $comptypes; then
         if wordin build $cmds; then
@@ -166,7 +163,7 @@ fi
     echo '#' Building missing docker containers...
     $execdir/dockbuild.sh
 }
-echo "*** TEST3"
+
 # handle angular building and/or testing.  If shell was requested with
 # angular, open the shell in the angular test contatiner (angtest).
 # 
