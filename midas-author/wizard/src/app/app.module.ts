@@ -10,17 +10,8 @@ import { FrameModule } from 'oarng';
 import { InputTextModule } from "primeng/inputtext";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { HttpClientModule } from '@angular/common/http';
-import { AppConfig } from './startwiz/services/config-service.service';
-
-/**
- * Initialize the configs for backend services
- */
-const appInitializerFn = (appConfig: AppConfig) => {
-    return () => {
-      console.log("**** CAlling APP Initialization ***");
-      return appConfig.loadAppConfig();
-    };
-};
+import { ConfigModule } from 'oarng';
+import { GoogleAnalyticsService} from "oarlps";
 
 @NgModule({
     declarations: [
@@ -34,16 +25,12 @@ const appInitializerFn = (appConfig: AppConfig) => {
         InputTextModule,
         OARngModule,
         FrameModule,
-        HttpClientModule
+        HttpClientModule,
+        ConfigModule
     ],
     providers: [
-        {
-            provide: APP_INITIALIZER,
-            useFactory: appInitializerFn,
-            multi: true,
-            deps: [AppConfig]
-        },
-        fakeBackendProvider
+        GoogleAnalyticsService
+        // fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })

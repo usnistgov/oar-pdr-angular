@@ -4,10 +4,9 @@ import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
-import { ActivatedRoute, Router } from "@angular/router";
 import { WizardService } from './services/wizard.service';
-import { AppConfig, Config } from './services/config-service.service';
-import { AuthenticationService, Credentials } from 'oarng';
+import { LPSConfig } from 'oarlps';
+import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 
 export class AuthStatus {
     static readonly AUTHORIZED = 'Authorized';
@@ -44,7 +43,7 @@ export class StepWizardComponent implements OnInit {
     currentStepSub!: Subscription;
     onSoftware: boolean = false;
     bodyHeight: number = 550;
-    confValues: Config;
+    confValues: LPSConfig;
     private PDRAPI: string;
 
     fgSteps!: FormGroup;
@@ -58,15 +57,12 @@ export class StepWizardComponent implements OnInit {
     constructor(private stepService: StepService,
                 private fb: FormBuilder, 
                 private cdr: ChangeDetectorRef,
-                private router: Router,
                 private wizardService: WizardService,
-                private appConfig: AppConfig,
-                private route: ActivatedRoute,
+                private configSvc: ConfigurationService,
                 public authService: AuthenticationService) { 
 
-            this.confValues = this.appConfig.getConfig();
-            this.PDRAPI = this.confValues.PDRAPI;
-            console.log('this.PDRAPI', this.PDRAPI);
+            this.confValues = this.configSvc.getConfig();
+            this.PDRAPI = this.confValues['PDRAPI'];
     }
 
     get isAuthorized() {
@@ -90,7 +86,7 @@ export class StepWizardComponent implements OnInit {
     }
 
     /**
-     * 
+     * Authorizing...
      */
     authorizeEditing() {
         this.authService.getCredentials().subscribe({
@@ -206,7 +202,6 @@ export class StepWizardComponent implements OnInit {
     }
 
     onSubmit(): void {
-        // this.router.navigate(['/complete']);
         console.log('this.dataModel', JSON.stringify(this.dataModel));
 
         let id: string;
