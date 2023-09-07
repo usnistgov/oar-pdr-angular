@@ -8,6 +8,7 @@
     padding: 0px 0px;
     overflow: auto;
     position: relative;
+    font-size: smaller;
 }
 
 .subtitle {
