@@ -209,12 +209,6 @@ export class AccesspageListComponent implements OnInit {
                 this.setCurrentPage(index);
             }
         }
-
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic['dragdrop'];
-
-        this.lpService.setSectionHelp(sectionHelp);        
     }
 
     setCurrentPage(index: number){
@@ -233,7 +227,7 @@ export class AccesspageListComponent implements OnInit {
         switch ( action.command.toLowerCase() ) {
             case 'edit':
                 this.selectApage(index);
-                this.setMode('edit');
+                this.setMode(MODE.EDIT);
                 break;
             case 'delete':
                 this.removeAccessPage(index);
@@ -353,7 +347,7 @@ export class AccesspageListComponent implements OnInit {
             this.updateMatadata(this.currentApage, this.currentApage["@id"]);
         }
 
-        this.setMode(editmode, refreshHelp, editmode);
+        this.setMode(editmode, refreshHelp);
     }
 
     updateMatadata(comp: NerdmComp = undefined, compId: string = undefined) {
@@ -413,16 +407,11 @@ export class AccesspageListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-
-        if(refreshHelp){
-            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
-            this.refreshHelpText(help_topic);
-        }
 
         switch ( this.editMode ) {
             case MODE.LIST:
@@ -430,11 +419,16 @@ export class AccesspageListComponent implements OnInit {
 
                 // Back to add mode
                 if(refreshHelp){
-                    this.refreshHelpText(MODE.ADD);
+                    this.refreshHelpText(MODE.LIST);
                 }
                 break;
             case MODE.EDIT:
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.EDIT);
+                }
                 break;
             case MODE.ADD:
                 //Append a blank access page to the record and set current access page.
@@ -452,10 +446,20 @@ export class AccesspageListComponent implements OnInit {
                 this.currentApage = this.accessPages[this.currentApageIndex];
 
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.ADD);
+                }                
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.NORNAL);
+                }                
                 break;
         }
 

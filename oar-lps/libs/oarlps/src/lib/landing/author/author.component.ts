@@ -88,7 +88,7 @@ export class AuthorComponent implements OnInit {
 
     startEditing(refreshHelp: boolean = true) {
         this.isEditing = true;
-        this.setMode(MODE.ADD, refreshHelp, MODE.ADD);
+        this.setMode(MODE.LIST, refreshHelp, MODE.LIST);
     }
 
     /**
@@ -135,7 +135,7 @@ export class AuthorComponent implements OnInit {
         }
             
         switch ( this.editMode ) {
-            case MODE.ADD:
+            case MODE.LIST:
                 this.editBlockStatus = "expanded";
                 this.setOverflowStyle();
                 this.isEditing = true;

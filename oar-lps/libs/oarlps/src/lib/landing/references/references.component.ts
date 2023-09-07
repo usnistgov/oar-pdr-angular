@@ -103,8 +103,8 @@ export class ReferencesComponent implements OnInit {
     /**
      * set current mode to editing.
      */
-    startEditing() {
-        this.setMode(MODE.EDIT);
+    startEditing(refreshHelp: boolean = true) {
+        this.setMode(MODE.LIST, refreshHelp);
     }
 
     /**
@@ -146,10 +146,10 @@ export class ReferencesComponent implements OnInit {
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText(help_topic: string = MODE.LIST){
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
+        sectionHelp.topic = HelpTopic[help_topic];
 
         this.lpService.setSectionHelp(sectionHelp);
     }
@@ -163,21 +163,28 @@ export class ReferencesComponent implements OnInit {
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-
-        if(refreshHelp){
-            this.refreshHelpText();
-        }
             
         switch ( this.editMode ) {
-            case MODE.EDIT:
+            case MODE.LIST:
                 this.openEditBlock();
                 this.setOverflowStyle();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.LIST);
+                }
+                break;
                 break;
 
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
                 this.setOverflowStyle();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.NORNAL);
+                }                
                 break;
         }
 

@@ -1,20 +1,21 @@
 
 {   
-    "general": "This screen allows you to enter the information for creating your publication.  On this page, you can:<ul><li>Click on <i class='faa faa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='faa faa-pencil'></i> to the right of each field to edit",
+    "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='faa faa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='faa faa-pencil'></i> to the right of each field to edit",
     "title": {
         "general": "The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p><p> If this publication can be considered a supplement to a literature publication, consider using the same title with an extra annotation, like ': Supplementary Data'.",
-        "edit": "Type the title into the input box and then click <i class='faa faa-check'></i> to save.",
+        "edit": "Type the title into the input box and then click the <i class='faa faa-check'></i> icon to save.",
         "seealso": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "authors": {
-        "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>Credit Contributor Roles Taxonomy</a>. Add affiliations and ORCIDs as available. Click <i class='faa faa-plus'></i> to input authors",
-        "add": "Click <i class='faa faa-check'></i> to save. Click <i class='faa faa-pencil'></i> to make edits.",
-        "edit": "Click <i class='faa faa-check'></i> to save changes.<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
+        "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>Credit Contributor Roles Taxonomy</a>. Add affiliations and ORCIDs as available.",
+        "list": "Click <i class='faa faa-plus'></i> to add authors. Click <i class='faa faa-pencil'></i> to make edits.",
+        "add": "Click <i class='faa faa-check'></i> to save.",
+        "edit": "Click <i class='faa faa-check'></i> to save changes.<p><i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
         "dragdrop": "To change the order of authors listed, click on <img src='./assets/images/reorder_s.png'> on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
     },
     "contactPoint": {
         "general": "Review the name of the NIST contact listed who will respond to questions about this resource. To edit this contact, click <i class='faa faa-pencil'></i>",
-       "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         "edit": "Click <i class='faa faa-check'></i> to save changes. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
     },
     "landingPage": {
@@ -38,14 +39,17 @@
     },
     "components": {
         "general": "You are in the Data Access section. Enter URLs for sites with related information on this resource, e.g. a GitHub repository. Each entry requires the URL, the 'Link text' or Title, and information 'About this link' or a description. Note: this area is not for links to files. To upload and link files use the 'Files' button below.",
-        "add": "Click <i class='faa faa-plus'></i> to enter URLs to sites with information related to this resource. Separate each URL with a comma. When all URLS are entered, click <i class='faa faa-check'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-        "edit": "Click <i class='faa faa-plus'></i> to add, <i class='faa faa-trash'></i> to remove, or <i class='faa faa-pencil'></i> to edit entries.",
+        "list": "Click <i class='faa faa-plus'></i> to enter URLs to sites with information related to this resource. Click <i class='faa faa-pencil'></i> to make edits.",
+        "add": "Separate each URL with a comma. When all URLS are entered, click <i class='faa faa-check'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+        "edit": "Separate each URL with a comma. When all URLS are entered, click <i class='faa faa-check'></i> to save.",
         "dragdrop": "To change the order of URLs listed, click on <img src='./assets/images/reorder_s.png'> on the left of each link, drag it to the right place in the list, and release the mouse button to drop it in place.<p><p>"
     },
     "references": {
         "general": "You are in <i>References</i> section where you can add references or citations related to this resource. You may wish to include links to multiple types of resources such as a related publication or a software package. <p><p> <i>[Other Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "add": "Click <i class='faa faa-plus'></i> to add the URI of a related resource. Separate each Reference URL with a comma. When all References are entered, click <i class='faa faa-check'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "edit": "Click <i class='faa faa-pencil'></i> to  make changes to existing References listed here. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "dragdrop": "To change the order of references listed, click on the arrow bar on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
-    }
+        "list": "Click <i class='faa faa-plus'></i> to add the URI of a related resource. Click <i class='faa faa-pencil'></i> to make changes to existing References listed here.",
+        "add": "Separate each Reference URL with a comma. When all References are entered, click <i class='faa faa-check'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "edit": "Separate each Reference URL with a comma. When all References are entered, click <i class='faa faa-check'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "dragdrop": "To change the order of references listed, click on <img src='./assets/images/reorder_s.png'> on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+    },
+    "completed": "Congratulations!"
 }

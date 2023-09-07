@@ -156,6 +156,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     prevMouseX: number = 0;
     prevHelpWidth: number = 0;
     lpsWidth: number = 500;
+    lpsWidthForPreview: number = 500; // lps width for preview mode
+    prevLpsWidth: number = 500; // Hold lps width if user switch view mode
     helpToggler: string = 'expanded';
     splitterPaddingTop: number = 0;
     pageYOffset: number = 0;
@@ -227,8 +229,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
                 
                 this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE);
-                if(this.hideToolMenu) {
+                if(!this.hideToolMenu) {
                     this.mainBodyStatus = "mainsquished";
+                    this.prevLpsWidth = this.lpsWidth;
+                    this.lpsWidth = this.lpsWidthForPreview;
+                }else{
+                    this.lpsWidth = this.prevLpsWidth;
                 }
             });
 
@@ -253,7 +259,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     get showSplitter() {
-        return (this.mainBodyStatus == "mainsquished") && !this.mobileMode;
+        return (this.mainBodyStatus == "mainsquished") && !this.mobileMode && this.hideToolMenu;
     }
 
     /**
@@ -621,8 +627,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             .subscribe((state: BreakpointState) => {
                 if (state.matches) {
                     this.mobileMode = false;
-                    if (this.menuElement)
-                        this.menuPosition = this.menuElement.nativeElement.offsetTop + 10;
+                    if (this.menuElement){
+                        this.menuPosition = this.menuElement.nativeElement.offsetTop - 40;
+                    }
+
                 } else {
                     this.mobileMode = true;
                     if (this.btnElement)
@@ -643,7 +651,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     showData() : void{
         if (this.md != null) {
             this._showData = true;
-            this.updateScreenSize();
+            setTimeout(() => {
+                this.setMenuPosition();
+                this.updateScreenSize();
+            }, 0);
         }else
             this._showData = false;
     }
@@ -825,6 +836,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
                 this.setLpsWidth(this.helpWidth);
                 this.prevHelpWidth = this.helpWidth;
+
+                this.lpsWidthForPreview = window.innerWidth * .75;              
             }
         }, 0);
     }

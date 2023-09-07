@@ -16,7 +16,7 @@
         <div *ngIf="(!suggustedSections['required'] || suggustedSections['required'].length == 0) 
             && (!suggustedSections['recommended'] || suggustedSections['recommended'].length == 0) 
             && (!suggustedSections['niceToHave'] || suggustedSections['niceToHave'].length == 0); else nextSteps">
-            Congratulations!
+            {{msgCompleted}}
         </div>
         <ng-template #nextSteps>
             Next Steps:

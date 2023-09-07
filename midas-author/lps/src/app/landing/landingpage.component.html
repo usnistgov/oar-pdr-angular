@@ -48,6 +48,7 @@
 
             </div>
         
+            <!-- <div #stickyMenu></div> -->
             <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
                 <tools-menu *ngIf="inBrowser" #menu2 [record]="md" [isPopup]="false" (toggle_citation)="toggleCitation('large')"
                     (scroll)="goToSection($event)">

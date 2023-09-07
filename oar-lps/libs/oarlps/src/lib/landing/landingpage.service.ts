@@ -4,6 +4,7 @@ import { SectionMode, SectionHelp, MODE } from '../shared/globals/globals';
 
 let _helpTopic = {};
 _helpTopic[MODE.NORNAL]  = 'general';
+_helpTopic[MODE.LIST]  = 'list';
 _helpTopic[MODE.EDIT]  = 'edit';
 _helpTopic[MODE.ADD]  = 'add';
 _helpTopic["dragdrop"]  = 'dragdrop';

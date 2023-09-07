@@ -128,7 +128,18 @@ export class RefListComponent implements OnInit {
      * set current mode to editing.
      */
     onEdit() {
-        this.setMode(MODE.EDIT);
+        this.setMode(MODE.EDIT, true);
+    }
+
+    /**
+     * Refresh the help text
+     */
+    refreshHelpText(help_topic: string = MODE.EDIT){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[help_topic];
+
+        this.lpService.setSectionHelp(sectionHelp);
     }
 
     /**
@@ -139,20 +150,24 @@ export class RefListComponent implements OnInit {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
-        sectionMode.mode = this.editMode;
-
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
-        if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
-        }
-            
+        sectionMode.mode = this.editMode;          
 
         switch ( this.editMode ) {
+            case MODE.LIST:
+                this.editBlockStatus = 'collapsed';
+
+                // Back to add mode
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.LIST);
+                }
+                break;            
             case MODE.EDIT:
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.EDIT);
+                }                
                 break;
             case MODE.ADD:
                 //Append a blank reference to the record and set current reference.
@@ -171,10 +186,20 @@ export class RefListComponent implements OnInit {
                 // this.orderChanged = true;
 
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.ADD);
+                }                  
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.NORNAL);
+                }                  
                 break;
         }
 
@@ -294,7 +319,7 @@ export class RefListComponent implements OnInit {
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.LIST);
     }
 
     /**
@@ -329,7 +354,7 @@ export class RefListComponent implements OnInit {
             }
         }
 
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.LIST);
     }
 
     /**

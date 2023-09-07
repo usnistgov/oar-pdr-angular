@@ -205,13 +205,13 @@ export class AuthorListComponent implements OnInit {
     }
 
     onAdd() {
-        this.setMode(MODE.ADD, true, MODE.EDIT);
+        this.setMode(MODE.ADD);
     }
 
     onEdit(index) {
         this.currentAuthor = JSON.parse(JSON.stringify(this.record[this.fieldName][index]));
         setTimeout(() => {
-            this.setMode(MODE.EDIT, true, MODE.EDIT);
+            this.setMode(MODE.EDIT);
         }, 0);
     }
 
@@ -238,7 +238,7 @@ export class AuthorListComponent implements OnInit {
                     if(closeAll)
                         this.setMode(MODE.NORNAL, refreshHelp);
                     else
-                        this.setMode(MODE.LIST, refreshHelp, MODE.ADD);
+                        this.setMode(MODE.LIST, refreshHelp);
                 }else
                     console.error("Failed to add author");
                     return;
@@ -250,7 +250,7 @@ export class AuthorListComponent implements OnInit {
                         if(closeAll)
                             this.setMode(MODE.NORNAL, refreshHelp);
                         else
-                            this.setMode(MODE.ADD, refreshHelp, MODE.ADD);
+                            this.setMode(MODE.LIST, refreshHelp);
                     }else{
                         console.error("Update failed")
                     }
@@ -314,7 +314,7 @@ export class AuthorListComponent implements OnInit {
     undoAllChanges() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode(MODE.NORNAL, true, MODE.ADD);
+                this.setMode(MODE.NORNAL, true);
                 this.orderChanged = false;
                 this.forceReset = true;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
@@ -342,7 +342,7 @@ export class AuthorListComponent implements OnInit {
         // Back to add mode
         // this.editMode = MODE.NORNAL;
         // this.refreshHelpText(MODE.ADD);
-        this.setMode(MODE.LIST, true, MODE.ADD)
+        this.setMode(MODE.LIST, true)
     }
 
 
@@ -504,7 +504,7 @@ export class AuthorListComponent implements OnInit {
     /**
      * Refresh the help text
      */
-    refreshHelpText(help_topic: string = MODE.EDIT){
+    refreshHelpText(help_topic: string = MODE.LIST){
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[help_topic];
@@ -516,16 +516,11 @@ export class AuthorListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-
-        if(refreshHelp){
-            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
-            this.refreshHelpText(help_topic);
-        }
             
         switch ( this.editMode ) {
             case MODE.LIST:
@@ -533,11 +528,16 @@ export class AuthorListComponent implements OnInit {
 
                 // Back to add mode
                 if(refreshHelp){
-                    this.refreshHelpText(MODE.ADD);
+                    this.refreshHelpText(MODE.LIST);
                 }
                 break;
             case MODE.EDIT:
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.EDIT);
+                }                
                 break;
             case MODE.ADD:
                 //Append a blank author to the record and set current author.
@@ -559,11 +559,21 @@ export class AuthorListComponent implements OnInit {
                 this.currentAuthor.dataChanged = false;
 
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.ADD);
+                }                
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed';
                 this.hideEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.NORNAL);
+                }                
                 break;
         }
 

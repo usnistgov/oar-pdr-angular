@@ -38,6 +38,7 @@ export class SidebarComponent implements OnInit {
     fieldName: string = "sidebar";
     DEFAULT_TITLE: string = "General Help";
     title: string = "General Help";
+    msgCompleted: string = "Congratulations!";
 
     // helpContent: any = {
     //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
@@ -60,6 +61,7 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
         this.lpService.watchSectionHelp((sectionHelp) => {
             this.updateHelpContent(sectionHelp);
         })
@@ -74,13 +76,10 @@ export class SidebarComponent implements OnInit {
         // Update help content
         let generalHelp = this.helpContentAll[GENERAL]? this.helpContentAll[GENERAL] : "Default help text.<p>";
 
-        console.log('sectionHelp', sectionHelp);
-        console.log('HelpTopic[MODE.NORNAL]', HelpTopic[MODE.NORNAL]);
-
         if(sectionHelp.topic == HelpTopic[MODE.NORNAL]) {
             sectionHelp.section = GENERAL;
         }
-        console.log('sectionHelp.section', sectionHelp.section);
+
         this.helpContent = generalHelp;
         if(sectionHelp.section && sectionHelp.section != GENERAL) {
             // Add general help of the section first
@@ -96,7 +95,7 @@ export class SidebarComponent implements OnInit {
                     if(this.helpContentAll[sectionHelp.section][sectionHelp.topic])
                         this.helpContent += this.helpContentAll[sectionHelp.section][sectionHelp.topic] + "<p><p>";
 
-                    if(sectionHelp.topic == HelpTopic[MODE.ADD] && this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]])
+                    if(sectionHelp.topic == HelpTopic[MODE.LIST] && this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]])
                         this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]] + "<p><p>";
                 }
             }
@@ -110,7 +109,6 @@ export class SidebarComponent implements OnInit {
         }   
 
         // Update help title
-        console.log('this.helpContent', this.helpContent)
         this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
 
         this.suggustedSections = this.sidebarService.getSuggestions(this.record, this.resourceType);

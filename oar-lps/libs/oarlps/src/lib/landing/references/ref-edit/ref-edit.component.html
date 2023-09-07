@@ -27,7 +27,7 @@
                         <span>DOI:</span>
                     </td>
                     <td colspan="2">
-                        <lib-text-edit [textField]="ref.doi" [submitButton]="true" [showBorder]="false" placeHolderText="Place DOI here" (command_out)="onDoiChange($event)"></lib-text-edit>
+                        <lib-text-edit [textField]="ref.doi" [submitButton]="true" [submitTooltip]="" [showBorder]="false" placeHolderText="Place DOI here" (command_out)="onDoiChange($event)"></lib-text-edit>
 
                         <!-- <input type="text" [(ngModel)]="ref.doi" style="height:2em;"
                         (input)="onDoiChange()"/> -->

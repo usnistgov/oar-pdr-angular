@@ -100,7 +100,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             "type": "dap"
         }
 
-        console.log("request", request);
+        // console.log("request", request);6
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
             if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
