@@ -52,6 +52,19 @@ Important note: The DOI (digital object identifier) will point to this URL.",
           Enter URLs links to these related resources.",
             "edit": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
             "dragdrop": "<p>To change the order of references listed, click on the arrow bar on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place."
+        },
+        "DOI": 
+            "general": "<p>A Digital Object Identifier or DOI is a persistent identifier created with each resource record. DOIs remain the same even if the underlying address or URL for the content changes.<p>
+The DOI for your record is reserved once the record is saved. It will be made accessible externally when the record is published.",
+            "edit": "<i>[More information about DOIs can be found at <a href='https://inet.nist.gov/library/what-doi'>the intranet DOI information page.</a>]</i>",
+        },
+        "versions": 
+            "general": "<p>The Versions that appear indicate versions of the publication record. Versions are expressed with three numerical digits.<p>
+The last digit, or digit on the right, indicates the number of changes to the record metadata only. <p>
+The middle digit indicates changes to the data or digital asset itself, e.g. a file change or file addition.<p>
+The first digit, or left digit, indicates a change requested by the author, e.g. a custom number that expresses a specific change the author wishes to describe.<p>
+Note: to see notation for version changes, click on the plus '+' sign next to the version number.",
+            "edit": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         }
     }
 
