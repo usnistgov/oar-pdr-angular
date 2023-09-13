@@ -1,0 +1,182 @@
+<app-header titleLn1="PDR" titleLn2="SME Approval"></app-header>
+
+<div class="container p-0 shadow my-2 bg-white rounded">
+     <!-- progress spinner when submitting form -->
+     <div class="progress-spinner" *ngIf="displayProgressSpinner">
+        <p-progressSpinner [style]="{width: '100px', height: '100px'}" styleClass="custom-spinner" strokeWidth="8"
+            animationDuration=".5s"></p-progressSpinner>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div *ngIf="loaded" class="rpdform-form-title d-flex align-items-center justify-content-center flex-column rounded-top"
+                [ngClass]="{
+                'bg-approved': status.toLowerCase().includes('approved'),
+                'bg-declined': status.toLowerCase().includes('declined')
+            }">
+                <h2 class="text-uppercase">
+                    {{status.toLowerCase().includes('pending') ? 'Pending Approval' :
+                    status.toLowerCase().includes('approved') ? 'Request Approved' :
+                    status.toLowerCase().includes('declined') ? 'Request Declined' : 'Unknown Status'}}
+                </h2>
+                <div class="case-number-text">Case Number: {{record?.caseNum}}</div>
+
+            </div>
+        </div>
+    </div>
+    <!-- <div class="testing">Hello this is a test</div> -->
+    <div class="rpdform-main-wrapper">
+        <div *ngIf="recordNotFound" class="d-flex align-items-center justify-content-center flex-column">
+            <i class="pi pi-exclamation-triangle" style="font-size: 5rem; color: 'var(--default-red)'"></i>
+            <h3 class="case-number-text">Ooops! Something went wrong.</h3>
+            <!-- <p class="error-hint-text">Error: {{errorHintText}}</p> -->
+        </div>
+        <ng-template [ngIf]="loaded && status.toLowerCase().includes('pending')">
+            <div class="rpdform-form-wrapper">
+                <div>You have received a request with the following information:
+                    <div class="divider"></div>
+                    <table class="pending-table">
+                        <tbody>
+                            <tr>
+                                <td><b>Case Number:</b></td>
+                                <td><span style="background-color: #f2f2f2; padding: 4px; border-radius: 5px;">{{record?.caseNum}}</span></td>
+                            </tr>
+                            <tr>
+                                <td><b>Requester's Full Name:</b></td>
+                                <td>{{record?.userInfo.fullName}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Requester's Organization:</b></td>
+                                <td>{{record?.userInfo.organization}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Requester's Email:</b></td>
+                                <td><a [href]="'mailto:' + record?.userInfo.email">{{record?.userInfo.email}}</a></td>
+                            </tr>
+                            <tr>
+                                <td><b>Country:</b></td>
+                                <td>{{record?.userInfo.country}}</td>
+                            </tr>
+                            <tr>
+                                <td><b>Description:</b></td>
+                                <td><div class="record-description-container">
+                                    <div class="record-description-title"><span>Product Title: </span>{{recordDescription.title}}</div>
+                                    <div class="record-description-address"><span>Requester's Address: </span>{{recordDescription.address}}</div>
+                                    <div class="record-description-phone"><span>Requester's Phone: </span>{{recordDescription.phone}}</div>
+                                  </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="rpdform-status-message">
+                        <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
+                        This request is still <b>{{record?.userInfo.approvalStatus.toLowerCase()}}</b>. Please approve
+                        or decline this request as soon as possible.
+                    </div>
+
+
+                </div>
+                <button class="rpdform-btn me-4 success-alt" (click)="onApprove()">Approve</button>
+                <button class="rpdform-btn danger" (click)="onDecline()">Decline</button>
+            </div>
+        </ng-template>
+        <ng-template [ngIf]="loaded && status.toLowerCase().includes('approved')">
+
+            <div class="rpdform-form-wrapper">
+                <div>This request has been approved on <strong>{{statusDate | date:'long'}}</strong> by <strong>{{smeEmail}}</strong>. Following are details about this request:</div>
+                <div class="divider"></div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><b>Case Number:</b></td>
+                            <td><span style="background-color: #f2f2f2; padding: 4px; border-radius: 5px;">{{record?.caseNum}}</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Requester's Full Name:</b></td>
+                            <td>{{record?.userInfo.fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Requester's Organization:</b></td>
+                            <td>{{record?.userInfo.organization}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Requester's Email:</b></td>
+                            <td><a [href]="'mailto:' + record?.userInfo.email">{{record?.userInfo.email}}</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>Country:</b></td>
+                            <td>{{record?.userInfo.country}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Description:</b></td>
+                            <td><div class="record-description-container">
+                                <div class="record-description-title"><span>Product Title: </span>{{recordDescription.title}}</div>
+                                <div class="record-description-address"><span>Requester's Address: </span>{{recordDescription.address}}</div>
+                                <div class="record-description-phone"><span>Requester's Phone: </span>{{recordDescription.phone}}</div>
+                              </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="rpdform-status-message">
+                    <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
+                    To cancel the requester's access to the data, please click decline.
+                </div>
+
+                <button class="rpdform-btn danger" (click)="onDecline()">Decline</button>
+            </div>
+        </ng-template>
+        <ng-template [ngIf]="loaded && status.toLowerCase().includes('declined')">
+            <div class="rpdform-form-wrapper">
+                <div>This request has been declined on <strong>{{statusDate | date:'long'}}</strong> by <strong>{{smeEmail}}</strong>. Following are details about this request:</div>
+                <div class="divider"></div>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td><b>Case Number:</b></td>
+                            <td><span style="background-color: #f2f2f2; padding: 4px; border-radius: 5px;">{{record?.caseNum}}</span></td>
+                        </tr>
+                        <tr>
+                            <td><b>Requester's Full Name:</b></td>
+                            <td>{{record?.userInfo.fullName}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Requester's Organization:</b></td>
+                            <td>{{record?.userInfo.organization}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Requester's Email:</b></td>
+                            <td><a [href]="'mailto:' + record?.userInfo.email">{{record?.userInfo.email}}</a></td>
+                        </tr>
+                        <tr>
+                            <td><b>Country:</b></td>
+                            <td>{{record?.userInfo.country}}</td>
+                        </tr>
+                        <tr>
+                            <td><b>Description:</b></td>
+                            <td><div class="record-description-container">
+                                <div class="record-description-title"><span>Product Title: </span>{{recordDescription.title}}</div>
+                                <div class="record-description-address"><span>Requester's Address: </span>{{recordDescription.address}}</div>
+                                <div class="record-description-phone"><span>Requester's Phone: </span>{{recordDescription.phone}}</div>
+                              </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="rpdform-status-message">
+                    <i class="pi pi-info-circle" style="font-size: 1rem; color: 'var(--nist-blue-default)'"></i>
+                    To override this decline, please click approve.
+                </div>
+                <button class="rpdform-btn success-alt" (click)="onApprove()">Approve</button>
+            </div>
+        </ng-template>
+    </div>
+    
+    <!-- <p-messages [showTransitionOptions]="'500ms'" [hideTransitionOptions]="'500ms'" [enableService]="true"
+                    [escape]="false"></p-messages> -->
+
+   
+</div>
+<p-toast></p-toast>
+<app-footer></app-footer>

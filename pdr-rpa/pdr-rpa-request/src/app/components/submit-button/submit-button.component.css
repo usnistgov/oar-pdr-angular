@@ -1,0 +1,23 @@
+.spinner ::ng-deep .p-progress-spinner {
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+  }
+
+  button {
+    background-color: white;
+    border-color: var(--nist-blue-dark);
+    color: var(--nist-blue-dark);
+    min-width: 200px;
+    min-height: 50px;
+    text-transform: uppercase;
+    border-radius: 999px;
+    border: 2px solid var(--nist-blue-default);
+  }
+
+  button:hover, button:active, button:disabled, button:focus {
+    background-color: var(--nist-blue-dark);
+    border-color: var(--nist-blue-dark);
+    color: white;
+  }
