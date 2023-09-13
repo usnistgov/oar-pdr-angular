@@ -5,7 +5,7 @@
         "emitDecoratorMetadata": true,
         "outDir": "../../out-tsc/spec",
         "types": [
-        "jest"
+        "jest", "node"
         ]
     },
     "files": [

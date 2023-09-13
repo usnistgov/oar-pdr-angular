@@ -1,6 +1,6 @@
-const baseConfig = require('./jest.base.config');
 module.exports = {
-    ...baseConfig,
+    preset: 'jest-preset-angular',
+    setupFilesAfterEnv: ['./setup-jest.ts'],
     moduleNameMapper: {
         "^lodash-es$": "lodash"
     },
