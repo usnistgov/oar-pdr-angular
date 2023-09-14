@@ -27,6 +27,14 @@
       "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
         "edit": "Enter a working URL for a homepage other than this repository landing page. Click <i class='faa faa-check'></i> to save changes<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
     },
+    "doi": {
+        "label": "Identifier",
+        "general": "Place holder for identifier help."
+    },
+    "version": {
+        "label": "Version",
+        "general": "Placeholder for version help."
+    },
     "description": {
         "label": "Description",
         "general": "This field is for a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource.",

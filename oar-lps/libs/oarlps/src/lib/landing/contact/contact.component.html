@@ -21,8 +21,8 @@
                     <span *ngIf="!hasEmail">{{currentContact.fn}}</span>
                 </strong>.
 
-                <i style="cursor: pointer;" class="faa"
-                [ngClass]="{'faa-plus-square-o': !clickContact, 'faa-minus-square-o': clickContact}"
+                <i style="cursor: pointer; margin-left: 0.5rem;" class="faa"
+                [ngClass]="{'faa-caret-right': !clickContact, 'faa-caret-down': clickContact}"
                 aria-hidden="true"
                 (click)="closeContent = !closeContent; clickContact=expandContact();"></i>
 

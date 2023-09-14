@@ -2,9 +2,12 @@
     <span class="" *ngIf="record.version" style="padding-right: 10pt;"> Version: <strong>{{record.version}}</strong></span>
     <span class="" *ngIf="record.versionHistory" style="padding-right: 15pt;">...
         <i style="cursor: pointer;" class="faa" aria-hidden="true"
-            [ngClass]="{'faa-plus-square-o': !clickHistory, 'faa-minus-square-o': clickHistory}"
+            [ngClass]="{'faa-caret-right': !clickHistory, 'faa-caret-down': clickHistory}"
             (click)="closeHistory = !closeHistory; clickHistory = expandHistory();"></i>
     </span>
+
+    <!-- Info button -->
+    <i class="faa faa-info-circle link-icon" (click)="refreshHelpText()" title="About version" ngbTooltip="About version" style="cursor: pointer;margin-right: 10px;"></i> 
 
     <!-- Releases, Last modified and creators -->
     <span class="" *ngIf="record.issued" style="padding-right: 10pt;"> Released:
