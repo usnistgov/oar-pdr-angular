@@ -109,7 +109,10 @@ export class SidebarComponent implements OnInit {
         }   
 
         // Update help title
-        this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
+        if(this.helpContentAll[sectionHelp.section]["label"])
+            this.title = this.helpContentAll[sectionHelp.section]["label"].trim() + " Help";
+        else
+            this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
 
         this.suggustedSections = this.sidebarService.getSuggestions(this.record, this.resourceType);
         // this.required = this.suggustedSections['required'];
