@@ -101,7 +101,7 @@ export class SidebarComponent implements OnInit {
             }
 
             // Add "see also" if available
-            if(this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]])
+            if(this.helpContentAll[sectionHelp.section] &&this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]])
                         this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]] + "<p><p>";
             
         }else {
@@ -109,7 +109,7 @@ export class SidebarComponent implements OnInit {
         }   
 
         // Update help title
-        if(this.helpContentAll[sectionHelp.section]["label"])
+        if(this.helpContentAll[sectionHelp.section] && this.helpContentAll[sectionHelp.section]["label"])
             this.title = this.helpContentAll[sectionHelp.section]["label"].trim() + " Help";
         else
             this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
