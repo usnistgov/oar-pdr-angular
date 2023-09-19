@@ -24,7 +24,7 @@ export abstract class MetadataService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    abstract getMetadata(id : string, ngenv?: IEnvironment) : Observable<NerdmRes>;
+    abstract getMetadata(id : string, authtoken? : string) : Observable<NerdmRes>;
 }
 
 /**
@@ -49,12 +49,12 @@ export class CachingMetadataService extends MetadataService {
         return this.cache.get(id) as NerdmRes;
     }
 
-    getMetadata(id : string) : Observable<NerdmRes> {
+    getMetadata(id : string, authtoken? : string) : Observable<NerdmRes> {
         let rec : NerdmRes = this.queryCache(id);
         if (rec !== undefined) 
             return rxjs.of(rec);
 
-        let out$ = this.del.getMetadata(id);
+        let out$ = this.del.getMetadata(id, authtoken);
         out$.subscribe(
             (rcrd) => { this.cacheRecord(id, rcrd.data); },
             (err) => {
@@ -187,7 +187,11 @@ export class RemoteWebMetadataService extends MetadataService {
             url += "?doi=";
         url += id;
         console.log("Pulling NERDm record from metadata service: " + url);
-        let out = this.webclient.get(url) as Observable<NerdmRes>;
+
+        let hdrs = { };
+        if (authtoken) 
+            hdrs = new HttpHeaders({ Authorization: "Bearer "+authtoken });
+        let out = this.webclient.get(url, { headers: hdrs, responseType: "json" }) as Observable<NerdmRes>;
         return out.pipe(
             rxjsop.map<NerdmRes, NerdmRes>(data => {
                 // strip out MongoDb search artifacts

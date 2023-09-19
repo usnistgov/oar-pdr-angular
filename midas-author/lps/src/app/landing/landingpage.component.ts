@@ -20,6 +20,7 @@ import { CartConstants } from 'oarlps';
 import { RecordLevelMetrics } from 'oarlps';
 import { MetricsService } from 'oarlps';
 import { formatBytes } from 'oarlps';
+import { AuthenticationService } from 'oarng';
 import { LandingBodyComponent } from './landingbody.component';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 // import { MetricsinfoComponent } from './metricsinfo/metricsinfo.component';
@@ -202,7 +203,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public metricsService: MetricsService,
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
-                public lpService: LandingpageService) 
+                public lpService: LandingpageService,
+                public authsvc: AuthenticationService) 
     {
         // Init the size of landing page body and the help box 
         this.updateScreenSize();
@@ -305,87 +307,95 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         // Retrive Nerdm record and keep it in case we need to display it in preview mode
         // use case: user manually open PDR landing page but the record was not edited by MIDAS
         // This part will only be executed if "editEnabled=true" is not in URL parameter.
-        this.mdserv.getMetadata(this.reqId).subscribe(
-        (data) => {
-            // successful metadata request
-            this.md = data;
-            // this.midasRecord = data;
+        this.authsvc.getCredentials().subscribe(
+            creds => {
+                this.mdserv.getMetadata(this.reqId, creds.token).subscribe(
+                    (data) => {
+                        // successful metadata request
+                        this.md = data;
+                        // this.midasRecord = data;
 
-            if (!this.md) {
-                // id not found; reroute
-                console.error("No data found for ID=" + this.reqId);
-                metadataError = "not-found";
-            }
-            else{
-                this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
-
-                if(this.inBrowser){
-                    if(this.editEnabled){
-                        this.metricsData.hasCurrentMetrics = false;
-                        this.showMetrics = true;
-                    }else{
-                        if(this.theme == Themes.DEFAULT_THEME){
-                            console.log("Getting metrics...");
-                            this.getMetrics();
+                        if (!this.md) {
+                            // id not found; reroute
+                            console.error("No data found for ID=" + this.reqId);
+                            metadataError = "not-found";
                         }
-                            
-                    }
-                }
+                        else{
+                            this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
-                // proceed with rendering of the component
-                this.useMetadata();
+                            if(this.inBrowser){
+                                if(this.editEnabled){
+                                    this.metricsData.hasCurrentMetrics = false;
+                                    this.showMetrics = true;
+                                }else{
+                                    if(this.theme == Themes.DEFAULT_THEME){
+                                        console.log("Getting metrics...");
+                                        this.getMetrics();
+                                    }
+                                    
+                                }
+                            }
 
-                // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                // in editing mode.  This is done in concert with the authentication process that can involve 
-                // redirection to an authentication server; on successful authentication, the server can 
-                // redirect the browser back to this landing page with editing turned on. 
-                if (this.inBrowser) {
-                    // Display content after 15sec no matter what
-                    setTimeout(() => {
+                            // proceed with rendering of the component
+                            this.useMetadata();
+
+                            // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                            // in editing mode.  This is done in concert with the authentication process that can involve 
+                            // redirection to an authentication server; on successful authentication, the server can 
+                            // redirect the browser back to this landing page with editing turned on. 
+                            if (this.inBrowser) {
+                                // Display content after 15sec no matter what
+                                setTimeout(() => {
+                                    this.edstatsvc.setShowLPContent(true);
+                                }, 15000);
+                                
+                                if (this.editRequested) {
+                                    showError = false;
+                                    // console.log("Returning from authentication redirection (editmode="+
+                                    //             this.editRequested+")");
+                                    
+                                    // Need to pass reqID (resID) because the resID in editControlComponent
+                                    // has not been set yet and the startEditing function relies on it.
+                                    this.edstatsvc.startEditing(this.reqId);
+                                }
+                                else 
+                                    showError = true;
+                            }
+                        }
+
+                        if (showError) {
+                            if (metadataError == "not-found") {
+                                if (this.editRequested) {
+                                    console.log("ID not found...");
+                                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                                    this.setMessage();
+                                    this.displaySpecialMessage = true;
+                                }
+                                else {
+                                    this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
+                                }
+                            }
+                        }
+                    },
+                    (err) => {
+                        console.error("Failed to retrieve metadata: ", err);
                         this.edstatsvc.setShowLPContent(true);
-                    }, 15000);
-        
-                    if (this.editRequested) {
-                        showError = false;
-                        // console.log("Returning from authentication redirection (editmode="+
-                        //             this.editRequested+")");
-                        
-                        // Need to pass reqID (resID) because the resID in editControlComponent
-                        // has not been set yet and the startEditing function relies on it.
-                        this.edstatsvc.startEditing(this.reqId);
+                        if (err instanceof IDNotFound) {
+                            metadataError = "not-found";
+                            this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
+                        }
+                        else {
+                            metadataError = "int-error";
+                            // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+                            this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+                        }
                     }
-                    else 
-                        showError = true;
-                }
+                );
+            },
+            err => {
+                console.error("Failed to authenticate user; unable to load NERDm record: ", err);
             }
-
-            if (showError) {
-                if (metadataError == "not-found") {
-                    if (this.editRequested) {
-                        console.log("ID not found...");
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
-                        this.setMessage();
-                        this.displaySpecialMessage = true;
-                    }
-                    else {
-                        this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                    }
-                }
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve metadata: ", err);
-            this.edstatsvc.setShowLPContent(true);
-            if (err instanceof IDNotFound) {
-                metadataError = "not-found";
-                this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-            }
-            else {
-                metadataError = "int-error";
-                // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-                this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-            }
-        });
+        );
     }
 
     /**
