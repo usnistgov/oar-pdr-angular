@@ -190,7 +190,7 @@ export class RemoteWebMetadataService extends MetadataService {
 
         let hdrs = { };
         if (authtoken) 
-            hdrs = new HttpHeaders({ Authorization: "Bearer "+authtoken });
+            hdrs = { Authorization: "Bearer "+authtoken };
         let out = this.webclient.get(url, { headers: hdrs, responseType: "json" }) as Observable<NerdmRes>;
         return out.pipe(
             rxjsop.map<NerdmRes, NerdmRes>(data => {
