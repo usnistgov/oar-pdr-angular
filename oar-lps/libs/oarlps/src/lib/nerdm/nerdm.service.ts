@@ -179,7 +179,7 @@ export class RemoteWebMetadataService extends MetadataService {
      * 
      * @param id   the identifier of the resource to load
      */
-    getMetadata(id : string) : Observable<NerdmRes> {
+    getMetadata(id : string, authtoken? : string) : Observable<NerdmRes> {
         let url = this.endpoint;
         if (id.startsWith("ark:/"))
             url += "?@id=";
