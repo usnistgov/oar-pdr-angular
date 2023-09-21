@@ -629,6 +629,8 @@ export class AuthorListComponent implements OnInit {
     }
 
     onAutherChange(event) {
+        console.log("event", event);
+        
         this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
         this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];

@@ -152,6 +152,7 @@ export class VisithomeComponent implements OnInit {
                 this.restoreOriginal();
                 break;
             default:
+                this.setMode();
                 break;
         }
     }
@@ -173,8 +174,6 @@ export class VisithomeComponent implements OnInit {
             this.record[this.fieldName] = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName]));
             this.visitHomeURL = this.record[this.fieldName];
         }
-
-        this.setMode();
     }
 
     saveVisitHomeURL(refreshHelp: boolean = true) {

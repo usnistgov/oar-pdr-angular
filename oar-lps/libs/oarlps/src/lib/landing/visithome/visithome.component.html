@@ -41,31 +41,4 @@
 <!-- Visit homepage editor -->
 <div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
     <lib-visithome-edit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit>
-    
-    <!-- <table style="width: 100%;">
-        <tr  style="width: 100%;">
-
-            <td class="edit-block" style="width: calc(100%-30px);" [style.background-color]="backgroundColor">
-                <lib-visithome-edit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' (dataChangedOutput)="onDataChange($event)"></lib-visithome-edit>
-            </td>
-
-            <td style="width: 30px;vertical-align: top;">
-
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveVisitHomeURL()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
-                    <i class="faa faa-check"></i>
-                </button>
-        
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
-                    (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
-                    <i class="faa faa-remove"></i>
-                </button>
-
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
-                [disabled]="!updated" (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
-                    <i class="faa faa-undo"
-                        [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"></i>
-                </button>                
-            </td>          
-        </tr>
-    </table> -->
 </div>

@@ -8,6 +8,8 @@ import { AuthorService } from '../author.service';
   styleUrls: ['../../landing.component.scss', './author-edit.component.css']
 })
 export class AuthorEditComponent implements OnInit {
+    orcidValid: boolean = false;
+
     @Input() author: Author = {} as Author;
     @Input() backgroundColor: string = 'var(--editable)';
     @Input() editMode: string = "edit";
@@ -17,6 +19,12 @@ export class AuthorEditComponent implements OnInit {
     constructor(private authorService: AuthorService) { }
 
     ngOnInit(): void {
+        if(!this.orcid_validation(this.author.orcid))
+        {
+            this.orcidValid = false;
+        }else{
+            this.orcidValid = true;
+        }
     }
 
     /*
@@ -71,21 +79,17 @@ export class AuthorEditComponent implements OnInit {
      * ORCID validation for UI
      * @param author - author object
      */
-    validateOrcid(event, author)
+    validateOrcid(author)
     {
         author.dataChanged = true;
-        this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
-
-        console.log('event', event);
+        this.dataChanged.next({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
 
         if(!this.orcid_validation(author.orcid))
         {
-            author.orcidValid = false;
+            this.orcidValid = false;
         }else{
-            author.orcidValid = true;
+            this.orcidValid = true;
         }
-
-        console.log('author.orcidValid', author.orcidValid);
     }  
     
     /**

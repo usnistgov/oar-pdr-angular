@@ -191,6 +191,8 @@ export class AuthorComponent implements OnInit {
      * @param dataChanged parameter passed from child component
      */
     onAuthorChange(dataChanged: any) {
+        console.log('dataChanged', dataChanged);
+        
         switch(dataChanged.action) {
             case 'hideEditBlock':
                 this.isEditing = false;

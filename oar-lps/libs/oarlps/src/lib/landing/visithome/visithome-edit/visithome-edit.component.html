@@ -11,9 +11,12 @@
                         <td>
                             <textarea autocomplete="off" [(ngModel)]='visitHomeURL' (ngModelChange)="onURLChange($event)" style="width: 100%;margin: 10px 10px 0px 0px; padding: 5px;height: fit-content;" libTextareaAutoresize></textarea>
                         </td>
-                        <td width="30px" align="right" style="vertical-align:top;">
+                        <td width="60px" align="right" style="vertical-align:top;">
                             <button class="edit_button" style="margin: 10px 0px 0px 2px" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
-                                <i class="faa faa-remove icon_enabled"></i>
+                                <i class="faa faa-eraser icon_enabled"></i>
+                            </button>
+                            <button class="edit_button" style="margin: 10px 0px 0px 2px" (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
+                                <i class="faa faa-undo icon_enabled"></i>
                             </button>
                         </td>
                     </tr>
@@ -31,9 +34,9 @@
                 <i class="faa faa-check"></i>
             </button>
     
-            <!-- Cancel button -->
+            <!-- Hide edit window button -->
             <button class="edit_button" type="button"
-                (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
+                (click)="commandOut('close')" aria-label="Close button" ngbTooltip="Hide edit window">
                 <i class="faa faa-remove"></i>
             </button>
 
