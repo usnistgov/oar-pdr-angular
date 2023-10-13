@@ -10,6 +10,7 @@ import { AccessPage } from './accessPage';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { DomSanitizer } from "@angular/platform-browser";
 import * as globals from '../../shared/globals/globals';
+import { AccesspageListComponent } from './accesspage-list/accesspage-list.component';
 
 @Component({
     selector: 'lib-accesspage',
@@ -21,16 +22,16 @@ import * as globals from '../../shared/globals/globals';
         state('leave', style({height: '*', opacity: 1})),
         transition('enter <=> leave', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
-        trigger('editExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        trigger('editExpanded', [
+            state('false', style({height: '0px', minHeight: '0'})),
+            state('true', style({height: '*'})),
+            transition('true <=> false', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ])
     ]
 })
 export class AccesspageComponent implements OnInit {
     accessPages: NerdmComp[] = [];
-    editBlockStatus: string = 'collapsed';
+    editBlockExpanded: boolean = false;
     fieldName: string = SectionPrefs.getFieldName(Sections.ACCESS_PAGES);
     editMode: string = MODE.NORNAL; 
     orig_record: any[]; //Original record or the record that's previously saved
@@ -45,6 +46,8 @@ export class AccesspageComponent implements OnInit {
     @Input() record: NerdmRes = null;
     @Input() theme: string;
 
+    @ViewChild('accesspagelist') accesspagelist: AccesspageListComponent;
+
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
@@ -55,8 +58,10 @@ export class AccesspageComponent implements OnInit {
                     if(sectionMode){
                         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                if(this.editBlockStatus == 'expanded')
+                                if(this.editBlockExpanded){
+                                    // this.accesspagelist.saveCurApage(false, MODE.NORNAL);
                                     this.setMode(MODE.NORNAL, false);
+                                }
                             }
                         }else{
                             if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
@@ -82,7 +87,16 @@ export class AccesspageComponent implements OnInit {
     }
 
     get isNormal() { return this.editMode==MODE.NORNAL }
+    get isListing() { return this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
+    get isAdding() { return this.editMode==MODE.ADD }
+
+    /**
+     * Return true if any access page was updated.
+     */
+    get updated() {
+        return this.mdupdsvc.anyFieldUpdated(this.fieldName);
+    }
 
     /**
      * select the AccessPage components to display, adding special disply options
@@ -136,7 +150,9 @@ export class AccesspageComponent implements OnInit {
      */
     getStyle(){
         if(this.mdupdsvc.isEditMode){
-            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged, undefined, this.isEditing);
+            let bkcolor = this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged, undefined, this.isEditing)
+
+            return bkcolor;
         }else{
             return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
         }
@@ -154,14 +170,14 @@ export class AccesspageComponent implements OnInit {
      */   
     editIconClass() {
         if(!this.isEditing){
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }
     }
 
     openEditBlock() {
-        this.editBlockStatus = 'expanded';
+        this.editBlockExpanded = true;
         this.lpService.setCurrentSection("dataAccess");
     }
 
@@ -197,9 +213,17 @@ export class AccesspageComponent implements OnInit {
                 }
                 break;
 
+            case MODE.ADD:
+
+                break;
+
+            case MODE.EDIT:
+
+                break;
+
             default: // normal
                 // Collapse the edit block
-                this.editBlockStatus = 'collapsed'
+                this.editBlockExpanded = false;
                 this.setOverflowStyle();
 
                 // Update help text
@@ -221,7 +245,7 @@ export class AccesspageComponent implements OnInit {
      * Then tooltip will not be cut off. 
      */
     setOverflowStyle() {
-        if(this.editBlockStatus == 'collapsed') {
+        if(!this.editBlockExpanded) {
             this.overflowStyle = 'hidden';
         }else {
             this.overflowStyle = 'hidden';
@@ -233,19 +257,27 @@ export class AccesspageComponent implements OnInit {
 
     /**
      * Handle requests from child component
-     * @param dataChanged parameter passed from child component
+     * @param status parameter passed from child component
      */
-    onAuthorChange(dataChanged: any) {
-        switch(dataChanged.action) {
-            case 'hideEditBlock':
+    onStatusChange(status: string) {
+        switch(status) {
+            case 'listing':
+                this.setMode(MODE.LIST);
+                break;
+            case 'adding':
+                this.setMode(MODE.ADD);
+                break;
+            case 'editing':
+                this.setMode(MODE.EDIT);
+                break;
+            default: //normal
                 this.setMode(MODE.NORNAL);
                 break;
-            case 'dataChanged':
-
-                break;
-            default:
-                break;
         }
+    }
+
+    restoreOriginal() {
+        this.accesspagelist.restoreOriginal();
     }
 
 }

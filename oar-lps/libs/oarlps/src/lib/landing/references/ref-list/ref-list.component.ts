@@ -57,6 +57,7 @@ export class RefListComponent implements OnInit {
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
+    @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
     constructor(public mdupdsvc : MetadataUpdateService,        
         private modalService: NgbModal,              
@@ -206,6 +207,8 @@ export class RefListComponent implements OnInit {
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        this.editmodeOutput.next(this.editMode);    
     }
 
     /**
@@ -229,9 +232,11 @@ export class RefListComponent implements OnInit {
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                         resolve(true);
-                    }else
-                        console.error("acknowledge references update failure");
+                    }else{
+                        let msg = "References update failed";
+                        console.error(msg);
                         resolve(false);
+                    }
                 });
             }else{  // Update all references
                 if(this.dataChanged){
@@ -242,9 +247,11 @@ export class RefListComponent implements OnInit {
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                             resolve(true);
-                        }else
-                            console.error("acknowledge references update failure");
+                        }else{
+                            let msg = "References update failed";
+                            console.error(msg);
                             resolve(false);
+                        }
                     });
                 }
             }
@@ -268,7 +275,6 @@ export class RefListComponent implements OnInit {
      * Save current reference
      */
     saveCurRef(refreshHelp: boolean = true) {
-        console.log("this.currentRef", this.currentRef);
         if(this.isAdding){
             if(this.currentRef.dataChanged){
                 var postMessage: any = {};
@@ -276,17 +282,17 @@ export class RefListComponent implements OnInit {
 
                 this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
-                        console.log("Return ref", rec);
                         this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;
-                    }else
-                        console.error("Failed to add reference");
+                    }else{
+                        let msg = "Failed to add reference";
+                        console.error(msg);
                         return;
+                    }
                 });
             }else{  //If no data has been entered, remove this reference
-                console.log("Removing current ref...")
                 this.removeRef(this.currentRefIndex);
             }
         }else{
@@ -308,14 +314,17 @@ export class RefListComponent implements OnInit {
                             ref.dataChanged = false;
                         });
                     }
-                }else
-                    console.error("Failed to undo " + this.fieldName + " metadata");
+                }else{
+                    let msg = "Failed to undo " + this.fieldName + " metadata"
+                    console.error(msg);
                     return;
+                }
             });
         }
         this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
 
         this.orderChanged = false;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderReset"});
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
@@ -443,6 +452,7 @@ export class RefListComponent implements OnInit {
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.orderChanged = true;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
         // Update reference data
         this.updateMatadata();
 
@@ -458,6 +468,7 @@ export class RefListComponent implements OnInit {
     removeRef(index: number) {
         this.record.references.splice(index,1);
         this.orderChanged = true;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
         this.updateMatadata();
     }
 
@@ -489,7 +500,8 @@ export class RefListComponent implements OnInit {
                         this.currentRef = this.record[this.fieldName][this.currentRefIndex];
                         this.forceReset = true; // Force reference editor to reset data
                     } else {
-                        console.error("Failed to restore reference");
+                        let msg = "Failed to restore reference";
+                        console.error(msg);
                     }
                 })
 
@@ -531,8 +543,11 @@ export class RefListComponent implements OnInit {
                             this.editMode = MODE.EDIT;
                         else    
                             this.editMode = MODE.NORNAL;
+
+                        this.editmodeOutput.next(this.editMode); 
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -647,11 +662,11 @@ export class RefListComponent implements OnInit {
     editIconClass() {
         if(this.isNormal){
             if(this.hasDisplayableReferences())
-                return "faa faa-pencil icon_enabled";
+                return "fas fa-pencil icon_enabled";
             else
-                return "faa faa-pencil icon_disabled";
+                return "fas fa-pencil icon_disabled";
         }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }
     }
 

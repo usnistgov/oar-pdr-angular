@@ -100,7 +100,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             "type": "dap"
         }
 
-        // console.log("request", request);6
+        // console.log("request", request);
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
             if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
@@ -224,15 +224,21 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PUT') {
-            let requestBody = JSON.parse(request.body)
+            let requestBody = JSON.parse(request.body);
             if(Array.isArray(requestBody)) {
                 requestBody.forEach(item => {
-                    if(!item['@id']){
+                    if(typeof item == 'object' && !item['@id']){
                         item['@id'] = this.readableRandomStringMaker(6);
                     }
                 })
             }
+
             return of(new HttpResponse({ status: 200, body: requestBody }));
+
+            // Simulate error response:
+            // throw new HttpErrorResponse(
+            //     {"status": 401}
+            // );
         }        
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
@@ -247,7 +253,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);
-            console.log("request body", obj);
 
             return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
         }

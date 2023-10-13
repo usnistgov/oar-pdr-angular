@@ -46,6 +46,7 @@ export class AuthorListComponent implements OnInit {
     @Input() record: any[];
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
+    @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
     
     //Drag and drop
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
@@ -96,6 +97,7 @@ export class AuthorListComponent implements OnInit {
 
         if(changes.forceReset){
             this.orderChanged = false;
+            this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
         }
     }
 
@@ -188,8 +190,10 @@ export class AuthorListComponent implements OnInit {
         this.updateMetadata().then((success) => {
             if(success){
                 this.orderChanged = true;
+                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
             }else{
-                console.error("Update failed")
+                let msg = "Update failed";
+                console.error(msg);
             }
         });
     }
@@ -239,9 +243,11 @@ export class AuthorListComponent implements OnInit {
                         this.setMode(MODE.NORNAL, refreshHelp);
                     else
                         this.setMode(MODE.LIST, refreshHelp);
-                }else
-                    console.error("Failed to add author");
+                }else{
+                    let msg = "Failed to add author";
+                    console.error(msg);
                     return;
+                }
             })
         }else{
             if(this.currentAuthor.dataChanged){
@@ -252,7 +258,8 @@ export class AuthorListComponent implements OnInit {
                         else
                             this.setMode(MODE.LIST, refreshHelp);
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -281,12 +288,15 @@ export class AuthorListComponent implements OnInit {
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("Author updated.", "", 3000);
                             resolve(true);
-                        }else
-                            console.error("acknowledge author update failure");
+                        }else{
+                            let msg = "Author update failed";
+                            console.error(msg);
                             resolve(true);
+                        }
                     });
                 }else{
-                    console.error("Author not found", author['@id']);
+                    let msg = "Author not found";
+                    console.error(msg, author['@id']);
                 }
             }else{  // Update all authors
                 postMessage[this.fieldName] = [];
@@ -300,7 +310,8 @@ export class AuthorListComponent implements OnInit {
                         this.notificationService.showSuccessWithTimeout("Authors updated.", "", 3000);
                         resolve(true);
                     }else{
-                        console.error("acknowledge authors update failure");
+                        let msg = "Authors update failed.";
+                        console.error(msg);
                         resolve(false);
                     }
                 });
@@ -318,8 +329,10 @@ export class AuthorListComponent implements OnInit {
                 this.orderChanged = false;
                 this.forceReset = true;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
+                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
             }else{
-                console.error("Failed to undo keywords metadata");    
+                let msg = "Failed to undo keywords metadata";
+                console.error(msg);   
             }
                 
         });
@@ -364,9 +377,9 @@ export class AuthorListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "faa faa-plus faa-lg icon_enabled";
+            return "fas fa-plus faa-lg icon_enabled";
         }else{
-            return "faa faa-plus faa-lg icon_disabled";
+            return "fas fa-plus faa-lg icon_disabled";
         }
     }
 
@@ -377,7 +390,7 @@ export class AuthorListComponent implements OnInit {
      * @returns undo button icon class
      */
     undoIconClass() {
-        return !this.authorsChanged && !this.authorsUpdated? "faa faa-undo icon_disabled" : "faa faa-undo icon_enabled";
+        return !this.authorsChanged && !this.authorsUpdated? "fas fa-undo icon_disabled" : "fas fa-undo icon_enabled";
     }
 
     /**
@@ -388,9 +401,9 @@ export class AuthorListComponent implements OnInit {
      */   
     editIconClass() {
         if(this.isNormal){
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }
     }
 
@@ -476,8 +489,11 @@ export class AuthorListComponent implements OnInit {
                             this.editMode = MODE.EDIT;
                         else    
                             this.editMode = MODE.NORNAL;
+
+                        this.editmodeOutput.next(this.editMode);
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -580,6 +596,8 @@ export class AuthorListComponent implements OnInit {
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        this.editmodeOutput.next(this.editMode);
     }
 
     /**
@@ -614,11 +632,11 @@ export class AuthorListComponent implements OnInit {
                             // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
                             this.forceReset = true; // Force author editor to reset data
                         } else {
-                            console.error("Failed to restore authors");
+                            let msg = "Failed to restore authors";
+                            console.error(msg);
                         }
                     })
                 }else{
-                    console.log("Removing author", index)
                     this.removeAuthor(index);
                 }
 
@@ -629,8 +647,6 @@ export class AuthorListComponent implements OnInit {
     }
 
     onAutherChange(event) {
-        console.log("event", event);
-        
         this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
         this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];

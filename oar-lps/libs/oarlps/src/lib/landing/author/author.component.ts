@@ -8,6 +8,7 @@ import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../sh
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Author } from './author';
 import * as globals from '../../shared/globals/globals';
+import { AuthorListComponent } from './author-list/author-list.component';
 
 @Component({
     selector: 'app-author',
@@ -24,15 +25,18 @@ import * as globals from '../../shared/globals/globals';
 export class AuthorComponent implements OnInit {
     fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     editMode: string = MODE.NORNAL; 
+    childEditMode: string = MODE.NORNAL;
     originAuthors: any[] = [];
     originalRecord: any[]; //Original record or the record that's previously saved
     authors: Author[] = [];
     editBlockStatus: string = 'collapsed';
     isEditing: boolean = false;
     overflowStyle: string = 'hidden';
+    orderChanged: boolean = false;
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
+
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
@@ -57,7 +61,29 @@ export class AuthorComponent implements OnInit {
      * a field indicating if this data has beed edited
      */
     get updated() { return this.mdupdsvc.anyFieldUpdated(this.fieldName); }
+    get childIsEditing() { return this.childEditMode==MODE.EDIT }
+    get childIsAdding() { return this.childEditMode==MODE.ADD }
 
+    @ViewChild('authorlist') authorList: AuthorListComponent;
+
+    /**
+     * Check if any author data changed or author order changed
+     */
+    get authorsChanged() {
+        let changed: boolean = false;
+
+        if(this.record[this.fieldName]) {
+            this.record[this.fieldName].forEach(author => {
+                changed = changed || author.dataChanged;
+            })
+        }
+        
+        return changed || this.orderChanged;
+    }
+
+    get authorsUpdated() {
+        return this.mdupdsvc.anyFieldUpdated(this.fieldName);
+    }
 
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
@@ -87,7 +113,6 @@ export class AuthorComponent implements OnInit {
     }
 
     startEditing(refreshHelp: boolean = true) {
-        this.isEditing = true;
         this.setMode(MODE.LIST, refreshHelp, MODE.LIST);
     }
 
@@ -191,20 +216,48 @@ export class AuthorComponent implements OnInit {
      * @param dataChanged parameter passed from child component
      */
     onAuthorChange(dataChanged: any) {
-        console.log('dataChanged', dataChanged);
-        
         switch(dataChanged.action) {
             case 'hideEditBlock':
-                this.isEditing = false;
-                this.overflowStyle = 'hidden';
-                this.editBlockStatus = 'collapsed';
+                this.hideEditBlock();
                 break;
             case 'dataChanged':
 
+                break;
+            case 'orderChanged':
+                this.orderChanged = true;
+                break;
+            case 'orderReset':
+                this.orderChanged = false;
                 break;
             default:
                 break;
         }
     }
 
+    /**
+     * Hide edit block
+     */
+    hideEditBlock() {
+        this.isEditing = false;
+        this.overflowStyle = 'hidden';
+        this.editBlockStatus = 'collapsed';
+    }
+
+    /**
+     * Update the edit status of child component 
+     * so we can set the status of the close button
+     * @param editmode editmode from child component
+     */
+    setChildEditMode(editmode: string) {
+        this.childEditMode = editmode;
+    }
+
+    /*
+     *  Undo editing. If no more field was edited, delete the record in staging area.
+     */
+    undoAllChanges() {
+        this.authorList.undoAllChanges();
+        this.setMode(MODE.NORNAL, true);
+        this.orderChanged = false;
+    }    
 }

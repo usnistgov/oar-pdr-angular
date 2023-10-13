@@ -44,6 +44,12 @@ export class AccesspageEditComponent implements OnInit {
         }
     }
 
+    getRecordBackgroundColor() {
+        let bkcolor = this.mdupdsvc.getFieldStyle(this.fieldName, this.accessPage.dataChanged)
+
+        return bkcolor;
+    }
+
     reset() {
         this.editBlockStatus = 'collapsed';
     

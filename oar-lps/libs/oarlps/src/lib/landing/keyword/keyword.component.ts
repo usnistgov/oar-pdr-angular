@@ -21,11 +21,12 @@ export class KeywordComponent implements OnInit {
     editMode: string = MODE.NORNAL; 
     placeholder: string = "Enter keywords separated by comma";
     isEditing: boolean = false;
-    keywords: string = "";
+    keywords: string[] = [];
     originKeywords: string = "";
     originalRecord: any[]; //Original record or the record that's previously saved
     message: string = "";
     backColor: string = "white";
+    dataChanged: boolean = false;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal, 
@@ -98,7 +99,7 @@ export class KeywordComponent implements OnInit {
      */
     getKeywords() {
         if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
-            this.keywords = this.record[this.fieldName].join(",");
+            this.keywords = JSON.parse(JSON.stringify(this.record[this.fieldName]));
 
         if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
             this.originKeywords = this.originalRecord[this.fieldName].join(",");
@@ -129,11 +130,35 @@ export class KeywordComponent implements OnInit {
         this.setBackground();
     }
 
-    keywordChanges() {
-        let keywordChanged = this.record[this.fieldName].filter(x => !this.originalRecord[this.fieldName].includes(x));
+    /**
+     * Check if current keywords changed
+     * @returns true if current keyword changed
+     */
+    currentKeywordChanged() {
+        return this.keywords.filter(x => !this.originalRecord[this.fieldName].includes(x));
+    }
+
+    /**
+     * Check if any keyword changed (current or previous)
+     * @returns true if keyword changed
+     */
+    keywordChanged() {
+        // let keywordChanged = this.record[this.fieldName].filter(x => !this.originalRecord[this.fieldName].includes(x));
         let keywordChanged2 = this.originalRecord[this.fieldName].filter(x => !this.record[this.fieldName].includes(x));
 
-        return (keywordChanged.length > 0 || keywordChanged2.length > 0);
+        return (this.currentKeywordChanged() || keywordChanged2.length > 0);
+    }
+
+    onAdd(event) {
+        console.log("On add", event);
+        this.dataChanged = true;
+    
+    }
+
+    onRemove(event) {
+        console.log("On remove", event);
+        this.dataChanged = true;
+    
     }
 
     /**
@@ -142,30 +167,42 @@ export class KeywordComponent implements OnInit {
      */
     onSave(refreshHelp: boolean = true) {
         // Trim items 
-        this.record[this.fieldName] = this.record[this.fieldName].map(element => {
+        // this.record[this.fieldName] = this.record[this.fieldName].map(element => {
+        //     return element.trim();
+        // });
+
+        this.keywords = this.keywords.map(element => {
             return element.trim();
         });
-        // remove duplicates
-        this.record[this.fieldName] = this.record[this.fieldName].filter((item, index)=> this.record[this.fieldName].indexOf(item) === index);
 
-        if(this.keywordChanges()) {
+        // remove duplicates
+        this.keywords = this.keywords.filter((item, index)=> this.keywords.indexOf(item) === index);
+
+        if(this.currentKeywordChanged()) {
             let updmd = {};
             // updmd[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
             // this.record[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
 
-            updmd[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+            updmd[this.fieldName] = JSON.parse(JSON.stringify(this.keywords));
 
             this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                if (updateSuccess)
+                if (updateSuccess){
                     this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
-                else
-                    console.error("acknowledge keywords update failure");
-            });
-        }
 
-        this.setMode(MODE.NORNAL, refreshHelp);
-        this.isEditing = false;
+                    this.setMode(MODE.NORNAL, refreshHelp);
+                    this.isEditing = false;
+                }else{
+                    let msg = "Keywords update failed";
+                    console.error(msg);
+                    this.setMode(MODE.NORNAL, refreshHelp);
+                    this.isEditing = false;
+                }
+            });
+        }else{
+            this.setMode(MODE.NORNAL, refreshHelp);
+            this.isEditing = false;
+        }
     }
 
     /**
@@ -175,7 +212,7 @@ export class KeywordComponent implements OnInit {
      * @param keywords 
      */
     setBackground() {
-        if(this.keywordChanges()){
+        if(this.keywordChanged()){
             this.backColor = 'var(--data-changed)';
         }else{
             this.backColor = 'white';
@@ -185,14 +222,16 @@ export class KeywordComponent implements OnInit {
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
-    undoEditing() {
+    restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode(MODE.NORNAL);
 
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            }else
-                console.error("Failed to undo keywords metadata")
+            }else{
+                let msg = "Failed to undo keywords metadata";
+                console.error(msg);
+            }
         });
         this.setBackground();
     }
@@ -223,7 +262,12 @@ export class KeywordComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
-            this.lpService.setEditing(sectionMode);        
+        if(editmode != MODE.NORNAL){
+            this.lpService.setEditing(sectionMode); 
+            this.isEditing = true; 
+        }else{
+            this.isEditing = false;
+            this.dataChanged = false;
+        }    
     }
 }

@@ -1,5 +1,5 @@
 <div class="editable_container" style="width: 100%;" >
-    <div class="editable_field" style="width: calc(100% - 100px);" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, accessPage.dataChanged)">
+    <div class="editable_field" style="width: calc(100% - 100px);" [ngStyle]="getRecordBackgroundColor()">
             <table align="center" style="width: 100%;">
                 <!-- Link URL -->
                 <tr>
@@ -48,13 +48,13 @@
             </table>
     </div>
     <div class="editable_field" style="white-space: nowrap;">
-        <button class="edit_button" type="button" (click)="commandOut('saveCurrentChanges')" aria-label="edit button" [disabled]="noURL || !accessPage.dataChanged" ngbTooltip="Save current changes">
+        <button class="edit_button" type="button" (click)="commandOut('saveCurrentPage')" aria-label="edit button" [disabled]="noURL || !accessPage.dataChanged" ngbTooltip="Save current changes">
             <i class="faa faa-check"></i>
         </button>
 
         <button class="edit_button" type="button"
             (click)="commandOut('undoCurrentChanges')" aria-label="undo button" ngbTooltip="Undo current changes">
-            <i class="faa faa-remove"></i>
+            <i class="fas fa-times"></i>
         </button>
     </div>
 </div>

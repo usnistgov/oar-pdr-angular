@@ -10,6 +10,7 @@ export class VisithomeEditComponent implements OnInit {
     defaultText: string = "Enter description here...";
     originalURL: string = "";
     msg: string = "";
+    currentValueChanged: boolean = false;
 
     @Input() visitHomeURL: any;
     @Input() editMode: string;
@@ -23,7 +24,7 @@ export class VisithomeEditComponent implements OnInit {
 
     ngOnInit(): void {
         this.originalURL = this.visitHomeURL;
-        this.visitHomeURL = this.originalURL;
+
         if(this.originalURL == null || this.originalURL == undefined)
             this.originalURL = "Not available.";
     }
@@ -33,14 +34,27 @@ export class VisithomeEditComponent implements OnInit {
     *   white spaces
     */
     onURLChange(event: any) {
-        // console.log("input value changed", event);
+        console.log("input value changed", event);
         // this.inputValue[this.field] = event; 
-        this.dataChangedOutput.emit({"visitHomeURL": this.visitHomeURL, "action": "dataChanged"});
+        this.currentValueChanged = this.originalURL != this.visitHomeURL;
+
+        if(this.currentValueChanged) {
+            this.dataChangedOutput.emit({"visitHomeURL": this.visitHomeURL, "action": "dataChanged"});
+        }else{
+            this.dataChangedOutput.emit({"visitHomeURL": this.visitHomeURL, "action": "dataReset"});
+        }
     }
 
     clearText() {
         this.visitHomeURL = "";
-        this.dataChangedOutput.emit({"visitHomeURL": this.visitHomeURL, "action": "dataChanged"});
+        
+        this.currentValueChanged = this.originalURL != this.visitHomeURL;
+
+        if(this.currentValueChanged) {
+            this.dataChangedOutput.emit({"visitHomeURL": this.visitHomeURL, "action": "dataChanged"});
+        }else{
+            this.dataChangedOutput.emit({"visitHomeURL": this.visitHomeURL, "action": "dataReset"});
+        }
     }
 
     /**
@@ -48,16 +62,27 @@ export class VisithomeEditComponent implements OnInit {
      * @param cmd command
      */
     commandOut(cmd: string) {
-        if(cmd != 'saveURL') {
-            this.msg = "";
-            this.cmdOutput.emit({"command": cmd});
-        }else {
-            if(this.isValidUrl(this.visitHomeURL)){
+        switch(cmd) {
+            case 'saveURL':
+                if(!this.visitHomeURL || this.isValidUrl(this.visitHomeURL)){
+                    this.msg = "";
+                    this.currentValueChanged = false;
+                    this.cmdOutput.emit({"command": cmd});
+                }else{
+                    this.msg = "Please enter a valid url.";
+                }
+
+                break;
+
+            case 'undoCurrentChanges':
                 this.msg = "";
+                this.currentValueChanged = false;
                 this.cmdOutput.emit({"command": cmd});
-            }else{
-                this.msg = "Please enter a valid url.";
-            }
+                break;
+
+            default:
+
+                break;
         }
     }
 

@@ -179,7 +179,7 @@ export class TextEditComponent implements OnInit {
         if(this.editing){
             return "faa faa-check";
         }else{
-            return "faa faa-pencil";
+            return "fas fa-pencil";
         }
     }
 
@@ -189,9 +189,9 @@ export class TextEditComponent implements OnInit {
      */
     getEditOnlyIconClass() {
         if(this.editing || this.disableControl){
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }else{
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }
     }
 
@@ -215,7 +215,7 @@ export class TextEditComponent implements OnInit {
         if(this.editing){
             return "faa faa-undo";
         }else{
-            return "faa faa-trash";
+            return "fas fa-trash-alt";
         }
     }    
 

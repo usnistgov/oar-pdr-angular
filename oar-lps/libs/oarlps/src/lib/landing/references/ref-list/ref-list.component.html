@@ -1,7 +1,7 @@
 <div class="references">
     <!-- <div class="section-header"><h3><b>References</b></h3></div> -->
     <div class="editable_container"  style="width: 100%;">
-        <div class="editable_field" style="width: calc(100% - 100px);">
+        <div class="editable_field" style="width: calc(100% - 35px);">
             <!-- Drag and drop reference list-->
             <div class="reference-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                 <!-- <div style="margin-left: 10px;"><i>Use this area to add references to papers and datasets</i></div> -->
@@ -55,18 +55,17 @@
                 <i [class]="editIconClass()"></i>
             </button> -->
 
+            <!-- Hide button - hide edit block -->
+            <!-- <button class="edit_button" type="button" [disabled]="isAdding || isEditing || isAdding"
+                (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                <i class="fas fa-times"></i>
+            </button>  -->
+
             <!-- Undo all changes button -->
-            <button class="edit_button" type="button" [disabled]="!dataChanged || isEditing || isAdding"
+            <!-- <button class="edit_button" type="button" [disabled]="!dataChanged || isEditing || isAdding"
                 (click)="undoAllChangesConfirmation()" aria-label="undo button" ngbTooltip="Undo all reference changes">
                 <i [class]="undoIconClass()"></i>
-            </button>
-
-            <!-- Hide button - hide edit block -->
-            <button class="edit_button" type="button" [disabled]="isAdding || isEditing || isAdding"
-                (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-                <i class="faa faa-remove"></i>
-            </button> 
-
+            </button> -->
         </div>
     </div>
     <!-- This is editing area. Will open up in add or edit mode -->
@@ -90,7 +89,7 @@
 
                     <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
                         (click)="undoCurRefChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                        <i class="faa faa-remove"></i>
+                        <i class="fas fa-times"></i>
                     </button>
                 </td>
             </tr>

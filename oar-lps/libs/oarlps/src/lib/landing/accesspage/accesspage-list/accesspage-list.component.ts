@@ -35,7 +35,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 export class AccesspageListComponent implements OnInit {
     accessPages: NerdmComp[] = [];
     scienceTheme = Themes.SCIENCE_THEME;
-    orderChanged: boolean = false;
+    currentOrderChanged: boolean = false;
     editBlockStatus: string = 'collapsed';
     placeholder: string = "Enter access page data below";
     fieldName: string = 'components';
@@ -70,7 +70,11 @@ export class AccesspageListComponent implements OnInit {
                     if( sectionMode ) {
                         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                if(this.dataChanged){
+                                if(this.currentOrderChanged){
+                                    this.saveListChanges(MODE.NORNAL, false);
+                                }
+                                if(this.currentApage.dataChanged){
+                                    console.log("Saving current access page...")
                                     this.saveCurApage(false);  // Do not refresh help text 
                                 }
 
@@ -100,24 +104,20 @@ export class AccesspageListComponent implements OnInit {
     /**
      * Check if any access page data changed or access page order changed
      */
-    get dataChanged() {
+    get ApageDataChanged() {
         let changed: boolean = false;
-        if(!this.accessPages || this.accessPages.length == 0) return this.orderChanged;
+        if(!this.accessPages || this.accessPages.length == 0) 
+            return changed;
+
         for(let i=0; i < this.accessPages.length; i++) {
             changed = changed || this.accessPages[i].dataChanged;
         }
 
-        return changed || this.orderChanged;
+        return changed;
     }
 
-    get dataChangedAndUpdated() {
-        let changed: boolean = false;
-
-        for(let i=0; i < this.accessPages.length; i++) {
-            changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, this.accessPages[i]['@id']);
-        }
-
-        return changed || this.orderChanged;        
+    get updated() {
+        return this.mdupdsvc.anyFieldUpdated(this.fieldName);        
     }
 
     /**
@@ -128,7 +128,7 @@ export class AccesspageListComponent implements OnInit {
         this.setMode(MODE.NORNAL, refreshHelp);
 
         if(this.record)
-            this.dataCommand.next({"data": this.record[this.fieldName], "action": "hideEditBlock"});
+            this.dataCommand.next({"data": this.record[this.fieldName], "action": "listing"});
     }
 
     ngOnChanges(ch : SimpleChanges) {
@@ -202,7 +202,8 @@ export class AccesspageListComponent implements OnInit {
                         else    
                             this.editMode = MODE.NORNAL;
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -237,9 +238,10 @@ export class AccesspageListComponent implements OnInit {
                     if (success) {
                         this.currentApageIndex = 0;
                         this.currentApage = this.record[this.fieldName][this.currentApageIndex];
-                        this.forceReset = true; // Force reference editor to reset data
+                        this.forceReset = true; // Force accesspage editor to reset data
                     } else {
-                        console.error("Failed to restore reference");
+                        let msg = "Failed to restore access pages"
+                        console.error(msg);
                     }
                 })
 
@@ -255,8 +257,9 @@ export class AccesspageListComponent implements OnInit {
      */
     removeAccessPage(index: number) {
         this.accessPages.splice(index,1);
-        this.orderChanged = true;
-        this.updateMatadata();
+        this.currentOrderChanged = true;
+        this.dataCommand.next("editing");
+        // this.updateMatadata();
 
         // If no access page available, update section help to display next steps 
         if(this.accessPages.length == 0){
@@ -282,7 +285,7 @@ export class AccesspageListComponent implements OnInit {
      */
     onCommandChanged(cmd) {
         switch(cmd.command) {
-            case 'saveCurrentChanges':
+            case 'saveCurrentPage':
                 this.saveCurApage(true, MODE.LIST);
                 break;
             case 'undoCurrentChanges':
@@ -300,24 +303,37 @@ export class AccesspageListComponent implements OnInit {
         this.setMode(MODE.ADD);
     }
 
-    // onSave() {
-    //     this.editBlockStatus = 'collapsed';
-    //     this.updateMatadata();
-    //     this.setMode(MODE.NORNAL);
-    // }
+    /**
+     * Cancel current changes
+     */
+    cancelEditing() {
+        this.useMetadata();
+        this.setMode();
+        this.currentOrderChanged = false;
+    }
 
-    onCancel() {
+    restoreOriginal() {
         this.editBlockStatus = 'collapsed';
         this.undoAllApageChanges();
     }
 
 
+    saveListChanges(editmode: string = MODE.LIST, refreshHelp: boolean = true) {
+        this.editBlockStatus = 'collapsed';
+        this.updateMatadata();
+        this.setMode(editmode, refreshHelp);
+        this.currentOrderChanged = false;
+    }
+
     /**
      * Save current access page
      */
-    saveCurApage(refreshHelp: boolean = true, editmode: string = MODE.NORNAL) {
+    saveCurApage(refreshHelp: boolean = true, editmode: string = MODE.LIST) {
         let postMessage = {};
         this.record[this.fieldName] = JSON.parse(JSON.stringify([this.accessPages, this.nonAccessPages]));
+        
+        this.record[this.fieldName].dataChanged = false;
+
         postMessage[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
 
         postMessage[this.fieldName].forEach(page => {
@@ -330,20 +346,25 @@ export class AccesspageListComponent implements OnInit {
             if(!this.emptyRecord(this.currentApageIndex)){
                 this.mdupdsvc.add(postMessage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {
                     if (rec){
-                        console.log("Return access pages", rec);
                         this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                         this.accessPages = this.selectAccessPages();
                         this.selectApage(this.accessPages.length - 1);
 
                         this.currentApage.dataChanged = false;
-                    }else
-                        console.error("Failed to add reference");
+                        this.currentOrderChanged = false;
+                        this.dataCommand.next("listing");
+                    }else{
+                        let msg = "Failed to add reference";
+                        console.error(msg);
                         return;
+                    }
                 });
             }else{  //If no data has been entered, remove this reference
                 this.removeAccessPage(this.currentApageIndex);
             }
         }else{
+            // this.updateMatadata();
+            this.currentApage.dataChanged = false;
             this.updateMatadata(this.currentApage, this.currentApage["@id"]);
         }
 
@@ -353,26 +374,25 @@ export class AccesspageListComponent implements OnInit {
     updateMatadata(comp: NerdmComp = undefined, compId: string = undefined) {
         return new Promise<boolean>((resolve, reject) => {
             if(compId) {   // Update specific access page
-                console.log("Updating specific access page", compId);
-                console.log("comp", comp);
                 let postMessage = JSON.parse(JSON.stringify(comp));
                 delete postMessage.showDesc;
                 delete postMessage.backcolor;
                 delete postMessage.dataChanged;
-                console.log("postMessage", postMessage);
+
                 this.mdupdsvc.update(this.fieldName, postMessage, compId, this.FieldNameAPI).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
+                        this.dataCommand.next("listing");
                         resolve(true);
                     }else{
-                        console.error("acknowledge access page update failure");
+                        let msg = "Access page update failed.";
+                        console.error(msg);
                         resolve(false);
                     }
                 });
             }else{  // Update all access page
-                if(this.dataChanged){
-                    console.log("Updating all access pages");
+                if(this.ApageDataChanged || this.currentOrderChanged){
                     let updmd = {};
                     this.record[this.fieldName] = JSON.parse(JSON.stringify([this.accessPages, this.nonAccessPages]));
                     updmd[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
@@ -381,9 +401,11 @@ export class AccesspageListComponent implements OnInit {
                         // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
+                            this.dataCommand.next("normal");
                             resolve(true);
                         }else{
-                            console.error("acknowledge access page update failure");
+                            let msg = "Access page update failed.";
+                            console.error(msg);
                             resolve(false);
                         }
                     });
@@ -416,6 +438,10 @@ export class AccesspageListComponent implements OnInit {
         switch ( this.editMode ) {
             case MODE.LIST:
                 this.editBlockStatus = 'collapsed';
+                if(this.currentOrderChanged)
+                    this.dataCommand.next("editing");
+                else
+                    this.dataCommand.next("listing");
 
                 // Back to add mode
                 if(refreshHelp){
@@ -424,6 +450,8 @@ export class AccesspageListComponent implements OnInit {
                 break;
             case MODE.EDIT:
                 this.openEditBlock();
+                // Notice the parent component
+                this.dataCommand.next("editing");
 
                 // Update help text
                 if(refreshHelp){
@@ -445,6 +473,9 @@ export class AccesspageListComponent implements OnInit {
                 this.accessPages[this.currentApageIndex].dataChanged = true;
                 this.currentApage = this.accessPages[this.currentApageIndex];
 
+                // Notice the parent component
+                this.dataCommand.next("adding");
+
                 this.openEditBlock();
 
                 // Update help text
@@ -455,6 +486,8 @@ export class AccesspageListComponent implements OnInit {
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
+                // Notice the parent component
+                this.dataCommand.next("normal");
 
                 // Update help text
                 if(refreshHelp){
@@ -467,32 +500,50 @@ export class AccesspageListComponent implements OnInit {
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
     }
-    
-    getBackgroundColor(index: number){
-        if(this.mdupdsvc.fieldUpdated(this.fieldName, this.accessPages[index]['@id'])){
-            return 'var(--data-changed-saved)';
-        }else if(this.accessPages[index].dataChanged){
-            return 'var(--data-changed)';
-        }else{
-            return 'white';
-        }
-    }
-
+   
+    /**
+     * Get the background color of the whole record for list mode
+     * We do not keep track of individual page status here because in list mode,
+     * individual page's changes must have been saved or discarded.
+     * @returns 
+     * Yellow - if order changed.
+     * Green - if data changed and saved.
+     */
     getRecordBackgroundColor() {
-        if(this.dataChangedAndUpdated){
-            return 'var(--data-changed-saved)';
-        }else if(this.dataChanged){
+        if(this.currentOrderChanged){
             return 'var(--data-changed)';
+        }else if(this.updated){
+            return 'var(--data-changed-saved)';
         }else{
             return 'var(--editable)';
         }
     }
 
-    getActiveItemStyle(index: number) {
+    /**
+     * 
+     * @param index index of the active access page
+     * @returns 
+     */
+    getActiveApageStyle(index: number) {
         if(index == this.currentApageIndex) {
-            return { 'background-color': this.getBackgroundColor(index), 'border': '1px solid var(--active-item)'};
+            return { 'background-color': this.getApageBackgroundColor(index), 'border': '1px solid var(--active-item)'};
         } else {
-            return {'background-color': this.getBackgroundColor(index), 'border':'1px solid var(--background-light-grey)'};
+            return {'background-color': this.getApageBackgroundColor(index), 'border':'1px solid var(--background-light-grey)'};
+        }
+    }
+
+    /**
+     * Get the background color of a specific access page
+     * @param index index number of the access page
+     * @returns 
+     */
+    getApageBackgroundColor(index: number){
+        if(this.accessPages[index].dataChanged){
+            return 'var(--data-changed)';
+        }else if(this.mdupdsvc.fieldUpdated(this.fieldName, this.accessPages[index]['@id'])){
+            return 'var(--data-changed-saved)';
+        }else{
+            return 'white';
         }
     }
 
@@ -518,20 +569,20 @@ export class AccesspageListComponent implements OnInit {
      */   
     editIconClass() {
         if(this.isNormal && this.accessPages.length > 0){
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }
     }
 
-    /*
+   /**
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
-    undoAllApageChanges() {
+   undoAllApageChanges() {
         // this.record = JSON.parse(JSON.stringify(this.orig_record));
         // this.useMetadata();
 
-        if(this.dataChangedAndUpdated){
+        if(this.updated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
                     this.useMetadata();
@@ -539,33 +590,24 @@ export class AccesspageListComponent implements OnInit {
                         apage.dataChanged = false;
                     });
 
-                    this.orderChanged = false;
+                    this.currentOrderChanged = false;
+                    this.dataCommand.next("normal");
                     this.currentApageIndex = 0;
                     this.currentApage = this.accessPages[this.currentApageIndex];
                     this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
                     this.hideEditBlock();
-                }else
-                    console.error("Failed to undo " + this.fieldName + " metadata");
+                }else{
+                    let msg = "Failed to undo " + this.fieldName + " metadata";
+                    console.error(msg);
                     return;
+                }
             });
         }
-
-
     }
 
     openEditBlock() {
         this.editBlockStatus = 'expanded';
         this.lpService.setCurrentSection("dataAccess");
-    }
-
-    /**
-     * Determine icon class of undo button
-     * If edit mode is normal, display disabled icon.
-     * Otherwise display enabled icon.
-     * @returns undo button icon class
-     */
-    undoIconClass() {
-        return !this.dataChanged || this.isEditing || this.isAdding? "faa faa-undo icon_disabled" : "faa faa-undo icon_enabled";
     }
 
     // Drag drop functions
@@ -615,8 +657,8 @@ export class AccesspageListComponent implements OnInit {
         }
         this.currentApageIndex = event.item.data;
         this.currentApage = this.accessPages[this.currentApageIndex];
-        this.orderChanged = true;
-        this.updateMatadata();
+        this.currentOrderChanged = true;
+        this.dataCommand.next("editing");
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;

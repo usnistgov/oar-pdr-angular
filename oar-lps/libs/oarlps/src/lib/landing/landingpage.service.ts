@@ -54,4 +54,13 @@ export class LandingpageService {
     public watchResourceType(subscriber) {
         this._resourceType.subscribe(subscriber);
     }    
+
+    // Set message to display
+    _msg: BehaviorSubject<string> = new BehaviorSubject<string>("resource");
+    setMessage(msg: string){
+        this._msg.next(msg);
+    }
+    public watchMessage(subscriber) {
+        this._msg.subscribe(subscriber);
+    }      
 }

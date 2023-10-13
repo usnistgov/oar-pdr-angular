@@ -124,7 +124,7 @@ export class RefAuthorComponent implements OnInit {
         if(this.editingAuthorIndex == index){
             return "faa faa-check";
         }else{
-            return "faa faa-pencil";
+            return "fas fa-pencil";
         }
     }
 
@@ -135,9 +135,9 @@ export class RefAuthorComponent implements OnInit {
      */
     getDelIconClass(index: number) {
         if(this.editingAuthorIndex == index){
-            return "faa faa-remove";
+            return "fas fa-times";
         }else{
-            return "faa faa-trash";
+            return "fas fa-trash-alt";
         }
     }
 

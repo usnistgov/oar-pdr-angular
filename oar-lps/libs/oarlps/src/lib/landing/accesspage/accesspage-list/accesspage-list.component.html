@@ -22,7 +22,7 @@
                                 [cdkDragDisabled]="isAdding || isEditing"
                                 class="apage-row"
                             >
-                                <div (click)="selectApage(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
+                                <div (click)="selectApage(i)" [ngStyle]="getActiveApageStyle(i)" style="width: 100%;"  [style.background-color]="getApageBackgroundColor(i)">
                                     <lib-text-edit 
                                         [textField]="apage.title" 
                                         [dragDropIcon]="accessPages.length==1?false:true" [editButton]="false" 
@@ -48,26 +48,31 @@
             </div>
             <div class="editable_field" style="white-space: nowrap;">
                 <!-- Add button -->
-                <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add access page">
-                    <i [class]="addIconClass()"></i>
+                <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" *ngIf="!isEditing && !isAdding" [disabled]="currentOrderChanged" ngbTooltip="Add access page">
+                    <i class="faa faa-plus fa-sm"></i>
                 </button>
 
-                <!-- Edit button -->
-                <!-- <button class="edit_button" type="button" (click)="setMode('edit')" aria-label="edit button" [disabled]="!isNormal || accessPages.length==0" ngbTooltip="Edit access page">
-                    <i [class]="editIconClass()"></i>
-                </button> -->
+                <!-- Save button -->
+                <button class="edit_button" type="button" (click)="saveListChanges()" aria-label="add button" *ngIf="currentOrderChanged" ngbTooltip="Save access pages">
+                    <i class="fas fa-check fa-sm"></i>
+                </button>
 
-                <!-- Restore original value-->
-                <button class="edit_button" type="button" [disabled]="!dataChanged || isEditing || isAdding"
-                    (click)="onCancel()" aria-label="undo button" ngbTooltip="Undo changes">
-                    <i [class]="undoIconClass()"></i>
+                <!-- Cancel current changes (order change) -->
+                <button class="edit_button" type="button" *ngIf="currentOrderChanged" (click)="cancelEditing()" aria-label="Cancel button" ngbTooltip="Cancel changes">
+                    <i class="fas fa-undo fa-sm"></i>
                 </button>
 
                 <!-- Hide button - hide edit block -->
-                <button class="edit_button" type="button" [disabled]="isAdding || isEditing"
+                <!-- <button class="edit_button" type="button" [disabled]="isAdding || isEditing"
                     (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-                    <i class="faa faa-remove"></i>
-                </button> 
+                    <i class="fas fa-times"></i>
+                </button>  -->
+
+                <!-- Restore original value-->
+                <!-- <button class="edit_button" type="button" [disabled]="!dataChanged || isEditing || isAdding"
+                    (click)="onCancel()" aria-label="undo button" ngbTooltip="Undo changes">
+                    <i [class]="undoIconClass()"></i>
+                </button> -->
             </div>
         </div>
         <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus"> 
@@ -81,7 +86,7 @@
             (mouseout)="apage['backcolor'] = 'white'">
                 <div class="indent-content"
                     *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
-                    <i class="faa faa-external-link"> <span style="margin-left:0em;">
+                    <i class="fas fa-external-link-alt"> <span style="margin-left:0em;">
                             <span *ngIf="apage['description']; else noAccessTitle">
                                 <a href="{{apage['accessURL']}}" title="{{apage['description']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
                                                                 'Resource title: ' + record.title,
@@ -108,7 +113,7 @@
                             <button style="margin-top: -6px;" type="button" class="btn btn-primary py-0"
                                 data-toggle="tooltip" data-placement="top" title="{{apage['title']}}"
                                 (click)="googleAnalytics(apage['accessURL'], $event, 'Download Data')"><i
-                                    class="faa faa-external-link button_icon"></i>Download Data</button>
+                                    class="fas fa-external-link-alt button_icon"></i>Download Data</button>
                         </a>
 
                         <div *ngIf="apage['description']">

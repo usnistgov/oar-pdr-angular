@@ -39,11 +39,22 @@
         <!-- Control buttons -->
         <div class="editable_field" *ngIf="mdupdsvc.isEditMode">
             <!-- Edit button -->
-            <!-- <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit topics">
-                <i [class]="editIconClass()"></i>
-            </button> -->
+            <button *ngIf="!isEditing" class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit topics">
+                <i class="fas fa-pencil"></i>
+            </button>
 
-            <i class="faa faa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit topics" ngbTooltip="edit topics" aria-label="edit topics" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
+            <!-- Close edit block -->
+            <button *ngIf="isEditing" class="edit_button" type="button" [disabled]="dataChanged" (click)="setMode()" aria-label="Close edit block" ngbTooltip="Close edit block">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Restore original -->
+            <button *ngIf="updated" class="edit_button" type="button"
+            (click)="restoreOriginal()" aria-label="Restore original topics" ngbTooltip="Restore original topics">
+                <i class="faa faa-undo fs-sm"></i>
+            </button> 
+
+            <!-- <i class="fas fa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" title="Edit topics" ngbTooltip="edit topics" aria-label="edit topics" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i> -->
              
         </div>
     </div>

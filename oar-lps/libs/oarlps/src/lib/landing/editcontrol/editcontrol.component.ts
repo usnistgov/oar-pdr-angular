@@ -222,8 +222,6 @@ export class EditControlComponent implements OnInit, OnChanges {
                     {
                         if(md)
                         {
-                            console.log("Draft loaded", md);
-                            // console.log("Draft loaded:", md);
                             this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
                             this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
                             this._setEditMode(this.EDIT_MODES.EDIT_MODE);

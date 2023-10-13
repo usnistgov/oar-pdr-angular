@@ -152,7 +152,6 @@ export class WebCustomizationService extends CustomizationService {
             let url = this.endpoint + this.draftapi + this.resid + "/data/" + subsetname;
             if(id) url += "/" + id;
 
-            console.log("Get subset request url", url);
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -224,17 +223,14 @@ export class WebCustomizationService extends CustomizationService {
 
         if(!id){
             return new Observable<Object>(subscriber => {
-                console.log("post message", md);
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
 
-                // console.log("Update url", url);
                 if(subsetname)
                     body = JSON.stringify(md[subsetname]);
                 else
                     body = JSON.stringify(md);
 
-                console.log("body", body);
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
                 this._wrapRespObs(obs, subscriber);
@@ -245,14 +241,8 @@ export class WebCustomizationService extends CustomizationService {
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
                 url = id == undefined ? url : url + "/" + id;
 
-                // console.log("Update url", url);
-                console.log("md", md);
-                // if(subsetname)
-                //     body = JSON.stringify(md[subsetname]);
-                // else
-                    body = JSON.stringify(md);
+                body = JSON.stringify(md);
 
-                console.log("body", body);
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
                 this._wrapRespObs(obs, subscriber);
@@ -286,10 +276,8 @@ export class WebCustomizationService extends CustomizationService {
             if(subsetnameAPI) { // Create a new subset
                 url += subsetnameAPI;
             }
-            console.log("Add url", url)
             
             let body = JSON.stringify(md[subsetname]);
-            console.log("body", body)
             let obs : Observable<Object> = 
                 this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -344,7 +332,6 @@ export class WebCustomizationService extends CustomizationService {
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data";
-            // console.log("Discard url", url);
             let obs : Observable<Object> = 
                 this.httpcli.delete(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -415,7 +402,6 @@ export class WebCustomizationService extends CustomizationService {
      */
     public getMidasMeta() : Observable<Object> {
         let url = this.endpoint + this.draftapi + this.resid + "/meta";
-        console.log("getMidasMeta url", url)
         return new Observable<Object>(subscriber => {
             let obs : Observable<Object>;
             this.httpcli.get(url).subscribe(data =>{

@@ -157,6 +157,10 @@ export class MetadataUpdateService {
         // if (JSON.stringify(md[subsetname]) == JSON.stringify(this.origfields[subsetname])) {
         //     this.undo(subsetname);
         // } else {
+
+        console.log('md', md);
+        console.log('subsetname', subsetname);
+
         return new Promise<boolean>((resolve, reject) => {
             this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe(
                 (res) => {
@@ -193,12 +197,14 @@ export class MetadataUpdateService {
      * @param id - optional - id of a subset item 
      */
     public updateInMemoryRec(res: any, subsetname: string = undefined, id: string = undefined) {
-        console.log("Updateing res", res);
         if(!subsetname) { // Update the whole record
             this.currentRec = JSON.parse(JSON.stringify(res));
         }else if(!id) {
-            if(res[subsetname]) 
+            if(res[subsetname]) {
                 this.currentRec[subsetname] = JSON.parse(JSON.stringify(res[subsetname]));
+            }else{
+                res[subsetname] = null;
+            }
         }else{
             let index = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
             if(index >= 0) {
@@ -209,7 +215,7 @@ export class MetadataUpdateService {
                 this.currentRec[subsetname].push(newItem);
             }
         }
-        console.log("this.currentRec", this.currentRec);
+
         this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
     }
     
@@ -217,7 +223,7 @@ export class MetadataUpdateService {
         return new Observable<Object>(subscriber => {
             this.custsvc.add(md, subsetname, subsetnameAPI).subscribe(
                 (res) => {
-                    console.log("Return obj from add", res);
+                    // console.log("Return obj from add", res);
                     // let obj = JSON.parse(res as string);
                     let obj = res as Object[];
                     // if(subsetname) {  //Add a subset
@@ -661,18 +667,18 @@ export class MetadataUpdateService {
 
         if (editMode) {
             if(!id){
-                if (this.anyFieldUpdated(fieldName)) {
-                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
-                } else if(dataChanged){
+                if(dataChanged) {
                     return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed)', 'padding-right': '1em', 'cursor': 'pointer' };
+                } else if(this.anyFieldUpdated(fieldName)){
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
                 }else{
                     return { 'border': '1px solid lightgrey', 'background-color': 'var(--editable)', 'padding-right': '1em', 'cursor': 'pointer' };
                 }
             }else{
-                if(this.fieldUpdated(fieldName, id)){
-                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
-                }else if(dataChanged){
+                if(dataChanged){
                     return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed)', 'padding-right': '1em', 'cursor': 'pointer' };
+                }else if(this.fieldUpdated(fieldName, id)){
+                    return { 'border': '1px solid lightgrey', 'background-color': 'var(--data-changed-saved)', 'padding-right': '1em', 'cursor': 'pointer' };
                 }else{
                     return { 'border': '1px solid lightgrey', 'background-color': 'var(--editable)', 'padding-right': '1em', 'cursor': 'pointer' };
                 }                

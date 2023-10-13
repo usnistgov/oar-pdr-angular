@@ -7,6 +7,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { Reference } from './reference';
+import { RefListComponent } from './ref-list/ref-list.component';
 
 @Component({
     selector: 'app-references',
@@ -29,6 +30,8 @@ export class ReferencesComponent implements OnInit {
     dataChanged: boolean = false;
     currentRef: Reference = {} as Reference;
     currentRefIndex: number = 0;
+    childEditMode: string = MODE.NORNAL;
+    orderChanged: boolean = false;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -92,13 +95,49 @@ export class ReferencesComponent implements OnInit {
             case 'dataChanged':
                 this.dataChanged = true;
                 break;
+            case 'orderChanged':
+                this.orderChanged = true;
+                break;
+            case 'orderReset':
+                this.orderChanged = false;
+                break;                
             default:
                 break;
         }
     }
 
+    /**
+     * Hide edit block
+     */
+    hideEditBlock() {
+        this.setMode(MODE.NORNAL);
+    }
+
     get isNormal() { return this.editMode==MODE.NORNAL }
-    get isEditing() { return this.editMode==MODE.EDIT }
+    get isEditing() { return this.editMode==MODE.EDIT || this.editMode==MODE.LIST }
+    get childIsEditing() { return this.childEditMode==MODE.EDIT }
+    get childIsAdding() { return this.childEditMode==MODE.ADD }
+    
+    @ViewChild('reflist') refList: RefListComponent;
+
+    /**
+     * Check if any author data changed or author order changed
+     */
+    get refChanged() {
+        let changed: boolean = false;
+
+        if(this.record[this.fieldName]) {
+            this.record[this.fieldName].forEach(author => {
+                changed = changed || author.dataChanged;
+            })
+        }
+        
+        return changed || this.orderChanged;
+    }
+
+    get refUpdated() {
+        return this.mdupdsvc.anyFieldUpdated(this.fieldName);
+    }
 
     /**
      * set current mode to editing.
@@ -115,9 +154,9 @@ export class ReferencesComponent implements OnInit {
      */   
     editIconClass() {
         if(!this.isEditing){
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }
     }
 
@@ -174,7 +213,6 @@ export class ReferencesComponent implements OnInit {
                     this.refreshHelpText(MODE.LIST);
                 }
                 break;
-                break;
 
             default: // normal
                 // Collapse the edit block
@@ -219,4 +257,21 @@ export class ReferencesComponent implements OnInit {
         return false;
     }
 
+    /**
+     * Update the edit status of child component 
+     * so we can set the status of the close button
+     * @param editmode editmode from child component
+     */
+    setChildEditMode(editmode: string) {
+        this.childEditMode = editmode;
+    }    
+
+    /*
+     *  Undo editing. If no more field was edited, delete the record in staging area.
+     */
+    undoAllChanges() {
+        this.refList.undoAllChangesConfirmation();
+        this.orderChanged = false; 
+        this.hideEditBlock();
+    }   
 }
