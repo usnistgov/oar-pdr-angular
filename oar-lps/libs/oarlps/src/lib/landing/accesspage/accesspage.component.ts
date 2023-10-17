@@ -176,7 +176,10 @@ export class AccesspageComponent implements OnInit {
         }
     }
 
-    openEditBlock() {
+    /**
+     * Open list block for editing
+     */
+    openListBlock() {
         this.editBlockExpanded = true;
         this.lpService.setCurrentSection("dataAccess");
     }
@@ -201,10 +204,9 @@ export class AccesspageComponent implements OnInit {
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-
         switch ( this.editMode ) {
             case MODE.LIST:
-                this.openEditBlock();
+                this.openListBlock();
                 this.setOverflowStyle();
 
                 // Update help text
@@ -260,20 +262,21 @@ export class AccesspageComponent implements OnInit {
      * @param status parameter passed from child component
      */
     onStatusChange(status: string) {
-        switch(status) {
-            case 'listing':
-                this.setMode(MODE.LIST);
-                break;
-            case 'adding':
-                this.setMode(MODE.ADD);
-                break;
-            case 'editing':
-                this.setMode(MODE.EDIT);
-                break;
-            default: //normal
-                this.setMode(MODE.NORNAL);
-                break;
-        }
+        this.setMode(status);
+        // switch(status) {
+        //     case 'listing':
+        //         this.setMode(MODE.LIST);
+        //         break;
+        //     case 'adding':
+        //         this.setMode(MODE.ADD);
+        //         break;
+        //     case 'editing':
+        //         this.setMode(MODE.EDIT);
+        //         break;
+        //     default: //normal
+        //         this.setMode(MODE.NORNAL);
+        //         break;
+        // }
     }
 
     restoreOriginal() {

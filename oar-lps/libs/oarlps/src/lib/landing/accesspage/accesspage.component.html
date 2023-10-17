@@ -4,7 +4,7 @@
     </div>
 
     <div class="editable_container" style="padding: 0px;">
-        <div class="editable_field" [ngStyle]="getStyle()" style="max-width: calc(100% - 1.65em);" >
+        <div class="editable_field" style="max-width: calc(100% - 1.65em);" >
             <div *ngIf="mdupdsvc.isEditMode">
                 Add links to relevant websites including software repositories.
             </div>
@@ -29,7 +29,7 @@
                             </span></i>
                         <div *ngIf="apage['description']">
                             <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                    class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i class="faa faa-caret-down"
+                                    class="fas fa-caret-right" *ngIf="!apage[showDesc]"></i><i class="fas fa-caret-down"
                                     *ngIf="apage[showDesc]"></i> About this link
                             </div>
                             <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
@@ -47,8 +47,8 @@
     
                             <div *ngIf="apage['description']">
                                 <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                        class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i
-                                        class="faa faa-caret-down" *ngIf="apage[showDesc]"></i> About downloading restricted
+                                        class="fas fa-caret-right" *ngIf="!apage[showDesc]"></i><i
+                                        class="fas fa-caret-down" *ngIf="apage[showDesc]"></i> About downloading restricted
                                     public data
                                 </div>
                                 <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
@@ -65,8 +65,6 @@
             <button class="edit_button" *ngIf="isNormal" (click)="startEditing()" aria-label="edit button">
                 <i class="fas fa-pencil fa-sm"></i>
             </button>
-
-            <!-- <i class="fas fa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit access page links" ngbTooltip="edit access page links" aria-label="edit access page links" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i> -->
               
             <!-- Hide button - hide edit block -->
             <button class="edit_button" type="button" *ngIf="!isNormal" [disabled] = 'isEditing || isAdding'

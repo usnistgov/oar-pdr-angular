@@ -19,8 +19,8 @@
                     <span *ngIf="i < record.authors.length-1 ">,</span>
                 </span>
                 <span>
-                    <i style="margin-left: 0.5rem;" class="faa"
-                    [ngClass]="{'faa-caret-right': !clickAuthors, 'faa-caret-down': clickAuthors}"
+                    <i style="margin-left: 0.5rem;" class="fas"
+                    [ngClass]="{'fa-caret-right': !clickAuthors, 'fa-caret-down': clickAuthors}"
                     aria-label="Show author details"
                     (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();"></i>
                 </span>

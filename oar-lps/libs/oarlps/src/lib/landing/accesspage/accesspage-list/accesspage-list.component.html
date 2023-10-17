@@ -49,85 +49,22 @@
             <div class="editable_field" style="white-space: nowrap;">
                 <!-- Add button -->
                 <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" *ngIf="!isEditing && !isAdding" [disabled]="currentOrderChanged" ngbTooltip="Add access page">
-                    <i class="faa faa-plus fa-sm"></i>
+                    <i class="fas fa-plus fa-sm"></i>
                 </button>
 
                 <!-- Save button -->
                 <button class="edit_button" type="button" (click)="saveListChanges()" aria-label="add button" *ngIf="currentOrderChanged" ngbTooltip="Save access pages">
-                    <i class="fas fa-check fa-sm"></i>
+                    <i [class]=" addIconClass()"></i>
                 </button>
 
                 <!-- Cancel current changes (order change) -->
                 <button class="edit_button" type="button" *ngIf="currentOrderChanged" (click)="cancelEditing()" aria-label="Cancel button" ngbTooltip="Cancel changes">
                     <i class="fas fa-undo fa-sm"></i>
                 </button>
-
-                <!-- Hide button - hide edit block -->
-                <!-- <button class="edit_button" type="button" [disabled]="isAdding || isEditing"
-                    (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-                    <i class="fas fa-times"></i>
-                </button>  -->
-
-                <!-- Restore original value-->
-                <!-- <button class="edit_button" type="button" [disabled]="!dataChanged || isEditing || isAdding"
-                    (click)="onCancel()" aria-label="undo button" ngbTooltip="Undo changes">
-                    <i [class]="undoIconClass()"></i>
-                </button> -->
             </div>
         </div>
         <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus"> 
             <lib-accesspage-edit [accessPage]="currentApage" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-accesspage-edit> 
         </div>
     </div>
-    <!-- <ng-template #nonEdit>
-        <div *ngIf="accessPages && accessPages.length > 0">
-            <div [ngStyle]="{'margin-top': '10px', 'background-color': apage['backcolor']}"
-            *ngFor="let apage of accessPages" (mouseover)="apage['backcolor'] = '#f2f2f2'"
-            (mouseout)="apage['backcolor'] = 'white'">
-                <div class="indent-content"
-                    *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
-                    <i class="fas fa-external-link-alt"> <span style="margin-left:0em;">
-                            <span *ngIf="apage['description']; else noAccessTitle">
-                                <a href="{{apage['accessURL']}}" title="{{apage['description']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                'Resource title: ' + record.title,
-                                                                apage['accessURL'])">&nbsp;&nbsp;{{apage['title']}}</a>
-                            </span>
-                            <ng-template #noAccessTitle>
-                                <a href="{{apage['accessURL']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                'Resource title: ' + record.title,
-                                                                apage['accessURL'])">&nbsp;&nbsp;{{apage['title']}}</a>
-                            </ng-template>
-                        </span></i>
-                    <div *ngIf="apage['description']">
-                        <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i class="faa faa-caret-down"
-                                *ngIf="apage[showDesc]"></i> About this link
-                        </div>
-                        <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
-                        </div>
-                    </div>
-                </div>
-                <ng-template #RestrictedAccessPage>
-                    <div style="padding:10px 20px;">
-                        <a href={{apage.accessURL}} target="_blank">
-                            <button style="margin-top: -6px;" type="button" class="btn btn-primary py-0"
-                                data-toggle="tooltip" data-placement="top" title="{{apage['title']}}"
-                                (click)="googleAnalytics(apage['accessURL'], $event, 'Download Data')"><i
-                                    class="fas fa-external-link-alt button_icon"></i>Download Data</button>
-                        </a>
-
-                        <div *ngIf="apage['description']">
-                            <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                    class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i
-                                    class="faa faa-caret-down" *ngIf="apage[showDesc]"></i> About downloading restricted
-                                public data
-                            </div>
-                            <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
-                            </div>
-                        </div>
-                    </div>
-                </ng-template>
-            </div>
-        </div>
-    </ng-template> -->
 </div>

@@ -258,7 +258,7 @@ export class AccesspageListComponent implements OnInit {
     removeAccessPage(index: number) {
         this.accessPages.splice(index,1);
         this.currentOrderChanged = true;
-        this.dataCommand.next("editing");
+        this.dataCommand.next(MODE.EDIT);
         // this.updateMatadata();
 
         // If no access page available, update section help to display next steps 
@@ -319,7 +319,6 @@ export class AccesspageListComponent implements OnInit {
 
 
     saveListChanges(editmode: string = MODE.LIST, refreshHelp: boolean = true) {
-        this.editBlockStatus = 'collapsed';
         this.updateMatadata();
         this.setMode(editmode, refreshHelp);
         this.currentOrderChanged = false;
@@ -352,7 +351,7 @@ export class AccesspageListComponent implements OnInit {
 
                         this.currentApage.dataChanged = false;
                         this.currentOrderChanged = false;
-                        this.dataCommand.next("listing");
+                        this.dataCommand.next(MODE.LIST);
                     }else{
                         let msg = "Failed to add reference";
                         console.error(msg);
@@ -371,7 +370,7 @@ export class AccesspageListComponent implements OnInit {
         this.setMode(editmode, refreshHelp);
     }
 
-    updateMatadata(comp: NerdmComp = undefined, compId: string = undefined) {
+    updateMatadata(comp: NerdmComp = undefined, compId: string = undefined, editmode: string = MODE.LIST) {
         return new Promise<boolean>((resolve, reject) => {
             if(compId) {   // Update specific access page
                 let postMessage = JSON.parse(JSON.stringify(comp));
@@ -383,7 +382,7 @@ export class AccesspageListComponent implements OnInit {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
-                        this.dataCommand.next("listing");
+                        this.dataCommand.next(editmode);
                         resolve(true);
                     }else{
                         let msg = "Access page update failed.";
@@ -401,7 +400,7 @@ export class AccesspageListComponent implements OnInit {
                         // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
-                            this.dataCommand.next("normal");
+                            this.dataCommand.next(editmode);
                             resolve(true);
                         }else{
                             let msg = "Access page update failed.";
@@ -429,7 +428,7 @@ export class AccesspageListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.LIST, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -439,9 +438,9 @@ export class AccesspageListComponent implements OnInit {
             case MODE.LIST:
                 this.editBlockStatus = 'collapsed';
                 if(this.currentOrderChanged)
-                    this.dataCommand.next("editing");
+                    this.dataCommand.next(MODE.EDIT);
                 else
-                    this.dataCommand.next("listing");
+                    this.dataCommand.next(editmode);
 
                 // Back to add mode
                 if(refreshHelp){
@@ -451,7 +450,7 @@ export class AccesspageListComponent implements OnInit {
             case MODE.EDIT:
                 this.openEditBlock();
                 // Notice the parent component
-                this.dataCommand.next("editing");
+                this.dataCommand.next(editmode);
 
                 // Update help text
                 if(refreshHelp){
@@ -474,7 +473,7 @@ export class AccesspageListComponent implements OnInit {
                 this.currentApage = this.accessPages[this.currentApageIndex];
 
                 // Notice the parent component
-                this.dataCommand.next("adding");
+                this.dataCommand.next(editmode);
 
                 this.openEditBlock();
 
@@ -487,7 +486,7 @@ export class AccesspageListComponent implements OnInit {
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
                 // Notice the parent component
-                this.dataCommand.next("normal");
+                this.dataCommand.next(editmode);
 
                 // Update help text
                 if(refreshHelp){
@@ -555,9 +554,9 @@ export class AccesspageListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "faa faa-plus icon_enabled";
+            return "fas fa-plus fa-sm icon_enabled";
         }else{
-            return "faa faa-plus icon_disabled";
+            return "fas fa-plus fa-sm icon_disabled";
         }
     }
 
@@ -591,7 +590,7 @@ export class AccesspageListComponent implements OnInit {
                     });
 
                     this.currentOrderChanged = false;
-                    this.dataCommand.next("normal");
+                    this.dataCommand.next(MODE.NORNAL);
                     this.currentApageIndex = 0;
                     this.currentApage = this.accessPages[this.currentApageIndex];
                     this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
@@ -658,7 +657,8 @@ export class AccesspageListComponent implements OnInit {
         this.currentApageIndex = event.item.data;
         this.currentApage = this.accessPages[this.currentApageIndex];
         this.currentOrderChanged = true;
-        this.dataCommand.next("editing");
+        // this.dataCommand.next("editing");
+        this.saveListChanges();
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;

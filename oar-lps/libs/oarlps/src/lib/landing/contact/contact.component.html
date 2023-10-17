@@ -50,8 +50,6 @@
 
         <!-- Control buttons -->
         <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-            <!-- <i class="fas fa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit contact" ngbTooltip="edit contact" aria-label="edit contact" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i> -->
-    
             <button class="edit_button" *ngIf="!isEditing" type="button" 
             (click)="startEditing()" aria-label="edit title" ngbTooltip="edit title" style="cursor: pointer">
                 <i class="fas fa-pencil fa-sm"></i>

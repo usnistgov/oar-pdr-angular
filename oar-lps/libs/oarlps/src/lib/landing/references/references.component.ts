@@ -15,15 +15,15 @@ import { RefListComponent } from './ref-list/ref-list.component';
     styleUrls: ['../landing.component.scss', './references.component.css'],
     animations: [
         trigger('editExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        state('false', style({height: '0px', minHeight: '0'})),
+        state('true', style({height: '*'})),
+        transition('true <=> false', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ])
     ]
 })
 export class ReferencesComponent implements OnInit {
     fieldName: string = 'references';
-    editBlockStatus: string = 'collapsed';
+    editBlockExpanded: boolean = false;
     editMode: string = MODE.NORNAL; 
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     overflowStyle: string = 'hidden';
@@ -48,7 +48,7 @@ export class ReferencesComponent implements OnInit {
                 if(sectionMode){
                     if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                         if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                            if(this.editBlockStatus == 'expanded')
+                            if(this.editBlockExpanded == true)
                             this.setMode(MODE.NORNAL, false);
                         }
                     }else{
@@ -114,7 +114,8 @@ export class ReferencesComponent implements OnInit {
     }
 
     get isNormal() { return this.editMode==MODE.NORNAL }
-    get isEditing() { return this.editMode==MODE.EDIT || this.editMode==MODE.LIST }
+    get isListing() { return this.editMode==MODE.LIST }
+    get isEditing() { return this.editMode==MODE.EDIT }
     get childIsEditing() { return this.childEditMode==MODE.EDIT }
     get childIsAdding() { return this.childEditMode==MODE.ADD }
     
@@ -176,7 +177,7 @@ export class ReferencesComponent implements OnInit {
      * Expand the edit block that user can edit reference data
      */
     openEditBlock() {
-        this.editBlockStatus = 'expanded';
+        this.editBlockExpanded = true;
 
         //Broadcast current edit section so landing page will scroll to the section
         this.lpService.setCurrentSection('references');
@@ -216,7 +217,7 @@ export class ReferencesComponent implements OnInit {
 
             default: // normal
                 // Collapse the edit block
-                this.editBlockStatus = 'collapsed'
+                this.editBlockExpanded = false;
                 this.setOverflowStyle();
 
                 // Update help text
@@ -238,7 +239,7 @@ export class ReferencesComponent implements OnInit {
      * Then tooltip will not be cut off. 
      */
     setOverflowStyle() {
-        if(this.editBlockStatus == 'collapsed') {
+        if(!this.editBlockExpanded) {
             this.overflowStyle = 'hidden';
         }else {
             this.overflowStyle = 'hidden';

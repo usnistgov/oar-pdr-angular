@@ -36,19 +36,6 @@
             <button *ngIf="currentValueChanged" class="edit_button" style="margin: 10px 0px 0px 2px" (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
                 <i class="fas fa-undo fa-sm"></i>
             </button>
-
-            <!-- Hide edit window button -->
-            <!-- <button class="edit_button" type="button"
-                (click)="commandOut('close')" aria-label="Close button" ngbTooltip="Hide edit window">
-                <i class="fas fa-times"></i>
-            </button> -->
-
-            <!-- Restore button -->
-            <!-- <button class="edit_button" type="button"
-            [disabled]="!updated" (click)="commandOut('restoreOriginal')" aria-label="Restore button" ngbTooltip="Restore original URL">
-                <i class="fas fa-undo"
-                    [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"></i>
-            </button>                 -->
         </td>          
     </tr>
 </table>

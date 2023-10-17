@@ -26,24 +26,21 @@
             
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;width: 1.65em;">
-
-                <!-- <i class="fas fa-pencil icon_enabled link-icon" *ngIf="!isEditing" (click)="startEditing()" title="Edit references" ngbTooltip="edit references" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i> -->
-
-                <button class="edit_button" *ngIf="!isEditing" type="button" 
+                <button class="edit_button" *ngIf="isNormal" type="button" 
                 (click)="startEditing()" aria-label="edit title" ngbTooltip="edit title" style="cursor: pointer">
                     <i class="fas fa-pencil fa-sm"></i>
                 </button> 
 
                 <!-- Hide button - hide edit block -->
-                <button class="edit_button" *ngIf="isEditing" [disabled]="childIsEditing || childIsAdding" type="button" 
+                <button class="edit_button" *ngIf="!isNormal" [disabled]="childIsEditing || childIsAdding" type="button" 
                     (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
                     <i class="fas fa-times"></i>
                 </button> 
 
                 <!-- Undo all changes button -->
-                <button class="edit_button" *ngIf="refChanged || refUpdated" type="button"
+                <button class="edit_button" *ngIf="refChanged || refUpdated" [disabled]="childIsEditing || childIsAdding" type="button"
                     (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo all author changes">
-                    <i class="fas fa-undo"></i>
+                    <i class="fas fa-undo fa-sm"></i>
                 </button>                
             </div>
         </div>
@@ -67,8 +64,8 @@
     </ng-template>
 </div>
 
-<div style="width: 100%;" *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" [style.overflow] = "overflowStyle">
-    <lib-ref-list #reflist [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmode)="setChildEditMode($event)"></lib-ref-list>
+<div style="width: 100%;" *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
+    <lib-ref-list #reflist [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
 </div>
 
 

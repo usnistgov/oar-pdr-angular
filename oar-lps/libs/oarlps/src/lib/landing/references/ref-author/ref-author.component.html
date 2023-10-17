@@ -23,31 +23,6 @@
             >
                 <div style="width: 100%;">
                     <lib-text-edit [textField]="author" [dragDropIcon]="true" [showBorder]="false" placeHolderText="Put author's name here" [disableControl]="(editingAuthorIndex!=-1) && (editingAuthorIndex!=i)" [forceReset]="forceReset" (command_out)="editAction($event, i)"></lib-text-edit>
-                    <!-- <table WIDTH="100%">
-                        <tr width="100%" style="width: 100% !important;">
-                            <td width="5%" style="border-right: 1px solid var(--background-light-grey02);width: 5%;">
-                                <img src="./assets/images/reorder.png" style="width: 20px; margin: 5px">
-                            </td>
-
-                            <td width="85%" style="text-align: left; width: 85% !important; margin-left: 10px;border-right: 1px solid var(--background-light-grey02);">
-                                <input *ngIf="editingAuthorIndex==i" type="text" [(ngModel)]="currentEditingAuthor" style="height:2em;width: 100% !important;background-color: var(--nist-blue-lighter02);" placeholder="Put author's name here"/>
-                                <span *ngIf="editingAuthorIndex!=i" style="margin-left: 10px !important;">
-                                    {{ author }}
-                                </span>
-                            </td>
-                            <td width="10%" style="width: 10% !important;">
-                                <button class="icon_button" type="button" (click)="editAuthor(i)" aria-label="Edit button">
-                                    <i [class]="getEditIconClass(i)"
-                                        data-toggle="tooltip" [title]="getEditButtonTooltip(i)"></i>
-                                </button>
-
-                                <button class="icon_button" type="button" (click)="removeAuthor(i)" aria-label="Delete button">
-                                    <i [class]="getDelIconClass(i)"
-                                        data-toggle="tooltip" [title]="getDelButtonTooltip(i)"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    </table> -->
                 </div>
             </div>
         </div>

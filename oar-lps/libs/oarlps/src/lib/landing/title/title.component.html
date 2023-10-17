@@ -17,7 +17,6 @@
                 <!-- </div> -->
 
                 <!-- Editing -->
-                <!-- <div class="editable_field" style="width:100%;" *ngIf="isEditing"> -->
                 <div *ngIf="isEditing" (click)="startEditing()" style="width: 100%; ">
                     <h2 style="width: 100%;">
                         <textarea #title autocomplete="off" [(ngModel)]='record.title' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" style="width: 100%;cursor: text;" libTextareaAutoresize></textarea>
@@ -28,9 +27,6 @@
 
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-                <!-- Edit button -->
-                <!-- <i class="fas fa-pencil icon_enabled link-icon" (click)="startEditing()" *ngIf="!isEditing" title="Edit title" ngbTooltip="edit title" aria-label="edit title" style="cursor: pointer;"></i> -->
-
                 <button class="edit_button" *ngIf="!isEditing" type="button" 
                 (click)="startEditing()" aria-label="edit title" ngbTooltip="edit title" style="cursor: pointer">
                     <i class="fas fa-pencil fa-sm"></i>

@@ -92,11 +92,9 @@ export class RefListComponent implements OnInit {
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
-
-    get editBtnTooltip() { return this.isNormal? "Edit selected reference" : "Save all changes to server" }
 
     /**
      * Check if any reference data changed or reference order changed
@@ -147,7 +145,7 @@ export class RefListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.LIST, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -630,16 +628,6 @@ export class RefListComponent implements OnInit {
     }
 
     /**
-     * Determine icon class of undo button
-     * If edit mode is normal, display disabled icon.
-     * Otherwise display enabled icon.
-     * @returns undo button icon class
-     */
-    undoIconClass() {
-        return !this.dataChanged || this.isEditing || this.isAdding? "faa faa-undo icon_disabled" : "faa faa-undo icon_enabled";
-    }
-
-    /**
      * Determine icon class of add button
      * If edit mode is normal, display enabled icon.
      * Otherwise display disabled icon.
@@ -647,26 +635,9 @@ export class RefListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "faa faa-plus faa-lg icon_enabled";
+            return "fas fa-plus fa-lg icon_enabled";
         }else{
-            return "faa faa-plus faa-lg icon_disabled";
-        }
-    }
-
-    /**
-     * Determine icon class of edit button
-     * If edit mode is normal, display edit icon.
-     * Otherwise display check icon.
-     * @returns edit button icon class
-     */   
-    editIconClass() {
-        if(this.isNormal){
-            if(this.hasDisplayableReferences())
-                return "fas fa-pencil icon_enabled";
-            else
-                return "fas fa-pencil icon_disabled";
-        }else{
-            return "fas fa-pencil icon_disabled";
+            return "fas fa-plus fa-lg icon_disabled";
         }
     }
 

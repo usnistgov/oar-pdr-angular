@@ -26,12 +26,6 @@
             </div>
 
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode && !inViewMode" style="margin-left: 5px; margin-top: 2px;">
-                <!-- <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
-                    <i [class]="editIconClass()"></i>
-                </button> -->
-
-                <!-- <i class="fas fa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" title="Edit URL" ngbTooltip="edit URL" aria-label="edit URL" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>  -->
-
                 <button *ngIf="!isEditing" class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
                     <i class="fas fa-pencil fa-sm" title="Edit URL" aria-label="edit URL"></i>  
                 </button>   
