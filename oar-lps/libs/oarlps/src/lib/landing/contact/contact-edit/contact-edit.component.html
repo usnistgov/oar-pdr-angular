@@ -11,7 +11,7 @@
                         style="color:red;">*</span> Name:</span>
             </td>
             <td align="left">
-                <input type="text" [(ngModel)]="contact.fn"
+                <input type="text" [(ngModel)]="contact.fn" placeholder="Name is required."
                     style="width: 100%;height: 1.5em;margin: 3px 10px;"
                     (input)="onFullNameChange($event.target.value)" />
             </td>

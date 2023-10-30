@@ -29,8 +29,8 @@ import { GoogleAnalyticsService} from "oarlps";
         ConfigModule
     ],
     providers: [
-        GoogleAnalyticsService
-        // fakeBackendProvider
+        GoogleAnalyticsService,
+        fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })

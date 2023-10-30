@@ -91,7 +91,6 @@ export class AuthorListComponent implements OnInit {
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.record){
-            // this.editingAuthorIndex = -1;
             this.updateSavedRecord();
         }
 
@@ -146,16 +145,19 @@ export class AuthorListComponent implements OnInit {
     getAuthorName(index: number) {
         if(!this.record || !this.record[this.fieldName] || this.record[this.fieldName].length == 0) return "";
 
-        if(this.record[this.fieldName][index].fn) return this.record[this.fieldName][index].fn;
+        if(this.record[this.fieldName][index].fn) {
+            return this.record[this.fieldName][index].fn;
+        }
 
         if(this.record[this.fieldName][index].givenName && this.record[this.fieldName][index].familyName)  
             return this.record[this.fieldName][index].givenName + " " + this.record[this.fieldName][index].familyName;
 
         if(this.record[this.fieldName][index].familyName)  
-            return this.record[this.fieldName][index].familyName;
+        return this.record[this.fieldName][index].familyName;
 
         if(this.record[this.fieldName][index].givenName)  
-            return this.record[this.fieldName][index].givenName;
+        return this.record[this.fieldName][index].givenName;
+
 
         return "";
     }
@@ -233,7 +235,6 @@ export class AuthorListComponent implements OnInit {
 
             this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                 if (rec){
-                    console.log("Return authors", rec);
                     this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                     this.currentAuthor = this.record[this.fieldName].at(-1); // last author
                     this.currentAuthorIndex = this.record[this.fieldName].length - 1;
@@ -274,7 +275,7 @@ export class AuthorListComponent implements OnInit {
      */
     updateMetadata(author: Author = undefined, id: string = undefined) {
         let lAuthors = [];
-        var postMessage: any = {};
+        let postMessage: any = {};
 
         return new Promise<boolean>((resolve, reject) => {
             // Only update certain author
@@ -300,9 +301,11 @@ export class AuthorListComponent implements OnInit {
                 }
             }else{  // Update all authors
                 postMessage[this.fieldName] = [];
-                this.record[this.fieldName].forEach(author => {
-                    postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
-                });
+                if(this.record[this.fieldName]){
+                    this.record[this.fieldName].forEach(author => {
+                        postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
+                    });
+                }
 
                 this.mdupdsvc.update(this.fieldName, postMessage, id).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
@@ -623,19 +626,28 @@ export class AuthorListComponent implements OnInit {
                 this.removeAuthor(index);
                 break;    
             case 'restore':
-                // If this is a new item, delete it. Otherwise, restore original value
-                if(this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName][index] && this.originalRecord[this.fieldName][index]['@id']){
-                    this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
-                        if (success) {
-                            this.record[this.fieldName][index]['dataChanged'] = false;
-                            // this.currentAuthorIndex = 0;
-                            // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-                            this.forceReset = true; // Force author editor to reset data
-                        } else {
-                            let msg = "Failed to restore authors";
-                            console.error(msg);
-                        }
-                    })
+                // If original record does not have this field, delete it. Otherwise if this is a new added item. delete it as well. Otherwise restore original.
+                if(this.originalRecord[this.fieldName]){
+                    let foundAuthorIndex = this.originalRecord[this.fieldName].findIndex(element => element['@id'].trim() == this.record[this.fieldName][index]['@id'].trim());
+
+                    // Remove if it's new author                    
+                    if(foundAuthorIndex < 0)
+                        this.removeAuthor(index);
+                    // Otherwise, restore original value
+                    else{
+                        // Restore original
+                        this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
+                            if (success) {
+                                this.record[this.fieldName][index]['dataChanged'] = false;
+                                // this.currentAuthorIndex = 0;
+                                // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+                                this.forceReset = true; // Force author editor to reset data
+                            } else {
+                                let msg = "Failed to restore authors";
+                                console.error(msg);
+                            }
+                        })
+                    }
                 }else{
                     this.removeAuthor(index);
                 }

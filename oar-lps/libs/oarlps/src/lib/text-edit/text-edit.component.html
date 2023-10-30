@@ -26,6 +26,11 @@
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
 
+                <!-- Custom button -->
+                <button *ngIf="customButton" class="edit_button" type="button" (click)="cust();" [disabled]="disableControl" [aria-label]="custBtnTooltip" [ngbTooltip]="custBtnTooltip">
+                    <i [class]="custBtnIcon"></i>
+                </button>
+
                 <!-- Edit only button-->
                 <button *ngIf="editOnlyButton" class="edit_button" type="button" (click)="edit()" [disabled]="editing || disableControl" aria-label="Edit button" ngbTooltip="Edit this item">
                     <i [class]="getEditOnlyIconClass()"
@@ -40,7 +45,7 @@
 
                 <!-- Restore button-->
                 <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl || !dataChanged || isNew" aria-label="Restore button" ngbTooltip="Restore from original value" data-container="body">
-                    <i class="faa faa-undo"
+                    <i class="fas fa-undo fa-sm"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>
 

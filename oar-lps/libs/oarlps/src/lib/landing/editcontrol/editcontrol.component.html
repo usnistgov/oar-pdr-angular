@@ -8,16 +8,16 @@
     <div *ngIf="screenWidth > screenSizeBreakPoint" style="float: right; margin-top: .5em !important;">
         <!-- Submit for review button -->
         <button pButton type="submit" class="btn btn-labeled" id="ec-review-btn" (click)="submitReview()"
-        [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="fas fa-arrow-circle-up faa-1x icon-white" iconPos="left">
+        [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="fas fa-arrow-circle-up faa-1x icon-white" iconPos="left">
         </button>
 
         <!-- Save button -->
         <button pButton type="submit" class="btn btn-labeled" id="ec-close-btn" (click)="doneEdits()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left">
+            [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left">
         </button>
 
         <!-- Discard button -->
-        <button pButton type="submit" class="btn btn-labeled" id="ec-discard-btn" (click)="confirmDiscardEdits()" [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
+        <button pButton type="submit" class="btn btn-labeled" id="ec-discard-btn" (click)="confirmDiscardEdits()" [disabled]="!(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
         </button>
 
         <!-- 
@@ -45,17 +45,17 @@
         <div style="width: 100%; text-align: right !important;">
             <!-- Submit for review button -->
             <button pButton type="submit" class="btn btn-labeled" id="ec-review-btn" (click)="submitReview()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="fas fa-arrow-circle-up faa-1x icon-white" iconPos="left">
+            [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="fas fa-arrow-circle-up faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Save button -->
             <button pButton type="submit" class="btn btn-labeled" id="ec-close-btn" (click)="doneEdits()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left">
+            [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Discard button -->
             <button pButton type="submit" class="btn btn-labeled" id="ec-discard-btn" (click)="confirmDiscardEdits()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
+            [disabled]="!(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Preview button-->

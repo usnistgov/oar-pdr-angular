@@ -103,10 +103,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // console.log("request", request);
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
-            if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
-                // console.log("Getting forensics")
-                return of(new HttpResponse({ status: 200, body: midasRes }));
-            }
+            // if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
+            //     // console.log("Getting forensics")
+            //     return of(new HttpResponse({ status: 200, body: midasRes }));
+            // }
 
             // metrics
             // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {

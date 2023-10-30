@@ -130,7 +130,6 @@ export class VisithomeComponent implements OnInit {
     onDataChange(dataChanged: any) {
         switch(dataChanged.action) {
             case 'dataChanged':
-                console.log("dataChanged", dataChanged);
                 this.record[this.fieldName] = dataChanged.visitHomeURL;
                 this.visitHomeURL = dataChanged.visitHomeURL;
                 this.dataChanged = true;

@@ -13,7 +13,7 @@
                         </td>
                         <td width="30px" align="left" style="vertical-align:top;">
                             <!-- Clear text button-->
-                            <button class="edit_button" style="margin: 10px 0px 0px 2px" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
+                            <button class="edit_button" style="margin: 10px 0px 0px 2px" [disabled]="!visitHomeURL" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
                                 <i class="fas fa-eraser"></i>
                             </button>
                         </td>

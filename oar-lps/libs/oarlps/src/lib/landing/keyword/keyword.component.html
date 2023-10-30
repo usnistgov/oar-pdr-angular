@@ -23,7 +23,7 @@
                 <div class="editable_field" style="width:100%">
                     <!-- Editing -->
                     <div *ngIf="isEditing; else nonEditing" style="max-width: 100%;margin-right: 3px;">
-                            <p-chips #keyword [(ngModel)]="keywords" (onAdd)="onAdd($event)" (onRemove)="onRemove()" separator="," class="p-fluid" placeholder="Add keywords"></p-chips>
+                            <p-chips #keyword [(ngModel)]="keywords" (onAdd)="onAdd($event)" (onRemove)="onRemove()" addOnBlur="true" separator="," class="p-fluid" placeholder="Add keywords"></p-chips>
                     </div>
                     <!-- nonEditing: only display tags-->
                     <div *ngIf="!isEditing && !isEmpty">

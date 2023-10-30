@@ -27,7 +27,7 @@
                                         [textField]="apage.title" 
                                         [dragDropIcon]="accessPages.length==1?false:true" [editButton]="false" 
                                         [deleteButton]="true" 
-                                        [restoreButton]="true" 
+                                        [restoreButton]="false" 
                                         [editOnlyButton]="true"
                                         [trashButton]="true" 
                                         [disableControl]="isAdding || isEditing" 
@@ -48,19 +48,19 @@
             </div>
             <div class="editable_field" style="white-space: nowrap;">
                 <!-- Add button -->
-                <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" *ngIf="!isEditing && !isAdding" [disabled]="currentOrderChanged" ngbTooltip="Add access page">
+                <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" *ngIf="!isEditing && !isAdding" ngbTooltip="Add access page">
                     <i class="fas fa-plus fa-sm"></i>
                 </button>
 
                 <!-- Save button -->
-                <button class="edit_button" type="button" (click)="saveListChanges()" aria-label="add button" *ngIf="currentOrderChanged" ngbTooltip="Save access pages">
-                    <i [class]=" addIconClass()"></i>
-                </button>
+                <!-- <button class="edit_button" type="button" (click)="saveListChanges()" aria-label="add button" *ngIf="currentOrderChanged" ngbTooltip="Save access pages">
+                    <i class="fas fa-check fa-sm"></i>
+                </button> -->
 
                 <!-- Cancel current changes (order change) -->
-                <button class="edit_button" type="button" *ngIf="currentOrderChanged" (click)="cancelEditing()" aria-label="Cancel button" ngbTooltip="Cancel changes">
+                <!-- <button class="edit_button" type="button" *ngIf="currentOrderChanged" (click)="cancelEditing()" aria-label="Cancel button" ngbTooltip="Cancel changes">
                     <i class="fas fa-undo fa-sm"></i>
-                </button>
+                </button> -->
             </div>
         </div>
         <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus"> 

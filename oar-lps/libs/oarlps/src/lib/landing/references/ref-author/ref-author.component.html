@@ -1,8 +1,8 @@
-<div class="card card-block card-header customcard" style="width: 100%; padding:.5em;">
+<div class="card card-block card-header customcard" style="width: 100%; padding:.5em;overflow: visible;">
 
     <!-- Add new author -->
     <div style="margin: 0px 10px;">
-        <lib-text-edit [textField]="newAuthor" [plusButton]="true" [showBorder]="false" placeHolderText="Put author's name here" (command_out)="editAction($event)"></lib-text-edit>
+        <lib-text-edit [textField]="newAuthor" [customButton]="true" custBtnTooltip="Add author to the list" custBtnIcon="fas fa-check fa-sm" [showBorder]="false" placeHolderText="Put author's name here" (command_out)="editAction($event)"></lib-text-edit>
     </div>
 
     <!-- Existing authors -->

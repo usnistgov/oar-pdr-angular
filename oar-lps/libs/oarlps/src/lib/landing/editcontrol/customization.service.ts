@@ -159,17 +159,14 @@ export class WebCustomizationService extends CustomizationService {
     }
 
     private _wrapRespObs(obs : Observable<Object>, subscriber : Subscriber<Object>) : void {
-        obs.subscribe(
-            (jsonbody) => {
-                // if (!jsonbody || !jsonbody['@id'])
-                //     console.warn("Data returned from customization service does not look like a "+
-                //                  "NERDm resource: "+JSON.stringify(jsonbody));
+        obs.subscribe({
+            next: (jsonbody) => {
                 subscriber.next(jsonbody);
             },
-            (httperr) => {   // this will be an HttpErrorResponse
+            error: (httperr) => {   // this will be an HttpErrorResponse
                 let msg = "";
                 let err = null;
-                console.log("httperr.status", httperr.status);
+
                 if (httperr.status == 401) {
                     msg += "Authorization Error (401)";
                     // TODO: can we get at body of message when an error occurs?
@@ -196,7 +193,7 @@ export class WebCustomizationService extends CustomizationService {
                 }
                 subscriber.error(err);
             }
-        );
+        });
     }
 
     /**
@@ -214,22 +211,18 @@ export class WebCustomizationService extends CustomizationService {
      *                   ConnectionCustomizationError -- if it was not possible to connect to the 
      *                     customization server, even to get back an error response.  
      */
-    public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
+    // public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
+    public updateMetadata(body : string, subsetname: string = undefined, id: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
         // To transform the output with proper error handling, we wrap the
         // HttpClient.patch() Observable with our own Observable
         //
-        let body: string;
+        // let body: string;
         if(!subsetnameAPI) subsetnameAPI = subsetname;  // Make it backward compactible
 
         if(!id){
             return new Observable<Object>(subscriber => {
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
-
-                if(subsetname)
-                    body = JSON.stringify(md[subsetname]);
-                else
-                    body = JSON.stringify(md);
 
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -240,8 +233,6 @@ export class WebCustomizationService extends CustomizationService {
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
                 url = id == undefined ? url : url + "/" + id;
-
-                body = JSON.stringify(md);
 
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -278,6 +269,8 @@ export class WebCustomizationService extends CustomizationService {
             }
             
             let body = JSON.stringify(md[subsetname]);
+            console.log("body", body);
+            
             let obs : Observable<Object> = 
                 this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -305,6 +298,7 @@ export class WebCustomizationService extends CustomizationService {
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.saveapi + this.resid + "/data";
+
             let obs : Observable<Object> = 
                 this.httpcli.put(url, {}, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -593,14 +587,11 @@ export class InMemCustomizationService extends CustomizationService {
     }
 
     private _wrapRespObs(obs : Observable<Object>, subscriber : Subscriber<Object>) : void {
-        obs.subscribe(
-            (jsonbody) => {
-                // if (!jsonbody || !jsonbody['@id'])
-                //     console.warn("Data returned from customization service does not look like a "+
-                //                  "NERDm resource: "+JSON.stringify(jsonbody));
+        obs.subscribe({
+            next: (jsonbody) => {
                 subscriber.next(jsonbody);
             },
-            (httperr) => {   // this will be an HttpErrorResponse
+            error: (httperr) => {   // this will be an HttpErrorResponse
                 let msg = "";
                 let err = null;
                 console.log("httperr.status", httperr.status);
@@ -630,7 +621,7 @@ export class InMemCustomizationService extends CustomizationService {
                 }
                 subscriber.error(err);
             }
-        );
+        });
     }
 }
 

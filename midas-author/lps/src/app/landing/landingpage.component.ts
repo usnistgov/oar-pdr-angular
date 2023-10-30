@@ -242,6 +242,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 (md) => {
                     if (md && md != this.md) {
                         this.md = md as NerdmRes;
+                        console.log("md changed", this.md);
                     }
 
                     if(md && !this.helpContentUpdated){

@@ -74,7 +74,7 @@
                                 [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" aria-hidden="true" (click)="authorExpandClick();"></i>
                         </div>
                         <!-- Author editor -->
-                        <div [@editExpand]="editBlockStatus" style="overflow: hidden;">
+                        <div [@editExpand]="editBlockStatus" [ngStyle]="getAuthorStyle()">
                             <lib-ref-author [ref]="ref" (dataChanged)="onDataChange($event)"></lib-ref-author>
                         </div>
                     </td>

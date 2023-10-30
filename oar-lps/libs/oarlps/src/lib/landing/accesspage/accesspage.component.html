@@ -5,7 +5,7 @@
 
     <div class="editable_container" style="padding: 0px;">
         <div class="editable_field" style="max-width: calc(100% - 1.65em);" >
-            <div *ngIf="mdupdsvc.isEditMode">
+            <div *ngIf="mdupdsvc.isEditMode" style="margin-right: 10px;">
                 Add links to relevant websites including software repositories.
             </div>
 
@@ -62,6 +62,7 @@
 
         <!-- Control buttons -->
         <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+            <!-- Edit button -->
             <button class="edit_button" *ngIf="isNormal" (click)="startEditing()" aria-label="edit button">
                 <i class="fas fa-pencil fa-sm"></i>
             </button>

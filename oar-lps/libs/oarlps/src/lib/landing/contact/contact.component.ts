@@ -297,7 +297,7 @@ export class ContactComponent implements OnInit {
     saveCurrentContact(refreshHelp: boolean = true) {
         var postMessage: any = {};
         postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.currentContact));
-        // console.log('postMessage', postMessage);
+        // console.log('postMessage', JSON.stringify(postMessage));
         
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             if (updateSuccess){

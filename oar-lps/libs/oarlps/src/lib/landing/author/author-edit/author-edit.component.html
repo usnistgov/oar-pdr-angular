@@ -8,7 +8,7 @@
                     <span style="margin-right: .5em;" ngbTooltip="This field is required">
                         <span style="color:red;">*</span> Given Name:</span>
                 </td>
-                <td>
+                <td *ngIf="author">
                     <input type="text" [(ngModel)]="author.givenName" class="text-input"
                         (input)="onGivenNameChange($event.target.value)" />
                 </td>
@@ -19,7 +19,7 @@
                 <td align="right">
                     <span style="margin-right: .5em;">Middle Name:</span>
                 </td>
-                <td>
+                <td *ngIf="author">
                     <input type="text" [(ngModel)]="author.middleName" class="text-input"
                         (input)="onMiddleNameChange(author, $event.target.value)" />
                 </td>
@@ -33,7 +33,7 @@
                     <span style="margin-right: .5em;" ngbTooltip="This field is required"><span
                             style="color:red;">*</span> Family Name:</span>
                 </td>
-                <td>
+                <td *ngIf="author">
                     <input type="text" [(ngModel)]="author.familyName" class="text-input"
                         (input)="onFamilyNameChange(author, $event.target.value)" />
                 </td>
@@ -48,7 +48,7 @@
                     <span style="margin-right: .5em;white-space: nowrap;" ngbTooltip="This field is required"><span
                             style="color:red;">*</span> Name (as displayed)</span>
                 </td>
-                <td align="left">
+                <td align="left" *ngIf="author">
                     <input type="text" [(ngModel)]="author.fn" class="text-input-right-button"
                         style="margin-right: 5px;"
                         (input)="onFullNameChange(author, $event.target.value)" />
@@ -68,7 +68,7 @@
                     <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
                             style="color:green;">*</span> ORCID:</span>
                 </td>
-                <td align="left">
+                <td align="left" *ngIf="author">
                     <input type="text" [(ngModel)]="author.orcid" id="orcid-input" (blur)="validateOrcid(author)" (ngModelChange)="validateOrcid(author)" placeholder="####-####-####-####" style="margin-right: 5px; " class="text-input-right-button"/>
 
                     <a href="https://orcid.org" target="blank">
@@ -96,7 +96,7 @@
                     <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
                             style="color:green;">*</span> Affiliations:</span>
                 </td>
-                <td style="border: 1px solid lightgrey;">
+                <td style="border: 1px solid lightgrey;" *ngIf="author">
                     <!-- Add button -->
                     <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add affiliation" style="float: right;margin: 5px;">
                         <i class="faa faa-plus faa-lg"></i>

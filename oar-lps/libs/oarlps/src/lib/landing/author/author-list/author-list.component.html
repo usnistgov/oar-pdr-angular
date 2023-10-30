@@ -74,7 +74,7 @@
             <!-- Control buttons -->
             <td style="width: 60px;vertical-align: top; white-space: nowrap;">
                 <!-- Save button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save authors">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!currentAuthor || !currentAuthor.dataChanged" ngbTooltip="Save authors">
                     <i class="faa faa-check"></i>
                 </button>
 

@@ -133,9 +133,9 @@ export class TitleComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode(MODE.NORNAL);
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to title.", "", 3000);
             }else{
-                let msg = "Failed to undo keywords metadata";
+                let msg = "Failed to undo title metadata";
                 console.error(msg);
             }
         });
@@ -147,7 +147,7 @@ export class TitleComponent implements OnInit {
      * Set background color based on the status of title
      * if it's the same as original value (nothing changed), set background color to white.
      * Otherwise set it to light yellow.
-     * @param keywords 
+     * @param title 
      */
     setBackground(title: string) {
         this.dataChanged = title != this.originalRecord['title'];

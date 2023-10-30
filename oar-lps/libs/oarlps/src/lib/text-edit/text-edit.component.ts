@@ -17,6 +17,10 @@ export class TextEditComponent implements OnInit {
     @Input() editButton: boolean = true; // Default button
     @Input() editOnlyButton: boolean = false; // Default button
     @Input() deleteButton: boolean = true; // Default button
+    @Input() customButton: boolean = false; 
+    @Input() custBtnIcon: string = "fas fa-pencil fa-sm";
+    @Input() custBtnFunc: string = "add()";
+    @Input() custBtnTooltip: string = "Save changes";
     @Input() plusButton: boolean = false; // If this is true, no edit/remove/undo button
     @Input() restoreButton: boolean = false;
     @Input() submitButton: boolean = false;
@@ -43,7 +47,7 @@ export class TextEditComponent implements OnInit {
             this.dragDropIcon = false;
             this.submitButton = false;
             this.controlBoxWidth = "27px !important";
-        } else if(this.submitButton) {
+        } else if(this.submitButton || this.customButton) {
             this.editing = true;
             this.editButton = false;
             this.deleteButton = false;
@@ -105,9 +109,9 @@ export class TextEditComponent implements OnInit {
         this.command_out.next({"value":this.currentVal, "command":"Edit"});
     }
 
-    onSave() {
+    onSave(cmd: string = 'Save') {
         this.editing = false;
-        this.command_out.next({"value":this.currentVal, "command":"Save"});
+        this.command_out.next({"value":this.currentVal, "command":cmd});
     }
 
     onUpdate() {
@@ -152,6 +156,11 @@ export class TextEditComponent implements OnInit {
         this.command_out.next({"value":this.currentVal, "command":"Add"});
         this.prevVal = "";
         this.currentVal = "";
+    }
+
+    cust() {
+        console.log('this.custBtnFunc', this.custBtnFunc);
+        eval('this.'+this.custBtnFunc);
     }
 
     /**

@@ -60,7 +60,10 @@ export class DescriptionComponent implements OnInit {
         }
     }
     get dataChanged() {
-        return this.description != this.record[this.fieldName].join("\r\n\r\n");
+        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0)
+            return this.description != this.record[this.fieldName].join("\r\n\r\n");
+        else
+            return this.description.trim() != "";
     }
 
     ngOnInit() {
@@ -85,6 +88,8 @@ export class DescriptionComponent implements OnInit {
     getDescription() {
         if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
             this.description = this.record[this.fieldName].join("\r\n\r\n");
+        else
+            this.description = "";
 
         if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
             this.originDescription = this.originalRecord[this.fieldName].join("\r\n\r\n");

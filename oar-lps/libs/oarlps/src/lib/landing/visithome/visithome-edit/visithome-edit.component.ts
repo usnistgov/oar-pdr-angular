@@ -34,7 +34,6 @@ export class VisithomeEditComponent implements OnInit {
     *   white spaces
     */
     onURLChange(event: any) {
-        console.log("input value changed", event);
         // this.inputValue[this.field] = event; 
         this.currentValueChanged = this.originalURL != this.visitHomeURL;
 

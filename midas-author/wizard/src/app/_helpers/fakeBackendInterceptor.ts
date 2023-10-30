@@ -9,6 +9,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
   constructor(private http: HttpClient) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    console.log("request", request);
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
         // Wizard
