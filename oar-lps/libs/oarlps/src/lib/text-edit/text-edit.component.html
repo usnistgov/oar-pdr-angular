@@ -27,7 +27,7 @@
                 </button>
 
                 <!-- Edit only button-->
-                <button *ngIf="editOnlyButton" class="edit_button" type="button" (click)="edit()" [disabled]="editing" aria-label="Edit button" ngbTooltip="Edit this item">
+                <button *ngIf="editOnlyButton" class="edit_button" type="button" (click)="edit()" [disabled]="editing || disableControl" aria-label="Edit button" ngbTooltip="Edit this item">
                     <i [class]="getEditOnlyIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
@@ -51,8 +51,8 @@
                 </button>
 
                 <!-- Submit button-->
-                <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button" ngbTooltip="Submit changes">
-                    <i class="faa faa-check"
+                <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button" [ngbTooltip]="submitTooltip">
+                    <i class="faa faa-check-circle"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>
             </td>

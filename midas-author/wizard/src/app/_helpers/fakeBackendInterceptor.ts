@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
-// import { userInfo } from 'os';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
@@ -10,58 +9,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
   constructor(private http: HttpClient) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // array in local storage for registered users
-
-    // const sampleData: any = require('../../assets/science-theme/BiometricsScienceTheme.json');
-    // const sampleRecord: any = require('../../assets/science-theme/DNAScienceTheme.json');
-
-    // const biometricsData1: any  = require('../../assets/science-theme/SDB-300.json');
-    // const biometricsData2: any  = require('../../assets/science-theme/SDB-301.json');
-    // const biometricsData3: any  = require('../../assets/science-theme/SDB-302.json');
-    // const dna1: any  = require('../../assets/science-theme/dna1.json');
-    // const dna2: any  = require('../../assets/science-theme/dna2.json');
-    // const dna3: any  = require('../../assets/science-theme/dna3.json');
-    // const dna4: any  = require('../../assets/science-theme/dna4.json');
-    // const dna5: any  = require('../../assets/science-theme/dna5.json');
-
-    // const testdata: any = {
-    //     PageSize: 1,
-    //     ResultCount: 8,
-    //     ResultData: [biometricsData1,biometricsData2,biometricsData3,dna1,dna2,dna3,dna4,dna5]
-    // }
-
-    const wizardResponse = {
-            "id": "test1",
-            "name": "CoTEM",
-            "acls": {
-              "read": [
-                "anonymous"
-              ],
-              "write": [
-                "anonymous"
-              ],
-              "admin": [
-                "anonymous"
-              ],
-              "delete": [
-                "anonymous"
-              ]
-            },
-            "owner": "anonymous",
-            "data": {
-              "title": "Microscopy of Cobalt Samples"
-            },
-            "meta": {},
-            "curators": [],
-            "created": 1669560885.988901,
-            "createdDate": "2022-11-27T09:54:45",
-            "lastModified": 1669560885.988901,
-            "lastModifiedDate": "2022-11-27T09:54:45",
-            "deactivated": null,
-            "type": "dmp"
-        
-    }
-    console.log("request.url", request.url);
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
         // Wizard

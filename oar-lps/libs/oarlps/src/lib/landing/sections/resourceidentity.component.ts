@@ -6,7 +6,7 @@ import { VersionComponent } from '../version/version.component';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { LandingConstants } from '../../landing/constants';
-import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 
@@ -155,7 +155,7 @@ export class ResourceIdentityComponent implements OnChanges {
     refreshHelpText(){
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
+        sectionHelp.topic = HelpTopic[MODE.EDIT];   //Use edit mode in order to display help text
 
         this.lpService.setSectionHelp(sectionHelp);
     }

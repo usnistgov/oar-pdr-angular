@@ -71,10 +71,12 @@ export class AuthorEditComponent implements OnInit {
      * ORCID validation for UI
      * @param author - author object
      */
-    validateOrcid(author)
+    validateOrcid(event, author)
     {
         author.dataChanged = true;
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
+
+        console.log('event', event);
 
         if(!this.orcid_validation(author.orcid))
         {
@@ -82,6 +84,8 @@ export class AuthorEditComponent implements OnInit {
         }else{
             author.orcidValid = true;
         }
+
+        console.log('author.orcidValid', author.orcidValid);
     }  
     
     /**

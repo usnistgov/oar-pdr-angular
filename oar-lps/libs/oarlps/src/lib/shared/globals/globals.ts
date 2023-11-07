@@ -1,3 +1,6 @@
+
+export const GENERAL = "general";
+
 export class Themes {
     static readonly SCIENCE_THEME = 'ScienceTheme';
     static readonly DEFAULT_THEME = 'DefaultTheme';
@@ -64,6 +67,7 @@ export interface SectionHelp {
 
 export const MODE = {
     "NORNAL": "normal",
+    "LIST": "list",
     "EDIT": "edit",
     "ADD": "add"
 }
@@ -71,6 +75,7 @@ export const MODE = {
 //For display purpose
 export class Sections {
     static readonly DEFAULT_SECTION = 'Title';
+    static readonly GENERAL = 'General';
     static readonly TITLE = 'Title';
     static readonly ACCESS_PAGES = 'Access Pages';
     static readonly DESCRIPTION = 'Description';
@@ -86,6 +91,7 @@ export class Sections {
     static readonly CONTACT = 'Contact';
     static readonly VISIT_HOME_PAGE = 'Visit Home Page';
     static readonly DOI = 'DOI';
+    static readonly VERSION = 'Version';
 }
 
 //_fieldName is the field name in Nerdm record
@@ -108,9 +114,30 @@ _fieldName[Sections.SIDEBAR] = "sidebar";
 _fieldName[Sections.CONTACT] = "contactPoint";
 _fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";
 _fieldName[Sections.DOI] = "doi";
+_fieldName[Sections.VERSION] = "version";
+
+let _displayName = {};
+_displayName[GENERAL] = Sections.GENERAL;
+_displayName["title"] = Sections.TITLE;
+_displayName["components"] = Sections.ACCESS_PAGES;
+_displayName["description"] = Sections.DESCRIPTION;
+_displayName["theme"] = Sections.TOPICS;
+_displayName["keyword"] = Sections.KEYWORDS;
+_displayName["identity"] = Sections.IDENTITY;
+_displayName["about"] = Sections.ABOUT;
+_displayName["references"] = Sections.REFERENCES;
+_displayName["authors"] = Sections.AUTHORS;
+_displayName["dataAccess"] = Sections.DATA_ACCESS;
+_displayName["facilitators"] = Sections.FACILITATORS;
+_displayName["sidebar"] = Sections.SIDEBAR;
+_displayName["contactPoint"] = Sections.CONTACT;
+_displayName["landingPage"] = Sections.VISIT_HOME_PAGE;
+_displayName["doi"] = Sections.DOI;
+_displayName["version"] = Sections.VERSION;
 
 export class SectionPrefs {
     private static readonly _lSectionID = _fieldName;
+    private static readonly _lDispName = _displayName;
 
     public static getFieldName(section: string) {
         if(! _fieldName || _fieldName == '') {
@@ -122,6 +149,14 @@ export class SectionPrefs {
         }
 
         return SectionPrefs._lSectionID[section]
+    }
+
+    public static getDispName(section: string) {
+        if(! _displayName || _displayName == '' || ! SectionPrefs._lDispName[section]) {
+            return SectionPrefs._lDispName[GENERAL];
+        }
+
+        return SectionPrefs._lDispName[section];
     }
 }
 

@@ -55,7 +55,7 @@
 
             <!-- Hide button - hide edit block -->
             <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isAdding || isEditing"
-                (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
                 <i class="faa faa-remove"></i>
             </button> 
         </div>

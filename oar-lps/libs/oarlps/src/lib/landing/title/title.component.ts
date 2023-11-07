@@ -43,7 +43,8 @@ export class TitleComponent implements OnInit {
                     if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                         if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
                             if(this.isEditing){
-                                this.onSave(false); // Do not refresh help text 
+                                // Do not refresh hekp content because other section already updated it. 
+                                this.onSave(false); 
                             }else{
                                 this.setMode(MODE.NORNAL, false);
                             }
@@ -81,7 +82,7 @@ export class TitleComponent implements OnInit {
 
     startEditing(refreshHelp: boolean = true) {
         this.isEditing = true;
-        this.setMode(MODE.EDIT, refreshHelp);
+        this.setMode(MODE.EDIT, refreshHelp, MODE.EDIT);
 
         setTimeout(()=>{ // this will make the execution after the above boolean has changed
             if(this.titleElement) {
@@ -155,10 +156,10 @@ export class TitleComponent implements OnInit {
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText(help_topic: string = MODE.EDIT){
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
+        sectionHelp.topic = HelpTopic[help_topic];
 
         this.lpService.setSectionHelp(sectionHelp);
     }
@@ -167,7 +168,7 @@ export class TitleComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.sender = this.fieldName;
@@ -175,7 +176,9 @@ export class TitleComponent implements OnInit {
         sectionMode.mode = this.editMode;
 
         if(refreshHelp){
-            this.refreshHelpText();
+            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
+
+            this.refreshHelpText(help_topic);
         }
 
         //Broadcast the current section and mode

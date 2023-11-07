@@ -3,7 +3,8 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs } from '../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL } from '../shared/globals/globals';
+import { HelpTopic } from '../landing/landingpage.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -14,13 +15,13 @@ import { SectionMode, SectionHelp, MODE, SectionPrefs } from '../shared/globals/
         state('sbvisible', style({
             position: 'absolute',
             right: '0%',
-            top: "20%",
+            top: "20px",
             bottom: "100%"
         })),
         state('sbhidden', style({
             position: 'absolute',
             right: '-250%',
-            top: "20%",
+            top: "20px",
             bottom: "100%"
         })),
         transition('sbvisible <=> sbhidden', [
@@ -35,9 +36,9 @@ export class SidebarComponent implements OnInit {
     helpContent: string = "";
     suggustedSections: any = {};
     fieldName: string = "sidebar";
-    // required: string[] = [];
-    // recommended: string[] = [];
-    // niceToHave: string[] = [];
+    DEFAULT_TITLE: string = "General Help";
+    title: string = "General Help";
+    msgCompleted: string = "Congratulations!";
 
     // helpContent: any = {
     //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
@@ -60,32 +61,58 @@ export class SidebarComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
         this.lpService.watchSectionHelp((sectionHelp) => {
             this.updateHelpContent(sectionHelp);
         })
     }
 
+    /**
+     * Update the help box text based on the input section data.
+     * If topic is normal, display general help. Otherwise fetch the content from question-help.json based on section and topic.
+     * @param sectionHelp section data
+     */
     updateHelpContent(sectionHelp: SectionHelp) {
-        let generalHelp = this.helpContentAll['general']? this.helpContentAll['general'] : "Default help text.<p>";
+        // Update help content
+        let generalHelp = this.helpContentAll[GENERAL]? this.helpContentAll[GENERAL] : "Default help text.<p>";
+
+        if(sectionHelp.topic == HelpTopic[MODE.NORNAL]) {
+            sectionHelp.section = GENERAL;
+        }
 
         this.helpContent = generalHelp;
-        if(sectionHelp.section) {
+        if(sectionHelp.section && sectionHelp.section != GENERAL) {
             // Add general help of the section first
             if(this.helpContentAll[sectionHelp.section]){
-                if(this.helpContentAll[sectionHelp.section]['general']) {
-                    this.helpContent = this.helpContentAll[sectionHelp.section]['general']+ "<p>";
+                if(this.helpContentAll[sectionHelp.section][GENERAL]) {
+                    this.helpContent = this.helpContentAll[sectionHelp.section][GENERAL]+ "<p><p>";
                 }
             }
 
             // Add topic help
             if(sectionHelp.topic) {
-                if(sectionHelp.topic != 'general' && this.helpContentAll[sectionHelp.section] && this.helpContentAll[sectionHelp.section][sectionHelp.topic]){
-                    this.helpContent += this.helpContentAll[sectionHelp.section][sectionHelp.topic];
+                if(sectionHelp.topic != GENERAL && this.helpContentAll[sectionHelp.section]){
+                    if(this.helpContentAll[sectionHelp.section][sectionHelp.topic])
+                        this.helpContent += this.helpContentAll[sectionHelp.section][sectionHelp.topic] + "<p><p>";
+
+                    if(sectionHelp.topic == HelpTopic[MODE.LIST] && this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]])
+                        this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]] + "<p><p>";
                 }
             }
+
+            // Add "see also" if available
+            if(this.helpContentAll[sectionHelp.section] &&this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]])
+                        this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]] + "<p><p>";
+            
         }else {
             this.helpContent = generalHelp;
         }   
+
+        // Update help title
+        if(this.helpContentAll[sectionHelp.section] && this.helpContentAll[sectionHelp.section]["label"])
+            this.title = this.helpContentAll[sectionHelp.section]["label"].trim() + " Help";
+        else
+            this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
 
         this.suggustedSections = this.sidebarService.getSuggestions(this.record, this.resourceType);
         // this.required = this.suggustedSections['required'];
@@ -97,7 +124,7 @@ export class SidebarComponent implements OnInit {
         let sectionID = SectionPrefs.getFieldName(section);
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = sectionID;
-        sectionHelp.topic = "general";
+        sectionHelp.topic = GENERAL;
 
         let sectionMode: SectionMode = {} as SectionMode;
         sectionMode.sender = this.fieldName;

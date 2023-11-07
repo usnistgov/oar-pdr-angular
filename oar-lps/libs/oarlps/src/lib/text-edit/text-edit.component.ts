@@ -20,6 +20,7 @@ export class TextEditComponent implements OnInit {
     @Input() plusButton: boolean = false; // If this is true, no edit/remove/undo button
     @Input() restoreButton: boolean = false;
     @Input() submitButton: boolean = false;
+    @Input() submitTooltip: string = "Submit changes";
     @Input() placeHolderText: string = "Input text here";
     @Input() disableControl: boolean = false;
     @Input() showBorder: boolean = true; // display the border between textbox and control
@@ -187,7 +188,7 @@ export class TextEditComponent implements OnInit {
      * @returns icon class
      */
     getEditOnlyIconClass() {
-        if(this.editing){
+        if(this.editing || this.disableControl){
             return "faa faa-pencil icon_disabled";
         }else{
             return "faa faa-pencil icon_enabled";
