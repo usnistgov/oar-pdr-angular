@@ -12,6 +12,9 @@ os=`uname`
 SED_RE_OPT=r
 [ "$os" != "Darwin" ] || SED_RE_OPT=E
 
+dap_dists="midas-author-wizard midas-author-lps"
+avail_dists="$dap_dists"
+
 function usage {
     cat <<EOF
 
@@ -19,15 +22,13 @@ $prog - build and optionally test the software in this repo via docker
 
 SYNOPSIS
   $prog [-d|--docker-build] [--dist-dir DIR] [CMD ...] 
-        [DISTNAME|python|angular|java ...] 
+        [DISTNAME|angular ...] 
         
 
 ARGS:
-  python    apply commands to just the python distributions
-  angular   apply commands to just the angular distributions
-  java      apply commands to just the java distributions
+  angular   apply commands to all available angular distributions
 
-DISTNAMES:  pdr-lps, pdr-publish, customization-api
+DISTNAMES:  editable, wizard, pdr-lps
 
 CMDs:
   build     build the software
@@ -64,12 +65,9 @@ distvol=
 distdir=
 dodockbuild=
 cmds=
-comptypes=
 args=()
 dargs=()
-pyargs=()
-angargs=()
-jargs=()
+dists=
 testcl=()
 while [ "$1" != "" ]; do
     case "$1" in
@@ -105,16 +103,25 @@ while [ "$1" != "" ]; do
         -*)
             args=(${args[@]} $1)
             ;;
-        python|wizard|editable|java)
-            comptypes="$comptypes $1"
-            ;;
-        wizard)
-            wordin wizard $comptypes || comptypes="$comptypes wizard"
-            angargs=(${args[@]} $1)
+        midas-author-wizard|midas-author-lps)
+            wordin $1 $dists || dists="$dists $1"
             ;;
         editable)
-            wordin editable $comptypes || comptypes="$comptypes editable"
-            angargs=(${args[@]} $1)
+            target=midas-author-lps
+            echo "Warning: 'editable' component name is deprecated;" \
+                 "treating it as a synonym for $target"
+            wordin $target $dists || dists="$dists $target"
+            ;;
+        wizard)
+            target=midas-author-wizard
+            echo "Warning: 'wizard' component name is deprecated;" \
+                 "treating it as a synonym for $target"
+            wordin $target $dists || dists="$dists $target"
+            ;;
+        angular)
+            for target in $dap_dists; do
+                wordin $target $dists || dists="$dists $target"
+            done
             ;;
         build|install|test|shell)
             cmds="$cmds $1"
@@ -131,12 +138,12 @@ done
 [ -z "${testcl[@]}" ] || {
     dargs=(${dargs[@]} --env OAR_TEST_INCLUDE=\"${testcl[@]}\")
 }
-echo "*** TEST"
-comptypes=`echo $comptypes`
+
+dists=`echo $dists`
 cmds=`echo $cmds`
-[ -n "$comptypes" ] || comptypes="pdr-lps"
+[ -n "$dists" ] || dists=$avail_dists
 [ -n "$cmds" ] || cmds="build"
-echo "run.sh: Running docker commands [$cmds] on [$comptypes]"
+echo "run.sh: Running docker commands [$cmds] on [$dists]"
 
 testopts="--cap-add SYS_ADMIN"
 volopt="-v ${codedir}:/dev/oar-pdr-angular"
@@ -144,61 +151,45 @@ volopt="-v ${codedir}:/dev/oar-pdr-angular"
 # check to see if we need to build the docker images; this can't detect
 # changes requiring re-builds.
 # 
-echo "*** TEST 2"
 if [ -z "$dodockbuild" ]; then
-    if wordin wizard $comptypes; then
-        if wordin build $cmds; then
-            docker_images_built oar-pdr-angular/wizard || dodockbuild=1
+    if wordin build-test $dists; then
+        if { wordin build $cmds || wordin test $cmds; }; then
+            docker_images_built oar-pdr-angular/build-test || dodockbuild=1
         fi
     fi
 fi
 
-if [ -z "$dodockbuild" ]; then
-    if wordin editable $comptypes; then
-        if wordin build $cmds; then
-            docker_images_built oar-pdr-angular/editable || dodockbuild=1
-        fi
-    fi
-fi
-
-        
 [ -z "$dodockbuild" ] || {
     echo '#' Building missing docker containers...
     $execdir/dockbuild.sh
 }
-echo "*** TEST3"
-# handle angular building and/or testing.  If shell was requested with
-# angular, open the shell in the angular test contatiner (angtest).
-# 
-if wordin wizard $comptypes; then
-    docmds=`echo $cmds | sed -${SED_RE_OPT}e 's/shell//' -e 's/install//' -e 's/^ +$//'`
-    if { wordin shell $cmds && [ "$comptypes" == "wizard" ]; }; then 
-        docmds="$docmds shell"
-    fi
 
-    if [ "$docmds" == "build" ]; then
-        # build only
-        echo '+' docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/wizard build \
-                       "${args[@]}" "${angargs[@]}"
-        docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/wizard build \
-                       "${args[@]}" "${angargs[@]}"
-    fi
+# build distributions, if requested
+#
+if wordin build $cmds; then
+    echo '+' docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/build-test \
+                    build "${args[@]}" $dists
+    docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/build-test \
+           build "${args[@]}" $dists
 fi
 
-# handle angular building and/or testing.  If shell was requested with
-# angular, open the shell in the angular test contatiner (angtest).
-# 
-if wordin editable $comptypes; then
-    docmds=`echo $cmds | sed -${SED_RE_OPT}e 's/shell//' -e 's/install//' -e 's/^ +$//'`
-    if { wordin shell $cmds && [ "$comptypes" == "editable" ]; }; then
-        docmds="$docmds shell"
-    fi
-
-    if [ "$docmds" == "build" ]; then
-        # build only
-        echo '+' docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/editable build \
-                       "${args[@]}" "${angargs[@]}"
-        docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/editable build \
-                       "${args[@]}" "${angargs[@]}"
-    fi
+# run tests, if requested
+#
+if wordin test $cmds; then
+    # not yet supported
+    echo '#' test command not yet implemented
+#    echo '+' docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/build-test \
+#                    test "${args[@]}" $dists
+#    docker run --rm $volopt "${dargs[@]}" oar-pdr-angular/build-test \
+#           test "${args[@]}" $dists
 fi
+
+# open a shell, if requested
+#
+if wordin shell $cmds; then
+    echo '+' docker run -ti --rm $volopt "${dargs[@]}"  \
+                    oar-pdr-angular/build-test shell "${args[@]}"
+    docker run --rm -ti $volopt "${dargs[@]}" oar-pdr-angular/build-test \
+           shell "${args[@]}"
+fi
+

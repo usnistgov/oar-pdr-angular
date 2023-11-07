@@ -22,7 +22,7 @@ PACKAGE_NAME=oar-pdr-angular
 ## containers to be built.  List them in dependency order (where a latter one
 ## depends the former ones).  
 #
-DOCKER_IMAGE_DIRS="pymongo jqfromsrc ejsonschema wizard editable"
+DOCKER_IMAGE_DIRS="build-test"
 
 . $codedir/oar-build/_dockbuild.sh
 
@@ -37,12 +37,12 @@ setup_build
 
 log_intro   # record start of build into log
 
-# $codedir/oar-metadata/docker/dockbuild.sh $BUILD_IMAGES
-if { echo " $BUILD_IMAGES " | grep -qs " wizard "; }; then
-    echo '+' docker build $BUILD_OPTS -t $PACKAGE_NAME/wizard wizard
-    docker build $BUILD_OPTS -t $PACKAGE_NAME/wizard wizard 2>&1
+# install CA certs into containers that can use them
+if { echo $BUILD_IMAGES | grep -qs build-test; }; then
+    cp_ca_certs_to build-test
 fi
-if { echo " $BUILD_IMAGES " | grep -qs " editable "; }; then
-    echo '+' docker build $BUILD_OPTS -t $PACKAGE_NAME/editable editable
-    docker build $BUILD_OPTS -t $PACKAGE_NAME/editable editable 2>&1
+
+if { echo " $BUILD_IMAGES " | grep -qs " build-test "; }; then
+    echo '+' docker build $BUILD_OPTS -t $PACKAGE_NAME/build-test build-test
+    docker build $BUILD_OPTS -t $PACKAGE_NAME/build-test build-test 2>&1
 fi

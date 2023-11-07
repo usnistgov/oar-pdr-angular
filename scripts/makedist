@@ -7,10 +7,24 @@
 # distributions can be done by listing the names of the desired distributions
 # on the command line.
 #
-# There are currently two distributions: pdr-publish, pdr-lps
+# The following distributions can be built with this script:
+#   midas-author-wizard
+#   midas-author-lps
+#   pdr-lps
+#   pdr-rpa-request
+#   pdr-rpa-approve
+#
+# The following synonyms are provided for backward compatability:
+#   editable -- for midas-author-lps
+#   wizard   -- for midas-author-wizard
+#
+# The following macros are also supported:
+#   midas-author -- builds both midas-author-lps and midas-author-wizard
+#   pdr-rpa      -- builds both pdr-rpa-request and pdr-rpa-approve
+#   angular      -- builds all available angular distributions
 #
 # SYNOPSIS
-#    makedist.angular [OPTIONS] [DISTNAME ...]
+#    makedist [OPTIONS] [DISTNAME ...]
 #
 # OPTIONS
 #    -l, --list               list the names of the supported distributions and
@@ -28,14 +42,14 @@
 #    
 #
 
-echo "********************** makedist in scripts"
 set -e
 prog=`basename $0`
 execdir=`dirname $0`
 [ "$execdir" = "" -o "$execdir" = "." ] && execdir=$PWD
 PACKAGE_DIR=`dirname $execdir`
-VERSION=
-echo "********************** $execdir "
+[ "$PACKAGE_DIR" = "" -o "$PACKAGE_DIR" = "." ] && PACKAGE_DIR=$PWD
+SOURCE_DIR=$PACKAGE_DIR
+
 # this is needed because realpath is not on macs
 function realpath {
     if [ -d "$1" ]; then
@@ -53,10 +67,16 @@ function realpath {
 }
 
 # Update this list with the names of the individual component names
-# 
-DISTNAMES="wizard editable"
-wizard_dists=":wizard:"
-editable_dists=":editable:"
+#
+midas_author_names="midas-author-wizard midas-author-lps"
+pdr_rpa_names="pdr-rpa-request pdr-rpa-approve"
+DISTNAMES="$midas_author_names"
+declare -A APPSRCDIR=(                        \
+    [midas-author-wizard]=midas-author/wizard \
+    [midas-author-lps]=midas-author/lps       \
+    [pdr-rpa-request]=pdr-rpa/pdr-rpa-request \
+    [pdr-rpa-approve]=pdr-rpa/pdr-rpa-approve \
+)
 
 # handle command line options
 while [ "$1" != "" ]; do 
@@ -88,6 +108,18 @@ while [ "$1" != "" ]; do
         CACHE_DIR=$1
         # NOTE: CACHE_DIR is ignored
         ;;
+    angular)
+        build_dist=${DISTNAMES}
+        ;;
+    midas-author)
+        build_dist="$build_dist $midas_author_names"
+        ;;
+    wizard)
+        build_dist="$build_dist midas-author-wizard"
+        ;;
+    editable)
+        build_dist="$build_dist midas-author-lps"
+        ;;
     -*)
         echo "$prog: unsupported option:" $1
         false
@@ -104,50 +136,81 @@ while [ "$1" != "" ]; do
   shift
 done
 [ -n "$build_dist" ] || build_dist=$DISTNAMES
+build_dist=`echo $build_dist | sed -e 's/ /\n/g' | sort -u`
 echo '#' Building $build_dist
 
-# # make sure the oar-metadata submodule has been initialized
-# #
-# [ -d "oar-metadata/scripts" ] || {
-#     set -x
-#     git submodule init
-#     git submodule update
-#     set +x
-# }
+true ${DIST_DIR:=$PACKAGE_DIR/dist}
+mkdir -p $DIST_DIR
+
+echo "# Building from $SOURCE_DIR..."
+cd $SOURCE_DIR || {
+    echo ${prog}: Unable to change into $SOURCE_DIR
+    false
+}
 
 # set the current version.  This will inject the version into the code, if 
 # needed.
 #
-set -x
-(scripts/setversion.sh)
-scripts/setversion.sh $VERSION
-set +x
+# set -x
+echo '+' scripts/setversion.sh
+scripts/setversion.sh 
 [ -n "$PACKAGE_NAME" ] || PACKAGE_NAME=`cat VERSION | awk '{print $1}'`
 version=`cat VERSION | awk '{print $2}'`
-vers4fn=`echo $version | perl -pe 's#[/ ]+#_#g'`
+vers4fn=`echo $version | sed -re 's#[/ \t]+#_#g'`
 
-build_wizard=
-build_editable=
-for dist in $build_dist; do
-    if (echo $wizard_dists | grep -qs :${dist}:); then
-        build_wizard="$build_wizard $dist"
-    elif (echo $editable_dists | grep -qs :${dist}:); then
-        build_editable="$build_editable $dist" 
+npmpfx=
+[ -z "$CACHE_DIR" ] || npmpfx="--prefix $CACHE_DIR"
+
+# install required modules
+npmvers=`npm --version`
+echo '+' npm install --legacy-peer-deps
+npm $npmpfx install --legacy-peer-deps
+
+# build oarng
+echo '+' npm $npmpfx run build-lib
+npm $npmpfx run build-lib
+
+# build the oar-lps library (needed by both rpa apps and pdr-lps)
+if (echo "$build_dist" | sed -e 's/ /\n/g' | grep -qs midas-author-lps); then
+    echo '+' npm $npmpfx run build-oarlps
+    npm $npmpfx run build-oarlps
+fi
+
+# build target distributions
+declare -A buildscript
+buildscript=(                            \
+    ["pdr-lps"]=build-pdrlps             \
+    ["midas-author-wizard"]=build-sw     \
+    ["midas-author-lps"]=build-midaslps  \
+)
+
+for target in $build_dist; do
+    distname="${target}-$vers4fn"
+    builddir="${APPSRCDIR[$target]}/dist"
+
+    echo '##############################################'
+    echo '#'
+    echo "# Building $distname"...
+    echo '#'
+    echo '##############################################'
+
+    # build the code
+    echo '+' npm $npmpfx run ${buildscript[$target]}
+    npm $npmpfx run ${buildscript[$target]}
+
+    # zip up the distribution
+    echo '+' '(cd $builddir' '&&' \
+             "zip -qr $DIST_DIR/${distname}.zip *)"
+    (cd $builddir && zip -qr $DIST_DIR/${distname}.zip *)
+
+    # create the dependency file
+    if [ -f "package-lock.json" ]; then
+        echo '+' $execdir/record_npm_deps.py $target $version package-lock.json \
+                 $npmvers \> $DIST_DIR/${distname}_dep.json
+        $execdir/record_npm_deps.py $target $version package-lock.json $npmvers \
+                                    > $DIST_DIR/${distname}_dep.json
+    else
+        echo ${prog}: WARNING: Unable to create dependency file for ${dist}: \
+             package-lock.json not found
     fi
 done
-
-args=
-[ -z "$CACHE_DIR" ] || args="$args --cache-dir=`realpath $CACHE_DIR`"
-[ -z "$DIST_DIR" ] || args="$args --dist-dir=`realpath $DIST_DIR`"
-[ -z "$build_wizard" ] || {
-    sargs=
-    [ -z "$SOURCE_DIR" ] || sargs="--source-dir=$SOURCE_DIR"
-    echo '+' makedist.wizard 
-    $execdir/makedist.wizard 
-}
-[ -z "$build_editable" ] || {
-    sargs=
-    [ -z "$SOURCE_DIR" ] || sargs="--source-dir=$SOURCE_DIR"
-    echo '+' makedist.editable 
-    $execdir/makedist.editable
-}
