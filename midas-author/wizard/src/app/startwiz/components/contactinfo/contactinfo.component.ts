@@ -74,12 +74,12 @@ export class ContactinfoComponent implements OnInit {
             this.steps[1].isComplete = false;
         }
 
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 
     updateContactName(evt:any) {
         this.dataModel.contactName = evt.target.value;
         this.steps[1].isComplete = (this.dataModel.contactName?.trim() != "");
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 }

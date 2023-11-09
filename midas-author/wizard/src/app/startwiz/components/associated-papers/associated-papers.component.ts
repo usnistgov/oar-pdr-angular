@@ -62,6 +62,6 @@ export class AssociatedPapersComponent implements OnInit {
             this.steps[4].isComplete = false;
         }
 
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 }

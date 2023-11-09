@@ -533,13 +533,13 @@ export class MetadataUpdateService {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            this.custsvc.getSubset(subsetname, id).subscribe(
-                (res) => {
+            this.custsvc.getSubset(subsetname, id).subscribe({
+                next:(res) => {
                     subscriber.next(res);
                     subscriber.complete();
                     if (onSuccess) onSuccess(); 
                 },
-                (err) => {
+                error:(err) => {
                     console.error("err", err);
                     
                     // err will be a subtype of CustomizationError
@@ -557,7 +557,7 @@ export class MetadataUpdateService {
                     subscriber.next(null);
                     subscriber.complete();
                 }
-            )
+            })
         });
     }
 

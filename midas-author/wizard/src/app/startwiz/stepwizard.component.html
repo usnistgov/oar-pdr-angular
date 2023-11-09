@@ -4,6 +4,11 @@
         <wiz-navigator [steps]="steps"></wiz-navigator>
     </div>
     
+    <!-- error messages go here -->
+    <div style="width: 100%;">
+        <pdr-message [defSysErrorPrefix]="'There was a problem while submitting your record.'"></pdr-message>
+    </div>
+
     <div class="step-page-container">
         <form [formGroup]="fgSteps" style="height: 100%;">
             <!-- <div class="step-page-container"> -->
@@ -32,6 +37,11 @@
                         <ng-container *ngSwitchCase="'5'">
                             <div formGroupName="assocPapers" class="step-page">
                                 <app-associated-papers [dataModel]="dataModel" [steps]="steps"></app-associated-papers>
+                            </div>
+                        </ng-container>
+                        <ng-container *ngSwitchCase="'6'">
+                            <div formGroupName="recordname" class="step-page">
+                                <app-recordname [dataModel]="dataModel" [steps]="steps"></app-recordname>
                             </div>
                         </ng-container>
                     </ng-container>

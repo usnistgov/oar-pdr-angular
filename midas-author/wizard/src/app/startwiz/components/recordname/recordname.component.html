@@ -1,0 +1,16 @@
+<form [formGroup]="parantFormGroup" class="full-height">
+    <oar-pushing-sidebar style="width: 100%; height: fit-content;">
+        <div class="main-content">
+            <div style="margin-top: 1em;">
+                <div style="margin-bottom: .5em;">Record Name: </div>
+                <input #name class="input input-box" type="text" pInputText name="recordname" on-focus="setFocus($event)" (input)="updateRecordName($event)"/>
+            </div>
+        </div>
+        <span class="sidebar-title">Question Help</span>
+        <div class="sidebar-content">
+            When your draft publication is created, it is assigned both an identifier and a name.  The system chooses the identifier, but you get to choose the name.  This name will not appear in the final publication; it is just a name that MIDAS will display in its portal to remind you what this publication is about.
+
+            This name should be brief--say, 16 characters or less (so it should not be the same as the publication title).  If it is much longer than that, it may get truncated in displays. A name must unique among all the records you create; we'll let you know if you are about to enter a name you've assigned before.  If you wish, you can change this name later.
+        </div>
+    </oar-pushing-sidebar>
+</form>

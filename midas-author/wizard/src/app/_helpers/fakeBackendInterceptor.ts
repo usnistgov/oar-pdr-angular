@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,
+    private toastrService: ToastrService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     console.log("request", request);
@@ -82,6 +84,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
       // // authenticate
       if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
+        this.toastrService.warning('You are using fake backend!', 'Warning!');
           let body: any = {
               userId: 'xyz@nist.gov',
               token: 'fake-jwt-token'
@@ -91,6 +94,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       }
 
       if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+        this.toastrService.warning('You are using fake backend!', 'Warning!');
+        // alert("You are using fake backend!")
         let body: any = {
             userDetails: {
                 userId: 'xyz@nist.gov',
@@ -100,7 +105,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             },
             token: 'fake-jwt-token'
         };
-        console.log("logging in...")
+        console.log("logging in......")
         return of(new HttpResponse({ status: 200, body }));
     }
       // return 401 not authorised if token is null or invalid

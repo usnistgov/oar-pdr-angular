@@ -118,7 +118,7 @@ export class DescriptionComponent implements OnInit {
     startEditing() {
         setTimeout(()=>{ // this will make the execution after the above boolean has changed
             const textArea = this.descElement.nativeElement as HTMLTextAreaElement;
-            textArea.focus();
+            // textArea.focus();
         },0);  
 
         this.isEditing = true;
