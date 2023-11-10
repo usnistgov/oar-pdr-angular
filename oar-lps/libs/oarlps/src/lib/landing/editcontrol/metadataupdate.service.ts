@@ -69,7 +69,7 @@ export class MetadataUpdateService {
      */
     constructor(private msgsvc: UserMessageService,
         private edstatsvc: EditStatusService,
-        private authsvc: AuthService,
+        public authsvc: AuthService,
         private datePipe: DatePipe) { 
           this.EDIT_MODES = LandingConstants.editModes;
 
