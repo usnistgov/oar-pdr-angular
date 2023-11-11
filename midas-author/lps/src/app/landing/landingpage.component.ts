@@ -391,7 +391,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         });
             },
             (err) => {
-                console.error("Authentication failed.");
+                console.error("Authentication failed: "+JSON.stringify(err));
             }
         );
     }
