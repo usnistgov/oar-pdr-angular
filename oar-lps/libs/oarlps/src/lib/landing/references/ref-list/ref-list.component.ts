@@ -57,6 +57,7 @@ export class RefListComponent implements OnInit {
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
+    @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
     constructor(public mdupdsvc : MetadataUpdateService,        
         private modalService: NgbModal,              
@@ -91,11 +92,9 @@ export class RefListComponent implements OnInit {
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
-
-    get editBtnTooltip() { return this.isNormal? "Edit selected reference" : "Save all changes to server" }
 
     /**
      * Check if any reference data changed or reference order changed
@@ -146,7 +145,7 @@ export class RefListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.LIST, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -206,6 +205,8 @@ export class RefListComponent implements OnInit {
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        this.editmodeOutput.next(this.editMode);    
     }
 
     /**
@@ -229,9 +230,11 @@ export class RefListComponent implements OnInit {
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                         resolve(true);
-                    }else
-                        console.error("acknowledge references update failure");
+                    }else{
+                        let msg = "References update failed";
+                        console.error(msg);
                         resolve(false);
+                    }
                 });
             }else{  // Update all references
                 if(this.dataChanged){
@@ -242,9 +245,11 @@ export class RefListComponent implements OnInit {
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                             resolve(true);
-                        }else
-                            console.error("acknowledge references update failure");
+                        }else{
+                            let msg = "References update failed";
+                            console.error(msg);
                             resolve(false);
+                        }
                     });
                 }
             }
@@ -268,25 +273,35 @@ export class RefListComponent implements OnInit {
      * Save current reference
      */
     saveCurRef(refreshHelp: boolean = true) {
-        console.log("this.currentRef", this.currentRef);
         if(this.isAdding){
             if(this.currentRef.dataChanged){
                 var postMessage: any = {};
                 postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
 
+                //Delete temp keys
+                console.log('postMessage[this.fieldName]01', postMessage[this.fieldName])
+                postMessage[this.fieldName].forEach(ref => {
+                    delete ref['isNew'];
+                    delete ref['dataChanged'];
+                });
+
+                postMessage[this.fieldName] = JSON.parse('{"refType":"IsSupplementTo","title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses","issued":"2020-02","publishYear":"2002","citation":"Gerbig, Y. B., & Michaels, C. A. (2020). In-situ Raman spectroscopic measurements of the deformation region in indented glasses. Journal of Non-Crystalline Solids, 530, 119828. doi:10.1016/j.jnoncrysol.2019.119828","label":"Journal of Non-Crystalline Solids: In-situ Raman spectroscopic measurements of the deformation region in indented glasses","location":"https://doi.org/10.1016/j.jnoncrysol.2019.119828","@id":"#ref:10.1016/j.jnoncrysol.2019.119828","@type":["schema:Article"],"_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"],"authors":["Gerbig, Y. B.", "Michaels, C. A."],"vol":"15","volNumber":"20","pages":"12345","doi":"10.1016/j.jnoncrysol.2019.119828","inPreparation":"yes"}');
+
+                console.log('postMessage[this.fieldName]02', postMessage[this.fieldName])
+
                 this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
-                        console.log("Return ref", rec);
                         this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;
-                    }else
-                        console.error("Failed to add reference");
+                    }else{
+                        let msg = "Failed to add reference";
+                        console.error(msg);
                         return;
+                    }
                 });
             }else{  //If no data has been entered, remove this reference
-                console.log("Removing current ref...")
                 this.removeRef(this.currentRefIndex);
             }
         }else{
@@ -308,14 +323,17 @@ export class RefListComponent implements OnInit {
                             ref.dataChanged = false;
                         });
                     }
-                }else
-                    console.error("Failed to undo " + this.fieldName + " metadata");
+                }else{
+                    let msg = "Failed to undo " + this.fieldName + " metadata"
+                    console.error(msg);
                     return;
+                }
             });
         }
         this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
 
         this.orderChanged = false;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderReset"});
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
@@ -443,6 +461,7 @@ export class RefListComponent implements OnInit {
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.orderChanged = true;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
         // Update reference data
         this.updateMatadata();
 
@@ -458,6 +477,7 @@ export class RefListComponent implements OnInit {
     removeRef(index: number) {
         this.record.references.splice(index,1);
         this.orderChanged = true;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
         this.updateMatadata();
     }
 
@@ -489,7 +509,8 @@ export class RefListComponent implements OnInit {
                         this.currentRef = this.record[this.fieldName][this.currentRefIndex];
                         this.forceReset = true; // Force reference editor to reset data
                     } else {
-                        console.error("Failed to restore reference");
+                        let msg = "Failed to restore reference";
+                        console.error(msg);
                     }
                 })
 
@@ -531,8 +552,11 @@ export class RefListComponent implements OnInit {
                             this.editMode = MODE.EDIT;
                         else    
                             this.editMode = MODE.NORNAL;
+
+                        this.editmodeOutput.next(this.editMode); 
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -615,16 +639,6 @@ export class RefListComponent implements OnInit {
     }
 
     /**
-     * Determine icon class of undo button
-     * If edit mode is normal, display disabled icon.
-     * Otherwise display enabled icon.
-     * @returns undo button icon class
-     */
-    undoIconClass() {
-        return !this.dataChanged || this.isEditing || this.isAdding? "faa faa-undo icon_disabled" : "faa faa-undo icon_enabled";
-    }
-
-    /**
      * Determine icon class of add button
      * If edit mode is normal, display enabled icon.
      * Otherwise display disabled icon.
@@ -632,26 +646,9 @@ export class RefListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "faa faa-plus faa-lg icon_enabled";
+            return "fas fa-plus fa-lg icon_enabled";
         }else{
-            return "faa faa-plus faa-lg icon_disabled";
-        }
-    }
-
-    /**
-     * Determine icon class of edit button
-     * If edit mode is normal, display edit icon.
-     * Otherwise display check icon.
-     * @returns edit button icon class
-     */   
-    editIconClass() {
-        if(this.isNormal){
-            if(this.hasDisplayableReferences())
-                return "faa faa-pencil icon_enabled";
-            else
-                return "faa faa-pencil icon_disabled";
-        }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-plus fa-lg icon_disabled";
         }
     }
 

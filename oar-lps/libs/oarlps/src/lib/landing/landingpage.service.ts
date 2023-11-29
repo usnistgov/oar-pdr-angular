@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SectionMode, SectionHelp, MODE } from '../shared/globals/globals';
+import { NerdmRes } from '../nerdm/nerdm';
+import { strict } from 'assert';
 
 let _helpTopic = {};
 _helpTopic[MODE.NORNAL]  = 'general';
@@ -54,4 +56,27 @@ export class LandingpageService {
     public watchResourceType(subscriber) {
         this._resourceType.subscribe(subscriber);
     }    
+
+    // Set message to display
+    _msg: BehaviorSubject<string> = new BehaviorSubject<string>("resource");
+    setMessage(msg: string){
+        this._msg.next(msg);
+    }
+    public watchMessage(subscriber) {
+        this._msg.subscribe(subscriber);
+    }      
+
+    /**
+     * Check if all required fields are filled
+     * @param mdrec input Nerdm record
+     */
+    readySummit(mdrec: NerdmRes) {
+        // if(!mdrec) return false;
+        // else if(!mdrec.title || !mdrec.contactPoint || !mdrec.contactPoint.fn || !mdrec.description || mdrec.description.length == 0 || !mdrec.theme || mdrec.theme.length == 0 || !mdrec.keyword || mdrec.keyword.length == 0) return false
+        // else return true;
+
+        if(!mdrec) return false;
+        else if(!mdrec.title || !mdrec.contactPoint || !mdrec.contactPoint.fn || !mdrec.description || mdrec.description.length == 0 || !mdrec.keyword || mdrec.keyword.length == 0) return false
+        else return true;
+    }
 }

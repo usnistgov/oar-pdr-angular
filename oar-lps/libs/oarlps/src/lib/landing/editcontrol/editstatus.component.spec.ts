@@ -102,7 +102,7 @@ describe('EditStatusComponent', () => {
         fixture.detectChanges();
         cmpel = fixture.nativeElement;
         bardiv = cmpel.querySelector(".ec-status-bar");
-        expect(bardiv.children[0].innerHTML).toContain('- edit');
+        expect(bardiv.children[0].innerHTML).toContain('required field');
 
         component.setLastUpdateDetails(updateDetails);
 
@@ -110,7 +110,7 @@ describe('EditStatusComponent', () => {
         component.showLastUpdate();
         expect(component.message).toContain("Edited by test01 NIST on 2025 April 1");
         fixture.detectChanges();
-        expect(bardiv.firstElementChild.innerHTML).toContain('- edit');
+        expect(bardiv.firstElementChild.innerHTML).toContain('required field');
         expect(bardiv.children[1].innerHTML).toContain('Edited by test01 NIST on 2025 April 1');
 
         component._editmode = EDIT_MODES.DONE_MODE;

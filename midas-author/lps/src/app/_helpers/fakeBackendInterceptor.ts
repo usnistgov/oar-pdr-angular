@@ -3,12 +3,14 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInte
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { userInfo } from 'os';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
+    alerted: boolean = false;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,
+        private toastrService: ToastrService) { }
 
     /**
      * Generate random string
@@ -100,13 +102,13 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             "type": "dap"
         }
 
-        // console.log("request", request);6
+        // console.log("request", request);
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
-            if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
-                // console.log("Getting forensics")
-                return of(new HttpResponse({ status: 200, body: midasRes }));
-            }
+            // if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
+            //     // console.log("Getting forensics")
+            //     return of(new HttpResponse({ status: 200, body: midasRes }));
+            // }
 
             // metrics
             // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {
@@ -174,6 +176,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //======
         // // authenticate
         if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             let body: any = {
                 userDetails: {
                     userId: 'xyz@nist.gov',
@@ -212,27 +219,38 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // }
 
         if (request.url.indexOf('/rmm/taxonomy') > -1 && request.method === 'GET') {
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
+
             return of(new HttpResponse({ status: 200, body: taxonomy }));
         }
 
         if (request.url.indexOf('data/theme') > -1 && request.method === 'PUT') {
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'GET') {
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PUT') {
-            let requestBody = JSON.parse(request.body)
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
+            let requestBody = JSON.parse(request.body);
             if(Array.isArray(requestBody)) {
                 requestBody.forEach(item => {
-                    if(!item['@id']){
+                    if(typeof item == 'object' && !item['@id']){
                         item['@id'] = this.readableRandomStringMaker(6);
                     }
                 })
             }
+
             return of(new HttpResponse({ status: 200, body: requestBody }));
+
+            // Simulate error response:
+            // throw new HttpErrorResponse(
+            //     {"status": 401}
+            // );
         }        
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
@@ -247,7 +265,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);
-            console.log("request body", obj);
 
             return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
         }

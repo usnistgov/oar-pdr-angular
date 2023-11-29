@@ -3,6 +3,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { GoogleAnalyticsService } from 'oarlps'
 import { LPSConfig } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-root',
@@ -24,7 +25,8 @@ export class AppComponent {
 
     constructor(
         private configSvc: ConfigurationService,
-        private gaService: GoogleAnalyticsService) { 
+        private toastrService: ToastrService,
+        public gaService: GoogleAnalyticsService) { 
             this.clientHeight = window.innerHeight; 
 
             this.confValues = this.configSvc.getConfig();
@@ -35,6 +37,7 @@ export class AppComponent {
     ngOnInit(): void {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
+        this.toastrService.show('You are using fake backend!', 'Warning!');
     }
 
     ngAfterViewInit(): void {

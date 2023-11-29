@@ -8,6 +8,7 @@ import { AppConfig } from '../../config/config';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { TopicEditComponent } from './topic-edit/topic-edit.component';
 
 @Component({
     selector: 'app-topic',
@@ -31,7 +32,8 @@ export class TopicComponent implements OnInit {
     @Input() inBrowser: boolean;   // false if running server-side
 
     @ViewChild('topic') topicElement: ElementRef;
-    
+    @ViewChild('topic') topicEditComp: TopicEditComponent;
+
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
     fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     editMode: string = MODE.NORNAL; 
@@ -131,8 +133,10 @@ export class TopicComponent implements OnInit {
                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
 
                 this.updateResearchTopics();
-            } else
-                console.error("acknowledge topic update failure");
+            } else{
+                let msg = "acknowledge topic update failure";
+                console.error(msg);
+            }
         });
 
         this.setMode();
@@ -143,16 +147,6 @@ export class TopicComponent implements OnInit {
      * Cancel current editing. Set this section to normal mode. Restore topics from previously saved ones.
      */
     cancelEditing() {
-        this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success) {
-                this.setMode(MODE.NORNAL);
-                this.dataChanged = false;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to research topic.", "", 3000);
-
-                this.updateResearchTopics();
-            } else
-                console.error("Failed to undo research topic")
-        });
         this.updateResearchTopics();
         // this.setMode(MODE.NORNAL);
         // this.dataChanged = false;
@@ -185,9 +179,6 @@ export class TopicComponent implements OnInit {
             case 'undoCurrentChanges':
                 this.cancelEditing();
                 break;
-            case 'restoreOriginal':
-                this.setMode();
-                break;
             default:
                 break;
         }
@@ -202,6 +193,20 @@ export class TopicComponent implements OnInit {
         sectionHelp.topic = HelpTopic[this.editMode];
 
         this.lpService.setSectionHelp(sectionHelp);
+    }
+
+    /*
+     *  Restore original value. If no more field was edited, delete the record in staging area.
+     */
+    restoreOriginal() {
+        this.mdupdsvc.undo(this.fieldName).then((success) => {
+            if (success){
+                this.dataChanged = false;
+                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
+                this.setMode();
+            }else
+                console.error("Failed to undo landingpage metadata")
+        });
     }
 
     /**
@@ -221,13 +226,16 @@ export class TopicComponent implements OnInit {
         switch ( this.editMode ) {
             case MODE.EDIT:
                 this.editBlockStatus = 'expanded';
-                this.setOverflowStyle();
+                this.overflowStyle = 'hidden';
+                setTimeout(() => {
+                    this.overflowStyle = 'visible';
+                }, 1000);
                 break;
  
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
-                this.setOverflowStyle();
+                this.overflowStyle = 'hidden';
                 break;
         }
 
@@ -242,16 +250,16 @@ export class TopicComponent implements OnInit {
      * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
      * Then tooltip will not be cut off. 
      */    
-    setOverflowStyle() {
-        if(this.editBlockStatus == 'collapsed') {
-            this.overflowStyle = 'hidden';
-        }else {
-            this.overflowStyle = 'hidden';
-            setTimeout(() => {
-                this.overflowStyle = 'visible';
-            }, 1000);
-        } 
-    }
+    // setOverflowStyle() {
+    //     if(this.editBlockStatus == 'collapsed') {
+    //         this.overflowStyle = 'hidden';
+    //     }else {
+    //         this.overflowStyle = 'hidden';
+    //         setTimeout(() => {
+    //             this.overflowStyle = 'visible';
+    //         }, 1000);
+    //     } 
+    // }
 
     /**
      * Update the research topic lists
@@ -328,8 +336,10 @@ export class TopicComponent implements OnInit {
                         this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
 
                         this.updateResearchTopics();
-                    } else
-                        console.error("acknowledge topic update failure");
+                    } else{
+                        let msg = "acknowledge topic update failure";
+                        console.error(msg);
+                    }
                 });
             }
         })
@@ -345,8 +355,10 @@ export class TopicComponent implements OnInit {
                 this.setMode(MODE.NORNAL);
                 this.updateResearchTopics();
                 // this.setBackground();
-            } else
-                console.error("Failed to undo research topic")
+            } else{
+                let msg = "Failed to undo research topic";
+                console.error(msg);
+            }
         });
     }
 
@@ -364,18 +376,4 @@ export class TopicComponent implements OnInit {
             return false;
         }
     }
-
-    /**
-     * Determind the edit icon class based on current editing status
-     * @returns icon class of the edit button
-     */
-    editIconClass() {
-        if(this.isEditing){
-            return "faa faa-pencil icon_disabled";
-        }else{
-            return "faa faa-pencil icon_enabled"
-        }
-    }
-
-
 }

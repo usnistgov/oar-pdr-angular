@@ -16,6 +16,7 @@ import { AppSettings } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 
 declare var _initAutoTracker: Function;
 
@@ -150,6 +151,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 public breakpointObserver: BreakpointObserver,
                 public mdupdsvc : MetadataUpdateService, 
                 private notificationService: NotificationService,
+                public lpService: LandingpageService, 
                 ngZone: NgZone)
     {
         this.cols = [
@@ -580,8 +582,10 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 this.globalDataCart.save();
                 this.allInCart = this._areAllInCart(this.files);
             }
-            else
-                console.error("Unable to add row with key="+rowData.key+"; Failed to find node in tree");
+            else{
+                let msg = "Unable to add row with key="+rowData.key+"; Failed to find node in tree";
+                console.error(msg);
+            }
         }, 0);
     }
     _addAllWithinToCart(node: TreeNode, cart: DataCart, selected: boolean = false) : void {

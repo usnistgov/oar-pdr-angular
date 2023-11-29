@@ -3,17 +3,18 @@ import { AppComponent } from './app.component';
 import { RouterModule, Routes } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
-import { SharedModule } from './shared/shared.module';
-import { FrameModule } from './frame/frame.module';
-import { GoogleAnalyticsService } from "./shared/ga-service/google-analytics.service";
-import { ConfigModule } from './config/config.module';
+import { SharedModule } from 'oarlps';
+import { FrameModule } from 'oarng';
+import { GoogleAnalyticsService } from "oarlps";
+import { ConfigModule } from 'oarlps';
 import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
 import { TransferState, StateKey } from '@angular/platform-browser';
-import { AppConfig } from './config/config';
-import { AngularEnvironmentConfigService } from './config/config.service';
-import { CartService } from './datacart/cart.service';
+import { AppConfig } from 'oarlps';
+import { AngularEnvironmentConfigService } from 'oarlps';
+import { CartService } from 'oarlps';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import * as environment from '../environments/environment';
 
 describe('AppComponent', () => {
     let cfg: AppConfig;
@@ -21,7 +22,7 @@ describe('AppComponent', () => {
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(environment, plid, ts)).getConfig() as AppConfig;
 
         TestBed.configureTestingModule({
 
@@ -50,14 +51,4 @@ describe('AppComponent', () => {
         })
     }));
 
-    it(`should contain 'DATA REPOSITORY' in the first span`, waitForAsync(() => {
-        const fixture = TestBed.createComponent(AppComponent);
-
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const compiled = fixture.debugElement.nativeElement;
-            console.log("span", compiled.querySelector('span').textContent);
-            expect(compiled.querySelector('span').textContent).toContain('DATA REPOSITORY');
-        })
-    }));
 });

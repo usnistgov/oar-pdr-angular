@@ -107,7 +107,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationDialogWith: number = 550; // Default width
     recordLevelMetrics : RecordLevelMetrics;
 
-    loadingMessage = '<i class="faa faa-spinner faa-spin"></i> Loading...';
+    loadingMessage = '<i class="fas fa-spinner fa-spin"></i> Loading...';
 
     dataCartStatus: DataCartStatus;
     fileLevelMetrics: any;
@@ -242,6 +242,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 (md) => {
                     if (md && md != this.md) {
                         this.md = md as NerdmRes;
+                        console.log("md changed", this.md);
                     }
 
                     if(md && !this.helpContentUpdated){

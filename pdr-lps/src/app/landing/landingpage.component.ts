@@ -72,7 +72,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationDialogWith: number = 550; // Default width
     recordLevelMetrics : RecordLevelMetrics;
 
-    loadingMessage = '<i class="faa faa-spinner faa-spin"></i> Loading...';
+    loadingMessage = '<i class="fas fa-spinner fa-spin"></i> Loading...';
 
     dataCartStatus: DataCartStatus;
     fileLevelMetrics: any;

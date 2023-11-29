@@ -88,7 +88,7 @@ enableProdMode();
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         GoogleAnalyticsService,
-        DatePipe,
+        DatePipe
         // fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

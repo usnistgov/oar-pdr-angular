@@ -19,8 +19,8 @@
                     <span *ngIf="i < record.authors.length-1 ">,</span>
                 </span>
                 <span>
-                    <i style="margin-left: 0.5rem;" class="faa"
-                    [ngClass]="{'faa-caret-right': !clickAuthors, 'faa-caret-down': clickAuthors}"
+                    <i style="margin-left: 0.5rem;" class="fas"
+                    [ngClass]="{'fa-caret-right': !clickAuthors, 'fa-caret-down': clickAuthors}"
                     aria-label="Show author details"
                     (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();"></i>
                 </span>
@@ -52,13 +52,29 @@
 
         <!-- Control buttons -->
         <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-            <i class="faa faa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit title" ngbTooltip="edit title" aria-label="edit title" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
-    
+            <!-- <i class="fas fa-pencil icon_enabled link-icon" (click)="startEditing()" *ngIf="!isEditing" title="Edit title" ngbTooltip="edit title" aria-label="edit title" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i> -->
+
+            <button class="edit_button" *ngIf="!isEditing" type="button" 
+                (click)="startEditing()" aria-label="edit title" ngbTooltip="edit title" style="cursor: pointer">
+                <i class="fas fa-pencil fa-sm"></i>
+            </button> 
+
+            <!-- Hide button - hide edit block -->
+            <button class="edit_button" *ngIf="isEditing" [disabled]="childIsEditing || childIsAdding" type="button" 
+                (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                <i class="fas fa-times"></i>
+            </button> 
+
+            <!-- Undo all changes button -->
+            <button class="edit_button" *ngIf="authorsChanged || authorsUpdated" type="button"
+                (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo all author changes">
+                <i class="fas fa-undo fa-sm"></i>
+            </button>             
         </div>
     </div>
 </div>
 
 <!-- Author editor -->
 <div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
-    <lib-author-list [record]="record" (dataChanged)="onAuthorChange($event)"></lib-author-list>
+    <lib-author-list #authorlist [record]="record" (dataChanged)="onAuthorChange($event)" (editmode)="setChildEditMode($event)"></lib-author-list>
 </div>

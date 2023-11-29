@@ -27,7 +27,7 @@ export class AccesspageEditComponent implements OnInit {
     get isEditing() { return this.editMode=="edit" };
     get isAdding() { return this.editMode=="add" };
     get noURL() {
-        return !this.accessPage.accessURL || this.accessPage.accessURL.trim() == "";
+        return !this.accessPage || !this.accessPage.accessURL || this.accessPage.accessURL.trim() == "";
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -37,11 +37,19 @@ export class AccesspageEditComponent implements OnInit {
 
         if(changes.accessPage) {
             if(this.accessPage) {
+                console.log("access page changed:", changes.accessPage)
                 this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
             }else{
                 this.originalApage = undefined;
             }
         }
+    }
+
+    getRecordBackgroundColor() {
+        let dataChanged = this.accessPage? this.accessPage.dataChanged : false;
+        let bkcolor = this.mdupdsvc.getFieldStyle(this.fieldName, dataChanged)
+
+        return bkcolor;
     }
 
     reset() {

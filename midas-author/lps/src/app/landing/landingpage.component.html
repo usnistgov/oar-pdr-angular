@@ -1,6 +1,11 @@
 <!-- edit control panel (visible when editing is enabled) -->
 <pdr-edit-control *ngIf="editEnabled" [inBrowser]="inBrowser" [(mdrec)]="md" [requestID]="requestId"></pdr-edit-control>
 
+<!-- error messages go here -->
+<div [ngStyle]="{'width': lpsWidth + 'px'}">
+    <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message>
+</div>
+
 <div *ngIf="theme == scienceTheme">
     <!-- Banner for Science Theme -->
     <div class="science-theme-banner" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')','margin-bottom':'-1em'}">
@@ -23,7 +28,7 @@
                 [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" 
                 type="button"
                 pButton 
-                icon="faa faa-list" 
+                icon="fas fa-list" 
                 class="ui-button ui-button-icon-only" 
                 (click)="menu3.togglePopup($event)">
             </button>

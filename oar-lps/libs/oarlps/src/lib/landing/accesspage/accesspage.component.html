@@ -4,18 +4,18 @@
     </div>
 
     <div class="editable_container" style="padding: 0px;">
-        <div class="editable_field" [ngStyle]="getStyle()" style="max-width: calc(100% - 1.65em);" >
-            <div *ngIf="mdupdsvc.isEditMode">
+        <div class="editable_field" style="max-width: calc(100% - 1.65em);" >
+            <div *ngIf="mdupdsvc.isEditMode" style="margin-right: 10px;">
                 Add links to relevant websites including software repositories.
             </div>
 
-            <div *ngIf="accessPages && accessPages.length > 0">
-                <div [ngStyle]="{'margin-top': i==0? '0px':'10px', 'background-color': apage['backcolor']}"
+            <div *ngIf="accessPages && accessPages.length > 0" style="overflow: hidden;" [@editExpanded]="!editBlockExpanded">
+                <div [ngStyle]="{'margin-top': '10px', 'background-color': apage['backcolor']}"
                 *ngFor="let apage of accessPages; let i = index" (mouseover)="apage['backcolor'] = '#f2f2f2'"
                 (mouseout)="apage['backcolor'] = 'transparent'">
                     <div class="indent-content"
                         *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
-                        <i class="faa faa-external-link"> <span style="margin-left:0em;">
+                        <i class="fas fa-external-link-alt"> <span style="margin-left:0em;">
                                 <span *ngIf="apage['description']; else noAccessTitle">
                                     <a href="{{apage['accessURL']}}" title="{{apage['description']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
                                                                     'Resource title: ' + record.title,
@@ -29,7 +29,7 @@
                             </span></i>
                         <div *ngIf="apage['description']">
                             <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                    class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i class="faa faa-caret-down"
+                                    class="fas fa-caret-right" *ngIf="!apage[showDesc]"></i><i class="fas fa-caret-down"
                                     *ngIf="apage[showDesc]"></i> About this link
                             </div>
                             <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
@@ -42,13 +42,13 @@
                                 <button style="margin-top: -6px;" type="button" class="btn btn-primary py-0"
                                     data-toggle="tooltip" data-placement="top" title="{{apage['title']}}"
                                     (click)="googleAnalytics(apage['accessURL'], $event, 'Download Data')"><i
-                                        class="faa faa-external-link button_icon"></i>Download Data</button>
+                                        class="fas fa-external-link-alt button_icon"></i>Download Data</button>
                             </a>
     
                             <div *ngIf="apage['description']">
                                 <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                        class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i
-                                        class="faa faa-caret-down" *ngIf="apage[showDesc]"></i> About downloading restricted
+                                        class="fas fa-caret-right" *ngIf="!apage[showDesc]"></i><i
+                                        class="fas fa-caret-down" *ngIf="apage[showDesc]"></i> About downloading restricted
                                     public data
                                 </div>
                                 <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
@@ -62,15 +62,26 @@
 
         <!-- Control buttons -->
         <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-            <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" (click)="onEdit()" aria-label="edit button" [disabled]="isEditing">
-                <i [class]="editIconClass()"></i>
-            </button> -->
-            <i class="faa faa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" *ngIf="mdupdsvc.isEditMode" title="Edit access page links" ngbTooltip="edit access page links" aria-label="edit access page links" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i>
+            <!-- Edit button -->
+            <button class="edit_button" *ngIf="isNormal" (click)="startEditing()" aria-label="edit button">
+                <i class="fas fa-pencil fa-sm"></i>
+            </button>
               
+            <!-- Hide button - hide edit block -->
+            <button class="edit_button" type="button" *ngIf="!isNormal" [disabled] = 'isEditing || isAdding'
+                (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                <i class="fas fa-times"></i>
+            </button> 
+
+            <!-- Restore original value-->
+            <button *ngIf="!isEditing && updated" class="edit_button" type="button"       (click)="restoreOriginal()" aria-label="undo button" ngbTooltip="Undo changes">
+                <i class="fas fa-undo fa-sm"></i>
+            </button>
+
         </div>
     </div>
 </div>
 
-<div style="width: 100%;" *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" [style.overflow] = "overflowStyle">
-    <lib-accesspage-list [record]="record" [theme]="theme" (dataCommand)="onAuthorChange($event)"></lib-accesspage-list>
+<div style="width: 100%;" *ngIf="mdupdsvc.isEditMode" [@editExpanded]="editBlockExpanded" [style.overflow] = "overflowStyle">
+    <lib-accesspage-list #accesspagelist [record]="record" [theme]="theme" (dataCommand)="onStatusChange($event)"></lib-accesspage-list>
 </div>

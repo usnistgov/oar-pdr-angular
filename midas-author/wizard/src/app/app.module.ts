@@ -12,6 +12,8 @@ import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfigModule } from 'oarng';
 import { GoogleAnalyticsService} from "oarlps";
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -26,7 +28,14 @@ import { GoogleAnalyticsService} from "oarlps";
         OARngModule,
         FrameModule,
         HttpClientModule,
-        ConfigModule
+        ConfigModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot({
+            toastClass: 'toast toast-bootstrap-compatibility-fix',
+            timeOut: 15000, // 15 seconds
+            closeButton: true,
+            progressBar: true,
+        }),
     ],
     providers: [
         GoogleAnalyticsService

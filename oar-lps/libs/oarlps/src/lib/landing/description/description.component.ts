@@ -54,10 +54,16 @@ export class DescriptionComponent implements OnInit {
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
     get descWidth() {
         if(this.isEditing){
-            return {'width': 'calc(100% - 100px)', 'height':'fit-content'};
+            return {'width': 'calc(100% - 70px)', 'height':'fit-content'};
         }else{
-            return {'width': 'fit-content', 'max-width': 'calc(100% - 40px)'};
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 70px)'};
         }
+    }
+    get dataChanged() {
+        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0)
+            return this.description != this.record[this.fieldName].join("\r\n\r\n");
+        else
+            return this.description.trim() != "";
     }
 
     ngOnInit() {
@@ -82,6 +88,8 @@ export class DescriptionComponent implements OnInit {
     getDescription() {
         if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
             this.description = this.record[this.fieldName].join("\r\n\r\n");
+        else
+            this.description = "";
 
         if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
             this.originDescription = this.originalRecord[this.fieldName].join("\r\n\r\n");
@@ -110,7 +118,7 @@ export class DescriptionComponent implements OnInit {
     startEditing() {
         setTimeout(()=>{ // this will make the execution after the above boolean has changed
             const textArea = this.descElement.nativeElement as HTMLTextAreaElement;
-            textArea.focus();
+            // textArea.focus();
         },0);  
 
         this.isEditing = true;
@@ -144,8 +152,10 @@ export class DescriptionComponent implements OnInit {
                 if (updateSuccess){
                     this.setBackground(this.description);
                     this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
-                }else
-                    console.error("acknowledge keywords update failure");
+                }else{
+                    let msg = "Description update failued";
+                    console.error(msg);
+                }
             });
         }
 
@@ -205,8 +215,10 @@ export class DescriptionComponent implements OnInit {
                 this.setMode(MODE.NORNAL);
                 this.setBackground(this.description);
                 this.notificationService.showSuccessWithTimeout("Reverted changes to description.", "", 3000);
-            }else
-                console.error("Failed to undo description metadata")
+            }else{
+                let msg = "Failed to undo description metadata";
+                console.error(msg);
+            }
         });
     }
 

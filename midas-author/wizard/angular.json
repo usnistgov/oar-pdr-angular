@@ -31,14 +31,19 @@
                                 "output": "./assets/"
                             }
                         ],
-                        "styles": [                            
-                            "../../node_modules/bootstrap/dist/css/bootstrap.css",
+                        "styles": [  
+                            "../../node_modules/primeng/resources/primeng.css",
+                            "../../node_modules/primeicons/primeicons.css",
+                            "../../node_modules/primeflex/primeflex.css",
+                            "../../node_modules/primeng/resources/themes/saga-blue/theme.css",                          
                             "../../lib/libs/oarng/src/styles/font-awesome/css/font-awesome.min.css",
                             "../../lib/libs/oarng/src/styles/main.css",
+
+                            "../../node_modules/ngx-toastr/toastr.css",
                             "src/styles.css"
                         ],
                         "scripts": [
-                            "../../node_modules/bootstrap/dist/js/bootstrap.js"
+                            "../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
                         ]
                     },
                     "configurations": {

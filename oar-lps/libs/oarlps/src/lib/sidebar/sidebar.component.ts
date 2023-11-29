@@ -16,13 +16,15 @@ import { HelpTopic } from '../landing/landingpage.service';
             position: 'absolute',
             right: '0%',
             top: "20px",
-            bottom: "100%"
+            bottom: "100%",
+            overflow: "auto"
         })),
         state('sbhidden', style({
             position: 'absolute',
-            right: '-250%',
+            right: '-450%',
             top: "20px",
-            bottom: "100%"
+            bottom: "100%",
+            overflow: "hidden"
         })),
         transition('sbvisible <=> sbhidden', [
             animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')

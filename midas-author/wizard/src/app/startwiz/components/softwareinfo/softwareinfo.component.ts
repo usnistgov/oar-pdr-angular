@@ -69,12 +69,12 @@ export class SoftwareinfoComponent implements OnInit {
             this.steps[3].isComplete = false;
         }
 
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 
     updateSoftwareLink(evt:any): void {
         this.dataModel.softwareLink = evt.target.value;
         this.steps[3].isComplete = (this.dataModel.softwareLink?.trim() != "");
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 }

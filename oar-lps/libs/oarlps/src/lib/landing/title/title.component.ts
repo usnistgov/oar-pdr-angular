@@ -62,7 +62,7 @@ export class TitleComponent implements OnInit {
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
     get titleWidth() {
         if(this.isEditing){
-            return {'width': 'calc(100% - 100px)', 'height':'fit-content'};
+            return {'width': 'calc(100% - 70px)', 'height':'fit-content'};
         }else{
             return {'width': 'fit-content', 'max-width': 'calc(100% - 40px)'};
         }
@@ -114,18 +114,16 @@ export class TitleComponent implements OnInit {
                     this.dataChanged = true;
                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
                     this.setMode(MODE.NORNAL, refreshHelp);
-                }else
-                    console.error("acknowledge title update failure");
+                }else{
+                    let msg = "Title update failed.";
+                    console.error(msg);
+                }
             });
         }else{
             this.dataChanged = false;
             this.setMode(MODE.NORNAL, refreshHelp);
         }
-            
-
-        
         // this.setBackground(this.record['title']);
-
     }
     
     /*
@@ -135,9 +133,11 @@ export class TitleComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode(MODE.NORNAL);
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            }else
-                console.error("Failed to undo keywords metadata")
+                this.notificationService.showSuccessWithTimeout("Reverted changes to title.", "", 3000);
+            }else{
+                let msg = "Failed to undo title metadata";
+                console.error(msg);
+            }
         });
         // this.setBackground(this.record['title']);
         this.dataChanged = false;
@@ -147,7 +147,7 @@ export class TitleComponent implements OnInit {
      * Set background color based on the status of title
      * if it's the same as original value (nothing changed), set background color to white.
      * Otherwise set it to light yellow.
-     * @param keywords 
+     * @param title 
      */
     setBackground(title: string) {
         this.dataChanged = title != this.originalRecord['title'];

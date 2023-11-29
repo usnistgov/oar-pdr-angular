@@ -221,7 +221,6 @@ export class MockAuthService extends AuthService {
         if(ngenv2 == undefined){
             ngenv2 = environment;
         }
-        console.log("ngenv2", ngenv2);
         
         if (!ngenv2.testdata)
             throw new Error("No test data encoded into angular environment");

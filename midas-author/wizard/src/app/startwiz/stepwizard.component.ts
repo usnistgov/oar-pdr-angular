@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
 import { WizardService } from './services/wizard.service';
 import { LPSConfig } from 'oarlps';
+import { UserMessageService } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 
 export class AuthStatus {
@@ -55,6 +56,7 @@ export class StepWizardComponent implements OnInit {
     _creds: Credentials|null = null;
 
     constructor(private stepService: StepService,
+                private msgsvc: UserMessageService,
                 private fb: FormBuilder, 
                 private cdr: ChangeDetectorRef,
                 private wizardService: WizardService,
@@ -138,6 +140,9 @@ export class StepWizardComponent implements OnInit {
             }),
             'assocPapers': this.fb.group({
                 assocPageType: [""]
+            }),
+            'recordname': this.fb.group({
+                recordname: [""]
             })
         });
     }
@@ -150,7 +155,8 @@ export class StepWizardComponent implements OnInit {
             new StepModel(2, 'Contact Info',true,false),
             new StepModel(3, 'Files',true,false),
             new StepModel(4, 'Software',false,false),
-            new StepModel(5, 'Associated Papers',true,false,false)
+            new StepModel(5, 'Associated Papers',true,false,false),
+            new StepModel(6, 'Name',true,false,false)
         ]
 
         this.currentStep = this.steps[0];
@@ -169,7 +175,6 @@ export class StepWizardComponent implements OnInit {
     }
 
     onNextStep() {
-        console.log("Next")
         if (!this.stepService.isLastStep()) {
             this.stepService.moveToNextStep();
         } else {
@@ -202,24 +207,37 @@ export class StepWizardComponent implements OnInit {
     }
 
     onSubmit(): void {
-        console.log('this.dataModel', JSON.stringify(this.dataModel));
-
         let id: string;
         let body = {
-            "name": this.readableRandomStringMaker(5),
+            // "name": this.readableRandomStringMaker(5),
+            "name": this.dataModel.recordname,
             "meta": this.dataModel
         }
 
-        this.wizardService.updateMetadata(body)
-        .subscribe(obj => {
-            console.log(obj);
-            id = obj['id'];
+        this.wizardService.updateMetadata(body).subscribe({
+            next: (obj) => {
+                id = obj['id'];
 
-            // Submit the request, get the id from server response then launch the landing page
-            let url = this.PDRAPI + id + '?editEnabled=true';
-            console.log("Open publishing url", url);
-            // window.location.href = url;
-            window.open(url, "_blank");
+                // Submit the request, get the id from server response then launch the landing page
+                let url = this.PDRAPI + id + '?editEnabled=true';
+                // window.location.href = url;
+                window.open(url, "_blank");
+            },
+            error: (err) => {
+                console.error("err", err);
+                
+                // err will be a subtype of CustomizationError
+                if (err.type == 'user') 
+                {
+                    console.error("Failed to retrieve draft metadata changes: user error:" + err.message);
+                    this.msgsvc.error(err.message);
+                }
+                else 
+                {
+                    console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
+                    this.msgsvc.syserror(err.message);
+                }
+            }
         });
     }
 

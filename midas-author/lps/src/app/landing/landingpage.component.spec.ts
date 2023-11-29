@@ -24,7 +24,6 @@ import * as mock from '../testing/mock.services';
 import {RouterTestingModule} from "@angular/router/testing";
 import * as environment from '../../environments/environment';
 import { CommonFunctionService } from "oarlps";
-import { IEnvironment } from '../../environments/ienvironment';
 
 describe('LandingPageComponent', () => {
     debugger;
@@ -39,7 +38,6 @@ describe('LandingPageComponent', () => {
     let route : ActivatedRoute;
     let router : Router;
     let authsvc : AuthService = new MockAuthService();
-    let ienv : IEnvironment;
     // let title : mock.MockTitle;
 
     let routes : Routes = [

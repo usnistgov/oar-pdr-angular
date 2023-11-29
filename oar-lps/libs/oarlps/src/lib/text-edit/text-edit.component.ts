@@ -17,6 +17,10 @@ export class TextEditComponent implements OnInit {
     @Input() editButton: boolean = true; // Default button
     @Input() editOnlyButton: boolean = false; // Default button
     @Input() deleteButton: boolean = true; // Default button
+    @Input() customButton: boolean = false; 
+    @Input() custBtnIcon: string = "fas fa-pencil fa-sm";
+    @Input() custBtnFunc: string = "add()";
+    @Input() custBtnTooltip: string = "Save changes";
     @Input() plusButton: boolean = false; // If this is true, no edit/remove/undo button
     @Input() restoreButton: boolean = false;
     @Input() submitButton: boolean = false;
@@ -43,7 +47,7 @@ export class TextEditComponent implements OnInit {
             this.dragDropIcon = false;
             this.submitButton = false;
             this.controlBoxWidth = "27px !important";
-        } else if(this.submitButton) {
+        } else if(this.submitButton || this.customButton) {
             this.editing = true;
             this.editButton = false;
             this.deleteButton = false;
@@ -105,9 +109,9 @@ export class TextEditComponent implements OnInit {
         this.command_out.next({"value":this.currentVal, "command":"Edit"});
     }
 
-    onSave() {
+    onSave(cmd: string = 'Save') {
         this.editing = false;
-        this.command_out.next({"value":this.currentVal, "command":"Save"});
+        this.command_out.next({"value":this.currentVal, "command":cmd});
     }
 
     onUpdate() {
@@ -154,6 +158,11 @@ export class TextEditComponent implements OnInit {
         this.currentVal = "";
     }
 
+    cust() {
+        console.log('this.custBtnFunc', this.custBtnFunc);
+        eval('this.'+this.custBtnFunc);
+    }
+
     /**
      * Submit this item
      */
@@ -179,7 +188,7 @@ export class TextEditComponent implements OnInit {
         if(this.editing){
             return "faa faa-check";
         }else{
-            return "faa faa-pencil";
+            return "fas fa-pencil";
         }
     }
 
@@ -189,9 +198,9 @@ export class TextEditComponent implements OnInit {
      */
     getEditOnlyIconClass() {
         if(this.editing || this.disableControl){
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }else{
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }
     }
 
@@ -215,7 +224,7 @@ export class TextEditComponent implements OnInit {
         if(this.editing){
             return "faa faa-undo";
         }else{
-            return "faa faa-trash";
+            return "fas fa-trash-alt";
         }
     }    
 

@@ -11,9 +11,10 @@
                         <td>
                             <textarea autocomplete="off" [(ngModel)]='visitHomeURL' (ngModelChange)="onURLChange($event)" style="width: 100%;margin: 10px 10px 0px 0px; padding: 5px;height: fit-content;" libTextareaAutoresize></textarea>
                         </td>
-                        <td width="30px" align="right" style="vertical-align:top;">
-                            <button class="edit_button" style="margin: 10px 0px 0px 2px" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
-                                <i class="faa faa-remove icon_enabled"></i>
+                        <td width="30px" align="left" style="vertical-align:top;">
+                            <!-- Clear text button-->
+                            <button class="edit_button" style="margin: 10px 0px 0px 2px" [disabled]="!visitHomeURL" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
+                                <i class="fas fa-eraser"></i>
                             </button>
                         </td>
                     </tr>
@@ -28,39 +29,13 @@
         <td style="width: 30px;vertical-align: top;">
             <!-- Save button -->
             <button class="edit_button" type="button" (click)="commandOut('saveURL')" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
-                <i class="faa faa-check"></i>
+                <i class="fas fa-check"></i>
             </button>
     
-            <!-- Cancel button -->
-            <button class="edit_button" type="button"
-                (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
-                <i class="faa faa-remove"></i>
+            <!-- Undo button -->
+            <button *ngIf="currentValueChanged" class="edit_button" style="margin: 10px 0px 0px 2px" (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
+                <i class="fas fa-undo fa-sm"></i>
             </button>
-
-            <!-- Restore button -->
-            <button class="edit_button" type="button"
-            [disabled]="!updated" (click)="commandOut('restoreOriginal')" aria-label="Restore button" ngbTooltip="Restore original URL">
-                <i class="faa faa-undo"
-                    [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"></i>
-            </button>                
         </td>          
     </tr>
 </table>
-
-<!-- <div style="width: 100%;text-align: left;padding: 10px;">
-    <div style="width: 100%;">
-        Enter a new url if you would like to change the current homepage location.
-    </div>
-    <table width="100%" align="left">
-        <tr>
-            <td>
-                <textarea autocomplete="off" [(ngModel)]='visitHomeURL' (ngModelChange)="onURLChange($event)" style="width: 100%;margin: 10px 10px 10px 0px; padding: 5px;height: fit-content;" libTextareaAutoresize></textarea>
-            </td>
-            <td width="30px" align="right" style="vertical-align:top">
-                <button class="edit_button" style="margin: 10px 0px 0px 2px" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
-                    <i class="faa faa-remove icon_enabled"></i>
-                </button>
-            </td>
-        </tr>
-    </table>
-</div> -->

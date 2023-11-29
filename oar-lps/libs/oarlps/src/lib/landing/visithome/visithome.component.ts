@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
@@ -7,6 +7,7 @@ import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
+import { VisithomeEditComponent } from './visithome-edit/visithome-edit.component';
 
 @Component({
     selector: 'app-visithome',
@@ -36,6 +37,8 @@ export class VisithomeComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
 
+    @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
+    
     constructor(
         public mdupdsvc : MetadataUpdateService,        
         public lpService: LandingpageService, 
@@ -114,9 +117,9 @@ export class VisithomeComponent implements OnInit {
      */
     editIconClass() {
         if(this.isEditing){
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }else{
-            return "faa faa-pencil icon_enabled"
+            return "fas fa-pencil icon_enabled"
         }
     }
 
@@ -131,6 +134,14 @@ export class VisithomeComponent implements OnInit {
                 this.visitHomeURL = dataChanged.visitHomeURL;
                 this.dataChanged = true;
                 break;
+
+            case 'dataReset':
+                this.record[this.fieldName] = dataChanged.visitHomeURL;
+                this.visitHomeURL = dataChanged.visitHomeURL;
+                this.dataChanged = false;
+                this.visitHomeEdit.currentValueChanged = false;
+                break;
+
             default:
                 break;
         }
@@ -152,6 +163,7 @@ export class VisithomeComponent implements OnInit {
                 this.restoreOriginal();
                 break;
             default:
+                this.setMode();
                 break;
         }
     }
@@ -174,10 +186,15 @@ export class VisithomeComponent implements OnInit {
             this.visitHomeURL = this.record[this.fieldName];
         }
 
-        this.setMode();
+        this.dataChanged = false;
     }
 
     saveVisitHomeURL(refreshHelp: boolean = true) {
+        if(!this.visitHomeURL) {
+            this.visitHomeURL = "";
+        }
+        console.log('this.visitHomeURL', this.visitHomeURL);
+
         this.record[this.fieldName] = this.visitHomeURL;
         let postMessage: any = {};
         postMessage[this.fieldName] = this.visitHomeURL;;
@@ -187,8 +204,10 @@ export class VisithomeComponent implements OnInit {
                 this.setMode(MODE.NORNAL, refreshHelp);
 
                 this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
-            }else
-                console.error("Updating " + this.fieldName + " failed.");
+            }else{
+                let msg = "Updating " + this.fieldName + " failed.";
+                console.error(msg);
+            }
         });        
     }
 
@@ -202,7 +221,9 @@ export class VisithomeComponent implements OnInit {
 
         if(this.updated){
             bkgroundColor = 'var(--data-changed-saved)';
-        }else if(this.dataChanged){
+        }
+        
+        if(this.dataChanged){
             bkgroundColor = 'var(--data-changed)';
         }
 
@@ -276,10 +297,12 @@ export class VisithomeComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode();
-
+                this.visitHomeEdit.currentValueChanged = false;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
-            }else
-                console.error("Failed to undo landingpage metadata")
+            }else{
+                let msg = "Failed to undo landingpage metadata";
+                console.error(msg);
+            }
         });
     }
 

@@ -24,7 +24,6 @@
                 <!-- Editing -->
                 <div style="width:100%;" *ngIf="isEditing">
                     <!-- <textarea #desc autocomplete="off" [placeholder]="placeholder" [(ngModel)]='description' (ngModelChange)="setBackground($event)" style="width: 100%;margin: 0px; padding: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" libTextareaAutoresize></textarea> -->
-
                     <textarea #desc autocomplete="off" [(ngModel)]='description' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="{'background-color': backColor}" style="width: 100%;cursor: text !important; min-height: 6em;" libTextareaAutoresize></textarea>
                 </div>
             </div>
@@ -32,28 +31,33 @@
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
                 <!-- Edit button -->
-                <!-- <button class="edit_button" type="button" (click)="startEditing()" *ngIf="!isEditing"
-                    aria-label="edit button" ngbTooltip="edit keywords">
-                    <i class="faa faa-pencil icon_enabled" data-toggle="tooltip" title="Edit keywords"></i>
-                </button> -->
-                <i class="faa faa-pencil icon_enabled link-icon" (click)="startEditing()" *ngIf="!isEditing" title="Edit keywords" ngbTooltip="edit keywords" aria-label="edit keywords" style="cursor: pointer;"></i>
+                <button *ngIf="!isEditing" class="edit_button" type="button" (click)="startEditing()" 
+                    aria-label="edit button" ngbTooltip="Edit description">
+                    <i class="fas fa-pencil fs-sm" data-toggle="tooltip" title="Edit description"></i>
+                </button>
+
+                <!-- Hide button - hide edit block -->
+                <button class="edit_button" *ngIf="isEditing && !dataChanged" type="button" 
+                    (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                    <i class="fas fa-times"></i>
+                </button> 
 
                 <!-- Save button -->
-                <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing"
+                <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing && dataChanged"
                 aria-label="save button" ngbTooltip="Save changes">
-                    <i class="faa faa-check icon_enabled" data-toggle="tooltip" title="Save keywords"></i>
+                    <i class="fas fa-check icon_enabled" data-toggle="tooltip" title="Save description"></i>
                 </button>
     
                 <!-- Cancel editing button -->
-                <button class="edit_button" type="button" *ngIf="isEditing"
+                <button class="edit_button" type="button" *ngIf="isEditing && dataChanged"
                 (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                    <i class="faa faa-remove" data-toggle="tooltip" title="Cancel editing"></i>
+                    <i class="fas fa-undo fa-sm" data-toggle="tooltip" title="Cancel editing"></i>
                 </button>
 
                 <!-- Undo button: restore original value -->
-                <button class="edit_button" type="button" *ngIf="isEditing"
-                    (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original keywords">
-                    <i class="faa faa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"
+                <button class="edit_button" type="button" *ngIf="!isEditing && updated"
+                    (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original description">
+                    <i class="fas fa-undo fa-sm"
                         data-toggle="tooltip" title="Undo keyword changes"></i>
                 </button>                
             </div>
