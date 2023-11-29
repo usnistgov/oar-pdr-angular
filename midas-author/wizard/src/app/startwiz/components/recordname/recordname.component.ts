@@ -29,14 +29,6 @@ export class RecordNameComponent implements OnInit {
         })
     }
 
-    setFocus(event) {
-        console.log("On focus", event)
-        setTimeout(()=>{ // this will make the execution after the above boolean has changed
-            const nameInput = this.nameElement.nativeElement as HTMLTextAreaElement;
-            nameInput.focus();
-        },0);  
-    }
-
     updateRecordName(evt:any) {
         this.dataModel.recordname = evt.target.value;
         this.steps[5].isComplete = (this.dataModel.recordname?.trim() != "");

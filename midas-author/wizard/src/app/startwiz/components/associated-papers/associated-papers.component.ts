@@ -29,20 +29,6 @@ export class AssociatedPapersComponent implements OnInit {
         this.chref.detectChanges();
     }
 
-    /**
-     * cancel this wizard
-     */
-        cancel() {
-        console.log("Canceling wizard input");
-    }
-    
-    /**
-     * close out the collection of information and dispatch it as necessary
-     */
-    finish() {
-        console.log("Done!");
-    }
-
     toggleSbarView() {
         this._sbarvisible = ! this._sbarvisible;
         this.chref.detectChanges();

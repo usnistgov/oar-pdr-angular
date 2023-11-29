@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
+    alerted: boolean = false;
 
     constructor(private http: HttpClient,
         private toastrService: ToastrService) { }
@@ -175,7 +176,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //======
         // // authenticate
         if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             let body: any = {
                 userDetails: {
                     userId: 'xyz@nist.gov',
@@ -215,6 +220,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         if (request.url.indexOf('/rmm/taxonomy') > -1 && request.method === 'GET') {
             this.toastrService.warning('You are using fake backend!', 'Warning!');
+
             return of(new HttpResponse({ status: 200, body: taxonomy }));
         }
 
@@ -248,17 +254,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }        
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
         
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PATCH') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2/data/references') > -1 && request.method === 'POST') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);
@@ -269,12 +272,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 //      Empty record
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'GET') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PUT') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             let requestBody = JSON.parse(request.body)
             if(Array.isArray(requestBody)) {
                 requestBody.forEach(item => {
@@ -289,17 +290,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }        
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'DELETE') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PATCH') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1/data/references') > -1 && request.method === 'POST') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);

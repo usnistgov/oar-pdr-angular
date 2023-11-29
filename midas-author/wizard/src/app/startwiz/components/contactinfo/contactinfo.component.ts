@@ -28,26 +28,12 @@ export class ContactinfoComponent implements OnInit {
         })
     }
 
-    /**
-     * cancel this wizard
-     */
-    cancel() {
-        console.log("Canceling wizard input");
-    }
-    
     ngAfterViewInit() {
         this.cdr.detectChanges();
     }
 
     ngAfterContentInit() {
         this.cdr.detectChanges();
-    }
-
-    /**
-     * close out the collection of information and dispatch it as necessary
-     */
-    finish() {
-        console.log("Done!");
     }
 
     toggleSbarView() {

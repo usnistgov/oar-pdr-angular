@@ -3,11 +3,13 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInte
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
+import { UserMessageService } from 'oarlps';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
 
   constructor(private http: HttpClient,
+    private msgsvc: UserMessageService,
     private toastrService: ToastrService) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -82,20 +84,24 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     //       });
     //   }
 
-      // // authenticate
-      if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
+    // // authenticate
+    if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
         this.toastrService.warning('You are using fake backend!', 'Warning!');
-          let body: any = {
-              userId: 'xyz@nist.gov',
-              token: 'fake-jwt-token'
-          };
-          console.log("logging in...")
-          return of(new HttpResponse({ status: 200, body }));
-      }
+        this.msgsvc.error('You are using fake backend!');
+        alert("You are using fake backend!");
+        
+        let body: any = {
+            userId: 'xyz@nist.gov',
+            token: 'fake-jwt-token'
+        };
+        console.log("logging in...")
+        return of(new HttpResponse({ status: 200, body }));
+    }
 
-      if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+    if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
         this.toastrService.warning('You are using fake backend!', 'Warning!');
-        // alert("You are using fake backend!")
+        this.msgsvc.inform('You are using fake backend!');
+        alert("You are using fake backend!");
         let body: any = {
             userDetails: {
                 userId: 'xyz@nist.gov',

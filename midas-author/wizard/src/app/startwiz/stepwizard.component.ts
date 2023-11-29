@@ -156,7 +156,7 @@ export class StepWizardComponent implements OnInit {
             new StepModel(3, 'Files',true,false),
             new StepModel(4, 'Software',false,false),
             new StepModel(5, 'Associated Papers',true,false,false),
-            new StepModel(6, 'Record Name',true,false,false)
+            new StepModel(6, 'Name',true,false,false)
         ]
 
         this.currentStep = this.steps[0];
@@ -175,7 +175,6 @@ export class StepWizardComponent implements OnInit {
     }
 
     onNextStep() {
-        console.log("Next")
         if (!this.stepService.isLastStep()) {
             this.stepService.moveToNextStep();
         } else {
@@ -208,8 +207,6 @@ export class StepWizardComponent implements OnInit {
     }
 
     onSubmit(): void {
-        console.log('this.dataModel', JSON.stringify(this.dataModel));
-
         let id: string;
         let body = {
             // "name": this.readableRandomStringMaker(5),
@@ -219,12 +216,10 @@ export class StepWizardComponent implements OnInit {
 
         this.wizardService.updateMetadata(body).subscribe({
             next: (obj) => {
-                console.log(obj);
                 id = obj['id'];
 
                 // Submit the request, get the id from server response then launch the landing page
                 let url = this.PDRAPI + id + '?editEnabled=true';
-                console.log("Open publishing url", url);
                 // window.location.href = url;
                 window.open(url, "_blank");
             },
