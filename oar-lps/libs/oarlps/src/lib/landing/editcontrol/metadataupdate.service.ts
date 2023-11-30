@@ -198,7 +198,12 @@ export class MetadataUpdateService {
             // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
                 next: (res) => {
-                    console.log("###DBG  Draft data returned from server:\n  ", res)
+                    console.log("###DBG  Draft data returned from server:\n  ", res);
+                    // console.log("res.toString:", res.toString());
+
+                    // res.toString().replace(/['"]+/g, '');
+                    // res = res.toString().substring(1, res.toString().length-1).replace(/['"]+/g, '').split(',');
+                    
                     console.log("stampUpdateDate...");
                     this.stampUpdateDate();
                     console.log("updateInMemoryRec...");
@@ -237,7 +242,12 @@ export class MetadataUpdateService {
             this.currentRec = JSON.parse(JSON.stringify(res));
         }else if(!id) {
             if(res && JSON.stringify(res) != "[]") {
-                this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
+                //Hard coded topic here, need to discuss better solution
+                if(subsetname == 'theme' || subsetname == 'topics'){
+                    this.currentRec[subsetname] = JSON.parse(res);
+                }else{
+                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
+                }
             }else{
                 delete this.currentRec[subsetname];
             }

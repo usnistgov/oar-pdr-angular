@@ -285,12 +285,9 @@ export class RefListComponent implements OnInit {
                     delete ref['dataChanged'];
                 });
 
-                postMessage[this.fieldName] = JSON.parse('{"refType":"IsSupplementTo","title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses","issued":"2020-02","publishYear":"2002","citation":"Gerbig, Y. B., & Michaels, C. A. (2020). In-situ Raman spectroscopic measurements of the deformation region in indented glasses. Journal of Non-Crystalline Solids, 530, 119828. doi:10.1016/j.jnoncrysol.2019.119828","label":"Journal of Non-Crystalline Solids: In-situ Raman spectroscopic measurements of the deformation region in indented glasses","location":"https://doi.org/10.1016/j.jnoncrysol.2019.119828","@id":"#ref:10.1016/j.jnoncrysol.2019.119828","@type":["schema:Article"],"_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"],"authors":["Gerbig, Y. B.", "Michaels, C. A."],"vol":"15","volNumber":"20","pages":"12345","doi":"10.1016/j.jnoncrysol.2019.119828","inPreparation":"yes"}');
-
-                console.log('postMessage[this.fieldName]02', postMessage[this.fieldName])
-
                 this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
+                        console.log("Ref returned from server:", rec);
                         this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;

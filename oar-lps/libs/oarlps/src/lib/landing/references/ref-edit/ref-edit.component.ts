@@ -100,7 +100,6 @@ export class RefEditComponent implements OnInit {
 
         if(updateCitation) this.updateCitation();
 
-        console.log("ref", this.ref);
         this.dataChanged.emit({"ref": this.ref, "dataChanged": true});
     }
 
