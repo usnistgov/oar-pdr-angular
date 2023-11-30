@@ -199,14 +199,8 @@ export class MetadataUpdateService {
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
                 next: (res) => {
                     console.log("###DBG  Draft data returned from server:\n  ", res);
-                    // console.log("res.toString:", res.toString());
-
-                    // res.toString().replace(/['"]+/g, '');
-                    // res = res.toString().substring(1, res.toString().length-1).replace(/['"]+/g, '').split(',');
                     
-                    console.log("stampUpdateDate...");
                     this.stampUpdateDate();
-                    console.log("updateInMemoryRec...");
                     this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
                     // this.mdres.next(this.currentRec);
                     resolve(true);
