@@ -198,10 +198,9 @@ export class MetadataUpdateService {
             // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
                 next: (res) => {
-                    console.log("###DBG  Draft data returned from server:\n  ", res)
-                    console.log("stampUpdateDate...");
+                    console.log("###DBG  Draft data returned from server:\n  ", res);
+                    
                     this.stampUpdateDate();
-                    console.log("updateInMemoryRec...");
                     this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
                     // this.mdres.next(this.currentRec);
                     resolve(true);
@@ -237,7 +236,12 @@ export class MetadataUpdateService {
             this.currentRec = JSON.parse(JSON.stringify(res));
         }else if(!id) {
             if(res && JSON.stringify(res) != "[]") {
-                this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
+                //Hard coded topic here, need to discuss better solution
+                if(subsetname == 'theme' || subsetname == 'topics'){
+                    this.currentRec[subsetname] = JSON.parse(res);
+                }else{
+                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
+                }
             }else{
                 delete this.currentRec[subsetname];
             }
@@ -533,13 +537,13 @@ export class MetadataUpdateService {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            this.custsvc.getSubset(subsetname, id).subscribe(
-                (res) => {
+            this.custsvc.getSubset(subsetname, id).subscribe({
+                next:(res) => {
                     subscriber.next(res);
                     subscriber.complete();
                     if (onSuccess) onSuccess(); 
                 },
-                (err) => {
+                error:(err) => {
                     console.error("err", err);
                     
                     // err will be a subtype of CustomizationError
@@ -557,7 +561,7 @@ export class MetadataUpdateService {
                     subscriber.next(null);
                     subscriber.complete();
                 }
-            )
+            })
         });
     }
 

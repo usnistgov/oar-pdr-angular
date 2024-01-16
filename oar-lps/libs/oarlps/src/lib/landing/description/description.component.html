@@ -24,7 +24,6 @@
                 <!-- Editing -->
                 <div style="width:100%;" *ngIf="isEditing">
                     <!-- <textarea #desc autocomplete="off" [placeholder]="placeholder" [(ngModel)]='description' (ngModelChange)="setBackground($event)" style="width: 100%;margin: 0px; padding: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" libTextareaAutoresize></textarea> -->
-
                     <textarea #desc autocomplete="off" [(ngModel)]='description' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="{'background-color': backColor}" style="width: 100%;cursor: text !important; min-height: 6em;" libTextareaAutoresize></textarea>
                 </div>
             </div>

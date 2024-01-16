@@ -398,7 +398,7 @@ export class WebCustomizationService extends CustomizationService {
         let url = this.endpoint + this.draftapi + this.resid + "/meta";
         return new Observable<Object>(subscriber => {
             let obs : Observable<Object>;
-            this.httpcli.get(url).subscribe(data =>{
+            this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
                 obs = of(JSON.parse(JSON.stringify(data)));
                 this._wrapRespObs(obs, subscriber);
             });
