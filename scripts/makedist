@@ -171,10 +171,14 @@ echo '+' npm $npmpfx run build-lib
 npm $npmpfx run build-lib
 
 # build the oar-lps library (needed by both rpa apps and pdr-lps)
-if (echo "$build_dist" | sed -e 's/ /\n/g' | grep -qs midas-author-lps); then
-    echo '+' npm $npmpfx run build-oarlps
-    npm $npmpfx run build-oarlps
-fi
+# if (echo "$build_dist" | sed -e 's/ /\n/g' | grep -qs midas-author-lps); then
+#     echo '+' npm $npmpfx run build-oarlps
+#     npm $npmpfx run build-oarlps
+# fi
+
+# Always build the oar-lps lib
+echo '+' npm $npmpfx run build-oarlps
+npm $npmpfx run build-oarlps
 
 # build target distributions
 declare -A buildscript
