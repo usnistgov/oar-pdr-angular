@@ -7,7 +7,7 @@ import { userInfo } from 'os';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
-
+    alerted: boolean = false;
     constructor(private http: HttpClient) { }
 
     /**
@@ -174,6 +174,11 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //======
         // // authenticate
         if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+            
             let body: any = {
                 userDetails: {
                     userId: 'xyz@nist.gov',
