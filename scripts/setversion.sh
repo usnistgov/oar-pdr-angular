@@ -37,3 +37,4 @@ fi
     bash "$PACKAGE_DIR/scripts/inject_version.sh" $version $PACKAGE_NAME
 }
 
+# echo $PACKAGE_NAME $version

@@ -13,8 +13,8 @@
 # 
 FROM debian:bullseye-slim
 
-RUN sed -e '/buster-updates/ s/^deb/#deb/' /etc/apt/sources.list \
-    > /tmp/sources.list && mv /tmp/sources.list /etc/apt/sources.list
+# RUN sed -e '/stretch-updates/ s/^deb/#deb/' /etc/apt/sources.list \
+#    > /tmp/sources.list && mv /tmp/sources.list /etc/apt/sources.list
 RUN apt-get update && \
     apt-get install -y --no-install-recommends zip wget ca-certificates git xz-utils \
                                                gnupg python3
@@ -42,9 +42,9 @@ RUN set -ex; \
 "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$arch.asc";\
     export GNUPGHOME="$(mktemp -d)"; \
     gpg --batch --keyserver hkps://keys.openpgp.org \
-         --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
+        --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
     gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-    sleep 1; rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc || true; \
+    rm -r /usr/local/bin/gosu.asc || true; \
     chmod +x /usr/local/bin/gosu; \
     gosu nobody true
 
@@ -60,6 +60,7 @@ RUN grep -qs :$devuid: /etc/group || \
 RUN grep -Pqs ":$devuid:\d+:" /etc/passwd || \
     useradd -m --comment "OAR Developer" --shell /bin/bash \
             --gid $devuid --uid $devuid $devuser
+
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod a+rx /usr/local/bin/entrypoint.sh

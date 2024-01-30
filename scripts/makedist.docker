@@ -10,15 +10,22 @@
 #                      (instead of the default directory, dist)
 #   angular            build only the angular-based distributions
 #   DISTNAME           build only the named distributions; DISTNAME can be
-#                      pdr-lps or pdr-publish
+#                      midas-lps, midas-wizard, pdr-lps, pdr-rpa-request,
+#                      and/or pdr-rpa-approve
 #
 prog=`basename $0`
 execdir=`dirname $0`
 [ "$execdir" = "" -o "$execdir" = "." ] && execdir=$PWD
-export CODEDIR=`(cd $execdir/.. > /dev/null 2>&1; pwd)`
-export DOCKERDIR=$CODEDIR/docker
+PACKAGE_DIR=`(cd $execdir/.. > /dev/null 2>&1; pwd)`
+docker_dir=${PACKAGE_DIR}/docker
 
-$DOCKERDIR/dockbuild.sh
-# Run the main makedist in the dockerdir
+# (re-)build the docker containers
+$docker_dir/dockbuild.sh -q || {
+    echo "${prog}: Failed to build docker containers; see docker/dockbuild.log" \
+         "for details."
+    false
+}
 
-exec $DOCKERDIR/makedist "$@"
+echo $docker_dir/makedist "$@"
+$docker_dir/makedist "$@"
+

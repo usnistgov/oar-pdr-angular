@@ -1,0 +1,7 @@
+<button [disabled]="isLoading" (click)="onClick.emit()" class="btn">
+    <i *ngIf="!isLoading" [ngClass]="'pi ' + icon + ' me-3'"></i>
+    <span *ngIf="!isLoading">{{ text }}</span>
+   
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-3" role="status" aria-hidden="true"></span>
+    <span *ngIf="isLoading">Loading...</span>
+  </button>

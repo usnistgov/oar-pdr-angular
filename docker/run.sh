@@ -12,13 +12,14 @@ os=`uname`
 SED_RE_OPT=r
 [ "$os" != "Darwin" ] || SED_RE_OPT=E
 
+rpa_dists="pdr-rpa-request pdr-rpa-approve"
 dap_dists="midas-author-wizard midas-author-lps"
-avail_dists="$dap_dists"
+avail_dists="$dap_dists $rpa_dists"
 
 function usage {
     cat <<EOF
 
-$prog - build and optionally test the software in this repo via docker
+$prog - build and optionally test the software in this repo
 
 SYNOPSIS
   $prog [-d|--docker-build] [--dist-dir DIR] [CMD ...] 
@@ -28,7 +29,7 @@ SYNOPSIS
 ARGS:
   angular   apply commands to all available angular distributions
 
-DISTNAMES:  editable, wizard, pdr-lps
+DISTNAMES:  midas-author-wizard midas-author-lps pdr-rpa-request pdr-rpa-approve
 
 CMDs:
   build     build the software
@@ -36,11 +37,10 @@ CMDs:
   install   just install the prerequisites (use with shell)
   shell     start a shell in the docker container used to build and test
 
+  DIST      the component (e.g. midas-lps) to build or test
+
 OPTIONS
   -d        build the required docker containers first
-  -t TESTCL include the TESTCL class of tests when testing; as some classes
-            of tests are skipped by default, this parameter provides a means 
-            of turning them on.
 EOF
 }
 
@@ -60,6 +60,7 @@ function docker_images_built {
 }
 
 set -e
+# set -x
 
 distvol=
 distdir=
@@ -89,13 +90,6 @@ while [ "$1" != "" ]; do
             distvol="-v ${distdir}:/app/dist"
             args=(${args[@]} "--dist-dir=/app/dist")
             ;;
-        -t|--incl-tests)
-            shift
-            testcl=(${testcl[@]} $1)
-            ;;
-        --incl-tests=*)
-            testcl=(${testcl[@]} `echo $1 | sed -e 's/[^=]*=//'`)
-            ;;
         -h|--help)
             usage
             exit
@@ -103,19 +97,23 @@ while [ "$1" != "" ]; do
         -*)
             args=(${args[@]} $1)
             ;;
-        midas-author-wizard|midas-author-lps)
-            wordin $1 $dists || dists="$dists $1"
+        midas-author-lps|midas-author-wizard|pdr-rpa-request|pdr-rpa-approve)
+            dists="$dists $1"
             ;;
         editable)
             target=midas-author-lps
+            echo "####################################################"
             echo "Warning: 'editable' component name is deprecated;" \
-                 "treating it as a synonym for $target"
+            echo "         treating it as a synonym for $target"
+            echo "####################################################"
             wordin $target $dists || dists="$dists $target"
             ;;
         wizard)
             target=midas-author-wizard
+            echo "####################################################"
             echo "Warning: 'wizard' component name is deprecated;" \
-                 "treating it as a synonym for $target"
+            echo "         treating it as a synonym for $target"
+            echo "####################################################"
             wordin $target $dists || dists="$dists $target"
             ;;
         angular)
@@ -127,7 +125,7 @@ while [ "$1" != "" ]; do
             cmds="$cmds $1"
             ;;
         *)
-            echo Unsupported command: $1
+            echo "${prog}: unsupported operation:" $1
             false
             ;;
     esac

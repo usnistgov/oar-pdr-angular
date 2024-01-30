@@ -1,11 +1,13 @@
 {
-    "name": "midas-publishing",
+    "name": "oar-pdr-angular",
     "workspaces": [
         "lib",
         "oar-lps",
         "pdr-lps",
         "midas-author/lps",
-        "midas-author/wizard"
+        "midas-author/wizard",
+        "pdr-rpa/pdr-rpa-request",
+        "pdr-rpa/pdr-rpa-approve"
     ],
     "scripts": {
         "postinstall": "ngcc --properties es2015 module",
@@ -13,7 +15,11 @@
         "build-oarlps": "npm run build oarlps --prefix ./oar-lps",
         "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps",
         "build-midaslps": "npm run build midas-lps --prefix ./midas-author/lps",
-        "build-all": "npm run build-lib; npm run build-oarlps; npm run build-sw; npm run build-midaslps",
+        "build-midaswiz": "npm run build step-wizard --prefix ./midas-author/wizard",
+        "build-midas": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./midas-author/wizard && npm run build midas-lps --prefix ./midas-author/lps",
+        "build-rpa-request": "npm run build pdr-rpa-request --prefix ./pdr-rpa/pdr-rpa-request",
+        "build-rpa-approve": "npm run build pdr-rpa-approve --prefix ./pdr-rpa/pdr-rpa-approve",
+        "build-all": "npm run build-lib; npm run build-oarlps; npm run build-sw; npm run build-midaslps; npm run build-rpa-request; npm run build-rpa-approve",
         "build-sw": "npm run build step-wizard --prefix ./midas-author/wizard",
         "start-sw": "npm run start step-wizard --prefix ./midas-author/wizard",
         "start-pdrlps": "npm run start pdr-lps --prefix ./pdr-lps",
@@ -22,16 +28,20 @@
         "test:midasauthor": "jest --config ./midas-author/lps/jest.config.js --silent",
         "test:wizard": "jest --config ./midas-author/wizard/jest.config.js --silent",
         "test:oarlps": "jest --config ./oar-lps/libs/oarlps/jest.config.js --silent",
-        "test:pdrlps": "jest --config ./pdr-lps/jest.config.js --silent"
+        "test:pdrlps": "jest --config ./pdr-lps/jest.config.js --silent",
+        "start-rpa-request": "npm run start pdr-rpa-request --prefix ./pdr-rpa/pdr-rpa-request",
+        "start-rpa-approve": "npm run start pdr-rpa-approve --prefix ./pdr-rpa/pdr-rpa-approve",
+        "test:pdr-rpa-request": "jest --config ./pdr-rpa/pdr-rpa-request/jest.config.js --silent",
+        "test:pdr-rpa-approve": "jest --config ./pdr-rpa/pdr-rpa-approve/jest.config.js --silent"
     },
     "devDependencies": {
-        "@types/jest": "^29.5.0",
+        "@types/jest": "^29.5.1",
         "@types/node": "^12.11.1",
         "fs": "0.0.2",
         "jest": "^29.5.0",
         "jest-preset-angular": "^13.0.1",
         "process": "0.11.10",
-        "ts-jest": "^29.0.5",
+        "ts-jest": "^29.1.0",
         "typescript": "4.5.5"
     },
     "dependencies": {

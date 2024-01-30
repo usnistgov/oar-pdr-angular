@@ -1,0 +1,343 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,300;0,400;0,500;0,600;1,100;1,300;1,400;1,500;1,600&display=swap');
+
+:host {
+    font-family: 'Poppins', sans-serif;
+    --success-green: #03C988;
+    --success-green-alt: #009E60;
+}
+.rpdform-mb-3 {
+    margin-bottom: 10px;
+}
+
+.divider {
+    margin-bottom: 24px;
+}
+
+.rpdform-form-title {
+    background-color: var(--nist-blue-default);
+    height: 120px;
+    color: white;
+}
+
+.rpdform-form-title h2 {
+    font-weight: 600;
+    font-size: 28px;
+    line-height: 34px;
+}
+
+.bg-approved {
+    background-color: var(--success-green-alt);
+    /* background-color: #03C988; */
+}
+
+.bg-declined {
+    background-color: var(--default-red);
+}
+
+.rpdform-relative {
+    position: relative;
+}
+
+.rpdform-opacity-0 {
+    opacity: 0;
+}
+
+.rpdform-stroke-current {
+    stroke: currentColor;
+}
+
+.rpdform-input-checkbox:checked~div span {
+    opacity: 1;
+}
+
+.rpdform-main-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 65vh;
+    padding: 16px;
+}
+
+.rpdform-form-wrapper {
+    margin: 0;
+    max-width: 800px;
+    width: 100%;
+    background: white;
+}
+
+
+.rpdform-form-text {
+    font-size: 16px;
+    line-height: 24px;
+    color: #5A5A5A;
+    margin-top: 12px;
+    margin-bottom: 24px;
+}
+
+.rpdform-input-flex {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+}
+
+.rpdform-input-flex>div {
+    width: 50%;
+}
+
+.rpdform-form-input {
+    text-align: left;
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dde3ec;
+    border-radius: 3px;
+    background: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
+    color: #536387;
+    outline: none;
+    resize: none;
+}
+
+
+.rpdform-form-input:focus {
+    border-color: #1E6BA1;
+    box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+}
+
+.rpdform-form-label {
+    color: #536387;
+    font-size: 14px;
+    line-height: 24px;
+    display: block;
+    margin-bottom: 10px;
+}
+
+.rpdform-checkbox-wrapper {
+    margin-top: 16px;
+}
+
+.rpdform-checkbox-label {
+    display: flex;
+    cursor: pointer;
+    user-select: none;
+    font-size: 16px;
+    line-height: 24px;
+    color: #536387;
+}
+
+.rpdform-checkbox-label a {
+    margin-left: 5px;
+    color: #1E6BA1;
+}
+
+.rpdform-input-checkbox {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.rpdform-checkbox-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    margin-right: 16px;
+    margin-top: 2px;
+    border: 0.7px solid #536387;
+    border-radius: 3px;
+}
+
+.rpdform-btn {
+    background-color: white; 
+    transition-duration: 0.3s;
+    font-size: 16px;
+    padding: 14px 25px;
+    border: none;
+    font-weight: 500;
+    color: black;
+    cursor: pointer;
+    margin-top: 16px;
+    min-width: 200px;
+    border-radius: 100px;
+    text-transform: uppercase;
+}
+
+
+
+svg {
+    color: 1E6BA1;
+}
+
+::placeholder {
+    /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #C0C0C0;
+    opacity: 1;
+    /* Firefox */
+}
+
+:-ms-input-placeholder {
+    /* Internet Explorer 10-11 */
+    color: #C0C0C0;
+}
+
+::-ms-input-placeholder {
+    /* Microsoft Edge */
+    color: #C0C0C0;
+}
+
+.danger {
+  color: var(--default-red); 
+  border: 2px solid var(--default-red);
+
+}
+
+.danger:hover{
+    background-color: var(--default-red);
+    color: white;
+}
+
+.success {
+    color: var(--nist-green-default); 
+    border: 2px solid var(--nist-green-default);
+}
+
+.success:hover {
+    background-color: var(--nist-green-default);
+    color: white;
+}
+
+.success-alt {
+    color: var(--success-green-alt); 
+    border: 2px solid var(--success-green-alt);
+}
+
+.success-alt:hover {
+    background-color: var(--success-green-alt);
+    color: white;
+}
+
+:host ::ng-deep .p-dropdown {
+    min-width: 50%;
+}
+
+.progress-spinner {
+    position: fixed;
+    z-index: 999;
+    height: 2em;
+    width: 2em;
+    overflow: show;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+}
+
+/* Transparent Overlay */
+.progress-spinner:before {
+    content: '';
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.53);
+}
+
+:host ::ng-deep .custom-spinner .p-progress-spinner-circle {
+    animation: custom-progress-spinner-dash 1.5s ease-in-out infinite, custom-progress-spinner-color 6s ease-in-out infinite;
+}
+
+@keyframes custom-progress-spinner-color {
+
+    100%,
+    0% {
+        stroke: #16697A;
+    }
+
+    40% {
+        stroke: #489FB5;
+    }
+
+    66% {
+        stroke: #82C0CC;
+    }
+
+    80%,
+    90% {
+        stroke: #FFA62B;
+    }
+}
+
+@keyframes custom-progress-spinner-dash {
+    0% {
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
+    }
+
+    50% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
+    }
+
+    100% {
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px;
+    }
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    min-width: 250px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    height: 16px; 
+    vertical-align: top;
+    text-align: left;
+}
+
+:host ::ng-deep td > span {
+    white-space: pre-line;
+}
+
+:host ::ng-deep description-field {
+    font-weight: bold;
+}
+
+.custom-hr {
+    border-top: 1px solid #1E6BA1; margin: auto; width: 75%;
+    margin-top: 48px;
+}
+
+.record-description-container {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .record-description-title,
+  .record-description-address,
+  .record-description-phone {
+    margin-bottom: 16px;
+  }
+  
+  .record-description-title span,
+  .record-description-address span,
+  .record-description-phone span {
+    font-weight: bold;
+  }
+  
+  
+  .rpdform-status-message {
+    margin-top: 16px;
+  }

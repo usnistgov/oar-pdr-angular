@@ -1,5 +1,6 @@
-#!/bin/bash
-
+#! /bin/bash 
+#
+#
 set -e
 
 [ "$DEVUID" == "" ] && {
@@ -23,3 +24,4 @@ case "$op" in
         ;;
 esac
 
+              

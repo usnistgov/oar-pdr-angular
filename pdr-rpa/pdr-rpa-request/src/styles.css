@@ -1,0 +1,212 @@
+@import "~ngx-toastr/toastr.css";
+
+/* * {
+    font-family: sans-serif;
+} */
+
+body {
+  background-color: #e3f7fd;
+  padding: 0;
+}
+
+:root {
+    /* Colors */
+    --science-theme-background-default: #008097;
+    --science-theme-background-dark: #007287;
+    --science-theme-background-light: #f5fbfd;
+    --science-theme-background-light2: #e3f7fd;
+    --science-theme-background-blue: #017abb;
+    --science-theme-background-blue-hover: #2db2fa;
+    --nist-green-default: #257a2d;
+    --nist-green-dark: #1c6022;
+    --nist-green-light: #6bad73;
+    --nist-blue-default: #12659c;
+    --nist-blue-dark: #0c4870;
+    --nist-blue-light: #197dc0;
+    --background-light-grey: #f3f3f3;
+}
+
+.myCustomModalClass .modal-dialog {
+  max-width: 1920px;
+}
+
+.myCustomModalClass > .modal-dialog {
+  max-width: 1490px !important;
+  min-width: 571px !important;   
+  width: 95% !important;
+}
+
+.comfirmModalClass > .modal-dialog {
+    max-width: 500px !important;
+    min-width: 200px !important;   
+    width: 95% !important;
+    margin-top: 20vh;
+}
+
+a:link {
+  color: var(--nist-blue-dark);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: var(--nist-blue-dark);
+   /* color: #551A8B; */
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid var(--nist-blue-light); /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.flex-container {
+  display: flex;
+  align-items: stretch;
+}
+
+.flex-container > div {
+  width: 100px;
+  line-height: 15px;
+}
+
+.login-panel .ui-inputtext:focus {
+  border-width: 2px 2px 2px 2px;
+  border-color: var(--nist-blue-default);
+}
+
+h2 {
+  color: black;
+}
+
+.myCustomModalClass .modal-dialog {
+  max-width: 90%;
+}
+
+.dialogHeader {
+  background-color:var(--nist-blue-dark);
+  height: 4em; 
+  color:white;
+  text-align: center;
+  padding-top: .5em;
+}
+
+.toast-bootstrap-compatibility-fix {
+  opacity:1;
+}
+
+.toast-success {
+  color: white;
+  padding: 0.5em 1.5em 0.5em 1.5em;
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+    color: grey
+}
+
+a.enabled {
+    cursor: pointer;
+    color: white;
+}
+
+a {
+    font-family: sans-serif;
+}
+
+.popup-header-bar {
+    background-color:black;
+    height: 3em; 
+    padding: .5em .5em .5em 2em
+}
+
+.popup-header {
+    color: white; 
+    text-align: center;
+}
+
+.popup-tool-bar {
+    background-color:var(--nist-blue-dark);
+    height: 3.3em; 
+    color:white;
+    padding: .5em .5em .5em 2em
+}
+
+.btn-labeled {
+    float:right;
+    margin-right: 1em;
+    width:160px; 
+    color:white;
+    padding-right: 1em;
+}
+
+.top-banner {
+    width: 100%;
+    background-position: center 63%;
+    margin-bottom: .5em;;
+    height: 80px;
+    border: 1px solid rgb(0, 23, 43);
+}
+
+.top-banner-text {
+    color: white !important;
+    margin: 2em 0em 0em 0em;
+    font-size: xx-large;
+}
+
+.inner-top-banner {
+    width: 94%;
+    margin: 1em auto;
+}
+
+.section-header {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border-bottom: 1px solid rgb(211, 211, 211);
+}
+
+.linked-text {
+    cursor: pointer; 
+    color:var(--nist-blue-default);
+    margin-left: 1em;
+}
+
+.highlight {
+    background-color: var(--nist-blue-light);
+    color: white;
+}
+
+.nist-green-fc {
+    color: var(--nist-green-default);
+}
+
+.nist-green-bc {
+    background-color: var(--nist-green-default);
+}
+
+.nist-blue-fc {
+    color: var(--nist-blue-default);
+}
+
+.nist-blue-bc {
+    background-color: var(--nist-blue-default);
+}
+
+.spinner {
+    position: relative;
+    width: 100%;
+    margin-top: 2em;
+}
