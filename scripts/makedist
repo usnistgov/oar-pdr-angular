@@ -70,7 +70,7 @@ function realpath {
 #
 midas_author_names="midas-author-wizard midas-author-lps"
 pdr_rpa_names="pdr-rpa-request pdr-rpa-approve"
-DISTNAMES="$midas_author_names"
+DISTNAMES="$midas_author_names $pdr_rpa_names"
 declare -A APPSRCDIR=(                        \
     [midas-author-wizard]=midas-author/wizard \
     [midas-author-lps]=midas-author/lps       \
@@ -101,12 +101,10 @@ while [ "$1" != "" ]; do
         ;;
     --cache-dir=*)
         CACHE_DIR=`echo $1 | sed -e 's/[^=]*=//'`
-        # NOTE: CACHE_DIR is ignored
         ;;
     -c|--cache-dir)
         shift
         CACHE_DIR=$1
-        # NOTE: CACHE_DIR is ignored
         ;;
     angular)
         build_dist=${DISTNAMES}
@@ -124,13 +122,13 @@ while [ "$1" != "" ]; do
         echo "$prog: unsupported option:" $1
         false
         ;;
-    *)
-        (echo :${DISTNAMES}: | sed -e 's/ /:/g' | grep -qs :${1}:) || {
-            echo "${prog}: ${1}: unrecognized distribution name"
-            echo "${prog}: recognized names:" $DISTNAMES
-            false
-        }
+    midas-author-lps|midas-author-wizard|pdr-rpa-request|pdr-rpa-approve)
         build_dist="$build_dist $1"
+        true
+        ;;
+    *)
+        echo "${prog}: ${1}: unrecognized distribution name"
+        false
         ;;
   esac
   shift
@@ -171,12 +169,6 @@ echo '+' npm $npmpfx run build-lib
 npm $npmpfx run build-lib
 
 # build the oar-lps library (needed by both rpa apps and pdr-lps)
-# if (echo "$build_dist" | sed -e 's/ /\n/g' | grep -qs midas-author-lps); then
-#     echo '+' npm $npmpfx run build-oarlps
-#     npm $npmpfx run build-oarlps
-# fi
-
-# Always build the oar-lps lib
 echo '+' npm $npmpfx run build-oarlps
 npm $npmpfx run build-oarlps
 
@@ -186,6 +178,8 @@ buildscript=(                            \
     ["pdr-lps"]=build-pdrlps             \
     ["midas-author-wizard"]=build-sw     \
     ["midas-author-lps"]=build-midaslps  \
+    ["pdr-rpa-request"]=build-rpa-request\
+    ["pdr-rpa-approve"]=build-rpa-approve\
 )
 
 for target in $build_dist; do
@@ -218,3 +212,4 @@ for target in $build_dist; do
              package-lock.json not found
     fi
 done
+
