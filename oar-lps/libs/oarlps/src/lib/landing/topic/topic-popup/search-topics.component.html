@@ -13,12 +13,12 @@
         <div class="ui-toolbar-group-right" style="margin-top: -1em;">
             <!-- Cancel button -->
             <button pButton type="submit" class="btn-labeled" id="btn-cancel" (click)="activeModal.close('Close click')" label="Cancel"
-                icon="faa faa-trash faa-1x icon-white" iconPos="left">
+                icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Save button -->
             <button pButton type="submit" class="btn-labeled" id="btn-save"
-                (click)="saveTopic();" label="Save" icon="faa faa-save faa-1x icon-white" iconPos="left"
+                (click)="saveTopic();" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left"
                 [disabled]="inputValue[field].length==0">
             </button>
         </div>
@@ -42,7 +42,7 @@
                     style="color: #1E6BA1; cursor: pointer;">{{topic}}</span>
             </td>
             <td width="50px">
-                <i class="faa faa-trash" (click)="deleteTopic(i)"
+                <i class="fas fa-trash-alt" (click)="deleteTopic(i)"
                     style="float: right;cursor: pointer;color:grey; margin: .5em;" data-toggle="tooltip"
                     title="Delete affiliation"></i>
             </td>

@@ -8,18 +8,18 @@
                 <tr>
                     <th [ngStyle]="headerStyle(titleWidth)" ttResizableColumn>
                         <span (click)="expandToLevel(dataTree.children, !isExpanded, null)" style="padding-right:0.5em;">
-                            <i *ngIf="!isExpanded" class="faa faa-arrow-circle-down faa-1x icon-white"
+                            <i *ngIf="!isExpanded" class="fas fa-arrow-circle-down faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                 title="Expand All"></i>
-                            <i *ngIf="isExpanded" class="faa faa-arrow-circle-up faa-1x icon-white"
+                            <i *ngIf="isExpanded" class="fas fa-arrow-circle-up faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                 title="Collapse All"></i>
                         </span>
                         <span (click)="showZipFilesNames = !showZipFilesNames" style="padding-right:0.5em;">
-                            <i *ngIf="!showZipFilesNames" class="faa faa-eye faa-1x icon-white"
+                            <i *ngIf="!showZipFilesNames" class="fas fa-eye faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                 title="Show Zip Files"></i>
-                            <i *ngIf="showZipFilesNames" class="faa faa-eye-slash faa-1x icon-white"
+                            <i *ngIf="showZipFilesNames" class="fas fa-eye-slash faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                 title="Hide Zip Files"></i>
                         </span>
@@ -28,7 +28,7 @@
                     <th [ngStyle]="headerStyle(typeWidth)" ttResizableColumn>Media Type</th>
                     <th [ngStyle]="headerStyle(sizeWidth)" ttResizableColumn>Size</th>
                     <th [ngStyle]="headerStyle(actionWidth)" ttResizableColumn>
-                        <i class="faa faa-cloud-download" aria-hidden="true" data-toggle="tooltip" title="Actions"></i>
+                        <i class="fas fa-cloud-download-alt" aria-hidden="true" data-toggle="tooltip" title="Actions"></i>
                     </th>
                     <th [ngStyle]="headerStyle(statusWidth)" ttResizableColumn>
                         Status
@@ -65,12 +65,12 @@
                         <div *ngIf="rowData.cartItem;else space_holder" style="display:inline;color: green;" >
                             <a *ngIf="rowData.cartItem.downloadStatus != 'downloading'" href='{{rowData.cartItem.downloadURL}}' target='_blank' download="download" data-toggle="tooltip" 
                                 title="Download this file" aria-label="Download this file">
-                                <i class="faa faa-download"
+                                <i class="fas fa-download"
                                     aria-hidden="true" (click)="setFileDownloaded(rowData)"></i>
                             </a>
                             <a *ngIf="rowData.cartItem.downloadStatus == 'downloading'" data-toggle="tooltip" 
                             title="Download this file" aria-label="Download this file">
-                            <i class="faa faa-download"
+                            <i class="fas fa-download"
                                 aria-hidden="true"></i>
                         </a>
                         </div>

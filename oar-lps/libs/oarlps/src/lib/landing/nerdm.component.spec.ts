@@ -26,7 +26,6 @@ import { DebugElement } from '@angular/core';
     it('should have expected <p> text', () => {
       fixture.detectChanges();
       const p = de.nativeElement;
-      expect(p.textContent).toMatch(/JSON-LD/i,
-        '<P> should say something about "JSON-LD"');
+      expect(p.textContent).toMatch(/JSON-LD/i);
     });
   });

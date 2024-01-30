@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../../nerdm/nerdm';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../../landingpage.service';
+import { LandingpageService, HelpTopic } from '../../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
@@ -35,7 +36,7 @@ export class TopicEditComponent implements OnInit {
     @Output() dataChangedOutput: EventEmitter<any> = new EventEmitter();
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
-    @ViewChild('panel', { read: ElementRef }) public panel: ElementRef<any>;
+    // @ViewChild('panel', { read: ElementRef }) public panel: ElementRef<any>;
     @ViewChild('panel0', { read: ElementRef, static: true }) public panel0: ElementRef<any>;
 
 
@@ -75,6 +76,12 @@ export class TopicEditComponent implements OnInit {
     get isEditing() { return this.editMode==MODE.EDIT }
 
     get isNormal() { return this.editMode==MODE.NORNAL }
+
+    reset() {
+        this.dataChanged = false;
+        this.editMode = MODE.NORNAL;
+        this.isVisible = true;
+    }
 
     cloneArray(sourceArray: any[], targetArray: any[]) {
         if(!sourceArray) 
@@ -154,22 +161,10 @@ export class TopicEditComponent implements OnInit {
         //Revert this.nistTaxonomyTopics
         this.cloneArray(this.originalNistTaxonomyTopics ,this.nistTaxonomyTopics);  
         this.cmdOutput.emit({"command": 'undoCurrentChanges'});
-        this.dataChanged = false;
+        this.reset();
     }
 
-    /*
-     *  Restore original value. If no more field was edited, delete the record in staging area.
-     */
-    restoreOriginal() {
-        this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
-                this.commandOut('restoreOriginal');
-                this.dataChanged = false;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
-            }else
-                console.error("Failed to undo landingpage metadata")
-        });
-    }
+
 
     /**
      * Save topics.
@@ -283,7 +278,7 @@ export class TopicEditComponent implements OnInit {
 
         this.isVisible = false;
         setTimeout(() => {
-        this.isVisible = true;
+            this.isVisible = true;
         }, 0);
 
         setTimeout(() => {

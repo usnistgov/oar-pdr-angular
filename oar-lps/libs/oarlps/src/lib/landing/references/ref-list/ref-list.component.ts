@@ -4,7 +4,8 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../../landingpage.service';
+import { LandingpageService, HelpTopic } from '../../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -12,12 +13,12 @@ import {
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import { Reference } from '../reference';
-
+import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     selector: 'lib-ref-list',
     templateUrl: './ref-list.component.html',
-    styleUrls: ['../../landing.component.scss', './ref-list.component.css'],
+    styleUrls: ['../../landing.component.scss', '../references.component.css', './ref-list.component.css'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -37,6 +38,9 @@ export class RefListComponent implements OnInit {
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
 
+    // For warning pop up
+    modalRef: any;
+
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter reference data?" will not display.
     // Default is "normal" mode.
     editMode: string = MODE.NORNAL; 
@@ -53,19 +57,28 @@ export class RefListComponent implements OnInit {
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
+    @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-        private ngbModal: NgbModal,                
+        private modalService: NgbModal,              
         private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.dataChanged){
-                        this.saveCurRef(false); // Do not refresh help text 
+                if( sectionMode ) {
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.dataChanged){
+                                this.saveCurRef(false); // Do not refresh help text 
+                            }else{
+                                this.setMode(MODE.NORNAL, false);
+                            }
+                        }
                     }else{
-                        this.setMode(MODE.NORNAL, false);
-                    }
+                            if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                                this.onAdd();
+                            }
+                        }
                 }
             })
     }
@@ -79,11 +92,9 @@ export class RefListComponent implements OnInit {
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
-
-    get editBtnTooltip() { return this.isNormal? "Edit selected reference" : "Save all changes to server" }
 
     /**
      * Check if any reference data changed or reference order changed
@@ -116,31 +127,46 @@ export class RefListComponent implements OnInit {
      * set current mode to editing.
      */
     onEdit() {
-        this.setMode(MODE.EDIT);
+        this.setMode(MODE.EDIT, true);
+    }
+
+    /**
+     * Refresh the help text
+     */
+    refreshHelpText(help_topic: string = MODE.EDIT){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[help_topic];
+
+        this.lpService.setSectionHelp(sectionHelp);
     }
 
     /**
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.LIST, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
-        sectionMode.mode = this.editMode;
-
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
-        if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
-        }
-            
+        sectionMode.mode = this.editMode;          
 
         switch ( this.editMode ) {
+            case MODE.LIST:
+                this.editBlockStatus = 'collapsed';
+
+                // Back to add mode
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.LIST);
+                }
+                break;            
             case MODE.EDIT:
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.EDIT);
+                }                
                 break;
             case MODE.ADD:
                 //Append a blank reference to the record and set current reference.
@@ -159,16 +185,28 @@ export class RefListComponent implements OnInit {
                 // this.orderChanged = true;
 
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.ADD);
+                }                  
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.NORNAL);
+                }                  
                 break;
         }
 
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        this.editmodeOutput.next(this.editMode);    
     }
 
     /**
@@ -192,9 +230,11 @@ export class RefListComponent implements OnInit {
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                         resolve(true);
-                    }else
-                        console.error("acknowledge references update failure");
+                    }else{
+                        let msg = "References update failed";
+                        console.error(msg);
                         resolve(false);
+                    }
                 });
             }else{  // Update all references
                 if(this.dataChanged){
@@ -205,9 +245,11 @@ export class RefListComponent implements OnInit {
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                             resolve(true);
-                        }else
-                            console.error("acknowledge references update failure");
+                        }else{
+                            let msg = "References update failed";
+                            console.error(msg);
                             resolve(false);
+                        }
                     });
                 }
             }
@@ -231,25 +273,32 @@ export class RefListComponent implements OnInit {
      * Save current reference
      */
     saveCurRef(refreshHelp: boolean = true) {
-        console.log("this.currentRef", this.currentRef);
         if(this.isAdding){
             if(this.currentRef.dataChanged){
                 var postMessage: any = {};
                 postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
 
+                //Delete temp keys
+                console.log('postMessage[this.fieldName]01', postMessage[this.fieldName])
+                postMessage[this.fieldName].forEach(ref => {
+                    delete ref['isNew'];
+                    delete ref['dataChanged'];
+                });
+
                 this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
-                        console.log("Return ref", rec);
+                        console.log("Ref returned from server:", rec);
                         this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;
-                    }else
-                        console.error("Failed to add reference");
+                    }else{
+                        let msg = "Failed to add reference";
+                        console.error(msg);
                         return;
+                    }
                 });
             }else{  //If no data has been entered, remove this reference
-                console.log("Removing current ref...")
                 this.removeRef(this.currentRefIndex);
             }
         }else{
@@ -266,22 +315,26 @@ export class RefListComponent implements OnInit {
         if(this.dataChangedAndUpdated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
-                    this.record.references.forEach((ref) => {
-                        ref.dataChanged = false;
-                    });
-
-                }else
-                    console.error("Failed to undo " + this.fieldName + " metadata");
+                    if(this.record && this.record.references){
+                        this.record.references.forEach((ref) => {
+                            ref.dataChanged = false;
+                        });
+                    }
+                }else{
+                    let msg = "Failed to undo " + this.fieldName + " metadata"
+                    console.error(msg);
                     return;
+                }
             });
         }
         this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
 
         this.orderChanged = false;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderReset"});
         this.currentRefIndex = 0;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.LIST);
     }
 
     /**
@@ -316,7 +369,7 @@ export class RefListComponent implements OnInit {
             }
         }
 
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.LIST);
     }
 
     /**
@@ -405,6 +458,7 @@ export class RefListComponent implements OnInit {
         this.currentRefIndex = event.item.data;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.orderChanged = true;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
         // Update reference data
         this.updateMatadata();
 
@@ -420,6 +474,7 @@ export class RefListComponent implements OnInit {
     removeRef(index: number) {
         this.record.references.splice(index,1);
         this.orderChanged = true;
+        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
         this.updateMatadata();
     }
 
@@ -437,6 +492,10 @@ export class RefListComponent implements OnInit {
      */
     onReferenceCommand(action: any, index: number = 0) {
         switch ( action.command.toLowerCase() ) {
+            case 'edit':
+                this.selectRef(index);
+                this.onEdit();
+                break;
             case 'delete':
                 this.removeRef(index);
                 break;
@@ -447,7 +506,8 @@ export class RefListComponent implements OnInit {
                         this.currentRef = this.record[this.fieldName][this.currentRefIndex];
                         this.forceReset = true; // Force reference editor to reset data
                     } else {
-                        console.error("Failed to restore reference");
+                        let msg = "Failed to restore reference";
+                        console.error(msg);
                     }
                 })
 
@@ -489,8 +549,11 @@ export class RefListComponent implements OnInit {
                             this.editMode = MODE.EDIT;
                         else    
                             this.editMode = MODE.NORNAL;
+
+                        this.editmodeOutput.next(this.editMode); 
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -498,11 +561,11 @@ export class RefListComponent implements OnInit {
             }
         }
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic['dragdrop'];
+        // let sectionHelp: SectionHelp = {} as SectionHelp;
+        // sectionHelp.section = this.fieldName;
+        // sectionHelp.topic = HelpTopic['dragdrop'];
 
-        this.lpService.setSectionHelp(sectionHelp);
+        // this.lpService.setSectionHelp(sectionHelp);
     }
 
     setCurrentPage(index: number){
@@ -573,16 +636,6 @@ export class RefListComponent implements OnInit {
     }
 
     /**
-     * Determine icon class of undo button
-     * If edit mode is normal, display disabled icon.
-     * Otherwise display enabled icon.
-     * @returns undo button icon class
-     */
-    undoIconClass() {
-        return !this.dataChanged || this.isEditing || this.isAdding? "faa faa-undo icon_disabled" : "faa faa-undo icon_enabled";
-    }
-
-    /**
      * Determine icon class of add button
      * If edit mode is normal, display enabled icon.
      * Otherwise display disabled icon.
@@ -590,26 +643,9 @@ export class RefListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "faa faa-plus faa-lg icon_enabled";
+            return "fas fa-plus fa-lg icon_enabled";
         }else{
-            return "faa faa-plus faa-lg icon_disabled";
-        }
-    }
-
-    /**
-     * Determine icon class of edit button
-     * If edit mode is normal, display edit icon.
-     * Otherwise display check icon.
-     * @returns edit button icon class
-     */   
-    editIconClass() {
-        if(this.isNormal){
-            if(this.hasDisplayableReferences())
-                return "faa faa-pencil icon_enabled";
-            else
-                return "faa faa-pencil icon_disabled";
-        }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-plus fa-lg icon_disabled";
         }
     }
 
@@ -641,4 +677,27 @@ export class RefListComponent implements OnInit {
             this.dataCommand.next({"data": this.record[this.fieldName], "action": "hideEditBlock"});
     }
 
+    /**
+     * Undo all changes
+     */
+    undoAllChangesConfirmation(){
+        var message = 'This will undo all reference changes.';
+
+        this.modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true });
+        this.modalRef.componentInstance.title = 'Please confirm';
+        this.modalRef.componentInstance.btnOkText = 'Confirm';
+        this.modalRef.componentInstance.btnCancelText = 'Cancel';
+        this.modalRef.componentInstance.message = message;
+        this.modalRef.componentInstance.showWarningIcon = true;
+        this.modalRef.componentInstance.showCancelButton = true;
+
+        this.modalRef.result.then((result) => {
+            if ( result ) {
+                this.undoChanges();
+            }else{
+                console.log("User changed mind.");
+            }
+        }, (reason) => {
+        });
+    }    
 }

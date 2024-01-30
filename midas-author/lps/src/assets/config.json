@@ -7,6 +7,9 @@
         "mdService":   "https://oardev.nist.gov/rmm/",
         "taxonomyService": "https://oardev.nist.gov/rmm/taxonomy"
     },
+    "auth": {
+        "serviceEndpoint": "https://localhost/sso/" 
+    },
     "mdAPI": "http://localhost:9091/midas/dap/mdsx/",
     "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
     "customizationAPI": "http://localhost:9091/midas/",

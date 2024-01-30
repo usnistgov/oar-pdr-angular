@@ -13,14 +13,15 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { IEnvironment } from '../../../environments/ienvironment';
 import { environment } from '../../../environments/environment-impl';
 import { TooltipModule } from 'primeng/tooltip';
+import { AuthenticationService, AuthModule } from 'oarng';
 
 @NgModule({
     declarations: [ EditControlComponent, EditStatusComponent ],
-    imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule, TooltipModule ],
+    imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule, TooltipModule, AuthModule ],
     exports: [ EditControlComponent, EditStatusComponent ],
     providers: [
         HttpClient,
-        { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient ] }
+        { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService ] }
     ]
 })
 export class EditControlModule { 

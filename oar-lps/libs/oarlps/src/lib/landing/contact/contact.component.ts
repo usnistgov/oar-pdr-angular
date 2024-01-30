@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
@@ -6,7 +6,9 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { ContactService } from './contact.service';
 import { Contact } from './contact';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
+import { ContactEditComponent } from './contact-edit/contact-edit.component';
 
 @Component({
     selector: 'app-contact',
@@ -23,7 +25,7 @@ import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '.
 export class ContactComponent implements OnInit {
     currentContact: Contact = {} as Contact;
     originalRecord: any = {};
-    fieldName = 'contactPoint';
+    fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
     editMode: string = MODE.NORNAL; 
 
     tempInput: any = {};
@@ -31,10 +33,13 @@ export class ContactComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
     backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
+    dataChanged: boolean = false;
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
 
+    @ViewChild('contactedit') contactEdit: ContactEditComponent;
+    
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
                 private gaService: GoogleAnalyticsService,
@@ -43,11 +48,19 @@ export class ContactComponent implements OnInit {
                 private contactService : ContactService)
     {
         this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                if(this.isEditing && this.currentContact.dataChanged){
-                    this.saveCurrentContact(false); // Do not refresh help text 
+            if(sectionMode){
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        if(this.isEditing && this.currentContact.dataChanged){
+                            this.saveCurrentContact(false); // Do not refresh help text 
+                        }
+                        this.hideEditBlock(false);
+                    }
+                }else{
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                        this.startEditing();
+                    }
                 }
-                this.hideEditBlock(false);
             }
         })
     }
@@ -82,8 +95,6 @@ export class ContactComponent implements OnInit {
     }
 
     updateOriginal(){
-        console.log("hasContact", this.hasContact);
-        
         if(this.hasContact) {
             this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
             this.currentContact.dataChanged = false;
@@ -118,21 +129,23 @@ export class ContactComponent implements OnInit {
      * based on the dataChanged flag of the record.
      * @returns the background color of the whole record
      */
-    // getRecordBackgroundColor() {
-    //     if(this.mdupdsvc.isEditMode){
-    //         if(this.mdupdsvc.fieldUpdated(this.fieldName)){
-    //             this.backgroundColor = 'var(--data-changed-saved)';
-    //         }else if(this.currentContact.dataChanged){
-    //             this.backgroundColor = 'var(--data-changed)';
-    //         }else{
-    //             this.backgroundColor = 'var(--editable)';
-    //         }
-    //     }else{
-    //         this.backgroundColor = 'white';
-    //     }
+    get getRecordBackgroundColor() {
+        if(this.mdupdsvc.isEditMode){
+            this.backgroundColor = 'var(--editable)';
+            
+            if(this.mdupdsvc.fieldUpdated(this.fieldName)){
+                this.backgroundColor = 'var(--data-changed-saved)';
+            }
+            
+            if(this.dataChanged){
+                this.backgroundColor = 'var(--data-changed)';
+            }
+        }else{
+            this.backgroundColor = 'white';
+        }
 
-    //     return this.backgroundColor;
-    // }
+        return this.backgroundColor;
+    }
 
     /**
      * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
@@ -174,6 +187,21 @@ export class ContactComponent implements OnInit {
     }
 
     /**
+     * Handle requests from child component
+     * @param dataChanged parameter passed from child component
+     */
+    onContactChange(dataChanged: any) {
+        switch(dataChanged.action) {
+            case 'dataChanged':
+                this.dataChanged = true;
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    /**
      * Unde current changes on contact
      */
     undoCurContactChanges() {
@@ -192,15 +220,36 @@ export class ContactComponent implements OnInit {
     }
 
     /**
+     * Close edit block. If is editing, save change first.
+     */
+    closeEditBlock() {
+        if(this.isEditing && this.dataChanged){
+            this.saveCurrentContact();
+        }
+
+        this.setMode(MODE.NORNAL, true);
+    }
+
+    /**
      * Determind the edit icon class based on current editing status
      * @returns icon class of the edit button
      */
     editIconClass() {
         if(this.isEditing){
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }else{
-            return "faa faa-pencil icon_enabled"
+            return "fas fa-pencil icon_enabled"
         }
+    }
+
+    /**
+     * Refresh the help text
+     */
+    refreshHelpText(){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+        this.lpService.setSectionHelp(sectionHelp);
     }
 
     /**
@@ -213,12 +262,8 @@ export class ContactComponent implements OnInit {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
         if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
+            this.refreshHelpText();
         }
             
         switch ( this.editMode ) {
@@ -232,6 +277,7 @@ export class ContactComponent implements OnInit {
                 this.editBlockStatus = 'collapsed'
                 this.currentContact.dataChanged = false;
                 this.setOverflowStyle();
+                this.dataChanged = false;
                 break;
         }
 
@@ -251,14 +297,16 @@ export class ContactComponent implements OnInit {
     saveCurrentContact(refreshHelp: boolean = true) {
         var postMessage: any = {};
         postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.currentContact));
-        console.log('postMessage', postMessage);
+        // console.log('postMessage', JSON.stringify(postMessage));
         
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             if (updateSuccess){
                 this.setMode(MODE.NORNAL, refreshHelp);
                 this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
-            }else
-                console.error("acknowledge title update failure");
+            }else{
+                let msg = "Contact update failed.";
+                console.error(msg);
+            }
         });
 
         // this.updateMatadata(this.currentContact).then((success) => {
@@ -286,7 +334,8 @@ export class ContactComponent implements OnInit {
                     this.notificationService.showSuccessWithTimeout("Contact updated.", "", 3000);
                     resolve(true);
                 }else{
-                    console.error("acknowledge contact update failure");
+                    let msg = "Contact update failed";
+                    console.error(msg);
                     resolve(false);
                 }
             });
@@ -301,8 +350,10 @@ export class ContactComponent implements OnInit {
             if (success){
                 this.setMode();
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            }else
-                console.error("Failed to undo keywords metadata")
+            }else{
+                let msg = "Failed to restore original value."
+                console.error(msg);
+            }
         });
     }
 

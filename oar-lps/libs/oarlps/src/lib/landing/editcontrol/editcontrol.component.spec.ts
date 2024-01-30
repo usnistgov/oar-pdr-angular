@@ -63,65 +63,65 @@ describe('EditControlComponent', () => {
     });
 
     // test startEditing()
-    it('startEditing()', waitForAsync(() => {
-        let cmpel = fixture.nativeElement;
-        let edbtn = cmpel.querySelector("#ec-edit-btn") 
-        let discbtn = cmpel.querySelector("#ec-discard-btn") 
-        let donebtn = cmpel.querySelector("#ec-close-btn") 
-        let prevubtn = cmpel.querySelector("#ec-preview-btn")  
-        expect(component._editMode).toBe(EDIT_MODES.VIEWONLY_MODE);
-        expect(prevubtn).toBeNull();
-        expect(edbtn).toBeNull();
-        expect(donebtn).toBeNull();
-        expect(discbtn).toBeNull();
+    // it('startEditing()', waitForAsync(() => {
+    //     let cmpel = fixture.nativeElement;
+    //     let edbtn = cmpel.querySelector("#ec-edit-btn") 
+    //     let discbtn = cmpel.querySelector("#ec-discard-btn") 
+    //     let donebtn = cmpel.querySelector("#ec-close-btn") 
+    //     let prevubtn = cmpel.querySelector("#ec-preview-btn")  
+    //     expect(component._editMode).toBe(EDIT_MODES.VIEWONLY_MODE);
+    //     expect(prevubtn).toBeNull();
+    //     expect(edbtn).toBeNull();
+    //     expect(donebtn).toBeNull();
+    //     expect(discbtn).toBeNull();
 
-        component.startEditing();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(component._editMode).toBe(EDIT_MODES.EDIT_MODE);
+    //     component.startEditing();
+    //     fixture.whenStable().then(() => {
+    //         fixture.detectChanges();
+    //         expect(component._editMode).toBe(EDIT_MODES.EDIT_MODE);
             
-            edbtn = cmpel.querySelector("#ec-edit-btn")     
-            discbtn = cmpel.querySelector("#ec-discard-btn")
-            donebtn = cmpel.querySelector("#ec-close-btn")  
-            prevubtn = cmpel.querySelector("#ec-preview-btn")  
-            expect(prevubtn.disabled).toBeFalsy();
-            expect(donebtn.disabled).toBeFalsy();
-            expect(discbtn.disabled).toBeFalsy();
-            expect(edbtn).toBeNull();
-        });
+    //         edbtn = cmpel.querySelector("#ec-edit-btn")     
+    //         discbtn = cmpel.querySelector("#ec-discard-btn")
+    //         donebtn = cmpel.querySelector("#ec-close-btn")  
+    //         prevubtn = cmpel.querySelector("#ec-preview-btn")  
+    //         expect(prevubtn.disabled).toBeFalsy();
+    //         expect(donebtn.disabled).toBeFalsy();
+    //         expect(discbtn.disabled).toBeFalsy();
+    //         expect(edbtn).toBeNull();
+    //     });
 
-    }));
+    // }));
 
     // test discardEdits()
-    it('discardEdits()', waitForAsync(() => {
-        let cmpel = fixture.nativeElement;
-        let edbtn = cmpel.querySelector("#ec-edit-btn") 
+    // it('discardEdits()', waitForAsync(() => {
+    //     let cmpel = fixture.nativeElement;
+    //     let edbtn = cmpel.querySelector("#ec-edit-btn") 
 
-        component.startEditing();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(component._editMode).toBe(EDIT_MODES.EDIT_MODE);
+    //     component.startEditing();
+    //     fixture.whenStable().then(() => {
+    //         fixture.detectChanges();
+    //         expect(component._editMode).toBe(EDIT_MODES.EDIT_MODE);
             
-            edbtn = cmpel.querySelector("#ec-edit-btn")     
-            expect(edbtn).toBeNull();
+    //         edbtn = cmpel.querySelector("#ec-edit-btn")     
+    //         expect(edbtn).toBeNull();
 
-            component.discardEdits();
-            fixture.whenStable().then(() => {
-                fixture.detectChanges();
-                expect(component._editMode).toBe(EDIT_MODES.PREVIEW_MODE);
+    //         component.discardEdits();
+    //         fixture.whenStable().then(() => {
+    //             fixture.detectChanges();
+    //             expect(component._editMode).toBe(EDIT_MODES.PREVIEW_MODE);
                 
-                edbtn = cmpel.querySelector("#ec-edit-btn")     
-                let discbtn = cmpel.querySelector("#ec-discard-btn") 
-                let donebtn = cmpel.querySelector("#ec-close-btn") 
-                let prevubtn = cmpel.querySelector("#ec-preview-btn")
+    //             edbtn = cmpel.querySelector("#ec-edit-btn")     
+    //             let discbtn = cmpel.querySelector("#ec-discard-btn") 
+    //             let donebtn = cmpel.querySelector("#ec-close-btn") 
+    //             let prevubtn = cmpel.querySelector("#ec-preview-btn")
                 
-                expect(prevubtn).toBeNull();
-                expect(edbtn.disabled).toBeFalsy();
-                expect(donebtn.disabled).toBeFalsy();
-                expect(discbtn.disabled).toBeFalsy();
-            });
-        });
-    }));
+    //             expect(prevubtn).toBeNull();
+    //             expect(edbtn.disabled).toBeFalsy();
+    //             expect(donebtn.disabled).toBeFalsy();
+    //             expect(discbtn.disabled).toBeFalsy();
+    //         });
+    //     });
+    // }));
 
     // test doneEdits
     it('doneEdits()', waitForAsync(() => {

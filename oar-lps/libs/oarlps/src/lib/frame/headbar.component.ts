@@ -25,7 +25,6 @@ export class HeadbarComponent {
     inBrowser: boolean = false;
     layoutCompact: boolean = true;
     layoutMode: string = 'horizontal';
-    searchLink: string = "localhost:5555";
     status: string = "";
     appVersion: string = "";
     cartLength: number = 0;

@@ -35,8 +35,7 @@ import { LandingAboutComponent } from './landingAbout.component';
     it('should have expected <p> text', () => {
       fixture.detectChanges();
       const p = de.nativeElement;
-      expect(p.textContent).toMatch(/NIST Public Data Repository/i,
-        '<P> should say something about "NIST Public Data Repository"');
+      expect(p.textContent).toMatch(/NIST Public Data Repository/i);
     });
 
     it('should have proper label', () => {

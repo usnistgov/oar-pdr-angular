@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Author } from '../author';
 import { AuthorService } from '../author.service';
 
@@ -8,7 +8,9 @@ import { AuthorService } from '../author.service';
   styleUrls: ['../../landing.component.scss', './author-edit.component.css']
 })
 export class AuthorEditComponent implements OnInit {
-    @Input() author: Author = {} as Author;
+    orcidValid: boolean = false;
+
+    @Input() author: Author = new Author();
     @Input() backgroundColor: string = 'var(--editable)';
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
@@ -17,8 +19,14 @@ export class AuthorEditComponent implements OnInit {
     constructor(private authorService: AuthorService) { }
 
     ngOnInit(): void {
+        if(!this.orcid_validation(this.author.orcid))
+        {
+            this.orcidValid = false;
+        }else{
+            this.orcidValid = true;
+        }
     }
-
+    
     /*
     *   Update full name when given name changed
     */
@@ -74,13 +82,13 @@ export class AuthorEditComponent implements OnInit {
     validateOrcid(author)
     {
         author.dataChanged = true;
-        this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
+        this.dataChanged.next({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
 
         if(!this.orcid_validation(author.orcid))
         {
-            author.orcidValid = false;
+            this.orcidValid = false;
         }else{
-            author.orcidValid = true;
+            this.orcidValid = true;
         }
     }  
     

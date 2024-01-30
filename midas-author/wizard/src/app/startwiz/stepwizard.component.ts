@@ -4,9 +4,29 @@ import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
-import { Router } from "@angular/router";
 import { WizardService } from './services/wizard.service';
-import { AppConfig, Config } from './services/config-service.service';
+import { LPSConfig } from 'oarlps';
+import { UserMessageService } from 'oarlps';
+import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
+
+export class AuthStatus {
+    static readonly AUTHORIZED = 'Authorized';
+    static readonly AUTHENTICATED = 'Authenticated';
+    static readonly NOTLOGIN = 'NotLoggedIn';
+    static readonly AUTHORIZING = 'Authorizing';
+}
+
+/**
+ * A specialized Error indicating a error originating with from client action/inaction; the 
+ * message is assumed to be one directed at the user (rather than the programmer) and can be 
+ * displayed in the application in some way.
+ */
+class ClientError extends Error {
+    constructor(msg: string) {
+      super(msg);
+      Object.setPrototypeOf(this, ClientError.prototype);
+    }
+}
 
 @Component({
     selector: 'app-wizard',
@@ -24,31 +44,82 @@ export class StepWizardComponent implements OnInit {
     currentStepSub!: Subscription;
     onSoftware: boolean = false;
     bodyHeight: number = 550;
-    confValues: Config;
+    confValues: LPSConfig;
     private PDRAPI: string;
 
     fgSteps!: FormGroup;
 
+    authStatus: string = AuthStatus.AUTHORIZING;
+    resid: string = "Wizard";
+    authMessage: string = "Authorizing...";
+
+    _creds: Credentials|null = null;
+
     constructor(private stepService: StepService,
+                private msgsvc: UserMessageService,
                 private fb: FormBuilder, 
                 private cdr: ChangeDetectorRef,
-                private router: Router,
                 private wizardService: WizardService,
-                private appConfig: AppConfig) { 
+                private configSvc: ConfigurationService,
+                public authService: AuthenticationService) { 
 
-            this.confValues = this.appConfig.getConfig();
-            this.PDRAPI = this.confValues.PDRAPI;
-            console.log('this.PDRAPI', this.PDRAPI);
+            this.confValues = this.configSvc.getConfig();
+            this.PDRAPI = this.confValues['PDRAPI'];
+    }
+
+    get isAuthorized() {
+        return this.authStatus == AuthStatus.AUTHORIZED;
+    }
+
+    get isAuthenticated() {
+        return this.authStatus == AuthStatus.AUTHENTICATED;
+    }
+
+    get notLoggedin() {
+        return this.authStatus == AuthStatus.NOTLOGIN;
+    }
+
+    get authorizing() {
+        return this.authStatus == AuthStatus.AUTHORIZING;
     }
 
     ngOnInit(): void {
-        this.reset();
+        this.authorizeEditing();
+    }
 
-        this.currentStepSub = this.stepService.getCurrentStep().subscribe((step: StepModel) => {
-            this.currentStep = step;
-        });
+    /**
+     * Authorizing...
+     */
+    authorizeEditing() {
+        this.authService.getCredentials().subscribe({
+            next: (creds) =>{
+                if (creds && creds.token) {
+                    this._creds = creds;
+                    this.wizardService.setToken(creds.token);
+                    this.authStatus = AuthStatus.AUTHORIZED;
 
-        this.bodyHeight = window.innerHeight - 150;
+                    this.reset();
+
+                    this.currentStepSub = this.stepService.getCurrentStep().subscribe((step: StepModel) => {
+                        this.currentStep = step;
+                    });
+            
+                    this.bodyHeight = window.innerHeight - 150;
+                }
+                else if (creds && creds.userAttributes && creds.userId) {
+                    // the user is authenticated but not authorized
+                    this.authStatus = AuthStatus.AUTHENTICATED;
+                }
+                else {
+                    // the user is not authenticated!
+                    this.authStatus = AuthStatus.NOTLOGIN;
+                }
+            },
+            error: (err) => {
+                this.authStatus = AuthStatus.NOTLOGIN;
+                this.authMessage = err['message'];
+            }
+        })
     }
 
     formGroupReset() {
@@ -69,6 +140,9 @@ export class StepWizardComponent implements OnInit {
             }),
             'assocPapers': this.fb.group({
                 assocPageType: [""]
+            }),
+            'recordname': this.fb.group({
+                recordname: [""]
             })
         });
     }
@@ -81,7 +155,8 @@ export class StepWizardComponent implements OnInit {
             new StepModel(2, 'Contact Info',true,false),
             new StepModel(3, 'Files',true,false),
             new StepModel(4, 'Software',false,false),
-            new StepModel(5, 'Associated Papers',true,false,false)
+            new StepModel(5, 'Associated Papers',true,false,false),
+            new StepModel(6, 'Name',true,false,false)
         ]
 
         this.currentStep = this.steps[0];
@@ -100,7 +175,6 @@ export class StepWizardComponent implements OnInit {
     }
 
     onNextStep() {
-        console.log("Next")
         if (!this.stepService.isLastStep()) {
             this.stepService.moveToNextStep();
         } else {
@@ -133,25 +207,37 @@ export class StepWizardComponent implements OnInit {
     }
 
     onSubmit(): void {
-        // this.router.navigate(['/complete']);
-        console.log('this.dataModel', JSON.stringify(this.dataModel));
-
         let id: string;
         let body = {
-            "name": this.readableRandomStringMaker(5),
+            // "name": this.readableRandomStringMaker(5),
+            "name": this.dataModel.recordname,
             "meta": this.dataModel
         }
 
-        this.wizardService.updateMetadata(body)
-        .subscribe(obj => {
-            console.log(obj);
-            id = obj['id'];
+        this.wizardService.updateMetadata(body).subscribe({
+            next: (obj) => {
+                id = obj['id'];
 
-            // Submit the request, get the id from server response then launch the landing page
-            let url = this.PDRAPI + id + '?editEnabled=true';
-            console.log("Open publishing url", url);
-            // window.location.href = url;
-            window.open(url, "_blank");
+                // Submit the request, get the id from server response then launch the landing page
+                let url = this.PDRAPI + id + '?editEnabled=true';
+                // window.location.href = url;
+                window.open(url, "_blank");
+            },
+            error: (err) => {
+                console.error("err", err);
+                
+                // err will be a subtype of CustomizationError
+                if (err.type == 'user') 
+                {
+                    console.error("Failed to retrieve draft metadata changes: user error:" + err.message);
+                    this.msgsvc.error(err.message);
+                }
+                else 
+                {
+                    console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
+                    this.msgsvc.syserror(err.message);
+                }
+            }
         });
     }
 

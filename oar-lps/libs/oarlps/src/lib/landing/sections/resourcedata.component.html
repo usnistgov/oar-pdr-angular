@@ -3,7 +3,8 @@
         <h3><b>Data Access</b></h3>
     </div>
 
-    <dl *ngIf="theme != scienceTheme">
+    <!-- <dl *ngIf="theme != scienceTheme"> -->
+    <dl >
         <dt>
             <span style="margin-left:0em" *ngIf="record['accessLevel'] === 'public'">
                 <i class="faa faa-globe"></i> These data are public.
@@ -42,7 +43,7 @@
                 (mouseout)="apage['backcolor'] = 'white'">
                 <div class="indent-content"
                     *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
-                    <i class="faa faa-external-link"> <span style="margin-left:0em;">
+                    <i class="fas fa-external-link-alt"> <span style="margin-left:0em;">
                             <span *ngIf="apage['description']; else noAccessTitle">
                                 <a href="{{apage['accessURL']}}" title="{{apage['description']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
                                                                 'Resource title: ' + record.title,
@@ -69,7 +70,7 @@
                             <button style="margin-top: -6px;" type="button" class="btn btn-primary py-0"
                                 data-toggle="tooltip" data-placement="top" title="{{apage['title']}}"
                                 (click)="googleAnalytics(apage['accessURL'], $event, 'Download Data')"><i
-                                    class="faa faa-external-link button_icon"></i>Download Data</button>
+                                    class="fas fa-external-link-alt button_icon"></i>Download Data</button>
                         </a>
 
                         <div *ngIf="apage['description']">

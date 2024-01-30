@@ -71,6 +71,18 @@ export class RefEditComponent implements OnInit {
     get useRefData() { return this.inputMethod == "2" };
     get useCitationData() { return this.inputMethod == "3" };
 
+    /**
+     * When edit block expanded, set overflow to visible so tooltip can be seen.
+     * @returns 
+     */
+    getAuthorStyle() {
+        if(this.editBlockStatus == 'collapsed')
+            return {'overflow': 'hidden'};
+        else{
+            return {'overflow': 'visible'};
+        }
+    }
+
     reset() {
         this.inputMethod = "1"; 
 
@@ -84,7 +96,6 @@ export class RefEditComponent implements OnInit {
     }
 
     onChange(updateCitation:boolean = false) {
-        console.log("this.ref", this.ref);
         this.ref.dataChanged = true;
 
         if(updateCitation) this.updateCitation();
@@ -235,13 +246,7 @@ export class RefEditComponent implements OnInit {
     }
 
     authorExpandClick() {
-        // this.contentCollapsed = !this.contentCollapsed;
         this.editBlockStatus = this.editBlockStatus=="collapsed"? "expanded" : "collapsed";
-        // if(this.contentCollapsed) {
-        //     this.editBlockStatus = "collapsed";
-        // }else{
-        //     this.editBlockStatus = "expanded";
-        // }
     }
 
     /**

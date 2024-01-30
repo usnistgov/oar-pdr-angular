@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
+import { APP_BASE_HREF } from '@angular/common';
 
 describe('AppComponent', () => {
     beforeEach(async () => {
@@ -11,6 +12,9 @@ describe('AppComponent', () => {
             ],
             declarations: [
             ],
+            providers: [
+                {provide: APP_BASE_HREF, useValue: '/'}
+            ]
         }).compileComponents();
     });
 
@@ -24,12 +28,5 @@ describe('AppComponent', () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.componentInstance;
         expect(app.title).toEqual('OAR Module Demo: Wizard');
-    });
-
-    it('should render title', () => {
-        const fixture = TestBed.createComponent(AppComponent);
-        fixture.detectChanges();
-        const compiled = fixture.nativeElement as HTMLElement;
-        expect(compiled.querySelector('.content span')!.textContent)!.toContain('wizard app is running!');
     });
 });

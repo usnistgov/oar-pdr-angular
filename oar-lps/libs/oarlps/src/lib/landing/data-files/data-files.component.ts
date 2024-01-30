@@ -15,6 +15,8 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { AppSettings } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 
 declare var _initAutoTracker: Function;
 
@@ -137,7 +139,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
-    fieldName: string = 'components';
+    fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -149,6 +151,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 public breakpointObserver: BreakpointObserver,
                 public mdupdsvc : MetadataUpdateService, 
                 private notificationService: NotificationService,
+                public lpService: LandingpageService, 
                 ngZone: NgZone)
     {
         this.cols = [
@@ -200,6 +203,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
             this.dataCartStatus = DataCartStatus.openCartStatus();
         }
+        
         if (this.record)
             this.useMetadata();
     }
@@ -578,8 +582,10 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 this.globalDataCart.save();
                 this.allInCart = this._areAllInCart(this.files);
             }
-            else
-                console.error("Unable to add row with key="+rowData.key+"; Failed to find node in tree");
+            else{
+                let msg = "Unable to add row with key="+rowData.key+"; Failed to find node in tree";
+                console.error(msg);
+            }
         }, 0);
     }
     _addAllWithinToCart(node: TreeNode, cart: DataCart, selected: boolean = false) : void {

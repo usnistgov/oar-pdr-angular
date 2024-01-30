@@ -8,13 +8,12 @@ import { Location } from '@angular/common';
 import { AppConfig } from '../../config/config'
 import { TransferState } from '@angular/platform-browser';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { IEnvironment } from '../../../environments/ienvironment';
+import * as env from '../../../environments/environment';
 
 describe('SearchfieldsListService', () => {
-    let ienv : IEnvironment;
     let plid : Object = "browser";
     let ts : TransferState = new TransferState();
-    let cfg : AppConfig = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+    let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
 
     beforeEach(() => TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, RouterModule, RouterTestingModule],
