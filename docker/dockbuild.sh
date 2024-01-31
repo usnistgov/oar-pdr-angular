@@ -34,6 +34,11 @@ setup_build
 
 log_intro   # record start of build into log
 
+# install CA certs into containers that can use them
+if { echo $BUILD_IMAGES | grep -qs build-test; }; then
+    cp_ca_certs_to build-test
+fi
+
 if { echo " $BUILD_IMAGES " | grep -qs " build-test "; }; then
     echo '+' docker build $BUILD_OPTS -t $PACKAGE_NAME/build-test build-test
     docker build $BUILD_OPTS -t $PACKAGE_NAME/build-test build-test 2>&1

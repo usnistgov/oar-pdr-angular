@@ -124,7 +124,7 @@ export class WebAuthService extends AuthService {
                 private httpcli: HttpClient,
                 public authService: AuthenticationService) {
         super();
-        this._endpoint = config.get('customizationAPI', '/customization/');
+        this._endpoint = config.get('mdAPI', '/customization/');
         if (!this._endpoint.endsWith('/')) this._endpoint += "/";
     }
 
