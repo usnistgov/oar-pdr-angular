@@ -268,6 +268,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
+        alert("Landing page 1.0");
         this.recordLevelMetrics = new RecordLevelMetrics();
         var showError: boolean = true;
         let metadataError = "";

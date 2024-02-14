@@ -37,7 +37,7 @@ export class AppComponent {
     ngOnInit(): void {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
-        this.toastrService.show('You are using fake backend!', 'Warning!');
+        alert("Wizard version 1.0 ");
     }
 
     ngAfterViewInit(): void {
