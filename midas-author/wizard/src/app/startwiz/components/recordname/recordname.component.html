@@ -7,7 +7,7 @@
                     Give this draft a brief name that will remind you what this publication will be about.  This name will not appear in the publication; instead, it will appear as a label in the MIDAS portal in your list of draft publications.<p></p>
                     Enter a brief name:
                 </div>
-                <input #name class="input input-box" type="text" pInputText name="recordname" (input)="updateRecordName($event)"/>
+                <input #name class="input input-box" type="text" pInputText name="recordname" formControlName="recordname" (input)="updateRecordName($event)"/>
             </div>
         </div>
         <span class="sidebar-title">Question Help</span>

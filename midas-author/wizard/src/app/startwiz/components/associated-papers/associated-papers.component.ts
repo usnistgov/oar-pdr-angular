@@ -42,6 +42,7 @@ export class AssociatedPapersComponent implements OnInit {
         this.dataModel.assocPageType = evt.target.value;
 
         if(this.dataModel.assocPageType != undefined){
+            this.steps[4].canGoNext = true;
             this.steps[4].isComplete = true;
         }else{
             this.dataModel.assocPageType = undefined;
