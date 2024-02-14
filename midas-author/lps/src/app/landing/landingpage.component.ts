@@ -313,6 +313,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     (data) => {
             // successful metadata request
             this.md = data as NerdmRes;
+            console.log("this.md", this.md);
             // this.midasRecord = data;
 
             if (!this.md) {

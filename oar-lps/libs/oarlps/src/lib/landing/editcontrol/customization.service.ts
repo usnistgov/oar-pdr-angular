@@ -34,7 +34,7 @@ export abstract class CustomizationService {
      * retrieve the latest draft resource metadata record from the server-side 
      * customization service.  
      */
-    public abstract getDraftMetadata() : Observable<Object>;
+    public abstract getDraftMetadata(dataOnly: boolean) : Observable<Object>;
 
     /**
      * Retrive a particular subset from server-side. If particular id is provided, only retrive 
@@ -74,6 +74,12 @@ export abstract class CustomizationService {
     public abstract getDataFiles() : Observable<Object>;
 
     /**
+     * retrieve the data files from the server-side 
+     * customization service.  
+     */
+    public abstract getDBIOrecord() : Observable<Object>;
+
+    /**
      * retrieve the metadata from the server-side 
      * customization service.  
      */
@@ -94,8 +100,8 @@ export abstract class CustomizationService {
  */
 export class WebCustomizationService extends CustomizationService {
 
-    readonly draftapi : string = "";
-    readonly saveapi : string = "";
+    readonly draftapi : string = "dap/mds3/";
+    readonly saveapi : string = "dap/mds3/";
 
     /**
      * construct the customization service
@@ -112,6 +118,7 @@ export class WebCustomizationService extends CustomizationService {
     {
         super(resid, userId);
         if (! endpoint.endsWith('/')) endpoint += '/';
+        console.log('endpoint', endpoint);
     }
 
     /**
@@ -129,13 +136,14 @@ export class WebCustomizationService extends CustomizationService {
      *                   ConnectionCustomizationError -- if it was not possible to connect to the 
      *                     customization server, even to get back an error response.  
      */
-    public getDraftMetadata() : Observable<Object> {
+    public getDraftMetadata(dataOnly: boolean = false) : Observable<Object> {
 
         // To transform the output with proper error handling, we wrap the
         // HttpClient.get() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data"
+
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -366,14 +374,25 @@ export class WebCustomizationService extends CustomizationService {
      *                   failure, ...
      */
     public getDataFiles() : Observable<Object> {
-        // Read local file for testing and demo purpose
         return new Observable<Object>(subscriber => {
-            let obs : Observable<Object>;
-            this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
-                obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
-                this._wrapRespObs(obs, subscriber);
-            });
+            let url = this.endpoint + this.draftapi + this.resid + "/file_space";
+            let body = { "action": "sync" };
+
+            let obs : Observable<Object> = 
+                this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+            this._wrapRespObs(obs, subscriber);
         });
+
+        // Read local file for testing and demo purpose
+        // return new Observable<Object>(subscriber => {
+        //     let url = this.endpoint + this.dbioapi + this.resid;
+        //     let body = { "action": "sync" };
+        //     let obs : Observable<Object>;
+        //     this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
+        //         obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
+        //         this._wrapRespObs(obs, subscriber);
+        //     });
+        // });
 
         // return of(sampleData);
         // To transform the output with proper error handling, we wrap the
@@ -387,6 +406,23 @@ export class WebCustomizationService extends CustomizationService {
         // });
     }
 
+    /**
+     * Retrieve the DBIO record from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getDBIOrecord() : Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            let url = this.endpoint + this.draftapi + this.resid;
+            console.log('url', url);
+            let obs : Observable<Object>;
+            this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
 
     /**
      * Retrieve the data files from server-side.
@@ -437,7 +473,7 @@ export class InMemCustomizationService extends CustomizationService {
      *                   failure, error function is called with an instance of a CustomizationError.
      *                   In this implementation, failure is not possible.
      */
-    public getDraftMetadata() : Observable<Object> {
+    public getDraftMetadata(dataOnly: boolean = false) : Observable<Object> {
         return of<Object>(this.resmd);
     }
 
@@ -542,6 +578,22 @@ export class InMemCustomizationService extends CustomizationService {
         return new Observable<Object>(subscriber => {
             let obs : Observable<Object>;
             this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
+    /**
+     * Retrieve the DBIO record in memory.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getDBIOrecord() : Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get("assets/sample-data/dbio-record.json").subscribe(data =>{
                 obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
                 this._wrapRespObs(obs, subscriber);
             });

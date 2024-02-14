@@ -17,6 +17,9 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { OverlayPanel } from 'primeng/overlaypanel';
+import { DBIOrecord } from '../editcontrol/interfaces';
+import { UserMessageService } from '../../frame/usermessage.service';
 
 declare var _initAutoTracker: Function;
 
@@ -140,6 +143,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
     fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
+    overlaypanelOn: boolean = false;
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -152,6 +156,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 public mdupdsvc : MetadataUpdateService, 
                 private notificationService: NotificationService,
                 public lpService: LandingpageService, 
+                private msgsvc: UserMessageService,
                 ngZone: NgZone)
     {
         this.cols = [
@@ -204,6 +209,18 @@ export class DataFilesComponent implements OnInit, OnChanges {
             this.dataCartStatus = DataCartStatus.openCartStatus();
         }
         
+        // Get file manager url
+        this.mdupdsvc.loadDBIOrecord().subscribe( data => {
+            let dbio: DBIOrecord = data as DBIOrecord;
+            console.log('dbio', dbio);
+            if(dbio && dbio.file_manager){
+                this.fileManagerUrl = dbio.file_manager.location;
+            }else{
+                this.fileManagerUrl = "";
+                //Display some message
+            }
+        })
+
         if (this.record)
             this.useMetadata();
     }
@@ -224,6 +241,11 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }else {
             return "restrict_preview";
         }
+    }
+
+    get fileManagerTooltip(){
+        if(this.fileManagerUrl) return this.fileManagerUrl;
+        else return "File Manager URL is not available."
     }
 
     ngOnChanges(ch: SimpleChanges) {
@@ -830,7 +852,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * Open url in a new tab
      */
     openFileManager() {
-        window.open(this.fileManagerUrl);
+        if(this.fileManagerUrl)
+            window.open(this.fileManagerUrl, 'blank');
     }
 
     /**
@@ -838,23 +861,69 @@ export class DataFilesComponent implements OnInit, OnChanges {
      */
     reloadFiles() {
         this.mdupdsvc.loadDataFiles().subscribe( data => {
-            let dataFiles: NerdmComp[] = data as NerdmComp[];
-            this.record['components'] = dataFiles;
-            this.buildTree(this.record['components']);
+            this.mdupdsvc.loadDraft(true).subscribe({
+                next: (md) => 
+                {
+                    if(md)
+                    {
+                        console.log("Reloaded Nerdm record", md);
+                        // this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
+                        // this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
+                        // this.record['components'] = JSON.parse(JSON.stringify(md['components']));
+                        // this.buildTree(this.record['components']);
+                    }else{
+                        this.msgsvc.error("Fail to retrive updated dataset.");
+                    }
+                },
+                error: (err) => 
+                {
+                    if(err.statusCode == 404)
+                    {
+                        console.log("404 error.");
+                        this.mdupdsvc.resetOriginal();
+                        this.msgsvc.error(err.message);
+                    }
+                }
+            });
+        });
+        // this.mdupdsvc.loadDataFiles().subscribe( data => {
+        //     let dataFiles: NerdmComp[] = data as NerdmComp[];
+        //     this.record['components'] = dataFiles;
+        //     this.buildTree(this.record['components']);
 
-            // var postMessage: any = {};
-            // postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-            // console.log('postMessage', postMessage);
+        //     // var postMessage: any = {};
+        //     // postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+        //     // console.log('postMessage', postMessage);
 
-            // // Update backend
-            // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-            //     console.log("###DBG  update sent; success: "+updateSuccess.toString());
-            //     if (updateSuccess)
-            //         this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
-            //     else
-            //         console.error("acknowledge description update failure");
-            // });
+        //     // // Update backend
+        //     // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+        //     //     console.log("###DBG  update sent; success: "+updateSuccess.toString());
+        //     //     if (updateSuccess)
+        //     //         this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
+        //     //     else
+        //     //         console.error("acknowledge description update failure");
+        //     // });
 
-        })
+        // })
+    }
+
+    /**
+     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert 
+     * the data to its previous state.
+     */
+    public showLargeFileManagerHelpPopup(event, overlaypanel: OverlayPanel): void {
+        if(!this.overlaypanelOn){
+            overlaypanel.hide();
+            setTimeout(() => {
+                overlaypanel.show(event);
+                this.overlaypanelOn = true;
+            }, 100);    
+        }else{
+            overlaypanel.hide();
+        }
+    }    
+
+    onHide() {
+        this.overlaypanelOn = false;
     }
 }

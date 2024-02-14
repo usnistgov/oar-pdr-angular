@@ -6,7 +6,7 @@ import { UserMessageService } from '../../frame/usermessage.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
 import { Observable, of, throwError, Subscriber } from 'rxjs';
-import { UpdateDetails } from './interfaces';
+import { UpdateDetails, DBIOrecord } from './interfaces';
 import { AuthService, WebAuthService } from './auth.service';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
@@ -571,29 +571,36 @@ export class MetadataUpdateService {
      * retrieve the latest draft of the resource metadata from the server and forward it
      * to the controller for display to the user.  
      */
-    public loadDraft(onSuccess?: () => void): Observable<Object> {
+    public loadDraft(dataOnly: boolean = false, onSuccess?: () => void): Observable<Object> {
         return new Observable<Object>(subscriber => {
             if (!this.custsvc) {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            this.custsvc.getDraftMetadata().subscribe(
-                (res) => {
-                    // if(!res["keyword"]) res["keyword"] = [];
+            this.custsvc.getDraftMetadata(dataOnly).subscribe({
+                next: (res) => {
                     if(res) {
-                        this.originalDraftRec = JSON.parse(JSON.stringify(res));
-                        this.currentRec = JSON.parse(JSON.stringify(res));
+                        if(!dataOnly){
+                            this.originalDraftRec = JSON.parse(JSON.stringify(res));
+                            this.currentRec = JSON.parse(JSON.stringify(res));
+                        }else{
+                            console.log("Load data only...")
+                            if(res["components"]) {
+                                this.originalDraftRec["components"] = JSON.parse(JSON.stringify(res["components"]));
+                                this.currentRec["components"] = JSON.parse(JSON.stringify(res["components"]));
+                            }
+                        }
                     }else {
                         this.originalDraftRec = {} as NerdmRes;
                         this.currentRec = {} as NerdmRes;
                     }
-                    // res = {};
-                    this.mdres.next(res as NerdmRes);
-                    subscriber.next(res as NerdmRes);
+
+                    this.mdres.next(this.currentRec as NerdmRes);
+                    subscriber.next(this.currentRec as NerdmRes);
                     subscriber.complete();
                     if (onSuccess) onSuccess();
                 },
-                (err) => {
+                error: (err) => {
                   console.error("err", err);
                   this.edstatsvc.setShowLPContent(true);
                   
@@ -618,7 +625,47 @@ export class MetadataUpdateService {
                   subscriber.next(null);
                   subscriber.complete();
                 }
-            );
+            });
+        });
+    }
+
+    public loadDBIOrecord(onSuccess?: () => void): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to fetch without authorization!  Ignoring...");
+                return;
+            }
+            this.custsvc.getDBIOrecord().subscribe({
+                next: (res) => {
+                    subscriber.next(res as DBIOrecord);
+                    subscriber.complete();
+                    if (onSuccess) onSuccess();
+                },
+                error: (err) => {
+                  console.error("err", err);
+                  this.edstatsvc.setShowLPContent(true);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    this.msgsvc.error(err.message);
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to retrieve DBIO record: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to retrieve DBIO record: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            });
         });
     }
 
@@ -696,13 +743,13 @@ export class MetadataUpdateService {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            this.custsvc.getDataFiles().subscribe(
-                (res) => {
+            this.custsvc.getDataFiles().subscribe({
+                next: (res) => {
                   subscriber.next(res as NerdmComp[]);
                   subscriber.complete();
                   if (onSuccess) onSuccess();
                 },
-                (err) => {
+                error: (err) => {
                   console.error("err", err);
                   
                   if(err.statusCode == 404)
@@ -725,7 +772,7 @@ export class MetadataUpdateService {
                   subscriber.next(null);
                   subscriber.complete();
                 }
-            );
+            });
         });
     }   
     
