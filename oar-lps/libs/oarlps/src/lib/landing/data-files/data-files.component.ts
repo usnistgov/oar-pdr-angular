@@ -868,10 +868,16 @@ export class DataFilesComponent implements OnInit, OnChanges {
                     if(md)
                     {
                         console.log("Reloaded Nerdm record", md);
-                        // this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
-                        // this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
-                        // this.record['components'] = JSON.parse(JSON.stringify(md['components']));
-                        // this.buildTree(this.record['components']);
+                        console.log("Reloaded Nerdm record", JSON.parse(JSON.stringify(md)));
+                        console.log("setOriginalMetadata...");
+                        this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
+                        console.log("checkUpdatedFields...");
+                        this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
+
+                        this.record['components'] = JSON.parse(JSON.stringify(md['components']));
+                        console.log("this.record", this.record);
+                        this.buildTree(this.record['components']);
+                        console.log("this.files", this.files);
                     }else{
                         this.msgsvc.error("Fail to retrive updated dataset.");
                     }
