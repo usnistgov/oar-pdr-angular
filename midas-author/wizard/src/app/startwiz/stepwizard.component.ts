@@ -46,6 +46,8 @@ export class StepWizardComponent implements OnInit {
     bodyHeight: number = 550;
     confValues: LPSConfig;
     private PDRAPI: string;
+    nextBtnIcon: string = "faa faa-long-arrow-right icon-white";
+    nextBtnText: string = "Next";
 
     fgSteps!: FormGroup;
 
@@ -177,8 +179,10 @@ export class StepWizardComponent implements OnInit {
     onNextStep() {
         if (!this.stepService.isLastStep()) {
             this.stepService.moveToNextStep();
+            this.showButtonLabel();
         } else {
             this.onSubmit();
+            this.nextBtnIcon = "faa faa-spinner faa-spin icon-white";
         }
     }
 
@@ -198,7 +202,11 @@ export class StepWizardComponent implements OnInit {
 
     showButtonLabel() {
         // return "continue";
-        return !this.stepService.isLastStep() ? 'Next' : 'Finish';
+        if(this.stepService.isLastStep()){
+            this.nextBtnText = 'Finish'; 
+        }else{
+            this.nextBtnText = 'Next';
+        }
     }
 
     ngOnDestroy(): void {

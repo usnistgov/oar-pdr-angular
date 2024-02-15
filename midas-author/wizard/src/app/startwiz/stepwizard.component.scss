@@ -71,6 +71,30 @@
 .input-box {
     height: 2em;
 }
+
+.btn-label {
+    position: relative;
+    left: -19px;
+    top: -1px;
+    display: inline-block;
+    padding: 3px 0px 0px 12px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 3px 0 0 3px;
+    height: inherit;
+}
+
+.btn-labeled {
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 140px;
+    margin: 1em .5em .5em 0em;
+}
+
+.btn {
+    margin-bottom: 10px;
+    height: 2em;
+}
+
 // .radio-group {
 //     margin-left: 2em;
 // }
