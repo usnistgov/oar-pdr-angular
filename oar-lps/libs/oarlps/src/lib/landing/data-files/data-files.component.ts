@@ -142,6 +142,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
+    fileManagerBaseUrl: string = 'https://nextcloud-dev.nist.gov';
     fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     overlaypanelOn: boolean = false;
 
@@ -176,7 +177,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }
         
         this.EDIT_MODES = LandingConstants.editModes;
-        this.fileManagerUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
+        this.fileManagerBaseUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
     }
 
     ngOnInit() {
