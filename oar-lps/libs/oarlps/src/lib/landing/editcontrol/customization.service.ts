@@ -100,8 +100,8 @@ export abstract class CustomizationService {
  */
 export class WebCustomizationService extends CustomizationService {
 
-    readonly draftapi : string = "dap/mds3/";
-    readonly saveapi : string = "dap/mds3/";
+    readonly draftapi : string = "";
+    readonly saveapi : string = "";
 
     /**
      * construct the customization service
