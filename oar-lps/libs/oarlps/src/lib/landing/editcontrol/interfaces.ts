@@ -47,7 +47,7 @@ export interface UpdateDetails {
 }
 
 export interface DBIOrecord {
-    file_manager: {
+    file_space: {
         location: string
     }
 }

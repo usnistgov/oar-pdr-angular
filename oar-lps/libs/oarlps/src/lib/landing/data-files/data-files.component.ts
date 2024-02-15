@@ -213,8 +213,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
         this.mdupdsvc.loadDBIOrecord().subscribe( data => {
             let dbio: DBIOrecord = data as DBIOrecord;
             console.log('dbio', dbio);
-            if(dbio && dbio.file_manager){
-                this.fileManagerUrl = dbio.file_manager.location;
+            if(dbio && dbio.file_space){
+                this.fileManagerUrl = dbio.file_space.location;
             }else{
                 this.fileManagerUrl = "";
                 //Display some message
