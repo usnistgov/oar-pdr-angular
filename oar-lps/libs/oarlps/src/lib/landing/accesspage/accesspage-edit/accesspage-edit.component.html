@@ -49,7 +49,7 @@
     </div>
     <div class="editable_field" style="white-space: nowrap;">
         <!-- Save button -->
-        <button class="edit_button" type="button" (click)="commandOut('saveCurrentPage')" aria-label="edit button" [disabled]="noURL || !accessPage || !accessPage.dataChanged" ngbTooltip="Save current changes">
+        <button class="edit_button" type="button" (click)="commandOut('saveCurrentPage')" aria-label="edit button" [disabled]="noURL || !accessPage || !accessPage?.dataChanged" ngbTooltip="Save current changes">
             <i class="fas fa-check fa-sm"></i>
         </button>
 

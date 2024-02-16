@@ -277,7 +277,6 @@ export class WebCustomizationService extends CustomizationService {
             }
             
             let body = JSON.stringify(md[subsetname]);
-            console.log("body", body);
             
             let obs : Observable<Object> = 
                 this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -434,10 +433,12 @@ export class WebCustomizationService extends CustomizationService {
      */
     public getMidasMeta() : Observable<Object> {
         let url = this.endpoint + this.draftapi + this.resid + "/meta";
+        console.log("Load metadata url", url);
         return new Observable<Object>(subscriber => {
             let obs : Observable<Object>;
             this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
                 obs = of(JSON.parse(JSON.stringify(data)));
+                console.log("Metadata return", obs);
                 this._wrapRespObs(obs, subscriber);
             });
         });

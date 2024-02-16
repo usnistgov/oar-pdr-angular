@@ -124,7 +124,6 @@ export class AccesspageComponent implements OnInit {
         this.accessPages = [] as NerdmComp[];
         if (this.record[this.fieldName]) {
             this.accessPages = this.selectAccessPages();
-
             // if current page has not been set, set it
             if(this.currentApageIndex == -1){
                 this.currentApage.dataChanged = false;

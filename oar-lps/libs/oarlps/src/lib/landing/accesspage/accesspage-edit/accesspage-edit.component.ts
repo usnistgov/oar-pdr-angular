@@ -12,7 +12,7 @@ export class AccesspageEditComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     fieldName: string = 'components';
 
-    @Input() accessPage: NerdmComp = null;
+    @Input() accessPage: NerdmComp = {} as NerdmComp;
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
@@ -21,7 +21,10 @@ export class AccesspageEditComponent implements OnInit {
     constructor(public mdupdsvc : MetadataUpdateService) { }
 
     ngOnInit(): void {
-        if(this.accessPage) this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
+        if(this.accessPage) 
+            this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
+        else
+            this.accessPage = {} as NerdmComp;
     }
 
     get isEditing() { return this.editMode=="edit" };
@@ -59,7 +62,9 @@ export class AccesspageEditComponent implements OnInit {
 
     onChange() {
         // console.log("accessPage02", this.accessPage)
-        this.accessPage.dataChanged = true;
+        if(this.accessPage)
+            this.accessPage.dataChanged = true;
+
         this.dataChanged.emit({"accessPage": this.accessPage, "dataChanged": true});
     }
 

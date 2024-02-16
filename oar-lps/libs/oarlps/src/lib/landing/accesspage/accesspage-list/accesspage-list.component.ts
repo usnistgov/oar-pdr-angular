@@ -144,8 +144,10 @@ export class AccesspageListComponent implements OnInit {
 
             // if current page has not been set, set it
             if(this.currentApageIndex == -1 || this.currentApageIndex >= this.accessPages.length || resetIndex){
-                this.currentApage.dataChanged = false;
                 this.currentApage = this.accessPages[0];
+                if(this.currentApage)
+                    this.currentApage.dataChanged = false;
+
                 this.currentApageIndex = 0;
             }else{
                 this.currentApage = this.accessPages[this.currentApageIndex];

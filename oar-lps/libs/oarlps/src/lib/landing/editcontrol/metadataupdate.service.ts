@@ -788,6 +788,7 @@ export class MetadataUpdateService {
             console.log("Loading metadata from server");
             this.custsvc.getMidasMeta().subscribe({
                 next: (res) => {
+                    console.log("Return from Load metadata:", res);
                     subscriber.next(res);
                     subscriber.complete();
                 },
