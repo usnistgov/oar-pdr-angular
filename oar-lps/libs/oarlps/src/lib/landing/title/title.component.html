@@ -28,7 +28,7 @@
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
                 <button class="edit_button" *ngIf="!isEditing" type="button" 
-                (click)="startEditing()" aria-label="edit title" ngbTooltip="edit title" style="cursor: pointer">
+                (click)="startEditing()" aria-label="Edit title" ngbTooltip="Edit title" style="cursor: pointer">
                     <i class="fas fa-pencil fa-sm"></i>
                 </button> 
 
@@ -47,8 +47,7 @@
                 <!-- Restore button, restore original value -->
                 <button class="edit_button" type="button" [disabled]="!updated" *ngIf="!isEditing && updated" 
                     (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
-                    <i class="fas fa-undo" [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"
-                        data-toggle="tooltip" title="Undo title"></i>
+                    <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
                 </button>           
             </div>
         </div>

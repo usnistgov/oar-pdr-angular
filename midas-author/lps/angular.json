@@ -45,6 +45,7 @@
               "../../styles/fontawesome-free-5.15.4-web/css/all.css",
               "../../node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles/main.css",
+              "src/styles/fontawesome-free-5.15.4-web/css/all.css",
               "src/app/content/modal.less",
               "../../node_modules/ngx-toastr/toastr.css"
             ],

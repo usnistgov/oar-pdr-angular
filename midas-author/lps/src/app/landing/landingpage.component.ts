@@ -306,14 +306,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         // Retrive Nerdm record and keep it in case we need to display it in preview mode
         // use case: user manually open PDR landing page but the record was not edited by MIDAS
         // This part will only be executed if "editEnabled=true" is not in URL parameter.
-        this.mdupdsvc.authsvc.authorizeEditing(this.reqId).subscribe(
-            (custsvc) => {
-                this.mdupdsvc._setCustomizationService(custsvc);
-                this.mdupdsvc.loadDraft().subscribe(
-                    (data) => {
+        this.mdserv.getMetadata(this.reqId).subscribe(
+        (data) => {
             // successful metadata request
-            this.md = data as NerdmRes;
-            console.log("this.md", this.md);
+            this.md = data;
             // this.midasRecord = data;
 
             if (!this.md) {
@@ -391,11 +387,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
             }
         });
-            },
-            (err) => {
-                console.error("Authentication failed: "+JSON.stringify(err));
-            }
-        );
     }
 
     /**
