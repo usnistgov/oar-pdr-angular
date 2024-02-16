@@ -174,7 +174,7 @@
                 </p-treeTable>
                 <div *ngIf="mdupdsvc.isEditMode" style="width: 100%; height: 40px; margin-top: 10px;">
                     <!-- Refresh Files button -->
-                    <button pButton type="submit" class="p-button-sm light-blue-btn" id="btn-fm" (click)="reloadFiles()" label="Refresh Files" icon="faa faa-repeat fa-1x icon-white" iconPos="left" style="float: right;">
+                    <button pButton type="submit" class="p-button-sm light-blue-btn" id="btn-fm" (click)="reloadFiles()" label="Refresh Files" [icon]="refreshFilesIcon" iconPos="left" style="float: right;">
                     </button>
     
                     <!-- Manage Files button -->

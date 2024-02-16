@@ -145,6 +145,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
     fileManagerBaseUrl: string = 'https://nextcloud-dev.nist.gov';
     fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     overlaypanelOn: boolean = false;
+    refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -861,6 +862,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * Reload data files
      */
     reloadFiles() {
+        this.refreshFilesIcon = "faa faa-spinner faa-spin icon-white";
         this.mdupdsvc.loadDataFiles().subscribe( data => {
             this.mdupdsvc.loadDraft(true).subscribe({
                 next: (md) => 
@@ -881,6 +883,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
                     }else{
                         this.msgsvc.error("Fail to retrive updated dataset.");
                     }
+
+                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
                 },
                 error: (err) => 
                 {
@@ -890,6 +894,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
                         this.mdupdsvc.resetOriginal();
                         this.msgsvc.error(err.message);
                     }
+
+                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
                 }
             });
         });
