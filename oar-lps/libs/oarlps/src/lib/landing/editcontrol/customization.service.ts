@@ -143,7 +143,7 @@ export class WebCustomizationService extends CustomizationService {
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data"
-            console.log("Loading data from url: ", url)
+            console.log("Loading draft data from url: ", url)
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -375,7 +375,7 @@ export class WebCustomizationService extends CustomizationService {
     public getDataFiles() : Observable<Object> {
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/file_space";
-            console.log("Loading data from url: ", url);
+            console.log("Loading data files from url: ", url);
             let body = { "action": "sync" };
             console.log("body: ", body);
 

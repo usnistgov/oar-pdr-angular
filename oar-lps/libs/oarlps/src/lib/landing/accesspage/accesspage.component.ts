@@ -126,8 +126,11 @@ export class AccesspageComponent implements OnInit {
             this.accessPages = this.selectAccessPages();
             // if current page has not been set, set it
             if(this.currentApageIndex == -1){
-                this.currentApage.dataChanged = false;
                 this.currentApage = this.accessPages[0];
+                
+                if(this.currentApage)
+                    this.currentApage.dataChanged = false;
+
                 this.currentApageIndex = 0;
             }
 

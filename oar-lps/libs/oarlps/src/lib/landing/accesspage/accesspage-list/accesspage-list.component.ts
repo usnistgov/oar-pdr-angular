@@ -70,7 +70,7 @@ export class AccesspageListComponent implements OnInit {
                     if( sectionMode ) {
                         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                if(this.currentApage.dataChanged){
+                                if(this.currentApage && this.currentApage.dataChanged){
                                     this.saveCurApage(false);  // Do not refresh help text 
                                 }
 
@@ -194,7 +194,7 @@ export class AccesspageListComponent implements OnInit {
         // if(this.isAdding || this.isEditing) return;
         
         if(index != this.currentApageIndex) { // user selected different access page
-            if(this.currentApage.dataChanged) {
+            if(this.currentApage && this.currentApage.dataChanged) {
                 this.updateMatadata(this.currentApage, this.currentApage["@id"]).then((success) => {
                     if(success){
                         this.setCurrentPage(index);
