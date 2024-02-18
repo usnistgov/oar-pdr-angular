@@ -352,6 +352,8 @@ export class AccesspageListComponent implements OnInit {
             delete page.dataChanged;
         })
 
+        console.log('postMessage (body)', JSON.stringify(postMessage));
+        
         if(this.isAdding){
             if(!this.emptyRecord(this.currentApageIndex)){
                 this.mdupdsvc.add(postMessage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {
