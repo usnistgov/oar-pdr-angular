@@ -634,44 +634,6 @@ export class MetadataUpdateService {
     }
 
     /**
-     * Get file manager URL from DBIO object
-     * @returns File manager URL
-     */
-    public getFileManagerUrl(): Observable<string> {
-        if(this._dbioRecord) return of(this._dbioRecord.file_space.location);
-        else {
-            return new Observable<string>(subscriber => {
-                this.loadDBIOrecord().subscribe({
-                    next: (res) => {
-                        this._dbioRecord = res as DBIOrecord;
-                        subscriber.next(res['file_space'].location);
-                        subscriber.complete();
-                    }
-                });
-            })
-        }
-    }
-
-    /**
-     * Get DBIO object from memory. If not available, load from server.
-     * @returns DBIO object
-     */
-    public getDBIORecord(): Observable<DBIOrecord> {
-        if(this._dbioRecord) return of(this._dbioRecord);
-        else {
-            return new Observable<DBIOrecord>(subscriber => {
-                this.loadDBIOrecord().subscribe({
-                    next: (res) => {
-                        this._dbioRecord = res as DBIOrecord;
-                        subscriber.next(res as DBIOrecord);
-                        subscriber.complete();
-                    }
-                })
-            })
-        }
-    }
-
-    /**
      * Load DBIO object from server
      * @param onSuccess 
      * @returns DBIO object
