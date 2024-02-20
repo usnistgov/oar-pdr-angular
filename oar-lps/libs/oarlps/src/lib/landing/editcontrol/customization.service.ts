@@ -416,7 +416,6 @@ export class WebCustomizationService extends CustomizationService {
     public getDBIOrecord() : Observable<Object> {
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid;
-            console.log('url', url);
             let obs : Observable<Object>;
             this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
                 obs = of(JSON.parse(JSON.stringify(data)));

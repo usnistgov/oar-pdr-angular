@@ -13,10 +13,10 @@ describe('InMemCustomizationService', () => {
 
     it('returns initial draft metadata', () => {
         let md = null;
-        svc.getDraftMetadata().subscribe(
-            (res) => { md = res; },
-            (err) => { throw err; }
-        );
+        svc.getDraftMetadata(false).subscribe({
+            next:(res) => { md = res; },
+            error:(err) => { throw err; }
+        });
         expect(md['title']).toContain("Multiple Encounter");
         expect(md['accessLevel']).toBe("public");
         expect(Object.keys(md)).not.toContain("goober");

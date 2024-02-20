@@ -41,7 +41,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     EDIT_MODES: any;
     screenWidth: number;
     screenSizeBreakPoint: number;
-    fileManagerUrl = AppSettings.FILE_MANAGER_URL;
+    fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
     portalURL: string;
 
     /**
@@ -123,6 +123,13 @@ export class EditControlComponent implements OnInit, OnChanges {
                 this.startEditing(remoteObj.nologin);
             }
         });
+
+        this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
+            console.log("fileManagerUrl changed to:", fileManagerUrl);
+            if (fileManagerUrl) {
+                this.fileManagerUrl = fileManagerUrl;
+            }
+        });        
     }
 
     ngOnChanges() {
@@ -197,6 +204,11 @@ export class EditControlComponent implements OnInit, OnChanges {
 
     get readySubmit() {
         return this.lpService.readySummit(this.mdrec);
+    }
+
+    get fileManagerTooltip(){
+        if(this.fileManagerUrl) return this.fileManagerUrl;
+        else return "File Manager URL is not available."
     }
 
     /**

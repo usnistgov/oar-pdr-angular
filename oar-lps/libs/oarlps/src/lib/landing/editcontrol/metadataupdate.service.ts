@@ -1,6 +1,6 @@
 import { Injectable, EventEmitter, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 import { UserMessageService } from '../../frame/usermessage.service';
 import { CustomizationService } from './customization.service';
@@ -35,6 +35,7 @@ export class MetadataUpdateService {
     private currentRec: NerdmRes = null;    //Current saved record
     private origfields: {} = {};   // keeps track of orginal metadata so that they can be undone
     public  EDIT_MODES: any;
+    _dbioRecord: DBIOrecord = null;
 
     private _lastupdate: UpdateDetails = {} as UpdateDetails;   // null object means unknown
     get lastUpdate() { return this._lastupdate; }
@@ -42,6 +43,25 @@ export class MetadataUpdateService {
         this._lastupdate = updateDetails;
         this.updated.emit(this._lastupdate);
     }
+
+    private _fileManagerUrl: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    
+    /**
+     * Set the number of files downloaded
+     * @param fileDownloadedCount 
+     */
+    setFileManagerUrl(fileManagerUrl: string) {
+        this._fileManagerUrl.next(fileManagerUrl);
+    }
+
+    /**
+     * Watch the number of files downloaded
+     * @param subscriber 
+     */
+    watchFileManagerUrl(subscriber) {
+        return this._fileManagerUrl.subscribe(subscriber);
+    }
+
 
     /**
      * any Observable that will send out the date of the last update each time the metadata
@@ -192,8 +212,6 @@ export class MetadataUpdateService {
             updateWholeRecord = true;
         }
         
-        console.log("body", body);
-        console.log("subsetname", subsetname);
         return new Promise<boolean>((resolve, reject) => {
             // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
@@ -263,18 +281,7 @@ export class MetadataUpdateService {
         return new Observable<Object>(subscriber => {
             this.custsvc.add(md, subsetname, subsetnameAPI).subscribe({
                 next: (res) => {
-                    // console.log("Return obj from add", res);
-                    // let obj = JSON.parse(res as string);
                     let obj = res as Object[];
-                    // if(subsetname) {  //Add a subset
-                    //     if(this.currentRec[subsetname]){
-                    //         this.currentRec[subsetname] = [...this.currentRec[subsetname], ...[obj]];
-                    //     }else{
-                    //         this.currentRec[subsetname] = [obj];
-                    //     }
-                    // } else {  // Add a record
-                    //     this.currentRec = JSON.parse(JSON.stringify(obj));
-                    // }
                     this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
 
                     obj.forEach(sub => {
@@ -398,9 +405,6 @@ export class MetadataUpdateService {
             }
 
             let body = JSON.stringify(postMsg);
-            console.log("updateWholeRecord", updateWholeRecord)
-            console.log("body", body);
-            console.log("body", JSON.parse(body));
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
                 next: (res) => {
                     this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
@@ -629,14 +633,63 @@ export class MetadataUpdateService {
         });
     }
 
+    /**
+     * Get file manager URL from DBIO object
+     * @returns File manager URL
+     */
+    public getFileManagerUrl(): Observable<string> {
+        if(this._dbioRecord) return of(this._dbioRecord.file_space.location);
+        else {
+            return new Observable<string>(subscriber => {
+                this.loadDBIOrecord().subscribe({
+                    next: (res) => {
+                        this._dbioRecord = res as DBIOrecord;
+                        subscriber.next(res['file_space'].location);
+                        subscriber.complete();
+                    }
+                });
+            })
+        }
+    }
+
+    /**
+     * Get DBIO object from memory. If not available, load from server.
+     * @returns DBIO object
+     */
+    public getDBIORecord(): Observable<DBIOrecord> {
+        if(this._dbioRecord) return of(this._dbioRecord);
+        else {
+            return new Observable<DBIOrecord>(subscriber => {
+                this.loadDBIOrecord().subscribe({
+                    next: (res) => {
+                        this._dbioRecord = res as DBIOrecord;
+                        subscriber.next(res as DBIOrecord);
+                        subscriber.complete();
+                    }
+                })
+            })
+        }
+    }
+
+    /**
+     * Load DBIO object from server
+     * @param onSuccess 
+     * @returns DBIO object
+     */
     public loadDBIOrecord(onSuccess?: () => void): Observable<Object> {
         return new Observable<Object>(subscriber => {
             if (!this.custsvc) {
                 console.error("Attempted to fetch without authorization!  Ignoring...");
                 return;
             }
+
             this.custsvc.getDBIOrecord().subscribe({
                 next: (res) => {
+                    this._dbioRecord = res as DBIOrecord;
+                    if(this._dbioRecord && this._dbioRecord.file_space && this._dbioRecord.file_space.location){
+                        this.setFileManagerUrl(this._dbioRecord.file_space.location)
+                    }
+
                     subscriber.next(res as DBIOrecord);
                     subscriber.complete();
                     if (onSuccess) onSuccess();
@@ -785,10 +838,8 @@ export class MetadataUpdateService {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            console.log("Loading metadata from server");
             this.custsvc.getMidasMeta().subscribe({
                 next: (res) => {
-                    console.log("Return from Load metadata:", res);
                     subscriber.next(res);
                     subscriber.complete();
                 },

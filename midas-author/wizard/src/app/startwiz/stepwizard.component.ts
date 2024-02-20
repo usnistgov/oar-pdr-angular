@@ -229,7 +229,7 @@ export class StepWizardComponent implements OnInit {
                 // Submit the request, get the id from server response then launch the landing page
                 let url = this.PDRAPI + id + '?editEnabled=true';
                 // window.location.href = url;
-                window.open(url, "_blank");
+                window.open(url, "_self");
             },
             error: (err) => {
                 console.error("err", err);

@@ -179,6 +179,12 @@ export class DataFilesComponent implements OnInit, OnChanges {
         
         this.EDIT_MODES = LandingConstants.editModes;
         this.fileManagerBaseUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
+
+        this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
+            if (fileManagerUrl) {
+                this.fileManagerUrl = fileManagerUrl;
+            }
+        });
     }
 
     ngOnInit() {
@@ -210,18 +216,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
             this.dataCartStatus = DataCartStatus.openCartStatus();
         }
-        
-        // Get file manager url
-        this.mdupdsvc.loadDBIOrecord().subscribe( data => {
-            let dbio: DBIOrecord = data as DBIOrecord;
-            console.log('dbio', dbio);
-            if(dbio && dbio.file_space){
-                this.fileManagerUrl = dbio.file_space.location;
-            }else{
-                this.fileManagerUrl = "";
-                //Display some message
-            }
-        })
 
         if (this.record)
             this.useMetadata();
@@ -869,17 +863,11 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 {
                     if(md)
                     {
-                        console.log("Reloaded Nerdm record", md);
-                        console.log("Reloaded Nerdm record", JSON.parse(JSON.stringify(md)));
-                        console.log("setOriginalMetadata...");
                         this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
-                        console.log("checkUpdatedFields...");
                         this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
 
                         this.record['components'] = JSON.parse(JSON.stringify(md['components']));
-                        console.log("this.record", this.record);
                         this.buildTree(this.record['components']);
-                        console.log("this.files", this.files);
                     }else{
                         this.msgsvc.error("Fail to retrive updated dataset.");
                     }
@@ -899,25 +887,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 }
             });
         });
-        // this.mdupdsvc.loadDataFiles().subscribe( data => {
-        //     let dataFiles: NerdmComp[] = data as NerdmComp[];
-        //     this.record['components'] = dataFiles;
-        //     this.buildTree(this.record['components']);
-
-        //     // var postMessage: any = {};
-        //     // postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-        //     // console.log('postMessage', postMessage);
-
-        //     // // Update backend
-        //     // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-        //     //     console.log("###DBG  update sent; success: "+updateSuccess.toString());
-        //     //     if (updateSuccess)
-        //     //         this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
-        //     //     else
-        //     //         console.error("acknowledge description update failure");
-        //     // });
-
-        // })
     }
 
     /**

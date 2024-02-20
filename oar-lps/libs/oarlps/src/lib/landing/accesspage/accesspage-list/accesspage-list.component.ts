@@ -344,16 +344,17 @@ export class AccesspageListComponent implements OnInit {
         
         this.record[this.fieldName].dataChanged = false;
 
-        postMessage[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
+        postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.accessPages));
 
-        postMessage[this.fieldName].forEach(page => {
-            delete page.showDesc;
-            delete page.backcolor;
-            delete page.dataChanged;
-        })
+        // postMessage[this.fieldName].forEach(page => {
+        //     delete page.showDesc;
+        //     delete page.backcolor;
+        //     delete page.dataChanged;
+        // })
 
-        console.log('postMessage (body)', JSON.stringify(postMessage));
-        
+        console.log('saveCurApage (body)', postMessage);
+        console.log('saveCurApage (body)', JSON.stringify(postMessage));
+
         if(this.isAdding){
             if(!this.emptyRecord(this.currentApageIndex)){
                 this.mdupdsvc.add(postMessage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {

@@ -175,7 +175,7 @@ export class TopicEditComponent implements OnInit {
 
         postMessage[this.fieldName] = this.nistTaxonomyTopics;
         this.record[this.fieldName] = this.nistTaxonomyTopics;
-        
+        console.log("postMessage", postMessage);
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             // console.log("###DBG  update sent; success: "+updateSuccess.toString());
             if (updateSuccess) {
