@@ -256,7 +256,7 @@ export class MetadataUpdateService {
             if(res && JSON.stringify(res) != "[]") {
                 //Hard coded topic here, need to discuss better solution
                 if(subsetname == 'theme' || subsetname == 'topics'){
-                    this.currentRec[subsetname] = JSON.parse(res);
+                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
                 }else{
                     this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
                 }
