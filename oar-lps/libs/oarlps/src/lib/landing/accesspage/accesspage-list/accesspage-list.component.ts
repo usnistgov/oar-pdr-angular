@@ -141,7 +141,7 @@ export class AccesspageListComponent implements OnInit {
         this.accessPages = [] as NerdmComp[];
         if (this.record[this.fieldName]) {
             this.accessPages = this.selectAccessPages();
-
+            
             // if current page has not been set, set it
             if(this.currentApageIndex == -1 || this.currentApageIndex >= this.accessPages.length || resetIndex){
                 this.currentApage = this.accessPages[0];
@@ -255,6 +255,7 @@ export class AccesspageListComponent implements OnInit {
      */
     removeAccessPage(index: number) {
         this.accessPages.splice(index,1);
+        console.log("this.accessPages=========", this.accessPages);
         // this.currentOrderChanged = true;
         // this.dataCommand.next(MODE.EDIT);
         this.updateMatadata().then((success) => {
@@ -396,7 +397,7 @@ export class AccesspageListComponent implements OnInit {
      */
     updateMatadata(comp: NerdmComp = undefined, compId: string = undefined) {
         let postMessage: any = {};
-
+        console.log("Updating comp:", comp);
         return new Promise<boolean>((resolve, reject) => {
             if(compId && comp) {   // Update specific access page
                 postMessage = JSON.parse(JSON.stringify(comp));
@@ -421,10 +422,8 @@ export class AccesspageListComponent implements OnInit {
 
                 if(this.accessPages.length > 0 || this.nonAccessPages.length > 0) {
                     this.record[this.fieldName] = JSON.parse(JSON.stringify([this.accessPages, this.nonAccessPages]));
-                    postMessage[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
+                    postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.accessPages));
                 }
-
-                // let pm = postMessage.length > 0 ? postMessage : {};
 
                 this.mdupdsvc.update(this.fieldName, postMessage, undefined, this.FieldNameAPI).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());

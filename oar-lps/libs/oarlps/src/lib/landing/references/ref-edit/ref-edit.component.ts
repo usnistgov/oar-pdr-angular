@@ -32,8 +32,9 @@ export class RefEditComponent implements OnInit {
     showRefData: boolean = false;
     showCitationData: boolean = false;
     showAllFields: boolean = false;
+    ref: Reference = {} as Reference;
 
-    @Input() ref: Reference = {} as Reference;
+    @Input() currentRef: Reference = {} as Reference;
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
@@ -43,9 +44,11 @@ export class RefEditComponent implements OnInit {
 
     ngOnInit(): void {
         if(this.isEditing) this.showAllFields = true;
-        if(this.ref) this.originalRef = JSON.parse(JSON.stringify(this.ref));
-
-        this.reftype = this.ref.refType == "IsSupplementTo" ? "1" : "2" ;
+        if(this.currentRef) {
+            this.originalRef = JSON.parse(JSON.stringify(this.currentRef));
+            this.ref = JSON.parse(JSON.stringify(this.currentRef));
+            this.reftype = this.currentRef.refType == "IsSupplementTo" ? "1" : "2" ;
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -55,12 +58,14 @@ export class RefEditComponent implements OnInit {
             this.reset();
         }
 
-        if(changes.ref) {
-            if(this.ref) {
-                this.originalRef = JSON.parse(JSON.stringify(this.ref));
+        if(changes.currentRef) {
+            if(this.currentRef) {
+                this.originalRef = JSON.parse(JSON.stringify(this.currentRef));
+                this.ref = JSON.parse(JSON.stringify(this.currentRef));
                 this.reftype = this.originalRef.refType == "IsSupplementTo" ? "1" : "2" ;
             }else{
                 this.originalRef = undefined;
+                this.ref = {} as Reference;
             }
         }
     }
