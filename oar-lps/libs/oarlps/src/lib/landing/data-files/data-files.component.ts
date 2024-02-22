@@ -17,6 +17,9 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { OverlayPanel } from 'primeng/overlaypanel';
+import { DBIOrecord } from '../editcontrol/interfaces';
+import { UserMessageService } from '../../frame/usermessage.service';
 
 declare var _initAutoTracker: Function;
 
@@ -139,7 +142,10 @@ export class DataFilesComponent implements OnInit, OnChanges {
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
+    fileManagerBaseUrl: string = 'https://nextcloud-dev.nist.gov';
     fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
+    overlaypanelOn: boolean = false;
+    refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -152,6 +158,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 public mdupdsvc : MetadataUpdateService, 
                 private notificationService: NotificationService,
                 public lpService: LandingpageService, 
+                private msgsvc: UserMessageService,
                 ngZone: NgZone)
     {
         this.cols = [
@@ -171,7 +178,13 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }
         
         this.EDIT_MODES = LandingConstants.editModes;
-        this.fileManagerUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
+        this.fileManagerBaseUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
+
+        this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
+            if (fileManagerUrl) {
+                this.fileManagerUrl = fileManagerUrl;
+            }
+        });
     }
 
     ngOnInit() {
@@ -203,7 +216,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
             this.dataCartStatus = DataCartStatus.openCartStatus();
         }
-        
+
         if (this.record)
             this.useMetadata();
     }
@@ -224,6 +237,11 @@ export class DataFilesComponent implements OnInit, OnChanges {
         }else {
             return "restrict_preview";
         }
+    }
+
+    get fileManagerTooltip(){
+        if(this.fileManagerUrl) return this.fileManagerUrl;
+        else return "File Manager URL is not available."
     }
 
     ngOnChanges(ch: SimpleChanges) {
@@ -830,31 +848,68 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * Open url in a new tab
      */
     openFileManager() {
-        window.open(this.fileManagerUrl);
+        if(this.fileManagerUrl)
+            window.open(this.fileManagerUrl, 'blank');
     }
 
     /**
      * Reload data files
      */
     reloadFiles() {
+        this.refreshFilesIcon = "faa faa-spinner faa-spin icon-white";
         this.mdupdsvc.loadDataFiles().subscribe( data => {
-            let dataFiles: NerdmComp[] = data as NerdmComp[];
-            this.record['components'] = dataFiles;
-            this.buildTree(this.record['components']);
+            this.mdupdsvc.loadDraft(true).subscribe({
+                next: (md) => 
+                {
+                    if(md)
+                    {
+                        this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
+                        this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
 
-            // var postMessage: any = {};
-            // postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-            // console.log('postMessage', postMessage);
+                        if (md['components']) 
+                            this.record['components'] = JSON.parse(JSON.stringify(md['components']));
+                        else
+                            this.record['components'] = []
+                        
+                        this.buildTree(this.record['components']);
+                    }else{
+                        this.msgsvc.error("Fail to retrive updated dataset.");
+                    }
 
-            // // Update backend
-            // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-            //     console.log("###DBG  update sent; success: "+updateSuccess.toString());
-            //     if (updateSuccess)
-            //         this.notificationService.showSuccessWithTimeout("Data files updated.", "", 3000);
-            //     else
-            //         console.error("acknowledge description update failure");
-            // });
+                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+                },
+                error: (err) => 
+                {
+                    if(err.statusCode == 404)
+                    {
+                        console.log("404 error.");
+                        this.mdupdsvc.resetOriginal();
+                        this.msgsvc.error(err.message);
+                    }
 
-        })
+                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+                }
+            });
+        });
+    }
+
+    /**
+     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert 
+     * the data to its previous state.
+     */
+    public showLargeFileManagerHelpPopup(event, overlaypanel: OverlayPanel): void {
+        if(!this.overlaypanelOn){
+            overlaypanel.hide();
+            setTimeout(() => {
+                overlaypanel.show(event);
+                this.overlaypanelOn = true;
+            }, 100);    
+        }else{
+            overlaypanel.hide();
+        }
+    }    
+
+    onHide() {
+        this.overlaypanelOn = false;
     }
 }

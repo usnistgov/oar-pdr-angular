@@ -64,7 +64,7 @@
             </div>
         </div>
         <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus"> 
-            <lib-accesspage-edit [accessPage]="currentApage" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-accesspage-edit> 
+            <lib-accesspage-edit [currentApage]="currentApage" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-accesspage-edit> 
         </div>
     </div>
 </div>

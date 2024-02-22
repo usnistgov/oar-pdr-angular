@@ -70,7 +70,7 @@ export class AccesspageListComponent implements OnInit {
                     if( sectionMode ) {
                         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                if(this.currentApage.dataChanged){
+                                if(this.currentApage && this.currentApage.dataChanged){
                                     this.saveCurApage(false);  // Do not refresh help text 
                                 }
 
@@ -144,8 +144,10 @@ export class AccesspageListComponent implements OnInit {
 
             // if current page has not been set, set it
             if(this.currentApageIndex == -1 || this.currentApageIndex >= this.accessPages.length || resetIndex){
-                this.currentApage.dataChanged = false;
                 this.currentApage = this.accessPages[0];
+                if(this.currentApage)
+                    this.currentApage.dataChanged = false;
+
                 this.currentApageIndex = 0;
             }else{
                 this.currentApage = this.accessPages[this.currentApageIndex];
@@ -192,7 +194,7 @@ export class AccesspageListComponent implements OnInit {
         // if(this.isAdding || this.isEditing) return;
         
         if(index != this.currentApageIndex) { // user selected different access page
-            if(this.currentApage.dataChanged) {
+            if(this.currentApage && this.currentApage.dataChanged) {
                 this.updateMatadata(this.currentApage, this.currentApage["@id"]).then((success) => {
                     if(success){
                         this.setCurrentPage(index);
@@ -342,13 +344,16 @@ export class AccesspageListComponent implements OnInit {
         
         this.record[this.fieldName].dataChanged = false;
 
-        postMessage[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
+        postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.accessPages));
 
-        postMessage[this.fieldName].forEach(page => {
-            delete page.showDesc;
-            delete page.backcolor;
-            delete page.dataChanged;
-        })
+        // postMessage[this.fieldName].forEach(page => {
+        //     delete page.showDesc;
+        //     delete page.backcolor;
+        //     delete page.dataChanged;
+        // })
+
+        console.log('saveCurApage (body)', postMessage);
+        console.log('saveCurApage (body)', JSON.stringify(postMessage));
 
         if(this.isAdding){
             if(!this.emptyRecord(this.currentApageIndex)){

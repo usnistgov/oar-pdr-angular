@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { ComponentsModule } from './components/components.module';
 import { WizardService } from './services/wizard.service';
 import { FrameModule } from 'oarlps';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { FrameModule } from 'oarlps';
         WizardModule,
         ComponentsModule,
         RouterModule,
-        FrameModule
+        FrameModule,
+        ButtonModule
     ],
     declarations: [
         StepWizardComponent

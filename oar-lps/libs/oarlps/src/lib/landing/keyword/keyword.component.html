@@ -41,7 +41,7 @@
         <!-- Control buttons -->
         <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
             <!-- Edit button -->
-            <button *ngIf="!isEditing" class="edit_button" type="button" (click)="startEditing()" aria-label="edit button" ngbTooltip="edit keywords">
+            <button *ngIf="!isEditing" class="edit_button" type="button" (click)="startEditing()" aria-label="Edit keywords" ngbTooltip="Edit keywords">
                 <i class="fas fa-pencil fa-sm"></i>
             </button>
 
@@ -49,8 +49,6 @@
             <button *ngIf="isEditing && !dataChanged" class="edit_button" type="button" (click)="setMode()" aria-label="Close edit block" ngbTooltip="Close edit block">
                 <i class="fas fa-times"></i>
             </button>
-
-            <!-- <i class="fas fa-pencil icon_enabled link-icon" (click)="startEditing()" *ngIf="!isEditing" title="Edit keyword" ngbTooltip="edit keyword" aria-label="edit keyword" style="cursor: pointer;"></i> -->
 
             <!-- Save button -->
             <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing && dataChanged"
@@ -66,8 +64,8 @@
 
             <!-- Undo button - Restore original keywords -->
             <button class="edit_button" type="button" *ngIf="!isEditing && updated"
-                (click)="restoreOriginal()" aria-label="undo button" ngbTooltip="Restore original keywords">
-                <i class="fas fa-undo fa-sm" [ngClass]="{'icon_enabled': updated, 'icon_disabled':!updated }"></i>
+                (click)="restoreOriginal()" aria-label="Restore original keywords" ngbTooltip="Restore original keywords">
+                <i class="fas fa-undo fa-sm"></i>
             </button>
         </div>
     </div>

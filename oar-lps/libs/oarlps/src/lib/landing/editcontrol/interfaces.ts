@@ -45,3 +45,9 @@ export interface UpdateDetails {
      */
     _updateDate: string;
 }
+
+export interface DBIOrecord {
+    file_space: {
+        location: string
+    }
+}

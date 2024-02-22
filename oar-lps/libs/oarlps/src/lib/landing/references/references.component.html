@@ -27,7 +27,7 @@
             <!-- Control buttons -->
             <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;width: 1.65em;">
                 <button class="edit_button" *ngIf="isNormal" type="button" 
-                (click)="startEditing()" aria-label="edit title" ngbTooltip="edit title" style="cursor: pointer">
+                (click)="startEditing()" aria-label="Edit reference" ngbTooltip="Edit reference" style="cursor: pointer">
                     <i class="fas fa-pencil fa-sm"></i>
                 </button> 
 
@@ -39,7 +39,7 @@
 
                 <!-- Undo all changes button -->
                 <button class="edit_button" *ngIf="refChanged || refUpdated" [disabled]="childIsEditing || childIsAdding" type="button"
-                    (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo all author changes">
+                    (click)="undoAllChanges()" aria-label="Undo" ngbTooltip="Undo">
                     <i class="fas fa-undo fa-sm"></i>
                 </button>                
             </div>

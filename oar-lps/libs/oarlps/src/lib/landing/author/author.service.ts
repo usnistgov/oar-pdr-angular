@@ -43,7 +43,7 @@ export class AuthorService {
  export interface Affiliation {
     '@id': string,
     title: string,
-    subunits?: string[], // This is an array in NERDm but we convert it to string for UI editing purpose
+    subunits: string[], // This is an array in NERDm but we convert it to string for UI editing purpose
     "@type": [string]
  }
 /**

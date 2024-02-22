@@ -1,12 +1,12 @@
 import { Injectable, EventEmitter, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 import { UserMessageService } from '../../frame/usermessage.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
 import { Observable, of, throwError, Subscriber } from 'rxjs';
-import { UpdateDetails } from './interfaces';
+import { UpdateDetails, DBIOrecord } from './interfaces';
 import { AuthService, WebAuthService } from './auth.service';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
@@ -35,6 +35,7 @@ export class MetadataUpdateService {
     private currentRec: NerdmRes = null;    //Current saved record
     private origfields: {} = {};   // keeps track of orginal metadata so that they can be undone
     public  EDIT_MODES: any;
+    _dbioRecord: DBIOrecord = null;
 
     private _lastupdate: UpdateDetails = {} as UpdateDetails;   // null object means unknown
     get lastUpdate() { return this._lastupdate; }
@@ -42,6 +43,25 @@ export class MetadataUpdateService {
         this._lastupdate = updateDetails;
         this.updated.emit(this._lastupdate);
     }
+
+    private _fileManagerUrl: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    
+    /**
+     * Set the number of files downloaded
+     * @param fileDownloadedCount 
+     */
+    setFileManagerUrl(fileManagerUrl: string) {
+        this._fileManagerUrl.next(fileManagerUrl);
+    }
+
+    /**
+     * Watch the number of files downloaded
+     * @param subscriber 
+     */
+    watchFileManagerUrl(subscriber) {
+        return this._fileManagerUrl.subscribe(subscriber);
+    }
+
 
     /**
      * any Observable that will send out the date of the last update each time the metadata
@@ -192,8 +212,6 @@ export class MetadataUpdateService {
             updateWholeRecord = true;
         }
         
-        console.log("body", body);
-        console.log("subsetname", subsetname);
         return new Promise<boolean>((resolve, reject) => {
             // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
@@ -238,7 +256,7 @@ export class MetadataUpdateService {
             if(res && JSON.stringify(res) != "[]") {
                 //Hard coded topic here, need to discuss better solution
                 if(subsetname == 'theme' || subsetname == 'topics'){
-                    this.currentRec[subsetname] = JSON.parse(res);
+                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
                 }else{
                     this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
                 }
@@ -263,18 +281,7 @@ export class MetadataUpdateService {
         return new Observable<Object>(subscriber => {
             this.custsvc.add(md, subsetname, subsetnameAPI).subscribe({
                 next: (res) => {
-                    // console.log("Return obj from add", res);
-                    // let obj = JSON.parse(res as string);
                     let obj = res as Object[];
-                    // if(subsetname) {  //Add a subset
-                    //     if(this.currentRec[subsetname]){
-                    //         this.currentRec[subsetname] = [...this.currentRec[subsetname], ...[obj]];
-                    //     }else{
-                    //         this.currentRec[subsetname] = [obj];
-                    //     }
-                    // } else {  // Add a record
-                    //     this.currentRec = JSON.parse(JSON.stringify(obj));
-                    // }
                     this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
 
                     obj.forEach(sub => {
@@ -398,9 +405,6 @@ export class MetadataUpdateService {
             }
 
             let body = JSON.stringify(postMsg);
-            console.log("updateWholeRecord", updateWholeRecord)
-            console.log("body", body);
-            console.log("body", JSON.parse(body));
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
                 next: (res) => {
                     this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
@@ -571,29 +575,36 @@ export class MetadataUpdateService {
      * retrieve the latest draft of the resource metadata from the server and forward it
      * to the controller for display to the user.  
      */
-    public loadDraft(onSuccess?: () => void): Observable<Object> {
+    public loadDraft(dataOnly: boolean = false, onSuccess?: () => void): Observable<Object> {
         return new Observable<Object>(subscriber => {
             if (!this.custsvc) {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            this.custsvc.getDraftMetadata().subscribe(
-                (res) => {
-                    // if(!res["keyword"]) res["keyword"] = [];
+            this.custsvc.getDraftMetadata(dataOnly).subscribe({
+                next: (res) => {
                     if(res) {
-                        this.originalDraftRec = JSON.parse(JSON.stringify(res));
-                        this.currentRec = JSON.parse(JSON.stringify(res));
+                        if(!dataOnly){
+                            this.originalDraftRec = JSON.parse(JSON.stringify(res));
+                            this.currentRec = JSON.parse(JSON.stringify(res));
+                        }else{
+                            console.log("Load data only...")
+                            if(res["components"]) {
+                                this.originalDraftRec["components"] = JSON.parse(JSON.stringify(res["components"]));
+                                this.currentRec["components"] = JSON.parse(JSON.stringify(res["components"]));
+                            }
+                        }
                     }else {
                         this.originalDraftRec = {} as NerdmRes;
                         this.currentRec = {} as NerdmRes;
                     }
-                    // res = {};
-                    this.mdres.next(res as NerdmRes);
-                    subscriber.next(res as NerdmRes);
+
+                    this.mdres.next(this.currentRec as NerdmRes);
+                    subscriber.next(this.currentRec as NerdmRes);
                     subscriber.complete();
                     if (onSuccess) onSuccess();
                 },
-                (err) => {
+                error: (err) => {
                   console.error("err", err);
                   this.edstatsvc.setShowLPContent(true);
                   
@@ -618,7 +629,58 @@ export class MetadataUpdateService {
                   subscriber.next(null);
                   subscriber.complete();
                 }
-            );
+            });
+        });
+    }
+
+    /**
+     * Load DBIO object from server
+     * @param onSuccess 
+     * @returns DBIO object
+     */
+    public loadDBIOrecord(onSuccess?: () => void): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to fetch without authorization!  Ignoring...");
+                return;
+            }
+
+            this.custsvc.getDBIOrecord().subscribe({
+                next: (res) => {
+                    this._dbioRecord = res as DBIOrecord;
+                    if(this._dbioRecord && this._dbioRecord.file_space && this._dbioRecord.file_space.location){
+                        this.setFileManagerUrl(this._dbioRecord.file_space.location)
+                    }
+
+                    subscriber.next(res as DBIOrecord);
+                    subscriber.complete();
+                    if (onSuccess) onSuccess();
+                },
+                error: (err) => {
+                  console.error("err", err);
+                  this.edstatsvc.setShowLPContent(true);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    this.msgsvc.error(err.message);
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to retrieve DBIO record: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to retrieve DBIO record: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            });
         });
     }
 
@@ -696,13 +758,13 @@ export class MetadataUpdateService {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            this.custsvc.getDataFiles().subscribe(
-                (res) => {
+            this.custsvc.getDataFiles().subscribe({
+                next: (res) => {
                   subscriber.next(res as NerdmComp[]);
                   subscriber.complete();
                   if (onSuccess) onSuccess();
                 },
-                (err) => {
+                error: (err) => {
                   console.error("err", err);
                   
                   if(err.statusCode == 404)
@@ -725,7 +787,7 @@ export class MetadataUpdateService {
                   subscriber.next(null);
                   subscriber.complete();
                 }
-            );
+            });
         });
     }   
     
@@ -738,7 +800,6 @@ export class MetadataUpdateService {
                 console.error("Attempted to update without authorization!  Ignoring update.");
                 return;
             }
-            console.log("Loading metadata from server");
             this.custsvc.getMidasMeta().subscribe({
                 next: (res) => {
                     subscriber.next(res);

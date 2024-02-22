@@ -4,6 +4,7 @@ import { FormGroup, FormGroupDirective, FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthModule, AuthenticationService, OARAuthenticationService, MockAuthenticationService } from 'oarng';
+import { UserMessageService } from 'oarlps';
 
 describe('WizardComponent', () => {
     let component: StepWizardComponent;
@@ -18,7 +19,8 @@ describe('WizardComponent', () => {
                 FormGroupDirective,
                 FormBuilder,
                 MockAuthenticationService,
-                AuthenticationService
+                AuthenticationService,
+                UserMessageService
             ]
         })
         .compileComponents();

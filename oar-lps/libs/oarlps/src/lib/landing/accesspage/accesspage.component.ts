@@ -104,13 +104,17 @@ export class AccesspageComponent implements OnInit {
     selectAccessPages() : NerdmComp[] {
         let use: NerdmComp[] = (new NERDResource(this.record)).selectAccessPages();
         use = (JSON.parse(JSON.stringify(use))) as NerdmComp[];
-        return use.map((cmp) => {
-            if (! cmp['title']) cmp['title'] = cmp['accessURL'];
-
-            cmp['showDesc'] = false;
-            cmp['backcolor'] = this.getStyle()['background-color'];
-            return cmp;
-        });
+        if(use) {
+            return use.map((cmp) => {
+                if (! cmp['title']) cmp['title'] = cmp['accessURL'];
+    
+                cmp['showDesc'] = false;
+                cmp['backcolor'] = this.getStyle()['background-color'];
+                return cmp;
+            });
+        }else{
+            return [] as NerdmComp[];
+        }
     }
 
     useMetadata() {
@@ -120,11 +124,13 @@ export class AccesspageComponent implements OnInit {
         this.accessPages = [] as NerdmComp[];
         if (this.record[this.fieldName]) {
             this.accessPages = this.selectAccessPages();
-
             // if current page has not been set, set it
             if(this.currentApageIndex == -1){
-                this.currentApage.dataChanged = false;
                 this.currentApage = this.accessPages[0];
+                
+                if(this.currentApage)
+                    this.currentApage.dataChanged = false;
+
                 this.currentApageIndex = 0;
             }
 

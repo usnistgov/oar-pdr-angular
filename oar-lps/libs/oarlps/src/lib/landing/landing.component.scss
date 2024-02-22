@@ -440,12 +440,13 @@ a:visited {
   display: table-cell;
   width: 1.65em;
   height: 1.65em;
-  background-color: rgb(233, 233, 233);
+  background-color: rgb(233, 233, 233, 0);
   vertical-align: top;
   border-style: solid;
   border-color: lightgrey;
-  border-width: 1px 1px 1px 0px;
+  border-width: 0px 0px 0px 0px;
   z-index: 99;
+  color: var(--link);
 }
 
 .edit_button:hover:enabled {
@@ -453,7 +454,7 @@ a:visited {
 }
 
 .icon_enabled { 
-  color: black;
+  color: var(--link);
   font-size: 1em;
 }
 

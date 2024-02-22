@@ -3,7 +3,7 @@
     <div>
         <wiz-navigator [steps]="steps"></wiz-navigator>
     </div>
-    
+
     <!-- error messages go here -->
     <div style="width: 100%;">
         <pdr-message [defSysErrorPrefix]="'There was a problem while submitting your record.'"></pdr-message>
@@ -12,40 +12,40 @@
     <div class="step-page-container">
         <form [formGroup]="fgSteps" style="height: 100%;">
             <!-- <div class="step-page-container"> -->
-                <div class="form-step">
-                    <ng-container [ngSwitch]="currentStep?.stepIndex">
-                        <ng-container *ngSwitchCase="'1'">
-                            <div formGroupName="pubtype" class="step-page">
-                                <app-pubtype [dataModel]="dataModel" [steps]="steps"></app-pubtype>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'2'">
-                            <div formGroupName="contactInfo" class="step-page">
-                                <app-contactinfo [dataModel]="dataModel" [steps]="steps"></app-contactinfo>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'3'">
-                            <div formGroupName="files" class="step-page">
-                                <app-files [dataModel]="dataModel" [steps]="steps"></app-files>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'4'">
-                            <div formGroupName="softwareInfo" class="step-page">
-                                <app-softwareinfo [dataModel]="dataModel" [steps]="steps"></app-softwareinfo>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'5'">
-                            <div formGroupName="assocPapers" class="step-page">
-                                <app-associated-papers [dataModel]="dataModel" [steps]="steps"></app-associated-papers>
-                            </div>
-                        </ng-container>
-                        <ng-container *ngSwitchCase="'6'">
-                            <div formGroupName="recordname" class="step-page">
-                                <app-recordname [dataModel]="dataModel" [steps]="steps"></app-recordname>
-                            </div>
-                        </ng-container>
+            <div class="form-step">
+                <ng-container [ngSwitch]="currentStep?.stepIndex">
+                    <ng-container *ngSwitchCase="'1'">
+                        <div formGroupName="pubtype" class="step-page">
+                            <app-pubtype [dataModel]="dataModel" [steps]="steps"></app-pubtype>
+                        </div>
                     </ng-container>
-                </div>
+                    <ng-container *ngSwitchCase="'2'">
+                        <div formGroupName="contactInfo" class="step-page">
+                            <app-contactinfo [dataModel]="dataModel" [steps]="steps"></app-contactinfo>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'3'">
+                        <div formGroupName="files" class="step-page">
+                            <app-files [dataModel]="dataModel" [steps]="steps"></app-files>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'4'">
+                        <div formGroupName="softwareInfo" class="step-page">
+                            <app-softwareinfo [dataModel]="dataModel" [steps]="steps"></app-softwareinfo>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'5'">
+                        <div formGroupName="assocPapers" class="step-page">
+                            <app-associated-papers [dataModel]="dataModel" [steps]="steps"></app-associated-papers>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="'6'">
+                        <div formGroupName="recordname" class="step-page">
+                            <app-recordname [dataModel]="dataModel" [steps]="steps"></app-recordname>
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
             <!-- </div> -->
         </form>
     </div>
@@ -55,21 +55,24 @@
                 Cancel
             </button>
 
-            <button (click)="onNextStep()" [disabled]="!currentStep?.canGoNext" class="form-nav-btn common-btn">
-                {{ showButtonLabel() }}
+            <button pButton type="button" class="form-nav-btn common-btn btn-labeled" (click)="onNextStep()"
+                [disabled]="!currentStep?.canGoNext"
+                [icon]="nextBtnIcon" iconPos="right" [label]="nextBtnText">
             </button>
 
-            <button (click)="onPrevStep()" [disabled]="!currentStep?.canGoPrev" class="form-nav-btn common-btn">
-                Prev
+            <button pButton type="button" class="btn-labeled form-nav-btn common-btn" (click)="onPrevStep()"
+                [disabled]="!currentStep?.canGoPrev" iconPos="left" icon="faa faa-long-arrow-left icon-white" label="Prev">
             </button>
         </div>
     </div>
 </div>
 
-<div *ngIf="isAuthenticated" style="display: flex;height:100%;justify-content: center;align-items: center;font-size: xx-large;">
+<div *ngIf="isAuthenticated"
+    style="display: flex;height:100%;justify-content: center;align-items: center;font-size: xx-large;">
     You are not authorized to edit this content.
 </div>
 
-<div *ngIf="notLoggedin || authorizing" style="display: flex;height:100%;justify-content: center;align-items: center;font-size: xx-large;">
+<div *ngIf="notLoggedin || authorizing"
+    style="display: flex;height:100%;justify-content: center;align-items: center;font-size: xx-large;">
     {{authMessage}}
 </div>

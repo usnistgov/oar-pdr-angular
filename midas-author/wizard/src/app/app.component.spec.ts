@@ -3,6 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
 import { APP_BASE_HREF } from '@angular/common';
+import { AuthModule, AuthenticationService, OARAuthenticationService, MockAuthenticationService } from 'oarng';
 
 describe('AppComponent', () => {
     beforeEach(async () => {
@@ -13,7 +14,9 @@ describe('AppComponent', () => {
             declarations: [
             ],
             providers: [
-                {provide: APP_BASE_HREF, useValue: '/'}
+                {provide: APP_BASE_HREF, useValue: '/'},
+                MockAuthenticationService,
+                AuthenticationService
             ]
         }).compileComponents();
     });

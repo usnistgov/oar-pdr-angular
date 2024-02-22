@@ -10,7 +10,7 @@
     "auth": {
         "serviceEndpoint": "https://localhost/sso/" 
     },
-    "mdAPI": "http://localhost:9091/midas/dap/mdsx/",
+    "mdAPI": "http://localhost:9091/midas/dap/mds3/",
     "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
     "customizationAPI": "http://localhost:9091/midas/",
     "fileManagerAPI": "https://nextcloud-dev.nist.gov",
