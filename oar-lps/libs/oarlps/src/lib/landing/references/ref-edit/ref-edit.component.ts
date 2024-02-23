@@ -23,7 +23,7 @@ export class RefEditComponent implements OnInit {
     fieldName: string = 'references';
     
     // Input method. 1 = DOI, 2=Ref data, 3=Citation text
-    inputMethod: string = "1"; 
+    inputMethod: string = "2"; 
 
     // contentCollapsed: boolean = true;
     citationLocked: boolean = false;
@@ -57,8 +57,9 @@ export class RefEditComponent implements OnInit {
         if(changes.editMode && changes.editMode.currentValue == "normal") {
             this.reset();
         }
-
+        console.log('changes', changes);
         if(changes.currentRef) {
+            console.log('this.currentRef', this.currentRef);
             if(this.currentRef) {
                 this.originalRef = JSON.parse(JSON.stringify(this.currentRef));
                 this.ref = JSON.parse(JSON.stringify(this.currentRef));
@@ -89,7 +90,7 @@ export class RefEditComponent implements OnInit {
     }
 
     reset() {
-        this.inputMethod = "1"; 
+        this.inputMethod = "2"; 
 
         this.citationLocked = false;
         this.editBlockStatus = 'collapsed';

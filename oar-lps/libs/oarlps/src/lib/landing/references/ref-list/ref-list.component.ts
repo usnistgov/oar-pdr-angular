@@ -84,9 +84,18 @@ export class RefListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.resetOriginalValue();
+    }
+
+    ngOnChanges(ch : SimpleChanges) {
+        if (ch.record){
+            this.resetOriginalValue();
+        }
+    }
+
+    resetOriginalValue() {
         if(this.record && this.record['references'] && this.record['references'].length > 0) {
             this.currentRef = this.record['references'][0];
-            console.log('this.currentRef', this.currentRef);
 
             //Keep a copy of the record for undo purpose
             this.orig_record = JSON.parse(JSON.stringify(this.record));
@@ -316,7 +325,8 @@ export class RefListComponent implements OnInit {
         if(this.dataChangedAndUpdated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
-                    if(this.orig_record && this.orig_record.references && this.record.references.length > 0){
+                    console.log("Undo succeed. This.record", this.record)
+                    if(this.orig_record && this.orig_record.references && this.record.references && this.record.references.length > 0){
                         this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
             
                         this.record.references.forEach((ref) => {

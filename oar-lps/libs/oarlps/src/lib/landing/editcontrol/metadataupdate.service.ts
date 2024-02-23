@@ -211,7 +211,7 @@ export class MetadataUpdateService {
             body = JSON.stringify(this.currentRec);
             updateWholeRecord = true;
         }
-        
+        console.log("Updating server - body", body);
         return new Promise<boolean>((resolve, reject) => {
             // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
@@ -332,6 +332,8 @@ export class MetadataUpdateService {
     public undo(subsetname: string, id: string = undefined, subsetnameAPI: string = undefined) {
         let updateWholeRecord: boolean = false;
         let key = id? subsetname + id : subsetname;
+
+        console.log("undo id", id);
         if (!subsetname || !this.origfields) {
             // Nothing to undo!
             console.warn("Undo called on " + subsetname + ": nothing to undo");
@@ -366,25 +368,40 @@ export class MetadataUpdateService {
 
             // undo specific id
             if(id){
-                let index = this.originalDraftRec[subsetname].findIndex(x => x["@id"] == id);
-                if(index >= 0) {
-                    postMsg = this.originalDraftRec[subsetname][index];
-                }else {
+                console.log("Undo id:", id);
+                console.log("this.originalDraftRec[subsetname]:", this.originalDraftRec[subsetname]);
+                if(this.originalDraftRec[subsetname]) {
+                    let index = this.originalDraftRec[subsetname].findIndex(x => x["@id"] == id);
+                    if(index >= 0) {
+                        postMsg = this.originalDraftRec[subsetname][index];
+                    }else {
+                        postMsg = undefined;
+                        // resolve(false);
+                    }
+                }else{
                     postMsg = undefined;
-                    // resolve(false);
                 }
 
                 // Locate the current rec because the index may not be the same as in original record
-                let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
+                if(this.currentRec[subsetname]){
+                    console.log("Locate the current rec", this.currentRec);
+                    let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
 
-                this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
+                    if(this.originalDraftRec[subsetname]){
+                        this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
 
-                postMsg = this.currentRec[subsetname][currentElementIndex];
-
+                        postMsg = this.currentRec[subsetname][currentElementIndex];
+                    }else{ //Original record does not have reference, current ref was newly added
+                        postMsg = undefined;
+                    }                    
+                }else{
+                    postMsg = undefined;
+                }
                 // delete specific origfield
                 delete this.origfields[key];
 
             }else {    // undo the whole subset
+                console.log("undo the whole subset", this.originalDraftRec);
                 postMsg = this.originalDraftRec[subsetname];
 
                 if(postMsg){
@@ -404,29 +421,37 @@ export class MetadataUpdateService {
                 })
             }
 
-            let body = JSON.stringify(postMsg);
-            this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
-                next: (res) => {
-                    this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
-                    this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
-                    // this.mdres.next(res as NerdmRes);
-                    resolve(true);
-                },
-                error: (err) => {
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') {
-                        console.error("Failed to undo metadata changes: user error:" + err.message);
-                        this.msgsvc.error(err.message)
+            if(postMsg){
+                let body = JSON.stringify(postMsg);
+                console.log("Post message:", body);
+
+                this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
+                    next: (res) => {
+                        console.log("Update return:", res);
+                        console.log("Emitting mdres(this.currentRec):", this.currentRec);
+                        this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
+                        this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+                        // this.mdres.next(res as NerdmRes);
+                        resolve(true);
+                    },
+                    error: (err) => {
+                        // err will be a subtype of CustomizationError
+                        if (err.type == 'user') {
+                            console.error("Failed to undo metadata changes: user error:" + err.message);
+                            this.msgsvc.error(err.message)
+                        }
+                        else {
+                            console.error("Failed to undo metadata changes: server/system error:" +
+                                err.message);
+                            this.msgsvc.syserror(err.message,
+                                "There was an problem while undoing changes to the " + subsetname + ". ")
+                        }
+                        resolve(false);
                     }
-                    else {
-                        console.error("Failed to undo metadata changes: server/system error:" +
-                            err.message);
-                        this.msgsvc.syserror(err.message,
-                            "There was an problem while undoing changes to the " + subsetname + ". ")
-                    }
-                    resolve(false);
-                }
-            });
+                });
+            }else{
+                resolve(true);
+            }
         });
         // }
     }
