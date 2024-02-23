@@ -100,9 +100,13 @@ export class KeywordComponent implements OnInit {
     getKeywords() {
         if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
             this.keywords = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+        else
+            this.keywords = [];
 
         if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
             this.originKeywords = this.originalRecord[this.fieldName].join(",");
+        else
+            this.originKeywords = '';
     }
 
     /**
