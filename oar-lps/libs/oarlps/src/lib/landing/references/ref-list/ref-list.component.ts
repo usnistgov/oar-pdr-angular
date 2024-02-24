@@ -84,6 +84,16 @@ export class RefListComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.resetOriginalValue();
+    }
+
+    ngOnChanges(ch : SimpleChanges) {
+        if (ch.record){
+            this.resetOriginalValue();
+        }
+    }
+
+    resetOriginalValue() {
         if(this.record && this.record['references'] && this.record['references'].length > 0) {
             this.currentRef = this.record['references'][0];
 
@@ -315,11 +325,26 @@ export class RefListComponent implements OnInit {
         if(this.dataChangedAndUpdated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
-                    if(this.record && this.record.references){
+                    console.log("Undo succeed. This.record", this.record)
+                    if(this.orig_record && this.orig_record.references && this.record.references && this.record.references.length > 0){
+                        this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
+            
                         this.record.references.forEach((ref) => {
                             ref.dataChanged = false;
                         });
+
+                        this.currentRefIndex = 0;
+                        this.currentRef = this.record.references[this.currentRefIndex];
+                        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderReset"});
+                    }else {   
+                        this.record.references = {} as Reference;
+                        this.currentRefIndex = 0;
+                        this.currentRef = {} as Reference;
                     }
+            
+                    this.orderChanged = false;
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                    this.setMode(MODE.LIST);
                 }else{
                     let msg = "Failed to undo " + this.fieldName + " metadata"
                     console.error(msg);
@@ -327,14 +352,6 @@ export class RefListComponent implements OnInit {
                 }
             });
         }
-        this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
-
-        this.orderChanged = false;
-        this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderReset"});
-        this.currentRefIndex = 0;
-        this.currentRef = this.record.references[this.currentRefIndex];
-        this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
-        this.setMode(MODE.LIST);
     }
 
     /**

@@ -26,7 +26,7 @@
                                     [editButton]="false" 
                                     [deleteButton]="true" 
                                     [editOnlyButton]="true"
-                                    [restoreButton]="true" 
+                                    [restoreButton]="false" 
                                     [disableControl]="isAdding || isEditing" 
                                     [placeHolderText]="placeholder" 
                                     [isNew]="reference.isNew" 
@@ -52,6 +52,6 @@
     </div>
     <!-- This is editing area. Will open up in add or edit mode -->
     <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus">  
-        <lib-ref-edit [ref]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onReferenceChange($event)"  (cmdOutput)="onCommandChanged($event)"></lib-ref-edit>
+        <lib-ref-edit [currentRef]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onReferenceChange($event)"  (cmdOutput)="onCommandChanged($event)"></lib-ref-edit>
     </div>
 </div>

@@ -231,6 +231,7 @@ export class WebCustomizationService extends CustomizationService {
             return new Observable<Object>(subscriber => {
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
+                console.log("url1", url);
 
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -241,6 +242,7 @@ export class WebCustomizationService extends CustomizationService {
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
                 url = id == undefined ? url : url + "/" + id;
+                console.log("url2", url);
 
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
