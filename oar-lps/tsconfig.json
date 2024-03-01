@@ -9,8 +9,8 @@
     "declaration": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true, 
-    "target": "es2015",
+    "emitDecoratorMetadata": true,
+    "target": "ES2022",
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "typeRoots": [
@@ -30,10 +30,14 @@
       "rxjs/*": [
         "./node_modules/rxjs/*"
       ],
-      "@angular/*": ["node_modules/@angular/*"]
+      "@angular/*": [
+        "node_modules/@angular/*"
+      ]
     },
     "types": [
-        "jest", "node"
-    ]
+      "jest",
+      "node"
+    ],
+    "useDefineForClassFields": false
   }
 }

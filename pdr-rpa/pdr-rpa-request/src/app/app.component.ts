@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, UntypedFormControl, UntypedFormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of, throwError } from 'rxjs';
 import { Country } from './model/country.model';
@@ -30,7 +30,7 @@ export class AppComponent {
     isFormValid = true;
     displayProgressSpinner = false;
     errors = [];
-    requestForm: FormGroup;
+    requestForm: UntypedFormGroup;
     countries: Country[];
     selectedCountry: Country;
     items: SelectItem[];
@@ -340,23 +340,23 @@ export class AppComponent {
 
         let emailBlacklist = this.getEmailBlacklist();
 
-        this.requestForm = new FormGroup({
-            fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
-            email: new FormControl("", [Validators.required, Validators.email, CustomValidators.blacklisted(emailBlacklist.patterns, emailBlacklist.emails, emailBlacklist.domains)]),
-            phone: new FormControl("", [Validators.required]),
-            organization: new FormControl("", [Validators.required]),
-            address1: new FormControl("", [Validators.required]),
-            address2: new FormControl(""),
-            address3: new FormControl("", [Validators.required]),
-            country: new FormControl("", [Validators.required]),
-            receiveEmails: new FormControl(false),
-            termsAndConditionsAgreenement: new FormControl(false, [
+        this.requestForm = new UntypedFormGroup({
+            fullName: new UntypedFormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
+            email: new UntypedFormControl("", [Validators.required, Validators.email, CustomValidators.blacklisted(emailBlacklist.patterns, emailBlacklist.emails, emailBlacklist.domains)]),
+            phone: new UntypedFormControl("", [Validators.required]),
+            organization: new UntypedFormControl("", [Validators.required]),
+            address1: new UntypedFormControl("", [Validators.required]),
+            address2: new UntypedFormControl(""),
+            address3: new UntypedFormControl("", [Validators.required]),
+            country: new UntypedFormControl("", [Validators.required]),
+            receiveEmails: new UntypedFormControl(false),
+            termsAndConditionsAgreenement: new UntypedFormControl(false, [
                 Validators.required,
             ]),
-            disclaimerAgreenement: new FormControl(false, [Validators.required]),
-            vettingAgreenement: new FormControl(false, [Validators.required]),
-            accessAgreement: new FormControl(false, [Validators.required]),
-            recaptcha: new FormControl(false, [Validators.required]),
+            disclaimerAgreenement: new UntypedFormControl(false, [Validators.required]),
+            vettingAgreenement: new UntypedFormControl(false, [Validators.required]),
+            accessAgreement: new UntypedFormControl(false, [Validators.required]),
+            recaptcha: new UntypedFormControl(false, [Validators.required]),
         });
     }
 
@@ -378,11 +378,11 @@ export class AppComponent {
      * @returns  validation errors associated with the input control
      */
     private getFormErrors(form: AbstractControl | null): ValidationErrors | null | undefined {
-        if (form instanceof FormControl) {
+        if (form instanceof UntypedFormControl) {
             // Return FormControl errors or null
             return form.errors ?? null;
         }
-        if (form instanceof FormGroup) {
+        if (form instanceof UntypedFormGroup) {
             const groupErrors = form.errors;
             // Form group can contain errors itself, in that case add'em
             const formErrors = groupErrors ? [groupErrors] : [];
