@@ -93,6 +93,8 @@ export class DescriptionComponent implements OnInit {
 
         if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
             this.originDescription = this.originalRecord[this.fieldName].join("\r\n\r\n");
+        else
+            this.originDescription = "";
     }
 
     /**

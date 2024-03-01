@@ -140,12 +140,15 @@ export class MetadataUpdateService {
      *             name can be an arbitrary label.  
      * @param md   an object containing the portion of the resource metadata that 
      *             should be updated.  
+     * @param id   id of the subset item
+     * @param subsetnameAPI API to append to the update url
+     * @param deleteOrigField true if this is the update for last undo of this subset
      * @return Promise<boolean>  -  result is true if the update was successful, false if 
      *             there was an issue.  Note that the underlying CustomizationService will
      *             take care of reporting the reason.  This allows the caller in charge of 
      *             getting updates to have its UI react accordingly.
      */
-    public update(subsetname: string, md: {}, id: string = undefined, subsetnameAPI: string = undefined): Promise<boolean> {
+    public update(subsetname: string, md: {}, id: string = undefined, subsetnameAPI: string = undefined, deleteOrigField: boolean = false): Promise<boolean> {
         let body: string;
         let updateWholeRecord: boolean = false;
 
@@ -180,15 +183,15 @@ export class MetadataUpdateService {
             if(subsetname){
                 if(md && md[subsetname]){
                     //Remove temp keys
-                    if(md[subsetname] instanceof Array) {
-                        md[subsetname].forEach(item =>{
-                            delete item["isNew"];
-                            delete item["dataChanged"];
-                        });
-                    }else{
-                        delete md[subsetname]["isNew"];
-                        delete md[subsetname]["dataChanged"];
-                    }
+                    // if(md[subsetname] instanceof Array) {
+                    //     md[subsetname].forEach(item =>{
+                    //         delete item["isNew"];
+                    //         delete item["dataChanged"];
+                    //     });
+                    // }else{
+                    //     delete md[subsetname]["isNew"];
+                    //     delete md[subsetname]["dataChanged"];
+                    // }
                     body = JSON.stringify(md[subsetname]);
                 }else
                     body = "";
@@ -221,6 +224,15 @@ export class MetadataUpdateService {
                     this.stampUpdateDate();
                     this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
                     // this.mdres.next(this.currentRec);
+
+                    if(deleteOrigField) {
+                    //Delete all origfields related to the subset
+                        Object.keys(this.origfields).forEach((fKey) => {
+                            if(fKey.includes(subsetname)) {
+                                delete this.origfields[fKey];
+                            }
+                        })
+                    }
                     resolve(true);
                 },
                 error: (err) => {
@@ -274,7 +286,7 @@ export class MetadataUpdateService {
             }
         }
 
-        this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+        // this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
     }
     
     public add(md: any, subsetname: string = undefined, subsetnameAPI: string = undefined):Observable<Object> {
@@ -293,7 +305,7 @@ export class MetadataUpdateService {
                     // this.origfields[key] = {};
                     // this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
 
-                    this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+                    // this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                     // resolve(true);
                     subscriber.next(JSON.parse(JSON.stringify(this.currentRec[subsetname])));
                     subscriber.complete();
@@ -430,8 +442,7 @@ export class MetadataUpdateService {
                         console.log("Update return:", res);
                         console.log("Emitting mdres(this.currentRec):", this.currentRec);
                         this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
-                        this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
-                        // this.mdres.next(res as NerdmRes);
+                        // this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                         resolve(true);
                     },
                     error: (err) => {

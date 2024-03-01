@@ -14,6 +14,15 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Reference } from '../reference';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+// import { DataSetMetrics } from 'dist/oarlps/public-api';
+
+const lastIndexOf = (array, key) => {
+    for(let i = array.length - 1; i >= 0; i--){
+      if(array[i]["@id"] === key)
+        return i;
+    }
+    return -1;
+};
 
 @Component({
     selector: 'lib-ref-list',
@@ -35,6 +44,7 @@ export class RefListComponent implements OnInit {
     orderChanged: boolean = false;
     currentRef: Reference = {} as Reference;
     currentRefIndex: number = 0;
+    savedRef: Reference[] = [];
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
 
@@ -89,13 +99,15 @@ export class RefListComponent implements OnInit {
 
     ngOnChanges(ch : SimpleChanges) {
         if (ch.record){
-            this.resetOriginalValue();
+            console.log('ch.record', ch.record)
+            // this.resetOriginalValue();
         }
     }
 
     resetOriginalValue() {
         if(this.record && this.record['references'] && this.record['references'].length > 0) {
             this.currentRef = this.record['references'][0];
+            this.currentRefIndex = 0;
 
             //Keep a copy of the record for undo purpose
             this.orig_record = JSON.parse(JSON.stringify(this.record));
@@ -123,10 +135,10 @@ export class RefListComponent implements OnInit {
 
     get dataChangedAndUpdated() {
         let changed: boolean = false;
-
         if(this.record && this.record[this.fieldName]) {
-            for(let i=0; i < this.record[this.fieldName].length; i++) {
-                changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][i]['@id']);
+            for(let ref of this.record[this.fieldName]) {
+                changed = changed || ref.dataSaved;
+                // changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, ref['@id']);
             }
         }
         
@@ -232,10 +244,10 @@ export class RefListComponent implements OnInit {
     /**
      * Update reference data to the server
      */
-    updateMatadata(ref: Reference = undefined, refid: string = undefined) {
+    updateMatadata(ref: Reference = undefined, refid: string = undefined, deleteOrigField: boolean = false) {
         return new Promise<boolean>((resolve, reject) => {
             if(refid) {    // Update specific reference
-                this.mdupdsvc.update(this.fieldName, ref, refid).then((updateSuccess) => {
+                this.mdupdsvc.update(this.fieldName, ref, refid, this.fieldName, deleteOrigField).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
@@ -250,7 +262,7 @@ export class RefListComponent implements OnInit {
                 if(this.dataChanged){
                     let updmd = {};
                     updmd[this.fieldName] = this.record[this.fieldName];
-                    this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
+                    this.mdupdsvc.update(this.fieldName, updmd, undefined, undefined, deleteOrigField).then((updateSuccess) => {
                         // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
@@ -281,45 +293,83 @@ export class RefListComponent implements OnInit {
 
     /**
      * Save current reference
+     * @param refreshHelp Indicate if help content needs be refreshed
+     * @param backup if we want to save a copy for undo purpose
+     * @returns Promise
      */
-    saveCurRef(refreshHelp: boolean = true) {
-        if(this.isAdding){
-            if(this.currentRef.dataChanged){
-                var postMessage: any = {};
-                postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+    saveCurRef(refreshHelp: boolean = true, backup: boolean = true, deleteOrigField: boolean = false) {
+        return new Promise<boolean>((resolve, reject) => {
 
-                //Delete temp keys
-                console.log('postMessage[this.fieldName]01', postMessage[this.fieldName])
-                postMessage[this.fieldName].forEach(ref => {
-                    delete ref['isNew'];
-                    delete ref['dataChanged'];
-                });
+            this.record[this.fieldName][this.currentRefIndex] = JSON.parse(JSON.stringify(this.currentRef));
 
-                this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
-                    if (rec){
-                        console.log("Ref returned from server:", rec);
-                        this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
-                        this.currentRef = this.record[this.fieldName].at(-1); // last reference
-                        this.currentRefIndex = this.record[this.fieldName].length - 1;
+            if(this.isAdding){
+                if(this.currentRef.dataChanged){
+                    var postMessage: any = {};
+                    postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+
+                    //Delete temp keys
+                    console.log('postMessage[this.fieldName]01', postMessage[this.fieldName])
+                    postMessage[this.fieldName].forEach(ref => {
+                        delete ref['isNew'];
+                        delete ref['dataChanged'];
+                    });
+
+                    this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
+                        if (rec){
+                            console.log("Ref returned from server:", rec);
+                            this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
+                            this.currentRef = this.record[this.fieldName].at(-1); // last reference
+                            this.currentRefIndex = this.record[this.fieldName].length - 1;
+                            this.currentRef.dataChanged = false;
+                            this.currentRef.dataSaved = true;
+                            this.updateRefStatus(this.currentRef);
+
+                            //Push saved reference into stack for undo purpose
+                            if(backup)
+                                this.savedRef.push(JSON.parse(JSON.stringify(this.currentRef)));
+
+                            this.setMode(MODE.NORNAL, refreshHelp);
+                            resolve(true);
+                        }else{
+                            let msg = "Failed to add reference";
+                            console.error(msg);
+                            resolve(false);
+                            return;
+                        }
+                    });
+                }else{  //If no data has been entered, remove this reference
+                    this.removeRef(this.currentRefIndex).then((success) => {
+                        if(success){
+                            this.setMode(MODE.NORNAL, refreshHelp);
+                            resolve(true);
+                        }else{
+                            resolve(false);
+                        }
+                    });
+                }
+            }else{
+                this.updateMatadata(this.currentRef, this.currentRef["@id"], deleteOrigField).then((success) => {
+                    if(success){
                         this.currentRef.dataChanged = false;
+                        this.currentRef.dataSaved = !deleteOrigField;
+                        this.updateRefStatus(this.currentRef);
+
+                        //Push saved reference into stack for undo purpose
+                        if(backup)
+                            this.savedRef.push(JSON.parse(JSON.stringify(this.currentRef)));
+
+                        this.setMode(MODE.NORNAL, refreshHelp);
+                        resolve(true);
                     }else{
-                        let msg = "Failed to add reference";
-                        console.error(msg);
-                        return;
+                        resolve(false);
                     }
                 });
-            }else{  //If no data has been entered, remove this reference
-                this.removeRef(this.currentRefIndex);
             }
-        }else{
-            this.updateMatadata(this.currentRef, this.currentRef["@id"]);
-        }
-
-        this.setMode(MODE.NORNAL, refreshHelp);
+        })
     }
 
     /*
-     *  Undo editing. If no more field was edited, delete the record in staging area.
+     *Undo all changes.
      */
     undoChanges() {
         if(this.dataChangedAndUpdated){
@@ -331,6 +381,7 @@ export class RefListComponent implements OnInit {
             
                         this.record.references.forEach((ref) => {
                             ref.dataChanged = false;
+                            ref.dataSaved = false;
                         });
 
                         this.currentRefIndex = 0;
@@ -354,8 +405,18 @@ export class RefListComponent implements OnInit {
         }
     }
 
+    updateRefStatus(reference: Reference) {
+        for(let ref of this.record[this.fieldName]) {
+            if(reference["@id"] == ref["@id"]){
+                ref.dataChanged = reference.dataChanged;
+                ref.dataSaved = reference.dataSaved;
+            }
+        }
+    }
+
     /**
-     * Revert current reference to saved data
+     * Cancel current reference editing. If this is newly added one,
+     * Remove it. Otherwise restore from memory.
      */
     undoCurRefChanges() {
         if(this.currentRef.dataChanged) {
@@ -378,6 +439,7 @@ export class RefListComponent implements OnInit {
 
                             this.currentRef = JSON.parse(JSON.stringify(ref));
                             this.currentRef.dataChanged = false;
+                            this.currentRef.dataSaved = false;
                             this.record.references[this.currentRefIndex] = JSON.parse(JSON.stringify(this.currentRef));
                         }else{
                             //This should never happen
@@ -492,7 +554,7 @@ export class RefListComponent implements OnInit {
         this.record.references.splice(index,1);
         this.orderChanged = true;
         this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
-        this.updateMatadata();
+        return this.updateMatadata();
     }
 
     /**
@@ -510,6 +572,7 @@ export class RefListComponent implements OnInit {
     onReferenceCommand(action: any, index: number = 0) {
         switch ( action.command.toLowerCase() ) {
             case 'edit':
+                console.log("Index", index);
                 this.selectRef(index);
                 this.onEdit();
                 break;
@@ -517,20 +580,96 @@ export class RefListComponent implements OnInit {
                 this.removeRef(index);
                 break;
             case 'restore':
-                this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]["@id"]).then((success) => {
-                    if (success) {
-                        this.currentRefIndex = 0;
-                        this.currentRef = this.record[this.fieldName][this.currentRefIndex];
-                        this.forceReset = true; // Force reference editor to reset data
-                    } else {
-                        let msg = "Failed to restore reference";
-                        console.error(msg);
-                    }
-                })
+                //Replace current reference with the last saved reference then save.
+                //If no more saved reference available, restore original reference:
+                //Locate the id in original reference, if found, replace current one 
+                //with original. Otherwise(newly added), delete current reference.
+                this.undoReference(index);
+
+                // this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]["@id"]).then((success) => {
+                //     if (success) {
+                //         this.currentRefIndex = 0;
+                //         this.currentRef = this.record[this.fieldName][this.currentRefIndex];
+                //         this.forceReset = true; // Force reference editor to reset data
+                //     } else {
+                //         let msg = "Failed to restore reference";
+                //         console.error(msg);
+                //     }
+                // })
 
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * Undo changes to a particular reference.
+     * Replace current reference with the last saved reference then save.
+     * If no more saved reference available, restore original reference:
+     * Locate the id in original reference, if found, replace current one 
+     * with original. Otherwise(newly added), delete current reference.
+     * @param index the reference to be undo.
+     */
+    undoReference(index: number) {
+        let savedReferenceIndex: number;
+
+        if(this.savedRef.length > 0){// We have saved reference
+            //Get the last pushed reference to restore
+            savedReferenceIndex = lastIndexOf(this.savedRef, this.record.references[index]["@id"]);
+            //The last one is the current one. Pop it first.
+            this.savedRef.splice(savedReferenceIndex, 1);
+
+            savedReferenceIndex = lastIndexOf(this.savedRef, this.record.references[index]["@id"]);
+
+            if(savedReferenceIndex > -1){ //Found saved record, replace current ref with found one then remove it from this.savedRef.
+                this.currentRef = JSON.parse(JSON.stringify(this.savedRef[savedReferenceIndex]));
+                this.currentRefIndex = index;
+
+                this.saveCurRef(false, false, this.savedRef.length == 0).then((success) => {
+                    if(success){
+                        this.forceReset = true;
+                        this.currentRef.dataChanged = false;
+                        this.currentRef.dataSaved = true;
+                        this.updateRefStatus(this.currentRef);
+                    }
+                });
+            }else{ // Not found in saved record. Restore original
+                this.lastUndo(index);
+            }
+        }else{ // Last undo, restore original
+            this.lastUndo(index);
+        }
+
+        console.log("this.savedRef", this.savedRef);
+    }
+
+    lastUndo(index: number) {
+        let originalRef: Reference;
+        if(this.orig_record.references && this.orig_record.references.length > 0) {
+            for(let ref of this.orig_record.references) {
+                if(ref["@id"] == this.record.references[index]["@id"]){
+                    originalRef = ref;
+                }
+            }
+
+            if(!originalRef) 
+                this.removeRef(index);
+            else{
+                this.currentRef = JSON.parse(JSON.stringify(originalRef));
+                this.currentRefIndex = index;
+
+                this.saveCurRef(false, false, this.savedRef.length == 0).then((success) => {
+                    if(success){
+                        this.forceReset = true;
+                        this.currentRef.dataChanged = false;
+                        this.currentRef.dataSaved = false;
+                        this.updateRefStatus(this.currentRef);
+                    }
+                });
+            }
+        }else{
+            this.removeRef(index);
         }
     }
 
@@ -558,9 +697,13 @@ export class RefListComponent implements OnInit {
     selectRef(index: number) {
         if(index != this.currentRefIndex) { // user selected different reference
             if(this.currentRef.dataChanged) {
+                console.log("this.currentRef before switching:", this.currentRef);
                 this.updateMatadata(this.currentRef, this.currentRef["@id"]).then((success) => {
                     if(success){
                         this.setCurrentPage(index);
+                        this.currentRef.dataChanged = false;
+                        this.currentRef.dataSaved = false;
+                        this.updateRefStatus(this.currentRef);
 
                         if(this.editMode==MODE.ADD || this.editMode==MODE.EDIT)
                             this.editMode = MODE.EDIT;
@@ -616,8 +759,8 @@ export class RefListComponent implements OnInit {
      * @returns background color
      */
     getBackgroundColor(index: number){
-        // if(this.record['references'][index].dataChanged){
-        if(this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][index]['@id'])){
+        if(this.record['references'][index].dataSaved){
+        // if(this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][index]['@id'])){
             return 'var(--data-changed-saved)';
         }else if(this.record['references'][index].dataChanged){
             return 'var(--data-changed)';

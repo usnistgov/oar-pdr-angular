@@ -241,6 +241,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
             this.mdupdsvc.subscribe(
                 (md) => {
+                    console.log("md changed:", md);
                     if (md && md != this.md) {
                         this.md = md as NerdmRes;
                     }
