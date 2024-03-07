@@ -11,7 +11,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
 import { SearchService } from '../shared/search-service/search-service.service';
 import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
-import { IEnvironment } from '../../environments/ienvironment';
+import * as env from '../../environments/environment';
 
 let fileLevelData = {
     "FilesMetricsCount": 3,
@@ -69,7 +69,6 @@ let fileLevelData = {
 }
 
 describe('MetricsComponent', () => {
-    let ienv : IEnvironment;
     let component: MetricsComponent;
     let fixture: ComponentFixture<MetricsComponent>;
     let route : ActivatedRoute;
@@ -78,7 +77,7 @@ describe('MetricsComponent', () => {
     let ts : TransferState = new TransferState();
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";

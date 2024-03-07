@@ -1,11 +1,13 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
+import { VisithomeEditComponent } from './visithome-edit/visithome-edit.component';
 
 @Component({
     selector: 'app-visithome',
@@ -25,7 +27,7 @@ export class VisithomeComponent implements OnInit {
     @Input() inViewMode: boolean;
     @Input() theme: string;
 
-    fieldName = 'landingPage';
+    fieldName = SectionPrefs.getFieldName(Sections.VISIT_HOME_PAGE);
     scienceTheme = Themes.SCIENCE_THEME;
     // backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
     editMode: string = MODE.NORNAL; 
@@ -35,6 +37,8 @@ export class VisithomeComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
 
+    @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
+    
     constructor(
         public mdupdsvc : MetadataUpdateService,        
         public lpService: LandingpageService, 
@@ -42,11 +46,19 @@ export class VisithomeComponent implements OnInit {
         private gaService: GoogleAnalyticsService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.isEditing && this.dataChanged){
-                        this.saveVisitHomeURL(false); // Do not refresh help text 
+                if(sectionMode){
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.isEditing && this.dataChanged){
+                                this.saveVisitHomeURL(false); // Do not refresh help text 
+                            }
+                            this.setMode(MODE.NORNAL,false);
+                        }
+                    }else{
+                        if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                            this.startEditing();
+                        }
                     }
-                    this.setMode(MODE.NORNAL,false);
                 }
             })
     }
@@ -105,9 +117,9 @@ export class VisithomeComponent implements OnInit {
      */
     editIconClass() {
         if(this.isEditing){
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }else{
-            return "faa faa-pencil icon_enabled"
+            return "fas fa-pencil icon_enabled"
         }
     }
 
@@ -122,6 +134,14 @@ export class VisithomeComponent implements OnInit {
                 this.visitHomeURL = dataChanged.visitHomeURL;
                 this.dataChanged = true;
                 break;
+
+            case 'dataReset':
+                this.record[this.fieldName] = dataChanged.visitHomeURL;
+                this.visitHomeURL = dataChanged.visitHomeURL;
+                this.dataChanged = false;
+                this.visitHomeEdit.currentValueChanged = false;
+                break;
+
             default:
                 break;
         }
@@ -143,11 +163,12 @@ export class VisithomeComponent implements OnInit {
                 this.restoreOriginal();
                 break;
             default:
+                this.setMode();
                 break;
         }
     }
 
-    onEdit() {
+    startEditing() {
         this.visitHomeURL = this.record[this.fieldName];
 
         this.setMode(MODE.EDIT);
@@ -165,10 +186,15 @@ export class VisithomeComponent implements OnInit {
             this.visitHomeURL = this.record[this.fieldName];
         }
 
-        this.setMode();
+        this.dataChanged = false;
     }
 
     saveVisitHomeURL(refreshHelp: boolean = true) {
+        if(!this.visitHomeURL) {
+            this.visitHomeURL = "";
+        }
+        console.log('this.visitHomeURL', this.visitHomeURL);
+
         this.record[this.fieldName] = this.visitHomeURL;
         let postMessage: any = {};
         postMessage[this.fieldName] = this.visitHomeURL;;
@@ -178,8 +204,10 @@ export class VisithomeComponent implements OnInit {
                 this.setMode(MODE.NORNAL, refreshHelp);
 
                 this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
-            }else
-                console.error("Updating " + this.fieldName + " failed.");
+            }else{
+                let msg = "Updating " + this.fieldName + " failed.";
+                console.error(msg);
+            }
         });        
     }
 
@@ -193,11 +221,23 @@ export class VisithomeComponent implements OnInit {
 
         if(this.updated){
             bkgroundColor = 'var(--data-changed-saved)';
-        }else if(this.dataChanged){
+        }
+        
+        if(this.dataChanged){
             bkgroundColor = 'var(--data-changed)';
         }
 
         return bkgroundColor;
+    }
+
+    /**
+     * Refresh the help text
+     */
+    refreshHelpText(){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+        this.lpService.setSectionHelp(sectionHelp);
     }
 
     /**
@@ -210,12 +250,8 @@ export class VisithomeComponent implements OnInit {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
         if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
+            this.refreshHelpText();
         }
             
         switch ( this.editMode ) {
@@ -261,10 +297,12 @@ export class VisithomeComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode();
-
+                this.visitHomeEdit.currentValueChanged = false;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
-            }else
-                console.error("Failed to undo landingpage metadata")
+            }else{
+                let msg = "Failed to undo landingpage metadata";
+                console.error(msg);
+            }
         });
     }
 

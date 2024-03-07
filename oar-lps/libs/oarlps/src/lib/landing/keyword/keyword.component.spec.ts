@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync  } from '@angular/core/testing';
 import { KeywordModule, KeywordComponent } from './keyword.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
@@ -11,10 +11,9 @@ import { ToastrModule } from 'ngx-toastr';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { IEnvironment } from '../../../environments/ienvironment';
+import * as env from '../../../environments/environment';
 
 describe('KeywordComponent', () => {
-    let ienv : IEnvironment;
     let component: KeywordComponent;
     let fixture: ComponentFixture<KeywordComponent>;
     let cfg: AppConfig;
@@ -23,7 +22,7 @@ describe('KeywordComponent', () => {
     let authsvc: AuthService = new MockAuthService(undefined);
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";
@@ -58,12 +57,15 @@ describe('KeywordComponent', () => {
 
     it('Subject Keywords should Wireless', () => {
         let cmpel = fixture.nativeElement;
-        let aels = cmpel.querySelectorAll(".keywords");
-        expect(aels.length).toEqual(5);
-        expect(aels[0].innerText).toContain('IoT');
-        expect(aels[1].innerText).toContain('Wireless');
-        expect(aels[2].innerText).toContain('RF');
-        expect(aels[3].innerText).toContain('Manufacturing');
-        expect(aels[4].innerText).toContain('Node.js');
+
+        fakeAsync(() => {
+            let aels = cmpel.querySelectorAll(".keywords");
+            expect(aels.length).toEqual(5);
+            expect(aels[0].innerText).toContain('IoT');
+            expect(aels[1].innerText).toContain('Wireless');
+            expect(aels[2].innerText).toContain('RF');
+            expect(aels[3].innerText).toContain('Manufacturing');
+            expect(aels[4].innerText).toContain('Node.js');
+        });
     });
 });

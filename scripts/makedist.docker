@@ -1,6 +1,17 @@
 #! /bin/bash
 #
-# build.sh:  build the package
+# makedist.docker -- make all components from this repo via the docker containers
+#                    defined in the docker directory.
+#
+# Usage: makedist.docker [--dist-dir=DIR] [python|angular|DISTNAME ...]
+#
+# where:
+#   --dist-dir=DIR     write component distributions to the given directory
+#                      (instead of the default directory, dist)
+#   angular            build only the angular-based distributions
+#   DISTNAME           build only the named distributions; DISTNAME can be
+#                      midas-lps, midas-wizard, pdr-lps, pdr-rpa-request,
+#                      and/or pdr-rpa-approve
 #
 prog=`basename $0`
 execdir=`dirname $0`
@@ -17,8 +28,4 @@ $docker_dir/dockbuild.sh -q || {
 
 echo $docker_dir/makedist "$@"
 $docker_dir/makedist "$@"
-
-
-
-
 

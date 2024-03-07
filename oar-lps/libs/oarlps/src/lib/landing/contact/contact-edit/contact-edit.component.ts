@@ -13,7 +13,7 @@ export class ContactEditComponent implements OnInit {
     @Input() backgroundColor: string = 'var(--editable)';
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
-    @Output() dataChanged: EventEmitter<any> = new EventEmitter();
+    @Output() dataChanged: EventEmitter<any> = new EventEmitter();    
     
     constructor() { }
 
@@ -33,10 +33,12 @@ export class ContactEditComponent implements OnInit {
 
     onFullNameChange(value) {
         this.contact.dataChanged = true;
+        this.dataChanged.next({"fn": JSON.parse(JSON.stringify(this.contact.fn)), action:"dataChanged"});
     }
 
     onEmailChange(value) {
         this.contact.hasEmail = "mailto:" + value;
         this.contact.dataChanged = true;
+        this.dataChanged.next({"email": JSON.parse(JSON.stringify(this.contact.hasEmail)), action:"dataChanged"});
     }
 }

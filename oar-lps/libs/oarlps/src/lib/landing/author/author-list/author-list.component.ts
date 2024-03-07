@@ -1,5 +1,6 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../../landingpage.service';
+import { LandingpageService, HelpTopic } from '../../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { Author } from '../author';
@@ -10,6 +11,7 @@ import {
     CdkDragMove,
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import * as globals from '../../../shared/globals/globals';
 
 @Component({
     selector: 'lib-author-list',
@@ -32,7 +34,7 @@ export class AuthorListComponent implements OnInit {
     originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
     // forceReset: boolean = false;
     newAuthor: Author = {} as Author;
-    fieldName = 'authors';
+    fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     placeholder: string = "Enter author data below";
     editBlockStatus: string = 'collapsed';
     orderChanged: boolean = false;
@@ -44,6 +46,7 @@ export class AuthorListComponent implements OnInit {
     @Input() record: any[];
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
+    @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
     
     //Drag and drop
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
@@ -59,33 +62,45 @@ export class AuthorListComponent implements OnInit {
                 public lpService: LandingpageService) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
-                    if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                        if(this.isEditing && this.currentAuthor.dataChanged){
-                            this.saveCurrentAuthor(false); // Do not refresh help text 
+                    if( sectionMode ) {
+                        if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
+                            if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                                //If is adding but nothing changed, undo adding
+                                if(this.isAdding && !this.currentAuthor.dataChanged){
+                                    this.undoCurAuthorChanges();
+                                //If is adding or editing and something changed, save it
+                                }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
+                                    this.saveCurrentAuthor(false, true); // Do not refresh help text 
+                                }
+                                this.hideEditBlock();
+                            }
+                        }else{
+                            if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                                this.onAdd();
+                            }
                         }
-                        this.hideEditBlock(false);
                     }
+
                 })
     }
 
     ngOnInit(): void {
-        this.updateOriginal();
-
+        this.updateSavedRecord();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.record){
-            // this.editingAuthorIndex = -1;
-            this.updateOriginal();
+            this.updateSavedRecord();
         }
 
         if(changes.forceReset){
             this.orderChanged = false;
+            this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
 
@@ -130,16 +145,19 @@ export class AuthorListComponent implements OnInit {
     getAuthorName(index: number) {
         if(!this.record || !this.record[this.fieldName] || this.record[this.fieldName].length == 0) return "";
 
-        if(this.record[this.fieldName][index].fn) return this.record[this.fieldName][index].fn;
+        if(this.record[this.fieldName][index].fn) {
+            return this.record[this.fieldName][index].fn;
+        }
 
         if(this.record[this.fieldName][index].givenName && this.record[this.fieldName][index].familyName)  
             return this.record[this.fieldName][index].givenName + " " + this.record[this.fieldName][index].familyName;
 
         if(this.record[this.fieldName][index].familyName)  
-            return this.record[this.fieldName][index].familyName;
+        return this.record[this.fieldName][index].familyName;
 
         if(this.record[this.fieldName][index].givenName)  
-            return this.record[this.fieldName][index].givenName;
+        return this.record[this.fieldName][index].givenName;
+
 
         return "";
     }
@@ -147,7 +165,7 @@ export class AuthorListComponent implements OnInit {
     /**
      * Update originalAuthors for unde purpose
      */
-    updateOriginal() {
+    updateSavedRecord() {
         if(this.record[this.fieldName]) {
             if(this.record[this.fieldName].length < 1) {
                 this.currentAuthorIndex = -1;
@@ -174,8 +192,10 @@ export class AuthorListComponent implements OnInit {
         this.updateMetadata().then((success) => {
             if(success){
                 this.orderChanged = true;
+                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
             }else{
-                console.error("Update failed")
+                let msg = "Update failed";
+                console.error(msg);
             }
         });
     }
@@ -204,7 +224,7 @@ export class AuthorListComponent implements OnInit {
     /**
      * Save current author to the server
      */    
-    saveCurrentAuthor(refreshHelp: boolean = true) {
+    saveCurrentAuthor(refreshHelp: boolean = true, closeAll: boolean = false) {
         let postMessage: any = {}; 
 
         if(this.isAdding) {  // Temp disable this function
@@ -215,23 +235,32 @@ export class AuthorListComponent implements OnInit {
 
             this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                 if (rec){
-                    console.log("Return authors", rec);
                     this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                     this.currentAuthor = this.record[this.fieldName].at(-1); // last author
                     this.currentAuthorIndex = this.record[this.fieldName].length - 1;
                     this.currentAuthor.dataChanged = false;
-                    this.setMode(MODE.NORNAL, refreshHelp);
-                }else
-                    console.error("Failed to add author");
+
+                    if(closeAll)
+                        this.setMode(MODE.NORNAL, refreshHelp);
+                    else
+                        this.setMode(MODE.LIST, refreshHelp);
+                }else{
+                    let msg = "Failed to add author";
+                    console.error(msg);
                     return;
+                }
             })
         }else{
             if(this.currentAuthor.dataChanged){
                 this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
                     if(success){
-                        this.setMode(MODE.NORNAL, refreshHelp);
+                        if(closeAll)
+                            this.setMode(MODE.NORNAL, refreshHelp);
+                        else
+                            this.setMode(MODE.LIST, refreshHelp);
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -246,7 +275,7 @@ export class AuthorListComponent implements OnInit {
      */
     updateMetadata(author: Author = undefined, id: string = undefined) {
         let lAuthors = [];
-        var postMessage: any = {};
+        let postMessage: any = {};
 
         return new Promise<boolean>((resolve, reject) => {
             // Only update certain author
@@ -260,18 +289,23 @@ export class AuthorListComponent implements OnInit {
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("Author updated.", "", 3000);
                             resolve(true);
-                        }else
-                            console.error("acknowledge author update failure");
+                        }else{
+                            let msg = "Author update failed";
+                            console.error(msg);
                             resolve(true);
+                        }
                     });
                 }else{
-                    console.error("Author not found", author['@id']);
+                    let msg = "Author not found";
+                    console.error(msg, author['@id']);
                 }
             }else{  // Update all authors
                 postMessage[this.fieldName] = [];
-                this.record[this.fieldName].forEach(author => {
-                    postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
-                });
+                if(this.record[this.fieldName]){
+                    this.record[this.fieldName].forEach(author => {
+                        postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
+                    });
+                }
 
                 this.mdupdsvc.update(this.fieldName, postMessage, id).then((updateSuccess) => {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
@@ -279,7 +313,8 @@ export class AuthorListComponent implements OnInit {
                         this.notificationService.showSuccessWithTimeout("Authors updated.", "", 3000);
                         resolve(true);
                     }else{
-                        console.error("acknowledge authors update failure");
+                        let msg = "Authors update failed.";
+                        console.error(msg);
                         resolve(false);
                     }
                 });
@@ -293,12 +328,14 @@ export class AuthorListComponent implements OnInit {
     undoAllChanges() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode();
+                this.setMode(MODE.NORNAL, true);
                 this.orderChanged = false;
                 this.forceReset = true;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
+                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
             }else{
-                console.error("Failed to undo keywords metadata");    
+                let msg = "Failed to undo keywords metadata";
+                console.error(msg);   
             }
                 
         });
@@ -306,18 +343,33 @@ export class AuthorListComponent implements OnInit {
 
     undoCurAuthorChanges() {
         if(this.isAdding) {
-            this.removeAuthor(this.currentAuthorIndex);
+            // this.removeAuthor(this.currentAuthorIndex);
+            if(this.savedRecord[this.fieldName] == undefined) {
+                delete this.record[this.fieldName];
+            }else {
+                this.record[this.fieldName] = JSON.parse(JSON.stringify(this.savedRecord[this.fieldName]));
+            }
         }else{
             this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(this.savedRecord[this.fieldName][this.currentAuthorIndex]));
         }
 
-        this.editBlockStatus = 'collapsed';
-        this.editMode = MODE.NORNAL;
+        // this.editBlockStatus = 'collapsed';
+
+        // Back to add mode
+        // this.editMode = MODE.NORNAL;
+        // this.refreshHelpText(MODE.ADD);
+        this.setMode(MODE.LIST, true)
     }
 
-    hideEditBlock(refreshHelp: boolean = true) {
-        if(this.record)
+
+    /**
+     * Hide the edit block
+     */
+    hideEditBlock() {
+        if(this.record){
             this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
+        }
+
     }
 
     /**
@@ -328,9 +380,9 @@ export class AuthorListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "faa faa-plus faa-lg icon_enabled";
+            return "fas fa-plus faa-lg icon_enabled";
         }else{
-            return "faa faa-plus faa-lg icon_disabled";
+            return "fas fa-plus faa-lg icon_disabled";
         }
     }
 
@@ -341,7 +393,7 @@ export class AuthorListComponent implements OnInit {
      * @returns undo button icon class
      */
     undoIconClass() {
-        return !this.authorsChanged && !this.authorsUpdated? "faa faa-undo icon_disabled" : "faa faa-undo icon_enabled";
+        return !this.authorsChanged && !this.authorsUpdated? "fas fa-undo icon_disabled" : "fas fa-undo icon_enabled";
     }
 
     /**
@@ -352,29 +404,11 @@ export class AuthorListComponent implements OnInit {
      */   
     editIconClass() {
         if(this.isNormal){
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }
     }
-
-    // editAction(action: any, index: number = 0) {
-    //     switch ( action.command.toLowerCase() ) {
-    //         case "delete":
-    //             this.removeAuthor(index);
-    //             break;
-
-    //         case "undo":
-    //             this.editingAuthorIndex = -1;
-    //             break;                  
-
-    //         default: 
-    //             // 
-    //             break;
-    //     }
-
-    //     this.forceReset = false;
-    // }
 
     removeAuthor(index: number) {
         this.record[this.fieldName].splice(index, 1);
@@ -458,8 +492,11 @@ export class AuthorListComponent implements OnInit {
                             this.editMode = MODE.EDIT;
                         else    
                             this.editMode = MODE.NORNAL;
+
+                        this.editmodeOutput.next(this.editMode);
                     }else{
-                        console.error("Update failed")
+                        let msg = "Update failed";
+                        console.error(msg);
                     }
                 })
             }else{
@@ -467,11 +504,11 @@ export class AuthorListComponent implements OnInit {
             }
         }
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic['dragdrop'];
+        // let sectionHelp: SectionHelp = {} as SectionHelp;
+        // sectionHelp.section = this.fieldName;
+        // sectionHelp.topic = HelpTopic['dragdrop'];
 
-        this.lpService.setSectionHelp(sectionHelp);
+        // this.lpService.setSectionHelp(sectionHelp);
     }
 
     setCurrentAuthor(index: number){
@@ -484,6 +521,17 @@ export class AuthorListComponent implements OnInit {
     }
 
     /**
+     * Refresh the help text
+     */
+    refreshHelpText(help_topic: string = MODE.LIST){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[help_topic];
+
+        this.lpService.setSectionHelp(sectionHelp);
+    }
+
+    /**
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
@@ -492,18 +540,23 @@ export class AuthorListComponent implements OnInit {
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
-        if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
-        }
             
         switch ( this.editMode ) {
+            case MODE.LIST:
+                this.editBlockStatus = 'collapsed';
+
+                // Back to add mode
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.LIST);
+                }
+                break;
             case MODE.EDIT:
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.EDIT);
+                }                
                 break;
             case MODE.ADD:
                 //Append a blank author to the record and set current author.
@@ -522,21 +575,32 @@ export class AuthorListComponent implements OnInit {
                 this.currentAuthorIndex = this.record[this.fieldName].length - 1;
 
                 this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-                this.currentAuthor.dataChanged = true;
-                // this.orderChanged = true;
+                this.currentAuthor.dataChanged = false;
 
                 this.openEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.ADD);
+                }                
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed';
                 this.hideEditBlock();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.NORNAL);
+                }                
                 break;
         }
 
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        this.editmodeOutput.next(this.editMode);
     }
 
     /**
@@ -562,20 +626,29 @@ export class AuthorListComponent implements OnInit {
                 this.removeAuthor(index);
                 break;    
             case 'restore':
-                // If this is a new item, delete it. Otherwise, restore original value
-                if(this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName][index] && this.originalRecord[this.fieldName][index]['@id']){
-                    this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
-                        if (success) {
-                            this.record[this.fieldName][index]['dataChanged'] = false;
-                            // this.currentAuthorIndex = 0;
-                            // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-                            this.forceReset = true; // Force author editor to reset data
-                        } else {
-                            console.error("Failed to restore authors");
-                        }
-                    })
+                // If original record does not have this field, delete it. Otherwise if this is a new added item. delete it as well. Otherwise restore original.
+                if(this.originalRecord[this.fieldName]){
+                    let foundAuthorIndex = this.originalRecord[this.fieldName].findIndex(element => element['@id'].trim() == this.record[this.fieldName][index]['@id'].trim());
+
+                    // Remove if it's new author                    
+                    if(foundAuthorIndex < 0)
+                        this.removeAuthor(index);
+                    // Otherwise, restore original value
+                    else{
+                        // Restore original
+                        this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
+                            if (success) {
+                                this.record[this.fieldName][index]['dataChanged'] = false;
+                                // this.currentAuthorIndex = 0;
+                                // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+                                this.forceReset = true; // Force author editor to reset data
+                            } else {
+                                let msg = "Failed to restore authors";
+                                console.error(msg);
+                            }
+                        })
+                    }
                 }else{
-                    console.log("Removing author", index)
                     this.removeAuthor(index);
                 }
 

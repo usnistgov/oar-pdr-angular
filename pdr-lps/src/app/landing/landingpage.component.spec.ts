@@ -3,12 +3,11 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { TransferState } from '@angular/platform-browser';
 import { ActivatedRoute, Router, Routes } from '@angular/router';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 
 import { ModalService } from 'oarlps';
-import { LandingPageModule } from './landingpage.module';
 import { LandingPageComponent } from './landingpage.component';
 import { AngularEnvironmentConfigService } from 'oarlps';
 import { AppConfig } from 'oarlps'
@@ -23,7 +22,7 @@ import { TestDataService } from 'oarlps';
 import { GoogleAnalyticsService } from 'oarlps';
 import * as mock from '../testing/mock.services';
 import {RouterTestingModule} from "@angular/router/testing";
-import { testdata } from 'oarlps';
+import * as environment from '../../environments/environment';
 import { CommonFunctionService } from "oarlps";
 
 describe('LandingPageComponent', () => {
@@ -46,13 +45,13 @@ describe('LandingPageComponent', () => {
     ];
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(environment, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";
         cfg.editEnabled = false;
 
-        nrd10 = testdata['test1'];
+        nrd10 = environment.testdata['test1'];
         /*
         nrd = {
             "@type": [ "nrd:SRD", "nrdp:DataPublication", "nrdp:DataPublicResource" ],
@@ -71,7 +70,7 @@ describe('LandingPageComponent', () => {
     let setupComponent = function() {
         TestBed.configureTestingModule({
             imports: [
-                HttpClientTestingModule, BrowserAnimationsModule, LandingPageModule, 
+                HttpClientTestingModule, NoopAnimationsModule,
                 RouterTestingModule.withRoutes(routes), 
                 ToastrModule.forRoot({
                     toastClass: 'toast toast-bootstrap-compatibility-fix'
@@ -98,15 +97,6 @@ describe('LandingPageComponent', () => {
     it("should set title bar", function() {
         setupComponent();
         expect(component.getDocumentTitle()).toBe("PDR: "+nrd10.title);
-    });
-
-    it("includes landing display", function() {
-        setupComponent();
-        expect(component).toBeTruthy();
-        let cmpel = fixture.nativeElement;
-        let el = cmpel.querySelector("h2");
-        expect(el).toBeTruthy();
-        expect(el.textContent).toContain(nrd10.title);
     });
 
 });

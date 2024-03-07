@@ -11,8 +11,9 @@
         </div>
 
         <!-- Has contact -->
-        <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);margin-left: 05em;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, currentContact.dataChanged)">
-            <div style="padding-left: 0.5em; padding-right: 0.5em;">
+        <!-- <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);margin-left: 05em;border: 1px solid red;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, currentContact.dataChanged, undefined, false)"> -->
+        <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);">
+            <div style="padding-right: 0.5em;">
                 <strong>
                     <a *ngIf="hasEmail"
                         href="{{currentContact.hasEmail}}" target="_top">
@@ -20,8 +21,8 @@
                     <span *ngIf="!hasEmail">{{currentContact.fn}}</span>
                 </strong>.
 
-                <i style="cursor: pointer;" class="faa"
-                [ngClass]="{'faa-plus-square-o': !clickContact, 'faa-minus-square-o': clickContact}"
+                <i style="cursor: pointer; margin-left: 0.5rem;" class="fas"
+                [ngClass]="{'fa-caret-right': !clickContact, 'fa-caret-down': clickContact}"
                 aria-hidden="true"
                 (click)="closeContent = !closeContent; clickContact=expandContact();"></i>
 
@@ -46,11 +47,28 @@
                 </div>
             </div>
         </div>
-        <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isEditing"
-            (click)="startEditing()">
-            <i [class]="editIconClass()" data-toggle="tooltip"
-                title="Edit contactPoint"></i>
-        </button>
+
+        <!-- Control buttons -->
+        <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+            <!-- Edit button -->
+            <button class="edit_button" *ngIf="!isEditing" type="button" 
+            (click)="startEditing()" aria-label="Edit contact" ngbTooltip="Edit contact" style="cursor: pointer">
+                <i class="fas fa-pencil fa-sm"></i>
+            </button> 
+
+            <!-- Close button -->
+            <button class="edit_button" *ngIf="isEditing" type="button" [disabled]="currentContact.dataChanged"
+                (click)="closeEditBlock()" aria-label="close button" ngbTooltip="Close edit block">
+                <i class="fas fa-times"></i>
+            </button>   
+            
+            <!-- Restore button -->
+            <button class="edit_button" *ngIf="updated" type="button"
+            (click)="restoreOriginal()">
+                <i class="fas fa-undo fa-sm"
+                    aria-label="Restore original" ngbTooltip="Restore original"></i>
+            </button>              
+        </div>
     </div>
 </div>
 
@@ -60,30 +78,21 @@
         <tr  style="width: 100%;">
             <!-- Text edit area -->
             <td class="edit-block" style="width: calc(100%-90px);">
-                <lib-contact-edit [contact]="currentContact" [backgroundColor]="backgroundColor" [editMode]="editMode" [forceReset]="forceReset"></lib-contact-edit>
+                <lib-contact-edit #contactedit [contact]="currentContact" [backgroundColor]="getRecordBackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onContactChange($event)"></lib-contact-edit>
             </td>
 
             <!-- Control buttons -->
             <td style="width: 90px;vertical-align: top;">
                 <!-- Save button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentContact()" aria-label="edit button" [disabled]="!currentContact.dataChanged" ngbTooltip="Save contact">
-                    <i class="faa faa-check"></i>
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentContact()" aria-label="edit button" [disabled]="!currentContact.dataChanged || !currentContact.fn" ngbTooltip="Save contact">
+                    <i class="fas fa-check"></i>
                 </button>
         
                 <!-- Cancel button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode && dataChanged" type="button"
                     (click)="undoCurContactChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                    <i class="faa faa-remove"></i>
+                    <i class="fas fa-undo fa-sm"></i>
                 </button>
-
-                <!-- Restore button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
-                [disabled]="!updated"
-                (click)="restoreOriginal()">
-                    <i class="faa faa-undo"
-                        [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"
-                        data-toggle="tooltip" title="Undo contactPoint"></i>
-                </button>                
             </td>          
         </tr>
     </table>

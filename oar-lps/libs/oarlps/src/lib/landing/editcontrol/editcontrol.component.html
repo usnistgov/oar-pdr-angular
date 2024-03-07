@@ -3,35 +3,35 @@
     <div *ngIf="_editMode != EDIT_MODES.DONE_MODE" style="color: white; background-color: #1c4d9b; float: left; margin: 0em .5em 0em 03em; padding: .4em .5em .4em .5em; font-size: 20px; font-weight:bolder !important;">{{currentMode}}</div>
     <!-- Buttons are arranged from right to left -->
 
-    <i class="faa faa-info-circle" id="ec-info-btn" (click)="showEditControlHelpPopup($event,op3)" data-toggle="tooltip" title="Show edit control help"></i>
+    <i class="fas fa-info-circle" id="ec-info-btn" (click)="showEditControlHelpPopup($event,op3)" data-toggle="tooltip" title="Show edit control help"></i>
 
     <div *ngIf="screenWidth > screenSizeBreakPoint" style="float: right; margin-top: .5em !important;">
         <!-- Submit for review button -->
         <button pButton type="submit" class="btn btn-labeled" id="ec-review-btn" (click)="submitReview()"
-        [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="faa faa-arrow-circle-up faa-1x icon-white" iconPos="left">
+        [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="fas fa-arrow-circle-up faa-1x icon-white" iconPos="left">
         </button>
 
         <!-- Save button -->
         <button pButton type="submit" class="btn btn-labeled" id="ec-close-btn" (click)="doneEdits()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="faa faa-save faa-1x icon-white" iconPos="left">
+            [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left">
         </button>
 
         <!-- Discard button -->
-        <button pButton type="submit" class="btn btn-labeled" id="ec-discard-btn" (click)="confirmDiscardEdits()" [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="faa faa-trash faa-1x icon-white" iconPos="left">
+        <button pButton type="submit" class="btn btn-labeled" id="ec-discard-btn" (click)="confirmDiscardEdits()" [disabled]="!(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
         </button>
 
         <!-- 
         -  Edit button:  when editing is off, the Edit button will show; if it is on, the
         -  "Preview" button will show in its place
         -->
-        <button pButton type="submit" *ngIf="_editMode == EDIT_MODES.PREVIEW_MODE" type="button" class="btn btn-labeled" (click)="startEditing()" id="ec-edit-btn" label="Edit" icon="faa faa-pencil faa-1x icon-white" iconPos="left">
+        <button pButton type="submit" *ngIf="_editMode == EDIT_MODES.PREVIEW_MODE" type="button" class="btn btn-labeled" (click)="startEditing()" id="ec-edit-btn" label="Edit" icon="fas fa-pencil faa-1x icon-white" iconPos="left">
         </button>
 
-        <button pButton type="submit" *ngIf="_editMode == EDIT_MODES.EDIT_MODE" type="button" class="btn btn-labeled" (click)="preview()" id="ec-preview-btn" label="Preview" icon="faa faa-eye faa-1x icon-white" iconPos="left">
+        <button pButton type="submit" *ngIf="_editMode == EDIT_MODES.EDIT_MODE" type="button" class="btn btn-labeled" (click)="preview()" id="ec-preview-btn" label="Preview" icon="fas fa-eye faa-1x icon-white" iconPos="left">
         </button>
 
         <!-- Manage Files button -->
-        <button pButton [pTooltip]="fileManagerUrl" tooltipPosition="bottom" type="button" class="btn btn-labeled light-blue-btn" id="ec-files-btn" label="Manage Files" icon="faa faa-external-link faa-1x icon-white" iconPos="left" (click)="openFileManager()">
+        <button pButton [pTooltip]="fileManagerTooltip" tooltipPosition="bottom" type="button" class="btn btn-labeled light-blue-btn" id="ec-files-btn" label="Manage Files" icon="fas fa-external-link-alt faa-1x icon-white" iconPos="left" (click)="openFileManager()">
         </button>
     </div>
 </div>
@@ -45,40 +45,40 @@
         <div style="width: 100%; text-align: right !important;">
             <!-- Submit for review button -->
             <button pButton type="submit" class="btn btn-labeled" id="ec-review-btn" (click)="submitReview()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="faa faa-arrow-circle-up faa-1x icon-white" iconPos="left">
+            [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Submit for review" icon="fas fa-arrow-circle-up faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Save button -->
             <button pButton type="submit" class="btn btn-labeled" id="ec-close-btn" (click)="doneEdits()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="faa faa-save faa-1x icon-white" iconPos="left">
+            [disabled]="!readySubmit && !(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Discard button -->
             <button pButton type="submit" class="btn btn-labeled" id="ec-discard-btn" (click)="confirmDiscardEdits()"
-            [disabled]="(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="faa faa-trash faa-1x icon-white" iconPos="left">
+            [disabled]="!(_editMode == EDIT_MODES.DONE_MODE || _editMode == EDIT_MODES.OUTSIDE_MIDAS_MODE)" label="Discard" icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Preview button-->
             <button pButton type="submit" *ngIf="_editMode == EDIT_MODES.PREVIEW_MODE" type="button" class="btn btn-labeled" 
                 (click)="startEditing()"
-                id="ec-edit-btn" label="Edit" icon="faa faa-pencil faa-1x icon-white" iconPos="left">
+                id="ec-edit-btn" label="Edit" icon="fas fa-pencil faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Edit button -->
-            <button pButton type="submit" *ngIf="_editMode == EDIT_MODES.EDIT_MODE" type="button" class="btn btn-labeled"  (click)="preview()" id="ec-preview-btn" label="Preview" icon="faa faa-eye faa-1x icon-white" iconPos="left">
+            <button pButton type="submit" *ngIf="_editMode == EDIT_MODES.EDIT_MODE" type="button" class="btn btn-labeled"  (click)="preview()" id="ec-preview-btn" label="Preview" icon="fas fa-eye faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Manage Files button -->
-            <button pButton [pTooltip]="fileManagerUrl" tooltipPosition="bottom" type="submit" class="btn btn-labeled light-blue-btn" id="ec-files-btn" label="Manage Files" icon="faa faa-external-link faa-1x icon-white" iconPos="left" (click)="openFileManager()">
+            <button pButton [pTooltip]="fileManagerUrl" tooltipPosition="bottom" type="submit" class="btn btn-labeled light-blue-btn" id="ec-files-btn" label="Manage Files" icon="fas fa-external-link-alt faa-1x icon-white" iconPos="left" (click)="openFileManager()">
             </button>
         </div>
 </div>
 
 <!-- status message bar -->
-<pdr-edit-status></pdr-edit-status>
+<pdr-edit-status [(mdrec)]="mdrec"></pdr-edit-status>
 
 <!-- error messages go here -->
-<pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message>
+<!-- <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message> -->
 
 <!-- Popup dialog for control button help -->
 <p-overlayPanel class="fileDialog" #op3 [dismissable]="true" [showCloseIcon]="true"
