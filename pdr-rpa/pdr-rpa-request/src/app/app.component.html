@@ -189,7 +189,7 @@
 
                     </label>
                 </div>
-                <div class="rpdform-checkbox-wrapper">
+                <div *ngIf="selectedFormTemplate.disclaimers && selectedFormTemplate.disclaimers.length > 0" class="rpdform-checkbox-wrapper">
                     <label for="disclaimerCheckbox" class="rpdform-checkbox-label">
                         <div class="rpdform-relative">
                             <input type="checkbox" id="disclaimerCheckbox" name="disclaimerCheckbox"
