@@ -15,14 +15,14 @@ _label[DownloadStatus.FAILED]      = 'Failed';
 _label[DownloadStatus.ERROR]       = 'Error';
 
 let _iconcl = {};
-_iconcl[DownloadStatus.DOWNLOADED]  = 'faa faa-check';
-_iconcl[DownloadStatus.COMPLETED]   = 'faa faa-check';
-_iconcl[DownloadStatus.DOWNLOADING] = 'faa faa-clock-o';
-_iconcl[DownloadStatus.PENDING]     = 'faa faa-clock-o';
-_iconcl[DownloadStatus.CANCELED]    = 'faa faa-remove';
-_iconcl[DownloadStatus.WARNING]     = 'faa faa-warning';
-_iconcl[DownloadStatus.FAILED]      = 'faa faa-warning';
-_iconcl[DownloadStatus.ERROR]       = 'faa faa-warning';
+_iconcl[DownloadStatus.DOWNLOADED]  = 'fas fa-check';
+_iconcl[DownloadStatus.COMPLETED]   = 'fas fa-check';
+_iconcl[DownloadStatus.DOWNLOADING] = 'fas fa-clock fa-spin';
+_iconcl[DownloadStatus.PENDING]     = 'fas fa-clock fa-spin';
+_iconcl[DownloadStatus.CANCELED]    = 'fas fa-times';
+_iconcl[DownloadStatus.WARNING]     = 'fas fa-exclamation-triangle';
+_iconcl[DownloadStatus.FAILED]      = 'fas fa-exclamation-triangle';
+_iconcl[DownloadStatus.ERROR]       = 'fas fa-exclamation-triangle';
 
 let _color = {};
 _color[DownloadStatus.DOWNLOADED]  = 'green';

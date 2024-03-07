@@ -11,6 +11,7 @@ import { TopicComponent } from './topic.component';
 import { SearchTopicsComponent } from './topic-popup/search-topics.component';
 import { ButtonModule } from 'primeng/button';
 import { TopicEditComponent } from './topic-edit/topic-edit.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * module that provide support for rendering and managing a resource's list of 
@@ -24,6 +25,7 @@ import { TopicEditComponent } from './topic-edit/topic-edit.component';
         TreeTableModule,
         OverlayPanelModule,
         ButtonModule,
+        NgbModule,
         ToastrModule.forRoot()
     ],
     declarations: [

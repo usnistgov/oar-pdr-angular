@@ -461,7 +461,6 @@ a:visited {
 }
 
 .icon_enabled { 
-  cursor: pointer;
   color: black;
   font-size: 1em;
 }

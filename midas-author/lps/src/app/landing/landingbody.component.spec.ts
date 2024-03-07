@@ -1,11 +1,8 @@
-import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, waitForAsync  } from '@angular/core/testing';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterTestingModule } from '@angular/router/testing';
-
 import { LandingBodyComponent } from './landingbody.component';
-import { SectionsModule } from 'oarlps';
-
 import { AppConfig } from 'oarlps';
 import { NerdmRes, NerdmComp } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
@@ -28,7 +25,7 @@ describe('LandingBodyComponent', () => {
     
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ HttpClientModule, SectionsModule, RouterTestingModule ],
+            imports: [ HttpClientModule, RouterTestingModule ],
             declarations: [ LandingBodyComponent ],
             providers: [
                 { provide: AppConfig, useValue: cfg },
@@ -59,43 +56,44 @@ describe('LandingBodyComponent', () => {
     });
 
     it('should initialize', () => {
-        expect(component).toBeTruthy();
-        let cmpel = fixture.nativeElement;
-        expect(cmpel.querySelector("#resourcebody")).toBeTruthy();
+        fakeAsync(() => {
+            expect(component).toBeTruthy();
+            let cmpel = fixture.nativeElement;
+            expect(cmpel.querySelector("#resourcebody")).toBeTruthy();
 
-        let sect = cmpel.querySelector("#identity");
-        expect(sect).toBeTruthy();
-        let title = sect.querySelector("h2");
-        expect(title).toBeTruthy();
-        expect(title.textContent).toContain("MEDS-I")
+            let sect = cmpel.querySelector("#identity");
+            expect(sect).toBeTruthy();
+            let title = sect.querySelector("h2");
+            expect(title).toBeTruthy();
+            expect(title.textContent).toContain("MEDS-I")
 
-        sect = cmpel.querySelector("#description")
-        expect(sect).toBeTruthy();
-        title = sect.querySelector("h3");
-        expect(title).toBeTruthy();
-        expect(title.textContent).toEqual("Description");
+            sect = cmpel.querySelector("#description")
+            expect(sect).toBeTruthy();
+            title = sect.querySelector("h3");
+            expect(title).toBeTruthy();
+            expect(title.textContent).toEqual("Description");
 
-        sect = cmpel.querySelector("#dataAccess")
-        console.log("sect", sect);
-        expect(sect).toBeTruthy();
-        title = sect.querySelector("h3");
-        expect(title).toBeTruthy();
-        expect(title.textContent).toEqual("Data Access");
+            sect = cmpel.querySelector("#dataAccess")
+            console.log("sect", sect);
+            expect(sect).toBeTruthy();
+            title = sect.querySelector("h3");
+            expect(title).toBeTruthy();
+            expect(title.textContent).toEqual("Data Access");
 
-        sect = cmpel.querySelector("#references")
-        console.log("sect", sect);
-        expect(sect).toBeTruthy();
-        title = sect.querySelector("h3");
-        expect(title).toBeTruthy();
-        expect(title.textContent).toEqual("References");
+            sect = cmpel.querySelector("#references")
+            console.log("sect", sect);
+            expect(sect).toBeTruthy();
+            title = sect.querySelector("h3");
+            expect(title).toBeTruthy();
+            expect(title.textContent).toEqual("References");
 
-        sect = cmpel.querySelector("#about")
-        expect(sect).toBeTruthy();
-        title = sect.querySelector("h3");
-        console.log("title", title);
-        expect(title).toBeTruthy();
-        expect(title.textContent).toEqual("About This Dataset");
-
+            sect = cmpel.querySelector("#about")
+            expect(sect).toBeTruthy();
+            title = sect.querySelector("h3");
+            console.log("title", title);
+            expect(title).toBeTruthy();
+            expect(title.textContent).toEqual("About This Dataset");
+        });
     });    
 });
 

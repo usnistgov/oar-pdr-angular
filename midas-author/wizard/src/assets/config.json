@@ -1,0 +1,26 @@
+{
+    "locations": {
+        "orgHome": "https://nist.gov/",
+        "portalBase": "https://oardev.nist.gov/",
+        "pdrHome": "https://oardev.nist.gov/pdr/",
+        "pdrSearch": "https://oardev.nist.gov/sdp/",
+        "mdService":   "https://oardev.nist.gov/rmm/",
+        "taxonomyService": "https://oardev.nist.gov/rmm/taxonomy"
+    },
+    "auth": {
+        "serviceEndpoint": "https://localhost/sso/" 
+    },
+    "mdAPI": "http://localhost:9091/midas/dap/mdsx/",
+    "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
+    "customizationAPI": "http://localhost:9091/midas/",
+    "fileManagerAPI": "https://nextcloud-dev.nist.gov",
+    "mode": "dev",
+    "status": "Dev Version",
+    "appVersion": "v1.3.X",
+    "production": false,
+    "gaCode": "not-set",
+    "screenSizeBreakPoint": 1060,
+    "MIDASAPI":  "https://localhost/midas/",
+    "PDRAPI":  "https://localhost/dapui/edit/od/id/",
+    "LANDING": "https://localhost/rmm/"
+}

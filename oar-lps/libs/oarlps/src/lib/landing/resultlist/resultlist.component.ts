@@ -3,10 +3,9 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
-import { timeout } from 'rxjs/operator/timeout';
+
 import { ThisReceiver } from '@angular/compiler';
 import * as e from 'express';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 
 @Component({

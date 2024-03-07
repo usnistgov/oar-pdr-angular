@@ -19,7 +19,7 @@ PACKAGE_NAME=oar-pdr-angular
 ## containers to be built.  List them in dependency order (where a latter one
 ## depends the former ones).  
 #
-DOCKER_IMAGE_DIRS="build test"
+DOCKER_IMAGE_DIRS="build-test"
 
 . $codedir/oar-build/_dockbuild.sh
 
@@ -34,7 +34,12 @@ setup_build
 
 log_intro   # record start of build into log
 
-for container in $BUILD_IMAGES; do 
-    echo '+ ' docker build $BUILD_OPTS -t $PACKAGE_NAME/$container $container | logit
-    docker build $BUILD_OPTS -t $PACKAGE_NAME/$container $container 2>&1 | logit
-done
+# install CA certs into containers that can use them
+if { echo $BUILD_IMAGES | grep -qs build-test; }; then
+    cp_ca_certs_to build-test
+fi
+
+if { echo " $BUILD_IMAGES " | grep -qs " build-test "; }; then
+    echo '+' docker build $BUILD_OPTS -t $PACKAGE_NAME/build-test build-test
+    docker build $BUILD_OPTS -t $PACKAGE_NAME/build-test build-test 2>&1
+fi

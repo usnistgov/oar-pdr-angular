@@ -16,6 +16,7 @@ import { AppConfig } from '../../config/config';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { deepCopy } from '../../config/config.service';
 import { AppSettings } from '../../shared/globals/globals';
+import { LandingpageService } from '../landingpage.service';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -40,7 +41,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     EDIT_MODES: any;
     screenWidth: number;
     screenSizeBreakPoint: number;
-    fileManagerUrl = AppSettings.FILE_MANAGER_URL;
+    fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
     portalURL: string;
 
     /**
@@ -88,6 +89,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         private authsvc: AuthService,
         private confirmDialogSvc: ConfirmationDialogService,
         private cfg: AppConfig,
+        public lpService: LandingpageService, 
         private msgsvc: UserMessageService) {
 
         this.EDIT_MODES = LandingConstants.editModes;
@@ -121,6 +123,13 @@ export class EditControlComponent implements OnInit, OnChanges {
                 this.startEditing(remoteObj.nologin);
             }
         });
+
+        this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
+            console.log("fileManagerUrl changed to:", fileManagerUrl);
+            if (fileManagerUrl) {
+                this.fileManagerUrl = fileManagerUrl;
+            }
+        });        
     }
 
     ngOnChanges() {
@@ -193,6 +202,15 @@ export class EditControlComponent implements OnInit, OnChanges {
      return returnString;
     }
 
+    get readySubmit() {
+        return this.lpService.readySummit(this.mdrec);
+    }
+
+    get fileManagerTooltip(){
+        if(this.fileManagerUrl) return this.fileManagerUrl;
+        else return "File Manager URL is not available."
+    }
+
     /**
      * start (or resume) editing of the resource metadata.  Calling this will cause editing widgets to 
      * appear on the landing page, allowing the user to edit various fields.
@@ -222,8 +240,6 @@ export class EditControlComponent implements OnInit, OnChanges {
                     {
                         if(md)
                         {
-                            console.log("Draft loaded", md);
-                            // console.log("Draft loaded:", md);
                             this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
                             this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
                             this._setEditMode(this.EDIT_MODES.EDIT_MODE);
@@ -263,8 +279,8 @@ export class EditControlComponent implements OnInit, OnChanges {
      */
     public discardEdits(): void {
         if (this._custsvc) {
-            this._custsvc.discardDraft().subscribe(
-                (md) => {
+            this._custsvc.discardDraft().subscribe({
+                next: (md) => {
                     // console.log("Discard edit return:", md);
                     this.mdupdsvc.forgetUpdateDate();
                     this.mdupdsvc.fieldReset();
@@ -280,7 +296,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                       this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     }
                 },
-                (err) => {
+                error: (err) => {
                     if (err.type == "user")
                         this.msgsvc.error(err.message);
                     else {
@@ -288,7 +304,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                         this.msgsvc.syserror("error during discard: " + err.message)
                     }
                 }
-            );
+        });
         }
         else
             console.warn("Warning: requested edit discard without authorization");
@@ -463,6 +479,6 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     submitReview() {
-        
+        console.log("Submit for review...")
     }
 }

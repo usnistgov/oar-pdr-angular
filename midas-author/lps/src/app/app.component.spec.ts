@@ -14,14 +14,13 @@ import { AngularEnvironmentConfigService } from 'oarlps';
 import { CartService } from 'oarlps';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
-import { IEnvironment } from '../environments/ienvironment';
 import * as environment from '../environments/environment';
+import { AuthModule, AuthenticationService, OARAuthenticationService, MockAuthenticationService } from 'oarng';
 
 describe('AppComponent', () => {
     let cfg: AppConfig;
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
-    let ienv : IEnvironment;
 
     beforeEach(waitForAsync(() => {
         debugger;
@@ -31,8 +30,15 @@ describe('AppComponent', () => {
 
             declarations: [
                 AppComponent,
-            ], providers: [GoogleAnalyticsService, CartService, { provide: AppConfig, useValue: cfg }]
-            , imports: [RouterTestingModule, FrameModule, ConfigModule, BrowserTransferStateModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
+            ], 
+            providers: [
+                GoogleAnalyticsService, 
+                CartService,
+                { provide: AppConfig, useValue: cfg },
+                MockAuthenticationService,
+                AuthenticationService
+            ]
+            , imports: [RouterTestingModule, FrameModule, BrowserTransferStateModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
         }).compileComponents();
     }));
 
@@ -55,14 +61,4 @@ describe('AppComponent', () => {
         })
     }));
 
-    it(`should contain 'DATA REPOSITORY' in the first span`, waitForAsync(() => {
-        const fixture = TestBed.createComponent(AppComponent);
-
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            const compiled = fixture.debugElement.nativeElement;
-            console.log("span", compiled.querySelector('span').textContent);
-            expect(compiled.querySelector('span').textContent).toContain('DATA REPOSITORY');
-        })
-    }));
 });

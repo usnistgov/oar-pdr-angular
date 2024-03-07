@@ -4,9 +4,10 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { Reference } from './reference';
-
+import { RefListComponent } from './ref-list/ref-list.component';
 
 @Component({
     selector: 'app-references',
@@ -14,21 +15,23 @@ import { Reference } from './reference';
     styleUrls: ['../landing.component.scss', './references.component.css'],
     animations: [
         trigger('editExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        state('false', style({height: '0px', minHeight: '0'})),
+        state('true', style({height: '*'})),
+        transition('true <=> false', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ])
     ]
 })
 export class ReferencesComponent implements OnInit {
     fieldName: string = 'references';
-    editBlockStatus: string = 'collapsed';
+    editBlockExpanded: boolean = false;
     editMode: string = MODE.NORNAL; 
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     overflowStyle: string = 'hidden';
     dataChanged: boolean = false;
     currentRef: Reference = {} as Reference;
     currentRefIndex: number = 0;
+    childEditMode: string = MODE.NORNAL;
+    orderChanged: boolean = false;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -40,9 +43,19 @@ export class ReferencesComponent implements OnInit {
         public lpService: LandingpageService) { 
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.editBlockStatus == 'expanded')
-                    this.setMode(MODE.NORNAL, false);
+
+
+                if(sectionMode){
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.editBlockExpanded == true)
+                            this.setMode(MODE.NORNAL, false);
+                        }
+                    }else{
+                        if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                            this.startEditing();
+                        }
+                    }
                 }
             })
     }
@@ -52,6 +65,7 @@ export class ReferencesComponent implements OnInit {
     }
 
     ngOnChanges(ch : SimpleChanges) {
+        console.log("changes", ch)
         if (ch.record){
             this.resetOrigin();
         }
@@ -60,6 +74,7 @@ export class ReferencesComponent implements OnInit {
 
     resetOrigin() {
         // if(this.record && this.record['references'] && this.record['references'].length > 0) {
+        console.log("references - this.record", this.record)
         if(this.record){
             // this.currentRef = this.record['references'][0];
 
@@ -82,19 +97,56 @@ export class ReferencesComponent implements OnInit {
             case 'dataChanged':
                 this.dataChanged = true;
                 break;
+            case 'orderChanged':
+                this.orderChanged = true;
+                break;
+            case 'orderReset':
+                this.orderChanged = false;
+                break;                
             default:
                 break;
         }
     }
 
+    /**
+     * Hide edit block
+     */
+    hideEditBlock() {
+        this.setMode(MODE.NORNAL);
+    }
+
     get isNormal() { return this.editMode==MODE.NORNAL }
+    get isListing() { return this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
+    get childIsEditing() { return this.childEditMode==MODE.EDIT }
+    get childIsAdding() { return this.childEditMode==MODE.ADD }
+    
+    @ViewChild('reflist') refList: RefListComponent;
+
+    /**
+     * Check if any author data changed or author order changed
+     */
+    get refChanged() {
+        let changed: boolean = false;
+
+        if(this.record[this.fieldName]) {
+            this.record[this.fieldName].forEach(author => {
+                changed = changed || author.dataChanged;
+            })
+        }
+        
+        return changed || this.orderChanged;
+    }
+
+    get refUpdated() {
+        return this.mdupdsvc.anyFieldUpdated(this.fieldName);
+    }
 
     /**
      * set current mode to editing.
      */
-    onEdit() {
-        this.setMode(MODE.EDIT);
+    startEditing(refreshHelp: boolean = true) {
+        this.setMode(MODE.LIST, refreshHelp);
     }
 
     /**
@@ -105,9 +157,9 @@ export class ReferencesComponent implements OnInit {
      */   
     editIconClass() {
         if(!this.isEditing){
-            return "faa faa-pencil icon_enabled";
+            return "fas fa-pencil icon_enabled";
         }else{
-            return "faa faa-pencil icon_disabled";
+            return "fas fa-pencil icon_disabled";
         }
     }
 
@@ -117,7 +169,7 @@ export class ReferencesComponent implements OnInit {
      */
     getStyle(){
         if(this.mdupdsvc.isEditMode){
-            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged);
+            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged, undefined, this.isEditing);
         }else{
             return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
         }
@@ -127,10 +179,21 @@ export class ReferencesComponent implements OnInit {
      * Expand the edit block that user can edit reference data
      */
     openEditBlock() {
-        this.editBlockStatus = 'expanded';
+        this.editBlockExpanded = true;
 
         //Broadcast current edit section so landing page will scroll to the section
         this.lpService.setCurrentSection('references');
+    }
+
+    /**
+     * Refresh the help text
+     */
+    refreshHelpText(help_topic: string = MODE.LIST){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[help_topic];
+
+        this.lpService.setSectionHelp(sectionHelp);
     }
 
     /**
@@ -142,26 +205,27 @@ export class ReferencesComponent implements OnInit {
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
-        if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
-        }
             
-
         switch ( this.editMode ) {
-            case MODE.EDIT:
+            case MODE.LIST:
                 this.openEditBlock();
                 this.setOverflowStyle();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.LIST);
+                }
                 break;
 
             default: // normal
                 // Collapse the edit block
-                this.editBlockStatus = 'collapsed'
+                this.editBlockExpanded = false;
                 this.setOverflowStyle();
+
+                // Update help text
+                if(refreshHelp){
+                    this.refreshHelpText(MODE.NORNAL);
+                }                
                 break;
         }
 
@@ -177,7 +241,7 @@ export class ReferencesComponent implements OnInit {
      * Then tooltip will not be cut off. 
      */
     setOverflowStyle() {
-        if(this.editBlockStatus == 'collapsed') {
+        if(!this.editBlockExpanded) {
             this.overflowStyle = 'hidden';
         }else {
             this.overflowStyle = 'hidden';
@@ -196,4 +260,21 @@ export class ReferencesComponent implements OnInit {
         return false;
     }
 
+    /**
+     * Update the edit status of child component 
+     * so we can set the status of the close button
+     * @param editmode editmode from child component
+     */
+    setChildEditMode(editmode: string) {
+        this.childEditMode = editmode;
+    }    
+
+    /*
+     *  Undo editing. If no more field was edited, delete the record in staging area.
+     */
+    undoAllChanges() {
+        this.refList.undoAllChangesConfirmation();
+        this.orderChanged = false; 
+        this.hideEditBlock();
+    }   
 }

@@ -23,7 +23,7 @@ export class RefEditComponent implements OnInit {
     fieldName: string = 'references';
     
     // Input method. 1 = DOI, 2=Ref data, 3=Citation text
-    inputMethod: string = "1"; 
+    inputMethod: string = "2"; 
 
     // contentCollapsed: boolean = true;
     citationLocked: boolean = false;
@@ -32,8 +32,9 @@ export class RefEditComponent implements OnInit {
     showRefData: boolean = false;
     showCitationData: boolean = false;
     showAllFields: boolean = false;
+    ref: Reference = {} as Reference;
 
-    @Input() ref: Reference = {} as Reference;
+    @Input() currentRef: Reference = {} as Reference;
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
@@ -43,9 +44,11 @@ export class RefEditComponent implements OnInit {
 
     ngOnInit(): void {
         if(this.isEditing) this.showAllFields = true;
-        if(this.ref) this.originalRef = JSON.parse(JSON.stringify(this.ref));
-
-        this.reftype = this.ref.refType == "IsSupplementTo" ? "1" : "2" ;
+        if(this.currentRef) {
+            this.originalRef = JSON.parse(JSON.stringify(this.currentRef));
+            this.ref = JSON.parse(JSON.stringify(this.currentRef));
+            this.reftype = this.currentRef.refType == "IsSupplementTo" ? "1" : "2" ;
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -54,13 +57,16 @@ export class RefEditComponent implements OnInit {
         if(changes.editMode && changes.editMode.currentValue == "normal") {
             this.reset();
         }
-
-        if(changes.ref) {
-            if(this.ref) {
-                this.originalRef = JSON.parse(JSON.stringify(this.ref));
+        console.log('changes', changes);
+        if(changes.currentRef) {
+            console.log('this.currentRef', this.currentRef);
+            if(this.currentRef) {
+                this.originalRef = JSON.parse(JSON.stringify(this.currentRef));
+                this.ref = JSON.parse(JSON.stringify(this.currentRef));
                 this.reftype = this.originalRef.refType == "IsSupplementTo" ? "1" : "2" ;
             }else{
                 this.originalRef = undefined;
+                this.ref = {} as Reference;
             }
         }
     }
@@ -71,8 +77,20 @@ export class RefEditComponent implements OnInit {
     get useRefData() { return this.inputMethod == "2" };
     get useCitationData() { return this.inputMethod == "3" };
 
+    /**
+     * When edit block expanded, set overflow to visible so tooltip can be seen.
+     * @returns 
+     */
+    getAuthorStyle() {
+        if(this.editBlockStatus == 'collapsed')
+            return {'overflow': 'hidden'};
+        else{
+            return {'overflow': 'visible'};
+        }
+    }
+
     reset() {
-        this.inputMethod = "1"; 
+        this.inputMethod = "2"; 
 
         this.citationLocked = false;
         this.editBlockStatus = 'collapsed';
@@ -84,7 +102,6 @@ export class RefEditComponent implements OnInit {
     }
 
     onChange(updateCitation:boolean = false) {
-        console.log("this.ref", this.ref);
         this.ref.dataChanged = true;
 
         if(updateCitation) this.updateCitation();
@@ -235,13 +252,7 @@ export class RefEditComponent implements OnInit {
     }
 
     authorExpandClick() {
-        // this.contentCollapsed = !this.contentCollapsed;
         this.editBlockStatus = this.editBlockStatus=="collapsed"? "expanded" : "collapsed";
-        // if(this.contentCollapsed) {
-        //     this.editBlockStatus = "collapsed";
-        // }else{
-        //     this.editBlockStatus = "expanded";
-        // }
     }
 
     /**

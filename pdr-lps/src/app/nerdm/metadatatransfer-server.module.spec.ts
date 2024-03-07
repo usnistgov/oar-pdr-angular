@@ -2,7 +2,7 @@ import * as mdt from './metadatatransfer-server.module';
 import { NerdmRes, MetadataTransfer } from 'oarlps';
 import { AppConfig } from 'oarlps';
 import { SchemaLabel, NerdmConversionService } from 'oarlps';
-import { config, testdata } from 'oarlps';
+import { config, testdata } from '../../environments/environment';
 
 describe('serializeMetadataTransferFactory', function() {
 

@@ -1,6 +1,5 @@
 import { Component, AfterViewInit, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
-import './content/modal.less';
 import { GoogleAnalyticsService } from 'oarlps'
 import { AppConfig } from 'oarlps';
 import { isPlatformBrowser } from '@angular/common';

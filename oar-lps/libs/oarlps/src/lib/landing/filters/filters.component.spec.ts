@@ -11,15 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { TreeModule } from 'primeng/tree';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { testdata } from '../../../environments/environment';
-import { IEnvironment } from '../../../environments/ienvironment';
+import * as env from '../../../environments/environment';
 
 describe('FiltersComponent', () => {
-    let ienv : IEnvironment;
     let component: FiltersComponent;
     let fixture: ComponentFixture<FiltersComponent>;
     let plid : Object = "browser";
     let ts : TransferState = new TransferState();
-    let cfg : AppConfig = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+    let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
     let nrd1 = testdata['forensics'];
 
     beforeEach(async () => {

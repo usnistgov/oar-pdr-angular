@@ -9,10 +9,9 @@ import { DataCart } from '../../datacart/cart';
 import { CartService } from '../../datacart/cart.service';
 import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { BadgeModule } from 'primeng/badge';
-import { IEnvironment } from '../../../environments/ienvironment';
+import * as env from '../../../environments/environment';
 
 describe('CartcontrolComponent', () => {
-    let ienv : IEnvironment;
     let component: CartcontrolComponent;
     let fixture: ComponentFixture<CartcontrolComponent>;
     let cfg: AppConfig;
@@ -20,7 +19,7 @@ describe('CartcontrolComponent', () => {
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";

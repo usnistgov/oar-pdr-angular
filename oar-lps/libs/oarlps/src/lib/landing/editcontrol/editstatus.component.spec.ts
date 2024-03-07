@@ -6,10 +6,11 @@ import { EditStatusService } from './editstatus.service';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { UpdateDetails, UserDetails } from './interfaces';
+import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
 import { AppConfig } from '../../config/config';
 import { config, testdata } from '../../../environments/environment';
+import { Credentials, UserAttributes } from 'oarng';
 
 describe('EditStatusComponent', () => {
     let component : EditStatusComponent;
@@ -17,14 +18,13 @@ describe('EditStatusComponent', () => {
     let authsvc : AuthService = new MockAuthService(undefined);
     let cfg : AppConfig = new AppConfig(config);
     cfg['editEnabled'] = true;
-    let userDetails: UserDetails = {
-        'userId': 'dsn1',
+    let userAttributes: UserAttributes = {
         'userName': 'test01',
         'userLastName': 'NIST',
         'userEmail': 'test01@nist.gov'
     }
     let updateDetails: UpdateDetails = {
-        'userDetails': userDetails,
+        'userAttributes': userAttributes,
         '_updateDate': '2025 April 1'
     }
 
@@ -102,7 +102,7 @@ describe('EditStatusComponent', () => {
         fixture.detectChanges();
         cmpel = fixture.nativeElement;
         bardiv = cmpel.querySelector(".ec-status-bar");
-        expect(bardiv.children[0].innerHTML).toContain('- edit');
+        expect(bardiv.children[0].innerHTML).toContain('required field');
 
         component.setLastUpdateDetails(updateDetails);
 
@@ -110,7 +110,7 @@ describe('EditStatusComponent', () => {
         component.showLastUpdate();
         expect(component.message).toContain("Edited by test01 NIST on 2025 April 1");
         fixture.detectChanges();
-        expect(bardiv.firstElementChild.innerHTML).toContain('- edit');
+        expect(bardiv.firstElementChild.innerHTML).toContain('required field');
         expect(bardiv.children[1].innerHTML).toContain('Edited by test01 NIST on 2025 April 1');
 
         component._editmode = EDIT_MODES.DONE_MODE;

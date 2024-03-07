@@ -4,6 +4,8 @@ import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from '../editcontrol/editstatus.service';
+import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 
 interface reference {
     refType?: string,
@@ -24,7 +26,7 @@ interface reference {
 @Component({
     selector: 'pdr-version',
     templateUrl: './version.component.html',
-    styleUrls: [ ]
+    styleUrls: [ '../landing.component.scss' ]
 })
 export class VersionComponent implements OnChanges {
     visibleHistory = false;
@@ -32,6 +34,7 @@ export class VersionComponent implements OnChanges {
     lpssvc : string = null;
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string;
+    fieldName = SectionPrefs.getFieldName(Sections.VERSION);
 
     @Input() record: NerdmRes = null;
 
@@ -40,7 +43,8 @@ export class VersionComponent implements OnChanges {
      * @param cfg   the app configuration data
      */
     constructor(private cfg : AppConfig,
-        public editstatsvc: EditStatusService) {
+        public editstatsvc: EditStatusService,
+        public lpService: LandingpageService) {
         this.lpssvc = this.cfg.get('locations.landingPageService',
                                    'https://data.nist.gov/od/id/');
     }
@@ -76,6 +80,7 @@ export class VersionComponent implements OnChanges {
             return "v" + relinfo.version;
         return this.renderRelAsLink(relinfo, "v" + relinfo.version);
     }
+
     renderRelAsLink(relinfo, linktext) {
         let out: string = linktext;
         if (relinfo.location)
@@ -173,6 +178,17 @@ export class VersionComponent implements OnChanges {
             }
         }
     }
+
+    /**
+     * Refresh the help text
+     */
+    refreshHelpText(){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+
+        this.lpService.setSectionHelp(sectionHelp);
+    }    
 }
 
 /**

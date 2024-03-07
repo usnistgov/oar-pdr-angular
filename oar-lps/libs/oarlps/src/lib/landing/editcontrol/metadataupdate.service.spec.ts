@@ -43,6 +43,7 @@ describe('MetadataUpdateService', () => {
 
     it('returns initial draft metadata', () => {
         var md = null;
+        debugger
         svc.subscribe({
             next: (res) => { md = res; },
             error: (err) => { throw err; }
@@ -68,18 +69,25 @@ describe('MetadataUpdateService', () => {
 
         var md = null;
         svc.setOriginalMetadata(resmd);
-        svc.subscribe({
-            next: (res) => { md = res; },
-            error: (err) => { throw err; }
-        }); 
-        svc.update('gurn', {'goober': "gurn", 'title': "Dr."});
-        expect(md['title']).toBe("Dr.");
-        expect(md['accessLevel']).toBe("public");
-        expect(md['goober']).toBe("gurn");
 
-        expect(svc.fieldUpdated('gurn')).toBeTruthy();
-        expect(upd).toBeTruthy();
-        expect(svc.lastUpdate).not.toBe({} as UpdateDetails);
+
+        debugger
+        svc.update('gurn', {'goober': "gurn", 'title': "Dr."});
+        svc.subscribe({
+            next: (res) => { 
+                debugger; 
+                md = res; 
+                expect(md['title']).toBe("Dr.");
+                expect(md['accessLevel']).toBe("public");
+                expect(md['goober']).toBe("gurn");
+        
+                expect(svc.fieldUpdated('gurn')).toBeTruthy();
+                expect(upd).toBeTruthy();
+                expect(svc.lastUpdate).not.toBe({} as UpdateDetails);
+            },
+            error: (err) => { debugger; throw err; }
+        }); 
+
     });
 
     it('undo()', () => {
@@ -87,25 +95,31 @@ describe('MetadataUpdateService', () => {
 
         var md = null;
         svc.setOriginalMetadata(rec);
+
+        svc.update('gurn', {'goober': "gurn", 'title': "Dr."});
         svc.subscribe({
-            next: (res) => { md = res; },
+            next: (res) => { 
+                md = res; 
+
+                expect(svc.fieldUpdated('gurn')).toBeTruthy();
+                expect(md['title']).toBe("Dr.");
+                expect(md['goober']).toBe("gurn");
+                expect(md['description'].length).toEqual(1);
+                svc.update("description", { description: rec['description'].concat(['Hah!']) });
+                expect(md['description'].length).toEqual(2);
+                expect(md['description'][1]).toEqual("Hah!");
+        
+                svc.undo('gurn');
+                expect(svc.fieldUpdated('gurn')).toBeFalsy();
+                expect(md['goober']).toBe(null);
+                expect(md['title']).toContain("Multiple Encounter");
+                expect(md['description'].length).toEqual(2);
+                expect(md['description'][1]).toEqual("Hah!");
+            },
             error: (err) => { throw err; }
         }); 
-        svc.update('gurn', {'goober': "gurn", 'title': "Dr."});
-        expect(svc.fieldUpdated('gurn')).toBeTruthy();
-        expect(md['title']).toBe("Dr.");
-        expect(md['goober']).toBe("gurn");
-        expect(md['description'].length).toEqual(1);
-        svc.update("description", { description: rec['description'].concat(['Hah!']) });
-        expect(md['description'].length).toEqual(2);
-        expect(md['description'][1]).toEqual("Hah!");
 
-        svc.undo('gurn');
-        expect(svc.fieldUpdated('gurn')).toBeFalsy();
-        expect(md['goober']).toBe(null);
-        expect(md['title']).toContain("Multiple Encounter");
-        expect(md['description'].length).toEqual(2);
-        expect(md['description'][1]).toEqual("Hah!");
+
         
     });
 
@@ -115,17 +129,21 @@ describe('MetadataUpdateService', () => {
         var md = null;
         svc.setOriginalMetadata(rec);
         svc.subscribe({
-            next: (res) => { md = res; },
+            next: (res) => { 
+                md = res; 
+
+                expect(svc.fieldUpdated('gurn')).toBeTruthy();
+                expect(md['title']).toBe("Dr.");
+        
+                svc.undo('gurn');
+                expect(svc.fieldUpdated('gurn')).toBeFalsy();
+                expect(md['goober']).toBe(undefined);
+                expect(md['title']).toContain("Multiple Encounter");
+            },
             error: (err) => { throw err; }
         }); 
         svc.update('gurn', {'goober': "gurn", 'title': "Dr."});
-        expect(svc.fieldUpdated('gurn')).toBeTruthy();
-        expect(md['title']).toBe("Dr.");
 
-        svc.undo('gurn');
-        expect(svc.fieldUpdated('gurn')).toBeFalsy();
-        expect(md['goober']).toBe(undefined);
-        expect(md['title']).toContain("Multiple Encounter");
         
     });
 

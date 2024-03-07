@@ -6,4 +6,5 @@ export interface DataModel {
     contactName?: string;
     willUpload?: boolean;
     assocPageType?: string;
+    recordname?: string;
 }

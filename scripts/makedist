@@ -2,23 +2,53 @@
 #
 # makedist:  build the package's distributions
 #
-# This package only provides four different distributions:
-#   midas-author
+# This script is designed to run without any arguments: this will build
+# all of the available distributions.  Restricting the build to specific
+# distributions can be done by listing the names of the desired distributions
+# on the command line.
+#
+# The following distributions can be built with this script:
+#   midas-author-wizard
+#   midas-author-lps
 #   pdr-lps
-#   pdr-rpa-requests
+#   pdr-rpa-request
 #   pdr-rpa-approve
 #
+# The following synonyms are provided for backward compatability:
+#   editable -- for midas-author-lps
+#   wizard   -- for midas-author-wizard
+#
+# The following macros are also supported:
+#   midas-author -- builds both midas-author-lps and midas-author-wizard
+#   pdr-rpa      -- builds both pdr-rpa-request and pdr-rpa-approve
+#   angular      -- builds all available angular distributions
+#
+# SYNOPSIS
+#    makedist [OPTIONS] [DISTNAME ...]
+#
+# OPTIONS
+#    -l, --list               list the names of the supported distributions and
+#                             exit without building.
+#    --dist-dir=DIR           The output directory to write the distribution
+#                             products into.
+#    -d DIR, --source-dir=DIR  the directory containing the python source code
+#                             (default: .)
+#    -c DIR, --cache-dir=DIR  directory for holding intermediate or cache-able
+#                             products; if provided, the node_modules cache will
+#                             be located and used from here.  This can be shared
+#                             with other similar packages to avoid redundant 
+#                             re-building of nodejs dependency modules
+#    -v VER, --version=VER    assign VER as the VERSION for this product
+#    
+#
+
 set -e
 prog=`basename $0`
 execdir=`dirname $0`
 [ "$execdir" = "" -o "$execdir" = "." ] && execdir=$PWD
-PACKAGE_DIR=`(cd $execdir/.. > /dev/null 2>&1; pwd)`
+PACKAGE_DIR=`dirname $execdir`
+[ "$PACKAGE_DIR" = "" -o "$PACKAGE_DIR" = "." ] && PACKAGE_DIR=$PWD
 SOURCE_DIR=$PACKAGE_DIR
-
-# Update this list with the names of the individual component names
-# 
-# DISTNAMES="midas-lps midas-wizard pdr-lps pdr-rpa-request pdr-rpa-approve"
-DISTNAMES="midas-lps midas-wizard pdr-rpa-request pdr-rpa-approve"
 
 # this is needed because realpath is not on macs
 function realpath {
@@ -35,6 +65,18 @@ function realpath {
         echo "$PWD/${1#./}"
     fi
 }
+
+# Update this list with the names of the individual component names
+#
+midas_author_names="midas-author-wizard midas-author-lps"
+pdr_rpa_names="pdr-rpa-request pdr-rpa-approve"
+DISTNAMES="$midas_author_names $pdr_rpa_names"
+declare -A APPSRCDIR=(                        \
+    [midas-author-wizard]=midas-author/wizard \
+    [midas-author-lps]=midas-author/lps       \
+    [pdr-rpa-request]=pdr-rpa/pdr-rpa-request \
+    [pdr-rpa-approve]=pdr-rpa/pdr-rpa-approve \
+)
 
 # handle command line options
 while [ "$1" != "" ]; do 
@@ -64,11 +106,23 @@ while [ "$1" != "" ]; do
         shift
         CACHE_DIR=$1
         ;;
+    angular)
+        build_dist=${DISTNAMES}
+        ;;
+    midas-author)
+        build_dist="$build_dist $midas_author_names"
+        ;;
+    wizard)
+        build_dist="$build_dist midas-author-wizard"
+        ;;
+    editable)
+        build_dist="$build_dist midas-author-lps"
+        ;;
     -*)
         echo "$prog: unsupported option:" $1
         false
         ;;
-    midas-lps|midas-wizard|pdr-lps|pdr-rpa-request|pdr-rpa-approve)
+    midas-author-lps|midas-author-wizard|pdr-rpa-request|pdr-rpa-approve)
         build_dist="$build_dist $1"
         true
         ;;
@@ -80,14 +134,13 @@ while [ "$1" != "" ]; do
   shift
 done
 [ -n "$build_dist" ] || build_dist=$DISTNAMES
+build_dist=`echo $build_dist | sed -e 's/ /\n/g' | sort -u`
 echo '#' Building $build_dist
 
 true ${DIST_DIR:=$PACKAGE_DIR/dist}
-# BUILD_DIR=$SOURCE_DIR/dist
-# mkdir -p $BUILD_DIR $DIST_DIR
 mkdir -p $DIST_DIR
 
-echo "# Building in $SOURCE_DIR..."
+echo "# Building from $SOURCE_DIR..."
 cd $SOURCE_DIR || {
     echo ${prog}: Unable to change into $SOURCE_DIR
     false
@@ -98,34 +151,13 @@ cd $SOURCE_DIR || {
 #
 # set -x
 echo '+' scripts/setversion.sh
-scripts/setversion.sh
+scripts/setversion.sh 
 [ -n "$PACKAGE_NAME" ] || PACKAGE_NAME=`cat VERSION | awk '{print $1}'`
-version=`cat VERSION | awk '{printf("%s",$2)}'`
-vers4fn=`echo $version | perl -pe 's#[/ \t]+#_#g'`
+version=`cat VERSION | awk '{print $2}'`
+vers4fn=`echo $version | sed -re 's#[/ \t]+#_#g'`
 
-echo '+' PACKAGE_NAME=$PACKAGE_NAME
-echo '+' version=$version
-
-[ -z "$CACHE_DIR" ] || {
-    CACHE_DIR=`realpath $CACHE_DIR`
-    if [ -e "node_modules" ]; then
-        if [ -L "node_modules" ]; then
-            { sharednmd=`readlink node_modules` && \
-              sharednmd=`realpath $sharednmd`; } || true
-            [ -n "$sharednmd" -a "$sharednmd" == "$CACHE_DIR/node_modules" ] || {
-                echo ${prog}: node_modules already "established;" \
-                     "ignoring --cache-dir"
-            }
-        else
-            echo ${prog}: node_modules already "established;" \
-                 "ignoring --cache-dir"
-        fi
-    else
-        # make ./node_modules a link to the shared one.
-        mkdir -p $CACHE_DIR/node_modules
-        ln -s $CACHE_DIR/node_modules node_modules
-    fi
-}
+npmpfx=
+[ -z "$CACHE_DIR" ] || npmpfx="--prefix $CACHE_DIR"
 
 # install required modules
 npmvers=`npm --version`
@@ -142,28 +174,23 @@ npm $npmpfx run build-oarlps
 
 # build target distributions
 declare -A buildscript
-buildscript=(["pdr-lps"]=build-pdrlps                                     \
-             ["midas-wizard"]=build-midaswiz ["midas-lps"]=build-midaslps \
-             ["pdr-rpa-request"]=build-rpa-request                        \
-             ["pdr-rpa-approve"]=build-rpa-approve)
-declare -A builddir
+buildscript=(                            \
+    ["pdr-lps"]=build-pdrlps             \
+    ["midas-author-wizard"]=build-sw     \
+    ["midas-author-lps"]=build-midaslps  \
+    ["pdr-rpa-request"]=build-rpa-request\
+    ["pdr-rpa-approve"]=build-rpa-approve\
+)
 
 for target in $build_dist; do
     distname="${target}-$vers4fn"
-    builddir="$target/dist"
-    if (echo $target | grep -qs '^pdr-rpa-'); then
-        builddir="pdr-rpa/$target/dist"
-    elif [ "$target" = "midas-lps" ]; then
-        builddir="midas-author/lps/dist"
-    elif [ "$target" = "midas-wizard" ]; then
-        builddir="midas-author/wizard/dist"
-    fi
+    builddir="${APPSRCDIR[$target]}/dist"
 
-    echo '#########################'
+    echo '##############################################'
     echo '#'
     echo "# Building $distname"...
     echo '#'
-    echo '#########################'
+    echo '##############################################'
 
     # build the code
     echo '+' npm $npmpfx run ${buildscript[$target]}
@@ -176,14 +203,13 @@ for target in $build_dist; do
 
     # create the dependency file
     if [ -f "package-lock.json" ]; then
-        echo '+' $execdir/record_deps.py $target $version package-lock.json \
+        echo '+' $execdir/record_npm_deps.py $target $version package-lock.json \
                  $npmvers \> $DIST_DIR/${distname}_dep.json
-        $execdir/record_deps.py $target $version package-lock.json $npmvers \
-                                > $DIST_DIR/${distname}_dep.json
+        $execdir/record_npm_deps.py $target $version package-lock.json $npmvers \
+                                    > $DIST_DIR/${distname}_dep.json
     else
         echo ${prog}: WARNING: Unable to create dependency file for ${dist}: \
              package-lock.json not found
     fi
 done
-    
-    
+

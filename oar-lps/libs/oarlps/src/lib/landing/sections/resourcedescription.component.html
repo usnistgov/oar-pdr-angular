@@ -1,6 +1,9 @@
 <div id="description">
         <div class="section-header">
-            <h3 style="display: inline-block;" name="description"><b>{{desctitle}}</b></h3>
+            <h3 style="display: inline-block;" name="description">
+                <!-- <b><span [ngClass]="{'highlight': titleSelected}" [@enterAnimation]>{{desctitle}}</span></b> -->
+                <b>{{desctitle}}</b>
+            </h3>
         </div>
         <div>
             <app-description [record]="record" [inBrowser]="inBrowser"></app-description>

@@ -8,16 +8,15 @@ import { Location } from '@angular/common';
 import { AppConfig } from '../../config/config'
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
-import { IEnvironment } from '../../../environments/ienvironment';
+import * as env from '../../../environments/environment';
 
 describe('TaxonomyListService', () => {
-    let ienv : IEnvironment;
     let cfg : AppConfig;
     let plid : Object = "browser";
     let ts : TransferState = new TransferState();
 
     it('should be created', () => {
-        cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
 
         TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, RouterModule, RouterTestingModule],

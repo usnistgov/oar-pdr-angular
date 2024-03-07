@@ -1,15 +1,15 @@
 <!-- Display zip files if any -->
 <div *ngIf="inBrowser" class="full-span">
     <!-- Show current task -->
-    <div *ngIf="showCurrentTask" style="text-align: center; margin:auto; width:100%;"><i class="faa faa-spinner faa-spin" style="color:#1E6BA1;" aria-hidden="true"></i><span style="padding-left: .5em;">{{currentTask}}</span></div>
+    <div *ngIf="showCurrentTask" style="text-align: center; margin:auto; width:100%;"><i class="fas fa-spinner fa-spin" style="color:#1E6BA1;" aria-hidden="true"></i><span style="padding-left: .5em;">{{currentTask}}</span></div>
     <!-- header -->
     <div *ngIf="zipData.length > 0" class="header-green" style="width: 100%;" data-toggle="tooltip" title="Zip Files">
         <span class="span30">
             <!-- Toggle button to show/hide zip files-->
             <span (click)="showZipFiles = !showZipFiles">
-                <i *ngIf="!showZipFiles" class="faa faa-arrow-circle-down faa-1x icon-white"
+                <i *ngIf="!showZipFiles" class="fas fa-arrow-circle-down faa-1x icon-white"
                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Expand All"></i>
-                <i *ngIf="showZipFiles" class="faa faa-arrow-circle-up faa-1x icon-white"
+                <i *ngIf="showZipFiles" class="fas fa-arrow-circle-up faa-1x icon-white"
                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i>
             </span>
             Zip File Name
@@ -39,7 +39,7 @@
                             [striped]="true"></ngb-progressbar>
                     </span>
 
-                    <span (click)="cancelDownloadZip(zip)" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel current download"><i class="faa faa-remove"></i></span>
+                    <span (click)="cancelDownloadZip(zip)" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel current download"><i class="fas fa-times"></i></span>
                 </div>
                 <ng-template #not_downloading style="display:inline-block;">
                     <div *ngIf="zip.downloadStatus != 'error'; else download_error" style="display:inline-block;"
@@ -49,7 +49,7 @@
                     </div>
                     <ng-template #download_error>
                         <div style="display:inline-block;margin-left: .5em;font-size: 0.8em; color: red; cursor: pointer;" (click)="openErrZipDetails($event,op5,zip) ">
-                            <i class="faa faa-warning" [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"></i>
+                            <i class="fas fa-exclamation-triangle" [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"></i>
                             <u>{{getStatusForDisplay(zip.downloadStatus)}}</u>
                         </div>
                     </ng-template>
@@ -71,7 +71,7 @@
                     <ngb-progressbar type="info" [value]="overallProgress" textType="white" [showValue]="true"
                         [striped]="true"></ngb-progressbar>
                 </span>
-                <span (click)="cancelDownloadAllConfirmation()" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel all downloads"><i class="faa faa-remove"></i></span>
+                <span (click)="cancelDownloadAllConfirmation()" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel all downloads"><i class="fas fa-times"></i></span>
             </div>
             <ng-template #not_overall_downloading style="display:inline-block;">
                 <span *ngIf="overallStatus === 'complete';else other">
@@ -93,10 +93,10 @@
     *ngIf="inBrowser && (bundlePlanStatus == 'error' || bundlePlanStatus == 'internal error' || bundlePlanStatus === 'warnings')">
     <div class="header-orange" data-toggle="tooltip" title="Bundle message details">
         <span style="margin-left: .5em;" *ngIf="bundlePlanMessage" (click)="showMessage = !showMessage">
-            <i *ngIf="showMessage; else hideMessage" class="faa faa-arrow-circle-up faa-1x icon-white"
+            <i *ngIf="showMessage; else hideMessage" class="fas fa-arrow-circle-up faa-1x icon-white"
                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i>
             <ng-template #hideMessage>
-                <i class="faa faa-arrow-circle-down faa-1x icon-white"
+                <i class="fas fa-arrow-circle-down faa-1x icon-white"
                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Expand All"></i>
             </ng-template>
         </span>

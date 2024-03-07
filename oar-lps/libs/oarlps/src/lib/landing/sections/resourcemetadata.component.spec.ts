@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
 
 import { ResourceMetadataComponent } from './resourcemetadata.component';
-import { SectionsModule } from './sections.module';
 
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
@@ -18,7 +17,7 @@ describe('ResourceMetadataComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ SectionsModule ],
+            imports: [ ],
             declarations: [  ],
             providers: [
                 { provide: AppConfig, useValue: cfg },

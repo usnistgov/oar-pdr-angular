@@ -28,26 +28,12 @@ export class ContactinfoComponent implements OnInit {
         })
     }
 
-    /**
-     * cancel this wizard
-     */
-    cancel() {
-        console.log("Canceling wizard input");
-    }
-    
     ngAfterViewInit() {
         this.cdr.detectChanges();
     }
 
     ngAfterContentInit() {
         this.cdr.detectChanges();
-    }
-
-    /**
-     * close out the collection of information and dispatch it as necessary
-     */
-    finish() {
-        console.log("Done!");
     }
 
     toggleSbarView() {
@@ -74,12 +60,12 @@ export class ContactinfoComponent implements OnInit {
             this.steps[1].isComplete = false;
         }
 
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 
     updateContactName(evt:any) {
         this.dataModel.contactName = evt.target.value;
         this.steps[1].isComplete = (this.dataModel.contactName?.trim() != "");
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 }

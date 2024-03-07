@@ -8,7 +8,6 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 
 import { AppConfig, LPSConfig } from './config';
-import * as ngenv from '../../environments/environment';
 
 export const CONFIG_KEY_NAME : string = "LPSConfig";
 export const CONFIG_TS_KEY : StateKey<string> = makeStateKey(CONFIG_KEY_NAME);
@@ -165,18 +164,12 @@ export class AngularEnvironmentConfigService extends ConfigService {
      * @param cache    the TransferState instance for the application.  If we are on the server,
      *                 getConfig() will cache the configuration to the TransferState object.
      */
-    constructor(private ienv : IEnvironment,
+    constructor(private env : IEnvironment,
                 private platid : object, 
                 private cache : TransferState)
     {
         super();
-        if(!ienv){
-            ienv = {} as IEnvironment;
-            ienv.config = env.config;
-            ienv.context = env.context;
-            ienv.testdata = env.testdata;
-        }
-        this.ngenv = ienv;
+        this.ngenv = env;
     }
 
     /**

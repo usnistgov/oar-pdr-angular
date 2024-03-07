@@ -33,7 +33,7 @@ export class FilesComponent implements OnInit {
                 this.dataModel.willUpload = undefined;
                 this.steps[2].isComplete = false;
             }
-            this.steps[4].canGoNext = this.stepService.allDone();
+            this.steps[5].canGoNext = this.stepService.allDone();
         })
     }
 

@@ -13,7 +13,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-
+// import { DragDropModule } from '@angular/cdk/drag-drop';
 import { config, testdata } from '../../../environments/environment';
 
 describe('ResourceDescriptionComponent', () => {
@@ -25,7 +25,7 @@ describe('ResourceDescriptionComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ HttpClientModule, SectionsModule ],
+            imports: [ HttpClientModule ],
             declarations: [  ],
             providers: [
                 { provide: AppConfig, useValue: cfg },

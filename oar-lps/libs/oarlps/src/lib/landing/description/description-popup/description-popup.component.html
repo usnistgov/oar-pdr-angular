@@ -13,7 +13,7 @@
         <div class="ui-toolbar-group-right" style="margin-top: -1em;">
             <!-- Cancel button -->
             <button pButton type="submit" class="btn-labeled" id="btn-cancel" (click)="cancelChange();" label="Cancel"
-                icon="faa faa-trash faa-1x icon-white" iconPos="left">
+                icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
             </button>
 
             <!-- Save button 
@@ -21,7 +21,7 @@
               -->
             <button pButton type="submit" class="btn-labeled" id="btn-save"
                 [disabled]="inputValue[field].trim()==''"
-                (click)="saveDescription();" label="Save" icon="faa faa-save faa-1x icon-white" iconPos="left">
+                (click)="saveDescription();" label="Save" icon="fas fa-save faa-1x icon-white" iconPos="left">
             </button>
         </div>
     </p-toolbar>

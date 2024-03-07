@@ -8,7 +8,7 @@ import { ModuleWithProviders } from "@angular/core";
 import { NgModule } from "@angular/core";
 import { OnDestroy } from "@angular/core";
 import { OnInit } from "@angular/core";
-import { Subscription } from "rxjs/Subscription";
+import { Subscription } from "rxjs";
 
 // ----------------------------------------------------------------------------------- //
 // ----------------------------------------------------------------------------------- //

@@ -21,7 +21,7 @@ const PDR_METADATA_SVCEP : InjectionToken<string> =
 export function getMetadataEndpoint(platid : Object, config : AppConfig) : string {
     if (isPlatformServer(platid) && proc.env["PDR_METADATA_SVCEP"])
         return proc.env["PDR_METADATA_SVCEP"];
-    return config.get("mdAPI", "/unconfigured");
+    return config.get("PDRAPI", "/unconfigured");
 }
 
 /**

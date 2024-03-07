@@ -44,14 +44,14 @@
             <a *ngIf="resultItem.landingPage" style="float: right; margin-top: -0.5em;"
                 href="{{resultItem.landingPage}}" target="_blank">
                 <button pButton label="Home Page" type="button" class="p-button-sm visit-home-page-forensics"
-                    icon="faa faa-external-link" iconPos="left" style="padding: 3px 10px;"></button>
+                    icon="fas fa-external-link-alt" iconPos="left" style="padding: 3px 10px;"></button>
             </a>
 
             <a *ngIf="!resultItem.landingPage" style="float: right; margin-top: -0.5em;"
                 href="{{PDRAPIURL}}{{resultItem.ediid}}" target="_blank"
                 (click)="gaService.gaTrackEvent('outbound', $event, 'Visit to homepage',resultItem.landingPage)">
                 <button pButton label="Home Page" type="button" class="p-button-sm visit-home-page-forensics"
-                    icon="faa faa-external-link" iconPos="left" style="padding: 3px 10px;"></button>
+                    icon="fas fa-external-link-alt" iconPos="left" style="padding: 3px 10px;"></button>
             </a>
 
             <div style="width: 80% !important;">

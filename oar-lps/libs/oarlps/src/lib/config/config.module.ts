@@ -3,11 +3,12 @@ import { BrowserTransferStateModule, TransferState } from '@angular/platform-bro
 import { HttpClient } from '@angular/common/http';
 import { AppConfig, LPSConfig, WebLocations } from './config'
 import { ConfigService, newConfigService, RemoteFileConfigService, CFG_DATA } from './config.service'
+import { ConfigModule as NewConfigModule, ConfigurationService } from 'oarng';
 import { IEnvironment } from '../../environments/ienvironment';
 import { environment } from '../../environments/environment-impl';
 
-export function getAppConfig(configService: ConfigService) : AppConfig {
-    let out : AppConfig = configService.getConfig();
+export function getAppConfig(configService: ConfigurationService) : AppConfig {
+    let out : AppConfig = new AppConfig(configService.getConfig<LPSConfig>());
     console.log("App status, according to the configuration: " + out.status);
     return out;
 }
@@ -26,13 +27,14 @@ export function configFetcherFactory(http: HttpClient, configSvc: ConfigService)
  * data, making available for injection throughout the app.  
  */
 @NgModule({
+    imports: [ NewConfigModule ],
     providers: [
         HttpClient,
-        { provide: ConfigService, useFactory: newConfigService,
-          deps: [ environment, PLATFORM_ID, TransferState, HttpClient ] },
-        { provide: AppConfig, useFactory: getAppConfig, deps: [ ConfigService ] },
-        { provide: APP_INITIALIZER, useFactory: configFetcherFactory,
-          deps: [ HttpClient, ConfigService], multi: true }
+//        { provide: ConfigService, useFactory: newConfigService,
+//          deps: [ environment, PLATFORM_ID, TransferState, HttpClient ] },
+        { provide: AppConfig, useFactory: getAppConfig, deps: [ ConfigurationService ] },
+//        { provide: APP_INITIALIZER, useFactory: configFetcherFactory,
+//          deps: [ HttpClient, ConfigService], multi: true }
     ]
 })
 export class ConfigModule { 
@@ -41,7 +43,7 @@ export class ConfigModule {
         return {
           ngModule: ConfigModule,
           providers: [
-            { provide: environment, useValue: env }
+//            { provide: environment, useValue: env }
           ]
         };
     } 

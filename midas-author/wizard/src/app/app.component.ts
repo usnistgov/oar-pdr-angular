@@ -1,5 +1,9 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 // import * as footerlinks from '../assets/site-constants/footer-links.json';
+import { GoogleAnalyticsService } from 'oarlps'
+import { LPSConfig } from 'oarlps';
+import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-root',
@@ -14,25 +18,30 @@ export class AppComponent {
     clientHeight: number = 500;
     footbarHeight!: number;
     appVersion: string = "1.0";
+    gaCode: string;
+    confValues: LPSConfig;
 
     @ViewChild('footbar') elementView!: ElementRef;
 
-    constructor() { 
-        this.clientHeight = window.innerHeight; 
-        console.log("clientHeight", this.clientHeight)
+    constructor(
+        private configSvc: ConfigurationService,
+        private toastrService: ToastrService,
+        public gaService: GoogleAnalyticsService) { 
+            this.clientHeight = window.innerHeight; 
+
+            this.confValues = this.configSvc.getConfig();
+            this.appVersion = this.confValues['appVersion'];
+            this.gaCode = this.confValues['gaCode'] as string;
     }
 
     ngOnInit(): void {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
-        
     }
 
     ngAfterViewInit(): void {
-        //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
-        //Add 'implements AfterViewInit' to the class.
-        // this.footbarHeight = -this.elementView.nativeElement.offsetHeight;
-        // console.log('this.footbarHeight', this.footbarHeight)
+
+        this.gaService.appendGaTrackingCode(this.gaCode);
     }
 
     onResize(event: any){

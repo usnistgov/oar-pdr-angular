@@ -2,22 +2,22 @@ import { EditStatusService } from './editstatus.service';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { AppConfig } from '../../config/config'
 import { config } from '../../../environments/environment'
-import { UpdateDetails, UserDetails } from './interfaces';
+import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
+import { Credentials, UserAttributes } from 'oarng';
 
 describe('EditStatusService', () => {
 
     let svc : EditStatusService = null;
     let cfgdata = null;
     let cfg = null;
-    let userDetails: UserDetails = {
-        'userId': 'dsn1',
+    let userAttributes: UserAttributes = {
         'userName': 'test01',
         'userLastName': 'NIST',
         'userEmail': 'test01@nist.gov'
     }
     let updateDetails: UpdateDetails = {
-        'userDetails': userDetails,
+        'userAttributes': userAttributes,
         '_updateDate': 'today'
     }
 
@@ -44,7 +44,7 @@ describe('EditStatusService', () => {
         svc._setAuthorized(false);
 
         expect(svc.lastUpdated._updateDate).toEqual("today");
-        expect(svc.lastUpdated.userDetails).toEqual(userDetails);
+        expect(svc.lastUpdated.userAttributes).toEqual(userAttributes);
         expect(svc.userID).toEqual("Hank");
         expect(svc.authenticated).toBe(true);
         expect(svc.authorized).toBe(false);

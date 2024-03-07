@@ -123,3 +123,5 @@ export * from './lib/landing/accesspage/accesspage.module';
 export * from './lib/landing/accesspage/accesspage-list/accesspage-list.component';
 export * from './lib/landing/accesspage/accesspage-edit/accesspage-edit.component';
 export * from './lib/shared/testdata-service/testDataService';
+
+export * as Globals from './lib/shared/globals/globals';

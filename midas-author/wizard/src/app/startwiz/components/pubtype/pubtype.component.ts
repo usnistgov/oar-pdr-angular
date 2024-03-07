@@ -45,7 +45,7 @@ export class PubtypeComponent implements OnInit {
             // Turn on optional step if resource type is software
             // this.steps[3].active = (this.dataModel.resourceType == "software");
 
-            // this.steps[4].canGoNext = this.stepService.allDone();
+            // this.steps[5].canGoNext = this.stepService.allDone();
         })
     }
 
@@ -74,6 +74,6 @@ export class PubtypeComponent implements OnInit {
         // Turn on optional step if resource type is software
         this.steps[3].active = (this.dataModel.resourceType == "software");
 
-        this.steps[4].canGoNext = this.stepService.allDone();
+        this.steps[5].canGoNext = this.stepService.allDone();
     }
 }

@@ -7,10 +7,10 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { ContactComponent } from './contact.component';
-// import { ContactPopupComponent } from './contact-popup/contact-popup.component';
 import { ContactService } from './contact.service';
 import { ButtonModule } from 'primeng/button';
 import { ContactEditComponent } from './contact-edit/contact-edit.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * module that provide support for rendering and managing a resource's 
@@ -23,6 +23,7 @@ import { ContactEditComponent } from './contact-edit/contact-edit.component';
         ToolbarModule,
         CollapseModule,
         ButtonModule,
+        NgbModule,
         ToastrModule.forRoot()
     ],
     declarations: [

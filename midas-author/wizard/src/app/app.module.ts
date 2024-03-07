@@ -10,17 +10,10 @@ import { FrameModule } from 'oarng';
 import { InputTextModule } from "primeng/inputtext";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { HttpClientModule } from '@angular/common/http';
-import { AppConfig } from './startwiz/services/config-service.service';
-
-/**
- * Initialize the configs for backend services
- */
-const appInitializerFn = (appConfig: AppConfig) => {
-    return () => {
-      console.log("**** CAlling APP Initialization ***");
-      return appConfig.loadAppConfig();
-    };
-};
+import { ConfigModule } from 'oarng';
+import { GoogleAnalyticsService} from "oarlps";
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
     declarations: [
@@ -34,17 +27,20 @@ const appInitializerFn = (appConfig: AppConfig) => {
         InputTextModule,
         OARngModule,
         FrameModule,
-        HttpClientModule
+        HttpClientModule,
+        ConfigModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot({
+            toastClass: 'toast toast-bootstrap-compatibility-fix',
+            timeOut: 15000, // 15 seconds
+            closeButton: true,
+            progressBar: true,
+        }),
     ],
     providers: [
-        {
-            provide: APP_INITIALIZER,
-            useFactory: appInitializerFn,
-            multi: true,
-            deps: [AppConfig]
-          },
+        GoogleAnalyticsService
+        // fakeBackendProvider
     ],
-    // providers: [fakeBackendProvider],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -21,7 +21,7 @@
                                     style="color: #1E6BA1; cursor: pointer;">{{topic}}</span>
                             </td>
                             <td width="50px">
-                                <i class="faa faa-trash" (click)="deleteTopic(i)"
+                                <i class="fas fa-trash-alt" (click)="deleteTopic(i)"
                                     style="float: right;cursor: pointer;color:grey; margin: .5em;" data-toggle="tooltip"
                                     title="Delete affiliation"></i>
                             </td>
@@ -77,17 +77,10 @@
             </button>
     
             <!-- Cancel button -->
-            <button class="edit_button" type="button"
+            <button *ngIf="dataChanged" class="edit_button" type="button"
                 (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
-                <i class="faa faa-remove"></i>
-            </button>
-
-            <!-- Restore button -->
-            <button class="edit_button" type="button"
-            [disabled]="!updated" (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
-                <i class="faa faa-undo"
-                    [ngClass]="{'icon_enabled': updated, 'icon_disabled': !updated }"></i>
-            </button>                
+                <i class="faa faa-undo fa-sm"></i>
+            </button>             
         </td>          
     </tr>
 </table>

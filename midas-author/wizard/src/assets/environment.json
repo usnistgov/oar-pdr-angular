@@ -1,7 +1,0 @@
-{
-    "MIDASAPI":  "https://mdsdev.nist.gov/midas/",
-    "PDRAPI":  "https://mdsdev.nist.gov/dapui/edit/od/id/",
-    "LANDING": "http://oardev.nist.gov/rmm/",
-    "GACODE": "not-set",
-    "APPVERSION": "1.3.0"
-}

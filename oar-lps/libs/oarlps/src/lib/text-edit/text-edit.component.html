@@ -26,8 +26,13 @@
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
 
+                <!-- Custom button -->
+                <button *ngIf="customButton" class="edit_button" type="button" (click)="cust();" [disabled]="disableControl" [aria-label]="custBtnTooltip" [ngbTooltip]="custBtnTooltip">
+                    <i [class]="custBtnIcon"></i>
+                </button>
+
                 <!-- Edit only button-->
-                <button *ngIf="editOnlyButton" class="edit_button" type="button" (click)="edit()" [disabled]="editing" aria-label="Edit button" ngbTooltip="Edit this item">
+                <button *ngIf="editOnlyButton" class="edit_button" type="button" (click)="edit()" [disabled]="editing || disableControl" aria-label="Edit button" ngbTooltip="Edit this item">
                     <i [class]="getEditOnlyIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
@@ -40,7 +45,7 @@
 
                 <!-- Restore button-->
                 <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl || !dataChanged || isNew" aria-label="Restore button" ngbTooltip="Restore from original value" data-container="body">
-                    <i class="faa faa-undo"
+                    <i class="fas fa-undo fa-sm"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>
 
@@ -51,8 +56,8 @@
                 </button>
 
                 <!-- Submit button-->
-                <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button" ngbTooltip="Submit changes">
-                    <i class="faa faa-check"
+                <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button" [ngbTooltip]="submitTooltip">
+                    <i class="faa faa-check-circle"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>
             </td>

@@ -8,6 +8,8 @@ import { PubtypeComponent } from './pubtype/pubtype.component';
 import { NavigatorComponent } from './navigator/navigator.component';
 import { FilesComponent } from './files/files.component';
 import { ContactinfoComponent } from './contactinfo/contactinfo.component';
+import { RecordNameComponent } from './recordname/recordname.component';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
     declarations: [
@@ -16,13 +18,15 @@ import { ContactinfoComponent } from './contactinfo/contactinfo.component';
         PubtypeComponent,
         NavigatorComponent,
         FilesComponent,
-        ContactinfoComponent
+        ContactinfoComponent,
+        RecordNameComponent
     ],
     imports: [
         CommonModule, 
         FormsModule,
         ReactiveFormsModule,
-        WizardModule
+        WizardModule,
+        InputTextModule
     ],
     exports: [
         AssociatedPapersComponent,
@@ -30,7 +34,8 @@ import { ContactinfoComponent } from './contactinfo/contactinfo.component';
         PubtypeComponent,
         NavigatorComponent,
         FilesComponent,
-        ContactinfoComponent
+        ContactinfoComponent,
+        RecordNameComponent
     ]
 })
 export class ComponentsModule { }

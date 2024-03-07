@@ -3,8 +3,8 @@ import * as ngenv from "./environment-impl";
 describe("environments.environment", function() {
 
     it("config", function() {
-        expect(ngenv.config.locations.orgHome).toBeTruthy();
-        expect(ngenv.config.mode).toBe("dev");
-        expect(ngenv.config.production).toBeFalsy();
+        expect(ngenv.environment.config.locations.orgHome).toBeTruthy();
+        expect(ngenv.environment.config.mode).toBe("dev");
+        expect(ngenv.environment.config.production).toBeFalsy();
     });
 });

@@ -1,12 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SearchTopicsComponent } from './topic-popup/search-topics.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { LandingpageService, SectionMode, MODE, SectionHelp, HelpTopic } from '../landingpage.service';
+import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { TopicEditComponent } from './topic-edit/topic-edit.component';
 
 @Component({
     selector: 'app-topic',
@@ -28,8 +30,12 @@ export class TopicComponent implements OnInit {
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
+
+    @ViewChild('topic') topicElement: ElementRef;
+    @ViewChild('topic') topicEditComp: TopicEditComponent;
+
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
-    fieldName = 'theme';
+    fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     editMode: string = MODE.NORNAL; 
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
@@ -44,11 +50,19 @@ export class TopicComponent implements OnInit {
             this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                    if(this.isEditing && this.dataChanged){
-                        this.onSave(false); // Do not refresh help text 
+                if( sectionMode ) {
+                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                            if(this.isEditing && this.dataChanged){
+                                this.onSave(false); // Do not refresh help text 
+                            }
+                            this.setMode(MODE.NORNAL,false);
+                        }
+                    }else { // Request from side bar, if not edit mode, start editing
+                        if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                            this.startEditing();
+                        }
                     }
-                    this.setMode(MODE.NORNAL,false);
                 }
             })        
     }
@@ -71,6 +85,14 @@ export class TopicComponent implements OnInit {
         }
     }
 
+    get topicWidth() {
+        if(this.isEditing){
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 400px)', 'height':'fit-content'};
+        }else{
+            return {'width': 'fit-content', 'max-width': 'calc(100% - 360px)'};
+        }
+    }
+
     ngOnInit() {
         this.updateResearchTopics();
     }
@@ -88,6 +110,10 @@ export class TopicComponent implements OnInit {
      * and the help side bar can update the info.
      */
     startEditing() {
+        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            this.topicElement.nativeElement.focus();
+        },0);  
+
         this.setMode(MODE.EDIT);
     }
 
@@ -97,6 +123,22 @@ export class TopicComponent implements OnInit {
      */
     onSave(refreshHelp: boolean = true) {
         this.updateResearchTopics();
+
+        var postMessage: any = {};
+        postMessage[this.fieldName] = this.record[this.fieldName];
+        
+        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+            if (updateSuccess) {
+                this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
+
+                this.updateResearchTopics();
+            } else{
+                let msg = "acknowledge topic update failure";
+                console.error(msg);
+            }
+        });
+
         this.setMode();
         this.dataChanged = false;
     }
@@ -105,10 +147,9 @@ export class TopicComponent implements OnInit {
      * Cancel current editing. Set this section to normal mode. Restore topics from previously saved ones.
      */
     cancelEditing() {
-        // this.updateResearchTopics();
-        this.setMode(MODE.NORNAL);
-        this.dataChanged = false;
-        // this.setBackground();
+        this.updateResearchTopics();
+        // this.setMode(MODE.NORNAL);
+        // this.dataChanged = false;
     }
 
     /**
@@ -138,12 +179,34 @@ export class TopicComponent implements OnInit {
             case 'undoCurrentChanges':
                 this.cancelEditing();
                 break;
-            case 'restoreOriginal':
-                this.setMode();
-                break;
             default:
                 break;
         }
+    }
+
+    /**
+     * Refresh the help text
+     */
+    refreshHelpText(){
+        let sectionHelp: SectionHelp = {} as SectionHelp;
+        sectionHelp.section = this.fieldName;
+        sectionHelp.topic = HelpTopic[this.editMode];
+
+        this.lpService.setSectionHelp(sectionHelp);
+    }
+
+    /*
+     *  Restore original value. If no more field was edited, delete the record in staging area.
+     */
+    restoreOriginal() {
+        this.mdupdsvc.undo(this.fieldName).then((success) => {
+            if (success){
+                this.dataChanged = false;
+                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
+                this.setMode();
+            }else
+                console.error("Failed to undo landingpage metadata")
+        });
     }
 
     /**
@@ -156,24 +219,23 @@ export class TopicComponent implements OnInit {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        let sectionHelp: SectionHelp = {} as SectionHelp;
-        sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
-
         if(refreshHelp){
-            this.lpService.setSectionHelp(sectionHelp);
+            this.refreshHelpText();
         }
 
         switch ( this.editMode ) {
             case MODE.EDIT:
                 this.editBlockStatus = 'expanded';
-                this.setOverflowStyle();
+                this.overflowStyle = 'hidden';
+                setTimeout(() => {
+                    this.overflowStyle = 'visible';
+                }, 1000);
                 break;
  
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
-                this.setOverflowStyle();
+                this.overflowStyle = 'hidden';
                 break;
         }
 
@@ -188,16 +250,16 @@ export class TopicComponent implements OnInit {
      * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
      * Then tooltip will not be cut off. 
      */    
-    setOverflowStyle() {
-        if(this.editBlockStatus == 'collapsed') {
-            this.overflowStyle = 'hidden';
-        }else {
-            this.overflowStyle = 'hidden';
-            setTimeout(() => {
-                this.overflowStyle = 'visible';
-            }, 1000);
-        } 
-    }
+    // setOverflowStyle() {
+    //     if(this.editBlockStatus == 'collapsed') {
+    //         this.overflowStyle = 'hidden';
+    //     }else {
+    //         this.overflowStyle = 'hidden';
+    //         setTimeout(() => {
+    //             this.overflowStyle = 'visible';
+    //         }, 1000);
+    //     } 
+    // }
 
     /**
      * Update the research topic lists
@@ -274,8 +336,10 @@ export class TopicComponent implements OnInit {
                         this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
 
                         this.updateResearchTopics();
-                    } else
-                        console.error("acknowledge topic update failure");
+                    } else{
+                        let msg = "acknowledge topic update failure";
+                        console.error(msg);
+                    }
                 });
             }
         })
@@ -291,8 +355,10 @@ export class TopicComponent implements OnInit {
                 this.setMode(MODE.NORNAL);
                 this.updateResearchTopics();
                 // this.setBackground();
-            } else
-                console.error("Failed to undo research topic")
+            } else{
+                let msg = "Failed to undo research topic";
+                console.error(msg);
+            }
         });
     }
 
@@ -310,18 +376,4 @@ export class TopicComponent implements OnInit {
             return false;
         }
     }
-
-    /**
-     * Determind the edit icon class based on current editing status
-     * @returns icon class of the edit button
-     */
-    editIconClass() {
-        if(this.isEditing){
-            return "faa faa-pencil icon_disabled";
-        }else{
-            return "faa faa-pencil icon_enabled"
-        }
-    }
-
-
 }

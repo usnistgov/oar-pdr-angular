@@ -3,37 +3,37 @@
         {   
             "name": "twitter", 
             "url": "https://twitter.com/nist",
-            "icon": "faa faa-twitter" 
+            "icon": "fas fa-twitter" 
         },
         { 
             "name": "facebook", 
             "url": "https://www.facebook.com/NIST/",
-            "icon": "faa faa-facebook" 
+            "icon": "fas fa-facebook" 
         },
         { 
             "name": "linkedin", 
             "url": "https://www.linkedin.com/company/nist",
-            "icon": "faa faa-linkedin" 
+            "icon": "fas fa-linkedin" 
         },
         { 
             "name": "Instagram", 
             "url": "https://www.instagram.com/nist/",
-            "icon": "faa faa-instagram" 
+            "icon": "fas fa-instagram" 
         },
         { 
             "name": "youtube", 
             "url": "https://www.youtube.com/nist",
-            "icon": "faa faa-youtube" 
+            "icon": "fas fa-youtube" 
         },
         { 
             "name": "rss", 
             "url": "https://www.nist.gov/news-events/nist-rss-feeds",
-            "icon": "faa faa-rss" 
+            "icon": "fas fa-rss" 
         },
         { 
             "name": "govdelivery", 
             "url": "https://service.govdelivery.com/accounts/USNIST/subscriber/new",
-            "icon": "faa faa-envelope" 
+            "icon": "fas fa-envelope" 
         }
     ],
     "footerLinks01": [

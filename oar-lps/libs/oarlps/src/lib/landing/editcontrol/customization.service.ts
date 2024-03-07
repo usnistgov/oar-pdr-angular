@@ -34,7 +34,7 @@ export abstract class CustomizationService {
      * retrieve the latest draft resource metadata record from the server-side 
      * customization service.  
      */
-    public abstract getDraftMetadata() : Observable<Object>;
+    public abstract getDraftMetadata(dataOnly: boolean) : Observable<Object>;
 
     /**
      * Retrive a particular subset from server-side. If particular id is provided, only retrive 
@@ -77,6 +77,18 @@ export abstract class CustomizationService {
      * retrieve the data files from the server-side 
      * customization service.  
      */
+    public abstract getDBIOrecord() : Observable<Object>;
+
+    /**
+     * retrieve the metadata from the server-side 
+     * customization service.  
+     */
+    public abstract getMidasMeta() : Observable<Object>;
+
+    /**
+     * retrieve the data files from the server-side 
+     * customization service.  
+     */
     public abstract add(md: any, subsetname: string, subsetnameAPI: string) : Observable<Object>;
 }
 
@@ -88,8 +100,8 @@ export abstract class CustomizationService {
  */
 export class WebCustomizationService extends CustomizationService {
 
-    readonly draftapi : string = "dap/mds3/";
-    readonly saveapi : string = "dap/mds3/";
+    readonly draftapi : string = "";
+    readonly saveapi : string = "";
 
     /**
      * construct the customization service
@@ -106,6 +118,7 @@ export class WebCustomizationService extends CustomizationService {
     {
         super(resid, userId);
         if (! endpoint.endsWith('/')) endpoint += '/';
+        console.log('endpoint', endpoint);
     }
 
     /**
@@ -123,13 +136,14 @@ export class WebCustomizationService extends CustomizationService {
      *                   ConnectionCustomizationError -- if it was not possible to connect to the 
      *                     customization server, even to get back an error response.  
      */
-    public getDraftMetadata() : Observable<Object> {
+    public getDraftMetadata(dataOnly: boolean = false) : Observable<Object> {
 
         // To transform the output with proper error handling, we wrap the
         // HttpClient.get() Observable with our own Observable
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data"
+            console.log("Loading draft data from url: ", url)
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -146,7 +160,6 @@ export class WebCustomizationService extends CustomizationService {
             let url = this.endpoint + this.draftapi + this.resid + "/data/" + subsetname;
             if(id) url += "/" + id;
 
-            console.log("Get subset request url", url);
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -154,17 +167,14 @@ export class WebCustomizationService extends CustomizationService {
     }
 
     private _wrapRespObs(obs : Observable<Object>, subscriber : Subscriber<Object>) : void {
-        obs.subscribe(
-            (jsonbody) => {
-                // if (!jsonbody || !jsonbody['@id'])
-                //     console.warn("Data returned from customization service does not look like a "+
-                //                  "NERDm resource: "+JSON.stringify(jsonbody));
+        obs.subscribe({
+            next: (jsonbody) => {
                 subscriber.next(jsonbody);
             },
-            (httperr) => {   // this will be an HttpErrorResponse
+            error: (httperr) => {   // this will be an HttpErrorResponse
                 let msg = "";
                 let err = null;
-                console.log("httperr.status", httperr.status);
+
                 if (httperr.status == 401) {
                     msg += "Authorization Error (401)";
                     // TODO: can we get at body of message when an error occurs?
@@ -191,7 +201,7 @@ export class WebCustomizationService extends CustomizationService {
                 }
                 subscriber.error(err);
             }
-        );
+        });
     }
 
     /**
@@ -209,26 +219,20 @@ export class WebCustomizationService extends CustomizationService {
      *                   ConnectionCustomizationError -- if it was not possible to connect to the 
      *                     customization server, even to get back an error response.  
      */
-    public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
+    // public updateMetadata(md : Object, subsetname: string = undefined, id: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
+    public updateMetadata(body : string, subsetname: string = undefined, id: string = undefined, subsetnameAPI: string = undefined) : Observable<Object> {
         // To transform the output with proper error handling, we wrap the
         // HttpClient.patch() Observable with our own Observable
         //
-        let body: string;
+        // let body: string;
         if(!subsetnameAPI) subsetnameAPI = subsetname;  // Make it backward compactible
 
         if(!id){
             return new Observable<Object>(subscriber => {
-                console.log("post message", md);
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
+                console.log("url1", url);
 
-                // console.log("Update url", url);
-                if(subsetname)
-                    body = JSON.stringify(md[subsetname]);
-                else
-                    body = JSON.stringify(md);
-
-                console.log("body", body);
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
                 this._wrapRespObs(obs, subscriber);
@@ -238,15 +242,8 @@ export class WebCustomizationService extends CustomizationService {
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
                 url = id == undefined ? url : url + "/" + id;
+                console.log("url2", url);
 
-                // console.log("Update url", url);
-                console.log("md", md);
-                // if(subsetname)
-                //     body = JSON.stringify(md[subsetname]);
-                // else
-                    body = JSON.stringify(md);
-
-                console.log("body", body);
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
                 this._wrapRespObs(obs, subscriber);
@@ -280,10 +277,9 @@ export class WebCustomizationService extends CustomizationService {
             if(subsetnameAPI) { // Create a new subset
                 url += subsetnameAPI;
             }
-            console.log("Add url", url)
             
             let body = JSON.stringify(md[subsetname]);
-            console.log("body", body)
+            
             let obs : Observable<Object> = 
                 this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -311,6 +307,7 @@ export class WebCustomizationService extends CustomizationService {
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.saveapi + this.resid + "/data";
+
             let obs : Observable<Object> = 
                 this.httpcli.put(url, {}, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -338,7 +335,6 @@ export class WebCustomizationService extends CustomizationService {
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data";
-            // console.log("Discard url", url);
             let obs : Observable<Object> = 
                 this.httpcli.delete(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -379,14 +375,27 @@ export class WebCustomizationService extends CustomizationService {
      *                   failure, ...
      */
     public getDataFiles() : Observable<Object> {
-        // Read local file for testing and demo purpose
         return new Observable<Object>(subscriber => {
-            let obs : Observable<Object>;
-            this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
-                obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
-                this._wrapRespObs(obs, subscriber);
-            });
+            let url = this.endpoint + this.draftapi + this.resid + "/file_space";
+            console.log("Loading data files from url: ", url);
+            let body = { "action": "sync" };
+            console.log("body: ", body);
+
+            let obs : Observable<Object> = 
+                this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+            this._wrapRespObs(obs, subscriber);
         });
+
+        // Read local file for testing and demo purpose
+        // return new Observable<Object>(subscriber => {
+        //     let url = this.endpoint + this.dbioapi + this.resid;
+        //     let body = { "action": "sync" };
+        //     let obs : Observable<Object>;
+        //     this.httpcli.get("assets/sample-data/ds-files_nerdm.json").subscribe(data =>{
+        //         obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
+        //         this._wrapRespObs(obs, subscriber);
+        //     });
+        // });
 
         // return of(sampleData);
         // To transform the output with proper error handling, we wrap the
@@ -398,6 +407,42 @@ export class WebCustomizationService extends CustomizationService {
         //         this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
         //     this._wrapRespObs(obs, subscriber);
         // });
+    }
+
+    /**
+     * Retrieve the DBIO record from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getDBIOrecord() : Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            let url = this.endpoint + this.draftapi + this.resid;
+            let obs : Observable<Object>;
+            this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
+    /**
+     * Retrieve the data files from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getMidasMeta() : Observable<Object> {
+        let url = this.endpoint + this.draftapi + this.resid + "/meta";
+        console.log("Load metadata url", url);
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
+                console.log("Metadata return", obs);
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
     }
 }
 
@@ -432,7 +477,7 @@ export class InMemCustomizationService extends CustomizationService {
      *                   failure, error function is called with an instance of a CustomizationError.
      *                   In this implementation, failure is not possible.
      */
-    public getDraftMetadata() : Observable<Object> {
+    public getDraftMetadata(dataOnly: boolean = false) : Observable<Object> {
         return of<Object>(this.resmd);
     }
 
@@ -543,6 +588,39 @@ export class InMemCustomizationService extends CustomizationService {
         });
     }
 
+    /**
+     * Retrieve the DBIO record in memory.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getDBIOrecord() : Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get("assets/sample-data/dbio-record.json").subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)) as NerdmComp);
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
+    /**
+     * Retrieve the data files from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public getMidasMeta() : Observable<Object> {
+        let url = "https://mdsdev.nist.gov/midas/dap/mds3/mds3:0001/meta";
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            this.httpcli.get("url").subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
     public getSubset(subsetname: string, id: string = undefined) : Observable<Object> {
 
         // To transform the output with proper error handling, we wrap the
@@ -565,14 +643,11 @@ export class InMemCustomizationService extends CustomizationService {
     }
 
     private _wrapRespObs(obs : Observable<Object>, subscriber : Subscriber<Object>) : void {
-        obs.subscribe(
-            (jsonbody) => {
-                // if (!jsonbody || !jsonbody['@id'])
-                //     console.warn("Data returned from customization service does not look like a "+
-                //                  "NERDm resource: "+JSON.stringify(jsonbody));
+        obs.subscribe({
+            next: (jsonbody) => {
                 subscriber.next(jsonbody);
             },
-            (httperr) => {   // this will be an HttpErrorResponse
+            error: (httperr) => {   // this will be an HttpErrorResponse
                 let msg = "";
                 let err = null;
                 console.log("httperr.status", httperr.status);
@@ -602,7 +677,7 @@ export class InMemCustomizationService extends CustomizationService {
                 }
                 subscriber.error(err);
             }
-        );
+        });
     }
 }
 

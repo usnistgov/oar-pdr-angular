@@ -25,6 +25,7 @@ import { SidebarModule } from 'oarlps';
 import { DownloadStatusModule } from 'oarlps';
 import { MetricsiinfoModule } from 'oarlps';
 import { LandingpageService } from 'oarlps';
+import { FrameModule } from 'oarlps';
 
 /**
  * A module supporting the complete display of landing page content associated with 
@@ -45,7 +46,8 @@ import { LandingpageService } from 'oarlps';
         WizardModule,
         SidebarModule,
         DownloadStatusModule,
-        MetricsiinfoModule
+        MetricsiinfoModule,
+        FrameModule
     ],
     declarations: [
         LandingPageComponent, LandingBodyComponent, 

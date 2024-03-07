@@ -3,12 +3,14 @@ import { HttpClient, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInte
 import { Observable, of, throwError } from 'rxjs';
 import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 import { userInfo } from 'os';
-
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable()
 export class FakeBackendInterceptor implements HttpInterceptor {
+    alerted: boolean = false;
 
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient,
+        private toastrService: ToastrService) { }
 
     /**
      * Generate random string
@@ -47,39 +49,67 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // }
 
         const midasRes = {
-            "id": "mdm1:0003",
-            "name": "CoTEM",
+            "id": "mds3:0001",
+            "name": "firsttest",
             "acls": {
-            "read": [
+              "read": [
                 "anonymous"
-            ],
-            "write": [
+              ],
+              "write": [
                 "anonymous"
-            ],
-            "admin": [
+              ],
+              "admin": [
                 "anonymous"
-            ],
-            "delete": [
+              ],
+              "delete": [
                 "anonymous"
-            ]
+              ]
             },
             "owner": "anonymous",
-            "data": {
-            "title": "Microscopy of Cobalt Samples"
-            },
-            "meta": {},
-            "curators": [],
-            "created": 1669560885.988901,
-            "createdDate": "2022-11-27T09:54:45",
-            "lastModified": 1669560885.988901,
-            "lastModifiedDate": "2022-11-27T09:54:45",
             "deactivated": null,
-            "type": "dmp"
+            "status": {
+              "created": 1678804311.8563082,
+              "state": "edit",
+              "action": "create",
+              "since": 1678804311.8570614,
+              "modified": 1678804311.9115264,
+              "message": "",
+              "createdDate": "2023-03-14T14:31:51",
+              "modifiedDate": "2023-03-14T14:31:51",
+              "sinceDate": "2023-03-14T14:31:51"
+            },
+            "data": {
+              "@id": "ark:/88434/mds3-0001",
+              "title": "",
+              "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+              "@type": [
+                "nrdp:PublicDataResource",
+                "dcat:Resource"
+              ],
+              "doi": "doi:10.18434/mds3-0001",
+              "author_count": 0,
+              "file_count": 0,
+              "nonfile_count": 0,
+              "reference_count": 0
+            },
+            "meta": {
+              "resourceType": "software",
+              "creatorisContact": true
+            },
+            "curators": [
+              
+            ],
+            "type": "dap"
         }
 
-        console.log("request", request);
+        // console.log("request", request);
         // wrap in delayed observable to simulate server api call
         return of(null).pipe(mergeMap(() => {
+            // if (request.url.indexOf('meta') > -1 && request.method === 'GET') {
+            //     // console.log("Getting forensics")
+            //     return of(new HttpResponse({ status: 200, body: midasRes }));
+            // }
+
             // metrics
             // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') {
             //     return of(new HttpResponse({ status: 200, body: metricsRecordDetails }));
@@ -145,17 +175,35 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         //======
         // // authenticate
-        if (request.url.indexOf('auth/_perm/') > -1 && request.method === 'GET') {
+        if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             let body: any = {
                 userDetails: {
                     userId: 'xyz@nist.gov',
-                    userName: 'xyz'
+                    userName: 'xyz',
+                    userLastName: 'anon',
+                    userEmail: "anon@email.com"
                 },
                 token: 'fake-jwt-token'
             };
             console.log("logging in...")
             return of(new HttpResponse({ status: 200, body }));
         }
+
+        // return 401 not authorised if token is null or invalid
+        // if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+        //     console.log("Returning 401 ...")
+        //     throw new HttpErrorResponse(
+        //             {"status": 401}
+        //     );
+        // }
+
+        
+
 
         // midas test data
         // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'GET') {
@@ -171,27 +219,38 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // }
 
         if (request.url.indexOf('/rmm/taxonomy') > -1 && request.method === 'GET') {
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
+
             return of(new HttpResponse({ status: 200, body: taxonomy }));
         }
 
         if (request.url.indexOf('data/theme') > -1 && request.method === 'PUT') {
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'GET') {
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PUT') {
-            let requestBody = JSON.parse(request.body)
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
+            let requestBody = JSON.parse(request.body);
             if(Array.isArray(requestBody)) {
                 requestBody.forEach(item => {
-                    if(!item['@id']){
+                    if(typeof item == 'object' && !item['@id']){
                         item['@id'] = this.readableRandomStringMaker(6);
                     }
                 })
             }
+
             return of(new HttpResponse({ status: 200, body: requestBody }));
+
+            // Simulate error response:
+            // throw new HttpErrorResponse(
+            //     {"status": 401}
+            // );
         }        
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
@@ -206,7 +265,6 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);
-            console.log("request body", obj);
 
             return of(new HttpResponse({ status: 200, body: JSON.stringify(obj) }));
         }

@@ -11,8 +11,9 @@ export class AccesspageEditComponent implements OnInit {
     originalApage: NerdmComp = {} as NerdmComp;
     editBlockStatus: string = 'collapsed';
     fieldName: string = 'components';
+    accessPage: NerdmComp = {} as NerdmComp;
 
-    @Input() accessPage: NerdmComp = null;
+    @Input() currentApage: NerdmComp = {} as NerdmComp;
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
@@ -21,13 +22,17 @@ export class AccesspageEditComponent implements OnInit {
     constructor(public mdupdsvc : MetadataUpdateService) { }
 
     ngOnInit(): void {
-        if(this.accessPage) this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
+        if(this.currentApage) {
+            this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
+            this.accessPage = JSON.parse(JSON.stringify(this.currentApage));
+        }else
+            this.accessPage = {} as NerdmComp;
     }
 
     get isEditing() { return this.editMode=="edit" };
     get isAdding() { return this.editMode=="add" };
     get noURL() {
-        return !this.accessPage.accessURL || this.accessPage.accessURL.trim() == "";
+        return !this.accessPage || !this.accessPage.accessURL || this.accessPage.accessURL.trim() == "";
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -35,13 +40,23 @@ export class AccesspageEditComponent implements OnInit {
             this.reset();
         }
 
-        if(changes.accessPage) {
-            if(this.accessPage) {
-                this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
+        if(changes.currentApage) {
+            if(this.currentApage) {
+                console.log("access page changed:", changes.currentApage)
+                this.originalApage = JSON.parse(JSON.stringify(this.currentApage));
+                this.accessPage = JSON.parse(JSON.stringify(this.currentApage));
             }else{
-                this.originalApage = undefined;
+                this.originalApage = {} as NerdmComp;
+                this.accessPage = {} as NerdmComp;
             }
         }
+    }
+
+    getRecordBackgroundColor() {
+        let dataChanged = this.accessPage? this.accessPage.dataChanged : false;
+        let bkcolor = this.mdupdsvc.getFieldStyle(this.fieldName, dataChanged)
+
+        return bkcolor;
     }
 
     reset() {
@@ -51,8 +66,11 @@ export class AccesspageEditComponent implements OnInit {
 
     onChange() {
         // console.log("accessPage02", this.accessPage)
-        this.accessPage.dataChanged = true;
-        this.dataChanged.emit({"accessPage": this.accessPage, "dataChanged": true});
+        if(this.accessPage)
+            this.accessPage.dataChanged = true;
+
+        this.currentApage = JSON.parse(JSON.stringify(this.accessPage));
+        this.dataChanged.emit({"accessPage": this.currentApage, "dataChanged": true});
     }
 
     /**

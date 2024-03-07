@@ -4,11 +4,11 @@
               - Red * means this is a required field.
             -->
             <tr>
-                <td align="right" data-toggle="tooltip" title="Required field" width="20%">
-                    <span style="margin-right: .5em;" data-toggle="tooltip" title="This field is required"><span
-                            style="color:red;">*</span> Given Name:</span>
+                <td align="right" width="20%">
+                    <span style="margin-right: .5em;" ngbTooltip="This field is required">
+                        <span style="color:red;">*</span> Given Name:</span>
                 </td>
-                <td>
+                <td *ngIf="author">
                     <input type="text" [(ngModel)]="author.givenName" class="text-input"
                         (input)="onGivenNameChange($event.target.value)" />
                 </td>
@@ -19,7 +19,7 @@
                 <td align="right">
                     <span style="margin-right: .5em;">Middle Name:</span>
                 </td>
-                <td>
+                <td *ngIf="author">
                     <input type="text" [(ngModel)]="author.middleName" class="text-input"
                         (input)="onMiddleNameChange(author, $event.target.value)" />
                 </td>
@@ -28,12 +28,12 @@
             <!-- Family name
               - Red * means this is a required field.
               -->
-            <tr data-toggle="tooltip" title="Required field">
+            <tr>
                 <td align="right">
-                    <span style="margin-right: .5em;" data-toggle="tooltip" title="This field is required"><span
+                    <span style="margin-right: .5em;" ngbTooltip="This field is required"><span
                             style="color:red;">*</span> Family Name:</span>
                 </td>
-                <td>
+                <td *ngIf="author">
                     <input type="text" [(ngModel)]="author.familyName" class="text-input"
                         (input)="onFamilyNameChange(author, $event.target.value)" />
                 </td>
@@ -45,19 +45,17 @@
               -->
             <tr>
                 <td width="15%" align="right">
-                    <span style="margin-right: .5em;white-space: nowrap;" data-toggle="tooltip" title="This field is required"><span
+                    <span style="margin-right: .5em;white-space: nowrap;" ngbTooltip="This field is required"><span
                             style="color:red;">*</span> Name (as displayed)</span>
                 </td>
-                <td align="left">
+                <td align="left" *ngIf="author">
                     <input type="text" [(ngModel)]="author.fn" class="text-input-right-button"
                         style="margin-right: 5px;"
                         (input)="onFullNameChange(author, $event.target.value)" />
                     <i *ngIf="!author.fnLocked" class="faa faa-unlock" (click)="author.fnLocked = !author.fnLocked"
-                        style="cursor:pointer;" data-toggle="tooltip"
-                        title="Prevent full name from updated automatically"></i>
+                        style="cursor:pointer;" ngbTooltip="Allow full name been updated automatically"></i>
                     <i *ngIf="author.fnLocked" class="faa faa-lock" (click)="author.fnLocked = !author.fnLocked"
-                        style="cursor:pointer;" data-toggle="tooltip"
-                        title="Allow full name been updated automatically"></i>
+                        style="cursor:pointer;" ngbTooltip="Prevent full name from been updated automatically"></i>
                 </td>
             </tr>
 
@@ -67,14 +65,14 @@
             -->
             <tr>
                 <td align="right">
-                    <span style="margin-right: .5em;" data-toggle="tooltip" title="This field is recommended"><span
+                    <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
                             style="color:green;">*</span> ORCID:</span>
                 </td>
-                <td align="left">
-                    <input type="text" [(ngModel)]="author.orcid" id="orcid-input" (blur)="validateOrcid(author)" (keyup.enter)="validateOrcid(author)" placeholder="####-####-####-####" style="margin-right: 5px; " class="text-input-right-button"/>
+                <td align="left" *ngIf="author">
+                    <input type="text" [(ngModel)]="author.orcid" id="orcid-input" (blur)="validateOrcid(author)" (ngModelChange)="validateOrcid(author)" placeholder="####-####-####-####" style="margin-right: 5px; " class="text-input-right-button"/>
 
                     <a href="https://orcid.org" target="blank">
-                        <img src="assets/images/orcid-logo.png" style="width: 20px;margin-left: 5px;">
+                        <img src="assets/images/orcid-logo.png" style="width: 20px;margin-left: 5px;" ngbTooltip="Visit orcid.org">
                     </a>
 
                     <!-- <div *ngIf="!author.orcidValid" id="orcid-warning">
@@ -83,10 +81,10 @@
                 </td>
             </tr>
 
-            <tr>
+            <tr *ngIf="!orcidValid">
                 <td></td>
                 <td align="left">
-                    <div *ngIf="!author.orcidValid" id="orcid-warning">
+                    <div id="orcid-warning">
                         <i>Please enter valid ORCID. <p>Examples: 0000-1832-8812-1125, 0030-0422-1347-101X</i>
                     </div>
                 </td>
@@ -95,16 +93,12 @@
             <!-- Affiliation management -->
             <tr>
                 <td align="right" style="vertical-align: top;">
-                    <span style="margin-right: .5em;" data-toggle="tooltip" title="This field is recommended"><span
+                    <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
                             style="color:green;">*</span> Affiliations:</span>
-                    <!-- <span class="faa-stack" (click)="addAffiliation();" data-toggle="tooltip" title="Add affiliation">
-                        <i class="faa faa-circle faa-stack-2x" style="color:green;"></i>
-                        <i class="faa faa-plus faa-stack-1x faa-inverse"></i>
-                    </span> -->
                 </td>
-                <td style="border: 1px solid lightgrey;">
+                <td style="border: 1px solid lightgrey;" *ngIf="author">
                     <!-- Add button -->
-                    <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add author" style="float: right;margin: 5px;">
+                    <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add affiliation" style="float: right;margin: 5px;">
                         <i class="faa faa-plus faa-lg"></i>
                     </button>
 
@@ -126,12 +120,12 @@
                                         <tr>
                                             <td width="10%" align="right" valign="center">Department/Division:</td>
                                             <td>
-                                                <input type="text" [(ngModel)]="author.affiliation[j].subunits"
+                                                <input type="text" [(ngModel)]="author.affiliation[j].subunits[0]"
                                                     style="width: 100%;height:2em;"
                                                     (input)="onDeptChange(author)" />
                                             </td>
                                             <td width="2em">
-                                                <i class="faa faa-trash" (click)="deleteAffiliation(i, aff)"
+                                                <i class="fas fa-trash-alt" (click)="deleteAffiliation(i, aff)"
                                                 style="float: right;cursor: pointer;color:grey; margin: 1em .5em;" data-toggle="tooltip"
                                                 title="Delete affiliation"></i>
                                             </td>

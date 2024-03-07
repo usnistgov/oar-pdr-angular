@@ -1,6 +1,6 @@
 import { NgModule }     from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { VersionComponent } from './version.component';
 
@@ -10,7 +10,8 @@ import { VersionComponent } from './version.component';
 @NgModule({
     imports: [
         CommonModule,
-        CollapseModule
+        CollapseModule,
+        NgbModule
     ],
     declarations: [
         VersionComponent
