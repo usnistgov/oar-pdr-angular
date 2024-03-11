@@ -42,6 +42,7 @@ export class AppComponent {
   status: string;
   statusDate: string = "";
   smeEmail: string = "";
+  randomId: string = "";
   record: Record;
   loaded: boolean = false;
   displayProgressSpinner: boolean = false;
@@ -168,26 +169,32 @@ export class AppComponent {
 
   /**
    * Parse the approval status of the record and update the component state with the
-   * status, status date, and email. If the status is "Pending", the date and email will be undefined.
+   * status, status date, email, and random ID. 
+   * If the status is "Pending", the date and email will be undefined.
    * 
    * @param record - The record to parse the approval status of.
    */
-  private parseApprovalStatus(record: Record): void {
+  parseApprovalStatus(record: Record): void {
     let statusParts = record.userInfo.approvalStatus.split("_");
 
     this.status = statusParts[0];
 
-    if(this.status.toLowerCase() === "pending") {
+    if (this.status.toLowerCase() === "pending") {
         this.statusDate = "";
         this.smeEmail = "";
-    } else if (statusParts.length === 3) {
+        this.randomId = "";
+    } else if (statusParts.length === 3 || statusParts.length === 4) {
         this.statusDate = statusParts[1];
         this.smeEmail = statusParts[2];
+        if (statusParts.length === 4) {
+            this.randomId = statusParts[3];
+        }
     } else {
-      // Handle unexpected format
-      throw new ClientError("Unexpected approval status format");
+        // Handle unexpected format
+        throw new ClientError("Unexpected approval status format");
     }
-  }
+}
+
 
 
 
