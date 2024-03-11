@@ -12,7 +12,7 @@ datasets:
       - "The researcher, at NIST's sole option, may be notified periodically when new data sets are available. Such information may also be posted on the relevant NIST website."
       - You agree to acknowledge the Nail to Nail Fingerprint Capture Challenge in any publication of results generated using the data from NIST Special Database 302.
     requiresApproval: true
-    formTemplate: demo
+    formTemplate: no-disclaimer
   - name: NIST Reseach Dataset (version 1)
     ediid: 849E1CC6FBE2C4C7E053B3570681FE987034
     description: NIST Special Database 18 is being distributed for use in development and testing of automated mugshot identification systems. The database consists of a total of 3248 images of variable size using PNG formatting with metadata TXT files corresponding to each per image. There are images of 1573 individuals (cases) 1495 male and 78 female. The database contains both <a href=https://www.nist.gov/property-fieldsection/faceimg>front and side</a> (profile) views when available. Separating front views and profiles, there are 131 cases with two or more front views and 1418 with only one front view. Profiles have 89 cases with two or more profiles and 1268 with only one profile. Cases with both fronts and profiles have 89 cases with two or more of both fronts and profiles, 27 with two or more fronts and one profile, and 1217 with only one front and one profile.<br><br>This NIST Special Database has the following features:<ul><li>3248 segmented 8-bit gray scale mugshot images (varying sizes) of 1573 individuals</li><li>1333 cases with both front and profile views (see statistics above)</li><li>131 cases with two or more front views and 89 cases with two or more profiles</li><li>images scanned at 19.7 pixels per mm</li></ul><br><br>Suitable for automated mugshot identification research, the database can be used for:<ul><li>algorithm development</li><li>system training and testing</li></ul>
@@ -183,9 +183,5 @@ formTemplates:
   agreements: 
     - I agree to the defined terms and conditions of this dataset.
     - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST. I represent that I have provided all requested information. I understand that if I have not provided all information I will not receive the dataset.
-  blockedEmails:
-    - email 1
-    - email 2
-  blockedCountries:
-    - Country 1
-    - Country 2
+  blockedEmails: []
+  blockedCountries: []

@@ -239,4 +239,16 @@ describe('AppComponent', () => {
   });
 
 
+  it('should hide disclaimer checkbox if there are no disclaimers', () => {
+    // Assume that selectedFormTemplate is already loaded with mockFormTemplate where disclaimers array is empty
+    component.selectedFormTemplate = { ...mockFormTemplate, disclaimers: [] };
+    fixture.detectChanges();
+  
+    // Query the DOM for the disclaimerCheckbox input
+    const disclaimerCheckbox = fixture.debugElement.query(By.css('#disclaimerCheckbox'));
+  
+    // Expect the disclaimerCheckbox to be null, i.e. not present in the DOM
+    expect(disclaimerCheckbox).toBeNull();
+  });
+  
 });
