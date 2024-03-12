@@ -18,21 +18,24 @@ import { ToastrModule } from 'ngx-toastr';
 import { TreeTableModule } from 'primeng/treetable';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
-import { IEnvironment } from '../../../environments/ienvironment';
+import * as env from '../../../environments/environment';
+import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { UserMessageService } from '../../frame/usermessage.service';
+import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 
 describe('DataFilesComponent', () => {
-  let ienv : IEnvironment;
   let component: DataFilesComponent;
   let fixture: ComponentFixture<DataFilesComponent>;
   let cfg: AppConfig;
   let plid: Object = "browser";
   let ts: TransferState = new TransferState();
+  let authsvc: AuthService = new MockAuthService(undefined);
 
   beforeEach(waitForAsync(() => {
     let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
     dc._forget();
 
-    cfg = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
     cfg.locations.pdrSearch = "https://goob.nist.gov/search";
     cfg.status = "Unit Testing";
     cfg.appVersion = "2.test";
@@ -53,6 +56,9 @@ describe('DataFilesComponent', () => {
         GoogleAnalyticsService,
         EditStatusService,
         DatePipe,
+        MetadataUpdateService,
+        UserMessageService,
+        { provide: AuthService, useValue: authsvc },
         { provide: AppConfig, useValue: cfg }]
     })
       .compileComponents();
@@ -82,8 +88,12 @@ describe('DataFilesComponent', () => {
   });
 
   it('Should have title Files', () => {
-    expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
-    expect(fixture.nativeElement.querySelector('#filelist-heading').innerText).toEqual('Files ');
+    component.editEnabled = true;
+    fixture.detectChanges();
+    fakeAsync(() => {
+        expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
+        expect(fixture.nativeElement.querySelector('#filelist-heading').innerText).toEqual('Files ');
+    });
   });
 
   it('Should have file tree table', () => {
@@ -115,7 +125,7 @@ describe('DataFilesComponent', () => {
   it('toggleAllFilesInGlobalCart() should be called', () => {
     let cmpel = fixture.nativeElement;
     let aels = cmpel.querySelectorAll(".icon-cart")[0];
-    spyOn(component, 'toggleAllFilesInGlobalCart');
+    jest.spyOn(component, 'toggleAllFilesInGlobalCart');
     aels.click();
     expect(component.toggleAllFilesInGlobalCart).toHaveBeenCalled();
   });

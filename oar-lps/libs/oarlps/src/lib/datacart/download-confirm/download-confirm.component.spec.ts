@@ -41,13 +41,13 @@ describe('DownloadConfirmComponent', () => {
   });
 
   it('ContinueDownload()', waitForAsync(() => {
-    spyOn(component.returnValue, 'emit');
+    jest.spyOn(component.returnValue, 'emit');
     component.ContinueDownload();
     expect(component.returnValue.emit).toHaveBeenCalledWith(true);
   }));
 
   it('CancelDownload()', waitForAsync(() => {
-    spyOn(component.returnValue, 'emit');
+    jest.spyOn(component.returnValue, 'emit');
 
     component.CancelDownload();
      expect(component.returnValue.emit).toHaveBeenCalledWith(false);

@@ -6,15 +6,48 @@
                     style="color: orange; cursor: pointer;"></i></a>
         </div>
         <div class="help-title">
-            Help
+            {{title}}
         </div>
     </div>
     <div class="help-frame" [innerHTML]="helpContent">
     </div>
     <div style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
-        <div>Next Steps:</div>
-        <div *ngFor="let section of suggustedSections" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
-            <i>Edit {{section}}</i>
+
+        <div *ngIf="(!suggustedSections['required'] || suggustedSections['required'].length == 0) 
+            && (!suggustedSections['recommended'] || suggustedSections['recommended'].length == 0) 
+            && (!suggustedSections['niceToHave'] || suggustedSections['niceToHave'].length == 0); else nextSteps">
+            {{msgCompleted}}
+        </div>
+        <ng-template #nextSteps>
+            Next Steps:
+        </ng-template>
+        
+
+        <div *ngIf="suggustedSections['required'] && suggustedSections['required'].length > 0"> 
+            <div class="subtitle"><span style="margin-right: 5px;">&#8226;</span>Required:</div>
+            <div class="steps">
+                <div *ngFor="let section of suggustedSections['required']" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
+                    <i>Add {{section}}</i>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="(!suggustedSections['required'] || suggustedSections['required'].length == 0) && (suggustedSections['recommended'] && suggustedSections['recommended'].length > 0)"> 
+            <div class="subtitle"><span style="margin-right: 5px;">&#8226;</span>Recommended:</div>        
+            <div class="steps">
+                <div *ngFor="let section of suggustedSections['recommended']" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
+                    <i>Add {{section}}</i>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="(!suggustedSections['recommended'] || suggustedSections['recommended'].length == 0) && (!suggustedSections['required'] || suggustedSections['required'].length == 0) && (suggustedSections['niceToHave'] && suggustedSections['niceToHave'].length > 0)"> 
+            <div class="subtitle"><span style="margin-right: 5px;">&#8226;</span>Nice to have:</div>        
+            <div class="steps">
+                <div *ngFor="let section of suggustedSections['niceToHave']" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
+                    <i>Add {{section}}</i>
+                </div>
+            </div>        
         </div>
     </div>
     <!-- <ng-content></ng-content> -->

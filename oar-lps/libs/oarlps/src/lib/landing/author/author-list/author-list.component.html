@@ -1,7 +1,7 @@
 <!-- <div style="width: 100%;"> -->
     <div class="editable_container" style="width: 100%;">
-        <div class="editable_field" style="width: 100%;">
-            <div class="edit_box" [style.background-color]="getRecordBackgroundColor()">
+        <div class="editable_field" style="width: calc(100% - 30px); min-height: 1.65em;" [style.background-color]="getRecordBackgroundColor()">
+            <div class="edit_box" >
                 <!-- Existing authors -->
                 <div #dropListContainer class="example-container" cdkDropListGroup>
                     <div style="width: 100%;" 
@@ -47,17 +47,17 @@
                 <i [class]="addIconClass()"></i>
             </button>
 
+            <!-- Hide button - hide edit block -->
+            <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isAdding || isEditing"
+                (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                <i class="fas fa-times"></i>
+            </button>  -->
+
             <!-- Undo all changes button -->
-            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="(!authorsChanged && !authorsUpdated) || isEditing || isAdding"
+            <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="(!authorsChanged && !authorsUpdated) || isEditing || isAdding"
                 (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo all author changes">
                 <i [class]="undoIconClass()"></i>
-            </button> 
-
-            <!-- Hide button - hide edit block -->
-            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isAdding || isEditing"
-                (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-                <i class="faa faa-remove"></i>
-            </button> 
+            </button>  -->
         </div>
     </div>
 <!-- </div> -->
@@ -74,14 +74,14 @@
             <!-- Control buttons -->
             <td style="width: 60px;vertical-align: top; white-space: nowrap;">
                 <!-- Save button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save authors">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!currentAuthor || !currentAuthor.dataChanged" ngbTooltip="Save authors">
                     <i class="faa faa-check"></i>
                 </button>
 
                 <!-- Cancel button -->
                 <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
                     (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                    <i class="faa faa-remove"></i>
+                    <i class="fas fa-times"></i>
                 </button>
             </td>
         </tr>

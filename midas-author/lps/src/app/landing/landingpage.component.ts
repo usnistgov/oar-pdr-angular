@@ -30,6 +30,8 @@ import { Themes, ThemesPrefs } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { LandingpageService } from 'oarlps';
 import questionhelp from '../../assets/site-constants/question-help.json';
+import wordMapping from '../../assets/site-constants/word-mapping.json';
+import { error } from 'console';
 
 /**
  * A component providing the complete display of landing page content associated with 
@@ -56,8 +58,8 @@ import questionhelp from '../../assets/site-constants/question-help.json';
     animations: [
         trigger("togglemain", [
             state('mainsquished', style({
-                "width": "75%"
-            })),
+                "width": "{{lps_width}}"}), {params: {lps_width: '450px'}}
+            ),
             state('mainexpanded', style({
                 "width": "95%"
             })),
@@ -70,8 +72,8 @@ import questionhelp from '../../assets/site-constants/question-help.json';
         ]),
         trigger("togglesbar", [
             state('mainsquished', style({
-                "width": "22%"
-            })),
+                "width": "{{help_width}}"}), {params: {help_width: '250px'}}
+            ),
             state('mainexpanded', style({
                 "width": "15px"
             })),
@@ -106,7 +108,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationDialogWith: number = 550; // Default width
     recordLevelMetrics : RecordLevelMetrics;
 
-    loadingMessage = '<i class="faa faa-spinner faa-spin"></i> Loading...';
+    loadingMessage = '<i class="fas fa-spinner fa-spin"></i> Loading...';
 
     dataCartStatus: DataCartStatus;
     fileLevelMetrics: any;
@@ -125,7 +127,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     windowScrolled: boolean = false;
     btnPosition: number = 20;
     menuPosition: number = 20;
-    // menuBottom: string = "1em";
+    topBarHeight: number = 150;
+    bottomBarHeight: number = 170;
     showMetrics: boolean = false;
     recordType: string = "";
     imageURL: string;
@@ -137,15 +140,36 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     private _sbarvisible : boolean = true;
     sidebarVisible: boolean = true;
     mainBodyStatus: string = "mainsquished";
-    sidebarStartY: number = 160;
-    sidebarY: number = 160;
+    sidebarStartY: number = 200;
+    sidebarY: number = 200;
+    sidebarHeight: number = 400;
 
-    helpContent: any = {
-        "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
-    }
+    // For help (sidebar)
+    helpWidth: number = 300;
+    helpMode: string = "normal";
+    helpMaxWidth: number = 500;
+    helpMinWidth: number = 200;
+
+    // For the split bar between landing page body and help box
+    splitterHeight: number = 500;
+    mouse: any = {x:0, y:0};
+    mouseDragging: boolean = false;
+    prevMouseX: number = 0;
+    prevHelpWidth: number = 0;
+    lpsWidth: number = 500;
+    lpsWidthForPreview: number = 500; // lps width for preview mode
+    prevLpsWidth: number = 500; // Hold lps width if user switch view mode
+    helpToggler: string = 'expanded';
+    splitterPaddingTop: number = 0;
+    pageYOffset: number = 0;
+
+    scrollMaxHeight: number;
+    wordMpping: any = wordMapping;
+    resourceType: string = "resource";
 
     suggustedSections: string[] = ["title", "keyword", "references"];
     public helpContentAll:{} = questionhelp;
+    helpContentUpdated: boolean = false;
 
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
@@ -155,7 +179,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     @ViewChild('stickyButton') btnElement: ElementRef;
     @ViewChild('stickyMenu') menuElement: ElementRef;
-    @ViewChild('test') test: ElementRef;
+    @ViewChild('lpscontent') lpscontent: ElementRef;
 
     /**
      * create the component.
@@ -181,6 +205,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService) 
     {
+        // Init the size of landing page body and the help box 
+        this.updateScreenSize();
+
         this.reqId = this.route.snapshot.paramMap.get('id');
         this.inBrowser = isPlatformBrowser(platformId);
         this.editEnabled = cfg.get('editEnabled', false) as boolean;
@@ -203,12 +230,24 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
                 
                 this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE);
+                if(!this.hideToolMenu) {
+                    this.mainBodyStatus = "mainsquished";
+                    this.prevLpsWidth = this.lpsWidth;
+                    this.lpsWidth = this.lpsWidthForPreview;
+                }else{
+                    this.lpsWidth = this.prevLpsWidth;
+                }
             });
 
             this.mdupdsvc.subscribe(
                 (md) => {
-                    if (md && md != this.md) 
+                    if (md && md != this.md) {
                         this.md = md as NerdmRes;
+                    }
+
+                    if(md && !this.helpContentUpdated){
+                        this.updateHelpContent();
+                    }
 
                     this.showData();
                 }
@@ -218,6 +257,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this._showContent = showContent;
             });
         }
+    }
+
+    get showSplitter() {
+        return (this.mainBodyStatus == "mainsquished") && !this.mobileMode && this.hideToolMenu;
     }
 
     /**
@@ -263,87 +306,131 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         // Retrive Nerdm record and keep it in case we need to display it in preview mode
         // use case: user manually open PDR landing page but the record was not edited by MIDAS
         // This part will only be executed if "editEnabled=true" is not in URL parameter.
-        this.mdserv.getMetadata(this.reqId).subscribe(
-        (data) => {
-            // successful metadata request
-            this.md = data;
-            // this.midasRecord = data;
+        this.mdupdsvc.authsvc.authorizeEditing(this.reqId).subscribe({
+            next: (custsvc) => {
+                this.mdupdsvc._setCustomizationService(custsvc);
+                this.mdupdsvc.loadDraft().subscribe({
+                    next: (data) => {
+                        // successful metadata request
+                        this.md = data as NerdmRes;
+                        console.log("this.md", this.md);
+                        // this.midasRecord = data;
 
-            if (!this.md) {
-                // id not found; reroute
-                console.error("No data found for ID=" + this.reqId);
-                metadataError = "not-found";
-            }
-            else{
-                this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
-
-                if(this.inBrowser){
-                    if(this.editEnabled){
-                        this.metricsData.hasCurrentMetrics = false;
-                        this.showMetrics = true;
-                    }else{
-                        if(this.theme == Themes.DEFAULT_THEME){
-                            console.log("Getting metrics...");
-                            this.getMetrics();
+                        if (!this.md) {
+                            // id not found; reroute
+                            console.error("No data found for ID=" + this.reqId);
+                            metadataError = "not-found";
                         }
-                            
-                    }
-                }
+                        else{
+                            this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
-                // proceed with rendering of the component
-                this.useMetadata();
+                            if(this.inBrowser){
+                                if(this.editEnabled){
+                                    this.metricsData.hasCurrentMetrics = false;
+                                    this.showMetrics = true;
+                                }else{
+                                    if(this.theme == Themes.DEFAULT_THEME){
+                                        console.log("Getting metrics...");
+                                        this.getMetrics();
+                                    }
+                                        
+                                }
+                            }
 
-                // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                // in editing mode.  This is done in concert with the authentication process that can involve 
-                // redirection to an authentication server; on successful authentication, the server can 
-                // redirect the browser back to this landing page with editing turned on. 
-                if (this.inBrowser) {
-                    // Display content after 15sec no matter what
-                    setTimeout(() => {
+                            // proceed with rendering of the component
+                            this.useMetadata();
+
+                            // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                            // in editing mode.  This is done in concert with the authentication process that can involve 
+                            // redirection to an authentication server; on successful authentication, the server can 
+                            // redirect the browser back to this landing page with editing turned on. 
+                            if (this.inBrowser) {
+                                // Display content after 15sec no matter what
+                                setTimeout(() => {
+                                    this.edstatsvc.setShowLPContent(true);
+                                }, 15000);
+                    
+                                if (this.editRequested) {
+                                    showError = false;
+                                    // console.log("Returning from authentication redirection (editmode="+
+                                    //             this.editRequested+")");
+                                    
+                                    // Need to pass reqID (resID) because the resID in editControlComponent
+                                    // has not been set yet and the startEditing function relies on it.
+                                    this.edstatsvc.startEditing(this.reqId);
+                                }
+                                else 
+                                    showError = true;
+                            }
+                        }
+
+                        if (showError) {
+                            if (metadataError == "not-found") {
+                                if (this.editRequested) {
+                                    console.log("ID not found...");
+                                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                                    this.setMessage();
+                                    this.displaySpecialMessage = true;
+                                }
+                                else {
+                                    this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
+                                }
+                            }
+                        }
+
+                        this.mdupdsvc.loadDBIOrecord().subscribe({
+                            next: (dbio) => {
+                                // console.log("dbio", dbio)
+                            },
+                            error: (err) => {
+                                console.error(err);
+                            }
+                        });
+                    },
+                    error: (err) => {
+                        console.error("Failed to retrieve metadata: ", err);
                         this.edstatsvc.setShowLPContent(true);
-                    }, 15000);
-        
-                    if (this.editRequested) {
-                        showError = false;
-                        // console.log("Returning from authentication redirection (editmode="+
-                        //             this.editRequested+")");
-                        
-                        // Need to pass reqID (resID) because the resID in editControlComponent
-                        // has not been set yet and the startEditing function relies on it.
-                        this.edstatsvc.startEditing(this.reqId);
+                        if (err instanceof IDNotFound) {
+                            metadataError = "not-found";
+                            this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
+                        }
+                        else {
+                            metadataError = "int-error";
+                            // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+                            this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+                        }
                     }
-                    else 
-                        showError = true;
-                }
-            }
-
-            if (showError) {
-                if (metadataError == "not-found") {
-                    if (this.editRequested) {
-                        console.log("ID not found...");
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
-                        this.setMessage();
-                        this.displaySpecialMessage = true;
-                    }
-                    else {
-                        this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                    }
-                }
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve metadata: ", err);
-            this.edstatsvc.setShowLPContent(true);
-            if (err instanceof IDNotFound) {
-                metadataError = "not-found";
-                this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-            }
-            else {
-                metadataError = "int-error";
-                // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-                this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+                })
+            },
+            error: (err) => {
+                console.error("Authentication failed: "+JSON.stringify(err));
             }
         });
+    }
+
+    /**
+     * Update help content
+     */
+    updateHelpContent() {
+        //Read meta from Midas record
+        this.mdupdsvc.loadMetaData().subscribe( midasrec => {
+            if(midasrec["resourceType"] != undefined) {
+                this.wordMpping["resource"] = midasrec["resourceType"];
+                this.resourceType = midasrec["resourceType"];
+
+                //Broadcast resource type
+                this.lpService.setResourceType(this.resourceType);
+
+                //Update helpContentAll
+                let keys = Object.keys(this.wordMpping);
+                keys.forEach(key => {
+                    this.helpContentAll = JSON.parse(JSON.stringify(this.helpContentAll).replace(new RegExp(key, 'g'), this.wordMpping[key]));
+                })  
+                
+                //Only update help content once
+                this.helpContentUpdated = true;
+            }
+        })
     }
 
     /**
@@ -427,14 +514,21 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     @HostListener("window:scroll", [])
     onWindowScroll() {
+        this.scrollMaxHeight = document.body.scrollHeight - window.innerHeight;
+
         if(this.mobileMode)
             this.windowScrolled = (window.pageYOffset > this.btnPosition);
         else
             this.windowScrolled = (window.pageYOffset > this.menuPosition);
 
         this.sidebarY = this.sidebarStartY - window.pageYOffset;
+        this.sidebarY = this.sidebarY < 0 ? 0 : this.sidebarY;
+
+        this.updateSidbarHeight();
+        this.updateSplitterHeight();
         
-        this.sidebarY = this.sidebarY > 10 ? this.sidebarY : 10;
+        this.splitterPaddingTop += window.pageYOffset - this.pageYOffset;
+        this.pageYOffset = window.pageYOffset;
     }
 
     /**
@@ -506,10 +600,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * apply housekeeping after view has been initialized
      */
     ngAfterViewInit() {
+        this.sidebarHeight = window.innerHeight - 250;
+
         if(this.inBrowser) {
             //Set the position of the sticky menu (or menu button)
             setTimeout(() => {
                 this.setMenuPosition();
+                this.updateScreenSize();
             }, 0);
         }
 
@@ -518,6 +615,23 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
             window.history.replaceState({}, '', '/od/id/' + this.reqId);
         }
+    }
+
+    /**
+     * Update the height of the help box
+     */
+    updateSidbarHeight() {
+        // The height of the help box
+        // should be windows inner height minus the height of the remaining of the top bar 
+        // minus the visible height of the bottom bar minus margin (50)
+
+        let visibleTopBarHeight = this.topBarHeight - window.pageYOffset + 50;
+        visibleTopBarHeight = visibleTopBarHeight > 0 ? visibleTopBarHeight : 0;
+
+        let visibleBottomBarHeight = this.bottomBarHeight - this.scrollMaxHeight + window.pageYOffset;
+        visibleBottomBarHeight = visibleBottomBarHeight > 0 ? visibleBottomBarHeight : 0;
+
+        this.sidebarHeight = window.innerHeight - visibleTopBarHeight - visibleBottomBarHeight - 50;
     }
 
     /**
@@ -533,8 +647,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             .subscribe((state: BreakpointState) => {
                 if (state.matches) {
                     this.mobileMode = false;
-                    if (this.menuElement)
-                        this.menuPosition = this.menuElement.nativeElement.offsetTop + 10;
+                    if (this.menuElement){
+                        this.menuPosition = this.menuElement.nativeElement.offsetTop - 40;
+                    }
+
                 } else {
                     this.mobileMode = true;
                     if (this.btnElement)
@@ -553,9 +669,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     showData() : void{
-        if (this.md != null)
+        if (this.md != null) {
             this._showData = true;
-        else
+            setTimeout(() => {
+                this.setMenuPosition();
+                this.updateScreenSize();
+            }, 0);
+        }else
             this._showData = false;
     }
 
@@ -573,6 +693,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         // set the document title
         this.setDocumentTitle();
         this.mdupdsvc.setOriginalMetadata(this.md);
+
         this.showData();
     }
 
@@ -712,5 +833,77 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             else    
                 this.mainBodyStatus = "mainexpanded";
         }
+    }
+
+    /**
+     *  Following functions detect screen size
+     */
+    @HostListener("window:resize", [])
+        public onResize() {
+            this.updateScreenSize();
+    }
+
+    private updateScreenSize() {
+        setTimeout(() => {
+            if(this.inBrowser){
+                this.helpMaxWidth = window.innerWidth / 2;
+                this.sidebarHeight = window.innerHeight - this.topBarHeight - 50;
+                this.pageYOffset = window.pageYOffset;
+                this.updateSplitterHeight();
+                this.splitterPaddingTop = (window.innerHeight - this.topBarHeight) / 2 - 100;
+                this.helpWidth = window.innerWidth * 0.37;
+                this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth;
+
+                this.setLpsWidth(this.helpWidth);
+                this.prevHelpWidth = this.helpWidth;
+
+                this.lpsWidthForPreview = window.innerWidth * .75;              
+            }
+        }, 0);
+    }
+
+
+    setLpsWidth(helpWidth: number) {
+        this.lpsWidth = window.innerWidth - helpWidth - 140;
+    }
+
+    updateSplitterHeight() {
+        if(this.lpscontent){
+            this.splitterHeight = this.lpscontent.nativeElement.offsetHeight;
+        }
+    }
+
+    // The following mouse functions handle drag action
+    @HostListener('window:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent){
+        this.mouse = {
+            x: event.clientX,
+            y: event.clientY
+        }
+
+        if(this.mouseDragging) {
+            let diff = this.mouse.x - this.prevMouseX;
+            this.helpWidth = this.prevHelpWidth - diff;
+            this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth > this.helpMaxWidth? this.helpMaxWidth : this.helpWidth;
+
+            this.updateSidbarHeight();
+            this.setLpsWidth(this.helpWidth);
+            this.updateSplitterHeight();
+
+            this.prevMouseX = this.mouse.x;
+            this.prevHelpWidth = this.helpWidth;
+        }
+    }
+
+    onMousedown(event) {
+        this.prevMouseX = this.mouse.x;
+        this.mouseDragging = true;
+
+
+    }
+
+    @HostListener('window:mouseup', ['$event'])
+    onMouseUp(event) {
+        this.mouseDragging = false;
     }
 }

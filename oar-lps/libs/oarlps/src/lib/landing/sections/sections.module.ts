@@ -23,6 +23,7 @@ import { ButtonModule } from 'primeng/button';
 import { VisithomeModule } from '../visithome/visithome.module';
 import { ReferencesModule } from '../references/references.module';
 import { AccesspageModule } from '../accesspage/accesspage.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -71,7 +72,8 @@ import { AccesspageModule } from '../accesspage/accesspage.module';
         ButtonModule,
         ReferencesModule,
         AccesspageModule,
-        VisithomeModule
+        VisithomeModule,
+        NgbModule
     ],
     declarations: [
         ResourceDataComponent,

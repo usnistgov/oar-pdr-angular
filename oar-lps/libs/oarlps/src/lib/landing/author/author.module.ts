@@ -14,6 +14,7 @@ import { AuthorListComponent } from './author-list/author-list.component';
 import { AuthorEditComponent } from './author-edit/author-edit.component';
 import { TextEditModule } from '../../text-edit/text-edit.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * module that provide support for rendering and managing a resource's 
@@ -29,6 +30,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
         ButtonModule,
         TextEditModule,
         DragDropModule,
+        NgbModule,
         ToastrModule.forRoot()
     ],
     declarations: [

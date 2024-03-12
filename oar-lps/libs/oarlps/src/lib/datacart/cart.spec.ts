@@ -353,8 +353,8 @@ describe('DataCart', () => {
         // expect(dc.updateFileStatusOf(udc)).toBe(1);
         expect(dc.findFile("gov", "fred")['downloadStatus']).toEqual("downloaded");
         expect(dc.findFile("gov", "hank")['downloadStatus']).toEqual("downloading");
-        expect(dc.findFile("gov", "fred")['inCart']).not.toBeDefined(true);
-        expect(dc.findFile("gov", "hank")['inCart']).not.toBeDefined(true);
+        expect(dc.findFile("gov", "fred")['inCart']).not.toBeDefined();
+        expect(dc.findFile("gov", "hank")['inCart']).not.toBeDefined();
     });
 
     it('matchFiles()', () => {

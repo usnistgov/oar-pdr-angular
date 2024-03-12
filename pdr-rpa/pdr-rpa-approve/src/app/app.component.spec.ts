@@ -172,5 +172,55 @@ describe('AppComponent', () => {
 
     });
   });
-});
 
+  describe('parseApprovalStatus', () => {
+
+    const pendingMockRecord: Record = {
+      id: '123',
+      caseNum: '1234567890',
+      userInfo: {
+        fullName: 'John Doe',
+        organization: 'NIST',
+        email: 'john.doe@nist.gov',
+        receiveEmails: 'Yes',
+        country: 'United States',
+        approvalStatus: 'Pending',
+        productTitle: 'example title',
+        subject: 'example subject',
+        description: 'example description'
+      }
+    };
+
+    const approvedMockRecord: Record = {
+      id: '123',
+      caseNum: '1234567890',
+      userInfo: {
+        fullName: 'John Doe',
+        organization: 'NIST',
+        email: 'john.doe@nist.gov',
+        receiveEmails: 'Yes',
+        country: 'United States',
+        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov_randomId12345',
+        productTitle: 'example title',
+        subject: 'example subject',
+        description: 'example description'
+      }
+    };
+
+    it('should correctly parse a pending status', () => {
+      component.parseApprovalStatus(pendingMockRecord);
+      expect(component.status).toEqual('Pending');
+      expect(component.statusDate).toEqual('');
+      expect(component.smeEmail).toEqual('');
+      expect(component.randomId).toEqual('');
+    });
+
+    it('should correctly parse a 4-part status', () => {
+      component.parseApprovalStatus(approvedMockRecord);
+      expect(component.status).toEqual('Approved');
+      expect(component.statusDate).toEqual('2023-04-25T10:00:00.000Z');
+      expect(component.smeEmail).toEqual('sme@nist.gov');
+      expect(component.randomId).toEqual('randomId12345');
+    });
+  });
+});

@@ -11,15 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { testdata } from '../../../environments/environment';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { IEnvironment } from '../../../environments/ienvironment';
+import * as env from '../../../environments/environment';
 
 describe('ResultlistComponent', () => {
-    let ienv : IEnvironment;
   let component: ResultlistComponent;
   let fixture: ComponentFixture<ResultlistComponent>;
   let plid : Object = "browser";
   let ts : TransferState = new TransferState();
-  let cfg : AppConfig = (new AngularEnvironmentConfigService(ienv, plid, ts)).getConfig() as AppConfig;
+  let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
   let nrd1 = testdata['test1'];
 
   beforeEach(async () => {

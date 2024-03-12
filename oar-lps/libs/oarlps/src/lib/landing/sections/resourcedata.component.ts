@@ -42,12 +42,13 @@ export class ResourceDataComponent implements OnChanges {
     recordType: string = "";
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
-
+    hasRights: boolean = true;
+    
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() editEnabled: boolean; 
-    @Input() theme: string;
+    @Input() theme: string = "default";
 
     // pass out download status for metrics refresh
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();
