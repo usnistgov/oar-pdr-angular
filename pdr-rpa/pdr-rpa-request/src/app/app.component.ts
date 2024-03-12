@@ -167,18 +167,29 @@ export class AppComponent {
             const recaptcha = this.requestForm.controls.recaptcha.value;
             const userInfo = this.getUserInfo(requestFormData);
 
-            // Create a new record and handle the response
-            this.rpaService.createRecord(userInfo, recaptcha)
-                .pipe(
-                    catchError((error: any) => {
-                        this.handleFailedSubmission(error);
-                        return of(null);
-                    })
-                ).subscribe((data: Record | null) => {
-                    if (data !== null) {
-                        this.handleSuccessfulSubmission(data);
-                    }
-                });
+            /// Check if in development mode
+            if (environment.debug) {
+                // Log data
+                console.log("Simulated submission:", userInfo, recaptcha);
+
+                // Simulate successful submission response
+                const simulatedData = { data: "simulation data", successful: true};
+                this.handleSuccessfulSubmission(simulatedData);
+            } else {
+                // Create a new record and handle the response in production
+                this.rpaService.createRecord(userInfo, recaptcha)
+                    .pipe(
+                        catchError((error: any) => {
+                            this.handleFailedSubmission(error);
+                            return of(null);
+                        })
+                    ).subscribe((data: Record | null) => {
+                        if (data !== null) {
+                            this.handleSuccessfulSubmission(data);
+                        }
+                    });
+            }
+
 
         }
     }
@@ -289,9 +300,36 @@ export class AppComponent {
         };
         this.messageService.add(message);
         // Empty form
-        this.requestForm.reset();
+        this.resetRequestForm();
     }
 
+    /**
+     * Resets the request form to its initial state.
+     *
+     * This function resets all form controls to their default values, effectively
+     * clearing the form and resetting its validation state. This is particularly useful
+     * following a form submission, allowing the form to be reused for another submission
+     * without carrying over the previous state.
+     *
+     */
+    private resetRequestForm(): void {
+        this.requestForm.reset({
+            fullName: "",
+            email: "",
+            phone: "",
+            organization: "",
+            address1: "",
+            address2: "",
+            address3: "",
+            country: "",
+            receiveEmails: false, // Resetting checkboxes
+            termsAndConditionsAgreenement: false,
+            disclaimerAgreenement: false,
+            vettingAgreenement: false,
+            accessAgreement: false,
+            recaptcha: false,
+        });
+    }
 
     /**
      * Helper method to create the userInfo that will be used as payload for creating a new record case in SF.
@@ -329,7 +367,7 @@ export class AppComponent {
         let address = addressLines.join('\n');
 
         return `Product Title: ${productTitle}\n\n` +
-             `Phone Number: ${requestFormData.phone}\n\n` +
+            `Phone Number: ${requestFormData.phone}\n\n` +
             `Address:\n${address}`;
     }
 
@@ -338,11 +376,11 @@ export class AppComponent {
      */
     private initRequestForm(): void {
 
-        let emailBlacklist = this.getEmailBlacklist();
+        // let emailBlacklist = this.getEmailBlacklist();
 
         this.requestForm = new FormGroup({
             fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
-            email: new FormControl("", [Validators.required, Validators.email, CustomValidators.blacklisted(emailBlacklist.patterns, emailBlacklist.emails, emailBlacklist.domains)]),
+            email: new FormControl("", [Validators.required, Validators.email]),
             phone: new FormControl("", [Validators.required]),
             organization: new FormControl("", [Validators.required]),
             address1: new FormControl("", [Validators.required]),
@@ -360,17 +398,18 @@ export class AppComponent {
         });
     }
 
+
     /**
      * Retrieves the email blacklist configuration.
      * @returns The email blacklist configuration object.
      */
-    private getEmailBlacklist(): any {
-        return {
-            patterns: ['test', '123'],
-            emails: ['john.doe@example.com', 'jane.doe@example.com'],
-            domains: ['gmail.com', 'test.com']
-        };
-    }
+    // private getEmailBlacklist(): any {
+    //     return {
+    //         patterns: ['test', '123'],
+    //         emails: ['john.doe@example.com', 'jane.doe@example.com'],
+    //         domains: ['gmail.com', 'test.com']
+    //     };
+    // }
 
     /**
      * Utility method that takes an AbstractControl or null and returns any validation errors that are present in the control or its child controls.
