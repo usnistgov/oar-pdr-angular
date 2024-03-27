@@ -63,7 +63,7 @@
                     </td>
                     <td [ngStyle]="bodyStyle(sizeWidth)">
                         <div *ngIf="rowData.cartItem;else space_holder" style="display:inline;color: green;" >
-                            <a *ngIf="rowData.cartItem.downloadStatus != 'downloading'" href='{{rowData.cartItem.downloadURL}}' target='_blank' download="{{rowData.name}}" data-toggle="tooltip" 
+                            <a *ngIf="rowData.cartItem.downloadStatus != 'downloading'" href='{{rowData.cartItem.downloadURL}}' download="{{rowData.name}}" data-toggle="tooltip" 
                                 title="Download this file" aria-label="Download this file">
                                 <i class="fas fa-download"
                                     aria-hidden="true" (click)="setFileDownloaded(rowData)"></i>
