@@ -581,6 +581,7 @@ export class TreetableComponent implements OnInit, AfterViewInit {
      * @param rowData - tree node that the file was downloaded
      */
     setFileDownloaded(rowData: any) {
+        console.log('setFileDownloaded() called, rowData.name = ' + rowData.name);
             // Google Analytics code to track download event
         this.gaService.gaTrackEvent('download', undefined, rowData.ediid, rowData.cartItem.downloadURL);
 
