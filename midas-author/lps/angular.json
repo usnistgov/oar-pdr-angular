@@ -47,7 +47,8 @@
               "src/styles/main.css",
               "src/styles/fontawesome-free-5.15.4-web/css/all.css",
               "src/app/content/modal.less",
-              "../../node_modules/ngx-toastr/toastr.css"
+              "../../node_modules/ngx-toastr/toastr.css",
+              "../../node_modules/@ng-select/ng-select/themes/default.theme.css"
             ],
             "vendorChunk": true,
             "extractLicenses": false,

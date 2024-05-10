@@ -13,7 +13,7 @@ import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
-import { LandingConstants } from './constants';
+import { Globals } from 'oarlps';
 import { CartService } from 'oarlps';
 import { DataCartStatus } from 'oarlps';
 import { CartConstants } from 'oarlps';
@@ -32,6 +32,7 @@ import { LandingpageService } from 'oarlps';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import { error } from 'console';
+import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 
 /**
  * A component providing the complete display of landing page content associated with 
@@ -97,8 +98,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citetext: string = null;
     citationVisible: boolean = false;
     editEnabled: boolean = false;
-    public EDIT_MODES: any = LandingConstants.editModes;
-    editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
+    public EDIT_MODES: any = Globals.LandingConstants.editModes;
+    editMode: string = Globals.LandingConstants.editModes.VIEWONLY_MODE;
+    editTypes = Globals.LandingConstants.editTypes;
+    // reviseTypes: any = Globals.LandingConstants.reviseTypes;
+    arrRevisionTypes: any[] = [];
     editRequested: boolean = false;
     _showData: boolean = false;
     _showContent: boolean = true;
@@ -164,7 +168,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     pageYOffset: number = 0;
 
     scrollMaxHeight: number;
-    wordMpping: any = wordMapping;
+    wordMapping: any = wordMapping;
     resourceType: string = "resource";
 
     suggustedSections: string[] = ["title", "keyword", "references"];
@@ -229,7 +233,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     this.setMessage();
                 }
                 
-                this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE);
+                this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE || this.editMode == this.EDIT_MODES.REVISE_MODE);
+
                 if(!this.hideToolMenu) {
                     this.mainBodyStatus = "mainsquished";
                     this.prevLpsWidth = this.lpsWidth;
@@ -268,6 +273,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
+        this.arrRevisionTypes = REVISION_TYPES["default"];
         this.recordLevelMetrics = new RecordLevelMetrics();
         var showError: boolean = true;
         let metadataError = "";
@@ -290,16 +296,46 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         if (this.editEnabled) {
             this.route.queryParamMap.subscribe(queryParams => {
-                let param = queryParams.get("editEnabled");
-                if (param)
-                    this.editRequested = (param.toLowerCase() == 'true');
+                let param = queryParams.get("editMode");
+                console.log('param', param);
+                switch(param.toLowerCase()) { 
+                    case "revise": { 
+                        this.editRequested = true;
+                        this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
+                        this.edstatsvc._setEditType(this.editTypes.REVISE);
+                        this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
+                        this.edstatsvc.setShowLPContent(false);
+                        break; 
+                    } 
+                    case "edit": { 
+                        this.editRequested = true;
+                        this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
+                        this.edstatsvc._setEditType(this.editTypes.NORNAL);
+                        this.edstatsvc.setShowLPContent(false);
+                        break; 
+                    } 
+                    case "done": { 
+                        this.editRequested = false;
+                        this.edstatsvc._setEditMode(this.EDIT_MODES.DONE_MODE);
+                        this.edstatsvc.setShowLPContent(true);
+                        break; 
+                    } 
+                    default: { // preview
+                        this.editRequested = false;
+                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setShowLPContent(true);
+                        break; 
+                    } 
+                } 
+                // if (param)
+                //     this.editRequested = (param.toLowerCase() == 'true');
 
                 // if editEnabled = true, we don't want to display the data that came from mdserver
                 // Will set the display to true after the authentication process. If authentication failed, 
                 // we set it to true and the data loaded from mdserver will be displayed. If authentication 
                 // passed and draft data loaded from customization service, we will set this flag to true 
                 // to display the data from MIDAS.
-                this.edstatsvc.setShowLPContent(! this.editRequested);
+                // this.edstatsvc.setShowLPContent(! this.editRequested);
             });
         }
 
@@ -309,6 +345,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.mdupdsvc.authsvc.authorizeEditing(this.reqId).subscribe({
             next: (custsvc) => {
                 this.mdupdsvc._setCustomizationService(custsvc);
+                this.mdupdsvc.validate().subscribe(response => {
+                    this.lpService.setSubmitResponse(response as Globals.SubmitResponse);
+                })
+
                 this.mdupdsvc.loadDraft().subscribe({
                     next: (data) => {
                         // successful metadata request
@@ -415,16 +455,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         //Read meta from Midas record
         this.mdupdsvc.loadMetaData().subscribe( midasrec => {
             if(midasrec["resourceType"] != undefined) {
-                this.wordMpping["resource"] = midasrec["resourceType"];
+                this.wordMapping["resource"] = midasrec["resourceType"];
                 this.resourceType = midasrec["resourceType"];
 
                 //Broadcast resource type
                 this.lpService.setResourceType(this.resourceType);
 
                 //Update helpContentAll
-                let keys = Object.keys(this.wordMpping);
+                let keys = Object.keys(this.wordMapping);
                 keys.forEach(key => {
-                    this.helpContentAll = JSON.parse(JSON.stringify(this.helpContentAll).replace(new RegExp(key, 'g'), this.wordMpping[key]));
+                    this.helpContentAll = JSON.parse(JSON.stringify(this.helpContentAll).replace(new RegExp(key, 'g'), this.wordMapping[key]));
                 })  
                 
                 //Only update help content once
@@ -650,12 +690,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     if (this.menuElement){
                         this.menuPosition = this.menuElement.nativeElement.offsetTop - 40;
                     }
-
                 } else {
                     this.mobileMode = true;
                     if (this.btnElement)
                         this.btnPosition = this.btnElement.nativeElement.offsetTop + 10;
                 }
+
+                this.lpService.setMobileMode(this.mobileMode);
             });
         }
     }

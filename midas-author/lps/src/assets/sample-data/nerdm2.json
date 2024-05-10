@@ -10,7 +10,7 @@
         "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
     ],
     "@type": ["nrdp:PublicDataResource"],
-    "@id": "ark:/88434/mds0000fbk",
+    "@id": "test2",
     "title": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
     "contactPoint": {
         "hasEmail": "mailto:patricia.flanagan@nist.gov",

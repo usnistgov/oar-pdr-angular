@@ -856,4 +856,83 @@ export class MetadataUpdateService {
             });
         });
     }      
+
+    /**
+     * Validate the status from backend
+     */
+    public validate(): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to validate without authorization!  Ignoring validate.");
+                return;
+            }
+            this.custsvc.validate().subscribe({
+                next: (res) => {
+                    subscriber.next(res);
+                    subscriber.complete();
+                },
+                error: (err) => {
+                  console.log("err", err);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    // handle 404
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to validate: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to validate: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            });
+        });
+    }      
+
+    public getEnvelop(): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to validate without authorization!  Ignoring validate.");
+                return;
+            }
+            this.custsvc.getEnvelop().subscribe({
+                next: (res) => {
+                    subscriber.next(res);
+                    subscriber.complete();
+                },
+                error: (err) => {
+                  console.log("err", err);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    // handle 404
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to validate: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to validate: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            });
+        });
+    }      
 }
