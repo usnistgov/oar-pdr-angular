@@ -21,17 +21,17 @@ export const context = {
 export const config: LPSConfig = {
     locations: {
         orgHome: "https://nist.gov/",
-        portalBase: "https://localhost/",
-        pdrHome: "https://localhost/pdr/",
-        pdrSearch: "https://localhost/sdp/",
-        mdService:   "https://localhost/rmm/",
-        taxonomyService: "https://localhost/rmm/taxonomy"
+        portalBase: "https://mdsdev.nist.gov/",
+        pdrHome: "https://mdsdev.nist.gov/pdr/",
+        pdrSearch: "https://mdsdev.nist.gov/sdp/",
+        mdService:   "https://mdsdev.nist.gov/rmm/",
+        taxonomyService: "https://mdsdev.nist.gov/rmm/taxonomy"
     },
-    mdAPI: "https://localhost/midas/dap/mds3/",
+    mdAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
     // mdAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
-    metricsAPI: "https://localhost/rmm/usagemetrics/",
+    metricsAPI: "https://mdsdev.nist.gov/rmm/usagemetrics/",
     // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "https://localhost/midas/",
+    customizationAPI: "https://mdsdev.nist.gov/midas/",
     // customizationAPI: "https://mdsdev.nist.gov/midas/",
     fileManagerAPI: "https://nextcloud-dev.nist.gov",
     mode: "dev",
@@ -39,14 +39,14 @@ export const config: LPSConfig = {
     appVersion: "v1.3.X",
     production: context.production,
     editEnabled: true,
-    distService: "https://localhost/od/ds/",
+    distService: "https://mdsdev.nist.gov/od/ds/",
     gaCode: "not-set",
-    screenSizeBreakPoint: 1060,
+    screenSizeBreakPoint: 1200,
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,
-    standardNISTTaxonomyURI: "https://localhost/od/dm/nist-themes/",
-    portalAPI: "https://localhost/portal/landing"  
+    standardNISTTaxonomyURI: "https://mdsdev.nist.gov/od/dm/nist-themes/",
+    portalAPI: "https://mdsdev.nist.gov/portal/landing"  
 }
 
 export const testdata: {} = {
@@ -1087,7 +1087,7 @@ export const testdata: {} = {
                     "nrda:DynamicResourceSet", "nrdp:SearchPage"
                 ],
                 "searchURL": "/rmm/records?isPartOf.@id=ark:/88434/mds9911",
-                "accessURL": "http://localhost:5555/#/search?q=isPartOf.@id%3Dark:/88434/mds9911&alternateView=forensics",
+                "accessURL": "http://mdsdev.nist.gov:5555/#/search?q=isPartOf.@id%3Dark:/88434/mds9911&alternateView=forensics",
                 "title": "All Forensics Data Collection",
                 "description": "The search URL here queries all the data which is part of Forensics data collection."
             },

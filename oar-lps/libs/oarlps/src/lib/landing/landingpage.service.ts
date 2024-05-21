@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { SectionMode, SectionHelp, MODE } from '../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SubmitResponse } from '../shared/globals/globals';
 import { NerdmRes } from '../nerdm/nerdm';
 import { strict } from 'assert';
 
@@ -48,7 +48,17 @@ export class LandingpageService {
         this._sectionHelp.subscribe(subscriber);
     }
 
-    // Indicate which section help content to display
+    // Set and watch help text returned from submit function
+    _submitResponse: BehaviorSubject<SubmitResponse> = new BehaviorSubject<SubmitResponse>({} as SubmitResponse);
+    setSubmitResponse(submitResponse: SubmitResponse){
+        this._submitResponse.next(submitResponse);
+    }
+
+    public watchSubmitResponse(subscriber) {
+        this._submitResponse.subscribe(subscriber);
+    }
+        
+    // Indicate which resource type to display
     _resourceType: BehaviorSubject<string> = new BehaviorSubject<string>("resource");
     setResourceType(resourceType: string){
         this._resourceType.next(resourceType);
@@ -56,6 +66,15 @@ export class LandingpageService {
     public watchResourceType(subscriber) {
         this._resourceType.subscribe(subscriber);
     }    
+
+    // Indicate which resource type to display
+    _mobileMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    setMobileMode(mobileMode: boolean){
+        this._mobileMode.next(mobileMode);
+    }
+    public watchMobileMode(subscriber) {
+        this._mobileMode.subscribe(subscriber);
+    }  
 
     // Set message to display
     _msg: BehaviorSubject<string> = new BehaviorSubject<string>("resource");

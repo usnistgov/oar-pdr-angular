@@ -15,8 +15,10 @@ describe('SidebarComponent', () => {
   });
 
   beforeEach(() => {
+    let record: any = require('../../assets/sampleRecord.json');
     fixture = TestBed.createComponent(SidebarComponent);
     component = fixture.componentInstance;
+    component.record = record;
     fixture.detectChanges();
   });
 

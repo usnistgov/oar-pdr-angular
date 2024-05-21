@@ -1,10 +1,10 @@
 {
-    "RMMAPI":  "https://localhost/rmm/",
-    "SDPAPI":  "https://localhost/sdp/",
-    "PDRAPI":  "https://localhost/od/id/",
-    "DISTAPI": "https://localhost/od/ds/",
-    "METAPI":  "https://localhost/metaurl/",
-    "LANDING": "https://localhost/rmm/",
-    "AUTHAPI": "https://localhost/sso/",
+    "RMMAPI":  "https://mdsdev.nist.gov/rmm/",
+    "SDPAPI":  "https://mdsdev.nist.gov/sdp/",
+    "PDRAPI":  "https://mdsdev.nist.gov/od/id/",
+    "DISTAPI": "https://mdsdev.nist.gov/od/ds/",
+    "METAPI":  "https://mdsdev.nist.gov/metaurl/",
+    "LANDING": "https://mdsdev.nist.gov/rmm/",
+    "AUTHAPI": "https://mdsdev.nist.gov/sso/",
     "REDIRECTAUTHAPI": "saml/login?redirectTo="
 }

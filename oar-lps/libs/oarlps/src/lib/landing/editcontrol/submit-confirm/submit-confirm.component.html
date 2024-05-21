@@ -1,0 +1,61 @@
+<div class="bar" style="color: white !important;">
+    Submit Confirmation
+</div>
+
+<div class="content">
+    <div>
+        We have reviewed your draft. The following are the items we recommend. You can choose continue submitting or cancel submit and go back to edit:
+    </div>
+    
+    <div>
+        <div style="margin: 10px;">
+            <div *ngIf="hasRequiredItems"> 
+               <div class="subtitle">
+                   <span style="margin-right: 5px;">&#8226;</span>
+                   Required:
+               </div>
+               <div class="steps">
+                   <div *ngFor="let section of submitResponse.validation.failures" class="stepitem">
+                       <i>{{section.title}} - {{section.description}}</i>
+                   </div>
+               </div>
+           </div>
+    
+           <div *ngIf="hasRecommendedItems"> 
+               <div class="subtitle">
+                   <span style="margin-right: 5px;">&#8226;</span>
+                   Recommended:
+               </div>
+               <div class="steps">
+                   <div *ngFor="let section of submitResponse.validation.warnings; let i = index"  class="stepitem">
+                       <i>{{section.title}} - {{section.description}}</i>
+                   </div>
+               </div>
+           </div>
+    
+           <div *ngIf="hasNiceToHaveItems"> 
+               <div class="subtitle">
+                   <span style="margin-right: 5px;">&#8226;</span>
+                   Nice to have:
+               </div>
+               <div class="steps">
+                   <div *ngFor="let section of submitResponse.validation.recommendations"  class="stepitem">
+                       <i>{{section.title}} - {{section.description}}</i>
+                   </div>
+               </div>
+           </div>
+       </div>
+    </div>
+</div>
+
+<hr>
+<div class="control-buttons">
+    <!-- Buttons are arranged from right to left -->
+        <!-- Continue Submit button -->
+        <button pButton class="btn btn-labeled" id="btn-submit" (click)="continueSubmit()"
+        label="Continue Submit" icon="fas fa-arrow-circle-up faa-1x icon-white" iconPos="left"></button>
+
+        <!-- Cancel button -->
+        <button pButton class="btn btn-labeled" id="btn-cancel" (click)="cancelSubmit()"
+        label="Cancel Submit" icon="fas fa-times faa-1x icon-white" iconPos="left"></button>
+</div>

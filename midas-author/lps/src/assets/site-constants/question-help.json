@@ -67,5 +67,5 @@
         "edit": "Separate each Reference URL with a comma. When all References are entered, click <i class='fas fa-check'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         "dragdrop": "To change the order of references listed, click on <img src='./assets/images/reorder_s.png'> on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
-    "completed": "Congratulations!"
+    "completed": "All data has been completed. No more suggestion."
 }

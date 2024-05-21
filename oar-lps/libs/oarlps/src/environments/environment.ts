@@ -38,7 +38,7 @@ export const config: LPSConfig = {
     editEnabled: false,
     distService: "https://testdata.nist.gov/od/ds/",
     gacode: "not-set",
-    screenSizeBreakPoint: 1060,
+    screenSizeBreakPoint: 1200,
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,

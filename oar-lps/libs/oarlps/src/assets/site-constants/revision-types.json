@@ -1,0 +1,7 @@
+[
+    {"id": "1", "type": "Metadata Update"},
+    {"id": "2", "type": "Distribution removal"},
+    {"id": "3", "type": "Data change (minor)"},
+    {"id": "4", "type": "Data change (major)"},
+    {"id": "5", "type": "New file addition"}
+]

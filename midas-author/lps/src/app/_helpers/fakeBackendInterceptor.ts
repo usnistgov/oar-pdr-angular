@@ -30,7 +30,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         // const biometricsData1: any  = require('../../assets/science-theme/SDB-300.json');
         // const biometricsData2: any  = require('../../assets/science-theme/SDB-301.json');
-        // const biometricsData3: any  = require('../../assets/science-theme/SDB-302.json');
+        const validateResponse: any  = require('../../assets/sample-data/validate_response.json');
         // const dna1: any  = require('../../assets/science-theme/dna1.json');
         // const dna2: any  = require('../../assets/science-theme/dna2.json');
         // const dna3: any  = require('../../assets/science-theme/dna3.json');
@@ -173,26 +173,38 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //       });
         //   }
 
-        //======
-        // // authenticate
-        if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+
+        // Validate
+        if (request.url.indexOf('status') > -1 && request.method === 'PUT') {
             if(!this.alerted) {
                 alert('You are using fake backend for authentication!');
                 this.alerted = true;
             }
 
-            let body: any = {
-                userDetails: {
-                    userId: 'xyz@nist.gov',
-                    userName: 'xyz',
-                    userLastName: 'anon',
-                    userEmail: "anon@email.com"
-                },
-                token: 'fake-jwt-token'
-            };
-            console.log("logging in...")
-            return of(new HttpResponse({ status: 200, body }));
+            console.log("Getting validation...")
+            return of(new HttpResponse({ status: 200, body: validateResponse}));
         }
+
+        //======
+        // // authenticate
+        // if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+        //     if(!this.alerted) {
+        //         alert('You are using fake backend for authentication!');
+        //         this.alerted = true;
+        //     }
+
+        //     let body: any = {
+        //         userDetails: {
+        //             userId: 'lnc9',
+        //             userName: 'Chuan Lin',
+        //             userLastName: 'Lin',
+        //             userEmail: "chuan.lin@nist.gov"
+        //         },
+        //         token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsbmM5IiwidXNlckVtYWlsIjoiY2h1YW4ubGluQG5pc3QuZ292IiwiZXhwIjoxNzE1MzYyMjY0LCJ1c2VyTmFtZSI6IkNodWFuIiwidXNlckxhc3ROYW1lIjoiTGluIn0.Dj3yceJZFksGGd5WyeV2er_4YHZcF0gVnrBRmD18uFk'
+        //     };
+        //     console.log("logging in...")
+        //     return of(new HttpResponse({ status: 200, body }));
+        // }
 
         // return 401 not authorised if token is null or invalid
         // if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
@@ -254,14 +266,28 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }        
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
         
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PATCH') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2/data/references') > -1 && request.method === 'POST') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);
@@ -272,10 +298,20 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 //      Empty record
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'GET') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PUT') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             let requestBody = JSON.parse(request.body)
             if(Array.isArray(requestBody)) {
                 requestBody.forEach(item => {
@@ -290,10 +326,20 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }        
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'DELETE') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PATCH') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
+
             return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
