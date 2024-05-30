@@ -148,8 +148,8 @@ export class TopicComponent implements OnInit {
      */
     cancelEditing() {
         this.updateResearchTopics();
-        // this.setMode(MODE.NORNAL);
-        // this.dataChanged = false;
+        this.setMode(MODE.NORNAL);
+        this.dataChanged = false;
     }
 
     /**

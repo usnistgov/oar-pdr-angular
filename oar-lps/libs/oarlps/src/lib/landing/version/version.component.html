@@ -1,5 +1,20 @@
 <div style="display: table;" *ngIf="record">
-    <span class="" *ngIf="record.version" style="padding-right: 10pt;"> Version: <strong>{{record.version}}</strong></span>
+    <span *ngIf="record.version" style="padding-right: 10pt;"> Version: <strong>{{major}}.{{minor}}.{{patch}}</strong></span>
+
+    <!-- Control buttons -->
+    <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+        <button class="edit_button" *ngIf="!isEditing" type="button" 
+        (click)="startEditing()" aria-label="Edit title" ngbTooltip="Edit title" style="cursor: pointer">
+            <i class="fas fa-pencil fa-sm"></i>
+        </button> 
+        
+        <button class="edit_button" type="button" [disabled]="!updated" *ngIf="!isEditing && updated" 
+            (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
+            <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
+        </button>           
+    </div>
+
+
     <span class="" *ngIf="record.versionHistory" style="padding-right: 15pt;">...
         <i style="cursor: pointer;" class="faa" aria-hidden="true"
             [ngClass]="{'faa-caret-right': !clickHistory, 'faa-caret-down': clickHistory}"
@@ -35,4 +50,31 @@
                 (click)="gaService.gaTrackEvent('outbound', $event, 'Resource title: ' + record.title, newer.label)">{{newer.label}}</a></b>
     </p>
 </div>
+
+<!-- Version editor -->
+<div class="editable_container" style="width: 100%;" [@editExpand]="editBlockStatus" [style.overflow] = "overflowStyle">
+    <div class="editable_field">
+        <p-inputNumber [inputStyle]="{width: '30px'}" [(ngModel)]="major" mode="decimal" [showButtons]="true" inputId="minmax-buttons" [(min)]="originalMajor" [max]="1000" (onInput)="onMajorChanged($event)">
+        </p-inputNumber>
+        .
+        <p-inputNumber [inputStyle]="{width: '30px'}" [(ngModel)]="minor" mode="decimal" [showButtons]="true" inputId="minmax-buttons" [(min)]="originalMinor" [max]="1000" (onInput)="onMinorChanged($event)">
+        </p-inputNumber>
+        .
+        {{patch}}
+    </div>
+    
+    <!-- Control buttons -->
+    <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+        <button class="edit_button" type="button" (click)="onSave()" 
+        aria-label="save button" ngbTooltip="Save changes">
+            <i class="fas fa-check icon_enabled"></i>
+        </button>
+    
+        <button class="edit_button" type="button" 
+        (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
+            <i class="fas fa-undo fa-sm" data-toggle="tooltip" title="Undo current changes"></i>
+        </button>            
+    </div>
+</div>
+
 

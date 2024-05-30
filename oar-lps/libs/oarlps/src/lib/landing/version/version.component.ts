@@ -1,11 +1,14 @@
-import { Component, OnChanges, Input } from '@angular/core';
+import { Component, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
 
 import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { Themes, ThemesPrefs, AppSettings, SectionMode, SectionHelp, MODE, SectionPrefs, Sections, SubmitResponse } from '../../shared/globals/globals';
+import { NotificationService } from '../../shared/notification-service/notification.service';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
 interface reference {
     refType?: string,
@@ -26,7 +29,14 @@ interface reference {
 @Component({
     selector: 'pdr-version',
     templateUrl: './version.component.html',
-    styleUrls: [ '../landing.component.scss' ]
+    styleUrls: [ '../landing.component.scss' ],
+    animations: [
+        trigger('editExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ])
+    ]
 })
 export class VersionComponent implements OnChanges {
     visibleHistory = false;
@@ -35,7 +45,22 @@ export class VersionComponent implements OnChanges {
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string;
     fieldName = SectionPrefs.getFieldName(Sections.VERSION);
+    dataChanged: boolean = false;
+    editBlockStatus: string = 'collapsed';
+    overflowStyle: string = 'hidden';
 
+    major: number = 1;  // Current value
+    prevMajor: number = 1;  // Previous value. For undo purpose.
+    originalMajor: number = 1; // Original value. For restore purpose.
+    minor: number = 0;  // Current value
+    prevMinor: number = 1;  // Previous value. For undo purpose.
+    originalMinor: number = 0;  // Original value. For restore purpose.
+    patch: number = 0;  // Current value
+    prevPatch: number = 1;  // Previous value. For undo purpose.
+    originalPatch: number = 0;  // Original value. For restore purpose.
+
+    // @ViewChild('minor') minorElement: ElementRef;
+    
     @Input() record: NerdmRes = null;
 
     /**
@@ -43,10 +68,31 @@ export class VersionComponent implements OnChanges {
      * @param cfg   the app configuration data
      */
     constructor(private cfg : AppConfig,
+        public mdupdsvc: MetadataUpdateService,
         public editstatsvc: EditStatusService,
+        private notificationService: NotificationService,
         public lpService: LandingpageService) {
+
         this.lpssvc = this.cfg.get('locations.landingPageService',
                                    'https://data.nist.gov/od/id/');
+
+        this.lpService.watchEditing((sectionMode: SectionMode) => {
+        if( sectionMode ) {
+            if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if(this.isEditing && this.dataChanged){
+                        this.onSave(false); // Do not refresh help text 
+                    }
+                    this.setMode(MODE.NORNAL,false);
+                }
+            }else { // Request from side bar, if not edit mode, start editing
+                if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                    this.startEditing();
+                }
+            }
+        }
+    })    
+
     }
 
     ngOnInit(): void {
@@ -54,6 +100,8 @@ export class VersionComponent implements OnChanges {
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
         });
+
+        // let editmode = this.mdupdsvc.isEditMode;
     }
 
     ngOnChanges() {
@@ -111,6 +159,142 @@ export class VersionComponent implements OnChanges {
             return id;
         else
             return this.renderRelAsLink(relinfo, id);
+    }
+
+    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get isEditing() { return this.editMode==MODE.EDIT }
+    get isNormal() { return this.editMode==MODE.NORNAL }
+
+    onMajorChanged(event) {
+        this.minor = 0;
+        this.patch = 0;
+    }
+
+    onMinorChanged(event) {
+        this.patch = 0;
+    }
+
+    startEditing(refreshHelp: boolean = true) {
+        // Save currect version numbers for undo purpose
+        this.prevMajor = this.major;
+        this.prevMinor = this.minor;
+        this.prevPatch = this.patch;
+
+        this.setMode(MODE.EDIT, refreshHelp, MODE.EDIT);
+    }
+
+    /**
+     * Save topics.
+     * @param refreshHelp Indicates if help content needs be refreshed.
+     */
+    onSave(refreshHelp: boolean = true) {
+        var postMessage: any = {};
+        postMessage[this.fieldName] = this.record[this.fieldName];
+        
+        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+            // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+            if (updateSuccess) {
+                this.notificationService.showSuccessWithTimeout("Version updated.", "", 3000);
+            } else{
+                let msg = "acknowledge version update failure";
+                console.error(msg);
+            }
+        });
+
+        this.setMode();
+        this.dataChanged = false;
+    }
+
+    /**
+     * Cancel current editing. Set this section to normal mode. Restore topics from previously saved ones.
+     */    
+    cancelEditing() {
+        this.major = this.prevMajor;
+        this.minor = this.prevMinor;
+        this.patch = this.prevPatch;
+
+        this.setMode(MODE.NORNAL);
+        this.dataChanged = false;
+    }
+
+    /*
+     *  Restore original value. If no more field was edited, delete the record in staging area.
+     */
+    restoreOriginal() {
+        this.mdupdsvc.undo(this.fieldName).then((success) => {
+            if (success){
+                this.dataChanged = false;
+                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
+                this.setMode();
+            }else
+                console.error("Failed to undo landingpage metadata")
+        });
+    }
+
+    /**
+     * Set the GI to different mode
+     * @param editmode edit mode to be set
+     */
+    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
+        let sectionMode: SectionMode = {} as SectionMode;
+        this.editMode = editmode;
+        sectionMode.sender = this.fieldName;
+        sectionMode.section = this.fieldName;
+        sectionMode.mode = this.editMode;
+
+        if(refreshHelp){
+            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
+
+            this.refreshHelpText(help_topic);
+        }
+
+        switch ( this.editMode ) {
+            case MODE.EDIT:
+                this.editBlockStatus = 'expanded';
+                this.overflowStyle = 'hidden';
+                setTimeout(() => {
+                    this.overflowStyle = 'visible';
+                }, 1000);
+                break;
+ 
+            default: // normal
+                // Collapse the edit block
+                this.editBlockStatus = 'collapsed'
+                this.overflowStyle = 'hidden';
+                break;
+        }
+
+        //Broadcast the current section and mode
+        if(editmode != MODE.NORNAL)
+            this.lpService.setEditing(sectionMode);
+    }
+
+    /**
+     * If version info exists, get major, minor and patch. 
+     * Otherwise set version to default value 1.0.0.
+     */
+    getVersionDetails() {
+        if(this.record["version"]) {
+            this.major = this.record["version"].split(".")[0];
+            this.prevMajor = this.major;
+            this.originalMajor = this.major;
+            this.minor = this.record["version"].split(".")[1];
+            this.prevMinor = this.minor;
+            this.originalMajor = this.minor;
+            this.patch = this.record["version"].split(".")[2];
+            this.prevPatch = this.patch;
+            this.originalMajor = this.patch;
+        }else{
+            this.major = 1;
+            this.prevMajor = this.major;
+            this.originalMajor = this.major;
+            this.minor = 0;
+            this.prevMinor = this.minor;
+            this.originalMinor = this.minor;
+            this.patch = 0;
+            this.prevPatch = this.patch;
+            this.originalPatch = this.patch;
+        }
     }
 
     /**
@@ -182,13 +366,13 @@ export class VersionComponent implements OnChanges {
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText(help_topic: string = MODE.EDIT){
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[this.editMode];
+        sectionHelp.topic = HelpTopic[help_topic];
 
         this.lpService.setSectionHelp(sectionHelp);
-    }    
+    }
 }
 
 /**
