@@ -4,13 +4,13 @@
     <!-- Control buttons -->
     <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
         <button class="edit_button" *ngIf="!isEditing" type="button" 
-        (click)="startEditing()" aria-label="Edit title" ngbTooltip="Edit title" style="cursor: pointer">
+        (click)="startEditing()" aria-label="Edit version" ngbTooltip="Edit version" style="cursor: pointer">
             <i class="fas fa-pencil fa-sm"></i>
         </button> 
         
         <button class="edit_button" type="button" [disabled]="!updated" *ngIf="!isEditing && updated" 
-            (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
-            <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
+            (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original version">
+            <i class="fas fa-undo" data-toggle="tooltip" title="Undo version"></i>
         </button>           
     </div>
 
