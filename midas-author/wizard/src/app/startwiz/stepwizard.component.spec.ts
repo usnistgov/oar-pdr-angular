@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { StepWizardComponent } from './stepwizard.component';
 import { FormGroup, FormGroupDirective, FormBuilder } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -36,4 +36,24 @@ describe('WizardComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('Next step button', fakeAsync(() => {
+        let button = fixture.debugElement.nativeElement.querySelector('#nextbtn');
+        expect(button.disabled).toBeTruthy();
+        
+        component.currentStep.canGoNext = true;
+        fixture.detectChanges();
+    
+        expect(button.disabled).toBeFalsy();
+    }));
+
+    it('Prev step button', fakeAsync(() => {
+        let button = fixture.debugElement.nativeElement.querySelector('#prevbtn');
+        expect(button.disabled).toBeTruthy();
+        
+        component.currentStep.canGoPrev = true;
+        fixture.detectChanges();
+    
+        expect(button.disabled).toBeFalsy();
+    }));
 });

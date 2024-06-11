@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
@@ -10,45 +9,34 @@ import { StepService } from '../../services/step.service';
   styleUrls: ['./associated-papers.component.css', '../../stepwizard.component.scss']
 })
 export class AssociatedPapersComponent implements OnInit {
-    parantFormGroup!: FormGroup;
-    private _sbarvisible : boolean = true;
+    lastStep: StepModel;
+    thisStep: StepModel;
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
 
     constructor(
-        private rootFormGroup: FormGroupDirective, 
         private chref: ChangeDetectorRef,
         private stepService: StepService) { }
 
     ngOnInit(): void {
-        this.parantFormGroup = this.rootFormGroup.control.controls['assocPapers'] as FormGroup;
+        this.thisStep = this.stepService.getStep("Associated Papers");
+        this.lastStep = this.stepService.getLastStep();
     }
 
     ngAfterContentInit() {
         this.chref.detectChanges();
     }
 
-    toggleSbarView() {
-        this._sbarvisible = ! this._sbarvisible;
-        this.chref.detectChanges();
-    }
-
-    isSbarVisible() {
-        return this._sbarvisible
-    }
-
     onSelectChange(evt: any) {
-        this.dataModel.assocPageType = evt.target.value;
-
         if(this.dataModel.assocPageType != undefined){
-            this.steps[4].canGoNext = true;
-            this.steps[4].isComplete = true;
+            this.thisStep.canGoNext = true;
+            this.thisStep.isComplete = true;
         }else{
             this.dataModel.assocPageType = undefined;
-            this.steps[4].isComplete = false;
+            this.thisStep.isComplete = false;
         }
 
-        this.steps[5].canGoNext = this.stepService.allDone();
+        this.lastStep.canGoNext = this.stepService.allDone();
     }
 }

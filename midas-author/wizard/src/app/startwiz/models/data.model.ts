@@ -7,4 +7,12 @@ export interface DataModel {
     willUpload?: boolean;
     assocPageType?: string;
     recordname?: string;
+    partOfCollection?: boolean;
+    collections?: string[];
+}
+
+export interface CollectionDataModel {
+    id: number;
+    displayName: string;
+    value: string;
 }

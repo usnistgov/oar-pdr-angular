@@ -1,17 +1,17 @@
-<form [formGroup]="parantFormGroup" class="full-height">
+<div class="full-height">
     <oar-pushing-sidebar style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>Will you be uploading any files to be included with this publication?</p>
             <div class="radio-group">
                 <div class="radio">
                     <label title="Yes, I will be the primary public contact.">
-                        <input type="radio" required name="willUpload" value="true" (change)="toggleprimaryContact($event)" formControlName="willUpload">
+                        <input type="radio" required name="willUpload" [value]="true" [(ngModel)]="dataModel.willUpload" (change)="setSteps()">
                         Yes
                     </label>
                 </div>
                 <div class="radio">
                     <label title="No, another NIST staff person will be the primary public contact.">
-                        <input type="radio" required name="willUpload" value="false" (change)="toggleprimaryContact($event)" formControlName="willUpload">
+                        <input type="radio" required name="willUpload" [value]="false" [(ngModel)]="dataModel.willUpload" (change)="setSteps()">
                         No
                     </label>
                 </div>
@@ -24,4 +24,4 @@
             make use of its contents.
         </div>
     </oar-pushing-sidebar>
-</form>
+</div>

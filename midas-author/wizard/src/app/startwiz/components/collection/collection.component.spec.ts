@@ -1,25 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { RecordNameComponent } from './recordname.component';
-import { StepService } from '../../services/step.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { CollectionComponent } from './collection.component';
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
+import { StepService } from '../../services/step.service';
 
-describe('RecordNameComponent', () => {
-  let component: RecordNameComponent;
-  let fixture: ComponentFixture<RecordNameComponent>;
+describe('CollectionComponent', () => {
+  let component: CollectionComponent;
+  let fixture: ComponentFixture<CollectionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-        declarations: [ RecordNameComponent ],
-        providers: [ 
-            StepService
-        ]
+        imports: [HttpClientTestingModule],
+        providers: [ StepService ],
+        declarations: [ CollectionComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RecordNameComponent);
+    fixture = TestBed.createComponent(CollectionComponent);
     component = fixture.componentInstance;
     component.dataModel = {} as DataModel;
     component.steps = [
