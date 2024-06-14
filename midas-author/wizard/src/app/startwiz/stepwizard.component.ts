@@ -3,7 +3,7 @@ import { StepModel } from "./models/step.model";
 import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
-import { FormControl, FormGroup, Validators, FormBuilder, FormGroupDirective} from '@angular/forms';
+import { FormControl, UntypedFormGroup, Validators, UntypedFormBuilder, FormGroupDirective} from '@angular/forms';
 import { WizardService } from './services/wizard.service';
 import { LPSConfig } from 'oarlps';
 import { UserMessageService } from 'oarlps';
@@ -49,7 +49,7 @@ export class StepWizardComponent implements OnInit {
     nextBtnIcon: string = "faa faa-long-arrow-right icon-white";
     nextBtnText: string = "Next";
 
-    fgSteps!: FormGroup;
+    fgSteps!: UntypedFormGroup;
 
     authStatus: string = AuthStatus.AUTHORIZING;
     resid: string = "Wizard";
@@ -59,7 +59,7 @@ export class StepWizardComponent implements OnInit {
 
     constructor(private stepService: StepService,
                 private msgsvc: UserMessageService,
-                private fb: FormBuilder, 
+                private fb: UntypedFormBuilder, 
                 private cdr: ChangeDetectorRef,
                 private wizardService: WizardService,
                 private configSvc: ConfigurationService,

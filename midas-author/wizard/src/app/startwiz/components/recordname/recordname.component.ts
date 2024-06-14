@@ -2,7 +2,7 @@ import { Component, Input, ChangeDetectorRef, OnInit, ViewChild, ElementRef } fr
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { UntypedFormGroup, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'app-recordname',
@@ -10,7 +10,7 @@ import { FormGroup, FormGroupDirective } from '@angular/forms';
   styleUrls: ['./recordname.component.css', '../../stepwizard.component.scss']
 })
 export class RecordNameComponent implements OnInit {
-    parantFormGroup!: FormGroup;
+    parantFormGroup!: UntypedFormGroup;
     private _sbarvisible : boolean = true;
 
     @Input() dataModel!: DataModel;
@@ -23,7 +23,7 @@ export class RecordNameComponent implements OnInit {
         private stepService: StepService) { }
 
     ngOnInit(): void {
-        this.parantFormGroup = this.rootFormGroup.control.controls['recordname'] as FormGroup;
+        this.parantFormGroup = this.rootFormGroup.control.controls['recordname'] as UntypedFormGroup;
 
         this.parantFormGroup.valueChanges.subscribe(selectedValue  => {
         })

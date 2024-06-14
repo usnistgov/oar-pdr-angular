@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { UntypedFormGroup, FormGroupDirective } from '@angular/forms';
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
@@ -10,7 +10,7 @@ import { StepService } from '../../services/step.service';
     styleUrls: ['./pubtype.component.css', '../../stepwizard.component.scss']
 })
 export class PubtypeComponent implements OnInit {
-    parantFormGroup!: FormGroup;
+    parantFormGroup!: UntypedFormGroup;
     private _sbarvisible : boolean = true;
 
     @Input() dataModel!: DataModel;
@@ -24,7 +24,7 @@ export class PubtypeComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.parantFormGroup = this.rootFormGroup.control.controls['pubtype'] as FormGroup;
+        this.parantFormGroup = this.rootFormGroup.control.controls['pubtype'] as UntypedFormGroup;
         // console.log('this.parantFormGroup', this.parantFormGroup.controls['pubtype'])
         this.parantFormGroup.valueChanges.subscribe(selectedValue  => {
             this.dataModel.resourceType = selectedValue.resourceType;
