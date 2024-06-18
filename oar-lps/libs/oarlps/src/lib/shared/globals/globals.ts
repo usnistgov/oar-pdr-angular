@@ -92,6 +92,7 @@ export class Sections {
     static readonly VISIT_HOME_PAGE = 'Visit Home Page';
     static readonly DOI = 'DOI';
     static readonly VERSION = 'Version';
+    static readonly COLLECTION = 'Collection';
 }
 
 //_fieldName is the field name in Nerdm record
