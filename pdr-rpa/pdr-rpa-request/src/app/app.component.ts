@@ -41,7 +41,7 @@ export class AppComponent {
         private messageService: MessageService,
         private configService: ConfigurationService,
         private rpaService: RPAService) {
-        this.initRequestForm();
+        // this.initRequestForm();
     }
 
     /**
@@ -55,7 +55,7 @@ export class AppComponent {
             // If 'ediid' is present, set the selected dataset using its value
             if (params['ediid']) {
                 this.queryId = params['ediid'];
-                this.setSelecetedDataset(this.queryId);
+                this.setSelectedDataset(this.queryId);
             }
             // Load countries list for use with dropdown menu
 
@@ -71,7 +71,7 @@ export class AppComponent {
    * Choose selectedDataset, and pick the appropriate form template from the config file
    * @param ediid the dataset ID
    */
-    setSelecetedDataset(ediid: string): void {
+    setSelectedDataset(ediid: string): void {
         this.getDatasets()
             // Start RxJs opeartors chaining
             .pipe(
@@ -90,11 +90,17 @@ export class AppComponent {
                             .subscribe((template) => {
                                 this.selectedFormTemplate = template;
                                 if (environment.debug) console.log(template);
+                                this.initRequestForm(template.blockedEmails);
+                                this.filterBlacklistedCountries(template.blockedCountries);
                             });
                     }
                 })
             )
             .subscribe((selectedDataset) => (this.selectedDataset = selectedDataset));
+    }
+
+    private filterBlacklistedCountries(blacklistedCountries: string[]): void {
+        this.countries = this.countries.filter(country => !blacklistedCountries.includes(country.name));
     }
 
     /**
@@ -374,13 +380,13 @@ export class AppComponent {
     /**
      * Initializes the request form with the necessary form controls and validators.
      */
-    private initRequestForm(): void {
+    private initRequestForm(blacklistedEmails: string[]): void {
 
         // let emailBlacklist = this.getEmailBlacklist();
-
+        console.log("blacklistedEmails", blacklistedEmails )
         this.requestForm = new FormGroup({
             fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
-            email: new FormControl("", [Validators.required, Validators.email]),
+            email: new FormControl("", [CustomValidators.blacklisted(blacklistedEmails), Validators.required, Validators.email]),
             phone: new FormControl("", [Validators.required]),
             organization: new FormControl("", [Validators.required]),
             address1: new FormControl("", [Validators.required]),
