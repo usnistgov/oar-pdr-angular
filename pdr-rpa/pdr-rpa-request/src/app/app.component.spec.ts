@@ -270,5 +270,19 @@ describe('AppComponent', () => {
     // Expect the disclaimerCheckbox to be null, i.e. not present in the DOM
     expect(disclaimerCheckbox).toBeNull();
   });
+
+  it('should validate checkbox as required', () => {
+    const checkboxControl = component.requestForm.get('termsAndConditionsAgreenement');
+  
+    if (checkboxControl) {
+      checkboxControl.setValue(false);
+      expect(checkboxControl.errors).toEqual({ required: true });
+  
+      checkboxControl.setValue(true);
+      expect(checkboxControl.errors).toBeNull();
+    } else {
+      fail('Checkbox control is not defined');
+    }
+  });
   
 });

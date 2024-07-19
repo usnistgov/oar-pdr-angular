@@ -395,11 +395,11 @@ export class AppComponent {
             country: new FormControl("", [Validators.required]),
             receiveEmails: new FormControl(false),
             termsAndConditionsAgreenement: new FormControl(false, [
-                Validators.required,
+                Validators.requiredTrue,
             ]),
-            disclaimerAgreenement: new FormControl(false, [Validators.required]),
-            vettingAgreenement: new FormControl(false, [Validators.required]),
-            accessAgreement: new FormControl(false, [Validators.required]),
+            disclaimerAgreenement: new FormControl(false, [Validators.requiredTrue]),
+            vettingAgreenement: new FormControl(false, [Validators.requiredTrue]),
+            accessAgreement: new FormControl(false, [Validators.requiredTrue]),
             recaptcha: new FormControl(false, [Validators.required]),
         });
     }
