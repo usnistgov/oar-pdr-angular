@@ -10,7 +10,7 @@
         "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
     ],
     "@type": ["nrdp:PublicDataResource"],
-    "@id": "ark:/88434/mds0000fbk",
+    "@id": "test2",
     "title": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
     "contactPoint": {
         "hasEmail": "mailto:patricia.flanagan@nist.gov",
@@ -222,5 +222,16 @@
         "_userDetails": { "userId": "dsn1", "userName": "Deoyani", "userLastName": "Nandrekar Heinis", "userEmail": "deoyani.nandrekarheinis@nist.gov" },
         "_updateDate": "2019-12-03T15:50:53.208+0000"
     }
+    ],
+    "isPartOf": [
+        {
+            "@id": "1234",
+            "title": "NIST Forensics Research.",
+            "proxyFor": "ark:/88434/mds9911",
+            "resType": [
+                "nrda:Aggregation",
+                "nrdp:PublicDataResource"
+            ]
+        }
     ]
 }

@@ -24,6 +24,7 @@ import { VisithomeModule } from '../visithome/visithome.module';
 import { ReferencesModule } from '../references/references.module';
 import { AccesspageModule } from '../accesspage/accesspage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { IspartofModule } from '../ispartof/ispartof.module';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -73,7 +74,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ReferencesModule,
         AccesspageModule,
         VisithomeModule,
-        NgbModule
+        NgbModule,
+        IspartofModule
     ],
     declarations: [
         ResourceDataComponent,

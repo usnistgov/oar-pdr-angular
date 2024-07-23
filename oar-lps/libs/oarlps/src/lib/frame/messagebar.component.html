@@ -3,7 +3,7 @@
     <div class="messagebar">
       <div style="float: right">
         <a (click)="dismiss(msg.id)" title="dismiss" style="cursor: pointer"><i 
-           class="fas fa-times fa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i></a>
+           class="faa faa-times fa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i></a>
       </div>
       <div  [class]="msg.type">
         Oops! {{msg.prefix || defSysErrorPrefix}} {{msg.text}} Please try to edit and save again.
@@ -17,7 +17,7 @@
   <div class="messagebar">
       <div style="float: right">
         <a (click)="dismiss(msg.id)" title="dismiss" style="cursor: pointer"><i 
-           class="fas fa-times faa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i></a>
+           class="faa faa-times faa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i></a>
       </div>
       <div [class]="msg.type">{{msg.text}}</div>
     </div>

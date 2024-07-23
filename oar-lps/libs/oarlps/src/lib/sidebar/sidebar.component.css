@@ -17,4 +17,24 @@
 
 .steps {
     padding-left: 20px;
+    overflow: hidden;
+}
+
+.stepitem {
+    cursor: pointer; 
+    color: var(--nist-blue-dark3);
+}
+
+.stepitem:hover {
+    background-color: rgb(227, 253, 253);
+}
+
+.help-title {
+    margin: auto;
+    text-align: center;
+}
+
+.expand-btn {
+    margin-left: 0.5rem;
+    cursor: pointer;
 }

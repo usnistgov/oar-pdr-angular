@@ -1,4 +1,4 @@
-<form [formGroup]="parantFormGroup" class="full-height">
+<div class="full-height">
     <oar-pushing-sidebar style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>We're going to start with a few questions...</p>
@@ -11,35 +11,40 @@
             <div class="radio-group">
                 <div class="radio">
                     <label title="downloadable files or a searchable database">
-                        <input type="radio" required name="resourceType" value="data" formControlName="resourceType" (change)="onSelectChange($event)">
+                        <input type="radio" required name="resourceType" value="data" [(ngModel)]="dataModel.resourceType" (change)="onSelectChange($event)">
                         Data
                     </label>
                 </div>
                 <div class="radio">
                     <label title="source code or a downloadable application one may install and run">
                         <input type="radio" required name="resourceType" value="software"
-                            formControlName="resourceType"  (change)="onSelectChange($event)">
+                        [(ngModel)]="dataModel.resourceType" (change)="onSelectChange($event)">
                         Software
                     </label>
                 </div>
                 <div class="radio">
                     <label title="a web site that presents tools and information">
-                        <input type="radio" required name="resourceType" value="website" formControlName="resourceType"  (change)="onSelectChange($event)">
+                        <input type="radio" required name="resourceType" value="website" [(ngModel)]="dataModel.resourceType" (change)="onSelectChange($event)">
                         A website or portal
                     </label>
                 </div>
                 <div class="radio">
                     <label title="either a programmatic web service or a service with a web-page interface">
-                        <input type="radio" required name="resourceType" value="service" formControlName="resourceType"  (change)="onSelectChange($event)">
+                        <input type="radio" required name="resourceType" value="service" [(ngModel)]="dataModel.resourceType" (change)="onSelectChange($event)">
                         A network-accessible service
                     </label>
                 </div>
                 <div class="radio">
                     <label>
-                        <input type="radio" required name="resourceType" value="other" formControlName="resourceType"  (change)="onSelectChange($event)">
+                        <input type="radio" required name="resourceType" value="other" [(ngModel)]="dataModel.resourceType" (change)="onSelectChange($event)">
                         Something else
                     </label>
                 </div>
+            </div>            
+
+            <div class="collection">
+                <input type="checkbox" [(ngModel)]="dataModel.partOfCollection" (change)="toggleCollection()">
+                <span style="margin-left: .5em;">This publication will be published as part of an existing topical collection.</span>
             </div>
         </div>
 
@@ -57,4 +62,4 @@
         </div>
     </oar-pushing-sidebar>
 
-</form>
+</div>

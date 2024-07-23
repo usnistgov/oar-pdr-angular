@@ -57,7 +57,9 @@
 .modal-small > .modal-dialog {
     max-width: 1000px !important;
     min-width: 500px !important;   
-    width: 50% !important;
+    width: 90% !important;
+    min-height: 400px !important;
+    height: 1000px !important;
 }
 
 .comfirmModalClass > .modal-dialog {
@@ -277,4 +279,10 @@ a {
     width:160px !important; 
     height: 2.5em !important; 
     margin: 0em .5em .5em 0em !important; 
+}
+
+:focus {
+    outline: 2px solid #00aaff;
+    box-shadow:0 0 3px #00aaff;
+	outline-offset: -2px;
 }

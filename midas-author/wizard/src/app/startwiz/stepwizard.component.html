@@ -5,49 +5,54 @@
     </div>
 
     <!-- error messages go here -->
-    <div style="width: 100%;">
+    <div style="width: 80%;margin: 20px auto;">
         <pdr-message [defSysErrorPrefix]="'There was a problem while submitting your record.'"></pdr-message>
     </div>
 
     <div class="step-page-container">
-        <form [formGroup]="fgSteps" style="height: 100%;">
+        <div style="height: 100%;">
             <!-- <div class="step-page-container"> -->
             <div class="form-step">
                 <ng-container [ngSwitch]="currentStep?.stepIndex">
                     <ng-container *ngSwitchCase="'1'">
-                        <div formGroupName="pubtype" class="step-page">
+                        <div class="step-page">
                             <app-pubtype [dataModel]="dataModel" [steps]="steps"></app-pubtype>
                         </div>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'7'">
+                        <div class="step-page">
+                            <app-collection [dataModel]="dataModel" [steps]="steps"></app-collection>
+                        </div>
+                    </ng-container>
                     <ng-container *ngSwitchCase="'2'">
-                        <div formGroupName="contactInfo" class="step-page">
+                        <div class="step-page">
                             <app-contactinfo [dataModel]="dataModel" [steps]="steps"></app-contactinfo>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="'3'">
-                        <div formGroupName="files" class="step-page">
+                        <div class="step-page">
                             <app-files [dataModel]="dataModel" [steps]="steps"></app-files>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="'4'">
-                        <div formGroupName="softwareInfo" class="step-page">
+                        <div class="step-page">
                             <app-softwareinfo [dataModel]="dataModel" [steps]="steps"></app-softwareinfo>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="'5'">
-                        <div formGroupName="assocPapers" class="step-page">
+                        <div class="step-page">
                             <app-associated-papers [dataModel]="dataModel" [steps]="steps"></app-associated-papers>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="'6'">
-                        <div formGroupName="recordname" class="step-page">
+                        <div class="step-page">
                             <app-recordname [dataModel]="dataModel" [steps]="steps"></app-recordname>
                         </div>
                     </ng-container>
                 </ng-container>
             </div>
             <!-- </div> -->
-        </form>
+        </div>
     </div>
     <div class="bottom-control-container">
         <div class="bottom-btn-container">
@@ -55,12 +60,12 @@
                 Cancel
             </button>
 
-            <button pButton type="button" class="form-nav-btn common-btn btn-labeled" (click)="onNextStep()"
+            <button id="nextbtn" pButton type="button" class="form-nav-btn common-btn btn-labeled" (click)="onNextStep()"
                 [disabled]="!currentStep?.canGoNext"
                 [icon]="nextBtnIcon" iconPos="right" [label]="nextBtnText">
             </button>
 
-            <button pButton type="button" class="btn-labeled form-nav-btn common-btn" (click)="onPrevStep()"
+            <button id="prevbtn" pButton type="button" class="btn-labeled form-nav-btn common-btn" (click)="onPrevStep()"
                 [disabled]="!currentStep?.canGoPrev" iconPos="left" icon="faa faa-long-arrow-left icon-white" label="Prev">
             </button>
         </div>

@@ -1,8 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
-import { Observable } from 'rxjs';
-
 
 @Component({
   selector: 'wiz-navigator',
@@ -12,6 +10,7 @@ import { Observable } from 'rxjs';
 })
 export class NavigatorComponent implements OnInit {
     currentStep!: StepModel;
+    stepOrder: number[];
 
     @Input() steps: StepModel[] = [];
 
@@ -23,6 +22,10 @@ export class NavigatorComponent implements OnInit {
         this.stepService.getCurrentStep().subscribe(step => {
             this.currentStep = step;
         })
+
+        this.stepService.getStepOrder().subscribe(stepOrder => {
+            this.stepOrder = stepOrder;
+        })
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -31,7 +34,10 @@ export class NavigatorComponent implements OnInit {
         // this.updateNavigator();
     }
 
-    getStepClass(step: StepModel) {
+    getStepClass(stepIndex: number) {
+        let step: StepModel;
+        step = this.steps.find(i => i.stepIndex == stepIndex);
+
         let returnClass = "step-incomplete";
 
         if(!step.canEnter) {
@@ -47,9 +53,18 @@ export class NavigatorComponent implements OnInit {
         return returnClass;
     }
 
-    onStepClick(step: StepModel) {
+    onStepClick(stepIndex: number) {
+        let step: StepModel;
+        step = this.steps.find(i => i.stepIndex == stepIndex);
+
         if(step.canEnter)
             this.stepService.setCurrentStep(step);
+    }
+
+    getStep(stepIndex: number) {
+        let step: StepModel;
+        step = this.steps.find(i => i.stepIndex == stepIndex);
+        return step;
     }
 
     titleStyle(index: number) {

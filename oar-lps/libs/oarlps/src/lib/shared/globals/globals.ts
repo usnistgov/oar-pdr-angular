@@ -92,6 +92,7 @@ export class Sections {
     static readonly VISIT_HOME_PAGE = 'Visit Home Page';
     static readonly DOI = 'DOI';
     static readonly VERSION = 'Version';
+    static readonly COLLECTION = 'Collection';
 }
 
 //_fieldName is the field name in Nerdm record
@@ -164,4 +165,51 @@ export class ResourceType {
     static readonly RESOURCE = 'resource';
     static readonly SOFTWARE = 'software';
     static readonly DATA = 'data';
+}
+
+export interface responseDetails {
+    "id": string,       //a unique identifier for the finding
+    "target": string,   //a name of a data property that the detected issue concerns; 
+                        //this is the primary property that needs to be corrected
+    "title": string,    //a short (e.g. single sentence) description or title for the detected issue
+    "description": string[] //a more detailed description of the issue.  Each element in the list can be
+                            //considered a different paragraph.  The first element should summarize the
+                            //problem, while subsequent elements can provide tips on how to correct the issue.
+}
+
+export interface SubmitResponse {
+    "action": string,   //e.g. "validate"
+    "message": string,  //this will be the message that was provided in the input or a default message if not provided
+    "validation": {
+        "failures": responseDetails[],
+        "warnings": responseDetails[],
+        "recommendations": responseDetails[],
+    }
+}
+
+export class LandingConstants {
+    public static get editModes(): any { 
+        return {
+            EDIT_MODE: 'editMode',
+            PREVIEW_MODE: 'previewMode',
+            DONE_MODE: 'doneMode',
+            VIEWONLY_MODE: 'viewOnlyMode',
+            OUTSIDE_MIDAS_MODE: 'outsideMidasMode'
+        }
+    };
+
+    public static get editTypes(): any { 
+        return {
+            NORMAL: 'normal', 
+            REVISE: 'revise' 
+        }
+    }; 
+
+    public static get reviseTypes(): any { 
+        return {
+            METADATA: 'metadata', 
+            TYPE02: 'reviseType02', 
+            TYPE03: 'reviseType03'
+        }
+    };  
 }

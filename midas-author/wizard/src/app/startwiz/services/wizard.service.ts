@@ -3,6 +3,7 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of, throwError, Subscriber } from 'rxjs';
 import { LPSConfig } from 'oarlps';
 import { ConfigurationService } from 'oarng';
+import { CollectionDataModel } from '../models/data.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,13 @@ export class WizardService {
     confValues: LPSConfig;
     private MIDASAPI: string;
 
+    collectionData: CollectionDataModel[] = [
+        {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
+        {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
+        {id: 3, displayName: "Forensics", value: "Forensics"},
+        {id: 4, displayName: "Do not add to any collection", value: "None"}
+    ]
+
     constructor(private httpcli: HttpClient,
                 private configSvc: ConfigurationService) { 
                     this.confValues = this.configSvc.getConfig();
@@ -22,6 +30,10 @@ export class WizardService {
 
     setToken(token: string){
         this.token = token;
+    }
+
+    public getCollectionData(): CollectionDataModel[] {
+        return this.collectionData;
     }
 
     public updateMetadata(md : Object) : Observable<Object> {
