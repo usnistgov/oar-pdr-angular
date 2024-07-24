@@ -397,7 +397,7 @@ export class AppComponent {
             termsAndConditionsAgreenement: new FormControl(false, [
                 Validators.requiredTrue,
             ]),
-            disclaimerAgreenement: new FormControl(false, [Validators.requiredTrue]),
+            disclaimerAgreenement: new FormControl(false),
             vettingAgreenement: new FormControl(false, [Validators.requiredTrue]),
             accessAgreement: new FormControl(false, [Validators.requiredTrue]),
             recaptcha: new FormControl(false, [Validators.required]),
