@@ -9,13 +9,16 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "target": "es2015",
+    "target": "ES2022",
     "lib": [
       "es2017",
       "dom"
     ],
     "paths": {
-        "@angular/*": ["./node_modules/@angular/*"]
-    }
+      "@angular/*": [
+        "./node_modules/@angular/*"
+      ]
+    },
+    "useDefineForClassFields": false
   }
 }
