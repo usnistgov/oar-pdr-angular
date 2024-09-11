@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppModule } from './app.module';
@@ -11,7 +11,6 @@ import { BrowserMetadataTransferModule } from 'oarlps';
         BrowserModule.withServerTransition({ appId: 'PDR-LandingPageService' }),
         BrowserAnimationsModule,
         AppModule,
-        BrowserTransferStateModule,
         BrowserMetadataTransferModule
     ],
     bootstrap: [ AppComponent ]

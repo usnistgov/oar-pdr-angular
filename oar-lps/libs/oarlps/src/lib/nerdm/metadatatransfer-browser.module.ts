@@ -36,7 +36,7 @@ export function initBrowserMetadataTransfer(doc : Document) : MetadataTransfer {
         console.log("Found embedded information with id='"+att+"'");
         try {
             data = JSON.parse(scripts[i].textContent);
-            if (data == {})
+            if (!data)
                 data = null;
             out.set(att, data);
         } catch (e) {

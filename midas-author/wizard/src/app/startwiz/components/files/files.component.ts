@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { FormGroup, FormGroupDirective } from '@angular/forms';
+import { UntypedFormGroup, FormGroupDirective } from '@angular/forms';
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
@@ -10,7 +10,7 @@ import { StepService } from '../../services/step.service';
   styleUrls: ['./files.component.css', '../../stepwizard.component.scss']
 })
 export class FilesComponent implements OnInit {
-    parantFormGroup!: FormGroup;
+    parantFormGroup!: UntypedFormGroup;
     private _sbarvisible : boolean = true;
 
     @Input() dataModel!: DataModel;
@@ -22,7 +22,7 @@ export class FilesComponent implements OnInit {
         private stepService: StepService) { }
 
     ngOnInit(): void {
-        this.parantFormGroup = this.rootFormGroup.control.controls['files'] as FormGroup;
+        this.parantFormGroup = this.rootFormGroup.control.controls['files'] as UntypedFormGroup;
 
         this.parantFormGroup.valueChanges.subscribe(selectedValue  => {
             this.dataModel.willUpload = selectedValue.willUpload;

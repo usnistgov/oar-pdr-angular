@@ -7,7 +7,7 @@ import { SharedModule } from 'oarlps';
 import { FrameModule } from 'oarng';
 import { GoogleAnalyticsService } from "oarlps";
 import { ConfigModule } from 'oarlps';
-import { BrowserModule, BrowserTransferStateModule } from '@angular/platform-browser';
+import { BrowserModule } from '@angular/platform-browser';
 import { TransferState, StateKey } from '@angular/platform-browser';
 import { AppConfig } from 'oarlps';
 import { AngularEnvironmentConfigService } from 'oarlps';
@@ -38,7 +38,7 @@ describe('AppComponent', () => {
                 MockAuthenticationService,
                 AuthenticationService
             ]
-            , imports: [RouterTestingModule, FrameModule, BrowserTransferStateModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
+            , imports: [RouterTestingModule, FrameModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
         }).compileComponents();
     }));
 
