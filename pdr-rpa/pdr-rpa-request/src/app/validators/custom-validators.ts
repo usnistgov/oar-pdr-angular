@@ -23,40 +23,22 @@ export class CustomValidators {
     }
 
     /**
-     * Validator that checks if the email is blacklisted based on patterns, email addresses, and domains.
+     * Validator that checks if the email is blacklisted based on patterns.
      * @param blacklistedPatterns - The array of blacklisted patterns.
-     * @param blacklistedEmails - The array of blacklisted email addresses.
-     * @param blacklistedDomains - The array of blacklisted email domains.
-     * @returns A validator function that returns an error if the email is blacklisted.
+     * @returns A validator function that returns an error if the email matches a blacklisted pattern.
      */
-    static blacklisted(
-        blacklistedPatterns: string[],
-        blacklistedEmails: string[],
-        blacklistedDomains: string[]
-    ): ValidatorFn {
+    static blacklisted(blacklistedPatterns: string[]): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
             const email = control.value;
 
             if (email) {
                 // Check against blacklisted patterns
                 for (const pattern of blacklistedPatterns) {
-                    if (email.includes(pattern)) {
-                        // Return an error if the email contains a blacklisted pattern
-                        return { blacklisted: true };
+                    const regex = new RegExp(pattern);
+                    if (regex.test(email)) {
+                        // Return an error if the email matches a blacklisted pattern
+                        return { blacklisted: 'pattern' };
                     }
-                }
-
-                // Check against blacklisted emails
-                if (blacklistedEmails.includes(email)) {
-                    // Return an error if the email is blacklisted
-                    return { blacklisted: true };
-                }
-
-                // Check against blacklisted domains
-                const domain = email.substring(email.lastIndexOf('@') + 1);
-                if (blacklistedDomains.includes(domain)) {
-                    // Return an error if the email domain is blacklisted
-                    return { blacklisted: true };
                 }
             }
 

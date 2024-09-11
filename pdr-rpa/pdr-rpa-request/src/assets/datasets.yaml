@@ -183,5 +183,5 @@ formTemplates:
   agreements: 
     - I agree to the defined terms and conditions of this dataset.
     - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST. I represent that I have provided all requested information. I understand that if I have not provided all information I will not receive the dataset.
-  blockedEmails: []
-  blockedCountries: []
+  blockedEmails: ["@123\\.", "@126\\.", "@163\\.", "@aliyun\\.", "appleid\\.com$", "@aol\\.", "@closeli\\.", "@cwallet\\.dk$", "@email\\.com$", "@foxmail\\.", "@gmail\\.", "@hanmail\\.", "@hotmail\\.", "@icloud\\.", "@laposte\\.net$", "@live\\.", "@mac\\.", "@mail\\.ru$", "@mailinator\\.", "@me\\.", "@msn\\.", "@nate\\.", "@naver\\.", "@outlook\\.", "@qq\\.", "@sina\\.", "@yahoo\\.", "\\.cu$", "\\.ir$", "\\.kp$", "\\.sy$"]
+  blockedCountries: ["Cuba", "Iran, Islamic Republic of", "Korea, Democratic People's Republic of", "Syrian Arab Republic"]

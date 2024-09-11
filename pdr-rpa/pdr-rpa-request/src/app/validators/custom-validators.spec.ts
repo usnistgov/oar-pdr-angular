@@ -80,9 +80,7 @@ describe('CustomValidators', () => {
 
   describe('blacklisted', () => {
     const blacklistedPatterns = ['test', '123'];
-    const blacklistedEmails = ['john.doe@example.com', 'jane.doe@example.com'];
-    const blacklistedDomains = ['example.com', 'test.com'];
-    const validatorFn = CustomValidators.blacklisted(blacklistedPatterns, blacklistedEmails, blacklistedDomains);
+    const validatorFn = CustomValidators.blacklisted(blacklistedPatterns);
 
     it('should return null for empty value', () => {
       const control = { value: '' } as AbstractControl;
@@ -90,7 +88,7 @@ describe('CustomValidators', () => {
       expect(result).toBeNull();
     });
 
-    it('should return null for value that does not match any blacklisted pattern, email, or domain', () => {
+    it('should return null for value that does not match any blacklisted pattern', () => {
       const control = { value: 'hello.world@example.org' } as AbstractControl;
       const result = validatorFn(control);
       expect(result).toBeNull();
@@ -99,25 +97,19 @@ describe('CustomValidators', () => {
     it('should return error for value that matches a blacklisted pattern', () => {
       const control = { value: 'this is a test' } as AbstractControl;
       const result = validatorFn(control);
-      expect(result).toEqual({ blacklisted: true });
+      expect(result).toEqual({ blacklisted: 'pattern' });
     });
 
-    it('should return error for value that matches a blacklisted email', () => {
-      const control = { value: 'john.doe@example.com' } as AbstractControl;
+    it('should return error for value that contains a blacklisted pattern', () => {
+      const control = { value: 'abc123def' } as AbstractControl;
       const result = validatorFn(control);
-      expect(result).toEqual({ blacklisted: true });
+      expect(result).toEqual({ blacklisted: 'pattern' });
     });
 
-    it('should return error for value that matches a blacklisted domain', () => {
-      const control = { value: 'test@example.com' } as AbstractControl;
+    it('should return null for value that matches a substring not covered by a pattern', () => {
+      const control = { value: 'this is a safe string' } as AbstractControl;
       const result = validatorFn(control);
-      expect(result).toEqual({ blacklisted: true });
-    });
-
-    it('should return error for value that matches both a blacklisted email and domain', () => {
-      const control = { value: 'jane.doe@test.com' } as AbstractControl;
-      const result = validatorFn(control);
-      expect(result).toEqual({ blacklisted: true });
+      expect(result).toBeNull();
     });
   });
 });
