@@ -65,7 +65,7 @@ const mockCountries: Country[] = [
   { name: 'Mexico', code: 'MX' }
 ]
 
-const mockFormTemplate = { id: 'template1', disclaimers: [], agreements: [], blockedEmails: [], blockedCountries: [] };
+const mockFormTemplate = { id: 'template1', disclaimers: [], agreements: [], blockedEmails: ["@hotmail\\.", "@123\\."], blockedCountries: [] };
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -139,6 +139,26 @@ describe('AppComponent', () => {
     await component.loadCountries().toPromise();
     expect(mockConfigService.getCountries).toHaveBeenCalled();
     expect(component.countries).toEqual(countries);
+  });
+
+  it('should validate email against blacklisted patterns', () => {
+    component.setSelectedDataset('123');
+    fixture.detectChanges();
+  
+    const emailControl = component.requestForm.get('email');
+    
+    if (emailControl) {
+      emailControl.setValue('user@hotmail.com');
+      expect(emailControl.errors).toEqual({ blacklisted: 'pattern' });
+  
+      emailControl.setValue('user@123.com');
+      expect(emailControl.errors).toEqual({ blacklisted: 'pattern' });
+  
+      emailControl.setValue('user@safecompany.com');
+      expect(emailControl.errors).toBeNull();
+    } else {
+      fail('Email control is not defined');
+    }
   });
 
   // TODO: this test keeps failing as it doesn't recognize the recaptcha element.
@@ -249,6 +269,20 @@ describe('AppComponent', () => {
   
     // Expect the disclaimerCheckbox to be null, i.e. not present in the DOM
     expect(disclaimerCheckbox).toBeNull();
+  });
+
+  it('should validate checkbox as required', () => {
+    const checkboxControl = component.requestForm.get('termsAndConditionsAgreenement');
+  
+    if (checkboxControl) {
+      checkboxControl.setValue(false);
+      expect(checkboxControl.errors).toEqual({ required: true });
+  
+      checkboxControl.setValue(true);
+      expect(checkboxControl.errors).toBeNull();
+    } else {
+      fail('Checkbox control is not defined');
+    }
   });
   
 });
