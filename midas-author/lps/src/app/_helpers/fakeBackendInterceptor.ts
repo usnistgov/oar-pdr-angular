@@ -187,24 +187,24 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 
         //======
         // // authenticate
-        // if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
-        //     if(!this.alerted) {
-        //         alert('You are using fake backend for authentication!');
-        //         this.alerted = true;
-        //     }
+        if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
+            if(!this.alerted) {
+                alert('You are using fake backend for authentication!');
+                this.alerted = true;
+            }
 
-        //     let body: any = {
-        //         userDetails: {
-        //             userId: 'lnc9',
-        //             userName: 'Chuan Lin',
-        //             userLastName: 'Lin',
-        //             userEmail: "chuan.lin@nist.gov"
-        //         },
-        //         token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsbmM5IiwidXNlckVtYWlsIjoiY2h1YW4ubGluQG5pc3QuZ292IiwiZXhwIjoxNzE1MzYyMjY0LCJ1c2VyTmFtZSI6IkNodWFuIiwidXNlckxhc3ROYW1lIjoiTGluIn0.Dj3yceJZFksGGd5WyeV2er_4YHZcF0gVnrBRmD18uFk'
-        //     };
-        //     console.log("logging in...")
-        //     return of(new HttpResponse({ status: 200, body }));
-        // }
+            let body: any = {
+                userDetails: {
+                    userId: 'lnc9',
+                    userName: 'Chuan Lin',
+                    userLastName: 'Lin',
+                    userEmail: "chuan.lin@nist.gov"
+                },
+                token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsbmM5IiwidXNlckVtY…luIn0.LndNNCAac8oUvDHOYLm2-czvY_W-IevdBrWGXyhoL8w'
+            };
+            console.log("logging in...")
+            return of(new HttpResponse({ status: 200, body }));
+        }
 
         // return 401 not authorised if token is null or invalid
         // if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {

@@ -25,6 +25,8 @@ import { ReferencesModule } from '../references/references.module';
 import { AccesspageModule } from '../accesspage/accesspage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { IspartofModule } from '../ispartof/ispartof.module';
+import { D3Service } from '../../shared/d3-service/d3.service';
+import { SectionTitleModule } from '../section-title/section-title.module';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -75,7 +77,8 @@ import { IspartofModule } from '../ispartof/ispartof.module';
         AccesspageModule,
         VisithomeModule,
         NgbModule,
-        IspartofModule
+        IspartofModule,
+        SectionTitleModule
     ],
     declarations: [
         ResourceDataComponent,
@@ -84,6 +87,7 @@ import { IspartofModule } from '../ispartof/ispartof.module';
         ResourceRefsComponent, ResourceMetadataComponent
     ],
     providers: [
+        D3Service
     ],
     exports: [
         ResourceDataComponent,

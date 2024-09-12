@@ -1,10 +1,11 @@
-import { Component, OnChanges, Input, ViewChild } from '@angular/core';
+import { Component, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import * as globals from '../../shared/globals/globals'
 import { animate, style, transition, trigger } from '@angular/animations';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, ColorScheme } from '../../shared/globals/globals';
+import { D3Service } from '../../shared/d3-service/d3.service';
 
 /**
  * a component that lays out the "Description" section of a landing page which includes the prose 
@@ -35,15 +36,17 @@ export class ResourceDescriptionComponent implements OnChanges {
     desctitle : string = "Description";
     recordType: string = "";
     titleSelected: boolean = false;
+    colorScheme: ColorScheme;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
-
+    
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig, public lpService: LandingpageService, ) {
+    constructor(private cfg: AppConfig, 
+                public lpService: LandingpageService, ) {
         // this.lpService.watchCurrentSection((currentSection) => {
         //     if(currentSection == globals.SectionPrefs.getFieldName(globals.Sections.DESCRIPTION)) {
         //         this.titleSelected = true;
@@ -56,6 +59,14 @@ export class ResourceDescriptionComponent implements OnChanges {
 
     ngOnInit(): void {
         this.recordType = (new NERDResource(this.record)).resourceLabel();
+
+        this.colorScheme = {
+            "default": "#257a2d",
+            "light": "#6bad73",
+            "lighter": "#f0f7f1",
+            "dark": "#1c6022",
+            "hover": "#ffffff" 
+        }
     }
 
     ngOnChanges() {

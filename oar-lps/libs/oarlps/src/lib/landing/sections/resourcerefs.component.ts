@@ -16,7 +16,8 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
     ]
 })
 export class ResourceRefsComponent {
-
+    sectionTitle: string = "References";
+    
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;

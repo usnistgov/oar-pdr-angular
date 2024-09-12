@@ -14,10 +14,10 @@ import { TextEditModule } from './text-edit/text-edit.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TextareaAutoresizeModule } from './textarea-autoresize/textarea-autoresize.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { SectionTitleModule } from './landing/section-title/section-title.module';
 
 @NgModule({
-    declarations: [
-  ],
+    declarations: [ ],
     imports: [
         CommonModule, 
         FrameModule, 
@@ -32,7 +32,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
         TextEditModule,
         HttpClientModule,
         TextareaAutoresizeModule,
-        NgSelectModule
+        NgSelectModule,
+        SectionTitleModule
     ],
     providers: [
         GoogleAnalyticsService

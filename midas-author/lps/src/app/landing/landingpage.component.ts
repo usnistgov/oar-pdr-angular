@@ -174,6 +174,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     suggustedSections: string[] = ["title", "keyword", "references"];
     public helpContentAll:{} = questionhelp;
     helpContentUpdated: boolean = false;
+    collection: string = Globals.Collections.DEFAULT;
 
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
@@ -207,6 +208,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public metricsService: MetricsService,
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
+                public globalService: Globals.GlobalService,
                 public lpService: LandingpageService) 
     {
         // Init the size of landing page body and the help box 
@@ -217,6 +219,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.editEnabled = cfg.get('editEnabled', false) as boolean;
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+        this.getCollection();
 
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
@@ -266,6 +269,17 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     get showSplitter() {
         return (this.mainBodyStatus == "mainsquished") && !this.mobileMode && this.hideToolMenu;
+    }
+
+    getCollection() {
+        if(this.reqId.includes("pdr0-0001"))
+            this.collection = Globals.Collections.FORENSICS;
+        else if(this.reqId.includes("pdr0-0002"))
+            this.collection = Globals.Collections.SEMICONDUCTORS; 
+        else
+            this.collection = Globals.Collections.DEFAULT;
+
+        this.globalService.setCollection(this.collection);
     }
 
     /**

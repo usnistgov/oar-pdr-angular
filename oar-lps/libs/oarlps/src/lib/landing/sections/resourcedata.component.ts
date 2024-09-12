@@ -1,10 +1,9 @@
-import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter } from '@angular/core';
-
+import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Themes, ThemesPrefs } from '../../shared/globals/globals';
+import { Themes, ThemesPrefs, ColorScheme } from '../../shared/globals/globals';
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -43,7 +42,9 @@ export class ResourceDataComponent implements OnChanges {
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
     hasRights: boolean = true;
-    
+    colorScheme: ColorScheme;
+    sectionTitle: string = "Data Access";
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
@@ -52,6 +53,8 @@ export class ResourceDataComponent implements OnChanges {
 
     // pass out download status for metrics refresh
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();
+
+    // @ViewChild('dataAccessHeader') dataAccessHeader: ElementRef;
 
     /**
      * create an instance of the Identity section
@@ -62,6 +65,14 @@ export class ResourceDataComponent implements OnChanges {
 
     ngOnInit(): void {
         this.recordType = (new NERDResource(this.record)).resourceLabel();
+
+        this.colorScheme = {
+            "default": "#257a2d",
+            "light": "#6bad73",
+            "lighter": "#f0f7f1",
+            "dark": "#1c6022",
+            "hover": "#ffffff" 
+        }
     }
 
     ngOnChanges(ch : SimpleChanges) {
