@@ -45,7 +45,7 @@ import { EditControlModule } from 'oarlps';
 
 import { OARngModule } from 'oarng';
 import { FrameModule } from 'oarng';
-import { WizardModule } from 'oarng';
+import { WizardModule, StaffDirModule } from 'oarng';
 
 enableProdMode();
 
@@ -57,7 +57,6 @@ enableProdMode();
         AppComponent
     ],
     imports: [
-        // ConfigModule,
         FrameModule,
         OARLPSModule,
         WizardModule,
@@ -69,9 +68,6 @@ enableProdMode();
         DatacartModule,
         MetricsModule,
         SharedModule.forRoot(),
-        // FragmentPolyfillModule.forRoot({
-        //     smooth: true
-        // }),
         HttpClientModule, FormsModule, ReactiveFormsModule,
         CommonModule, BrowserAnimationsModule, FormsModule,
         ToastrModule.forRoot({
@@ -80,7 +76,8 @@ enableProdMode();
         NgbModule,
         NerdmModule.forRoot(environment),
         ConfigModule.forRoot(environment),
-        EditControlModule.forRoot(environment)
+        EditControlModule.forRoot(environment),
+        StaffDirModule
     ],
     exports: [],
     providers: [
@@ -95,7 +92,7 @@ enableProdMode();
 
 export class AppModule {
     // We inject the service here to keep it alive whole time
-    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) { } 
+    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) { }
 }
 
 

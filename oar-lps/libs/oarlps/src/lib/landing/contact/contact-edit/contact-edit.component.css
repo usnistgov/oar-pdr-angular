@@ -3,3 +3,11 @@
     width:100%;
     padding: 0.5em;
 }
+
+:host ::ng-deep .myClass{ 
+    height: 30px; 
+}
+
+::ng-deep .custom-panel-class {
+    height: fit-content !important; 
+}

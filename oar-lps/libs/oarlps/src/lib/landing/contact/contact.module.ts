@@ -11,6 +11,7 @@ import { ContactService } from './contact.service';
 import { ButtonModule } from 'primeng/button';
 import { ContactEditComponent } from './contact-edit/contact-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 /**
  * module that provide support for rendering and managing a resource's 
@@ -24,7 +25,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         CollapseModule,
         ButtonModule,
         NgbModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        AutoCompleteModule
     ],
     declarations: [
         ContactComponent, ContactEditComponent

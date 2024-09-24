@@ -11,9 +11,24 @@
                         style="color:red;">*</span> Name:</span>
             </td>
             <td align="left">
-                <input type="text" [(ngModel)]="contact.fn" placeholder="Name is required."
+                <span class="p-float-label" style="height: 40px;overflow: visible;">
+                    <p-autoComplete 
+                        styleClass="myClass"
+                        [panelStyleClass]="'custom-panel-class'"
+                        [(ngModel)]="selectedSuggestion" 
+                        [suggestions]="suggestions" 
+                        (completeMethod)="set_suggestions($event)"
+                        (onSelect)="showFullRecord($event)"
+                        field="display"
+                        inputId="person"
+                        appendTo="body"
+                    />
+                    <label for="person">Start typing a name</label>
+                </span>
+
+                <!-- <input type="text" [(ngModel)]="contact.fn" placeholder="Name is required."
                     style="width: 100%;height: 1.5em;margin: 3px 10px;"
-                    (input)="onFullNameChange($event.target.value)" />
+                    (input)="onFullNameChange($event.target.value)" /> -->
             </td>
         </tr>
 
