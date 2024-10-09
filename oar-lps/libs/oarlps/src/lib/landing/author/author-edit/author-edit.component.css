@@ -25,3 +25,31 @@
     height:2em;
     width: calc(100% - 3em);
 }
+
+.unit-label {
+    background-color: transparent !important;
+    width: 25%;
+    border-color: transparent !important;
+    display:inline-block !important;
+    vertical-align: top !important;
+    margin-top: .6em;
+    text-align: right;
+}
+
+.org-label {
+    display:inline-block !important;
+    background-color: transparent !important;
+    width: 25%;
+    border-color: transparent !important;
+    text-align: right !important;
+    margin-top: 5px;
+}
+
+.org-input {
+    width: 100%;
+    height:2em;
+}
+
+.add_unit_btn {
+    float:right !important;
+}

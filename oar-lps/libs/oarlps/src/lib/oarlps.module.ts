@@ -16,6 +16,7 @@ import { TextareaAutoresizeModule } from './textarea-autoresize/textarea-autores
 
 @NgModule({
     declarations: [
+
   ],
     imports: [
         CommonModule, 

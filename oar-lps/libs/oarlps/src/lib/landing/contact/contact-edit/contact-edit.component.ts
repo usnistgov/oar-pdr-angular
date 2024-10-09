@@ -1,8 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Contact } from '../contact';
-import { SDSuggestion, SDSIndex, StaffDirectoryService } from 'oarng';
-import { AutoCompleteCompleteEvent, AutoCompleteOnSelectEvent } from 'primeng/autocomplete';
-
 
 @Component({
   selector: 'lib-contact-edit',
@@ -10,17 +7,6 @@ import { AutoCompleteCompleteEvent, AutoCompleteOnSelectEvent } from 'primeng/au
   styleUrls: ['./contact-edit.component.css']
 })
 export class ContactEditComponent implements OnInit {
-    minPromptLength = 2;
-
-    // the index we will download after the first minPromptLength (2) characters are typed
-    index: SDSIndex|null = null;
-
-    // the current list of suggested completions matching what has been typed so far.
-    suggestions: SDSuggestion[] = [];
-
-    // the suggested completion that was picked; it contains a reference to the full record
-    selectedSuggestion: SDSuggestion|null = null;
-
     // the full record for the selected person
     selected: any = null;
 
@@ -36,17 +22,15 @@ export class ContactEditComponent implements OnInit {
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();    
     
-    constructor(private ps: StaffDirectoryService) { }
+    constructor() { }
 
     ngOnInit(): void {
         this.convertEmail();
-        this.selectedSuggestion = new SDSuggestion(0, this.contact.fn, null);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.contact) {
             this.convertEmail();
-            this.selectedSuggestion = new SDSuggestion(0, this.contact.fn, null);
         }
     }
 
@@ -65,44 +49,23 @@ export class ContactEditComponent implements OnInit {
         this.dataChanged.next({"email": JSON.parse(JSON.stringify(this.contact.hasEmail)), action:"dataChanged"});
     }
 
-    set_suggestions(ev: AutoCompleteCompleteEvent) {
-        if (ev.query) {
-            if (ev.query.length >= this.minPromptLength) {  // don't do anything unless we have 2 chars
-                if (! this.index) {
-                    // retrieve initial index
-                    this.ps.getPeopleIndexFor(ev.query).subscribe(
-                        pi => {
-                            // save it to use with subsequent typing
-                            this.index = pi;
-                            if (this.index != null) {
-                                // pull out the matching suggestions
-                                this.suggestions = (this.index as SDSIndex).getSuggestions(ev.query);
-                            }
-                        },
-                        e => {
-                            console.error('Failed to pull people index for "'+ev.query+'": '+e)
-                        }
-                    );
-                }
-                else
-                    // pull out the matching suggestions
-                    this.suggestions = (this.index as SDSIndex).getSuggestions(ev.query);
-            }
-            else if (this.index) {
-                this.index = null;
-                this.suggestions = [];
-            }
-        }
-    }    
+    /**
+     * Handle requests from child component
+     * @param dataChanged parameter passed from child component
+     */
+    onDataChanged(dataChanged: any) {
+        switch(dataChanged.action) {
+            case 'fieldChanged':
+                // this.contact.dataChanged = true;
+                // this.contact.fn = dataChanged.value;
+                // this.dataChanged.next({"fn": this.contact.fn, action:"dataChanged"});
+    
+                break;
 
-    showFullRecord(ev: AutoCompleteOnSelectEvent) {
-        let sugg = ev.value as SDSuggestion;
-        
-        sugg.getRecord().subscribe({
-            next: (rec) => { 
-                this.selected = rec;
+            case 'peopleChanged':
+                this.selected = dataChanged.selectedPeopleRecord;
                 if(this.selected.lastName && this.selected.firstName){
-                    this.contact.fn = this.selected.firstName + " " + this.selected.lastName;
+                    this.contact.fn = this.selected.lastName + ", " + this.selected.firstName;
 
                     this.contact.dataChanged = true;
                     this.dataChanged.next({"fn": JSON.parse(JSON.stringify(this.contact.fn)), action:"dataChanged"});
@@ -121,13 +84,11 @@ export class ContactEditComponent implements OnInit {
                     this.contact.dataChanged = true;
                     this.dataChanged.next({"email": JSON.parse(JSON.stringify(this.contact.hasEmail)), action:"dataChanged"});
                 }
-
-        
-            },
-            error: (err) => {
-                console.error("Failed to resolve suggestion into person data");
-            }
-    });
+    
+                break;                
+            default:
+                break;
+        }
     }
 
 }

@@ -5,9 +5,9 @@
 }
 
 :host ::ng-deep .myClass{ 
-    height: 30px; 
+    height: 45px !important; 
 }
 
-::ng-deep .custom-panel-class {
+/* ::ng-deep .custom-panel-class {
     height: fit-content !important; 
-}
+} */
