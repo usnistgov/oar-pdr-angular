@@ -34,9 +34,9 @@ import wordMapping from '../../assets/site-constants/word-mapping.json';
 import { error } from 'console';
 
 /**
- * A component providing the complete display of landing page content associated with 
+ * A component providing the complete display of landing page content associated with
  * a resource identifier.  This content is handle in various sub-components.
- * 
+ *
  * Features include:
  * * an "identity" section, providing title, names, identifiers, and who is repsonsible
  * * description section, providing thd prose description/abstract, keywords, terms, ...
@@ -44,7 +44,7 @@ import { error } from 'console';
  * * a references section
  * * tools and navigation section.
  *
- * This component sets the view encapsulation to None: this means that the style settings 
+ * This component sets the view encapsulation to None: this means that the style settings
  * defined in landingpage.component.css apply globally, including to all the child components.
  */
 @Component({
@@ -117,7 +117,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     showJsonViewer: boolean = false;
 
     //Default: wait 5 minutes (300sec) after user download a file then refresh metrics data
-    delayTimeForMetricsRefresh: number = 300; 
+    delayTimeForMetricsRefresh: number = 300;
     cartChangeHandler: any;
     public CART_ACTIONS: CartActions;
 
@@ -188,7 +188,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * @param titleSv the Title service (used to set the browser's title bar)
      * @param cfg     the app configuration data
      * @param mdserv  the MetadataService for gaining access to the NERDm metadata.
-     * @param res     a CurrentResource object for sharing the metadata and requested 
+     * @param res     a CurrentResource object for sharing the metadata and requested
      *                 ID with child components.
      */
     constructor(private route: ActivatedRoute,
@@ -203,9 +203,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public metricsService: MetricsService,
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
-                public lpService: LandingpageService) 
+                public lpService: LandingpageService)
     {
-        // Init the size of landing page body and the help box 
+        // Init the size of landing page body and the help box
         this.updateScreenSize();
 
         this.reqId = this.route.snapshot.paramMap.get('id');
@@ -228,7 +228,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     this._showContent = true;
                     this.setMessage();
                 }
-                
+
                 this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE);
                 if(!this.hideToolMenu) {
                     this.mainBodyStatus = "mainsquished";
@@ -264,7 +264,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * initialize the component.  This is called early in the lifecycle of the component by 
+     * initialize the component.  This is called early in the lifecycle of the component by
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
@@ -282,7 +282,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
         this.metricsData = new MetricsData();
 
-        // Clean up cart status storage 
+        // Clean up cart status storage
         if(this.inBrowser){
             this.dataCartStatus = DataCartStatus.openCartStatus();
             this.dataCartStatus.cleanUpStatusStorage();
@@ -290,14 +290,14 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         if (this.editEnabled) {
             this.route.queryParamMap.subscribe(queryParams => {
-                let param = queryParams.get("editEnabled");
+                let param = queryParams.get("editenabled");
                 if (param)
                     this.editRequested = (param.toLowerCase() == 'true');
 
                 // if editEnabled = true, we don't want to display the data that came from mdserver
-                // Will set the display to true after the authentication process. If authentication failed, 
-                // we set it to true and the data loaded from mdserver will be displayed. If authentication 
-                // passed and draft data loaded from customization service, we will set this flag to true 
+                // Will set the display to true after the authentication process. If authentication failed,
+                // we set it to true and the data loaded from mdserver will be displayed. If authentication
+                // passed and draft data loaded from customization service, we will set this flag to true
                 // to display the data from MIDAS.
                 this.edstatsvc.setShowLPContent(! this.editRequested);
             });
@@ -333,7 +333,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                         console.log("Getting metrics...");
                                         this.getMetrics();
                                     }
-                                        
+
                                 }
                             }
 
@@ -341,25 +341,25 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                             this.useMetadata();
 
                             // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                            // in editing mode.  This is done in concert with the authentication process that can involve 
-                            // redirection to an authentication server; on successful authentication, the server can 
-                            // redirect the browser back to this landing page with editing turned on. 
+                            // in editing mode.  This is done in concert with the authentication process that can involve
+                            // redirection to an authentication server; on successful authentication, the server can
+                            // redirect the browser back to this landing page with editing turned on.
                             if (this.inBrowser) {
                                 // Display content after 15sec no matter what
                                 setTimeout(() => {
                                     this.edstatsvc.setShowLPContent(true);
                                 }, 15000);
-                    
+
                                 if (this.editRequested) {
                                     showError = false;
                                     // console.log("Returning from authentication redirection (editmode="+
                                     //             this.editRequested+")");
-                                    
+
                                     // Need to pass reqID (resID) because the resID in editControlComponent
                                     // has not been set yet and the startEditing function relies on it.
                                     this.edstatsvc.startEditing(this.reqId);
                                 }
-                                else 
+                                else
                                     showError = true;
                             }
                         }
@@ -425,8 +425,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 let keys = Object.keys(this.wordMpping);
                 keys.forEach(key => {
                     this.helpContentAll = JSON.parse(JSON.stringify(this.helpContentAll).replace(new RegExp(key, 'g'), this.wordMpping[key]));
-                })  
-                
+                })
+
                 //Only update help content once
                 this.helpContentUpdated = true;
             }
@@ -465,7 +465,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                             this.recordLevelMetrics = JSON.parse(await event.body.text());
 
                             let hasFile = false;
-        
+
                             if(this.md.components && this.md.components.length > 0){
                                 this.md.components.forEach(element => {
                                     if(element.filepath){
@@ -474,16 +474,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                     }
                                 });
                             }
-            
+
                             if(hasFile){
                                 //Now check if there is any metrics data
                                 this.metricsData.totalDatasetDownload = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].record_download : 0;
-                
+
                                 this.metricsData.totalDownloadSize = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].total_size : 0;
-                    
+
                                 this.metricsData.totalUsers = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].number_users : 0;
-                        
-                                this.metricsData.totalUsers = this.metricsData.totalUsers == undefined? 0 : this.metricsData.totalUsers;                                    
+
+                                this.metricsData.totalUsers = this.metricsData.totalUsers == undefined? 0 : this.metricsData.totalUsers;
                             }
 
                             this.metricsData.dataReady = true;
@@ -494,7 +494,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         this.metricsData.hasCurrentMetrics = false;
                         this.showMetrics = true;
                         this.metricsData.dataReady = true;
-                    });  
+                    });
                 }else{
                     this.metricsData.dataReady = true;
                 }
@@ -506,7 +506,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.metricsData.hasCurrentMetrics = false;
             this.showMetrics = true;
             this.metricsData.dataReady = true; // ready to display message
-        });                    
+        });
     }
 
     /**
@@ -526,15 +526,15 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         this.updateSidbarHeight();
         this.updateSplitterHeight();
-        
+
         this.splitterPaddingTop += window.pageYOffset - this.pageYOffset;
         this.pageYOffset = window.pageYOffset;
     }
 
     /**
-     * When storage changed, if it's dataCartStatus and action is "set download completed", 
+     * When storage changed, if it's dataCartStatus and action is "set download completed",
      * we want to refresh the metrics after certain period of time.
-     * 
+     *
      * @param ev Event - storage changed
      */
     cartChanged(ev){
@@ -568,7 +568,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Handle download status change event. 
+     * Handle download status change event.
      *
      * @param downloadStatus download status of a direct download event. Currently only handle "downloaded" status.
      */
@@ -622,7 +622,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     updateSidbarHeight() {
         // The height of the help box
-        // should be windows inner height minus the height of the remaining of the top bar 
+        // should be windows inner height minus the height of the remaining of the top bar
         // minus the visible height of the bottom bar minus margin (50)
 
         let visibleTopBarHeight = this.topBarHeight - window.pageYOffset + 50;
@@ -640,7 +640,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     setMenuPosition() {
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
         // The breakpoint for PrimeNG menu is 750. For some reason the following min-width
-        // need to set to 768 to be able to change the state at 750px. 
+        // need to set to 768 to be able to change the state at 750px.
         if(this.inBrowser){
             this.breakpointObserver
             .observe(['(min-width: 768px)'])
@@ -682,7 +682,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     /**
      * make use of the metadata to initialize this component.  This is called asynchronously
      * from ngOnInit after the metadata has been successfully retrieved (and saved to this.md).
-     * 
+     *
      * This method will:
      *  * set the page's title (as displayed in the browser title bar).
      */
@@ -698,7 +698,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * set the document's title.  
+     * set the document's title.
      */
     setDocumentTitle(): void {
         let title = "PDR: ";
@@ -732,7 +732,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         console.warn("useFragment: failed to find document body!");
                 }
                 if (element) {
-                    //element.scrollIntoView(); 
+                    //element.scrollIntoView();
                     setTimeout(() => {
                         element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
                     }, 1);
@@ -742,10 +742,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * scroll the view to the named section.  
+     * scroll the view to the named section.
      *
-     * This funtion delegates the scrolling to the LandingBodyComponent which defines the available 
-     * sections.  
+     * This funtion delegates the scrolling to the LandingBodyComponent which defines the available
+     * sections.
      */
     goToSection(sectionId: string) {
         // If sectionID is "Metadata", scroll to About This Dataset and display JSON viewer
@@ -768,15 +768,15 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     /**
      * toggle the visibility of the citation pop-up window
-     * @param size 
+     * @param size
      */
-    toggleCitation(size: string) : void { 
+    toggleCitation(size: string) : void {
         if(size == 'small')
             this.citationDialogWith = 400;
         else
             this.citationDialogWith = 550;
 
-        this.citationVisible = !this.citationVisible; 
+        this.citationVisible = !this.citationVisible;
     }
 
     /**
@@ -791,7 +791,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * Set the message to display based on the edit mode.
      */
     setMessage() {
-        if (this.editMode == this.EDIT_MODES.DONE_MODE) 
+        if (this.editMode == this.EDIT_MODES.DONE_MODE)
             this.message = 'You can now close this browser tab <p>and go back to MIDAS to either accept or discard the changes.'
 
         if (this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE)
@@ -810,7 +810,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * toggle whether the sidebar is visible.  When this is called, a change in 
+     * toggle whether the sidebar is visible.  When this is called, a change in
      * in the visiblity of the sidebar will be animated (either opened or closed).
      */
     toggleSbarView() {
@@ -830,7 +830,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }else {
             if(this.sidebarVisible)
                 this.mainBodyStatus = "mainsquished";
-            else    
+            else
                 this.mainBodyStatus = "mainexpanded";
         }
     }
@@ -857,7 +857,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this.setLpsWidth(this.helpWidth);
                 this.prevHelpWidth = this.helpWidth;
 
-                this.lpsWidthForPreview = window.innerWidth * .75;              
+                this.lpsWidthForPreview = window.innerWidth * .75;
             }
         }, 0);
     }
