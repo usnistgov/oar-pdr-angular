@@ -9,6 +9,8 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { TopicEditComponent } from './topic-edit/topic-edit.component';
+import { CollectionService } from '../../shared/collection-service/collection.service';
+import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-topic',
@@ -23,10 +25,26 @@ import { TopicEditComponent } from './topic-edit/topic-edit.component';
     ]
 })
 export class TopicComponent implements OnInit {
-    nistTaxonomyTopics: any[] = [];
+    selectedTopics: any[] = [];
     scienceThemeTopics: any[] = [];
     recordType: string = "";
     standardNISTTaxonomyURI: string = "https://data.nist.gov/od/dm/nist-themes/";
+    allCollections: any = {};
+    //  Array to define the collection order
+    collectionOrder: string[] = [Collections.DEFAULT];
+    collection: string;
+    editCollection: string; //parameter pass to the edit component
+    editScheme: string = "https://data.nist.gov/od/dm/nist-themes/"; //current topic scheme pass to the edit component
+    topics: any = {};
+    originalTopics: any = {};   //For undo purpose
+
+    //For display
+    topicBreakPoint: number = 5;
+    topicDisplay: any = {};
+    topicShort: any = {};
+    topicLong: any = {};
+    colorScheme: ColorScheme;
+    hovered: boolean = false;
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
@@ -45,9 +63,18 @@ export class TopicComponent implements OnInit {
                 private ngbModal: NgbModal,
                 private cfg: AppConfig,
                 public lpService: LandingpageService, 
+                public globalService: GlobalService,
+                public collectionService: CollectionService,
                 private notificationService: NotificationService) {
 
             this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
+
+            this.collectionOrder = this.collectionService.getCollectionForDisplay();
+            this.allCollections = this.collectionService.loadAllCollections();
+
+            this.globalService.watchCollection((collection) => {
+                this.collection = collection;
+            });
 
             this.lpService.watchEditing((sectionMode: SectionMode) => {
                 if( sectionMode ) {
@@ -70,7 +97,12 @@ export class TopicComponent implements OnInit {
     /**
      * a field indicating if this data has beed edited
      */
-    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    // get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    
+    updated(collection: string = Collections.DEFAULT) { 
+        return this.mdupdsvc.fieldUpdated(this.fieldName + "-" + collection); 
+    }
+
     get isEditing() { return this.editMode==MODE.EDIT }
 
     get isNormal() { return this.editMode==MODE.NORNAL }
@@ -78,11 +110,12 @@ export class TopicComponent implements OnInit {
      * a field indicating whether there is no topic.  
      */
     get isEmpty() {
-        if(this.recordType == "Science Theme"){
-            return this.scienceThemeTopics.length <= 0 && this.nistTaxonomyTopics.length <= 0;
-        }else{
-            return this.nistTaxonomyTopics.length <= 0;
-        }
+        return false;
+        // if(this.recordType == "Science Theme"){
+        //     return this.scienceThemeTopics.length <= 0 && this.selectedTopics.length <= 0;
+        // }else{
+        //     return this.selectedTopics.length <= 0;
+        // }
     }
 
     get topicWidth() {
@@ -94,7 +127,10 @@ export class TopicComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.colorScheme = this.collectionService.getColorScheme(this.collection);
+
         this.updateResearchTopics();
+        this.originalTopics = JSON.parse(JSON.stringify(this.topics));
     }
 
     /**
@@ -106,13 +142,37 @@ export class TopicComponent implements OnInit {
     }
 
     /**
+     * Decide if given collection's topic is in edit mode
+     * @param collection 
+     * @returns 
+     */
+    editingTopics(collection: string) {
+        return this.isEditing && this.editCollection == collection;
+    }
+
+    /**
+     * a field indicating if this data has beed edited
+     */
+    // get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    isUpdated(collection: string = Collections.DEFAULT) { 
+        return this.mdupdsvc.fieldUpdated(this.fieldName + "-" + collection); 
+    }
+
+    /**
      * Start editing topics. Set this section in edit mode and broadcast the status so other section will auto save
      * and the help side bar can update the info.
      */
-    startEditing() {
+    startEditing(collection: string = Collections.DEFAULT) {
         setTimeout(()=>{ // this will make the execution after the above boolean has changed
             this.topicElement.nativeElement.focus();
         },0);  
+
+        this.editCollection = collection;
+        this.editScheme = this.allCollections[this.editCollection].taxonomyURI;
+        this.selectedTopics = [];
+        for(let obj of this.topics[collection]) {
+            this.selectedTopics.push(obj.tag);
+        } 
 
         this.setMode(MODE.EDIT);
     }
@@ -122,25 +182,58 @@ export class TopicComponent implements OnInit {
      * @param refreshHelp Indicates if help content needs be refreshed.
      */
     onSave(refreshHelp: boolean = true) {
-        this.updateResearchTopics();
-
         var postMessage: any = {};
-        postMessage[this.fieldName] = this.record[this.fieldName];
-        
-        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+        let field = this.fieldName + "-" + this.editCollection;
+
+        postMessage[this.fieldName] = this.restoreTopics(this.topics);
+
+        this.mdupdsvc.update(field, postMessage).then((updateSuccess) => {
             // console.log("###DBG  update sent; success: "+updateSuccess.toString());
             if (updateSuccess) {
                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
-
+                this.record[this.fieldName] = postMessage[this.fieldName];
                 this.updateResearchTopics();
-            } else{
-                let msg = "acknowledge topic update failure";
-                console.error(msg);
-            }
+            } else
+                console.error("acknowledge topic update failure");
         });
+
+
+        // this.updateResearchTopics();
+
+        // var postMessage: any = {};
+        // postMessage[this.fieldName] = this.record[this.fieldName];
+        
+        // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+        //     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+        //     if (updateSuccess) {
+        //         this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
+
+        //         this.updateResearchTopics();
+        //     } else{
+        //         let msg = "acknowledge topic update failure";
+        //         console.error(msg);
+        //     }
+        // });
 
         this.setMode();
         this.dataChanged = false;
+    }
+
+    /**
+     * Restore topics to Nerdm format
+     */
+    restoreTopics(inputTopics: any) {
+        let topics: any[] = [];
+
+        for(let col of this.collectionOrder) {
+            if(inputTopics[col] && inputTopics[col].length > 0) {
+                for(let topic of inputTopics[col]) {
+                    topics.push(topic);
+                }
+            }
+        }
+
+        return topics;
     }
 
     /**
@@ -174,6 +267,7 @@ export class TopicComponent implements OnInit {
     onCommandChanged(cmd) {
         switch(cmd.command) {
             case 'saveTopics':
+                this.topics[this.editCollection] = cmd.selectedTopics;
                 this.onSave();
                 break;
             case 'undoCurrentChanges':
@@ -198,8 +292,10 @@ export class TopicComponent implements OnInit {
     /*
      *  Restore original value. If no more field was edited, delete the record in staging area.
      */
-    restoreOriginal() {
-        this.mdupdsvc.undo(this.fieldName).then((success) => {
+    restoreOriginal(collection: string) {
+        this.topics[collection] = JSON.parse(JSON.stringify(this.originalTopics[collection]));
+
+        this.mdupdsvc.undo(this.fieldName+"-"+collection, null, null, this.restoreTopics(this.topics)).then((success) => {
             if (success){
                 this.dataChanged = false;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
@@ -264,28 +360,74 @@ export class TopicComponent implements OnInit {
     /**
      * Update the research topic lists
      */
-    updateResearchTopics() {
-        if(this.record) {
-            this.scienceThemeTopics = [];
-            this.nistTaxonomyTopics = [];
+    // updateResearchTopics() {
+    //     if(this.record) {
+    //         this.scienceThemeTopics = [];
+    //         this.nistTaxonomyTopics = [];
 
-            if(this.record['topic']) {
-                this.record['topic'].forEach(topic => {
-                    if(topic['scheme'].indexOf(this.standardNISTTaxonomyURI) < 0){
-                        if(this.scienceThemeTopics.indexOf(topic.tag) < 0)
-                            this.scienceThemeTopics.push(topic.tag);
+    //         if(this.record['topic']) {
+    //             this.record['topic'].forEach(topic => {
+    //                 if(topic['scheme'].indexOf(this.standardNISTTaxonomyURI) < 0){
+    //                     if(this.scienceThemeTopics.indexOf(topic.tag) < 0)
+    //                         this.scienceThemeTopics.push(topic.tag);
+    //                 }
+    //             });
+    //         }
+
+    //         if(this.record['theme']) {
+    //             this.record['theme'].forEach(topic => {
+    //                 if(this.nistTaxonomyTopics.indexOf(topic) < 0)
+    //                     this.nistTaxonomyTopics.push(topic);
+    //             });
+    //         }
+    //     }
+    // }
+
+
+    /**
+     * Update the research topic lists
+     */
+    updateResearchTopics() {
+        this.topics = {};
+        if(this.record) {
+            if (this.record[this.fieldName]) {
+                this.record[this.fieldName].forEach(topic => {
+                    if (topic['scheme'] && topic.tag) {
+                        for(let col of this.collectionOrder) {
+                            if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                                if(!this.topics[col]) {
+                                    this.topics[col] = [topic];
+                                }else if(this.topics[col].indexOf(topic) < 0) {
+                                    this.topics[col].push(topic);
+                                }
+                            }
+                        }
+
                     }
                 });
             }
+        }
 
-            if(this.record['theme']) {
-                this.record['theme'].forEach(topic => {
-                    if(this.nistTaxonomyTopics.indexOf(topic) < 0)
-                        this.nistTaxonomyTopics.push(topic);
-                });
+        //For display
+        for(let col of this.collectionOrder) {
+            if(this.topics[col]) {
+                if(this.topics[col].length > 5) {
+                    this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col].slice(0, this.topicBreakPoint)));
+                    this.topicShort[col].push({tag:"Show more...", "@type":"", scheme:""});
+                    this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));
+                    this.topicLong[col].push({tag:"Show less...", "@type":"", scheme:""});                
+                }else {
+                    this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col]));
+                    this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));
+                }
+            }else {
+                this.topicShort[col] = [];
+                this.topicLong[col] = []
             }
         }
-    }
+
+        this.topicDisplay = JSON.parse(JSON.stringify(this.topicShort));
+    }    
 
     /**
      * Open topic pop up window
@@ -315,34 +457,34 @@ export class TopicComponent implements OnInit {
 
         const modalRef = this.ngbModal.open(SearchTopicsComponent, ngbModalOptions);
 
-        let val: string[] = [];
-        if (this.record[this.fieldName])
-            val = JSON.parse(JSON.stringify(this.nistTaxonomyTopics));
+        // let val: string[] = [];
+        // if (this.record[this.fieldName])
+        //     val = JSON.parse(JSON.stringify(this.selectedTopics));
 
-        modalRef.componentInstance.inputValue = {};
-        modalRef.componentInstance.inputValue[this.fieldName] = val;
-        modalRef.componentInstance['field'] = this.fieldName;
-        modalRef.componentInstance['title'] = "Research Topics";
+        // modalRef.componentInstance.inputValue = {};
+        // modalRef.componentInstance.inputValue[this.fieldName] = val;
+        // modalRef.componentInstance['field'] = this.fieldName;
+        // modalRef.componentInstance['title'] = "Research Topics";
 
-        modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-            if (returnValue) {
-                var postMessage: any = {};
-                postMessage[this.fieldName] = returnValue[this.fieldName];
-                this.record[this.fieldName] = returnValue[this.fieldName];
+        // modalRef.componentInstance.returnValue.subscribe((returnValue) => {
+        //     if (returnValue) {
+        //         var postMessage: any = {};
+        //         postMessage[this.fieldName] = returnValue[this.fieldName];
+        //         this.record[this.fieldName] = returnValue[this.fieldName];
                 
-                this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-                    if (updateSuccess) {
-                        this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
+        //         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+        //             // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+        //             if (updateSuccess) {
+        //                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
 
-                        this.updateResearchTopics();
-                    } else{
-                        let msg = "acknowledge topic update failure";
-                        console.error(msg);
-                    }
-                });
-            }
-        })
+        //                 this.updateResearchTopics();
+        //             } else{
+        //                 let msg = "acknowledge topic update failure";
+        //                 console.error(msg);
+        //             }
+        //         });
+        //     }
+        // })
     }
 
     /*
@@ -376,4 +518,75 @@ export class TopicComponent implements OnInit {
             return false;
         }
     }
+
+    /**
+     * Set bubble color based on content
+     * @param topic 
+     */
+    bubbleColor(topic) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+            return "#e6ecff";
+        }else{
+            return "#ededed";
+        }
+    }
+
+    /**
+     * Set border for "More..." and "Less..." button when mouse over
+     * @param keyword 
+     * @returns 
+     */    
+    borderStyle(topic) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+            if(this.hovered){
+                return "1px solid blue";
+            }else{
+                return "1px solid #ededed";
+            }
+        }else{
+            return "1px solid #ededed";
+        }
+    }
+
+    /**
+     * Set cursor type for "More..." and "Less..." button
+     * @param topic 
+     * @returns 
+     */
+    setCursor(topic) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+            return "pointer";
+        }else{
+            return "";
+        }
+    }
+
+    mouseEnter(topic) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+            this.hovered = true;
+        }
+    }
+
+    mouseOut(topic) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+            this.hovered = false;
+        }
+    }
+
+    /**
+     * Display short/long list based on which button was clicked.
+     * @param topic 
+     */
+    topicClick(topic, collection) {
+        if(topic.tag == "Show more...") {
+            this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicLong[collection]));
+        }
+
+        if(topic.tag == "Show less...") {
+            this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicShort[collection]));
+        }
+
+        this.hovered = false;
+    }
+
 }
