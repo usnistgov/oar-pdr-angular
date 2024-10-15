@@ -1,10 +1,16 @@
-<div (click)="handleAsideClick($event)" class="combo-container" style="display: inline-block; width:100%;">
-  <div style="width:100%; height:2em; vertical-align: top; display: inline-block;">
+<div (click)="handleAsideClick($event)" class="combo-container" style="width:100%;">
+  <div class="p-inputgroup" style="width:100%; height:2em; vertical-align: top; ">
     <input type="text" [(ngModel)]="controlField" (ngModelChange)="textChange($event)" ngControl="controlField"
       name="controlField" (keyup)="onKeyDownAction($event)" (focus)="onFocusEventAction()" (blur)="onBlurEventAction()"
-      style="height: 2em; max-width:calc(100% - 1.8em); margin: 0; float: left;" />
-    <button style="float:right;width:1.8em;margin-top: 2px;" class="drop-down-button" (click)="toogleDropDown()"><i
-        [ngClass]="arrowClass()"></i></button>
+      style="height: 2em; max-width:calc(100% - 1.8em); " />
+
+    <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
+        <i class="pi pi-caret-down" (click)="toogleDropDown()"
+        style="cursor: pointer;" data-toggle="tooltip"
+        title="Orgnization list"></i>
+    </span>
+    <!-- <button style="float:right;width:1.8em;margin-top: 2px;" class="drop-down-button" (click)="toogleDropDown()"><i
+        [ngClass]="arrowClass()"></i></button> -->
   </div>
   <div class="data-container" *ngIf="showDropDown">
     <div style="padding-left: .5em;" *ngFor="let data of dummyDataList; let i = index" class="data-list"

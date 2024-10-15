@@ -10,7 +10,7 @@ import {
 import { deepCopy } from '../../config/config.service';
 import { IEnvironment } from '../../../environments/ienvironment';
 import * as environment from '../../../environments/environment';
-import { AuthenticationService, Credentials, UserAttributes } from 'oarng';
+import { AuthenticationService, Credentials, UserAttributes, StaffDirectoryService } from 'oarng';
 
 /**
  * A specialized Error indicating a error originating with from client action/inaction; the 
@@ -122,7 +122,8 @@ export class WebAuthService extends AuthService {
      */
     constructor(config: AppConfig, 
                 private httpcli: HttpClient,
-                public authService: AuthenticationService) {
+                public authService: AuthenticationService,
+                private sdsvc: StaffDirectoryService) {
         super();
         this._endpoint = config.get('mdAPI', '/customization/');
         if (!this._endpoint.endsWith('/')) this._endpoint += "/";
@@ -160,6 +161,7 @@ export class WebAuthService extends AuthService {
                 next: (creds) =>{
                     this._creds = creds;
                     if (creds.token) {
+                        this.sdsvc.setAuthToken(creds.token);
                         // the user is authenticated and authorized to edit!
                         subscriber.next(
                             new WebCustomizationService(resid, this.endpoint, this.authToken,
@@ -277,7 +279,7 @@ export class MockAuthService extends AuthService {
  * context.useCustomizationService from the angular environment (i.e. 
  * src/environments/environment.ts).  A value of false assumes a develoment context.
  */
-export function createAuthService(ngenv: IEnvironment, config: AppConfig, httpClient: HttpClient, authService: AuthenticationService, devmode?: boolean)
+export function createAuthService(ngenv: IEnvironment, config: AppConfig, httpClient: HttpClient, authService: AuthenticationService, sdsvc: StaffDirectoryService, devmode?: boolean)
     : AuthService {
 
     if (devmode === undefined)
@@ -286,7 +288,7 @@ export function createAuthService(ngenv: IEnvironment, config: AppConfig, httpCl
     if (!devmode) {
         // production mode
         console.log("Will use configured customization web service");
-        return new WebAuthService(config, httpClient, authService);
+        return new WebAuthService(config, httpClient, authService, sdsvc);
     }
 
     // dev mode

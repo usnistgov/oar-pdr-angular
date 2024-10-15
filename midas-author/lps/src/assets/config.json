@@ -8,7 +8,7 @@
         "taxonomyService": "https://oardev.nist.gov/rmm/taxonomy"
     },
     "auth": {
-        "serviceEndpoint": "https://localhost/sso/" 
+        "serviceEndpoint": "https://localhost/sso/"
     },
     "mdAPI": "http://localhost:9091/midas/dap/mds3/",
     "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
@@ -24,5 +24,9 @@
     "screenSizeBreakPoint": 1060,
     "bundleSizeAlert": 500000000,
     "delayTimeForMetricsRefresh": 300,
-    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/"  
+    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
+    "staffdir": {
+        "serviceEndpoint": "http://localhost:9092/oar1"
+    }
+
 }

@@ -68,21 +68,23 @@
         <tr  style="width: 100%;">
             <!-- Text edit area -->
             <td class="edit-block" style="width: calc(100%-60px);">
-                <lib-author-edit [author]="currentAuthor" [backgroundColor]="editAreabackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onAutherChange($event)"></lib-author-edit>
+                <lib-author-edit [author]="currentAuthor" [authors]="currentAuthors" [backgroundColor]="editAreabackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onAutherChange($event)"></lib-author-edit>
             </td>
 
             <!-- Control buttons -->
-            <td style="width: 60px;vertical-align: top; white-space: nowrap;">
-                <!-- Save button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!currentAuthor || !currentAuthor.dataChanged" ngbTooltip="Save authors">
-                    <i class="faa faa-check"></i>
-                </button>
+            <td style="width: 60px;vertical-align: top; ">
+                <div style="margin-top: 1em;white-space: nowrap;">
+                    <!-- Save button -->
+                    <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!currentAuthor || !currentAuthor.dataChanged" ngbTooltip="Save authors">
+                        <i class="faa faa-check"></i>
+                    </button>
 
-                <!-- Cancel button -->
-                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
-                    (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                    <i class="fas fa-times"></i>
-                </button>
+                    <!-- Cancel button -->
+                    <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
+                        (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </td>
         </tr>
     </table>      

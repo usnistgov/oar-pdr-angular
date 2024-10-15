@@ -1,5 +1,9 @@
 #contact-details-outer {
     text-align: center; 
     width:100%;
-    padding: 0.5em;
+    padding: 1em 0.5em 0.5em 0.5em;
+}
+
+:host ::ng-deep .myClass{ 
+    height: 45px !important; 
 }
