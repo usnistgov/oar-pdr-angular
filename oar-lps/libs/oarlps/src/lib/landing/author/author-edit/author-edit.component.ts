@@ -33,8 +33,6 @@ export class AuthorEditComponent implements OnInit {
          { }
 
     ngOnInit(): void {
-        this.getUnits();
-
         if(!this.author) {
             // this.author = this.authorService.getBlankAuthor();
             this.author = new Author("", "", "", "", [this.authorService.getBlankAffiliation("")]);
@@ -59,17 +57,6 @@ export class AuthorEditComponent implements OnInit {
                 this.currentAuthors.push(new SDSuggestion(0, author.fn, null))
             }
         }
-    }
-
-    getUnits() {
-        this.ps.getOrgs().subscribe({
-            next: (recs) => {
-                this.unitList = recs;
-            },
-            error: (err) => {
-                console.error("Failed to resolve person id into org data");
-            }
-        });
     }
 
     /*
