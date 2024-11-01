@@ -17,10 +17,10 @@
 
             <!-- data access, include available files -->
             <a name="dataAccess" #dataAccess></a>
-            <pdr-resource-data 
-                [record]="md" 
-                [inBrowser]="inBrowser" 
-                [editEnabled]="editEnabled" 
+            <pdr-resource-data
+                [record]="md"
+                [inBrowser]="inBrowser"
+                [editEnabled]="editEnabled"
                 [theme]="theme"
                 (dlStatus)="setDownloadStatus($event)">
             </pdr-resource-data>

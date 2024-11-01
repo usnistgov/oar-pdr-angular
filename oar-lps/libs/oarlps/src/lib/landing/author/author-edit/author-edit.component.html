@@ -63,7 +63,7 @@
               - Allows user to enter ORCID
               - The icon to the right will open official ORCID home page 
             -->
-            <tr>
+            <tr *ngIf="isAuthor">
                 <td align="right">
                     <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
                             style="color:green;">*</span> ORCID:</span>
@@ -81,7 +81,7 @@
                 </td>
             </tr>
 
-            <tr *ngIf="!orcidValid">
+            <tr *ngIf="isAuthor && !orcidValid">
                 <td></td>
                 <td align="left">
                     <div id="orcid-warning">
@@ -91,7 +91,7 @@
             </tr>
 
             <!-- Affiliation management -->
-            <tr>
+            <tr *ngIf="isAuthor">
                 <td align="right" style="vertical-align: top;">
                     <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
                             style="color:green;">*</span> Affiliations:</span>

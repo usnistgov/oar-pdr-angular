@@ -19,6 +19,9 @@ import { LandingpageService } from '../landingpage.service';
 import * as REVISION_TYPES from '../../../assets/site-constants/revision-types.json';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
+import { CollectionService } from '../../shared/collection-service/collection.service';
+import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import * as CollectionData from '../../../assets/site-constants/collections.json';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -52,6 +55,10 @@ export class EditControlComponent implements OnInit, OnChanges {
     submitResponse: SubmitResponse = {} as SubmitResponse;
     mobileMode: boolean = false;
     modalRef: any; // For submit pop up
+    imageURL: string = '';
+    collection: string;
+    collectionObj: any;
+    message: string = "test";
 
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
@@ -100,7 +107,21 @@ export class EditControlComponent implements OnInit, OnChanges {
         private cfg: AppConfig,
         public lpService: LandingpageService, 
         private modalService: NgbModal,
+        public globalService: GlobalService,
         private msgsvc: UserMessageService) {
+
+        this.globalService.watchCollection((collection) => {
+            this.collection = collection;
+            this.loadBannerUrl();
+        });
+
+        this.globalService.watchMessage((message) => {
+            this.message = message;
+            //Display message for 3 seconds
+            setTimeout(() => {
+                this.message = "";
+            }, 3000);
+        });
 
         this.EDIT_MODES = LandingConstants.editModes;
         this.mdupdsvc.subscribe(
@@ -181,6 +202,29 @@ export class EditControlComponent implements OnInit, OnChanges {
                 // this.mdupdsvc.setOriginalMetadata(this.originalRecord)
             }
         }
+    }
+
+    loadBannerUrl() {
+        this.collectionObj = CollectionData[this.collection] as any;
+
+        switch(this.collection) {
+            case Collections.FORENSICS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
+            }
+            case Collections.SEMICONDUCTORS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
+            }
+            default: {
+                this.imageURL = "";
+                break;
+            }
+        }
+
+        setTimeout(() => {
+            // this.displayBanner = true;
+        }, 0);
     }
 
     /**
@@ -351,11 +395,13 @@ export class EditControlComponent implements OnInit, OnChanges {
               if(successful){
                 console.log("Loading draft...");
                 this.statusbar.showMessage("Loading draft...", true)
+                // this.globalService.setMessage("Loading draft...");
                 this.mdupdsvc.loadDraft().subscribe(
                     (md) => 
                     {
                         if(md)
                         {
+                            // this.globalService.setMessage("");
                             this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
                             this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
                             this._setEditMode(this.EDIT_MODES.EDIT_MODE);
@@ -373,7 +419,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                             console.log("404 error.");
                             this.edstatsvc.setShowLPContent(true);
                             this.mdupdsvc.resetOriginal();
-                            this.statusbar.showMessage("", false)
+                            // this.statusbar.showMessage("", false)
                             this._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                         }
                     }
@@ -385,6 +431,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                 this.edstatsvc.setShowLPContent(true);
                 this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                 this.statusbar.showMessage("Authentication failed.");
+                // this.globalService.setMessage("Authentication failed.");
             }
         );
       }
@@ -533,9 +580,11 @@ export class EditControlComponent implements OnInit, OnChanges {
         return new Observable<boolean>(subscriber => {
             console.log("obtaining editing authorization");
             this.statusbar.showMessage("Authenticating/authorizing access...", true)
+            // this.globalService.setMessage("Authenticating/authorizing access...");
 
             this.authsvc.authorizeEditing(this.resID, nologin).subscribe(  // might cause redirect (see above)
                 (custsvc) => {
+                    // this.globalService.setMessage("");
                     this._custsvc = custsvc;    // could be null, indicating user is not authorized.
                     this.mdupdsvc._setCustomizationService(custsvc);
 
@@ -560,6 +609,7 @@ export class EditControlComponent implements OnInit, OnChanges {
 
                     console.log(msg);
                     this.statusbar.showMessage(msg, false); 
+                    // this.globalService.setMessage(msg);
 
                     if(authenticated){
                       subscriber.next(Boolean(this._custsvc));
@@ -576,6 +626,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                 (err) => {
                     let msg = "Failure during authorization: " + err.message;
                     this.statusbar.showMessage(msg, false); 
+                    // this.globalService.setMessage(msg);
                     console.error(msg);
                     this.msgsvc.syserror(msg);
                     subscriber.next(false);

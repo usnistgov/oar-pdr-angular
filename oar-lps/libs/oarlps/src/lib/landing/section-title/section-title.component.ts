@@ -14,6 +14,7 @@ export class SectionTitleComponent {
     colorScheme: Globals.ColorScheme;
     sectionWidth: number;
     backColor: string = '#003c97';
+    maxWidth: number = 1000;
 
     @Input() sectionTitle: string = "Hello"; 
     @Input() inBrowser: boolean = false;
@@ -27,6 +28,10 @@ export class SectionTitleComponent {
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
         });
+
+        this.globalService.watchLpsLeftWidth(width => {
+            this.maxWidth = width + 20;
+        })
     }
 
     ngOnInit(): void {

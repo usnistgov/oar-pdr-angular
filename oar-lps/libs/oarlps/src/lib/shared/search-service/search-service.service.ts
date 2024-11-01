@@ -47,6 +47,9 @@ export class SearchService {
         this.rmmBackend = cfg.get("locations.mdService", "/unconfigured");
         if (this.rmmBackend == "/unconfigured")
             throw new Error("mdService endpoint not configured!");
+
+        if (! this.rmmBackend.endsWith("/")) this.rmmBackend += "/";
+        this.portalBase = cfg.get("locations.portalBase", "/unconfigured");
     }
 
     /**
@@ -58,6 +61,17 @@ export class SearchService {
         return this.http.get(this.landingBackend);
     }
     
+    /**
+         * Signal clear all action.  
+         */
+    _clearAll : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public setClearAll(val : boolean) { 
+        this._clearAll.next(val); 
+    }
+    public watchClearAll(subscriber) {
+        this._clearAll.subscribe(subscriber);
+    }
+
     searchById(searchValue: string, browserside: boolean = false) {
         var backend: string = this.landingBackend;
 

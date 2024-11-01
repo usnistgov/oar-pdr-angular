@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Author } from '../author';
 import { AuthorService } from '../author.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 
 @Component({
   selector: 'lib-author-edit',
@@ -13,6 +14,7 @@ export class AuthorEditComponent implements OnInit {
     @Input() author: Author = new Author();
     @Input() backgroundColor: string = 'var(--editable)';
     @Input() editMode: string = "edit";
+    @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     
@@ -27,6 +29,9 @@ export class AuthorEditComponent implements OnInit {
         }
     }
     
+    get isAuthor() {
+        return this.fieldName == SectionPrefs.getFieldName(Sections.AUTHORS);
+    }
     /*
     *   Update full name when given name changed
     */

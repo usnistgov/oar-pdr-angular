@@ -34,7 +34,6 @@ export class AuthorListComponent implements OnInit {
     originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
     // forceReset: boolean = false;
     newAuthor: Author = {} as Author;
-    fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     placeholder: string = "Enter author data below";
     editBlockStatus: string = 'collapsed';
     orderChanged: boolean = false;
@@ -45,6 +44,7 @@ export class AuthorListComponent implements OnInit {
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
+    @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
     

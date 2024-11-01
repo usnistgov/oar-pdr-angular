@@ -1,7 +1,13 @@
 .edit-control-buttons {
     background-color: #153971;
     color: #FFFFFF; 
-    height: 3em;
+    height: 100px;
+}
+
+.science-theme-background {
+    width: 100%;
+    background-size: cover;
+    background-position-y: 25%;
 }
   
 .btn-label {
@@ -229,4 +235,10 @@ a:link, a:visited, a:hover, a:active {
     min-width: 500px !important;   
     width: 50% !important;
     min-height: 500px !important;
+}
+
+.science-theme-background {
+    width: 100%;
+    background-size: cover;
+    background-position-y: 25%;
 }

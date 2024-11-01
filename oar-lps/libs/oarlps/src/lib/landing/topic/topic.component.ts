@@ -126,6 +126,28 @@ export class TopicComponent implements OnInit {
         }
     }
 
+    isDefaultCollection(collection) {
+        return collection == Collections.DEFAULT;
+    }
+
+    showTopics(collection) {
+        //Always display NIST R&D, then only display the collection terms that the article is part of
+        if(this.isDefaultCollection(collection))
+            return true;
+        else {
+            //Loop through "isPartOf" field
+            if(this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
+            this.record['isPartOf'].length > 0) {
+                for(let c of this.record['isPartOf']) {
+                    return (c.title.toLowerCase().indexOf(collection.toLowerCase()) > -1)
+                }
+            }else{
+                return false;
+            }
+        }
+
+    }
+
     ngOnInit() {
         this.colorScheme = this.collectionService.getColorScheme(this.collection);
 

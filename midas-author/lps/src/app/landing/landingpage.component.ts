@@ -1,3 +1,4 @@
+// import { GlobalService } from './../../../../../oar-lps/libs/oarlps/src/lib/shared/globals/globals';
 import {
     Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef,
     PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef
@@ -13,7 +14,7 @@ import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
-import { Globals } from 'oarlps';
+import { Globals, GlobalService } from 'oarlps';
 import { CartService } from 'oarlps';
 import { DataCartStatus } from 'oarlps';
 import { CartConstants } from 'oarlps';
@@ -26,13 +27,14 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { CartActions } from 'oarlps';
 // import { initBrowserMetadataTransfer } from 'oarlps';
 import { MetricsData } from "oarlps";
-import { Themes, ThemesPrefs } from 'oarlps';
+import { Themes, ThemesPrefs, Collections } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { LandingpageService } from 'oarlps';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import { error } from 'console';
 import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
+import CollectionData from '../../assets/site-constants/collections.json';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -73,7 +75,7 @@ import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/s
         ]),
         trigger("togglesbar", [
             state('mainsquished', style({
-                "width": "{{help_width}}"}), {params: {help_width: '250px'}}
+                "width": "{{help_width}}"}), {params: {help_width: '450px'}}
             ),
             state('mainexpanded', style({
                 "width": "15px"
@@ -135,11 +137,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     bottomBarHeight: number = 170;
     showMetrics: boolean = false;
     recordType: string = "";
-    imageURL: string;
+    imageURL: string = 'assets/images/fingerprint.jpg';
     theme: string;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
-    hideToolMenu: boolean = false;
+    hideToolMenu: boolean = true;
 
     private _sbarvisible : boolean = true;
     sidebarVisible: boolean = true;
@@ -150,6 +152,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     // For help (sidebar)
     helpWidth: number = 300;
+    helpWidthDefault: number = 300;
     helpMode: string = "normal";
     helpMaxWidth: number = 500;
     helpMinWidth: number = 200;
@@ -166,6 +169,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     helpToggler: string = 'expanded';
     splitterPaddingTop: number = 0;
     pageYOffset: number = 0;
+    widthForSplitter: number = 60;
+    splitterX: number = 1000;
 
     scrollMaxHeight: number;
     wordMapping: any = wordMapping;
@@ -175,6 +180,15 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     public helpContentAll:{} = questionhelp;
     helpContentUpdated: boolean = false;
     collection: string = Globals.Collections.DEFAULT;
+    collectionObj: any;
+    displayBanner: boolean = true;
+    showStickMenu: boolean = false;
+
+    @HostListener('document:click', ['$event'])
+    documentClick(event: MouseEvent) {
+        event.stopPropagation();
+        this.showStickMenu = false;
+    }
 
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
@@ -185,6 +199,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     @ViewChild('stickyButton') btnElement: ElementRef;
     @ViewChild('stickyMenu') menuElement: ElementRef;
     @ViewChild('lpscontent') lpscontent: ElementRef;
+    @ViewChild('splitter') splitter: ElementRef;
 
     /**
      * create the component.
@@ -208,7 +223,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public metricsService: MetricsService,
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
-                public globalService: Globals.GlobalService,
+                public globalService: GlobalService,
                 public lpService: LandingpageService)
     {
         // Init the size of landing page body and the help box
@@ -220,6 +235,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
         this.getCollection();
+        this.loadBannerUrl();
 
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
@@ -238,13 +254,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
                 this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE || this.editMode == this.EDIT_MODES.REVISE_MODE);
 
-                if(!this.hideToolMenu) {
-                    this.mainBodyStatus = "mainsquished";
-                    this.prevLpsWidth = this.lpsWidth;
-                    this.lpsWidth = this.lpsWidthForPreview;
-                }else{
-                    this.lpsWidth = this.prevLpsWidth;
+                if( this.hideToolMenu && this.editMode != this.EDIT_MODES.PREVIEW_MODE && this.editMode != this.EDIT_MODES.VIEWONLY_MODE){
+                  this.helpWidth = this.helpWidthDefault;
                 }
+                this.setLpsWidth();
             });
 
             this.mdupdsvc.subscribe(
@@ -282,6 +295,29 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.globalService.setCollection(this.collection);
     }
 
+    loadBannerUrl() {
+        this.collectionObj = CollectionData[this.collection] as any;
+
+        switch(this.collection) {
+            case Collections.FORENSICS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
+            }
+            case Collections.SEMICONDUCTORS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
+            }
+            default: {
+                this.imageURL = "";
+                break;
+            }
+        }
+
+        setTimeout(() => {
+            // this.displayBanner = true;
+        }, 0);
+    }
+
     /**
      * initialize the component.  This is called early in the lifecycle of the component by
      * the Angular rendering infrastructure.
@@ -293,7 +329,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let metadataError = "";
         this.displaySpecialMessage = false;
         this.CART_ACTIONS = CartActions.cartActions;
-        this.imageURL = 'assets/images/fingerprint.jpg';
+        // this.imageURL = 'assets/images/METIS-Banner-Op1.png';
 
         // Only listen to storage change if we are not in edit mode
         if(this.inBrowser && !this.editEnabled){
@@ -657,6 +693,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.sidebarHeight = window.innerHeight - 250;
 
         if(this.inBrowser) {
+            if(this.splitter){
+              this.splitterX = this.splitter.nativeElement.offsetLeft + 6;
+            }
+
             //Set the position of the sticky menu (or menu button)
             setTimeout(() => {
                 this.setMenuPosition();
@@ -879,15 +919,26 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     updateSidebarStatus(sbarVisible) {
         this.sidebarVisible = sbarVisible;
-
+        let helpWidth = null;
         if(this.mobileMode){
+            this.helpWidth = 0;
+            this.lpsWidth = window.innerWidth;
             this.mainBodyStatus = "mainfullyexpanded";
         }else {
-            if(this.sidebarVisible)
-                this.mainBodyStatus = "mainsquished";
-            else
+            if(this.sidebarVisible){
+              this.helpWidth = window.innerWidth * 0.35;
+              this.lpsWidth = window.innerWidth - this.helpWidth - 140;
+
+              this.mainBodyStatus = "mainsquished";
+
+            }else{
+                this.helpWidth = window.innerWidth * 0.05;
+                this.lpsWidth = window.innerWidth * 0.95 - 0;
                 this.mainBodyStatus = "mainexpanded";
+            }
         }
+
+          this.updateScreenSize(0, helpWidth);
     }
 
     /**
@@ -898,28 +949,72 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.updateScreenSize();
     }
 
-    private updateScreenSize() {
+    private updateScreenSize(diff: number = 0, helpWidth: number=null) {
         setTimeout(() => {
             if(this.inBrowser){
-                this.helpMaxWidth = window.innerWidth / 2;
-                this.sidebarHeight = window.innerHeight - this.topBarHeight - 50;
-                this.pageYOffset = window.pageYOffset;
+              switch (this.mainBodyStatus){
+                case 'mainexpanded':
+                  // this.helpWidth = window.innerWidth * 0.05;
+                  // this.lpsWidth = window.innerWidth * 0.95;
+                  this.helpWidth = 50;
+                  this.lpsWidth = window.innerWidth;
+                  break;
+                case 'mainfullyexpanded':
+                  this.helpWidth = 0;
+                  this.lpsWidth = window.innerWidth;
+                  break;
+                default: //mainsquished
+                  // this.helpWidth = window.innerWidth - this.splitterX - 120;
+                  if(helpWidth) this.helpWidth = helpWidth;
+                  else this.helpWidth = this.helpWidth - diff;
+
+                  this.lpsWidth = window.innerWidth - this.helpWidth - 120;
+
+                  this.helpMaxWidth = window.innerWidth / 2;
+                  this.sidebarHeight = window.innerHeight - this.topBarHeight - 50;
+                  this.pageYOffset = window.pageYOffset;
+                  this.splitterPaddingTop = (window.innerHeight - this.topBarHeight) / 2 - 100;
+                  // this.helpWidth = window.innerWidth * 0.37;
+                  this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth;
+                  this.lpsWidthForPreview = window.innerWidth * .75;
+                  break;
+              }
+
+                // this.helpMaxWidth = window.innerWidth / 2;
+                // this.sidebarHeight = window.innerHeight - this.topBarHeight - 50;
+                // this.pageYOffset = window.pageYOffset;
                 this.updateSplitterHeight();
-                this.splitterPaddingTop = (window.innerHeight - this.topBarHeight) / 2 - 100;
-                this.helpWidth = window.innerWidth * 0.37;
-                this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth;
+                // this.splitterPaddingTop = (window.innerHeight - this.topBarHeight) / 2 - 100;
+                // this.helpWidth = window.innerWidth * 0.37;
+                // this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth;
 
-                this.setLpsWidth(this.helpWidth);
-                this.prevHelpWidth = this.helpWidth;
+                this.setLpsWidth();
 
-                this.lpsWidthForPreview = window.innerWidth * .75;
+                // this.lpsWidthForPreview = window.innerWidth * .75;
             }
         }, 0);
     }
 
 
-    setLpsWidth(helpWidth: number) {
-        this.lpsWidth = window.innerWidth - helpWidth - 140;
+    setLpsWidth() {
+      if(this.hideToolMenu){
+          this.lpsWidth = window.innerWidth - this.helpWidth - 140;
+          // this.globalService.setLpsLeftWidth(this.lpsWidth);
+          this.globalService.setLpsLeftWidth(this.lpsWidth - this.widthForSplitter);
+      }else{
+          // this.mainBodyStatus = "mainsquished";
+          this.prevLpsWidth = this.lpsWidth;
+          // this.lpsWidth = this.lpsWidthForPreview;
+
+          if(!this.mobileMode) {
+            this.lpsWidth = window.innerWidth - 450;
+          }
+          //Preview mode
+          //In preview mode, the width of the right side menu is 18% of of the page width
+          //So left side should be 80% of the page width (splitter also need some space)
+          this.globalService.setLpsLeftWidth(this.lpsWidth);
+      }
+
     }
 
     updateSplitterHeight() {
@@ -937,28 +1032,34 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
 
         if(this.mouseDragging) {
-            let diff = this.mouse.x - this.prevMouseX;
-            this.helpWidth = this.prevHelpWidth - diff;
-            this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth > this.helpMaxWidth? this.helpMaxWidth : this.helpWidth;
+          this.splitterX = this.mouse.x;
 
-            this.updateSidbarHeight();
-            this.setLpsWidth(this.helpWidth);
-            this.updateSplitterHeight();
+          let diff = this.mouse.x - this.prevMouseX;
+            // this.helpWidth = this.prevHelpWidth - diff;
+            // this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth > this.helpMaxWidth? this.helpMaxWidth : this.helpWidth;
+
+            // this.updateSidbarHeight();
+            // this.setLpsWidth(this.helpWidth);
+            // this.updateSplitterHeight();
 
             this.prevMouseX = this.mouse.x;
             this.prevHelpWidth = this.helpWidth;
+            this.updateScreenSize(diff, null);
         }
     }
 
     onMousedown(event) {
         this.prevMouseX = this.mouse.x;
         this.mouseDragging = true;
-
-
     }
 
     @HostListener('window:mouseup', ['$event'])
     onMouseUp(event) {
         this.mouseDragging = false;
+    }
+
+    toggleMenu(event){
+      event.stopPropagation();
+      this.showStickMenu = !this.showStickMenu
     }
 }

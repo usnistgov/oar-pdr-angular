@@ -21,6 +21,30 @@ export class GlobalService {
         this._collection.subscribe(subscriber);
     }    
 
+    /**
+     * Set/get the width of the left side landing page 
+     */
+    _lpsLeftWidth : BehaviorSubject<number> =
+        new BehaviorSubject<number>(600);
+    public setLpsLeftWidth(val : number) { 
+        this._lpsLeftWidth.next(val); 
+    }
+    public watchLpsLeftWidth(subscriber) {
+        this._lpsLeftWidth.subscribe(subscriber);
+    }  
+
+    /**
+     * Set/get the width of the left side landing page 
+     */
+    _message : BehaviorSubject<string> =
+        new BehaviorSubject<string>("");
+    public setMessage(val : string) { 
+        this._message.next(val); 
+    }
+    public watchMessage(subscriber) {
+        this._message.subscribe(subscriber);
+    }  
+
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
         let text = document.createElement("span"); 
         document.body.appendChild(text); 
@@ -275,6 +299,14 @@ export class Collection {
     taxonomyURI: string;
     color: ColorScheme;
     theme: CollectionThemes;
+}
+
+export interface ColorScheme {
+    default: string;
+    light: string;
+    lighter: string;
+    dark: string;
+    hover: string;
 }
 
 export interface CollectionThemes {

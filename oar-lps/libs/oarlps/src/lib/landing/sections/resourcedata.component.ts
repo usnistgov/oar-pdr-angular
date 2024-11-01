@@ -4,6 +4,7 @@ import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Themes, ThemesPrefs, ColorScheme } from '../../shared/globals/globals';
+import * as Globals from '../../shared/globals/globals'
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -44,6 +45,8 @@ export class ResourceDataComponent implements OnChanges {
     hasRights: boolean = true;
     colorScheme: ColorScheme;
     sectionTitle: string = "Data Access";
+    collection: string;
+    maxWidth: number = 1000;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -60,8 +63,17 @@ export class ResourceDataComponent implements OnChanges {
      * create an instance of the Identity section
      */
     constructor(private cfg: AppConfig,
+                public globalService: Globals.GlobalService,
                 private gaService: GoogleAnalyticsService)
-    { }
+    { 
+        this.globalService.watchCollection((collection) => {
+            this.collection = collection;
+        });
+
+        this.globalService.watchLpsLeftWidth(width => {
+            this.maxWidth = width + 20;
+        })
+    }
 
     ngOnInit(): void {
         this.recordType = (new NERDResource(this.record)).resourceLabel();

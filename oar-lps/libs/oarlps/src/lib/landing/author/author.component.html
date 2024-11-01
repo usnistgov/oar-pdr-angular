@@ -74,6 +74,14 @@
 </div>
 
 <!-- Author editor -->
-<div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
-    <lib-author-list #authorlist [record]="record" (dataChanged)="onAuthorChange($event)" (editmode)="setChildEditMode($event)"></lib-author-list>
+<div *ngIf="mdupdsvc.isEditMode" 
+    [@editExpand]="editBlockStatus" 
+    style = "width: 100%;" 
+    [style.overflow] = "overflowStyle">
+    <lib-author-list #authorlist 
+        [record]="record" 
+        [fieldName]="fieldName"
+        (dataChanged)="onAuthorChange($event)" 
+        (editmode)="setChildEditMode($event)">
+    </lib-author-list>
 </div>

@@ -66,7 +66,7 @@
     "topic": [
         {
             "@type": "Concept",
-            "scheme": "https://www.nist.gov/od/dm/nist-themes/v1.0",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/",
             "tag": "Information Technology: Biometrics"
         },
         {
@@ -131,9 +131,9 @@
           },
           {
             "tag": "Physics: Optical physics",
-            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/",
             "@type": "Concept"
-          }        
+          }
     ],
     "references": [
         {

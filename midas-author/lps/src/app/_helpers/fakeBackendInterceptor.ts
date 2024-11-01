@@ -31,6 +31,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // const biometricsData1: any  = require('../../assets/science-theme/SDB-300.json');
         // const biometricsData2: any  = require('../../assets/science-theme/SDB-301.json');
         const validateResponse: any  = require('../../assets/sample-data/validate_response.json');
+
+        const sampleCollection2: any = require('../../assets/sample-data/collectionTestData.json');
         // const dna1: any  = require('../../assets/science-theme/dna1.json');
         // const dna2: any  = require('../../assets/science-theme/dna2.json');
         // const dna3: any  = require('../../assets/science-theme/dna3.json');
@@ -41,6 +43,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         const emptyNerdm: any = require('../../assets/sample-data/nerdm-empty.json');
         const nerdm: any = require('../../assets/sample-data/nerdm2.json');
         const taxonomy: any = require('../../assets/sample-data/taxonomy-list.json');
+        const forensics: any = require('../../assets/sample-data/pdr0-0001.json');
+        const chips: any = require('../../assets/sample-data/pdr0-0002-new.json');
 
         // const testdata: any = {
         //     PageSize: 1,
@@ -97,7 +101,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
               "creatorisContact": true
             },
             "curators": [
-              
+
             ],
             "type": "dap"
         }
@@ -120,7 +124,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             //     return of(new HttpResponse({ status: 200, body: testdata }));
             // }
 
-            // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') 
+            // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET')
             // {
             //   console.log("Throw error...");
             //   throw new HttpErrorResponse(
@@ -139,14 +143,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // }
 
         // Generate bundle plan
-        //   if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST') 
+        //   if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST')
         //   {
         //     console.log("Record saved...");
         //     return of(new HttpResponse({ status: 200, body: bundlePlanRes }));
         //   }
 
         // Generate bundle plan internal error
-        // if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST') 
+        // if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST')
         // {
         //   console.log("Throw error...");
         //   throw new HttpErrorResponse(
@@ -160,7 +164,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // }
 
         // Generate bundle download internal error
-        //   if (request.url.indexOf('_bundle') > -1 && request.url.indexOf('_bundle_plan') <= 0 && request.method === 'POST') 
+        //   if (request.url.indexOf('_bundle') > -1 && request.url.indexOf('_bundle_plan') <= 0 && request.method === 'POST')
         //   {
         //     console.log("Throw error...");
         //     throw new HttpErrorResponse(
@@ -196,7 +200,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             let body: any = {
                 userDetails: {
                     userId: 'lnc9',
-                    userName: 'Chuan Lin',
+                    userName: 'Chuan',
                     userLastName: 'Lin',
                     userEmail: "chuan.lin@nist.gov"
                 },
@@ -214,9 +218,15 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //     );
         // }
 
-        
+        if (request.url.indexOf('od/id/test3') > -1 && request.method === 'GET') {
+            console.log("Getting collectionTestData.....")
+            return of(new HttpResponse({ status: 200, body: sampleCollection2 }));
+        }
 
-
+        // if (request.url.indexOf('oardev.nist.gov/od/id/pdr0-0002') > -1 && request.method === 'GET') {
+        //     console.log("Getting CHIPS pdr0-0002.....")
+        //     return of(new HttpResponse({ status: 200, body: pdr0_0002 }));
+        // }
         // midas test data
         // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'GET') {
         //     return of(new HttpResponse({ status: 200, body: emptyNerdm }));
@@ -225,7 +235,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'DELETE') {
         //     return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         // }
-        
+
         // if (request.url.indexOf('midas/dap/mdsx/test1') > -1 && request.method === 'PATCH') {
         //     return of(new HttpResponse({ status: 200, body: emptyNerdm }));
         // }
@@ -241,12 +251,22 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return of(new HttpResponse({ status: 200, body: request.body }));
         }
 
+        if (request.url.indexOf('midas/dap/mds3/pdr0-0001') > -1 && request.method === 'GET') {
+            this.toastrService.warning('You are using fake backend!', 'Warning!');
+            return of(new HttpResponse({ status: 200, body: forensics }));
+        }
+
+        if (request.url.indexOf('midas/dap/mds3/pdr0-0002') > -1 && request.method === 'GET') {
+          this.toastrService.warning('You are using fake backend!', 'Warning!');
+          return of(new HttpResponse({ status: 200, body: chips }));
+        }
+
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'GET') {
             this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
 
-        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PUT') {
+        if ((request.url.indexOf('midas/dap/mds3/test2') > -1 || request.url.indexOf('midas/dap/mds3/pdr0-0002') > -1 || request.url.indexOf('midas/dap/mds3/pdr0-0001') > -1) && request.method === 'PUT') {
             this.toastrService.warning('You are using fake backend!', 'Warning!');
             let requestBody = JSON.parse(request.body);
             if(Array.isArray(requestBody)) {
@@ -263,7 +283,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             // throw new HttpErrorResponse(
             //     {"status": 401}
             // );
-        }        
+        }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
             if(!this.alerted) {
@@ -272,8 +292,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             }
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
-        
-        if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'PATCH') {
+
+        if ((request.url.indexOf('midas/dap/mds3/test2') > -1  || request.url.indexOf('midas/dap/mds3/pdr0-0002') > -1  || request.url.indexOf('midas/dap/mds3/pdr0-0001') > -1) && request.method === 'PATCH') {
             if(!this.alerted) {
                 alert('You are using fake backend for authentication!');
                 this.alerted = true;
@@ -323,7 +343,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 })
             }
             return of(new HttpResponse({ status: 200, body: requestBody }));
-        }        
+        }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'DELETE') {
             if(!this.alerted) {
@@ -442,7 +462,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //     console.log("Handling /od/ds/_bundle:");
 
         //     const duplicate = request.clone({
-        // method: 'get' 
+        // method: 'get'
         //     })
         //     return next.handle(request);
         // }

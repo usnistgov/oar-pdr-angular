@@ -1,7 +1,10 @@
-<div class="editable_field" style="font-size: smaller;" *ngIf="isPartOf">
+<div class="editable_field" style="font-size: smaller;" *ngIf="isPartOf; else template">
     <i>Part of {{isPartOf[0]}} <a href="{{isPartOf[1]}}"
         title="view collection">{{isPartOf[2]}}</a> {{isPartOf[3]}}</i>
 </div>
+<ng-template #template>
+    Add to curated collection
+</ng-template>
 
 <!-- Control buttons -->
 <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">

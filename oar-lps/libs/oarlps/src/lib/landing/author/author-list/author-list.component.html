@@ -68,7 +68,14 @@
         <tr  style="width: 100%;">
             <!-- Text edit area -->
             <td class="edit-block" style="width: calc(100%-60px);">
-                <lib-author-edit [author]="currentAuthor" [backgroundColor]="editAreabackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onAutherChange($event)"></lib-author-edit>
+                <lib-author-edit 
+                    [author]="currentAuthor" 
+                    [fieldName]="fieldName"
+                    [backgroundColor]="editAreabackgroundColor" 
+                    [editMode]="editMode" 
+                    [forceReset]="forceReset" 
+                    (dataChanged)="onAutherChange($event)">
+                </lib-author-edit>
             </td>
 
             <!-- Control buttons -->

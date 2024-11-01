@@ -1,11 +1,10 @@
 import { Component, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
-import * as globals from '../../shared/globals/globals'
 import { animate, style, transition, trigger } from '@angular/animations';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, ColorScheme } from '../../shared/globals/globals';
-import { D3Service } from '../../shared/d3-service/d3.service';
+import { ColorScheme } from '../../shared/globals/globals';
+import * as Globals from '../../shared/globals/globals'
 
 /**
  * a component that lays out the "Description" section of a landing page which includes the prose 
@@ -37,6 +36,7 @@ export class ResourceDescriptionComponent implements OnChanges {
     recordType: string = "";
     titleSelected: boolean = false;
     colorScheme: ColorScheme;
+    maxWidth: number = 1000;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -46,15 +46,12 @@ export class ResourceDescriptionComponent implements OnChanges {
      * create an instance of the Identity section
      */
     constructor(private cfg: AppConfig, 
-                public lpService: LandingpageService, ) {
-        // this.lpService.watchCurrentSection((currentSection) => {
-        //     if(currentSection == globals.SectionPrefs.getFieldName(globals.Sections.DESCRIPTION)) {
-        //         this.titleSelected = true;
-        //         setTimeout(() => {
-        //             this.titleSelected = false;
-        //         }, 2000);
-        //     }
-        // });
+        public globalService: Globals.GlobalService,
+                public lpService: LandingpageService ) {
+
+                this.globalService.watchLpsLeftWidth(width => {
+                    this.maxWidth = width + 20;
+                })
     }
 
     ngOnInit(): void {
