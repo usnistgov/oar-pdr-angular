@@ -3,6 +3,7 @@ import { Author, Affiliation } from '../author';
 import { AuthorService } from '../author.service';
 import { NIST } from '../../../shared/globals/globals';
 import { SDSuggestion, SDSIndex, StaffDirectoryService } from 'oarng';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'lib-author-edit',
@@ -19,6 +20,7 @@ export class AuthorEditComponent implements OnInit {
     unitList: any[];
     //For people lookup - filter out from suggestions
     currentAuthors: SDSuggestion[];
+    showDeptMsg: boolean = false;
 
     @Input() author: Author;
     @Input() authors: Author[];
@@ -292,7 +294,13 @@ export class AuthorEditComponent implements OnInit {
      * Add a blank subunit to an affiliation
      * @param index index number of author's affiliation
      */
-    addSubunit(index: number) {
+    addSubunit(index: number, subunit: any) {
+        if(subunit.trim() == "") {
+            this.showDeptMsg = true;
+            setTimeout(() => {
+                this.showDeptMsg = false;
+            }, 5000);
+        }
         if(!this.author.affiliation[index].subunits) {
             this.author.affiliation[index].subunits = [];
         }

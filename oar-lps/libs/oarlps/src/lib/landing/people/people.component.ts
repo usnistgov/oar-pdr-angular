@@ -58,11 +58,7 @@ export class PeopleComponent {
                             if (this.index != null) {
                                 // pull out the matching suggestions
                                 this.suggestions = (this.index as SDSIndex).getSuggestions(ev.query);
-                                // this.suggestions = this.suggestions.filter((el) => {
-                                //     return this.existingPeople.some((f) => {
-                                //       return f.display === el.display;
-                                //     });
-                                //   });
+                                this.index = null;
                             }
                         },
                         error:(e) => {
@@ -103,7 +99,8 @@ export class PeopleComponent {
         if (selected) {
             this.ps.getOrgsFor(selected.id).subscribe({
                 next: (recs) => {
-                    this.selectedOrgs = recs;
+                    //Get first 3 units and then reverse the order
+                    this.selectedOrgs = recs.slice(0, 3).reverse();
                     this.dataChanged.next({"selectedPeopleOrg": JSON.parse(JSON.stringify(this.selectedOrgs)), action:"orgChanged"});
                     this.selectedSuggestion = null;
                 },

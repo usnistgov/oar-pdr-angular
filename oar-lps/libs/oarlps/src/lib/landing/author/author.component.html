@@ -40,8 +40,8 @@
                         </div>
                         <div *ngFor="let aff of author.affiliation" style="padding-left: 1em">
                             <i>
-                            <div>{{aff.title}}</div>
-                            <div *ngIf="aff.subunits">{{getSubunites(aff.subunits)}}</div>
+                                <div>{{aff.title}}</div>
+                                <div *ngIf="aff.subunits" style="margin-left: 1em;">{{getSubunites(aff.subunits)}}</div>
                             </i>
                         </div>
                     </div>
