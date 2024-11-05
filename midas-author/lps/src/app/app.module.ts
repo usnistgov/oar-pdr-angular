@@ -45,7 +45,7 @@ import { EditControlModule } from 'oarlps';
 
 import { OARngModule } from 'oarng';
 import { FrameModule } from 'oarng';
-import { WizardModule } from 'oarng';
+import { WizardModule, StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
@@ -88,7 +88,8 @@ enableProdMode();
         NgbModule,
         NerdmModule.forRoot(environment),
         ConfigModule.forRoot(environment),
-        EditControlModule.forRoot(environment)
+        EditControlModule.forRoot(environment),
+        StaffDirModule
     ],
     exports: [],
     providers: [

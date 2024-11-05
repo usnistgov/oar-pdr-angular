@@ -27,6 +27,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { IspartofModule } from '../ispartof/ispartof.module';
 import { D3Service } from '../../shared/d3-service/d3.service';
 import { SectionTitleModule } from '../section-title/section-title.module';
+import { PeopleModule } from '../people/people.module';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -79,6 +80,7 @@ import { SectionTitleModule } from '../section-title/section-title.module';
         NgbModule,
         IspartofModule,
         SectionTitleModule
+        PeopleModule
     ],
     declarations: [
         ResourceDataComponent,

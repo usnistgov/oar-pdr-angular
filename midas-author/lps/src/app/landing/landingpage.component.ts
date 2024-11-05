@@ -377,8 +377,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         break;
                     }
                 }
-                // if (param)
-                //     this.editRequested = (param.toLowerCase() == 'true');
 
                 // if editEnabled = true, we don't want to display the data that came from mdserver
                 // Will set the display to true after the authentication process. If authentication failed,
@@ -989,8 +987,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 // this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth;
 
                 this.setLpsWidth();
-
-                // this.lpsWidthForPreview = window.innerWidth * .75;
             }
         }, 0);
     }
@@ -1057,7 +1053,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     onMouseUp(event) {
         this.mouseDragging = false;
     }
-
+  
     toggleMenu(event){
       event.stopPropagation();
       this.showStickMenu = !this.showStickMenu

@@ -1,141 +1,188 @@
 <div id="author-details-outer" [style.background-color]="backgroundColor">
-        <table width="90%" align="center">
-            <!-- Given name
-              - Red * means this is a required field.
-            -->
-            <tr>
-                <td align="right" width="20%">
-                    <span style="margin-right: .5em;" ngbTooltip="This field is required">
-                        <span style="color:red;">*</span> Given Name:</span>
-                </td>
-                <td *ngIf="author">
-                    <input type="text" [(ngModel)]="author.givenName" class="text-input"
-                        (input)="onGivenNameChange($event.target.value)" />
-                </td>
-            </tr>
+    <table width="100%" align="center">
+        <!-- Given name
+            - Red * means this is a required field.
+        -->
 
-            <!-- Middle name -->
-            <tr>
-                <td align="right">
-                    <span style="margin-right: .5em;">Middle Name:</span>
-                </td>
-                <td *ngIf="author">
-                    <input type="text" [(ngModel)]="author.middleName" class="text-input"
-                        (input)="onMiddleNameChange(author, $event.target.value)" />
-                </td>
-            </tr>
-
-            <!-- Family name
-              - Red * means this is a required field.
-              -->
-            <tr>
-                <td align="right">
-                    <span style="margin-right: .5em;" ngbTooltip="This field is required"><span
-                            style="color:red;">*</span> Family Name:</span>
-                </td>
-                <td *ngIf="author">
-                    <input type="text" [(ngModel)]="author.familyName" class="text-input"
-                        (input)="onFamilyNameChange(author, $event.target.value)" />
-                </td>
-            </tr>
-
-            <!-- Full name to display in the landing page
-              - Red * means this is a required field.
-              - By default, full name is Given Name + Middle Name + Family Name. But user can it to whatever they want. Once user changes this field, the lock at the right side will be locked. Click on the lock will toggle the lock. If it's locked, user can change the value. When it's unlocked, the default value will display.
-              -->
-            <tr>
-                <td width="15%" align="right">
-                    <span style="margin-right: .5em;white-space: nowrap;" ngbTooltip="This field is required"><span
-                            style="color:red;">*</span> Name (as displayed)</span>
-                </td>
-                <td align="left" *ngIf="author">
-                    <input type="text" [(ngModel)]="author.fn" class="text-input-right-button"
-                        style="margin-right: 5px;"
-                        (input)="onFullNameChange(author, $event.target.value)" />
-                    <i *ngIf="!author.fnLocked" class="faa faa-unlock" (click)="author.fnLocked = !author.fnLocked"
-                        style="cursor:pointer;" ngbTooltip="Allow full name been updated automatically"></i>
-                    <i *ngIf="author.fnLocked" class="faa faa-lock" (click)="author.fnLocked = !author.fnLocked"
-                        style="cursor:pointer;" ngbTooltip="Prevent full name from been updated automatically"></i>
-                </td>
-            </tr>
-
-            <!-- ORCID 
-              - Allows user to enter ORCID
-              - The icon to the right will open official ORCID home page 
-            -->
-            <tr *ngIf="isAuthor">
-                <td align="right">
-                    <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
-                            style="color:green;">*</span> ORCID:</span>
-                </td>
-                <td align="left" *ngIf="author">
-                    <input type="text" [(ngModel)]="author.orcid" id="orcid-input" (blur)="validateOrcid(author)" (ngModelChange)="validateOrcid(author)" placeholder="####-####-####-####" style="margin-right: 5px; " class="text-input-right-button"/>
-
-                    <a href="https://orcid.org" target="blank">
-                        <img src="assets/images/orcid-logo.png" style="width: 20px;margin-left: 5px;" ngbTooltip="Visit orcid.org">
-                    </a>
-
-                    <!-- <div *ngIf="!author.orcidValid" id="orcid-warning">
-                        <i>Please enter valid ORCID. <p>Examples: 0000-1832-8812-1125, 0030-0422-1347-101X</i>
-                    </div> -->
-                </td>
-            </tr>
-
-            <tr *ngIf="isAuthor && !orcidValid">
-                <td></td>
-                <td align="left">
-                    <div id="orcid-warning">
-                        <i>Please enter valid ORCID. <p>Examples: 0000-1832-8812-1125, 0030-0422-1347-101X</i>
+        <tr>
+            <td align="right" width="20%">
+                <span style="margin-right: .5em;" ngbTooltip="People lookup">
+                    NIST People Lookup:</span>
+            </td>
+            <td>
+                <div style="width: 100%; padding-right: 1em; margin-bottom: 20px;margin-top: 10px;">
+                    <div style="margin: -15px -10px 15px 10px;">
+                        <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
                     </div>
-                </td>
-            </tr>
+                </div>
 
-            <!-- Affiliation management -->
-            <tr *ngIf="isAuthor">
-                <td align="right" style="vertical-align: top;">
-                    <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
-                            style="color:green;">*</span> Affiliations:</span>
-                </td>
-                <td style="border: 1px solid lightgrey;" *ngIf="author">
-                    <!-- Add button -->
-                    <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add affiliation" style="float: right;margin: 5px;">
-                        <i class="faa faa-plus faa-lg"></i>
-                    </button>
+            </td>
+        </tr>
+        <tr>
+            <td align="right" width="20%">
+                <span style="margin-right: .5em;" ngbTooltip="This field is required">
+                    <span style="color:red;">*</span> Given Name:</span>
+            </td>
+            <td *ngIf="author">
+                <div style="width: 100%; padding-right: 1em;">
+                    <input type="text" [(ngModel)]="author.givenName" class="text-input"
+                    (input)="onGivenNameChange($event.target.value)" />
+                </div>
+            </td>
+        </tr>
 
-                    <div class="text-input-right-button" style="margin-left: 10px;">
-                        <div *ngFor="let aff of author.affiliation; let j = index; trackBy: trackByFn"
-                        style="width:100%; margin: 0em 0em .5em 0em;">
-                            <div style="width: 100%; background-color: rgb(248, 246, 237)">
-                                <div style="float: left; width: calc(100% - 2em); margin-left: .5em;">
-                                    <table>
-                                        <tr>
-                                            <td width="10%" align="right">Organization Name:</td>
-                                            <td colspan="2">
-                                                <combo-box [dataList]="affiliationList" [columnName]="'name'"
-                                                    [(controlField)]="author.affiliation[j].title"
-                                                    (controlFieldChange)="affiliationNameChanged($event, i)">
-                                                </combo-box>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td width="10%" align="right" valign="center">Department/Division:</td>
-                                            <td>
-                                                <input type="text" [(ngModel)]="author.affiliation[j].subunits[0]"
-                                                    style="width: 100%;height:2em;"
-                                                    (input)="onDeptChange(author)" />
-                                            </td>
-                                            <td width="2em">
-                                                <i class="fas fa-trash-alt" (click)="deleteAffiliation(i, aff)"
-                                                style="float: right;cursor: pointer;color:grey; margin: 1em .5em;" data-toggle="tooltip"
-                                                title="Delete affiliation"></i>
-                                            </td>
-                                        </tr>
-                                    </table>
+        <!-- Middle name -->
+        <tr>
+            <td align="right">
+                <span style="margin-right: .5em;">Middle Name:</span>
+            </td>
+            <td *ngIf="author">
+                <div style="width: 100%; padding-right: 1em;">
+                    <input type="text" [(ngModel)]="author.middleName" class="text-input"
+                    (input)="onMiddleNameChange(author, $event.target.value)" />
+                </div>
+            </td>
+        </tr>
+
+        <!-- Family name
+            - Red * means this is a required field.
+            -->
+        <tr>
+            <td align="right">
+                <span style="margin-right: .5em;" ngbTooltip="This field is required"><span
+                        style="color:red;">*</span> Family Name:</span>
+            </td>
+            <td *ngIf="author">
+                <div style="width: 100%; padding-right: 1em;">
+                    <input type="text" [(ngModel)]="author.familyName" class="text-input"
+                    (input)="onFamilyNameChange(author, $event.target.value)" />
+                </div>
+            </td>
+        </tr>
+
+        <!-- Full name to display in the landing page
+            - Red * means this is a required field.
+            - By default, full name is Given Name + Middle Name + Family Name. But user can it to whatever they want. Once user changes this field, the lock at the right side will be locked. Click on the lock will toggle the lock. If it's locked, user can change the value. When it's unlocked, the default value will display.
+            -->
+
+        <tr>
+            <td width="15%" align="right">
+                <span style="margin-right: .5em;white-space: nowrap;" ngbTooltip="This field is required"><span
+                        style="color:red;">*</span> Name (as displayed)</span>
+            </td>
+            <td align="left" *ngIf="author">
+                <input type="text" [(ngModel)]="author.fn" class="text-input-right-button"
+                    style="margin-right: 5px;"
+                    (input)="onFullNameChange(author, $event.target.value)" />
+                <i *ngIf="!author.fnLocked" class="faa faa-unlock" (click)="author.fnLocked = !author.fnLocked"
+                    style="cursor:pointer;" ngbTooltip="Allow full name been updated automatically"></i>
+                <i *ngIf="author.fnLocked" class="faa faa-lock" (click)="author.fnLocked = !author.fnLocked"
+                    style="cursor:pointer;" ngbTooltip="Prevent full name from been updated automatically"></i>
+            </td>
+        </tr>
+
+        <!-- ORCID 
+            - Allows user to enter ORCID
+            - The icon to the right will open official ORCID home page 
+        -->
+        <tr>
+            <td align="right">
+                <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
+                        style="color:green;">*</span> ORCID:</span>
+            </td>
+            <td align="left" *ngIf="author">
+                <input type="text" [(ngModel)]="author.orcid" id="orcid-input" (blur)="validateOrcid(author)" (ngModelChange)="validateOrcid(author)" placeholder="####-####-####-####" style="margin-right: 5px; " class="text-input-right-button"/>
+
+                <a href="https://orcid.org" target="blank">
+                    <img src="assets/images/orcid-logo.png" style="width: 20px;margin-left: 5px;" ngbTooltip="Visit orcid.org">
+                </a>
+
+                <!-- <div *ngIf="!author.orcidValid" id="orcid-warning">
+                    <i>Please enter valid ORCID. <p>Examples: 0000-1832-8812-1125, 0030-0422-1347-101X</i>
+                </div> -->
+            </td>
+        </tr>
+
+        <tr *ngIf="!orcidValid">
+            <td></td>
+            <td align="left">
+                <div id="orcid-warning">
+                    <i>Please enter valid ORCID. <p>Examples: 0000-1832-8812-1125, 0030-0422-1347-101X</i>
+                </div>
+            </td>
+        </tr>
+
+        <!-- Affiliation management -->
+        <tr>
+            <td align="right" style="vertical-align: top;padding-top: 7px;">
+                <span style="margin-right: .5em;" ngbTooltip="This field is recommended"><span
+                        style="color:green;">*</span> Affiliations:</span>
+            </td>
+            <td align="left" *ngIf="author">
+                <!-- Add button -->
+                <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add affiliation" style="float: right;margin: 5px;">
+                    <i class="faa faa-plus faa-lg"></i>
+                </button>
+
+                <div class="text-input-right-button" style="margin-left: 10px;border: 1px solid lightgrey;height:fit-content;min-height: 30px;">
+                    <div *ngFor="let aff of author.affiliation; let j = index; trackBy: trackByFn"
+                    style="margin: .5em;">
+                        <div class="p-inputgroup" style="background-color: rgb(240, 240, 240);border-radius: 5px 5px 0px 0px;border: 1px solid lightgrey">
+                            <span class="p-inputgroup-addon org-label">Organization Name:</span>
+                            <div class="p-inputgroup" style="width: 75%;margin-right: .5em;">
+                                <input 
+                                type="text" 
+                                [(ngModel)]="aff.title"
+                                class="org-input"
+                                (click)="$event.target.select()" 
+                                (input)="affiliationNameChanged($event)"
+                                placeholder="Please enter organization name" />
+
+                                <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
+                                    <i class="fas fa-trash-alt" (click)="deleteAffiliation(aff)"
+                                    style="cursor: pointer;" data-toggle="tooltip"
+                                    title="Delete affiliation"></i>
+                                </span>
+                            </div>
+
+                        </div>
+
+                        <div class="p-inputgroup" style="border-radius: 0px 0px 5px 5px;border: 1px solid lightgrey">
+                            <span class="p-inputgroup-addon unit-label">Department/Division:</span>
+                            <div style="width: 75%;margin-right: .5em;">
+                                <div *ngIf="aff && aff.subunits && aff.subunits.length > 0" style="width: 100%;margin: .5em .5em .5em 0;">
+                                    <div *ngFor="let unit of aff.subunits; let i = index;" class="p-inputgroup" style="height: 2em; margin-bottom: 10px;width: 100%;">
+                                        <input 
+                                            type="text" 
+                                            [ngModel]="unit" 
+                                            (keyup.enter)="onDeptChange($event, j, i)" 
+                                            (blur)="onDeptChange($event, j, i)"
+                                            (click)="$event.target.select()" 
+                                            style="width: 100%;height:2em;"
+                                            placeholder="Please enter department/Division name" />
+
+                                        <span *ngIf="i==aff.subunits.length-1" class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
+                                            <i class="fas fa-plus fa-sm" (click)="addSubunit(j, aff.subunits[i])"
+                                            style="cursor: pointer;" data-toggle="tooltip"
+                                            title="Add subunit"></i>
+                                        </span>                                            
+                                            
+                                        <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
+                                            <i class="fas fa-trash-alt" (click)="deleteUnit(j, aff.subunits[i])"
+                                            style="cursor: pointer;" data-toggle="tooltip"
+                                            title="Delete subunit"></i>
+                                        </span>
+
+                                    </div>
+                                    <div style="color: red;" *ngIf="showDeptMsg">Please enter department/division name.</div>
                                 </div>
                             </div>
                         </div>
+
+
                     </div>
-                </td>
-            </tr>
-        </table>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>

@@ -65,6 +65,8 @@ export class GlobalService {
     }
 }
 
+export const NIST = "National Institute of Standards and Technology";
+
 export const GENERAL = "general";
 
 export class Themes {
