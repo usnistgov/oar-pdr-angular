@@ -149,7 +149,6 @@ export class EditControlComponent implements OnInit, OnChanges {
         // });
 
         this.arrRevisionTypes = REVISION_TYPES["default"];
-        console.log('this.arrReviseTypes', this.arrRevisionTypes);
         // set edit mode to view only on init
         // this._setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
         this.ngOnChanges();
@@ -173,17 +172,14 @@ export class EditControlComponent implements OnInit, OnChanges {
         })
 
         this.edstatsvc.watchReviseType((revisionType) => {
-            console.log("edit controls recived reviseType", revisionType);
             this.revisionType = revisionType;
         })
         
         this.edstatsvc.watchEditMode((editMode) => {
-            console.log("edit controls recived editmode", editMode);
             this._editMode = editMode;
         })
 
         this.edstatsvc.watchEditType((editType) => {
-            console.log("edit controls recived edittype", editType);
             this._editType = editType;
         })
 
@@ -252,10 +248,9 @@ export class EditControlComponent implements OnInit, OnChanges {
         return this._editMode == this.EDIT_MODES.EDIT_MODE && this._editType == this.EDIT_TYPES.REVISE;
     }
 
-    setReviseType(type: any) {
-        console.log("Revise type selected ============", type.target.value);
+    // setReviseType(type: any) {
         // this.edstatsvc.setReviseType(type.type);
-    }
+    // }
 
     /**
      * flag indicating whether the current editing mode of the landing page.  
@@ -416,7 +411,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     {
                         if(err.statusCode == 404)
                         {
-                            console.log("404 error.");
+                            console.error("404 error.");
                             this.edstatsvc.setShowLPContent(true);
                             this.mdupdsvc.resetOriginal();
                             // this.statusbar.showMessage("", false)
@@ -427,7 +422,7 @@ export class EditControlComponent implements OnInit, OnChanges {
               }
             },
             (err) => {
-                console.log("Authentication failed.");
+                console.error("Authentication failed.");
                 this.edstatsvc.setShowLPContent(true);
                 this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                 this.statusbar.showMessage("Authentication failed.");

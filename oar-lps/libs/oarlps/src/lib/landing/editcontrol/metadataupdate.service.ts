@@ -214,7 +214,7 @@ export class MetadataUpdateService {
             body = JSON.stringify(this.currentRec);
             updateWholeRecord = true;
         }
-        console.log("Updating server - body", body);
+
         return new Promise<boolean>((resolve, reject) => {
             // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
             this.custsvc.updateMetadata(body, updateWholeRecord?undefined:fieldName, id, subsetnameAPI).subscribe({
@@ -340,7 +340,6 @@ export class MetadataUpdateService {
         let key = id? subsetname + id : subsetname;
         let fieldName = subsetname.split("-")[0];
 
-        console.log("undo id", id);
         if (!subsetname || !this.origfields) {
             // Nothing to undo!
             console.warn("Undo called on " + subsetname + ": nothing to undo");
@@ -375,8 +374,6 @@ export class MetadataUpdateService {
 
             // undo specific id
             if(id){
-                console.log("Undo id:", id);
-                console.log("this.originalDraftRec[subsetname]:", this.originalDraftRec[fieldName]);
                 if(this.originalDraftRec[fieldName]) {
                     let index = this.originalDraftRec[fieldName].findIndex(x => x["@id"] == id);
                     if(index >= 0) {
@@ -391,7 +388,6 @@ export class MetadataUpdateService {
 
                 // Locate the current rec because the index may not be the same as in original record
                 if(this.currentRec[fieldName]){
-                    console.log("Locate the current rec", this.currentRec);
                     let currentElementIndex = this.currentRec[fieldName].findIndex(x => x["@id"] == id);
 
                     if(this.originalDraftRec[fieldName]){
@@ -408,7 +404,6 @@ export class MetadataUpdateService {
                 delete this.origfields[key];
 
             }else {    // undo the whole subset
-                console.log("undo the whole subset", this.originalDraftRec);
                 if(originalValue) {
                     postMsg = originalValue;
                 }else {
@@ -434,12 +429,9 @@ export class MetadataUpdateService {
 
             if(postMsg){
                 let body = JSON.stringify(postMsg);
-                console.log("Post message:", body);
 
                 this.custsvc.updateMetadata(body, updateWholeRecord?undefined:fieldName, id, subsetnameAPI).subscribe({
                     next: (res) => {
-                        console.log("Update return:", res);
-                        console.log("Emitting mdres(this.currentRec):", this.currentRec);
                         this.updateInMemoryRec(res, fieldName, id, updateWholeRecord);
                         this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                         // this.mdres.next(res as NerdmRes);
@@ -842,7 +834,7 @@ export class MetadataUpdateService {
                     subscriber.complete();
                 },
                 error: (err) => {
-                  console.log("err", err);
+                  console.error("err", err);
                   
                   if(err.statusCode == 404)
                   {
@@ -883,7 +875,7 @@ export class MetadataUpdateService {
                     subscriber.complete();
                 },
                 error: (err) => {
-                  console.log("err", err);
+                  console.error("err", err);
                   
                   if(err.statusCode == 404)
                   {
@@ -921,7 +913,7 @@ export class MetadataUpdateService {
                     subscriber.complete();
                 },
                 error: (err) => {
-                  console.log("err", err);
+                  console.error("err", err);
                   
                   if(err.statusCode == 404)
                   {

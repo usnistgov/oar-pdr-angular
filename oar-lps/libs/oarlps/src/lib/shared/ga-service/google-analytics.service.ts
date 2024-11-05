@@ -62,7 +62,6 @@ export class GoogleAnalyticsService {
             let scriptId = '_fed_an_ua_tag';
 
             if (document.getElementById(scriptId)) {
-                console.log("Found GA id.");
                 document.getElementById(scriptId).remove();
             }
 

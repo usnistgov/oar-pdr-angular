@@ -60,7 +60,7 @@ export class SearchfieldsListService {
                 subscriber.complete();
             },
             (error) => {
-                console.log(error);
+                console.error(error);
                 subscriber.next(error);
                 subscriber.complete();
             }

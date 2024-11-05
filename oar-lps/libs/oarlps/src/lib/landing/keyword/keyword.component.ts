@@ -161,13 +161,11 @@ export class KeywordComponent implements OnInit {
     }
 
     onAdd(event) {
-        console.log("On add", event);
         this.dataChanged = true;
         this.keywordInit(); 
     }
 
     onRemove(event) {
-        console.log("On remove", event);
         this.dataChanged = true;
         this.keywordInit(); 
     }

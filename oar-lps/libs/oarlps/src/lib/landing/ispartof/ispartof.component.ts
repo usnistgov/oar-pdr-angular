@@ -196,7 +196,6 @@ export class IspartofComponent implements OnInit {
     }
 
     colChanged(event) {
-        console.log("event", event.target.value);
         this.selectedCollection = event.target.value;
         this.dataChanged = true;
     }

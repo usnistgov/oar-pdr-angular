@@ -79,7 +79,7 @@ import { PeopleModule } from '../people/people.module';
         VisithomeModule,
         NgbModule,
         IspartofModule,
-        SectionTitleModule
+        SectionTitleModule,
         PeopleModule
     ],
     declarations: [

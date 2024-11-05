@@ -136,9 +136,7 @@ export class ResultlistComponent implements OnInit {
     }
 
     onSelected(event) {
-        console.log("event", event.target.value);
         this.currentPage = this.pages.filter(p => p.name == event.target.value)[0];
-        console.log("this.currentPage", this.currentPage);
     }
 
     /**

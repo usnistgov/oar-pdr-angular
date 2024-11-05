@@ -46,7 +46,6 @@ describe('LandingPageComponent', () => {
     ];
 
     beforeEach(() => {
-        console.log('environment', environment);
         cfg = (new AngularEnvironmentConfigService(environment, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";

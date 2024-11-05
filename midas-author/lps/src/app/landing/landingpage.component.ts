@@ -347,7 +347,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         if (this.editEnabled) {
             this.route.queryParamMap.subscribe(queryParams => {
                 let param = queryParams.get("editmode");
-                console.log('param', param);
                 switch(param.toLowerCase()) {
                     case "revise": {
                         this.editRequested = true;
@@ -401,8 +400,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     next: (data) => {
                         // successful metadata request
                         this.md = data as NerdmRes;
-                        console.log("this.md", this.md);
-                        // this.midasRecord = data;
 
                         if (!this.md) {
                             // id not found; reroute
@@ -1053,7 +1050,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     onMouseUp(event) {
         this.mouseDragging = false;
     }
-  
+
     toggleMenu(event){
       event.stopPropagation();
       this.showStickMenu = !this.showStickMenu

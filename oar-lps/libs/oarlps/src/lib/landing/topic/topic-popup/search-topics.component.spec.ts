@@ -92,7 +92,6 @@ describe('SearchTopicsComponent', () => {
 
     it('First topic should be Bioscience: Genomic measurements', () => {
         component.returnValue.subscribe((value) => {
-            console.log("value", value);
             outputValue = value;
         });
 

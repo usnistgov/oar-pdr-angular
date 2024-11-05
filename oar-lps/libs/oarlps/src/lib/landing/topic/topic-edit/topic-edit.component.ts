@@ -80,8 +80,6 @@ export class TopicEditComponent implements OnInit {
      * @param changes 
      */
     ngOnChanges(changes: SimpleChanges): void {
-        console.log("selectedTopics", this.selectedTopics);
-
         // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
 
         // for(let obj of this.selectedTopicObjs) {

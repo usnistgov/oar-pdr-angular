@@ -57,7 +57,6 @@ export class SearchService {
      */
     testdata(): Observable<any> {
         //"http://localhost:4200/assets/sampledata.json"
-        console.log("Test service here:" + this.landingBackend);
         return this.http.get(this.landingBackend);
     }
     

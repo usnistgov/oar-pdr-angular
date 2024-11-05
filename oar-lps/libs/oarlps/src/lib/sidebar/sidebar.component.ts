@@ -170,7 +170,6 @@ export class SidebarComponent implements OnInit {
             this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
 
         this.suggustedSections = this.sidebarService.getSuggestions(this.record, this.resourceType);
-        console.log('this.suggustedSections', this.suggustedSections);
         // this.required = this.suggustedSections['required'];
         // this.recommended = this.suggustedSections['recommended'];
         // this.niceToHave = this.suggustedSections['niceToHave'];

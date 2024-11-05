@@ -159,7 +159,6 @@ export class TextEditComponent implements OnInit {
     }
 
     cust() {
-        console.log('this.custBtnFunc', this.custBtnFunc);
         eval('this.'+this.custBtnFunc);
     }
 
