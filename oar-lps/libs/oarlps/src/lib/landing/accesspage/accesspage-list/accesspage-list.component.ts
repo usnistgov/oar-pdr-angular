@@ -281,6 +281,7 @@ export class AccesspageListComponent implements OnInit {
     onDataChange(event) {
         this.accessPages[this.currentApageIndex] = JSON.parse(JSON.stringify(event.accessPage));
         this.accessPages[this.currentApageIndex].dataChanged = event.dataChanged;
+        this.currentApage = this.accessPages[this.currentApageIndex];
     }
 
     /**

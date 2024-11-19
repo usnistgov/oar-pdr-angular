@@ -54,10 +54,6 @@ export class Author {
         this.fnLocked = false;
         this.dataChanged = false;
     }  
-    
-    updateFullName() {
-        this.fn = this.givenName + " " + (this.middleName == undefined ? "" : this.middleName + " ") + (this.familyName == undefined ? "" : this.familyName);
-    }
 }
 
 

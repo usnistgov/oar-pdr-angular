@@ -4,6 +4,7 @@ import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../..
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { Author } from '../author';
+import { AuthorService } from '../author.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import {
     CdkDragDrop,
@@ -60,6 +61,7 @@ export class AuthorListComponent implements OnInit {
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
+                private authorService: AuthorService,
                 public lpService: LandingpageService) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
@@ -573,11 +575,12 @@ export class AuthorListComponent implements OnInit {
                     this.record[this.fieldName] = [];
                 }
 
-                let newAuthor: Author = {} as Author;
+                // let newAuthor: Author = {} as Author;
+                let newAuthor: Author = new Author("", "", "", "", [this.authorService.getBlankAffiliation("")])
                 newAuthor["isNew"] = true;
-                newAuthor["familyName"] = "";
-                newAuthor["givenName"] = "";
-                newAuthor["fn"] = "";
+                // newAuthor["familyName"] = "";
+                // newAuthor["givenName"] = "";
+                // newAuthor["fn"] = "";
 
                 this.record[this.fieldName].push(newAuthor);
                 

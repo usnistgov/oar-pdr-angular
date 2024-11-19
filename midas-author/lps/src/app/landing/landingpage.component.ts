@@ -257,7 +257,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 if( this.hideToolMenu && this.editMode != this.EDIT_MODES.PREVIEW_MODE && this.editMode != this.EDIT_MODES.VIEWONLY_MODE){
                   this.helpWidth = this.helpWidthDefault;
                 }
-                this.setLpsWidth();
+                // this.setLpsWidth();
             });
 
             this.mdupdsvc.subscribe(
@@ -392,9 +392,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.mdupdsvc.authsvc.authorizeEditing(this.reqId).subscribe({
             next: (custsvc) => {
                 this.mdupdsvc._setCustomizationService(custsvc);
-                this.mdupdsvc.validate().subscribe(response => {
-                    this.lpService.setSubmitResponse(response as Globals.SubmitResponse);
-                })
+                // this.mdupdsvc.validate().subscribe(response => {
+                //     this.lpService.setSubmitResponse(response as Globals.SubmitResponse);
+                // })
 
                 this.mdupdsvc.loadDraft().subscribe({
                     next: (data) => {
@@ -991,7 +991,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     setLpsWidth() {
       if(this.hideToolMenu){
-          this.lpsWidth = window.innerWidth - this.helpWidth - 140;
+          this.lpsWidth = window.innerWidth - this.helpWidth - 160;
           // this.globalService.setLpsLeftWidth(this.lpsWidth);
           this.globalService.setLpsLeftWidth(this.lpsWidth - this.widthForSplitter);
       }else{

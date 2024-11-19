@@ -53,7 +53,8 @@ export class TopicComponent implements OnInit {
     @ViewChild('topic') topicEditComp: TopicEditComponent;
 
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
-    fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
+    // fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
+    fieldName = "theme";
     editMode: string = MODE.NORNAL; 
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
@@ -192,10 +193,17 @@ export class TopicComponent implements OnInit {
         this.editCollection = collection;
         this.editScheme = this.allCollections[this.editCollection].taxonomyURI;
         this.selectedTopics = [];
-        for(let obj of this.topics[collection]) {
-            this.selectedTopics.push(obj.tag);
-        } 
+        //For new topic structure
+        // if(this.topics && this.topics[collection]) {
+        //     for(let obj of this.topics[collection]) {
+        //         this.selectedTopics.push(obj.tag);
+        //     } 
+        // }
 
+        //For old topic structure (theme)
+        for(let topic of this.topics["NIST"]) {
+            this.selectedTopics.push(topic);
+        } 
         this.setMode(MODE.EDIT);
     }
 
@@ -244,7 +252,7 @@ export class TopicComponent implements OnInit {
     /**
      * Restore topics to Nerdm format
      */
-    restoreTopics(inputTopics: any) {
+    restoreTopics_for_collection(inputTopics: any) {
         let topics: any[] = [];
 
         for(let col of this.collectionOrder) {
@@ -252,6 +260,22 @@ export class TopicComponent implements OnInit {
                 for(let topic of inputTopics[col]) {
                     topics.push(topic);
                 }
+            }
+        }
+
+        return topics;
+    }
+
+    /**
+     * Restore topics to Nerdm format
+     */
+    restoreTopics(inputTopics: any) {
+        let topics: any[] = [];
+        let col = "NIST";
+
+        if(inputTopics[col] && inputTopics[col].length > 0) {
+            for(let topic of inputTopics[col]) {
+                topics.push(topic);
             }
         }
 
@@ -413,19 +437,28 @@ export class TopicComponent implements OnInit {
         this.topics = {};
         if(this.record) {
             if (this.record[this.fieldName]) {
-                this.record[this.fieldName].forEach(topic => {
-                    if (topic['scheme'] && topic.tag) {
-                        for(let col of this.collectionOrder) {
-                            if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
-                                if(!this.topics[col]) {
-                                    this.topics[col] = [topic];
-                                }else if(this.topics[col].indexOf(topic) < 0) {
-                                    this.topics[col].push(topic);
-                                }
-                            }
-                        }
+                //For new topic structure
+                // this.record[this.fieldName].forEach(topic => {
+                //     if (topic['scheme'] && topic.tag) {
+                //         for(let col of this.collectionOrder) {
+                //             if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                //                 if(!this.topics[col]) {
+                //                     this.topics[col] = [topic];
+                //                 }else if(this.topics[col].indexOf(topic) < 0) {
+                //                     this.topics[col].push(topic);
+                //                 }
+                //             }
+                //         }
+                //     }
+                // });
 
-                    }
+                //For old topic (under theme field)
+                this.record[this.fieldName].forEach(topic => {
+                    if(!this.topics["NIST"]) {
+                            this.topics["NIST"] = [topic];
+                        }else if(this.topics["NIST"].indexOf(topic) < 0) {
+                            this.topics["NIST"].push(topic);
+                        }
                 });
             }
         }

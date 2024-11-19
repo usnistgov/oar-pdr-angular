@@ -115,9 +115,9 @@ export class TitleComponent implements OnInit {
                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
                     this.setMode(MODE.NORNAL, refreshHelp);
                     //Validate
-                    this.mdupdsvc.validate().subscribe(response => {
-                        this.lpService.setSubmitResponse(response as SubmitResponse);
-                    })
+                    // this.mdupdsvc.validate().subscribe(response => {
+                    //     this.lpService.setSubmitResponse(response as SubmitResponse);
+                    // })
                 }else{
                     let msg = "Title update failed.";
                     console.error(msg);

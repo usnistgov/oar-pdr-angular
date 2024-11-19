@@ -74,7 +74,7 @@ export class AuthorEditComponent implements OnInit {
         this.author.givenName = givenName;
         this.author.dataChanged = true;
         if (!this.author.fnLocked) {
-            this.author.updateFullName();
+            this.author.fn = this.author.givenName + " " + (this.author.middleName == undefined ? "" : this.author.middleName + " ") + (this.author.familyName == undefined ? "" : this.author.familyName);
         }
 
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
@@ -87,7 +87,7 @@ export class AuthorEditComponent implements OnInit {
         this.author.middleName = middleName;
         author.dataChanged = true;
         if (!author.fnLocked) {
-            this.author.updateFullName();
+            this.author.fn = this.author.givenName + " " + (this.author.middleName == undefined ? "" : this.author.middleName + " ") + (this.author.familyName == undefined ? "" : this.author.familyName);
         }
 
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
@@ -100,7 +100,7 @@ export class AuthorEditComponent implements OnInit {
         this.author.familyName = familyName;
         author.dataChanged = true;
         if (!author.fnLocked) {
-            this.author.updateFullName();
+            this.author.fn = this.author.givenName + " " + (this.author.middleName == undefined ? "" : this.author.middleName + " ") + (this.author.familyName == undefined ? "" : this.author.familyName);
         }
 
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});

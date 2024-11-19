@@ -148,11 +148,11 @@ export class MetadataUpdateService {
      *             getting updates to have its UI react accordingly.
      */
     public update(subsetname: string, md: {}, id: string = undefined, subsetnameAPI: string = undefined): Promise<boolean> {
-        let body: string;
+        let body: any;
         let updateWholeRecord: boolean = false;
         let fieldName = subsetname.split("-")[0];
 
-        if(!subsetnameAPI) subsetnameAPI = subsetname;
+        if(!subsetnameAPI) subsetnameAPI = fieldName;
   
         if (!this.custsvc) {
             console.error("Attempted to update without authorization!  Ignoring update.");
@@ -192,7 +192,11 @@ export class MetadataUpdateService {
                         delete md[fieldName]["isNew"];
                         delete md[fieldName]["dataChanged"];
                     }
-                    body = JSON.stringify(md[fieldName]);
+                    // body = JSON.stringify(md[fieldName]);
+                    if(Array.isArray(md[fieldName]))
+                        body = md[fieldName];
+                    else
+                        body = JSON.stringify(md[fieldName]);
                 }else
                     body = "";
             }else{
@@ -428,7 +432,11 @@ export class MetadataUpdateService {
             }
 
             if(postMsg){
-                let body = JSON.stringify(postMsg);
+                let body: any;
+                if(Array.isArray(postMsg) || typeof postMsg === 'string')
+                    body = postMsg
+                else
+                    body = JSON.stringify(postMsg);
 
                 this.custsvc.updateMetadata(body, updateWholeRecord?undefined:fieldName, id, subsetnameAPI).subscribe({
                     next: (res) => {
