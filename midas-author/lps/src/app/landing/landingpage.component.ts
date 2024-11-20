@@ -346,7 +346,17 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         if (this.editEnabled) {
             this.route.queryParamMap.subscribe(queryParams => {
-                let param = queryParams.get("editmode");
+                // Use parameter "editEnabled". Need to decide the edit mode when backend is ready.
+                // For now, always go to edit mode.
+                // let param = queryParams.get("editmode");
+                let param = queryParams.get("editenabled");
+                if (param){
+                  this.editRequested = (param.toLowerCase() == 'true');
+                  param = "edit";
+                }else{
+                  param = "";
+                }
+
                 switch(param.toLowerCase()) {
                     case "revise": {
                         this.editRequested = true;
