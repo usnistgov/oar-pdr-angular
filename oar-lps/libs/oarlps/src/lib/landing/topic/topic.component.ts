@@ -201,9 +201,11 @@ export class TopicComponent implements OnInit {
         // }
 
         //For old topic structure (theme)
-        for(let topic of this.topics["NIST"]) {
-            this.selectedTopics.push(topic);
-        } 
+        if(this.topics && this.topics["NIST"]) {
+            for(let topic of this.topics["NIST"]) {
+                this.selectedTopics.push(topic);
+            } 
+        }
         this.setMode(MODE.EDIT);
     }
 
@@ -275,7 +277,7 @@ export class TopicComponent implements OnInit {
 
         if(inputTopics[col] && inputTopics[col].length > 0) {
             for(let topic of inputTopics[col]) {
-                topics.push(topic);
+                topics.push(topic.tag);
             }
         }
 
@@ -298,7 +300,15 @@ export class TopicComponent implements OnInit {
     onDataChange(dataChanged: any) {
         switch(dataChanged.action) {
             case 'dataChanged':
-                this.record[this.fieldName] = dataChanged[this.fieldName];
+                if(dataChanged[this.fieldName] && dataChanged[this.fieldName].length>0){
+                    this.record[this.fieldName] = [];
+                    dataChanged[this.fieldName].forEach((topic) => {
+                        this.record[this.fieldName].push(topic.tag);
+                    })
+                }
+
+                // For new topic structure (topic field)
+                // this.record[this.fieldName] = dataChanged[this.fieldName];
                 this.dataChanged = true;
                 break;
             default:
@@ -339,7 +349,10 @@ export class TopicComponent implements OnInit {
      *  Restore original value. If no more field was edited, delete the record in staging area.
      */
     restoreOriginal(collection: string) {
-        this.topics[collection] = JSON.parse(JSON.stringify(this.originalTopics[collection]));
+        if(!this.originalTopics || this.originalTopics[collection] || this.originalTopics[collection].length == 0)
+            this.topics[collection] = null;
+        else
+            this.topics[collection] = JSON.parse(JSON.stringify(this.originalTopics[collection]));
 
         this.mdupdsvc.undo(this.fieldName+"-"+collection, null, null, this.restoreTopics(this.topics)).then((success) => {
             if (success){
