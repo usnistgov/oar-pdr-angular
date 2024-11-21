@@ -230,10 +230,13 @@ export class TopicEditComponent implements OnInit {
         this.toggle = false;
         const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
-//Need to create a topic object before push
-            this.selectedTopics.push(
-                { "@id": "", "@type": "", "tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
-            this.dataChanged = true;
+            //Need to create a topic object before push
+            // this.selectedTopics.push(
+            //     { "@id": "", "@type": "", "tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
+
+            this.selectedTopics.push(rowNode.node.data.researchTopic);
+    
+                this.dataChanged = true;
             // Reset search text box
             if (this.searchText != "") {
                 this.searchText = "";
@@ -247,7 +250,7 @@ export class TopicEditComponent implements OnInit {
     */
     getTopicColor(rowNode: any) {
         // console.log("this.tempTopics", this.tempTopics);
-        if(!this.selectedTopics) return 'lightgrey';
+        if(!this.selectedTopics) return ROW_COLOR;
 
         const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length <= 0) {
@@ -417,10 +420,10 @@ export class TopicEditComponent implements OnInit {
     */
     rowColor(rowNode: any) {
         if (this.highlight == "") {
-        return this.getTopicColor(rowNode);
+            return this.getTopicColor(rowNode);
         } else {
-        if (this.highlight == rowNode.node.data.name) {
-            return "white";
+            if (this.highlight == rowNode.node.data.name) {
+                return "white";
         } else {
             return this.getTopicColor(rowNode);
         }

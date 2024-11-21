@@ -18,8 +18,8 @@
                             style="border-bottom:1pt solid black;" height="2em" [style.background-color]="backgroundColor">
                             <td style="padding-left: 2em;">
                                 <!-- For new topic structure, change topic to topic.tag -->
-                                <span (click)="searchAndExpandTaxonomyTree(topic.tag, true)"
-                                    style="color: #1E6BA1; cursor: pointer;">{{topic.tag}}</span>
+                                <span (click)="searchAndExpandTaxonomyTree(topic, true)"
+                                    style="color: #1E6BA1; cursor: pointer;">{{topic}}</span>
                             </td>
                             <td width="50px">
                                 <i class="fas fa-trash-alt" (click)="deleteTopic(i)"

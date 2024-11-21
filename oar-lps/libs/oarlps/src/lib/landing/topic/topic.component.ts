@@ -277,7 +277,7 @@ export class TopicComponent implements OnInit {
 
         if(inputTopics[col] && inputTopics[col].length > 0) {
             for(let topic of inputTopics[col]) {
-                topics.push(topic.tag);
+                topics.push(topic);
             }
         }
 
@@ -349,7 +349,7 @@ export class TopicComponent implements OnInit {
      *  Restore original value. If no more field was edited, delete the record in staging area.
      */
     restoreOriginal(collection: string) {
-        if(!this.originalTopics || this.originalTopics[collection] || this.originalTopics[collection].length == 0)
+        if(!this.originalTopics || !this.originalTopics[collection] || this.originalTopics[collection].length == 0)
             this.topics[collection] = null;
         else
             this.topics[collection] = JSON.parse(JSON.stringify(this.originalTopics[collection]));
