@@ -576,7 +576,7 @@ export class AuthorListComponent implements OnInit {
                 }
 
                 // let newAuthor: Author = {} as Author;
-                let newAuthor: Author = new Author("", "", "", "", [this.authorService.getBlankAffiliation("")])
+                let newAuthor: Author = new Author("", "", "", "", null)
                 newAuthor["isNew"] = true;
                 // newAuthor["familyName"] = "";
                 // newAuthor["givenName"] = "";
