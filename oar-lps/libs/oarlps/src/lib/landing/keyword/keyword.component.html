@@ -12,7 +12,6 @@
             <!-- Keywords in regular or preview mode -->
             <div class="editable_field" *ngIf="!mdupdsvc.isEditMode || !isEditing; else editmode" style="width: 100%;">
                 <span class="editable_field ind" style="max-width: 90%;white-space: nowrap">
-                    <span style="white-space: nowrap;"><strong>Keywords: </strong></span>
                     <span 
                         class="keywords" 
                         [style.background-color]="bubbleColor(keyword)" 

@@ -71,7 +71,7 @@ export class AccesspageListComponent implements OnInit {
                         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
                                 if(this.currentApage && this.currentApage.dataChanged){
-                                    this.saveCurApage(false);  // Do not refresh help text 
+                                    this.saveCurApage(false, MODE.NORNAL);  // Do not refresh help text 
                                 }
 
                                 if(this.editBlockStatus == 'expanded')
