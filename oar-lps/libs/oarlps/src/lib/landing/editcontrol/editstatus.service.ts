@@ -46,12 +46,40 @@ export class EditStatusService {
     }
 
     /**
+     * flag indicating the current edit type (normal or revise).  
+     * Make editType observable so any component that subscribe to it will
+     * get an update once the type changed.
+     */
+    _editType : BehaviorSubject<string> =
+        new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
+    _setEditType(val : string) { 
+        this._editType.next(val); 
+    }
+    public watchEditType(subscriber) {
+        this._editType.subscribe(subscriber);
+    }
+
+    /**
+     * flag indicating the current edit mode.  
+     * Make editMode observable so any component that subscribe to it will
+     * get an update once the mode changed.
+     */
+    _reviseType : BehaviorSubject<string> =
+        new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
+    public setReviseType(val : string) { 
+        this._reviseType.next(val); 
+    }
+    public watchReviseType(subscriber) {
+        this._reviseType.subscribe(subscriber);
+    }
+
+    /**
      * Flag to tell the app to hide the content display or not. 
      * Usecase: to hide server side rendering content while in edit mode and display the content when 
      * browser side rendering is ready.
      */
     _showLPContent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    setShowLPContent(val: boolean){
+    public setShowLPContent(val: boolean){
         this._showLPContent.next(val);
     }
     public watchShowLPContent(subscriber) {

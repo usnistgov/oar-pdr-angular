@@ -24,6 +24,9 @@ import { VisithomeModule } from '../visithome/visithome.module';
 import { ReferencesModule } from '../references/references.module';
 import { AccesspageModule } from '../accesspage/accesspage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { IspartofModule } from '../ispartof/ispartof.module';
+import { D3Service } from '../../shared/d3-service/d3.service';
+import { SectionTitleModule } from '../section-title/section-title.module';
 import { PeopleModule } from '../people/people.module';
 
 /**
@@ -75,6 +78,8 @@ import { PeopleModule } from '../people/people.module';
         AccesspageModule,
         VisithomeModule,
         NgbModule,
+        IspartofModule,
+        SectionTitleModule,
         PeopleModule
     ],
     declarations: [
@@ -84,6 +89,7 @@ import { PeopleModule } from '../people/people.module';
         ResourceRefsComponent, ResourceMetadataComponent
     ],
     providers: [
+        D3Service
     ],
     exports: [
         ResourceDataComponent,

@@ -578,7 +578,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
             return;
 
         setTimeout(() => {
-            console.log("Removing all within "+this.ediid+"/"+rowData.comp.filepath+" from global cart");
             this.globalDataCart.removeMatchingFiles(this.ediid, rowData.comp.filepath, true);
             this.allInCart = false;
         }, 0);
@@ -595,7 +594,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
         setTimeout(() => {
             let node : TreeNode = this.findNode(this.files, rowData.key);
             if (node) {
-                console.log("Adding all within "+node.data.key+" to global cart");
                 this._addAllWithinToCart(node, this.globalDataCart, false);
                 this.globalDataCart.save();
                 this.allInCart = this._areAllInCart(this.files);
@@ -654,12 +652,10 @@ export class DataFilesComponent implements OnInit, OnChanges {
         this.isTogglingAllInGlobalCart = true;
         setTimeout(() => {
             if (this.allInCart) {
-                console.log("Removing all files from "+this.ediid+" from cart");
                 this.globalDataCart.removeMatchingFiles(this.ediid, '', false);
                 this.allInCart = false;
             }
             else {
-                console.log("Adding all files from "+this.ediid+" to cart");
                 for (let child of this.files) 
                     this._addAllWithinToCart(child, this.globalDataCart, false);
                 this.allInCart = true;
@@ -882,7 +878,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 {
                     if(err.statusCode == 404)
                     {
-                        console.log("404 error.");
+                        console.error("404 error.");
                         this.mdupdsvc.resetOriginal();
                         this.msgsvc.error(err.message);
                     }

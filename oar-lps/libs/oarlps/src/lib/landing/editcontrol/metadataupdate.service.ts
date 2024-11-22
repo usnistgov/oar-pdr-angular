@@ -140,16 +140,19 @@ export class MetadataUpdateService {
      *             name can be an arbitrary label.  
      * @param md   an object containing the portion of the resource metadata that 
      *             should be updated.  
+     * @param id   Component id. If provided, only update specific @id.
+     * @param subsetnameAPI the API that appends to default URL to make update call.
      * @return Promise<boolean>  -  result is true if the update was successful, false if 
      *             there was an issue.  Note that the underlying CustomizationService will
      *             take care of reporting the reason.  This allows the caller in charge of 
      *             getting updates to have its UI react accordingly.
      */
     public update(subsetname: string, md: {}, id: string = undefined, subsetnameAPI: string = undefined): Promise<boolean> {
-        let body: string;
+        let body: any;
         let updateWholeRecord: boolean = false;
+        let fieldName = subsetname.split("-")[0];
 
-        if(!subsetnameAPI) subsetnameAPI = subsetname;
+        if(!subsetnameAPI) subsetnameAPI = fieldName;
   
         if (!this.custsvc) {
             console.error("Attempted to update without authorization!  Ignoring update.");
@@ -165,12 +168,12 @@ export class MetadataUpdateService {
             if (!this.origfields[key])
                 this.origfields[key] = {};
 
-            for (let prop in md) {
-                if (this.origfields[key][prop] === undefined) {
-                    if (this.currentRec[prop] !== undefined) {
-                        this.origfields[key][prop] = JSON.parse(JSON.stringify(this.currentRec[prop]));
+            for (let realProp in md) {
+                if (this.origfields[key][realProp] === undefined) {
+                    if (this.currentRec[realProp] !== undefined) {
+                        this.origfields[key][realProp] = JSON.parse(JSON.stringify(this.currentRec[realProp]));
                     } else {
-                        this.origfields[key][prop] = null;   // TODO: problematic; need to clean-up nulls
+                        this.origfields[key][realProp] = null;   // TODO: problematic; need to clean-up nulls
                     }
                 }
             }
@@ -178,18 +181,22 @@ export class MetadataUpdateService {
         
         if(!id){
             if(subsetname){
-                if(md && md[subsetname]){
+                if(md && md[fieldName]){
                     //Remove temp keys
-                    if(md[subsetname] instanceof Array) {
-                        md[subsetname].forEach(item =>{
+                    if(md[fieldName] instanceof Array) {
+                        md[fieldName].forEach(item =>{
                             delete item["isNew"];
                             delete item["dataChanged"];
                         });
                     }else{
-                        delete md[subsetname]["isNew"];
-                        delete md[subsetname]["dataChanged"];
+                        delete md[fieldName]["isNew"];
+                        delete md[fieldName]["dataChanged"];
                     }
-                    body = JSON.stringify(md[subsetname]);
+                    // body = JSON.stringify(md[fieldName]);
+                    if(Array.isArray(md[fieldName]))
+                        body = md[fieldName];
+                    else
+                        body = JSON.stringify(md[fieldName]);
                 }else
                     body = "";
             }else{
@@ -207,19 +214,19 @@ export class MetadataUpdateService {
 
         // If no body, remove this field from curent record
         if(!body) {
-            delete this.currentRec[subsetname];
+            delete this.currentRec[fieldName];
             body = JSON.stringify(this.currentRec);
             updateWholeRecord = true;
         }
-        console.log("Updating server - body", body);
+
         return new Promise<boolean>((resolve, reject) => {
             // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
-            this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
+            this.custsvc.updateMetadata(body, updateWholeRecord?undefined:fieldName, id, subsetnameAPI).subscribe({
                 next: (res) => {
                     console.log("###DBG  Draft data returned from server:\n  ", res);
                     
                     this.stampUpdateDate();
-                    this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
+                    this.updateInMemoryRec(res, fieldName, id, updateWholeRecord);
                     // this.mdres.next(this.currentRec);
                     resolve(true);
                 },
@@ -323,17 +330,20 @@ export class MetadataUpdateService {
      * 
      * @param subsetname    the name for the metadata that was used in the call to update() which 
      *                      should be undone.
+     * @param id   Component id. If provided, only update specific @id.
+     * @param subsetnameAPI the API that appends to default URL to make update call.
+     * @param originalValue If provided, use it instead of the original value in the service. This parameter will be ignored if id is provided.
      * @return Promise<boolean>  -  result is true if the undo was successful, false if 
      *             there was an issue, including that there was nothing to undo.  Note that this 
      *             MetadataUpdateService instance will take care of reporting the reason.  This 
      *             response allows the caller in charge of getting updates to have its UI react
      *             accordingly.
      */
-    public undo(subsetname: string, id: string = undefined, subsetnameAPI: string = undefined) {
+    public undo(subsetname: string, id: string = undefined, subsetnameAPI: string = undefined, originalValue: any = null) {
         let updateWholeRecord: boolean = false;
         let key = id? subsetname + id : subsetname;
+        let fieldName = subsetname.split("-")[0];
 
-        console.log("undo id", id);
         if (!subsetname || !this.origfields) {
             // Nothing to undo!
             console.warn("Undo called on " + subsetname + ": nothing to undo");
@@ -368,12 +378,10 @@ export class MetadataUpdateService {
 
             // undo specific id
             if(id){
-                console.log("Undo id:", id);
-                console.log("this.originalDraftRec[subsetname]:", this.originalDraftRec[subsetname]);
-                if(this.originalDraftRec[subsetname]) {
-                    let index = this.originalDraftRec[subsetname].findIndex(x => x["@id"] == id);
+                if(this.originalDraftRec[fieldName]) {
+                    let index = this.originalDraftRec[fieldName].findIndex(x => x["@id"] == id);
                     if(index >= 0) {
-                        postMsg = this.originalDraftRec[subsetname][index];
+                        postMsg = this.originalDraftRec[fieldName][index];
                     }else {
                         postMsg = undefined;
                         // resolve(false);
@@ -383,14 +391,13 @@ export class MetadataUpdateService {
                 }
 
                 // Locate the current rec because the index may not be the same as in original record
-                if(this.currentRec[subsetname]){
-                    console.log("Locate the current rec", this.currentRec);
-                    let currentElementIndex = this.currentRec[subsetname].findIndex(x => x["@id"] == id);
+                if(this.currentRec[fieldName]){
+                    let currentElementIndex = this.currentRec[fieldName].findIndex(x => x["@id"] == id);
 
-                    if(this.originalDraftRec[subsetname]){
-                        this.currentRec[subsetname][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[subsetname].find(x => x["@id"] == id)));
+                    if(this.originalDraftRec[fieldName]){
+                        this.currentRec[fieldName][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[fieldName].find(x => x["@id"] == id)));
 
-                        postMsg = this.currentRec[subsetname][currentElementIndex];
+                        postMsg = this.currentRec[fieldName][currentElementIndex];
                     }else{ //Original record does not have reference, current ref was newly added
                         postMsg = undefined;
                     }                    
@@ -401,13 +408,16 @@ export class MetadataUpdateService {
                 delete this.origfields[key];
 
             }else {    // undo the whole subset
-                console.log("undo the whole subset", this.originalDraftRec);
-                postMsg = this.originalDraftRec[subsetname];
+                if(originalValue) {
+                    postMsg = originalValue;
+                }else {
+                    postMsg = this.originalDraftRec[fieldName];
+                }
 
                 if(postMsg){
-                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(postMsg));
+                    this.currentRec[fieldName] = JSON.parse(JSON.stringify(postMsg));
                 }else{
-                    delete this.currentRec[subsetname];
+                    delete this.currentRec[fieldName];
                     postMsg = this.currentRec;
 
                     updateWholeRecord = true;
@@ -422,14 +432,15 @@ export class MetadataUpdateService {
             }
 
             if(postMsg){
-                let body = JSON.stringify(postMsg);
-                console.log("Post message:", body);
+                let body: any;
+                if(Array.isArray(postMsg) || typeof postMsg === 'string')
+                    body = postMsg
+                else
+                    body = JSON.stringify(postMsg);
 
-                this.custsvc.updateMetadata(body, updateWholeRecord?undefined:subsetname, id, subsetnameAPI).subscribe({
+                this.custsvc.updateMetadata(body, updateWholeRecord?undefined:fieldName, id, subsetnameAPI).subscribe({
                     next: (res) => {
-                        console.log("Update return:", res);
-                        console.log("Emitting mdres(this.currentRec):", this.currentRec);
-                        this.updateInMemoryRec(res, subsetname, id, updateWholeRecord);
+                        this.updateInMemoryRec(res, fieldName, id, updateWholeRecord);
                         this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
                         // this.mdres.next(res as NerdmRes);
                         resolve(true);
@@ -831,7 +842,7 @@ export class MetadataUpdateService {
                     subscriber.complete();
                 },
                 error: (err) => {
-                  console.log("err", err);
+                  console.error("err", err);
                   
                   if(err.statusCode == 404)
                   {
@@ -846,6 +857,85 @@ export class MetadataUpdateService {
                     else 
                     {
                         console.error("Failed to retrieve metadata: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            });
+        });
+    }      
+
+    /**
+     * Validate the status from backend
+     */
+    public validate(): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to validate without authorization!  Ignoring validate.");
+                return;
+            }
+            this.custsvc.validate().subscribe({
+                next: (res) => {
+                    subscriber.next(res);
+                    subscriber.complete();
+                },
+                error: (err) => {
+                  console.error("err", err);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    // handle 404
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to validate: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to validate: server error:" + err.message);
+                        this.msgsvc.syserror(err.message);
+                    }
+                  }
+
+                  subscriber.next(null);
+                  subscriber.complete();
+                }
+            });
+        });
+    }      
+
+    public getEnvelop(): Observable<Object> {
+        return new Observable<Object>(subscriber => {
+            if (!this.custsvc) {
+                console.error("Attempted to validate without authorization!  Ignoring validate.");
+                return;
+            }
+            this.custsvc.getEnvelop().subscribe({
+                next: (res) => {
+                    subscriber.next(res);
+                    subscriber.complete();
+                },
+                error: (err) => {
+                  console.error("err", err);
+                  
+                  if(err.statusCode == 404)
+                  {
+                    // handle 404
+                  }else{
+                    // err will be a subtype of CustomizationError
+                    if (err.type == 'user') 
+                    {
+                        console.error("Failed to validate: user error:" + err.message);
+                        this.msgsvc.error(err.message);
+                    }
+                    else 
+                    {
+                        console.error("Failed to validate: server error:" + err.message);
                         this.msgsvc.syserror(err.message);
                     }
                   }

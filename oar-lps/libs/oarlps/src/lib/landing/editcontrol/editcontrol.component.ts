@@ -11,12 +11,17 @@ import { EditStatusService } from './editstatus.service';
 import { AuthService, WebAuthService } from './auth.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes } from '../../nerdm/nerdm'
-import { LandingConstants } from '../constants';
 import { AppConfig } from '../../config/config';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { deepCopy } from '../../config/config.service';
-import { AppSettings } from '../../shared/globals/globals';
+import { LandingConstants, SubmitResponse } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
+import * as REVISION_TYPES from '../../../assets/site-constants/revision-types.json';
+import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
+import { CollectionService } from '../../shared/collection-service/collection.service';
+import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import * as CollectionData from '../../../assets/site-constants/collections.json';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -38,11 +43,22 @@ export class EditControlComponent implements OnInit, OnChanges {
     private _custsvc: CustomizationService = null;
     private originalRecord: NerdmRes = null;
     _editMode: string;
+    EDIT_TYPES: any = LandingConstants.editTypes;
+    _editType: string;
     EDIT_MODES: any;
     screenWidth: number;
     screenSizeBreakPoint: number;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
     portalURL: string;
+    arrRevisionTypes: any[] = [];
+    revisionType: string;
+    submitResponse: SubmitResponse = {} as SubmitResponse;
+    mobileMode: boolean = false;
+    modalRef: any; // For submit pop up
+    imageURL: string = '';
+    collection: string;
+    collectionObj: any;
+    message: string = "test";
 
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
@@ -90,7 +106,22 @@ export class EditControlComponent implements OnInit, OnChanges {
         private confirmDialogSvc: ConfirmationDialogService,
         private cfg: AppConfig,
         public lpService: LandingpageService, 
+        private modalService: NgbModal,
+        public globalService: GlobalService,
         private msgsvc: UserMessageService) {
+
+        this.globalService.watchCollection((collection) => {
+            this.collection = collection;
+            this.loadBannerUrl();
+        });
+
+        this.globalService.watchMessage((message) => {
+            this.message = message;
+            //Display message for 3 seconds
+            setTimeout(() => {
+                this.message = "";
+            }, 3000);
+        });
 
         this.EDIT_MODES = LandingConstants.editModes;
         this.mdupdsvc.subscribe(
@@ -112,8 +143,14 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     ngOnInit() {
+        let i = 0;
+        // Object.keys(REVISION_TYPES).map((key) => {
+        //     this.arrReviseTypes.push({id:i++, type: this.reviseTypes[key]});
+        // });
+
+        this.arrRevisionTypes = REVISION_TYPES["default"];
         // set edit mode to view only on init
-        this._setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
+        // this._setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
         this.ngOnChanges();
         this.edstatsvc._watchRemoteStart((remoteObj) => {
             // To remote start editing, resID need be set otherwise authorizeEditing()
@@ -125,11 +162,30 @@ export class EditControlComponent implements OnInit, OnChanges {
         });
 
         this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
-            console.log("fileManagerUrl changed to:", fileManagerUrl);
             if (fileManagerUrl) {
                 this.fileManagerUrl = fileManagerUrl;
             }
-        });        
+        });     
+        
+        this.lpService.watchSubmitResponse((response) => {
+            this.submitResponse = response;
+        })
+
+        this.edstatsvc.watchReviseType((revisionType) => {
+            this.revisionType = revisionType;
+        })
+        
+        this.edstatsvc.watchEditMode((editMode) => {
+            this._editMode = editMode;
+        })
+
+        this.edstatsvc.watchEditType((editType) => {
+            this._editType = editType;
+        })
+
+        this.lpService.watchMobileMode((response) => {
+            this.mobileMode = response;
+        })
     }
 
     ngOnChanges() {
@@ -142,6 +198,29 @@ export class EditControlComponent implements OnInit, OnChanges {
                 // this.mdupdsvc.setOriginalMetadata(this.originalRecord)
             }
         }
+    }
+
+    loadBannerUrl() {
+        this.collectionObj = CollectionData[this.collection] as any;
+
+        switch(this.collection) {
+            case Collections.FORENSICS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
+            }
+            case Collections.SEMICONDUCTORS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
+            }
+            default: {
+                this.imageURL = "";
+                break;
+            }
+        }
+
+        setTimeout(() => {
+            // this.displayBanner = true;
+        }, 0);
     }
 
     /**
@@ -165,6 +244,14 @@ export class EditControlComponent implements OnInit, OnChanges {
             this.screenWidth = 500; 
     }
 
+    get isRevisionMode() {
+        return this._editMode == this.EDIT_MODES.EDIT_MODE && this._editType == this.EDIT_TYPES.REVISE;
+    }
+
+    // setReviseType(type: any) {
+        // this.edstatsvc.setReviseType(type.type);
+    // }
+
     /**
      * flag indicating whether the current editing mode of the landing page.  
      * @param editmode   
@@ -180,35 +267,103 @@ export class EditControlComponent implements OnInit, OnChanges {
      * @param nologin Return current mode string for display
      */
     get currentMode(){
-      let returnString: string = "";
-      switch(this._editMode) { 
-        case this.EDIT_MODES.EDIT_MODE: { 
-          returnString = "EDIT MODE";
-           break; 
-        } 
-        case this.EDIT_MODES.PREVIEW_MODE: { 
-          returnString = "PREVIEW MODE";
-           break; 
-        } 
-        case this.EDIT_MODES.DONE_MODE: { 
-            returnString = "DONE MODE";
-             break; 
-          } 
-        default: { 
-           break; 
-        } 
-     } 
+        let returnString: string = "";
+        switch(this._editMode) { 
+            case this.EDIT_MODES.EDIT_MODE: { 
+                if(this._editType == this.EDIT_TYPES.NORNAL)
+                    returnString = "EDIT MODE";
+                else if(this._editType == this.EDIT_TYPES.REVISE)
+                    returnString = "REVISION MODE";
 
-     return returnString;
+                break; 
+            } 
+            case this.EDIT_MODES.PREVIEW_MODE: { 
+                returnString = "PREVIEW MODE";
+                break; 
+            } 
+            case this.EDIT_MODES.DONE_MODE: { 
+                returnString = "DONE MODE";
+                break; 
+            } 
+            default: { 
+                break; 
+            } 
+        } 
+
+        return returnString;
+    }
+
+    get editModeTooltip() {
+        let returnString: string = "";
+        switch(this._editMode) { 
+            case this.EDIT_MODES.EDIT_MODE: { 
+                if(this._editType == this.EDIT_TYPES.NORNAL)
+                    returnString = "EDIT MODE";
+                else if(this._editType == this.EDIT_TYPES.REVISE)
+                    returnString = "REVISION MODE";
+                break; 
+            } 
+            case this.EDIT_MODES.PREVIEW_MODE: { 
+                returnString = "PREVIEW MODE";
+                break; 
+            } 
+            case this.EDIT_MODES.DONE_MODE: { 
+                returnString = "DONE MODE";
+                break; 
+            } 
+            default: { 
+                break; 
+            } 
+        } 
+
+        return returnString;
+    }
+
+    get editModeIconClass() {
+        let returnString: string = "";
+        switch(this._editMode) { 
+            case this.EDIT_MODES.EDIT_MODE: { 
+                if(this._editType == this.EDIT_TYPES.NORNAL)
+                    returnString = "fa-pencil";
+                else if(this._editType == this.EDIT_TYPES.REVISE)
+                    returnString = "fa-undo";
+                break; 
+            } 
+            case this.EDIT_MODES.PREVIEW_MODE: { 
+                returnString = "fa-eye";
+                break; 
+            } 
+            case this.EDIT_MODES.DONE_MODE: { 
+                returnString = "fa-check";
+                break; 
+            } 
+            default: { 
+                break; 
+            } 
+        } 
+
+        return returnString;
     }
 
     get readySubmit() {
-        return this.lpService.readySummit(this.mdrec);
+        return !this.hasRequiredItems;
     }
 
     get fileManagerTooltip(){
         if(this.fileManagerUrl) return this.fileManagerUrl;
         else return "File Manager URL is not available."
+    }
+
+    get hasRequiredItems() {
+        return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.failures &&  this.submitResponse.validation.failures.length > 0;
+    }
+
+    get hasRecommendedItems() {
+        return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.warnings &&  this.submitResponse.validation.warnings.length > 0;
+    }
+
+    get hasNiceToHaveItems() {
+        return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.recommendations &&  this.submitResponse.validation.recommendations.length > 0;
     }
 
     /**
@@ -235,11 +390,13 @@ export class EditControlComponent implements OnInit, OnChanges {
               if(successful){
                 console.log("Loading draft...");
                 this.statusbar.showMessage("Loading draft...", true)
+                // this.globalService.setMessage("Loading draft...");
                 this.mdupdsvc.loadDraft().subscribe(
                     (md) => 
                     {
                         if(md)
                         {
+                            // this.globalService.setMessage("");
                             this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
                             this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
                             this._setEditMode(this.EDIT_MODES.EDIT_MODE);
@@ -254,10 +411,10 @@ export class EditControlComponent implements OnInit, OnChanges {
                     {
                         if(err.statusCode == 404)
                         {
-                            console.log("404 error.");
+                            console.error("404 error.");
                             this.edstatsvc.setShowLPContent(true);
                             this.mdupdsvc.resetOriginal();
-                            this.statusbar.showMessage("", false)
+                            // this.statusbar.showMessage("", false)
                             this._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                         }
                     }
@@ -265,10 +422,11 @@ export class EditControlComponent implements OnInit, OnChanges {
               }
             },
             (err) => {
-                console.log("Authentication failed.");
+                console.error("Authentication failed.");
                 this.edstatsvc.setShowLPContent(true);
                 this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                 this.statusbar.showMessage("Authentication failed.");
+                // this.globalService.setMessage("Authentication failed.");
             }
         );
       }
@@ -417,9 +575,11 @@ export class EditControlComponent implements OnInit, OnChanges {
         return new Observable<boolean>(subscriber => {
             console.log("obtaining editing authorization");
             this.statusbar.showMessage("Authenticating/authorizing access...", true)
+            // this.globalService.setMessage("Authenticating/authorizing access...");
 
             this.authsvc.authorizeEditing(this.resID, nologin).subscribe(  // might cause redirect (see above)
                 (custsvc) => {
+                    // this.globalService.setMessage("");
                     this._custsvc = custsvc;    // could be null, indicating user is not authorized.
                     this.mdupdsvc._setCustomizationService(custsvc);
 
@@ -444,6 +604,7 @@ export class EditControlComponent implements OnInit, OnChanges {
 
                     console.log(msg);
                     this.statusbar.showMessage(msg, false); 
+                    // this.globalService.setMessage(msg);
 
                     if(authenticated){
                       subscriber.next(Boolean(this._custsvc));
@@ -460,6 +621,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                 (err) => {
                     let msg = "Failure during authorization: " + err.message;
                     this.statusbar.showMessage(msg, false); 
+                    // this.globalService.setMessage(msg);
                     console.error(msg);
                     this.msgsvc.syserror(msg);
                     subscriber.next(false);
@@ -480,5 +642,26 @@ export class EditControlComponent implements OnInit, OnChanges {
 
     submitReview() {
         console.log("Submit for review...")
+
+        let ngbModalOptions: NgbModalOptions = {
+            backdrop: 'static',
+            keyboard: false,
+            windowClass: "modal-small",
+            size: 'lg'
+        };
+
+        this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
+        this.modalRef.componentInstance.submitResponse = this.submitResponse;
+        // this.modalRef.componentInstance.zipData = this.zipData;
+        // this.modalRef.componentInstance.totalFiles = blob.filesCount;
+        this.modalRef.componentInstance.returnValue.subscribe((returnValue) => {
+            if ( returnValue ) {
+                console.log("Return value", returnValue);
+            }else{
+                console.log("User canceled submit.");
+            }
+        }, (reason) => {
+            console.log("User canceled submit.");
+        });
     }
 }

@@ -11,11 +11,11 @@
                     <div *ngIf="editEnabled; else editDisabled"
                         style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
                         <span><b id="filelist-heading">Files</b></span>
-                        <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;">
+                        <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all" ngbTooltip="Download all from data cart">
                             <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                             <i class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
                         </span>
-                        <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;">
+                        <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;" aria-label="Add all to data cart" ngbTooltip="Add all to data cart">
                             <i class="far fa-circle fa-stack-1x fa-lg"></i>
                             <i class="fas fa-cart-plus fa-stack-1x fa-xs"></i>
                             <!-- <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
@@ -27,8 +27,7 @@
                         <div style="flex: 0 0 140px; text-align: left; padding-bottom: 0em;">
                             <span><b id="filelist-heading">Files </b> </span>
                             <a class="fa-stack fa-lg icon-download" *ngIf="!editEnabled"
-                                (click)="downloadAllFiles()"
-                                data-toggle="tooltip" title="Download all files"
+                                (click)="downloadAllFiles()" aria-label="Download all" ngbTooltip="Download all from data cart"
                                 [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
                                 <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                                 <!-- <i class="fas fa-download fa-stack-1x" aria-hidden="true"></i> -->
@@ -42,8 +41,7 @@
                             <span *ngIf="!editEnabled" class="fa-stack fa-lg icon-cart"
                                 (click)="toggleAllFilesInGlobalCart(files)"
                                 [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',
-                                'margin-right': '1em'}"
-                                data-toggle="tooltip" [title]="getCartProcessTooltip()">
+                                'margin-right': '1em'}" [aria-label]="getCartProcessTooltip()" [ngbTooltip]="getCartProcessTooltip()">
                                 <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                                 <i *ngIf="!isTogglingAllInGlobalCart; else show_spinner" 
                                     class="fas fa-cart-plus fa-stack-1x fa-xs" aria-hidden="true"></i>
@@ -73,11 +71,10 @@
                                     <span (click)="expandToLevel(files, !isExpanded, null)"
                                         style="padding-right:0.5em;">
                                         <i *ngIf="!isExpanded" class="fas fa-arrow-circle-down fa-1x icon-white"
-                                            style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                            title="Expand All"></i>
+                                            style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" aria-label="Expand All" ngbTooltip="Expand All" placement="bottom" container="body"></i>
                                         <i *ngIf="isExpanded" class="fas fa-arrow-circle-up fa-1x icon-white"
-                                            style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                            title="Collapse All"></i>
+                                            style="cursor: pointer;color: rgb(255, 255, 255);" aria-label="Collapse All"
+                                            ngbTooltip="Collapse All" placement="bottom" container="body"></i>
                                     </span>
                                 </span>
                                 {{col.header}}
@@ -87,9 +84,10 @@
                     <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                         <tr [ttSelectableRow]="rowNode" [ngStyle]="rowStyle(rowData)" style="color: black;">
                             <td [ngStyle]="titleStyle(rowData)" (click)="openDetails(rowData)">
-                                <p-treeTableToggler [rowNode]="rowNode" data-toggle="tooltip" title="Expand/Collapse">
+                                <p-treeTableToggler [rowNode]="rowNode" aria-label="Expand/Collapse"
+                                ngbTooltip="Expand/Collapse">
                                 </p-treeTableToggler>
-                                <span data-toggle="tooltip" title="Click for more details">
+                                <span aria-label="Click for more details" ngbTooltip="Click for more details">
                                     <b>{{rowData.name}}</b> </span>
                                 <span style="margin-left: .5em;" *ngIf="isLeaf(rowData)">
                                     <i [ngClass]='fileDetailsDisplayClass(rowData)'></i></span>    
@@ -101,10 +99,7 @@
                             <td [ngStyle]="statusStyle()">
                                 <div style="display: flex;">
                                     <div *ngIf="rowData.comp.downloadURL;else space_holder">
-                                        <a *ngIf="rowData.downloadStatus != 'downloading'"
-                                            href='{{rowData.comp.downloadURL}}' target='_blank' download="download"
-                                            data-toggle="tooltip" title="Direct download"
-                                            (click)="setFileDownloaded(rowData)">
+                                        <a href='{{fileManagerUrl}}' target='_blank'                aria-label="Access file in File Manager" ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(rowData)">
                                             <i class="fas fa-download"
                                                 [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
                                                 aria-hidden="true"></i>
@@ -116,16 +111,16 @@
                                     <ng-template #space_holder>
                                         <div style="padding-right: 0.4em;">&nbsp;&nbsp;</div>
                                     </ng-template>
-                                    <div style="padding-left:10px;" *ngIf="rowData.isInCart;else not_in_cart"
+                                    <div style="padding-left:10px;" *ngIf="rowData.isInCart;else not_in_cart" 
                                         (click)="removeFromGlobalCart(rowData)">
-                                        <i class="fas fa-cart-plus green-cart"                                 aria-hidden="true" data-toggle="tooltip" title="Remove from cart"></i>
+                                        <i class="fas fa-cart-plus green-cart" aria-hidden="true" aria-label="Remove from cart" ngbTooltip="Remove from cart" title="Remove from cart"></i>
                                     </div>
                                     <div *ngIf="rowData.isInCart" style="margin-left: 0.5em;font-size: 0.5em">Added
                                     </div>
                                     <ng-template #not_in_cart>
                                         <div style="padding-left:10px;" (click)="addToGlobalCart(rowData)">
                                             <i class="fas fa-cart-plus blue-cart" 
-                                                aria-hidden="true" data-toggle="tooltip" title="Add to cart"></i>
+                                                aria-hidden="true" aria-label="Add to cart" ngbTooltip="Add to cart" title="Add to cart"></i>
                                         </div>
                                     </ng-template>
                                 </div>
@@ -148,7 +143,7 @@
                                         <span [ngClass]="{'highlight': hashCopied}" [@enterAnimation]>
                                             {{rowData.comp.checksum.hash}}
                                         </span>
-                                        <span id="hash-copy" (click)="copyToClipboard(rowData.comp.checksum.hash)" data-toggle="tooltip" title="Copy to clipboard"><i class="fas fa-clone"></i></span><span [@enterAnimation] *ngIf="hashCopied" class="badge" style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Hash copied to clipboard</span>
+                                        <span id="hash-copy" (click)="copyToClipboard(rowData.comp.checksum.hash)" aria-label="Copy to clipboard" ngbTooltip="Copy to clipboard"><i class="fas fa-clone"></i></span><span [@enterAnimation] *ngIf="hashCopied" class="badge" style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Hash copied to clipboard</span>
                                     </div>
                                     <div *ngIf="rowData.comp.filepath">
                                         <b>File path</b>: {{rowData.comp.filepath}}

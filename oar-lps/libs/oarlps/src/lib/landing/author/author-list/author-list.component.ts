@@ -4,6 +4,7 @@ import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../..
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { Author } from '../author';
+import { AuthorService } from '../author.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import {
     CdkDragDrop,
@@ -35,7 +36,6 @@ export class AuthorListComponent implements OnInit {
     originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
     // forceReset: boolean = false;
     newAuthor: Author = {} as Author;
-    fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     placeholder: string = "Enter author data below";
     editBlockStatus: string = 'collapsed';
     orderChanged: boolean = false;
@@ -46,6 +46,7 @@ export class AuthorListComponent implements OnInit {
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
+    @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
     
@@ -60,6 +61,7 @@ export class AuthorListComponent implements OnInit {
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
+                private authorService: AuthorService,
                 public lpService: LandingpageService) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
@@ -214,7 +216,6 @@ export class AuthorListComponent implements OnInit {
      * Also update the author data. 
      */
     onAuthorChange(event) {
-        console.log("event", event);
         this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
         this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
@@ -574,11 +575,12 @@ export class AuthorListComponent implements OnInit {
                     this.record[this.fieldName] = [];
                 }
 
-                let newAuthor: Author = {} as Author;
+                // let newAuthor: Author = {} as Author;
+                let newAuthor: Author = new Author("", "", "", "", null)
                 newAuthor["isNew"] = true;
-                newAuthor["familyName"] = "";
-                newAuthor["givenName"] = "";
-                newAuthor["fn"] = "";
+                // newAuthor["familyName"] = "";
+                // newAuthor["givenName"] = "";
+                // newAuthor["fn"] = "";
 
                 this.record[this.fieldName].push(newAuthor);
                 

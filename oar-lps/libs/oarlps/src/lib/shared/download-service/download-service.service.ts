@@ -314,7 +314,6 @@ export class DownloadService {
             },
             err => {
                 console.error('Error:', err);
-                console.log('Download details:', nextZip);
                 nextZip.downloadStatus = DownloadStatus.ERROR;
                 nextZip.downloadErrorMessage = err.message;
                 nextZip.downloadProgress = 0;

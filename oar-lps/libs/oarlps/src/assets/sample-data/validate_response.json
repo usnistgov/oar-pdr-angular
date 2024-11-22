@@ -1,0 +1,53 @@
+
+{
+    "action": "validate",
+    "message":  "Default message",       
+    "validation": {
+        "failures": [
+            {
+                "id":  "1",
+                "target": "Title",
+                "title":  "Title is missing.",
+                "description": [
+                    "Title is required.","Please go back and fix it."
+                ]
+            },
+            {
+                "id":  "2",
+                "target": "Description",
+                "title":  "Description is missing.",
+                "description": [
+                    "Description is required.","Please go back and fix it."
+                ]
+            }         
+        ],
+        "warnings": [
+            {
+                "id":  "1",
+                "target": "Authors",
+                "title":  "We recommend to add some authors.",
+                "description": [
+                    "We recommend to add some authors.","But you don't have to."
+                ]
+            },
+            {
+                "id":  "2",
+                "target": "Visit Home Page",
+                "title":  "Homepage URL is recommended if available.",
+                "description": [
+                    "Homepage URL is recommended if available.","But it's not required."
+                ]
+            }  
+        ],
+        "recommendations": [
+            {
+                "id":  "1",
+                "target": "References",
+                "title":  "It's nice to have some references.",
+                "description": [
+                    "It's nice to have some references.","But it's not required."
+                ]
+            }
+        ]
+    }
+}

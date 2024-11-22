@@ -11,28 +11,32 @@ import { FormsModule } from '@angular/forms';
 import { TreeModule } from 'primeng/tree';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { testdata } from '../../../environments/environment';
-import * as env from '../../../environments/environment';
+import { TaxonomyModule } from '../taxonomy/taxonomy.module';
+import { TaxonomyComponent } from '../taxonomy/taxonomy.component';
+import { CollectionService } from '../../shared/collection-service/collection.service';
 
 describe('FiltersComponent', () => {
     let component: FiltersComponent;
     let fixture: ComponentFixture<FiltersComponent>;
     let plid : Object = "browser";
     let ts : TransferState = new TransferState();
-    let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+    let cfg : AppConfig = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
     let nrd1 = testdata['forensics'];
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ FiltersComponent ],
+            declarations: [ FiltersComponent, TaxonomyComponent ],
             imports: [
                 HttpClientTestingModule, 
                 BrowserTransferStateModule,
                 AutoCompleteModule,
                 FormsModule,
                 TreeModule,
-                BrowserAnimationsModule],
+                BrowserAnimationsModule,
+                TaxonomyModule],
             providers: [
                 SearchService,
+                CollectionService,
                 { provide: AppConfig,       useValue: cfg }
             ]
         })

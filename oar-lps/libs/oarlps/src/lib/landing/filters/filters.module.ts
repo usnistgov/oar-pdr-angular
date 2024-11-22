@@ -15,6 +15,8 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CheckboxModule } from 'primeng/checkbox';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
+import { TaxonomyModule } from '../taxonomy/taxonomy.module';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [FiltersComponent],
@@ -32,7 +34,9 @@ import { FormsModule } from '@angular/forms';
     InputTextareaModule,
     ProgressSpinnerModule,
     MultiSelectModule,
-    FormsModule
+    FormsModule,
+    TaxonomyModule,
+    ButtonModule
   ],
   exports: [
     FiltersComponent

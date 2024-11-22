@@ -39,7 +39,7 @@ export class Author {
             familyName: string = "", 
             middleName: string = "", 
             fn: string = "", 
-            affiliation: Affiliation[] = [],
+            affiliation: Affiliation[] = null,
             orcid: string = "") {
 
         this.affiliation = affiliation;
@@ -54,32 +54,8 @@ export class Author {
         this.fnLocked = false;
         this.dataChanged = false;
     }  
-    
-    updateFullName() {
-        this.fn = this.givenName + " " + (this.middleName == undefined ? "" : this.middleName + " ") + (this.familyName == undefined ? "" : this.familyName);
-    }
 }
 
 
-// export class Author {
-//     "@id": string;
-//     familyName: string;
-//     givenName: string;
-//     middleName: string;
-//     fn: string;
-//     orcid: string;
-//     affiliation: Affiliation[];
-//     dataChanged: boolean;
-//     isCollapsed: boolean;
-//     isNew: boolean;
-//     fnLocked: boolean;
-//     orcidValid: boolean;
 
-//     constructor() {
-//         this.isNew = true;
-//         this.familyName = "";
-//         this.givenName = "";
-//         this.fn = "";
-//     }
-// }
 

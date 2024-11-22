@@ -1,9 +1,9 @@
-<div id="dataAccess">
+<div id="dataAccess" [ngStyle]="{'max-width': maxWidth+'px'}">
     <div class="section-header">
-        <h3><b>Data Access</b></h3>
+        <lib-section-title [sectionTitle]="sectionTitle" [inBrowser]="inBrowser" sectionTag="dataAccessHeader" id="dataAccessHeader" #dataAccessHeader></lib-section-title>
+        
     </div>
 
-    <!-- <dl *ngIf="theme != scienceTheme"> -->
     <dl >
         <dt>
             <span style="margin-left:0em" *ngIf="record['accessLevel'] === 'public'">
@@ -35,58 +35,6 @@
 
     <!-- Access pages -->
     <div id="accessPages">
-        <!-- <div *ngIf="accessPages.length > 0">
-            <b>Data and related material can be found at the following locations:</b>
-            <br>
-            <div [ngStyle]="{'margin-top': '10px', 'background-color': apage['backcolor']}"
-                *ngFor="let apage of accessPages" (mouseover)="apage['backcolor'] = '#f2f2f2'"
-                (mouseout)="apage['backcolor'] = 'white'">
-                <div class="indent-content"
-                    *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
-                    <i class="fas fa-external-link-alt"> <span style="margin-left:0em;">
-                            <span *ngIf="apage['description']; else noAccessTitle">
-                                <a href="{{apage['accessURL']}}" title="{{apage['description']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                'Resource title: ' + record.title,
-                                                                apage['accessURL'])">&nbsp;&nbsp;{{apage['title']}}</a>
-                            </span>
-                            <ng-template #noAccessTitle>
-                                <a href="{{apage['accessURL']}}" (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                'Resource title: ' + record.title,
-                                                                apage['accessURL'])">&nbsp;&nbsp;{{apage['title']}}</a>
-                            </ng-template>
-                        </span></i>
-                    <div *ngIf="apage['description']">
-                        <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i class="faa faa-caret-down"
-                                *ngIf="apage[showDesc]"></i> About this link
-                        </div>
-                        <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
-                        </div>
-                    </div>
-                </div>
-                <ng-template #RestrictedAccessPage>
-                    <div style="padding:10px 20px;">
-                        <a href={{apage.accessURL}} target="_blank">
-                            <button style="margin-top: -6px;" type="button" class="btn btn-primary py-0"
-                                data-toggle="tooltip" data-placement="top" title="{{apage['title']}}"
-                                (click)="googleAnalytics(apage['accessURL'], $event, 'Download Data')"><i
-                                    class="fas fa-external-link-alt button_icon"></i>Download Data</button>
-                        </a>
-
-                        <div *ngIf="apage['description']">
-                            <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
-                                    class="faa faa-caret-right" *ngIf="!apage[showDesc]"></i><i
-                                    class="faa faa-caret-down" *ngIf="apage[showDesc]"></i> About downloading restricted
-                                public data
-                            </div>
-                            <div class="description" *ngIf="apage[showDesc]" [@enterAnimation]>{{apage['description']}}
-                            </div>
-                        </div>
-                    </div>
-                </ng-template>
-            </div>
-        </div> -->
-
         <div style="width: 100%;">
             <lib-accesspage [record]="record" [theme]="theme"></lib-accesspage>
         </div>
@@ -96,8 +44,8 @@
         (dlStatus)="setDownloadStatus($event)">
     </pdr-data-files>
 
-    <div *ngIf="hasDRS" style="margin-top: 2em;">
-        <app-searchresult [record]="record" [inBrowser]="inBrowser">
+    <div *ngIf="hasDRS" style="margin-top: 2em;margin-right: 0px;">
+        <app-searchresult [record]="record" [inBrowser]="inBrowser" [collection]="collection">
         </app-searchresult>
     </div>
 </div>

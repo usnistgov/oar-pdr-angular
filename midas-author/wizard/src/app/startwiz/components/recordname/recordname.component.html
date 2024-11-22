@@ -1,4 +1,4 @@
-<form [formGroup]="parantFormGroup" class="full-height">
+<div class="full-height">
     <oar-pushing-sidebar style="width: 100%; height: fit-content;">
         <div class="main-content">
             <div style="margin-top: 1em;margin-right: 1em;">
@@ -7,7 +7,7 @@
                     Give this draft a brief name that will remind you what this publication will be about.  This name will not appear in the publication; instead, it will appear as a label in the MIDAS portal in your list of draft publications.<p></p>
                     Enter a brief name:
                 </div>
-                <input #name class="input input-box" type="text" pInputText name="recordname" formControlName="recordname" (input)="updateRecordName($event)"/>
+                <input #name class="input input-box" type="text" pInputText name="recordname" [(ngModel)]="dataModel.recordname" (input)="updateRecordName($event)"/>
             </div>
         </div>
         <span class="sidebar-title">Question Help</span>
@@ -17,4 +17,4 @@
             This name should be brief--say, 16 characters or less (so it should not be the same as the publication title).  If it is much longer than that, it may get truncated in displays. A name must unique among all the records you create; we'll let you know if you are about to enter a name you've assigned before.  If you wish, you can change this name later.
         </div>
     </oar-pushing-sidebar>
-</form>
+</div>

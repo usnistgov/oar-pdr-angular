@@ -1,74 +1,97 @@
-<div id="topics" style="width: 100%;">
-    <div class="editable_container" style="width: 100%;">
-        <!-- Label -->
-        <div class="editable_field" style="width: fit-content;">
-            <span *ngIf="mdupdsvc.isEditMode" style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
-            <span style="white-space: nowrap;margin-right: .5em;">
-                <strong>General Research Topics: </strong>
-            </span>
-        </div>
+<div style="border: 1px solid rgb(210, 210, 210);border-radius: 10px;padding: 10px;margin-bottom: 0.5em;">
+    <div style="margin-top: -1.3em; margin-bottom: 0px; background-color: white;width: fit-content;padding-left: 10px;padding-right: 10px;font-size:larger;">
+        <span *ngIf="mdupdsvc.isEditMode"
+        style="color: rgb(173, 0, 0); vertical-align: top;text-align: left; padding-right: .5em;">
+        *</span>
+        <strong>Research Areas</strong>
+    </div>
 
-        <div class="editable_field" *ngIf="!isEmpty" [ngStyle]="topicWidth">
-            <!-- Topics in regular or preview mode -->
-            <div *ngIf="!mdupdsvc.isEditMode" style="width: 100%;">
-                <div style="text-align: left;">
-                    <span>{{nistTaxonomyTopics.join(', ')}}</span>
-                </div>
-            </div>
+    <div style="margin-bottom: 0em; margin-left: 10px;margin-bottom: -15px;">
+        <span style="display: table;">
+            <div class="editable_container" style="display: table-row;">
+                <!-- Loop through collections and display topics -->    
+                <div *ngFor="let col of collectionOrder; let i =index" style="margin-bottom: .3em;">
+                    <div *ngIf="showTopics(col)" style=" display: table-cell;max-width: calc(100%-70px) !important;">
+                        <!-- Display collection name -->
+                        <span *ngIf="topics[col] && topics[col].length > 0; else noTopic" style="font-weight: 500;white-space: nowrap;" >
+                            <strong>{{ allCollections[col].tag }}: </strong>
+                        </span>
 
-            <!-- Topics in edit mode -->
-            <!-- <ng-template #editmode> -->
-            <div *ngIf="mdupdsvc.isEditMode">
-                <!-- Editing -->
-                <div *ngIf="isEditing; else nonEditing" style="width:fit-content" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
-                    <span>{{nistTaxonomyTopics.join(', ')}}</span>
-                </div>
-                <!-- nonEditing: only display topics-->
-                <ng-template #nonEditing>
-                    <div class="topics" style="width: fit-content;padding-left: 5px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
-                        <span *ngIf="!isEmpty">
-                            {{nistTaxonomyTopics.join(', ')}}
+                        <!-- If no topic, display Add {collection name} -->
+                        <ng-template #noTopic>
+                            <span *ngIf="mdupdsvc.isEditMode" style="padding-right: 10px !important; white-space: nowrap;">
+                                <strong>{{ allCollections[col].tag }}: </strong>
+                            </span>
+                        </ng-template>
+
+                        <!-- Display topics in bubbles -->
+                        <span *ngIf="topics[col] && topics[col].length > 0" style="padding-left: 20px;">
+                            <span style="max-width: 95%; ">
+                                <span class="topics" 
+                                    [style.background-color]="bubbleColor(topic)" 
+                                    [style.border]="borderStyle(topic)" 
+                                    (mouseenter)="mouseEnter(topic)" 
+                                    (mouseover)="mouseEnter(topic)" 
+                                    (mouseout)="mouseOut(topic)" 
+                                    [style.cursor]="setCursor(topic)" 
+                                    style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
+                                    (click)="topicClick(topic, col)" 
+                                    *ngFor="let topic of topicDisplay[col]; let i =index">
+                                    <span style="display: inline-block">{{ topic }}</span>
+                                    <!-- New topic structure -->
+                                    <!-- <span style="display: inline-block">{{ topic.tag }}</span> -->
+                                </span> 
+                            </span>
                         </span>
                     </div>
-                </ng-template>
+
+                    <!-- Control buttons -->
+                    <span *ngIf="mdupdsvc.isEditMode && showTopics(col)" style=" display: table-cell;width: 70px;">
+                        <!-- Edit button -->
+                        <button 
+                            *ngIf="!editingTopics(col)"
+                            class="edit_button" 
+                            (click)="startEditing(col)" 
+                            aria-label="edit button" 
+                            ngbTooltip="Edit topics">
+
+                            <i class="fas fa-pencil"></i>
+                        </button>
+
+                        <!-- Close edit block -->
+                        <button 
+                            *ngIf="editingTopics(col)" 
+                            class="edit_button" 
+                            type="button" 
+                            [disabled]="dataChanged" 
+                            (click)="setMode()" 
+                            aria-label="Close edit block" 
+                            ngbTooltip="Close edit block">
+
+                            <i class="fas fa-times"></i>
+                        </button>
+
+                        <!-- Restore original -->
+                        <button *ngIf="updated(col)" class="edit_button" type="button"
+                        (click)="restoreOriginal(col)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
+                            <i class="faa faa-undo fs-sm"></i>
+                        </button>                                 
+                    </span>
+                </div>
             </div>
-            <!-- </ng-template> -->
-        </div>
-
-        
-        <!-- Control buttons -->
-        <div class="editable_field" *ngIf="mdupdsvc.isEditMode">
-            <!-- Edit button -->
-            <button *ngIf="!isEditing" class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit topics">
-                <i class="fas fa-pencil"></i>
-            </button>
-
-            <!-- Close edit block -->
-            <button *ngIf="isEditing" class="edit_button" type="button" [disabled]="dataChanged" (click)="setMode()" aria-label="Close edit block" ngbTooltip="Close edit block">
-                <i class="fas fa-times"></i>
-            </button>
-
-            <!-- Restore original -->
-            <button *ngIf="updated" class="edit_button" type="button"
-            (click)="restoreOriginal()" aria-label="Restore original topics" ngbTooltip="Restore original topics">
-                <i class="faa faa-undo fs-sm"></i>
-            </button> 
-
-            <!-- <i class="fas fa-pencil icon_enabled link-icon" [ngClass]="{'icon_enabled': !isEditing, 'icon_disabled':isEditing }" (click)="startEditing()" title="Edit topics" ngbTooltip="edit topics" aria-label="edit topics" [ngStyle]="{'cursor': isEditing? 'default' : 'pointer' }"></i> -->
-             
-        </div>
+        </span>
     </div>
 </div>
 
 <!-- Topic editor -->
 <div #topic *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
-    <lib-topic-edit [record]="record" [inBrowser]="inBrowser" [nistTaxonomyTopics]="nistTaxonomyTopics" [editMode]="editMode" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-topic-edit>
+    <lib-topic-edit 
+        [record]="record" 
+        [inBrowser]="inBrowser" 
+        [collection]="editCollection" 
+        [selectedTopics]="topics[editCollection]" 
+        [scheme]="editScheme"
+        (dataChangedOutput)="onDataChange($event)" 
+        (cmdOutput)="onCommandChanged($event)"></lib-topic-edit>
 </div>
 
-<div *ngIf="scienceThemeTopics.length > 0" style="width: 100%;">
-    <strong>Forensics Research Topics: </strong>
-    <span class="topics" *ngFor="let topic of scienceThemeTopics; let i =index">
-        <i>{{ topic }}</i>
-        <span *ngIf="i < scienceThemeTopics.length-1 ">, </span>
-    </span> &nbsp; &nbsp;
-</div> 

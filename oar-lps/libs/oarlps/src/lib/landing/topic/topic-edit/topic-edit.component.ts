@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../../nerdm/nerdm';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
@@ -28,11 +28,14 @@ export class TopicEditComponent implements OnInit {
     taxonomyList: any[];
     taxonomyTree: TreeNode[] = [];
     toggle: Boolean = true;  
-    originalNistTaxonomyTopics: any[] = [];
+    originalSelectedTopicsTopics: any[] = [];
+    // selectedTopics: any[] = [];
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;
-    @Input() nistTaxonomyTopics: any[] = [];
+    @Input() collection: string;
+    @Input() selectedTopics: any[] = [];
+    @Input() scheme: string = "";
     @Output() dataChangedOutput: EventEmitter<any> = new EventEmitter();
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
@@ -48,7 +51,11 @@ export class TopicEditComponent implements OnInit {
 
     ngOnInit(): void {
         //Clone this.nistTaxonomyTopics
-        this.cloneArray(this.nistTaxonomyTopics, this.originalNistTaxonomyTopics);
+        // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
+
+        // for(let obj of this.selectedTopicObjs) {
+        //     this.selectedTopics.push(obj.tag);
+        // }
 
         this.taxonomyListService.get(0).subscribe((result) => {
             if (result != null && result != undefined)
@@ -69,6 +76,18 @@ export class TopicEditComponent implements OnInit {
     }
 
     /**
+     * Once input record changed, refresh the topic list 
+     * @param changes 
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+        // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
+
+        // for(let obj of this.selectedTopicObjs) {
+        //     this.selectedTopics.push(obj.tag);
+        // }        
+    }
+
+    /**
      * a field indicating if this data has beed edited
      */
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
@@ -83,14 +102,14 @@ export class TopicEditComponent implements OnInit {
         this.isVisible = true;
     }
 
-    cloneArray(sourceArray: any[], targetArray: any[]) {
-        if(!sourceArray) 
-            targetArray = sourceArray;
-        else{
-            targetArray = [];
-            sourceArray.forEach(val => targetArray.push(val));
-        }
-    }
+    // cloneArray(sourceArray: any[], targetArray: any[]) {
+    //     if(!sourceArray) 
+    //         targetArray = sourceArray;
+    //     else{
+    //         targetArray = [];
+    //         sourceArray.forEach(val => targetArray.push(val));
+    //     }
+    // }
 
     /*
         *   build taxonomy tree
@@ -159,7 +178,7 @@ export class TopicEditComponent implements OnInit {
 
     undoCurrentChanges() {
         //Revert this.nistTaxonomyTopics
-        this.cloneArray(this.originalNistTaxonomyTopics ,this.nistTaxonomyTopics);  
+        // this.cloneArray(this.originalSelectedTopicsTopics ,this.selectedTopics);  
         this.cmdOutput.emit({"command": 'undoCurrentChanges'});
         this.reset();
     }
@@ -171,29 +190,34 @@ export class TopicEditComponent implements OnInit {
      * @param refreshHelp Indicates if help content needs be refreshed.
      */
     onSave(refreshHelp: boolean = true) {
-        let postMessage: any = {};
+        this.dataChanged = false;
+        this.cmdOutput.emit({'command':'saveTopics','selectedTopics':this.selectedTopics});
 
-        postMessage[this.fieldName] = this.nistTaxonomyTopics;
-        this.record[this.fieldName] = this.nistTaxonomyTopics;
-        console.log("postMessage", postMessage);
-        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-            // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-            if (updateSuccess) {
-                this.dataChanged = false;
-                this.commandOut('saveTopics');
-                this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
-            } else
-                console.error("acknowledge topic update failure");
-        });
+        // let postMessage: any = {};
+
+        // postMessage[this.fieldName] = this.selectedTopics;
+        // this.record[this.fieldName] = this.selectedTopics;
+        // console.log("postMessage", postMessage);
+        // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+        //     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
+        //     if (updateSuccess) {
+        //         this.dataChanged = false;
+        //         this.commandOut('saveTopics');
+        //         this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
+        //     } else
+        //         console.error("acknowledge topic update failure");
+        // });
     }
 
     /**
      * Delete a topic
      */
     deleteTopic(index: number) {
+        if(!this.selectedTopics) return;
+
         this.setTreeVisible(true);
-        this.searchAndExpandTaxonomyTree(this.nistTaxonomyTopics[index], false);
-        this.nistTaxonomyTopics = this.nistTaxonomyTopics.filter(topic => topic != this.nistTaxonomyTopics[index]);
+        this.searchAndExpandTaxonomyTree(this.selectedTopics[index], false);
+        this.selectedTopics = this.selectedTopics.filter(topic => topic != this.selectedTopics[index]);
         this.refreshTopicTree();
         this.dataChanged = true;
     }
@@ -202,11 +226,17 @@ export class TopicEditComponent implements OnInit {
      * Update the topic list
      */
     updateTopics(rowNode: any) {
+        if(!this.selectedTopics) this.selectedTopics = [];
         this.toggle = false;
-        const existingTopic = this.nistTaxonomyTopics.filter(topic => topic == rowNode.node.data.researchTopic);
+        const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
-            this.nistTaxonomyTopics.push(rowNode.node.data.researchTopic);
-            this.dataChanged = true;
+            //Need to create a topic object before push
+            // this.selectedTopics.push(
+            //     { "@id": "", "@type": "", "tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
+
+            this.selectedTopics.push(rowNode.node.data.researchTopic);
+    
+                this.dataChanged = true;
             // Reset search text box
             if (this.searchText != "") {
                 this.searchText = "";
@@ -220,11 +250,13 @@ export class TopicEditComponent implements OnInit {
     */
     getTopicColor(rowNode: any) {
         // console.log("this.tempTopics", this.tempTopics);
-        const existingTopic = this.nistTaxonomyTopics.filter(topic => topic == rowNode.node.data.researchTopic);
+        if(!this.selectedTopics) return ROW_COLOR;
+
+        const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length <= 0) {
-        return ROW_COLOR;
+            return ROW_COLOR;
         } else {
-        return 'lightgrey';
+            return 'lightgrey';
         }
     }
 
@@ -232,11 +264,13 @@ export class TopicEditComponent implements OnInit {
     *   Set cursor type
     */
     getTopicCursor(rowNode: any) {
-        const existingTopic = this.nistTaxonomyTopics.filter(topic0 => topic0 == rowNode.node.data.researchTopic);
+        if(!this.selectedTopics) return 'default';
+
+        const existingTopic = this.selectedTopics.filter(topic0 => topic0 == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length <= 0)
-        return 'pointer';
+            return 'pointer';
         else
-        return 'default';
+            return 'default';
     }
 
     searchAndExpandTaxonomyTree(topic: string, option: boolean) {
@@ -386,10 +420,10 @@ export class TopicEditComponent implements OnInit {
     */
     rowColor(rowNode: any) {
         if (this.highlight == "") {
-        return this.getTopicColor(rowNode);
+            return this.getTopicColor(rowNode);
         } else {
-        if (this.highlight == rowNode.node.data.name) {
-            return "white";
+            if (this.highlight == rowNode.node.data.name) {
+                return "white";
         } else {
             return this.getTopicColor(rowNode);
         }

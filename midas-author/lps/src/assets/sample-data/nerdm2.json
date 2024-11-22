@@ -10,7 +10,7 @@
         "https://www.nist.gov/od/dm/nerdm-schema/pub/v0.1#/definitions/PublicDataResource"
     ],
     "@type": ["nrdp:PublicDataResource"],
-    "@id": "ark:/88434/mds0000fbk",
+    "@id": "test2",
     "title": "Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32",
     "contactPoint": {
         "hasEmail": "mailto:patricia.flanagan@nist.gov",
@@ -66,9 +66,74 @@
     "topic": [
         {
             "@type": "Concept",
-            "scheme": "https://www.nist.gov/od/dm/nist-themes/v1.0",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/",
             "tag": "Information Technology: Biometrics"
-        }
+        },
+        {
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+            "tag": "Materials: Ceramics",
+            "@type": "Concept"
+          },
+          {
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+            "tag": "Standards: Reference data",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Physics: Condensed matter",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Materials: Modeling and computational material science",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Electronics: Thin-film electronics",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Electronics: Optoelectronics",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Chemistry: Molecular characterization",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Chemistry: Theoretical chemistry and modeling",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Nanotechnology:Nanoelectronics",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Chemistry: Chemical thermodynamics and chemical properties",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Electronics: Semiconductors",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Materials: Materials characterization",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
+            "@type": "Concept"
+          },
+          {
+            "tag": "Physics: Optical physics",
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/",
+            "@type": "Concept"
+          }
     ],
     "references": [
         {
@@ -222,5 +287,16 @@
         "_userDetails": { "userId": "dsn1", "userName": "Deoyani", "userLastName": "Nandrekar Heinis", "userEmail": "deoyani.nandrekarheinis@nist.gov" },
         "_updateDate": "2019-12-03T15:50:53.208+0000"
     }
+    ],
+    "isPartOf": [
+        {
+            "@id": "1234",
+            "title": "NIST Forensics Research.",
+            "proxyFor": "ark:/88434/mds9911",
+            "resType": [
+                "nrda:Aggregation",
+                "nrdp:PublicDataResource"
+            ]
+        }
     ]
 }

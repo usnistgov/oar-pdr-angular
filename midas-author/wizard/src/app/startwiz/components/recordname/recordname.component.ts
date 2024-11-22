@@ -2,7 +2,6 @@ import { Component, Input, ChangeDetectorRef, OnInit, ViewChild, ElementRef } fr
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
-import { UntypedFormGroup, FormGroupDirective } from '@angular/forms';
 
 @Component({
   selector: 'app-recordname',
@@ -10,28 +9,23 @@ import { UntypedFormGroup, FormGroupDirective } from '@angular/forms';
   styleUrls: ['./recordname.component.css', '../../stepwizard.component.scss']
 })
 export class RecordNameComponent implements OnInit {
-    parantFormGroup!: UntypedFormGroup;
-    private _sbarvisible : boolean = true;
+    lastStep: StepModel;
+    thisStep: StepModel;
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
-
-    @ViewChild('name') nameElement: ElementRef;
     
-    constructor(private rootFormGroup: FormGroupDirective, 
+    constructor(
         private cdr: ChangeDetectorRef,
         private stepService: StepService) { }
 
     ngOnInit(): void {
-        this.parantFormGroup = this.rootFormGroup.control.controls['recordname'] as UntypedFormGroup;
-
-        this.parantFormGroup.valueChanges.subscribe(selectedValue  => {
-        })
+        this.thisStep = this.stepService.getStep("Name");
+        this.lastStep = this.stepService.getLastStep();
     }
 
     updateRecordName(evt:any) {
-        this.dataModel.recordname = evt.target.value;
-        this.steps[5].isComplete = (this.dataModel.recordname?.trim() != "");
-        this.steps[5].canGoNext = this.stepService.allDone();
+        this.thisStep.isComplete = (this.dataModel.recordname?.trim() != "");
+        this.lastStep.canGoNext = this.stepService.allDone();
     }
 }

@@ -85,11 +85,18 @@ export abstract class CustomizationService {
      */
     public abstract getMidasMeta() : Observable<Object>;
 
+    public abstract getEnvelop() : Observable<Object>;
     /**
      * retrieve the data files from the server-side 
      * customization service.  
      */
     public abstract add(md: any, subsetname: string, subsetnameAPI: string) : Observable<Object>;
+
+    /**
+     * Validate  from the server-side 
+     * customization service.  
+     */
+    public abstract validate() : Observable<Object>;    
 }
 
 /**
@@ -118,7 +125,6 @@ export class WebCustomizationService extends CustomizationService {
     {
         super(resid, userId);
         if (! endpoint.endsWith('/')) endpoint += '/';
-        console.log('endpoint', endpoint);
     }
 
     /**
@@ -143,7 +149,6 @@ export class WebCustomizationService extends CustomizationService {
         //
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/data"
-            console.log("Loading draft data from url: ", url)
             let obs : Observable<Object> = 
                 this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } });
             this._wrapRespObs(obs, subscriber);
@@ -231,7 +236,6 @@ export class WebCustomizationService extends CustomizationService {
             return new Observable<Object>(subscriber => {
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
-                console.log("url1", url);
 
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -242,7 +246,6 @@ export class WebCustomizationService extends CustomizationService {
                 let url = this.endpoint + this.draftapi + this.resid + "/data";
                 url = subsetname == undefined ? url : url + "/" + subsetnameAPI;
                 url = id == undefined ? url : url + "/" + id;
-                console.log("url2", url);
 
                 let obs : Observable<Object> = 
                     this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -377,9 +380,7 @@ export class WebCustomizationService extends CustomizationService {
     public getDataFiles() : Observable<Object> {
         return new Observable<Object>(subscriber => {
             let url = this.endpoint + this.draftapi + this.resid + "/file_space";
-            console.log("Loading data files from url: ", url);
             let body = { "action": "sync" };
-            console.log("body: ", body);
 
             let obs : Observable<Object> = 
                 this.httpcli.patch(url, body, { headers: { "Authorization": "Bearer " + this.token } });
@@ -434,17 +435,50 @@ export class WebCustomizationService extends CustomizationService {
      */
     public getMidasMeta() : Observable<Object> {
         let url = this.endpoint + this.draftapi + this.resid + "/meta";
-        console.log("Load metadata url", url);
         return new Observable<Object>(subscriber => {
             let obs : Observable<Object>;
             this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
                 obs = of(JSON.parse(JSON.stringify(data)));
-                console.log("Metadata return", obs);
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
+    /**
+     * Retrieve the data files from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public validate(message: string = "") : Observable<Object> {
+        let url = this.endpoint + this.draftapi + this.resid + "/status";
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+            let body = {
+                "action": "validate",
+                "message":  message     
+            };
+
+            this.httpcli.put(url, body, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
+                this._wrapRespObs(obs, subscriber);
+            });
+        });
+    }
+
+    public getEnvelop(message: string = "") : Observable<Object> {
+        let url = this.endpoint + this.draftapi + this.resid;
+        return new Observable<Object>(subscriber => {
+            let obs : Observable<Object>;
+
+            this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.token } }).subscribe(data =>{
+                obs = of(JSON.parse(JSON.stringify(data)));
                 this._wrapRespObs(obs, subscriber);
             });
         });
     }
 }
+
 
 /**
  * a CustomizationService that tracks updates to the metadata record in memory
@@ -455,7 +489,7 @@ export class InMemCustomizationService extends CustomizationService {
 
     private origmd : Object = null;
     private resmd : Object = null;
-
+    private validateResponse: any  = require('../../../assets/sample-data/validate_response.json');
     /**
      * construct the customization service
      *
@@ -621,6 +655,20 @@ export class InMemCustomizationService extends CustomizationService {
         });
     }
 
+    /**
+     * Retrieve the data files from server-side.
+     * @returns Observable<Object> -- on success, the subscriber's success (next) function is 
+     *                   passed the Object representing the full NERDm components array.  On 
+     *                   failure, ...
+     */
+    public validate() : Observable<Object> {
+        return of<Object>(JSON.parse(JSON.stringify(this.validateResponse)));
+    }
+
+    public getEnvelop() : Observable<Object> {
+        return of<Object>(JSON.parse(JSON.stringify(this.validateResponse)));
+    }
+
     public getSubset(subsetname: string, id: string = undefined) : Observable<Object> {
 
         // To transform the output with proper error handling, we wrap the
@@ -650,7 +698,7 @@ export class InMemCustomizationService extends CustomizationService {
             error: (httperr) => {   // this will be an HttpErrorResponse
                 let msg = "";
                 let err = null;
-                console.log("httperr.status", httperr.status);
+                console.error("httperr.status", httperr.status);
                 if (httperr.status == 401) {
                     msg += "Authorization Error (401)";
                     // TODO: can we get at body of message when an error occurs?

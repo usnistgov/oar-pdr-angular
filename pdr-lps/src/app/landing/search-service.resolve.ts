@@ -40,9 +40,9 @@ export class SearchResolve implements Resolve<any> {
     else {
       return this.searchService.searchById(recordid).pipe(
         catchError((err: Response, caught: Observable<any[]>) => {
-          console.log(err);
+          console.error(err);
           if (err !== undefined) {
-            console.log("ERROR STATUS :::" + err.status);
+            console.error("ERROR STATUS :::" + err.status);
             if (err.status >= 500) {
               this.rtr.navigate(["/usererror", recordid, { errorcode: err.status }]);
             }

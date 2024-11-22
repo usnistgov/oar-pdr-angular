@@ -289,7 +289,6 @@ export class RefListComponent implements OnInit {
                 postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
 
                 //Delete temp keys
-                console.log('postMessage[this.fieldName]01', postMessage[this.fieldName])
                 postMessage[this.fieldName].forEach(ref => {
                     delete ref['isNew'];
                     delete ref['dataChanged'];
@@ -297,7 +296,6 @@ export class RefListComponent implements OnInit {
 
                 this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
-                        console.log("Ref returned from server:", rec);
                         this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;
@@ -325,7 +323,6 @@ export class RefListComponent implements OnInit {
         if(this.dataChangedAndUpdated){
             this.mdupdsvc.undo(this.fieldName).then((success) => {
                 if (success){
-                    console.log("Undo succeed. This.record", this.record)
                     if(this.orig_record && this.orig_record.references && this.record.references && this.record.references.length > 0){
                         this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
             

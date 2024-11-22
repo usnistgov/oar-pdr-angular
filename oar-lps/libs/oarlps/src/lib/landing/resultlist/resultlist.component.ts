@@ -3,15 +3,18 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
-
+import { timeout } from 'rxjs-compat/operator/timeout';
 import { ThisReceiver } from '@angular/compiler';
 import * as e from 'express';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
+import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
+import * as CollectionData from '../../../assets/site-constants/collections.json';
+import { CollectionService } from '../../shared/collection-service/collection.service';
 
 @Component({
   selector: 'app-resultlist',
   templateUrl: './resultlist.component.html',
-  styleUrls: ['./resultlist.component.css'],
+  styleUrls: ['../landing.component.scss', './resultlist.component.css'],
   animations: [
         trigger('detailExpand', [
         state('void', style({height: '0px', minHeight: '0'})),
@@ -37,6 +40,7 @@ import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics
 export class ResultlistComponent implements OnInit {
     searchResults: any[];
     searchResultsForDisplay: any[];
+    searchResultsForDisplayOriginal: any[];
     searchResultsOriginal: any[];
     currentIndex: number = 0;
     resultCount: number = 0;
@@ -44,19 +48,30 @@ export class ResultlistComponent implements OnInit {
     optionSelected: string;
     searchPhases: string = "";
     searchFields: string[] = ["title", "description", "keyword"];
-    showResult: boolean = true;
-    PDRAPIURL: string = "https://data.nist.gov/od/id/";
-    noSearchResult: boolean = false;
-    expandIcon: string = 'url(assets/images/open_200x200.png)';
+    PDRAPIURL: string = "https://data.nist.gov/lps/";
     isEmail: boolean = false;
-    expandButtonAlterText: string = "Open dataset details";
+    homeBtnBackColor: string = "white";
+
+    //Result display
+    showResult: boolean = true;
+    showResultList: boolean = false;
+    noSearchResult: boolean = false;
+    // expandButtonAlterText: string = "Open dataset details";
 
     //Pagination
     totalResultItems: number = 0;
     totalPages: number = 0;
-    itemsPerPage: number = 20;
+    itemsPerPage: number = 10;
     pages = [{name:'Page 1', value:1},{name:'Page 2', value:2}];
     currentPage: any = {name:'Page 1', value:1};
+
+    allCollections: any = {};
+
+    //  Color
+    colorScheme: ColorScheme;
+    defaultColor: string;
+    lightColor: string;  
+    lighterColor: string;  
 
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
@@ -64,18 +79,30 @@ export class ResultlistComponent implements OnInit {
     @Input() mobWidth: number = 1920;
     @Input() resultWidth: string = '400px';
     @Input() filterString: string = '';
+    @Input() collection: string = Collections.FORENSICS;
+    @Input() taxonomyURI: any = {};
 
     constructor(private searchService: SearchService, 
         private cfg: AppConfig,
-        public gaService: GoogleAnalyticsService) { }
+        public collectionService: CollectionService,
+        public gaService: GoogleAnalyticsService) { 
+
+            this.searchService.watchClearAll((clearAll: boolean) => {
+                if(clearAll) {
+                    this.searchPhases = "";
+                    this.filterResults();
+                }
+            });
+        }
 
     ngOnInit(): void {
+        this.colorScheme = this.collectionService.getColorScheme(this.collection);
         this.PDRAPIURL = this.cfg.get('locations.landingPageService',
                                    'https://data.nist.gov/od/id/');
 
         let that = this;
         let urls = (new NERDResource(this.md)).dynamicSearchUrls();
-        // console.log("ResultlistComponent: Found "+urls.length+" search url(s)");
+
         for(let i=0; i < urls.length; i++){
             this.searchService.resolveSearchRequest(urls[i])
             .subscribe(
@@ -83,9 +110,15 @@ export class ResultlistComponent implements OnInit {
                     this.resultCount = searchResults['ResultCount'];
                     that.onSuccess(searchResults.ResultData);
                 },
-                error => that.onError(error)
+                error => that.onError(urls[i], error)
             );
         }
+
+        this.allCollections = this.collectionService.loadAllCollections();
+    }
+
+    onPageChange(value: any){
+        // console.log("this.currentPage", value.target.value);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -102,14 +135,18 @@ export class ResultlistComponent implements OnInit {
         }
     }
 
+    onSelected(event) {
+        this.currentPage = this.pages.filter(p => p.name == event.target.value)[0];
+    }
+
     /**
      * Processing search results
      * @param searchResults search results
      */
     onSuccess(searchResults: any[]) {
         searchResults.forEach((object) => {
-            object['DetailsDisplayed'] = false;
-            object['iconurl'] = 'assets/images/open_200x200.png';
+            object['expandIcon'] = "faa faa-caret-right";
+            object['isExpanded'] = false;
             object['active'] = true;
         })
 
@@ -128,6 +165,8 @@ export class ResultlistComponent implements OnInit {
 
         this.filterResults();
         this.sortByDate();
+
+        this.showResultList = true;
     }
 
     /**
@@ -149,26 +188,8 @@ export class ResultlistComponent implements OnInit {
 
         this.pages = [];
         for(let i=1; i <= this.totalPages; i++) {
-            this.pages.push({name:'Page '+i+'/'+this.totalPages, value:i})
+            this.pages.push({name:'Page '+i+' of '+this.totalPages, value:i})
         }
-    }
-
-    /**
-     * Return the background image url of the icon next to the file name.
-     * If the details is hidden, display the "open" icon. Otherwise "close" icon.
-     * @returns 
-     */
-    detailExpandIcon(resultItem: any) {
-        let url;
-        if(resultItem.DetailsDisplayed){
-            url = 'url(assets/images/close_200x200.png)';
-        }else{
-            url = 'url(assets/images/open_200x200.png)';
-        }  
-
-        setTimeout(() => {
-            return url;
-        }, 0);
     }
 
     /**
@@ -177,24 +198,36 @@ export class ResultlistComponent implements OnInit {
      * @param fileNode       the TreeNode for the file to provide details for
      */
     toggleDetails(fileNode: any, index: number) {
+        let currentFileNode = this.searchResultsForDisplay[this.currentIndex];
         //Close current details window if it's open
-        if(index != this.currentIndex && this.searchResultsForDisplay[this.currentIndex]) {
-            this.searchResultsForDisplay[this.currentIndex]['DetailsDisplayed'] = false;
-            this.searchResultsForDisplay[this.currentIndex]['iconurl'] = 'assets/images/open_200x200.png';
+        if(index != this.currentIndex && currentFileNode != undefined) {
+            currentFileNode.expandIcon = "faa faa-caret-right";
+            currentFileNode.isExpanded = false;
         }
+
         this.currentIndex = index;
 
-        if(fileNode.DetailsDisplayed){
-            fileNode.DetailsDisplayed = false;
-            fileNode.iconurl = 'assets/images/open_200x200.png';
-            this.expandButtonAlterText = "Open dataset details";
+        if(fileNode.isExpanded){
+            fileNode.isExpanded = false;
+            fileNode.expandIcon = "faa faa-caret-right";
         }else{
-            fileNode.DetailsDisplayed = true;
-            fileNode.iconurl = 'assets/images/close_200x200.png';
-            this.expandButtonAlterText = "Close dataset details";
+            fileNode.isExpanded = true;
+            fileNode.expandIcon = "faa faa-caret-down";            
         }
     }
 
+    /**
+     * This function returns alter text/tooltip text for the expand symbol next to the given treenode title
+     * @param fileNode the TreeNode
+     * @returns 
+     */
+    expandButtonAlterText(fileNode: any) {
+        if(fileNode.isExpanded)
+            return "Close dataset details";
+        else
+            return "Open dataset details";
+    }
+    
     /**
      * Return class name based on given column number and window size
      * @param column 
@@ -219,8 +252,8 @@ export class ResultlistComponent implements OnInit {
     /**
      * If search is unsuccessful push the error message
      */
-    onError(error: any) {
-        console.error("Search URL failed to resolve: "+error.error);
+    onError(url: string, error: any) {
+        console.error("Search URL ("+url+") failed to resolve: "+error.message);
     }
 
     /**
@@ -264,7 +297,8 @@ export class ResultlistComponent implements OnInit {
             let searchWord: string = "";
 
             if(searchPhase != ""){
-                filteredResults = JSON.parse(JSON.stringify(this.searchResultsOriginal));
+                // filteredResults = JSON.parse(JSON.stringify(this.searchResultsOriginal));
+                filteredResults = JSON.parse(JSON.stringify(this.searchResults));
 
                 // Restore the contents in quotes
                 if(searchPhase.indexOf('Quooooote') >= 0) {
@@ -275,72 +309,72 @@ export class ResultlistComponent implements OnInit {
                     searchWord = searchPhase.replace(/"/g, '');
                 }
 
-                // Do search
-                filteredResults = this.filterResultByWord(filteredResults, searchWord);
-
-                filteredResults.forEach((object)=>{
-                    finalFilteredResults.push(object);
-                })
-                
-                finalFilteredResults.map(item => item["@id"])
-                    .filter((value, index, self) => self.indexOf(value) === index);
+                // Filter by word
+                this.filterResultByWord(this.searchResults, searchWord);
             }
         })
-        
-        this.searchResults = finalFilteredResults;
     }
 
     /**
      * Filter search result using searchString
      * @param searchResults The result list to be searched
      * @param searchString search string
-     * @returns filtered result list
      */
     filterResultByWord(searchResults:any[], searchString: string) {
         let retuenVal: any[] = [];
         let found: boolean = false;
 
+        // Filter by word means only remove items, never add items
         for(let object of searchResults) {
-            found = false;
-            for(let key of this.searchFields) {
-                if(Array.isArray(object[key])) {
-                    for(let val of object[key]) {
-                        if(val.toLowerCase().includes(searchString.trim().toLowerCase())) {
+            if(object.active){
+                found = false;
+                for(let key of this.searchFields) {
+                    if(Array.isArray(object[key])) {
+                        for(let val of object[key]) {
+                            if(val.toLowerCase().includes(searchString.trim().toLowerCase())) {
+                                retuenVal.push(object);
+                                found = true;
+                                break;
+                            }
+                        }
+                    }else{
+                        if(object[key].toLowerCase().includes(searchString.toLowerCase())) {
                             retuenVal.push(object);
                             found = true;
                             break;
                         }
                     }
-                }else{
-                    if(object[key].toLowerCase().includes(searchString.toLowerCase())) {
-                        retuenVal.push(object);
-                        found = true;
-                        break;
-                    }
-                }
 
-                if(found) break;
-            };
+                    if(found) break;
+                };
+
+                object.active = found; 
+            }
         }
-
-        // Remove items with duplicated @id
-        retuenVal.map(item => item["@id"])
-                .filter((value, index, self) => self.indexOf(value) === index);
-
-        return retuenVal;
     }
 
     /**
      * Reset active flags of all search result items to true (default)
      */
-    resetResult() {
+    resetResult(active: boolean = false) {
         if(this.searchResults) {
             this.searchResults.forEach((object) => {
-                object.DetailsDisplayed = false;
-                object.iconurl = 'assets/images/open_200x200.png';
-                object.active = true;
+                object.expandIcon = "faa faa-caret-right";
+                object.isExpanded = false;
+                object.active = active;
             })
         }
+    }
+
+    /**
+     * Restore reserved chars. For example, change "aaamp" back to "&".
+     * @param inputString 
+     */
+    restoreReservedChars(inputString: string) {
+        if(!inputString || inputString.trim() == "")
+            return "";
+        else
+            return inputString.replace(new RegExp("aaamp", "g"), "&"); 
     }
 
     /**
@@ -352,10 +386,7 @@ export class ResultlistComponent implements OnInit {
         let filters: string[];
         
         // Reset the search result
-        this.resetResult();
-
-        // Handle search text box first
-        this.filterResultByPhase(this.searchPhases);
+        this.resetResult(this.filterString=="NoFilter");
 
         // Handle filters
         if(this.filterString != "noFilter" && this.filterString != ""){
@@ -364,44 +395,60 @@ export class ResultlistComponent implements OnInit {
                 switch(filter.split("=")[0]){
                     case "@type":
                         this.searchResults.forEach((object) => {
-                            if(object.active == true){
-                                object.active = false;
+                            if(!object.active){
+                                // object.active = false;
 
                                 object["@type"].forEach((oType) => {
-                                    if(oType.includes(filter.split("=")[1]))
-                                        object.active = true;
+                                    let types = filter.split("=")[1].split(",");
+                                    types.forEach(type => {
+                                        if(oType.toLowerCase().includes(this.restoreReservedChars(type).toLowerCase()))
+                                            object.active = true;
+                                    });
                                 })
                             } 
                         });
 
                         break;
                     case "topic.tag":
-                        this.searchResults.forEach((object) => {
+                        let topics = filter.split("=")[1].split(",");
+                        for(let resultItem of this.searchResults) {
                             
-                            if(object.active == true){
-                                object.active = false;
+                            if(!resultItem.active){
+                                // resultItem.active = false;
 
-                                object["topic"].forEach((oTopic) => {
-                                    let topics = filter.split("=")[1].split(",");
-                                    topics.forEach(topic => {
-                                        if(oTopic["tag"].toLowerCase().includes(topic.toLowerCase()))
-                                            object.active = true;
-                                    });
-                                })
+                                for(let oTopic of resultItem["topic"]) {
+                                    for(let topic of topics) {
+                                        let collection = topic.split("----")[0];
+                                        let topicValue = this.restoreReservedChars(topic.split("----")[1]);
+
+                                        if(oTopic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
+                                            if(collection == Collections.DEFAULT) {
+                                                if(oTopic["tag"].toLowerCase().includes(topicValue.toLowerCase()))
+                                                    resultItem.active = true;
+                                            }else {
+                                                if(oTopic["tag"].toLowerCase() == (topicValue.toLowerCase()))
+                                                    resultItem.active = true;
+                                            }
+                                        }
+                                    };
+                                };
                             }
-                        });
+                        };
 
                         break;
                     case "components.@type":
                         this.searchResults.forEach((object) => {
                             if(object["components"] != undefined) {
-                                if(object.active == true){
-                                    object.active = false;
+                                if(!object.active){
+                                    // object.active = false;
     
                                     object["components"].forEach((component) => {
                                         component["@type"].forEach((cType) => {
-                                            if(cType.includes(filter.split("=")[1]))
-                                                object.active = true;
+                                            let types = filter.split("=")[1].split(",");
+                                            types.forEach(type => {
+                                                if(cType.toLowerCase().includes(this.restoreReservedChars(type).toLowerCase()))
+                                                    object.active = true;
+                                            });
                                         })
                                     })
                                 }
@@ -413,8 +460,8 @@ export class ResultlistComponent implements OnInit {
                         break;
                     case "contactPoint.fn":
                         this.searchResults.forEach((object) => {
-                            if(object.active == true){
-                                object.active = false;
+                            if(!object.active){
+                                // object.active = false;
                             
                                 if(object["contactPoint"]["fn"].includes(filter.split("=")[1]))
                                     object.active = true;
@@ -426,13 +473,13 @@ export class ResultlistComponent implements OnInit {
                         // Loop through each keyword in each search result. Display those that match
                         // the keywords from keyword filter
                         this.searchResults.forEach((object) => {
-                            if(object.active == true){
-                                object.active = false;
+                            if(!object.active){
+                                // object.active = false;
                             
                                 object["keyword"].forEach((keyword) => {
                                     //Loop through each search keyword from keyword filter
                                     filter.split("=")[1].split(",").forEach(kw => {
-                                        if(keyword.toLowerCase().includes(kw)){
+                                        if(keyword.toLowerCase().includes(this.restoreReservedChars(kw))){
                                             object.active = true;
                                         }
                                     })   
@@ -447,12 +494,18 @@ export class ResultlistComponent implements OnInit {
             })
         }
 
+        // Handle search text box first
+        this.filterResultByPhase(this.searchPhases);
+
         this.searchResultsForDisplay = [];
         this.searchResults.forEach((object) => {
             if(object.active) this.searchResultsForDisplay.push(object);
         })
 
+        this.searchResultsForDisplayOriginal = JSON.parse(JSON.stringify(this.searchResultsForDisplay));
+
         this.getTotalResultItems();
+        this.currentPage = this.pages[0];
     }
 
     /**
@@ -460,7 +513,16 @@ export class ResultlistComponent implements OnInit {
      * @param event sort item
      */
     onSortByChange(event: any) {
-        let key = event.value.value;
+        // console.log("event", event.value);
+        if(event.target.value == "none") {
+            this.searchResultsForDisplay = JSON.parse(JSON.stringify(this.searchResultsForDisplayOriginal));
+
+            this.refreshResult();
+            event.target.value = "";
+            return;
+        }
+
+        let key = this.options.filter(o => o.name == event.target.value)[0].value;
 
         if(key == "modified"){
             this.sortByDate();

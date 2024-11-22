@@ -8,6 +8,7 @@ import { MetricsData } from "../metrics-data";
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { formatBytes } from '../../utils';
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
+import { GlobalService } from '../../shared/globals/globals';
 
 @Component({
     selector: 'aboutdataset-detail',
@@ -43,6 +44,7 @@ export class AboutdatasetComponent implements OnChanges {
     defaultTheme = Themes.DEFAULT_THEME;
     scienceThemeResourceType = ThemesPrefs.getResourceLabel(Themes.SCIENCE_THEME);
     isPartOf: string[][] = null;
+    maxWidth: number = 1000;
     
     private _collapsed: boolean = false;
     @Input() record: NerdmRes;
@@ -79,7 +81,12 @@ export class AboutdatasetComponent implements OnChanges {
     public set jsonExpandDepth(newValue) {this._jsonExpandDepth = newValue}
 
     constructor(private cfg: AppConfig, 
-                public gaService: GoogleAnalyticsService) {  }
+        public globalService: GlobalService,
+        public gaService: GoogleAnalyticsService) { 
+            this.globalService.watchLpsLeftWidth(width => {
+                this.maxWidth = width;
+            })
+        }
 
     ngOnInit(): void {
         this.nerdmRecord["Native JSON (NERDm)"] = this.record;

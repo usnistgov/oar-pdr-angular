@@ -19,7 +19,7 @@ import { MetricsinfoComponent } from './metricsinfo.component';
         MetricsinfoComponent
     ]
 })
-export class MetricsiinfoModule { }
+export class MetricsinfoModule { }
 
 export {
     MetricsinfoComponent

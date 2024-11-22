@@ -18,13 +18,13 @@
     --nist-blue-light: #197dc0;
     --nist-blue-lighter: #2293dd;
     --nist-blue-lighter02: #ecf7ff;
-    --nist-blue-dark2: #1c4d9b; 
+    --nist-blue-dark2: #1c4d9b;
     --nist-blue-dark3: rgb(9, 108, 221);
     --background-light-grey: #f3f3f3;
     --background-light-grey02: #d3d3d3;
     --background-light-grey03: #ababab;
     --active-item: #33ccff;
-    --data-changed-saved: #dbffdd;
+    --data-changed-saved: #e2fcec;
     --data-changed: #fffeee;
     --editable: #ecf2f9;
     --tag-blue: #c0e6ff;
@@ -38,31 +38,33 @@
 
 .myCustomModalClass > .modal-dialog {
   max-width: 1490px !important;
-  min-width: 571px !important;   
+  min-width: 571px !important;
   width: 95% !important;
 }
 
 .modal-large > .modal-dialog {
     max-width: 1720px !important;
-    min-width: 1000px !important;   
+    min-width: 1000px !important;
     width: 70% !important;
 }
 
 .modal-mid > .modal-dialog {
     max-width: 1300px !important;
-    min-width: 800px !important;   
+    min-width: 800px !important;
     width: 60% !important;
 }
 
 .modal-small > .modal-dialog {
     max-width: 1000px !important;
-    min-width: 500px !important;   
-    width: 50% !important;
+    min-width: 500px !important;
+    width: 90% !important;
+    min-height: 400px !important;
+    height: 1000px !important;
 }
 
 .comfirmModalClass > .modal-dialog {
     max-width: 500px !important;
-    min-width: 200px !important;   
+    min-width: 200px !important;
     width: 95% !important;
     margin-top: 20vh;
 }
@@ -119,7 +121,7 @@ h2 {
 
 .dialogHeader {
   background-color:var(--nist-blue-dark);
-  height: 4em; 
+  height: 4em;
   color:white;
   text-align: center;
   padding-top: .5em;
@@ -153,18 +155,18 @@ a {
 
 .popup-header-bar {
     background-color:black;
-    height: 3em; 
+    height: 3em;
     padding: .5em .5em .5em 2em
 }
 
 .popup-header {
-    color: white; 
+    color: white;
     text-align: center;
 }
 
 .popup-tool-bar {
     background-color:var(--nist-blue-dark);
-    height: 3.3em; 
+    height: 3.3em;
     color:white;
     padding: .5em .5em .5em 2em
 }
@@ -172,7 +174,7 @@ a {
 .btn-labeled {
     float:right;
     margin-right: 1em;
-    width:160px; 
+    width:160px;
     color:white;
     padding-right: 1em;
 }
@@ -197,13 +199,13 @@ a {
 }
 
 .section-header {
-    margin-top: 1em;
+    margin-top: 0em;
     margin-bottom: 1em;
     border-bottom: 1px solid rgb(211, 211, 211);
 }
 
 .linked-text {
-    cursor: pointer; 
+    cursor: pointer;
     color:var(--nist-blue-default);
     margin-left: 1em;
 }
@@ -240,8 +242,8 @@ a {
     color: white;
 }
 
-.green-btn:hover{ 
-    background-color: var(--nist-green-light) !important; 
+.green-btn:hover{
+    background-color: var(--nist-green-light) !important;
 }
 
 .blue-btn {
@@ -249,8 +251,8 @@ a {
     color: white;
 }
 
-.blue-btn:hover{ 
-    background-color: var(--nist-blue-light) !important; 
+.blue-btn:hover{
+    background-color: var(--nist-blue-light) !important;
 }
 
 .blue-btn2 {
@@ -258,23 +260,31 @@ a {
     color: white;
 }
 
-.blue-btn2:hover{ 
-    background-color: var(--nist-blue-light) !important; 
+.blue-btn2:hover{
+    background-color: var(--nist-blue-light) !important;
 }
 
 .light-blue-btn {
-    background-color:var(--nist-blue-light) !important; 
-    color: white !important; 
+    background-color:var(--nist-blue-light) !important;
+    color: white !important;
 }
 
-.light-blue-btn:hover{ 
-    background-color: var(--nist-blue-lighter) !important; 
+.light-blue-btn:hover{
+    background-color: var(--nist-blue-lighter) !important;
 }
 
 .diagram-btn-labeled {
-    padding-top: 0 !important; 
-    padding-bottom: 0 !important; 
-    width:160px !important; 
-    height: 2.5em !important; 
-    margin: 0em .5em .5em 0em !important; 
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    width:160px !important;
+    height: 2.5em !important;
+    margin: 0em .5em .5em 0em !important;
 }
+
+:focus {
+    outline: 2px solid #00aaff;
+    box-shadow:0 0 3px #00aaff;
+	outline-offset: -2px;
+}
+
+

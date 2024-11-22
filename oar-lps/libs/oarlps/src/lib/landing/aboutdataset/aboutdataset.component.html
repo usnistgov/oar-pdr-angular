@@ -50,7 +50,7 @@
     </a>
 </div>
 <!-- JSON viewer with a thin grey border -->
-<div class="json-viewer-box" id="json-viewer" *ngIf="showJsonViewer">
+<div class="json-viewer-box" [ngStyle]="{'max-width':maxWidth+'px'}" id="json-viewer" *ngIf="showJsonViewer">
     <!-- Header bar with JSON tree navigate buttons (left) and JSON export button (right)-->
     <div class="json-viewer-header">
         <!-- JSON export button (right alignment) -->

@@ -5,6 +5,7 @@ import { NotificationService } from '../../shared/notification-service/notificat
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { GlobalService } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-description',
@@ -26,12 +27,18 @@ export class DescriptionComponent implements OnInit {
     backColor: string = "white";
     resource: string = "resource";
     placeholder: string = "Please add description here.";
-
+    maxWidth: number = 1000;
+    
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
-                public lpService: LandingpageService,                  
+                public lpService: LandingpageService,
+                public globalService: GlobalService,                  
                 private notificationService: NotificationService){
                     
+                this.globalService.watchLpsLeftWidth(width => {
+                    this.onResize(width + 20);
+                })
+
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
                     if( sectionMode ) {
                         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
@@ -80,6 +87,10 @@ export class DescriptionComponent implements OnInit {
             this.originalRecord = JSON.parse(JSON.stringify(this.record));
             this.getDescription();
         }
+    }
+
+    onResize(width: number) {
+        this.maxWidth = width;
     }
 
     /**

@@ -1,4 +1,4 @@
-<div id="identity">
+<div id="identity" [ngStyle]="{'max-width': maxWidth+'px'}">
     <div style="width: 100%;">
         <span class="recordType">
             <b>{{recordType}}</b>
@@ -6,14 +6,13 @@
         </span>
         <br>
         <app-title [record]="record" [inBrowser]="inBrowser"></app-title>
-        <div id="ispartof" *ngIf="isPartOf">
-          <i style="font-size: smaller;">Part of {{isPartOf[0]}} <a href="{{isPartOf[1]}}"
-             title="view collection">{{isPartOf[2]}}</a> {{isPartOf[3]}}</i>
-        </div>
+
+        <app-ispartof *ngIf="isDefaultCollection" [record]="record" [inBrowser]="inBrowser"></app-ispartof>
+        
     </div>
     
     <div style="width: 100%;">
-        <app-author [record]="record" [inBrowser]="inBrowser"></app-author>
+        <app-author *ngIf="theme != scienceTheme" [record]="record" [inBrowser]="inBrowser"></app-author>
 
         <!-- Facilitators -->
         <div *ngIf="theme == scienceTheme" style="width: 100%;" [ngStyle]="{'margin-bottom': record.creators? '15px' : '1.5em'}">
@@ -24,9 +23,7 @@
             <div class="cell left">
                 <app-contact [record]="record" [inBrowser]="inBrowser"></app-contact>
             </div>
-            <!-- <div *ngIf="showHomePageLink"  class="cell right" style="height: 30px;margin-top: .5em;">
-                <app-visithome [record]="record" [inBrowser]="inBrowser" [editMode]="editMode" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
-            </div> -->
+
             <div class="cell right">
                 <app-visithome [record]="record" [inBrowser]="inBrowser" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
             </div>

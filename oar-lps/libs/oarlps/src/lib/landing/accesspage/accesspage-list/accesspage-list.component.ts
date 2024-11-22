@@ -71,7 +71,7 @@ export class AccesspageListComponent implements OnInit {
                         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
                                 if(this.currentApage && this.currentApage.dataChanged){
-                                    this.saveCurApage(false);  // Do not refresh help text 
+                                    this.saveCurApage(false, MODE.NORNAL);  // Do not refresh help text 
                                 }
 
                                 if(this.editBlockStatus == 'expanded')
@@ -255,14 +255,13 @@ export class AccesspageListComponent implements OnInit {
      */
     removeAccessPage(index: number) {
         this.accessPages.splice(index,1);
-        console.log("this.accessPages=========", this.accessPages);
         // this.currentOrderChanged = true;
         // this.dataCommand.next(MODE.EDIT);
         this.updateMatadata().then((success) => {
             if(success){
                 this.setMode(MODE.LIST);
             }else{
-                console.log("Update failed.")
+                console.error("Update failed.")
             }
         });
 
@@ -282,6 +281,7 @@ export class AccesspageListComponent implements OnInit {
     onDataChange(event) {
         this.accessPages[this.currentApageIndex] = JSON.parse(JSON.stringify(event.accessPage));
         this.accessPages[this.currentApageIndex].dataChanged = event.dataChanged;
+        this.currentApage = this.accessPages[this.currentApageIndex];
     }
 
     /**
@@ -328,7 +328,7 @@ export class AccesspageListComponent implements OnInit {
             if(success){
                 this.setMode(MODE.LIST);
             }else{
-                console.log("Update failed.")
+                console.error("Update failed.")
             }
         });
 
@@ -347,14 +347,8 @@ export class AccesspageListComponent implements OnInit {
 
         postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.accessPages));
 
-        // postMessage[this.fieldName].forEach(page => {
-        //     delete page.showDesc;
-        //     delete page.backcolor;
-        //     delete page.dataChanged;
-        // })
-
-        console.log('saveCurApage (body)', postMessage);
-        console.log('saveCurApage (body)', JSON.stringify(postMessage));
+        // console.log('saveCurApage (body)', postMessage);
+        // console.log('saveCurApage (body)', JSON.stringify(postMessage));
 
         if(this.isAdding){
             if(!this.emptyRecord(this.currentApageIndex)){
@@ -382,7 +376,7 @@ export class AccesspageListComponent implements OnInit {
                     this.currentApage.dataChanged = false;
                     this.setMode(editmode, refreshHelp);
                 }else{
-                    console.log("Update failed.")
+                    console.error("Update failed.")
                 }
             });
         }
@@ -397,7 +391,6 @@ export class AccesspageListComponent implements OnInit {
      */
     updateMatadata(comp: NerdmComp = undefined, compId: string = undefined) {
         let postMessage: any = {};
-        console.log("Updating comp:", comp);
         return new Promise<boolean>((resolve, reject) => {
             if(compId && comp) {   // Update specific access page
                 postMessage = JSON.parse(JSON.stringify(comp));

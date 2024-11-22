@@ -1,8 +1,11 @@
 <div class="grid" id="about">
     <div class="col-12 col-md-12 col-lg-12 col-sm-12">
         <div class="section-header">
-            <h3 style="display: inline-block;" name="about"><b>About This {{resourceType}}</b></h3>
+            <!-- <h3 style="display: inline-block;" name="about"><b>About This {{resourceType}}</b></h3> -->
+            <lib-section-title [sectionTitle]="sectionTitle" [inBrowser]="inBrowser" sectionTag="aboutHeader" id="aboutHeader" #aboutHeader></lib-section-title>
+ 
         </div>
+
         <aboutdataset-detail [record]="record" [inBrowser]="inBrowser" [mobileMode]="mobileMode" [metricsData]="metricsData" [showJsonViewer]='showJsonViewer' [theme]="theme">
         </aboutdataset-detail>
     </div>

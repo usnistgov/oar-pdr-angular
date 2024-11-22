@@ -22,14 +22,14 @@ describe('LandingBodyComponent', () => {
     let authsvc : AuthService = new MockAuthService(undefined, environment);
     let record1 : NerdmRes = environment.testdata['test1'];
     debugger;
-    
+
     let makeComp = function() {
         TestBed.configureTestingModule({
             imports: [ HttpClientModule, RouterTestingModule ],
             declarations: [ LandingBodyComponent ],
             providers: [
                 { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }, 
+                { provide: AuthService, useValue: authsvc },
                 GoogleAnalyticsService, UserMessageService, MetadataUpdateService, DatePipe,
                 CartService
             ]
@@ -38,7 +38,7 @@ describe('LandingBodyComponent', () => {
         fixture = TestBed.createComponent(LandingBodyComponent);
         component = fixture.componentInstance;
     }
-  
+
     beforeEach(waitForAsync(() => {
         makeComp();
         component.inBrowser = true;
@@ -74,14 +74,12 @@ describe('LandingBodyComponent', () => {
             expect(title.textContent).toEqual("Description");
 
             sect = cmpel.querySelector("#dataAccess")
-            console.log("sect", sect);
             expect(sect).toBeTruthy();
             title = sect.querySelector("h3");
             expect(title).toBeTruthy();
             expect(title.textContent).toEqual("Data Access");
 
             sect = cmpel.querySelector("#references")
-            console.log("sect", sect);
             expect(sect).toBeTruthy();
             title = sect.querySelector("h3");
             expect(title).toBeTruthy();
@@ -90,10 +88,9 @@ describe('LandingBodyComponent', () => {
             sect = cmpel.querySelector("#about")
             expect(sect).toBeTruthy();
             title = sect.querySelector("h3");
-            console.log("title", title);
             expect(title).toBeTruthy();
             expect(title.textContent).toEqual("About This Dataset");
         });
-    });    
+    });
 });
 

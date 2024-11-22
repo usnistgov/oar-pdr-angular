@@ -3,11 +3,11 @@ import { StepModel } from "./models/step.model";
 import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
-import { FormControl, UntypedFormGroup, Validators, UntypedFormBuilder, FormGroupDirective} from '@angular/forms';
 import { WizardService } from './services/wizard.service';
 import { LPSConfig } from 'oarlps';
 import { UserMessageService } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
+import { CollectionDataModel } from './models/data.model';
 
 export class AuthStatus {
     static readonly AUTHORIZED = 'Authorized';
@@ -32,7 +32,6 @@ class ClientError extends Error {
     selector: 'app-wizard',
     templateUrl: './stepwizard.component.html',
     styleUrls: ['./stepwizard.component.scss'],
-    providers: [FormGroupDirective],
     host: {
         '(window:resize)': 'onResize($event)'
     }
@@ -49,17 +48,17 @@ export class StepWizardComponent implements OnInit {
     nextBtnIcon: string = "faa faa-long-arrow-right icon-white";
     nextBtnText: string = "Next";
 
-    fgSteps!: UntypedFormGroup;
-
     authStatus: string = AuthStatus.AUTHORIZING;
     resid: string = "Wizard";
     authMessage: string = "Authorizing...";
 
     _creds: Credentials|null = null;
+    hasError: boolean = false;
+
+    collectionData: CollectionDataModel[] = [];
 
     constructor(private stepService: StepService,
                 private msgsvc: UserMessageService,
-                private fb: UntypedFormBuilder, 
                 private cdr: ChangeDetectorRef,
                 private wizardService: WizardService,
                 private configSvc: ConfigurationService,
@@ -87,6 +86,11 @@ export class StepWizardComponent implements OnInit {
 
     ngOnInit(): void {
         this.authorizeEditing();
+        this.collectionData = this.wizardService.getCollectionData();
+
+        this.stepService.getCurrentStep().subscribe(currentStep => {
+            this.showButtonLabel();
+        })
     }
 
     /**
@@ -120,56 +124,27 @@ export class StepWizardComponent implements OnInit {
             error: (err) => {
                 this.authStatus = AuthStatus.NOTLOGIN;
                 this.authMessage = err['message'];
+                this.hasError = true;
             }
         })
-    }
-
-    formGroupReset() {
-        this.fgSteps = this.fb.group({
-            'pubtype': this.fb.group({
-                resourceType: [""]
-            }),
-            'softwareInfo': this.fb.group({
-                provideLink: [false],
-                softwareLink: [""]
-            }),
-            'contactInfo': this.fb.group({
-                creatorIsContact: [true],
-                contactName: [""]
-            }),
-            'files': this.fb.group({
-                willUpload: [true]
-            }),
-            'assocPapers': this.fb.group({
-                assocPageType: [""]
-            }),
-            'recordname': this.fb.group({
-                recordname: [""]
-            })
-        });
     }
 
     stepDataReset(){
         this.steps = [];
 
-        this.steps = [
-            new StepModel(1, 'Publication Type',true,true,false,false),
-            new StepModel(2, 'Contact Info',true,false),
-            new StepModel(3, 'Files',true,false),
-            new StepModel(4, 'Software',false,false),
-            new StepModel(5, 'Associated Papers',true,false,false),
-            new StepModel(6, 'Name',true,false,false)
-        ]
+        this.stepService.getSteps().subscribe(steps => {
+            this.steps = steps;
 
-        this.currentStep = this.steps[0];
-        this.stepService.setSteps(this.steps);
-        this.stepService.setCurrentStep(this.currentStep);
+            this.currentStep = this.steps[0];
+            this.stepService.setCurrentStep(this.currentStep);
+        })
     }
 
     reset(){
-        this.formGroupReset();
         this.stepDataReset();
         this.dataModel = {};
+        this.showButtonLabel();
+        this.hasError = false;
     }
 
     ngAfterViewInit() {
@@ -198,10 +173,13 @@ export class StepWizardComponent implements OnInit {
         if (!this.isFirstStep) {
             this.stepService.moveToPrevStep();
         }
+
+        this.showButtonLabel();
     }
 
     showButtonLabel() {
-        // return "continue";
+        this.nextBtnIcon = "faa faa-long-arrow-right icon-white";
+
         if(this.stepService.isLastStep()){
             this.nextBtnText = 'Finish'; 
         }else{
@@ -216,6 +194,15 @@ export class StepWizardComponent implements OnInit {
 
     onSubmit(): void {
         let id: string;
+
+        // If partOfCollection flag is set but collection value is "None", 
+        // set the flag off and reset the collection value.
+        if(this.dataModel.partOfCollection && this.dataModel.collections[0] == this.collectionData.find(c => c.id === 4).value) {
+            this.dataModel.partOfCollection = false;
+            this.dataModel.collections = [];
+            this.stepService.toggleCollection(false);
+        }
+
         let body = {
             // "name": this.readableRandomStringMaker(5),
             "name": this.dataModel.recordname,
@@ -225,6 +212,8 @@ export class StepWizardComponent implements OnInit {
         this.wizardService.updateMetadata(body).subscribe({
             next: (obj) => {
                 id = obj['id'];
+                //Reset submit nutton icon
+                this.nextBtnIcon = "faa faa-long-arrow-right icon-white";
 
                 // Submit the request, get the id from server response then launch the landing page
                 let url = this.PDRAPI + id + '?editEnabled=true';
@@ -233,7 +222,9 @@ export class StepWizardComponent implements OnInit {
             },
             error: (err) => {
                 console.error("err", err);
-                
+                this.hasError = true;
+                this.nextBtnIcon = "faa faa-exclamation-triangle icon-orange";
+
                 // err will be a subtype of CustomizationError
                 if (err.type == 'user') 
                 {

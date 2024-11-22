@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { UntypedFormGroup, FormGroupDirective } from '@angular/forms';
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
@@ -10,70 +9,61 @@ import { StepService } from '../../services/step.service';
     styleUrls: ['./pubtype.component.css', '../../stepwizard.component.scss']
 })
 export class PubtypeComponent implements OnInit {
-    parantFormGroup!: UntypedFormGroup;
-    private _sbarvisible : boolean = true;
+    lastStep: StepModel;
+    thisStep: StepModel;
+    softwareStep: StepModel;
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
 
     constructor(
-        private rootFormGroup: FormGroupDirective, 
         private chref: ChangeDetectorRef,
         private stepService: StepService) { 
         
     }
 
     ngOnInit(): void {
-        this.parantFormGroup = this.rootFormGroup.control.controls['pubtype'] as UntypedFormGroup;
-        // console.log('this.parantFormGroup', this.parantFormGroup.controls['pubtype'])
-        this.parantFormGroup.valueChanges.subscribe(selectedValue  => {
-            this.dataModel.resourceType = selectedValue.resourceType;
-            if(this.dataModel.resourceType == undefined){
-            //     this.steps[0].canGoNext = true;
-            //     this.steps[0].isComplete = true;
-            //     for(let i = 1; i < this.steps.length; i++){
-            //         this.steps[i].canEnter = true;
-            //     }
-            // }else{
-                for(let i = 1; i < this.steps.length; i++){
-                    this.steps[i].canEnter = false;
-                }
-                this.dataModel.resourceType = undefined;
-                this.steps[0].isComplete = false;
-            }
-                
-            // Turn on optional step if resource type is software
-            // this.steps[3].active = (this.dataModel.resourceType == "software");
+        this.thisStep = this.stepService.getStep("Publication Type");
+        this.softwareStep = this.stepService.getStep("Software");
+        this.lastStep = this.stepService.getLastStep();
 
-            // this.steps[5].canGoNext = this.stepService.allDone();
-        })
+        if(this.dataModel.resourceType == undefined){
+            for(let i = 1; i < this.steps.length; i++){
+                this.steps[i].canEnter = false;
+            }
+            this.dataModel.resourceType = undefined;
+            this.thisStep.isComplete = false;
+        }
     }
 
     ngAfterContentInit() {
         this.chref.detectChanges();
     }
 
-    toggleSbarView() {
-        this._sbarvisible = ! this._sbarvisible;
-        this.chref.detectChanges();
-    }
-
-    isSbarVisible() {
-        return this._sbarvisible
-    }
-
+    /**
+     * Set other steps' status based on user selection:
+     * Upon user select any option, all steps become active.
+     * If user select "Software", the "Software" step shows up. Otherwise "Software" step is hidden.
+     * If all steps are completed, the "Finish" button in the last step will be enabled.
+     * @param evt Not used
+     */
     onSelectChange(evt: any) {
-        this.dataModel.resourceType = evt.target.value;
-
-        this.steps[0].canGoNext = true;
-        this.steps[0].isComplete = true;
+        this.thisStep.canGoNext = true;
+        this.thisStep.isComplete = true;
         for(let i = 1; i < this.steps.length; i++){
             this.steps[i].canEnter = true;
         }
 
         // Turn on optional step if resource type is software
-        this.steps[3].active = (this.dataModel.resourceType == "software");
+        this.softwareStep.active = (this.dataModel.resourceType == "software");
 
-        this.steps[5].canGoNext = this.stepService.allDone();
+        this.lastStep.canGoNext = this.stepService.allDone();
+    }
+
+    /**
+     * Show or hide collection step based on the value of partOfCollection
+     */
+    toggleCollection() {
+        this.stepService.toggleCollection(this.dataModel.partOfCollection);
     }
 }
