@@ -159,8 +159,12 @@ export class DownloadService {
         // create the request body
         let reqfiles = [];
         for (let item of files) {
+            let resId = item.resId;       
+            let filePath = item.filePath;
+            console.log(`resId: ${resId}, filePath: ${filePath}`);
+
             reqfiles.push({
-                "filePath": item.resId + '/' + item.filePath,
+                "filePath": resId + '/' + filePath,
                 "downloadUrl": item.downloadURL
             });
         }
