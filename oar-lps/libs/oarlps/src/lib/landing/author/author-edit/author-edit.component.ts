@@ -1,6 +1,10 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { Author } from '../author';
+import { Author, Affiliation } from '../author';
 import { AuthorService } from '../author.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
+import { NIST } from '../../../shared/globals/globals';
+import { SDSuggestion, SDSIndex, StaffDirectoryService } from 'oarng';
+import { timeout } from 'rxjs';
 
 @Component({
   selector: 'lib-author-edit',
@@ -9,16 +13,35 @@ import { AuthorService } from '../author.service';
 })
 export class AuthorEditComponent implements OnInit {
     orcidValid: boolean = false;
+    // the full record for the selected person
+    selected: any = null;
+    // the organizations that the selected person is a member of
+    selectedOrgs: any[]|null = null;
+    affiliationList: any[];
+    unitList: any[];
+    //For people lookup - filter out from suggestions
+    currentAuthors: SDSuggestion[];
+    showDeptMsg: boolean = false;
 
-    @Input() author: Author = new Author();
+    @Input() author: Author;
+    @Input() authors: Author[];
     @Input() backgroundColor: string = 'var(--editable)';
     @Input() editMode: string = "edit";
+    @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     
-    constructor(private authorService: AuthorService) { }
+    constructor(
+        private authorService: AuthorService,
+        private ps: StaffDirectoryService)
+         { }
 
     ngOnInit(): void {
+        if(!this.author) {
+            // this.author = this.authorService.getBlankAuthor();
+            this.author = new Author("", "", "", "", [this.authorService.getBlankAffiliation("")]);
+        }
+
         if(!this.orcid_validation(this.author.orcid))
         {
             this.orcidValid = false;
@@ -27,13 +50,31 @@ export class AuthorEditComponent implements OnInit {
         }
     }
     
+    get isAuthor() {
+        return this.fieldName == SectionPrefs.getFieldName(Sections.AUTHORS);
+    }
+
+    /**
+     * Update current author list
+     */
+    currentAuthorsInit() {
+        this.currentAuthors = [];
+
+        if(this.authors) {
+            for(let author of this.authors) {
+                this.currentAuthors.push(new SDSuggestion(0, author.fn, null))
+            }
+        }
+    }
+
     /*
     *   Update full name when given name changed
     */
     onGivenNameChange(givenName: string) {
+        this.author.givenName = givenName;
         this.author.dataChanged = true;
         if (!this.author.fnLocked) {
-            this.author.fn = givenName + " " + (this.author.middleName == undefined ? " " : this.author.middleName + " ") + (this.author.familyName == undefined ? "" : this.author.familyName);
+            this.author.fn = this.author.givenName + " " + (this.author.middleName == undefined ? "" : this.author.middleName + " ") + (this.author.familyName == undefined ? "" : this.author.familyName);
         }
 
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
@@ -43,9 +84,10 @@ export class AuthorEditComponent implements OnInit {
     *   Update full name when middle name changed
     */
     onMiddleNameChange(author: any, middleName: string) {
+        this.author.middleName = middleName;
         author.dataChanged = true;
         if (!author.fnLocked) {
-            author.fn = (author.givenName == undefined ? " " : author.givenName + " ") + middleName + " " + (author.familyName == undefined ? "" : author.familyName);
+            this.author.fn = this.author.givenName + " " + (this.author.middleName == undefined ? "" : this.author.middleName + " ") + (this.author.familyName == undefined ? "" : this.author.familyName);
         }
 
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
@@ -55,9 +97,10 @@ export class AuthorEditComponent implements OnInit {
     *   Update full name when middle name changed
     */
     onFamilyNameChange(author: any, familyName: string) {
+        this.author.familyName = familyName;
         author.dataChanged = true;
         if (!author.fnLocked) {
-            author.fn = (author.givenName == undefined ? " " : author.givenName + " ") + (author.middleName == undefined ? " " : author.middleName + " ") + familyName;
+            this.author.fn = this.author.givenName + " " + (this.author.middleName == undefined ? "" : this.author.middleName + " ") + (this.author.familyName == undefined ? "" : this.author.familyName);
         }
 
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
@@ -115,7 +158,11 @@ export class AuthorEditComponent implements OnInit {
         if (!this.author.affiliation)
             this.author.affiliation = [];
 
-        this.author.affiliation.push(this.authorService.getBlankAffiliation());
+        let defaultName = "National Institute of Standards and Technology";
+        if(this.author.affiliation.length > 0)
+            defaultName = "";
+        
+        this.author.affiliation.push(this.authorService.getBlankAffiliation(defaultName));
         this.author.dataChanged = true;
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
     }    
@@ -123,15 +170,16 @@ export class AuthorEditComponent implements OnInit {
     /*
     *   When affiliation department/division changed
     */
-    onDeptChange(author: any) {
-        author.dataChanged = true;
+    onDeptChange(event: any, j: number, i: number) {
+        let subunit = event.target.value;
+        this.author.affiliation[j].subunits[i] = event.target.value;
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
     }
 
     /*
     *   Remove one affiliation from an author
     */
-    deleteAffiliation(i: number, aff: any) {
+    deleteAffiliation(aff: any) {
         this.author.affiliation = this.author.affiliation.filter(obj => obj !== aff);
         this.author.dataChanged = true;
 
@@ -139,9 +187,19 @@ export class AuthorEditComponent implements OnInit {
     }
 
     /*
+    *   Remove one affiliation from an author
+    */
+    deleteUnit(affIndex: number, unit: string) {
+        this.author.affiliation[affIndex].subunits = this.author.affiliation[affIndex].subunits.filter(obj => obj !== unit);
+        this.author.dataChanged = true;
+
+        this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
+    }    
+
+    /*
     *   When affiliation name changed
     */
-    affiliationNameChanged(message: string, i: number) {
+    affiliationNameChanged(message: string) {
         this.author.dataChanged = true;
         this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
     }   
@@ -151,5 +209,110 @@ export class AuthorEditComponent implements OnInit {
     */
     trackByFn(index: any, author: any) {
         return index;
-    }    
+    }  
+    
+    /**
+     * Handle requests from child component
+     * @param dataChanged parameter passed from child component
+     */
+    onDataChanged(dataChanged: any) {
+        switch(dataChanged.action) {
+            case 'fieldChanged':
+                // this.author.dataChanged = true;
+                // this.author.fn = dataChanged.value;
+                // this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
+    
+                break;
+
+            case 'peopleChanged':
+                this.selected = dataChanged.selectedPeopleRecord;
+                if(this.selected.lastName && this.selected.firstName){
+                    this.author.fn = this.selected.lastName + ", " + this.selected.firstName;
+
+                    this.author.dataChanged = true;
+                }
+
+                if(this.selected.lastName){
+                    this.author.familyName = this.selected.lastName;
+                    this.author.dataChanged = true;
+                }
+
+                if(this.selected.firstName){
+                    this.author.givenName = this.selected.firstName;
+                    this.author.dataChanged = true;
+                }
+
+                if(this.selected.midName){
+                    this.author.middleName = this.selected.midName;
+                    this.author.dataChanged = true;
+                }
+
+                if(this.selected.orcid){
+                    this.author.orcid = this.selected.orcid;
+
+                    if(!this.orcid_validation(this.author.orcid)){
+                        this.orcidValid = false;
+                    }else{
+                        this.orcidValid = true;
+                    }
+                    this.author.dataChanged = true;
+                }
+
+                if(this.author.dataChanged) {
+                    this.dataChanged.emit({"author": JSON.parse(JSON.stringify(this.author)), "dataChanged": true});
+                }
+    
+                break;     
+                
+            case 'orgChanged':
+                this.selectedOrgs = dataChanged.selectedPeopleOrg;
+
+                if(this.selectedOrgs.length > 0 && this.author) {
+                    if(!this.author.affiliation){
+                        this.author.affiliation = [];
+                    }
+
+                    let org = this.author.affiliation.find((org) => org.title == NIST);
+                    if(!org) {
+                        this.author.affiliation.push({
+                            '@id': "",
+                            'title': NIST,
+                            'subunits': []
+                        } as Affiliation)
+                    }
+
+                    org = this.author.affiliation.find((org) => {
+                        return org.title == NIST;
+                    });
+
+                    for(let subunit of this.selectedOrgs) {
+                        if(!org.subunits.find((unit) => unit.toLowerCase() == subunit.orG_Name.toLowerCase()))
+                            org.subunits.push(subunit.orG_Name)
+                    }
+                }
+                break;     
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Add a blank subunit to an affiliation
+     * @param index index number of author's affiliation
+     */
+    addSubunit(index: number, subunit: any) {
+        if(subunit.trim() == "") {
+            this.showDeptMsg = true;
+            setTimeout(() => {
+                this.showDeptMsg = false;
+            }, 5000);
+        }
+        if(!this.author.affiliation[index].subunits) {
+            this.author.affiliation[index].subunits = [];
+        }
+
+        let length = this.author.affiliation[index].subunits.length;
+        if(length == 0 || this.author.affiliation[index].subunits[length-1].trim() != "")
+            this.author.affiliation[index].subunits.push("");
+    }
 }

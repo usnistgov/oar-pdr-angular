@@ -13,8 +13,6 @@ import { TreeModule } from 'primeng/tree';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { testdata } from '../../../environments/environment';
-import * as env from '../../../environments/environment';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 
 describe('SearchresultComponent', () => {
     let component: SearchresultComponent;
@@ -25,7 +23,7 @@ describe('SearchresultComponent', () => {
     let nrd1 = testdata['test1'];
 
     beforeEach(async () => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
 
         await TestBed.configureTestingModule({
@@ -40,7 +38,6 @@ describe('SearchresultComponent', () => {
         providers: [
             { provide: AppConfig,       useValue: cfg },
             SearchService,
-            GoogleAnalyticsService,
             TransferState]
         })
         .compileComponents();
@@ -55,5 +52,11 @@ describe('SearchresultComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('Should have title', () => {
+        expect(fixture.nativeElement.querySelectorAll('#datasetlist-heading').length).toEqual(1);
+        expect(fixture.nativeElement.querySelector('#datasetlist-heading').innerText)
+            .toEqual('Datasets in this collection');
     });
 });

@@ -40,8 +40,8 @@
                         </div>
                         <div *ngFor="let aff of author.affiliation" style="padding-left: 1em">
                             <i>
-                            <div>{{aff.title}}</div>
-                            <div *ngIf="aff.subunits">{{getSubunites(aff.subunits)}}</div>
+                                <div>{{aff.title}}</div>
+                                <div *ngIf="aff.subunits" style="margin-left: 1em;">{{getSubunites(aff.subunits)}}</div>
                             </i>
                         </div>
                     </div>
@@ -74,6 +74,14 @@
 </div>
 
 <!-- Author editor -->
-<div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
-    <lib-author-list #authorlist [record]="record" (dataChanged)="onAuthorChange($event)" (editmode)="setChildEditMode($event)"></lib-author-list>
+<div *ngIf="mdupdsvc.isEditMode" 
+    [@editExpand]="editBlockStatus" 
+    style = "width: 100%;" 
+    [style.overflow] = "overflowStyle">
+    <lib-author-list #authorlist 
+        [record]="record" 
+        [fieldName]="fieldName"
+        (dataChanged)="onAuthorChange($event)" 
+        (editmode)="setChildEditMode($event)">
+    </lib-author-list>
 </div>

@@ -1,3 +1,71 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { SelectItem, TreeNode } from 'primeng/api';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class GlobalService {
+    constructor() { }
+
+    /**
+     * Current collection.  
+     * Make collection observable for any component.
+     */
+    _collection : BehaviorSubject<string> =
+        new BehaviorSubject<string>("");
+    public setCollection(val : string) { 
+        this._collection.next(val); 
+    }
+    public watchCollection(subscriber) {
+        this._collection.subscribe(subscriber);
+    }    
+
+    /**
+     * Set/get the width of the left side landing page 
+     */
+    _lpsLeftWidth : BehaviorSubject<number> =
+        new BehaviorSubject<number>(600);
+    public setLpsLeftWidth(val : number) { 
+        this._lpsLeftWidth.next(val); 
+    }
+    public watchLpsLeftWidth(subscriber) {
+        this._lpsLeftWidth.subscribe(subscriber);
+    }  
+
+    /**
+     * Set/get the width of the left side landing page 
+     */
+    _message : BehaviorSubject<string> =
+        new BehaviorSubject<string>("");
+    public setMessage(val : string) { 
+        this._message.next(val); 
+    }
+    public watchMessage(subscriber) {
+        this._message.subscribe(subscriber);
+    }  
+
+    getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
+        let text = document.createElement("span"); 
+        document.body.appendChild(text); 
+     
+        text.style.fontFamily = font; 
+        text.style.fontSize = size + "px"; 
+        text.style.fontWeight = fontWeight; 
+        text.style.height = 'auto'; 
+        text.style.width = 'auto'; 
+        text.style.position = 'absolute'; 
+        text.style.whiteSpace = 'no-wrap'; 
+        text.innerHTML = textString; 
+     
+        let width = Math.ceil(text.clientWidth); 
+        document.body.removeChild(text); 
+
+        return width * 0.9 + 50;
+    }
+}
+
+export const NIST = "National Institute of Standards and Technology";
 
 export const GENERAL = "general";
 
@@ -92,6 +160,7 @@ export class Sections {
     static readonly VISIT_HOME_PAGE = 'Visit Home Page';
     static readonly DOI = 'DOI';
     static readonly VERSION = 'Version';
+    static readonly COLLECTION = 'Collection';
 }
 
 //_fieldName is the field name in Nerdm record
@@ -100,7 +169,7 @@ _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
 _fieldName[Sections.ACCESS_PAGES] = "components";
 _fieldName[Sections.DESCRIPTION] = "description";
-_fieldName[Sections.TOPICS] = "theme";
+_fieldName[Sections.TOPICS] = "topic";
 _fieldName[Sections.KEYWORDS] = "keyword";
 _fieldName[Sections.IDENTITY] = "identity";
 _fieldName[Sections.AUTHORS] = "identity";
@@ -164,4 +233,234 @@ export class ResourceType {
     static readonly RESOURCE = 'resource';
     static readonly SOFTWARE = 'software';
     static readonly DATA = 'data';
+}
+
+export interface responseDetails {
+    "id": string,       //a unique identifier for the finding
+    "target": string,   //a name of a data property that the detected issue concerns; 
+                        //this is the primary property that needs to be corrected
+    "title": string,    //a short (e.g. single sentence) description or title for the detected issue
+    "description": string[] //a more detailed description of the issue.  Each element in the list can be
+                            //considered a different paragraph.  The first element should summarize the
+                            //problem, while subsequent elements can provide tips on how to correct the issue.
+}
+
+export interface SubmitResponse {
+    "action": string,   //e.g. "validate"
+    "message": string,  //this will be the message that was provided in the input or a default message if not provided
+    "validation": {
+        "failures": responseDetails[],
+        "warnings": responseDetails[],
+        "recommendations": responseDetails[],
+    }
+}
+
+export class LandingConstants {
+    public static get editModes(): any { 
+        return {
+            EDIT_MODE: 'editMode',
+            PREVIEW_MODE: 'previewMode',
+            DONE_MODE: 'doneMode',
+            VIEWONLY_MODE: 'viewOnlyMode',
+            OUTSIDE_MIDAS_MODE: 'outsideMidasMode'
+        }
+    };
+
+    public static get editTypes(): any { 
+        return {
+            NORMAL: 'normal', 
+            REVISE: 'revise' 
+        }
+    }; 
+
+    public static get reviseTypes(): any { 
+        return {
+            METADATA: 'metadata', 
+            TYPE02: 'reviseType02', 
+            TYPE03: 'reviseType03'
+        }
+    };  
+}
+
+export interface ColorScheme {
+    default: string;
+    light: string;
+    lighter: string;
+    dark: string;
+    hover: string;
+}
+
+export class Collections {
+    static readonly DEFAULT = 'NIST';
+    static readonly FORENSICS = 'Forensics';
+    static readonly SEMICONDUCTORS = 'Semiconductors';
+}
+
+export class Collection {
+    bannerUrl: string;
+    taxonomyURI: string;
+    color: ColorScheme;
+    theme: CollectionThemes;
+}
+
+export interface ColorScheme {
+    default: string;
+    light: string;
+    lighter: string;
+    dark: string;
+    hover: string;
+}
+
+export interface CollectionThemes {
+    collectionThemes: SelectItem[];
+    collectionThemesAllArray: string[];
+    collectionUnspecifiedCount: number;
+    collectionUniqueThemes: string[];
+    collectionThemesWithCount: FilterTreeNode[];
+    collectionThemesTree: FilterTreeNode[];
+    collectionShowMoreLink: boolean;
+    collectionSelectedThemesNode: any[];
+}
+
+/**
+ * A TreeNode that knows how to insert and update items from a data cart
+ */
+export class FilterTreeNode implements TreeNode {
+    children = [];
+    count: number = 0;
+    data: string[] = [];
+    label: string = "";
+    ediids: string[] = [];
+    expanded = false;
+    keyname: string = '';
+    parent = null;
+    level: number = 1;
+    selectable: boolean = true;
+    unspecified: boolean[] = [];
+    
+    constructor(label: string='', expanded: boolean = false, key: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1) {
+        this.label = label;
+        if(data && !this.data.includes(data))
+            this.data.push(data);
+        this.count = count;
+        this.selectable = selectable;
+        this.level = level;
+        this.keyname = key;
+        if(!key) this.keyname = label;
+    }
+
+   /**
+     * insert or update a node within this tree corresponding to the given data cart item
+     * @return CartTreeNode   the node that was inserted or updated
+     */
+    upsertNodeFor(item: any[], level:number = 1, searchResults: any = null, collection: string = null, taxonomyURI: any = {}) : TreeNode {
+        let levels = item[0].split(":");
+        for(let i = 0; i < levels.length; i++) {
+            levels[i] = levels[i].trim();
+        }
+        
+        return this._upsertNodeFor(levels, item, level, searchResults, collection, taxonomyURI);
+    }
+
+    _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}) : TreeNode {
+        let nodeLabel: string = ''; 
+        // find the node corresponding to the given item in the data cart 
+        for (let child of this.children) {
+            if (child.keyname == levels[0]) {
+                if(searchResults) {
+                    for (let resultItem of searchResults) {
+                        let found: boolean = false;
+                        if(resultItem.topic && resultItem.topic.length > 0){
+                            for(let topic of resultItem.topic) {
+                                if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                                    if(collection == Collections.DEFAULT) {
+                                        if(topic.tag.includes(item[0])) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }else{
+                                        if(topic.tag == item[0]) {
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+    
+                        if(found){
+                            if(!child.ediids.includes(resultItem.ediid)){
+                                child.ediids.push(resultItem.ediid);
+                                child.count++;
+                            }
+                        }        
+                    }
+                }
+
+                if (levels.length > 1){
+                    return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI);
+                }else {
+                    child.label = levels[0] + "---" + item[1];
+                    if(!child.data.includes(item[0]))
+                        child.data.push(item[0]);
+
+                    return child;
+                }
+            }
+        }
+
+        // ancestor does not exist yet; create it
+        let key = levels[0];
+        let label = levels[0];
+        let data = item[0];
+
+        let count = 0;
+        if (levels.length == 1) {
+            label += "---" + item[1]; 
+        }
+
+        if(levels[0] == "Unspecified") {
+            count = item[1];
+        }
+
+        let child = new FilterTreeNode(label, false, key, data, count, true, level+1);
+        child.parent = this;
+        this.children = [...this.children, child];
+
+        //Add only unique dataset to the count
+        if(searchResults) {
+            for (let resultItem of searchResults) {
+                let found: boolean = false;
+                if(resultItem.topic && resultItem.topic.length > 0){
+                    for(let topic of resultItem.topic) {
+                        if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                            if(collection == Collections.DEFAULT) {
+                                if(topic.tag.includes(data)) {
+                                    found = true;
+                                    break;
+                                }
+                            }else{
+                                if(topic.tag == data) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(found){
+                    if(!child.ediids.includes(resultItem.ediid)){
+                        child.ediids.push(resultItem.ediid);
+                        child.count++;
+                    }
+                }        
+            }
+        }
+
+        if (levels.length > 1){
+            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI);
+        }
+        return child;
+    }    
 }

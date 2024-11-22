@@ -57,9 +57,8 @@ export class RefEditComponent implements OnInit {
         if(changes.editMode && changes.editMode.currentValue == "normal") {
             this.reset();
         }
-        console.log('changes', changes);
+
         if(changes.currentRef) {
-            console.log('this.currentRef', this.currentRef);
             if(this.currentRef) {
                 this.originalRef = JSON.parse(JSON.stringify(this.currentRef));
                 this.ref = JSON.parse(JSON.stringify(this.currentRef));

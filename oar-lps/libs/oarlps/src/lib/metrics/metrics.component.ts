@@ -128,7 +128,6 @@ export class MetricsComponent implements OnInit {
                                 if(event.type == HttpEventType.Response){
                                     let response = await event.body.text();
                                     this.fileLevelData = JSON.parse(response);
-                                    console.log("File level metrics", this.fileLevelData);
 
                                     if(this.fileLevelData.FilesMetrics != undefined && this.fileLevelData.FilesMetrics.length > 0){
                                         this.totalFileLevelSuccessfulGet = 0;
@@ -151,10 +150,10 @@ export class MetricsComponent implements OnInit {
                             },
                             (err) => {
                                 let dateTime = new Date();
-                                console.log("err", err);
+                                console.error("err", err);
                                 this.errorMsg = JSON.stringify(err);
                                 this.hasError = true;
-                                console.log('this.hasError', this.hasError);
+                                console.error('this.hasError', this.hasError);
                                 this.emailSubject = 'PDR: Error getting file level metrics data';
                                 this.emailBody =
                                     'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'
@@ -179,7 +178,6 @@ export class MetricsComponent implements OnInit {
                         case HttpEventType.Response:
                             // this.recordLevelData = JSON.parse(JSON.stringify(event.body));
                             this.recordLevelData = JSON.parse(await event.body.text());
-                            console.log("Record level metrics", this.recordLevelData);
 
                             if(this.recordLevelData.DataSetMetrics != undefined && this.recordLevelData.DataSetMetrics.length > 0){
                                 this.firstTimeLogged = this.datePipe.transform(this.recordLevelData.DataSetMetrics[0].first_time_logged, "MMM d, y");
@@ -201,10 +199,10 @@ export class MetricsComponent implements OnInit {
                 },
                 (err) => {
                     let dateTime = new Date();
-                    console.log("err", err);
+                    console.error("err", err);
                     this.errorMsg = JSON.stringify(err);
                     this.hasError = true;
-                    console.log('this.hasError', this.hasError);
+                    console.error('this.hasError', this.hasError);
 
                     this.emailSubject = 'PDR: Error getting file level metrics data';
                     this.emailBody =

@@ -42,7 +42,6 @@ export class AccesspageEditComponent implements OnInit {
 
         if(changes.currentApage) {
             if(this.currentApage) {
-                console.log("access page changed:", changes.currentApage)
                 this.originalApage = JSON.parse(JSON.stringify(this.currentApage));
                 this.accessPage = JSON.parse(JSON.stringify(this.currentApage));
             }else{

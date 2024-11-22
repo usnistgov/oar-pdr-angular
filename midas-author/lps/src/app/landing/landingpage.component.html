@@ -1,3 +1,8 @@
+<!-- <div *ngIf="theme == scienceTheme && displayBanner">
+    <div class="science-theme-banner" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')','margin-bottom':'-1em'}">
+    </div>
+</div> -->
+
 <!-- edit control panel (visible when editing is enabled) -->
 <pdr-edit-control *ngIf="editEnabled" [inBrowser]="inBrowser" [(mdrec)]="md" [requestID]="requestId"></pdr-edit-control>
 
@@ -6,11 +11,8 @@
     <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message>
 </div>
 
-<div *ngIf="theme == scienceTheme">
-    <!-- Banner for Science Theme -->
-    <div class="science-theme-banner" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')','margin-bottom':'-1em'}">
-    </div>
-</div>
+<!-- status message bar -->
+<!-- <pdr-edit-status [(mdrec)]="md"></pdr-edit-status> -->
 
 <div style="margin: 20px 40px 20px 0;">
     <div *ngIf="!displaySpecialMessage && _showContent">
@@ -23,23 +25,42 @@
             <!-- div to keep track of the menu button position -->
             <div #stickyButton></div>
 
-            <button #menubtn
-                *ngIf="md !== null && inBrowser && mobileMode && !hideToolMenu" 
-                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" 
+            <button #menubtn *ngIf="!hideToolMenu && md !== null && inBrowser && mobileMode"
+                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" type="button" pButton
+                icon="faa faa-list" class="ui-button ui-button-icon-only"
+                (click)="toggleMenu($event)">
+            </button>
+
+            <app-menu
+                [record]="md"
+                [ngClass]="windowScrolled ? 'sticky-menu-popup' : 'sticky-menu-popup-top'"
+                *ngIf="!hideToolMenu && showStickMenu && mobileMode"
+                [collection]="collection"
+                [appendTo]="body"
+                [theme]="theme"
+                [inBrowser]="inBrowser"
+                [metricsData]="metricsData"
+                [showMetrics]="showMetrics"
+                (scroll)="goToSection($event)"
+                (toggle_citation)="toggleCitation('large')">
+            </app-menu>
+            <!-- <button #menubtn
+                *ngIf="md !== null && inBrowser && mobileMode && !hideToolMenu"
+                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'"
                 type="button"
-                pButton 
-                icon="fas fa-list" 
-                class="ui-button ui-button-icon-only" 
+                pButton
+                icon="fas fa-list"
+                class="ui-button ui-button-icon-only"
                 (click)="menu3.togglePopup($event)">
             </button>
 
-            <tools-menu #menu3  
-                [record]="md" 
+            <tools-menu #menu3
+                [record]="md"
                 [isPopup]="true"
                 [appendTo]="body"
                 (toggle_citation)="toggleCitation('small')"
                 (scroll)="goToSection($event)">
-            </tools-menu>
+            </tools-menu> -->
         </div>
         <div #stickyMenu></div>
 
@@ -52,27 +73,37 @@
                 </pdr-landing-body>
 
             </div>
-        
+
             <!-- <div #stickyMenu></div> -->
             <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
-                <tools-menu *ngIf="inBrowser" #menu2 [record]="md" [isPopup]="false" (toggle_citation)="toggleCitation('large')"
-                    (scroll)="goToSection($event)">
-                </tools-menu>
-                
-                <app-metricsinfo *ngIf="recordType!='Science Theme'" [inBrowser]="inBrowser" [record]="md"
-                    [metricsData]="metricsData" [showMetrics]="showMetrics">
-                </app-metricsinfo>
+              <app-menu [record]="md" [collection]="collection" [theme]="theme" [inBrowser]="inBrowser" [metricsData]="metricsData" [showMetrics]="showMetrics" (scroll)="goToSection($event)"
+                  (toggle_citation)="toggleCitation('large')">
+              </app-menu>
 
-                <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
+              <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
             </div>
 
             <!-- Drag bar to resize the help box -->
-            <div *ngIf="showSplitter" class="splitter" (mousedown)="onMousedown($event)" (mouseup)="onMouseUp($event)" [ngStyle]="{'height': splitterHeight + 'px','padding-top': splitterPaddingTop + 'px'}">
+            <div #splitter
+              *ngIf="showSplitter"
+              class="splitter"
+              (mousedown)="onMousedown($event)"
+              (mouseup)="onMouseUp($event)"
+              [ngStyle]="{'height': splitterHeight + 'px','padding-top': splitterPaddingTop + 'px'}">
                 <div id="separator" style="opacity: .3;">||</div>
             </div>
 
             <!-- The help box at the right side -->
-            <app-sidebar *ngIf="hideToolMenu" class='normal-sdbar' [record]="md" [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}" [@togglesbar]="{value: mainBodyStatus, params:{help_width: helpWidth + 'px'}}" [helpContentAll]="helpContentAll" [resourceType]="resourceType" (sbarvisible_out)="updateSidebarStatus($event)" (scroll)="goToSection($event)">
+            <app-sidebar
+              *ngIf="hideToolMenu"
+              class='normal-sdbar'
+              [record]="md"
+              [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}"
+              [@togglesbar]="{value: mainBodyStatus, params:{help_width: helpWidth + 'px'}}"
+              [helpContentAll]="helpContentAll"
+              [resourceType]="resourceType"
+              (sbarvisible_out)="updateSidebarStatus($event)"
+              (scroll)="goToSection($event)">
             </app-sidebar>
 
             <!-- citation pop-up -->

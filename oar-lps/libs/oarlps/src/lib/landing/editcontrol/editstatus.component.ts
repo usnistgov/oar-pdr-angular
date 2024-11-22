@@ -171,14 +171,14 @@ export class EditStatusComponent implements OnInit {
       switch(this._editmode){
         case this.EDIT_MODES.EDIT_MODE:
             // We are editing the metadata (and are logged in)
-            if (this._updateDetails)
-                this.showMessage("Edited by " + this._updateDetails.userAttributes.userName + " " + this._updateDetails.userAttributes.userLastName + " on " + this._updateDetails._updateDate);
+            if (this.updateDetails)
+                this.showMessage("Edited by " + this.updateDetails.userAttributes.userName + " " + this.updateDetails.userAttributes.userLastName + " on " + this.updateDetails._updateDate);
             else
                 this.showMessage('');
           break;
         case this.EDIT_MODES.PREVIEW_MODE:
-            if (this._updateDetails)
-                this.showMessage("There are un-submitted changes last edited on " + this._updateDetails._updateDate + ".  Click on the Edit button to continue editing.", 
+            if (this.updateDetails)
+                this.showMessage("There are un-submitted changes last edited on " + this.updateDetails._updateDate + ".  Click on the Edit button to continue editing.", 
                 false, "rgb(255, 115, 0)");
             else
                 this.showMessage('To see any previously edited inputs or to otherwise edit this page, click on the "Edit" button.');

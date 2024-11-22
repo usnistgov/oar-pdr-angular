@@ -1,5 +1,5 @@
-{   
-    "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='fas fa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='fas fa-pencil'></i> to the right of each field to edit",
+{
+    "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='fas fa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='fas fa-pencil'></i> to the right of each field to edit.<p><p>* required field.",
     "title": {
         "label": "Title",
         "general": "The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p><p> If this publication can be considered a supplement to a literature publication, consider using the same title with an extra annotation, like ': Supplementary Data'.",
@@ -11,7 +11,7 @@
         "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>Credit Contributor Roles Taxonomy</a>. Add affiliations and ORCIDs as available.",
         "list": "Click <i class='fas fa-plus'></i> to add authors. Click <i class='fas fa-pencil'></i> to make edits.",
         "add": "Click <i class='fas fa-check'></i> to save.",
-        "edit": "Click <i class='fas fa-check'></i> to save changes.<p><i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>", 
+        "edit": "Click <i class='fas fa-check'></i> to save changes.<p><i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         "dragdrop": "To change the order of authors listed, click on <img src='./assets/images/reorder_s.png'> on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
     },
     "contactPoint": {
@@ -67,5 +67,5 @@
         "edit": "Separate each Reference URL with a comma. When all References are entered, click <i class='fas fa-check'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         "dragdrop": "To change the order of references listed, click on <img src='./assets/images/reorder_s.png'> on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
-    "completed": "Congratulations!"
+    "completed": "All data has been completed. No more suggestion."
 }

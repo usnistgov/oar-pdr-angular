@@ -13,15 +13,19 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { IEnvironment } from '../../../environments/ienvironment';
 import { environment } from '../../../environments/environment-impl';
 import { TooltipModule } from 'primeng/tooltip';
-import { AuthenticationService, AuthModule } from 'oarng';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
+import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng';
 
 @NgModule({
-    declarations: [ EditControlComponent, EditStatusComponent ],
-    imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule, TooltipModule, AuthModule ],
+    declarations: [ EditControlComponent, EditStatusComponent, SubmitConfirmComponent ],
+    imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule, TooltipModule, AuthModule, NgbModule, NgSelectModule, FormsModule ],
     exports: [ EditControlComponent, EditStatusComponent ],
     providers: [
         HttpClient,
-        { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService ] }
+        { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService, StaffDirectoryService ] }
     ]
 })
 export class EditControlModule { 

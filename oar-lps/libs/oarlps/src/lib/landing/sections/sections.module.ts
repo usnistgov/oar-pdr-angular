@@ -24,6 +24,10 @@ import { VisithomeModule } from '../visithome/visithome.module';
 import { ReferencesModule } from '../references/references.module';
 import { AccesspageModule } from '../accesspage/accesspage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { IspartofModule } from '../ispartof/ispartof.module';
+import { D3Service } from '../../shared/d3-service/d3.service';
+import { SectionTitleModule } from '../section-title/section-title.module';
+import { PeopleModule } from '../people/people.module';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -73,7 +77,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ReferencesModule,
         AccesspageModule,
         VisithomeModule,
-        NgbModule
+        NgbModule,
+        IspartofModule,
+        SectionTitleModule,
+        PeopleModule
     ],
     declarations: [
         ResourceDataComponent,
@@ -82,6 +89,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ResourceRefsComponent, ResourceMetadataComponent
     ],
     providers: [
+        D3Service
     ],
     exports: [
         ResourceDataComponent,

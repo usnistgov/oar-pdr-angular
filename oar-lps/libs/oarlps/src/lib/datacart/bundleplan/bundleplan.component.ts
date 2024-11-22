@@ -368,8 +368,8 @@ export class BundleplanComponent implements OnInit {
             },
             err => {
                 // err is an object with diagnostic information in it
-                console.log("Calling following end point returned error:");
-                console.log(err['url']);
+                console.error("Calling following end point returned error:");
+                console.error(err['url']);
                 console.log("Post message:", err['body']);
                 console.log("Error message:", err['error']);
                 this.bundlePlanMessage = err['error'];

@@ -23,12 +23,12 @@ import { SearchresultModule } from 'oarlps';
 import { WizardModule } from 'oarng';
 import { SidebarModule } from 'oarlps';
 import { DownloadStatusModule } from 'oarlps';
-import { MetricsiinfoModule } from 'oarlps';
+import { MetricsinfoModule } from 'oarlps';
 import { LandingpageService } from 'oarlps';
 import { FrameModule } from 'oarlps';
 
 /**
- * A module supporting the complete display of landing page content associated with 
+ * A module supporting the complete display of landing page content associated with
  * a resource identifier
  */
 @NgModule({
@@ -46,11 +46,11 @@ import { FrameModule } from 'oarlps';
         WizardModule,
         SidebarModule,
         DownloadStatusModule,
-        MetricsiinfoModule,
+        MetricsinfoModule,
         FrameModule
     ],
     declarations: [
-        LandingPageComponent, LandingBodyComponent, 
+        LandingPageComponent, LandingBodyComponent,
         ErrorComponent, UserErrorComponent, NoidComponent
     ],
     providers: [
@@ -58,12 +58,12 @@ import { FrameModule } from 'oarlps';
         LandingpageService
     ],
     exports: [
-        LandingPageComponent, LandingBodyComponent, 
+        LandingPageComponent, LandingBodyComponent,
         ErrorComponent, UserErrorComponent, NoidComponent
     ]
 })
 export class LandingPageModule { }
 
-export { LandingPageComponent, LandingBodyComponent, 
+export { LandingPageComponent, LandingBodyComponent,
     ErrorComponent, UserErrorComponent,NoidComponent };
-    
+

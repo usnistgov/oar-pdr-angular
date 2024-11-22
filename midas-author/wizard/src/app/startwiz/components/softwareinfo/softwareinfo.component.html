@@ -1,18 +1,18 @@
-<form [formGroup]="parantFormGroup" class="full-height">
+<div class="full-height">
     <oar-pushing-sidebar style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>Would you like to provide a link to a public software repository (e.g. in GitHub)?</p>
             <div class="radio-group">
                 <div class="radio">
                     <label title="downloadable files or a searchable database">
-                        <input type="radio" required name="provideLink" value="yes" (change)="toggleSoftwareLink($event)" formControlName="provideLink">
+                        <input type="radio" required name="provideLink" [value]="true" (change)="toggleSoftwareLink($event)" [(ngModel)]="dataModel.provideLink">
                         Yes
                     </label>
                 </div>
                 <div class="radio">
                     <label title="source code or a downloadable application one may install and run">
-                        <input type="radio" required name="provideLink" value="no"  (change)="toggleSoftwareLink($event)"
-                            formControlName="provideLink">
+                        <input type="radio" required name="provideLink" [value]="false"  (change)="toggleSoftwareLink($event)"
+                        [(ngModel)]="dataModel.provideLink">
                         No
                     </label>
                 </div>
@@ -20,7 +20,7 @@
 
             <div style="margin-top: 1em;" *ngIf="dataModel.provideLink">
                 <div style="margin-bottom: .5em;">Type in software link: </div>
-                <input class="input-box input" type="text" pInputText name="softwareLink" formControlName="softwareLink" (input)="updateSoftwareLink($event)"/>
+                <input class="input-box input" type="text" pInputText name="softwareLink" [(ngModel)]="dataModel.softwareLink" (input)="updateSoftwareLink($event)"/>
             </div>
         </div>
         <span class="sidebar-title">Question Help</span>
@@ -34,4 +34,4 @@
                 <i>[Helpful examples, links to policy and guideance]</i>
         </div>
     </oar-pushing-sidebar>
-</form>
+</div>

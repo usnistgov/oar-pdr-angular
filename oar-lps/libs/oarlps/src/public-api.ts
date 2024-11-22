@@ -48,7 +48,7 @@ export * from './lib/landing/author/author.service';
 export * from './lib/landing/author/author.module';
 
 export * from './lib/landing/tools/tools.module';
-export * from './lib/landing/tools/toolmenu.component';
+export * from './lib/landing/tools/menu.component';
 
 export * from './lib/landing/references/references.component';
 export * from './lib/landing/references/references.module';

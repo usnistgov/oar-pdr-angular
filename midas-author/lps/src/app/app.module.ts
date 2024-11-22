@@ -45,7 +45,19 @@ import { EditControlModule } from 'oarlps';
 
 import { OARngModule } from 'oarng';
 import { FrameModule } from 'oarng';
-import { WizardModule } from 'oarng';
+import { WizardModule, StaffDirModule } from 'oarng';
+import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
+
+export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
+  parse(url: string): UrlTree {
+      // Optional Step: Do some stuff with the url if needed.
+
+      // If you lower it in the optional step
+      // you don't need to use "toLowerCase"
+      // when you pass it down to the next function
+      return super.parse(url.toLowerCase());
+  }
+}
 
 enableProdMode();
 
@@ -57,7 +69,6 @@ enableProdMode();
         AppComponent
     ],
     imports: [
-        // ConfigModule,
         FrameModule,
         OARLPSModule,
         WizardModule,
@@ -69,9 +80,6 @@ enableProdMode();
         DatacartModule,
         MetricsModule,
         SharedModule.forRoot(),
-        // FragmentPolyfillModule.forRoot({
-        //     smooth: true
-        // }),
         HttpClientModule, FormsModule, ReactiveFormsModule,
         CommonModule, BrowserAnimationsModule, FormsModule,
         ToastrModule.forRoot({
@@ -80,12 +88,17 @@ enableProdMode();
         NgbModule,
         NerdmModule.forRoot(environment),
         ConfigModule.forRoot(environment),
-        EditControlModule.forRoot(environment)
+        EditControlModule.forRoot(environment),
+        StaffDirModule
     ],
     exports: [],
     providers: [
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
+        {
+          provide: UrlSerializer,
+          useClass: LowerCaseUrlSerializer
+        },
         GoogleAnalyticsService,
         DatePipe
         // fakeBackendProvider
@@ -95,7 +108,7 @@ enableProdMode();
 
 export class AppModule {
     // We inject the service here to keep it alive whole time
-    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) { } 
+    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) { }
 }
 
 

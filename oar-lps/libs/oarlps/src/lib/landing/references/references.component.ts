@@ -65,7 +65,6 @@ export class ReferencesComponent implements OnInit {
     }
 
     ngOnChanges(ch : SimpleChanges) {
-        console.log("changes", ch)
         if (ch.record){
             this.resetOrigin();
         }
@@ -74,7 +73,6 @@ export class ReferencesComponent implements OnInit {
 
     resetOrigin() {
         // if(this.record && this.record['references'] && this.record['references'].length > 0) {
-        console.log("references - this.record", this.record)
         if(this.record){
             // this.currentRef = this.record['references'][0];
 

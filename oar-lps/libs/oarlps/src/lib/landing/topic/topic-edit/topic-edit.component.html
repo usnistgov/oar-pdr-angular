@@ -14,9 +14,10 @@
                             <td width="50px">
                             </td>
                         </tr>
-                        <tr *ngFor="let topic of nistTaxonomyTopics; let i = index; trackBy: trackByFn" align="top"
+                        <tr *ngFor="let topic of selectedTopics; let i = index; trackBy: trackByFn" align="top"
                             style="border-bottom:1pt solid black;" height="2em" [style.background-color]="backgroundColor">
                             <td style="padding-left: 2em;">
+                                <!-- For new topic structure, change topic to topic.tag -->
                                 <span (click)="searchAndExpandTaxonomyTree(topic, true)"
                                     style="color: #1E6BA1; cursor: pointer;">{{topic}}</span>
                             </td>
@@ -77,7 +78,8 @@
             </button>
     
             <!-- Cancel button -->
-            <button *ngIf="dataChanged" class="edit_button" type="button"
+            <!-- <button *ngIf="dataChanged" class="edit_button" type="button" -->
+            <button class="edit_button" type="button"
                 (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
                 <i class="faa faa-undo fa-sm"></i>
             </button>             

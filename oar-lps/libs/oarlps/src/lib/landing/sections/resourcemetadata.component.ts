@@ -21,6 +21,7 @@ import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 })
 export class ResourceMetadataComponent implements OnChanges {
     resourceType: string;
+    sectionTitle: string;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -54,5 +55,6 @@ export class ResourceMetadataComponent implements OnChanges {
      */
     useMetadata(): void {
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
+        this.sectionTitle = "About This " + this.resourceType;
     }
 }

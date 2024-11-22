@@ -1,25 +1,24 @@
-<form [formGroup]="parantFormGroup" class="full-height">
+<div class="full-height">
     <oar-pushing-sidebar style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>Should you be the primary public contact for this record?</p>
             <div class="radio-group">
                 <div class="radio">
                     <label title="Yes, I will be the primary public contact.">
-                        <input type="radio" required name="creatorIsContact" value="true" (change)="toggleContactName($event)"
-                            formControlName="creatorIsContact">
+                        <input type="radio" required name="creatorIsContact" [value]="true" (change)="toggleContactName($event)" [(ngModel)]="dataModel.creatorIsContact">
                         Yes
                     </label>
                 </div>
                 <div class="radio">
                     <label title="No, another NIST staff person will be the primary public contact.">
-                        <input type="radio" required name="creatorIsContact" value="false" (change)="toggleContactName($event)" formControlName="creatorIsContact">
+                        <input type="radio" required name="creatorIsContact" [value]="false" (change)="toggleContactName($event)" [(ngModel)]="dataModel.creatorIsContact">
                         No
                     </label>
                 </div>
             </div>
             <div style="margin-top: 1em;" *ngIf="dataModel.creatorIsContact != undefined && !dataModel.creatorIsContact">
                 <div style="margin-bottom: .5em;">Type in contact's name and select the appropriate match: </div>
-                <input class="input-box" style="width: 300px;" type="text" pInputText name="otherContact" formControlName="contactName" (input)="updateContactName($event)"/>
+                <input class="input-box" style="width: 300px;" type="text" pInputText name="otherContact" [(ngModel)]="dataModel.contactName" (input)="updateContactName($event)"/>
             </div>
         </div>
         <span class="sidebar-title">Question Help</span>
@@ -29,4 +28,4 @@
             make use of its contents.
         </div>
     </oar-pushing-sidebar>
-</form>
+</div>

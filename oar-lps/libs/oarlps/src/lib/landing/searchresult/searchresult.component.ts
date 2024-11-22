@@ -1,7 +1,9 @@
 import { Component, OnInit, Input, HostListener, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-
+import { CollectionService } from '../../shared/collection-service/collection.service';
+import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes, FilterTreeNode } from '../../shared/globals/globals';
+import { GlobalService } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-searchresult',
@@ -20,7 +22,8 @@ export class SearchresultComponent implements OnInit {
     mobHeight: number;
     mobWidth: number;
     mobileMode: boolean = false; // set mobile mode to true if window width < 641
-    filterWidth: number;
+    filterWidth: number; // Filter expanded by default
+    defaultFilterWidth: number = 310;
     filterWidthStr: string;
     filterMode: string = "normal";
     resultWidth: any;
@@ -32,24 +35,40 @@ export class SearchresultComponent implements OnInit {
     mouseDragging: boolean = false;
     prevMouseX: number = 0;
     prevFilterWidth: number = 0;
+    prevLpsWidth: number = 500; //Default value
+    taxonomyURI: any = {};
+    allCollections: any = {};
 
-    @ViewChild('parentDiv')
-    topLevelDiv: ElementRef;
+    @ViewChild('titleDiv') titleDiv: ElementRef;
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
+    @Input() collection: string;
 
-    constructor(private cdr: ChangeDetectorRef) {
+    constructor(
+        private cdr: ChangeDetectorRef,
+        public collectionService: CollectionService,
+        public globalService: GlobalService
+    ) {
+        this.globalService.watchLpsLeftWidth(width => {
+            this.onResize(width);
+        })
     }
 
     ngOnInit(): void {
+        this.prevFilterWidth = this.filterWidth;
+        this.filterWidth = this.defaultFilterWidth;
+        this.allCollections = this.collectionService.loadAllCollections();
+        this.taxonomyURI[Collections.DEFAULT] = this.allCollections[Collections.DEFAULT].taxonomyURI;
+        this.taxonomyURI[Collections.FORENSICS] = this.allCollections[Collections.FORENSICS].taxonomyURI;
+        this.taxonomyURI[Collections.SEMICONDUCTORS] = this.allCollections[Collections.SEMICONDUCTORS].taxonomyURI;
     }
 
     ngAfterViewInit(): void {
         //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
         //Add 'implements AfterViewInit' to the class.
         if(this.inBrowser){
-            this.mobWidth = this.topLevelDiv.nativeElement.offsetWidth;
+            this.mobWidth = this.titleDiv.nativeElement.offsetWidth;
             this.mobileMode = this.mobWidth < 641;
         }
 
@@ -70,9 +89,8 @@ export class SearchresultComponent implements OnInit {
             this.filterWidth = this.prevFilterWidth + diff;
             this.filterWidth = this.filterWidth < 40? 39 : this.filterWidth > 500? 500 : this.filterWidth;
             this.filterWidthStr = this.filterWidth + 'px';
+            this.setResultWidth();
         }
-
-        this.setResultWidth();
     }
 
     onMousedown(event) {
@@ -84,10 +102,17 @@ export class SearchresultComponent implements OnInit {
     @HostListener('window:mouseup', ['$event'])
     onMouseUp(event) {
         this.mouseDragging = false;
+        this.prevFilterWidth = this.filterWidth; //Remember current width
     }
 
-    onResize(event) {
-        this.mobWidth = this.topLevelDiv.nativeElement.offsetWidth;
+    onResize(width: number) {
+        // this.prevLpsWidth = width; // Keep current lps width
+        this.mobWidth = width;
+        // if(this.titleDiv) {
+        //     let w = this.titleDiv.nativeElement.offsetWidth;
+        //     this.mobWidth = this.mobWidth > w ? this.mobWidth : w;
+        // }
+
         this.mobileMode = this.mobWidth < 541;
         this.updateWidth();
     }
@@ -97,17 +122,19 @@ export class SearchresultComponent implements OnInit {
      * @param filterMode expanded or collapsed
      */
     updateWidth(filterMode?: string){
+        if(!this.mobWidth) return;
+        
         this.filterMode = filterMode? filterMode : this.filterMode;
 
         if(!this.mobileMode){
-            if(this.filterMode == 'normal'){
-                this.filterToggler = 'expanded';
-            }else{
-                this.filterToggler = 'collapsed';
-            }
+            // if(this.filterMode == 'normal'){
+            //     this.filterToggler = 'expanded';
+            // }else{
+            //     this.filterToggler = 'collapsed';
+            // }
 
             if(this.filterMode == 'normal'){
-                this.filterWidth = this.mobWidth / 4;                
+                this.filterWidth = this.defaultFilterWidth;                 
                 this.filterToggler = 'expanded';
             }else{
                 this.filterWidth = 39;
@@ -140,7 +167,13 @@ export class SearchresultComponent implements OnInit {
         if(this.mobileMode){
             this.resultWidth = "100%";
         }else{
-            this.resultWidth = this.mobWidth - this.filterWidth - 20 + "px";
+            // let titleDivWidth;
+            // if(this.titleDiv) {
+            //     titleDivWidth = this.titleDiv.nativeElement.offsetWidth;
+            //     console.log("title div", titleDivWidth);
+            // }
+    
+            this.resultWidth = this.mobWidth - this.filterWidth + "px";
         }
     }
 }

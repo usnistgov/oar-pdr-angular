@@ -11,14 +11,14 @@ import { FormsModule } from '@angular/forms';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { testdata } from '../../../environments/environment';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import * as env from '../../../environments/environment';
+import { CollectionService } from '../../shared/collection-service/collection.service';
 
 describe('ResultlistComponent', () => {
   let component: ResultlistComponent;
   let fixture: ComponentFixture<ResultlistComponent>;
   let plid : Object = "browser";
   let ts : TransferState = new TransferState();
-  let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+  let cfg : AppConfig = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
   let nrd1 = testdata['test1'];
 
   beforeEach(async () => {
@@ -33,6 +33,7 @@ describe('ResultlistComponent', () => {
         providers: [
             SearchService,
             GoogleAnalyticsService,
+            CollectionService,
             { provide: AppConfig,       useValue: cfg }
         ]
     })

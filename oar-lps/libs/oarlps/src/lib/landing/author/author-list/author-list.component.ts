@@ -4,6 +4,7 @@ import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../..
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { Author } from '../author';
+import { AuthorService } from '../author.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import {
     CdkDragDrop,
@@ -29,12 +30,12 @@ export class AuthorListComponent implements OnInit {
     // editingAuthorIndex: number = -1; // Indicating which author is being edited
     currentAuthorIndex: number = 0;
     currentAuthor: Author; // for drag drop
+    currentAuthors: Author[] = [];
     // currentEditingAuthor: Author // for editing
     savedRecord: any = {}; // Previously saved record
     originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
     // forceReset: boolean = false;
     newAuthor: Author = {} as Author;
-    fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     placeholder: string = "Enter author data below";
     editBlockStatus: string = 'collapsed';
     orderChanged: boolean = false;
@@ -45,6 +46,7 @@ export class AuthorListComponent implements OnInit {
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
+    @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
     
@@ -59,6 +61,7 @@ export class AuthorListComponent implements OnInit {
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
+                private authorService: AuthorService,
                 public lpService: LandingpageService) { 
 
                 this.lpService.watchEditing((sectionMode: SectionMode) => {
@@ -87,11 +90,13 @@ export class AuthorListComponent implements OnInit {
     ngOnInit(): void {
         this.updateSavedRecord();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
+        this.onRecordChanged();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.record){
             this.updateSavedRecord();
+            this.onRecordChanged();
         }
 
         if(changes.forceReset){
@@ -136,6 +141,12 @@ export class AuthorListComponent implements OnInit {
         }
 
         return bkColor;
+    }
+
+    onRecordChanged() {
+        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0)
+            this.currentAuthors = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+
     }
 
     authorUpdated(index: number) {
@@ -564,11 +575,12 @@ export class AuthorListComponent implements OnInit {
                     this.record[this.fieldName] = [];
                 }
 
-                let newAuthor: Author = {} as Author;
+                // let newAuthor: Author = {} as Author;
+                let newAuthor: Author = new Author("", "", "", "", null)
                 newAuthor["isNew"] = true;
-                newAuthor["familyName"] = "";
-                newAuthor["givenName"] = "";
-                newAuthor["fn"] = "";
+                // newAuthor["familyName"] = "";
+                // newAuthor["givenName"] = "";
+                // newAuthor["fn"] = "";
 
                 this.record[this.fieldName].push(newAuthor);
                 

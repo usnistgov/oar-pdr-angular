@@ -193,7 +193,6 @@ export class VisithomeComponent implements OnInit {
         if(!this.visitHomeURL) {
             this.visitHomeURL = "";
         }
-        console.log('this.visitHomeURL', this.visitHomeURL);
 
         this.record[this.fieldName] = this.visitHomeURL;
         let postMessage: any = {};

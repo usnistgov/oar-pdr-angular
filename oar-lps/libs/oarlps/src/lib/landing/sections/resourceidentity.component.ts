@@ -9,6 +9,8 @@ import { LandingConstants } from '../../landing/constants';
 import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { CollectionService } from '../../shared/collection-service/collection.service';
+import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
 
 /**
  * a component that lays out the "identity" section of a landing page
@@ -33,7 +35,9 @@ export class ResourceIdentityComponent implements OnChanges {
     defaultTheme = Themes.DEFAULT_THEME;
     fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
     fieldName = SectionPrefs.getFieldName(Sections.DOI);
-    
+    collection: string = Collections.DEFAULT;
+    maxWidth: number = 1000;
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
@@ -46,8 +50,17 @@ export class ResourceIdentityComponent implements OnChanges {
                 public editstatsvc: EditStatusService,
                 public mdupdsvc : MetadataUpdateService, 
                 private gaService: GoogleAnalyticsService,
+                public globalService: GlobalService,
                 public lpService: LandingpageService)
-    { }
+    { 
+        this.globalService.watchCollection((collection) => {
+            this.collection = collection;
+        });
+
+        this.globalService.watchLpsLeftWidth(width => {
+            this.onResize(width + 20);
+        })
+    }
 
     ngOnInit(): void {
         this.EDIT_MODES = LandingConstants.editModes;
@@ -58,11 +71,19 @@ export class ResourceIdentityComponent implements OnChanges {
         });
     }
 
+    onResize(width: number) {
+        this.maxWidth = width;
+    }
+
     /**
      * Decide if currently in view only mode
      */
     get inViewMode() {
         return this.editMode == this.EDIT_MODES.VIEWONLY_MODE || this.editMode == this.EDIT_MODES.PREVIEW_MODE;
+    }
+
+    get isDefaultCollection() {
+        return this.collection == Collections.DEFAULT;
     }
 
     ngOnChanges(changes: SimpleChanges) {

@@ -1,9 +1,12 @@
-<div id="description">
+<div id="description" [ngStyle]="{'max-width': maxWidth+'px'}">
         <div class="section-header">
-            <h3 style="display: inline-block;" name="description">
+            <!-- <h3 style="display: inline-block;" name="description"> -->
                 <!-- <b><span [ngClass]="{'highlight': titleSelected}" [@enterAnimation]>{{desctitle}}</span></b> -->
-                <b>{{desctitle}}</b>
-            </h3>
+                <!-- <b>{{desctitle}}</b> -->
+            <!-- </h3> -->
+            <!-- <div name="description" style="width: 100%; height: 27px;" id="sectionHeader" #sectionHeader (window:resize)="onResize()"></div> -->
+            <lib-section-title [sectionTitle]="desctitle" [inBrowser]="inBrowser" sectionTag="descHeader" id="descHeader" #descHeader></lib-section-title>
+
         </div>
         <div>
             <app-description [record]="record" [inBrowser]="inBrowser"></app-description>

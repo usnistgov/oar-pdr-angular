@@ -3,7 +3,7 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL } from '../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, SubmitResponse } from '../shared/globals/globals';
 import { HelpTopic } from '../landing/landingpage.service';
 
 @Component({
@@ -29,7 +29,22 @@ import { HelpTopic } from '../landing/landingpage.service';
         transition('sbvisible <=> sbhidden', [
             animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
         ])
-    ])
+    ]),
+    trigger('requiredExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+    trigger('recommendedExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+    trigger('niceToHaveExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
 ]
 })
 export class SidebarComponent implements OnInit {
@@ -40,7 +55,12 @@ export class SidebarComponent implements OnInit {
     fieldName: string = "sidebar";
     DEFAULT_TITLE: string = "General Help";
     title: string = "General Help";
-    msgCompleted: string = "Congratulations!";
+    msgCompleted: string = "All data has been completed. No more suggestion.";
+    submitResponse: SubmitResponse = {} as SubmitResponse;
+    showRequired: boolean = true;
+    showRecommeded: boolean = false;
+    showNiceToHave: boolean = false;
+    ediid: string = "";
 
     // helpContent: any = {
     //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
@@ -66,7 +86,40 @@ export class SidebarComponent implements OnInit {
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
         this.lpService.watchSectionHelp((sectionHelp) => {
             this.updateHelpContent(sectionHelp);
-        })
+        });
+
+        this.lpService.watchSubmitResponse((response) => {
+            this.submitResponse = response;
+
+            this.showRecommeded = !this.hasRequiredItems;
+            this.showNiceToHave = !this.hasRequiredItems && !this.hasRecommendedItems;
+        });
+        
+        this.ediid = this.record["@id"];
+    }
+
+    get isTestData() {
+        return this.ediid == "test1" || this.ediid == "test2";
+    }
+
+    get hasRequiredItems() {
+        return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.failures &&  this.submitResponse.validation.failures.length > 0;
+    }
+
+    get hasRecommendedItems() {
+        return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.warnings &&  this.submitResponse.validation.warnings.length > 0;
+    }
+
+    get hasNiceToHaveItems() {
+        return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.recommendations &&  this.submitResponse.validation.recommendations.length > 0;
+    }
+
+    /**
+     * Generate next steps list
+     * @param response Response from server side validation
+     */
+    generateNextSteps(response: SubmitResponse) {
+
     }
 
     /**

@@ -335,8 +335,6 @@ export class TreetableComponent implements OnInit, AfterViewInit {
      * @param event - change event
      */
     cartChanged(which) {
-        console.log("Updating view for change in cart contents");
-
         // update selections due to cart additions or changes to item data
         let node: CartTreeNode = null;
         for (let item of this.dataCart.getFiles()) {

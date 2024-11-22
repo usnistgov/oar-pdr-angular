@@ -27,6 +27,11 @@ export class KeywordComponent implements OnInit {
     message: string = "";
     backColor: string = "white";
     dataChanged: boolean = false;
+    keywordShort: string[] = [];
+    keywordLong: string[] = [];
+    keywordBreakPoint: number = 5;
+    keywordDisplay: string[] = [];
+    hovered: boolean = false;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal, 
@@ -81,6 +86,7 @@ export class KeywordComponent implements OnInit {
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.getKeywords();
+        this.keywordInit();
     }
 
     /**
@@ -91,6 +97,7 @@ export class KeywordComponent implements OnInit {
         if(changes.record){
             this.originalRecord = JSON.parse(JSON.stringify(this.record));
             this.getKeywords();
+            this.keywordInit();
         }
     }
 
@@ -154,15 +161,13 @@ export class KeywordComponent implements OnInit {
     }
 
     onAdd(event) {
-        console.log("On add", event);
         this.dataChanged = true;
-    
+        this.keywordInit(); 
     }
 
     onRemove(event) {
-        console.log("On remove", event);
         this.dataChanged = true;
-    
+        this.keywordInit(); 
     }
 
     /**
@@ -274,4 +279,97 @@ export class KeywordComponent implements OnInit {
             this.dataChanged = false;
         }    
     }
+
+    /**
+     * Set bubble color based on content
+     * @param keyword 
+     */
+    bubbleColor(keyword) {
+        if(keyword == "Show more..." || keyword == "Show less..." ) {
+            return "#e6ecff";
+        }else{
+            return "#ededed";
+        }
+    }
+
+    /**
+     * Generate short and long keyword list for display
+     */
+    keywordInit() {
+        if(this.record['keyword']) {
+            if(this.record['keyword'].length > 5) {
+                this.keywordShort = JSON.parse(JSON.stringify(this.record['keyword'])).slice(0, this.keywordBreakPoint);
+                this.keywordShort.push("Show more...");
+                this.keywordLong = JSON.parse(JSON.stringify(this.record['keyword']));
+                this.keywordLong.push("Show less...");                
+            }else {
+                this.keywordShort = JSON.parse(JSON.stringify(this.record['keyword']));
+                this.keywordLong = JSON.parse(JSON.stringify(this.record['keyword']));
+            }
+        }else{
+            this.keywordShort = [];
+            this.keywordLong = [];
+        }
+
+        this.keywordDisplay = this.keywordShort;
+    }
+
+    /**
+     * Set border for "More..." and "Less..." button when mouse over
+     * @param keyword 
+     * @returns 
+     */
+    borderStyle(keyword) {
+        if(keyword == "Show more..." || keyword == "Show less..." ) {
+            if(this.hovered){
+                return "1px solid blue";
+            }else{
+                return "1px solid #ededed";
+            }
+        }else{
+            return "1px solid #ededed";
+        }
+    }
+
+    mouseEnter(keyword) {
+        if(keyword == "Show more..." || keyword == "Show less..." ) {
+            this.hovered = true;
+        }
+    }
+
+    mouseOut(keyword) {
+        if(keyword == "Show more..." || keyword == "Show less..." ) {
+            this.hovered = false;
+        }
+    }
+
+    /**
+     * Display short/long list based on which button was clicked.
+     * @param keyword 
+     */
+    keywordClick(keyword) {
+        if(keyword == "Show more...") {
+            this.keywordDisplay = this.keywordLong;
+        }
+
+        if(keyword == "Show less...") {
+            this.keywordDisplay = this.keywordShort;
+        }
+
+        this.hovered = false;
+    }
+
+    /**
+     * Set cursor type for "More..." and "Less..." button
+     * @param keyword
+     * @returns 
+     */
+    setCursor(keyword) {
+        if(keyword == "Show more..." || keyword == "Show less..." ) {
+            return "pointer";
+        }else{
+            return "";
+        }
+    }    
+
 }

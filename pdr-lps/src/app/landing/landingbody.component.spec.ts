@@ -74,14 +74,12 @@ describe('LandingBodyComponent', () => {
             expect(title.textContent).toEqual("Description");
 
             sect = cmpel.querySelector("#dataAccess")
-            console.log("sect", sect);
             expect(sect).toBeTruthy();
             title = sect.querySelector("h3");
             expect(title).toBeTruthy();
             expect(title.textContent).toEqual("Data Access");
 
             sect = cmpel.querySelector("#references")
-            console.log("sect", sect);
             expect(sect).toBeTruthy();
             title = sect.querySelector("h3");
             expect(title).toBeTruthy();
@@ -90,7 +88,6 @@ describe('LandingBodyComponent', () => {
             sect = cmpel.querySelector("#about")
             expect(sect).toBeTruthy();
             title = sect.querySelector("h3");
-            console.log("title", title);
             expect(title).toBeTruthy();
             expect(title.textContent).toEqual("About This Dataset");
         });

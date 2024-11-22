@@ -5,7 +5,7 @@ import { NotificationService } from '../../shared/notification-service/notificat
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, SubmitResponse } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-title',
@@ -114,6 +114,10 @@ export class TitleComponent implements OnInit {
                     this.dataChanged = true;
                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
                     this.setMode(MODE.NORNAL, refreshHelp);
+                    //Validate
+                    // this.mdupdsvc.validate().subscribe(response => {
+                    //     this.lpService.setSubmitResponse(response as SubmitResponse);
+                    // })
                 }else{
                     let msg = "Title update failed.";
                     console.error(msg);
