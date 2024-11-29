@@ -15,19 +15,17 @@
         <div class="editable_field" *ngIf="hasContact" style="max-width:calc(100% - 4em);">
             <div style="padding-right: 0.5em;">
                 <strong>
-                    <a *ngIf="hasEmail"
-                        href="{{currentContact.hasEmail}}" target="_top">
-                        {{currentContact.fn}}</a>
-                    <span *ngIf="!hasEmail">{{currentContact.fn}}</span>
+                    <span style="cursor: pointer;" (click)="closeContent = !closeContent">{{currentContact.fn}}</span>
                 </strong>.
 
-                <i style="cursor: pointer; margin-left: 0.5rem;" class="fas"
-                [ngClass]="{'fa-caret-right': !clickContact, 'fa-caret-down': clickContact}"
-                aria-hidden="true"
-                (click)="closeContent = !closeContent; clickContact=expandContact();"></i>
+                <i style="cursor: pointer; margin-left: 0.5rem;" 
+                    class="fas"
+                    [ngClass]="{'fa-caret-right': closeContent, 'fa-caret-down': !closeContent}"
+                    aria-hidden="true"
+                    (click)="closeContent = !closeContent;"></i>
 
-                <div [collapse]="!closeContent" class="card card-body bg-faded">
-                    <span class="" *ngIf="currentContact.fn">
+                <div [collapse]="closeContent" class="card card-body bg-faded">
+                        <span class="" *ngIf="currentContact.fn">
                         <span>{{currentContact.fn}}</span>
                     </span>
                     <span *ngIf="hasEmail">
@@ -72,13 +70,12 @@
     </div>
 </div>
 
-<!-- Contact editor -->
-<div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+<div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
     <table style="width: 100%;">
         <tr  style="width: 100%;">
             <!-- Text edit area -->
             <td class="edit-block" style="width: calc(100%-90px);">
-                <lib-contact-edit #contactedit [contact]="currentContact" [backgroundColor]="getRecordBackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onContactChange($event)"></lib-contact-edit>
+                <ng-template #contactedit></ng-template>
             </td>
 
             <!-- Control buttons -->
@@ -93,7 +90,30 @@
                     (click)="undoCurContactChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
                     <i class="fas fa-undo fa-sm"></i>
                 </button>
-            </td>          
+            </td>              
         </tr>
     </table>
 </div>
+
+<!-- Contact editor - not sure why the following is not working -->
+<!-- <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+    <table style="width: 100%;">
+        <tr  style="width: 100%;">
+
+            <td class="edit-block" style="width: calc(100%-90px);">
+                <lib-contact-edit #contactedit [contact]="currentContact" [backgroundColor]="getRecordBackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onContactChange($event)"></lib-contact-edit>
+            </td>
+
+            <td style="width: 90px;vertical-align: top;">
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentContact()" aria-label="edit button" [disabled]="!currentContact.dataChanged || !currentContact.fn" ngbTooltip="Save contact">
+                    <i class="fas fa-check"></i>
+                </button>
+        
+                <button class="edit_button" *ngIf="mdupdsvc.isEditMode && dataChanged" type="button"
+                    (click)="undoCurContactChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
+                    <i class="fas fa-undo fa-sm"></i>
+                </button>
+            </td>          
+        </tr>
+    </table>
+</div> -->

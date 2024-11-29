@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild, ViewContainerRef, inject, ComponentFactoryResolver } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
@@ -16,9 +16,9 @@ import { ContactEditComponent } from './contact-edit/contact-edit.component';
     styleUrls: ['../landing.component.scss'],
     animations: [
         trigger('editExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ])
     ]
 })
@@ -27,6 +27,8 @@ export class ContactComponent implements OnInit {
     originalRecord: any = {};
     fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
     editMode: string = MODE.NORNAL; 
+    clickContact = false;
+    closeContent = true;
 
     tempInput: any = {};
 
@@ -35,17 +37,26 @@ export class ContactComponent implements OnInit {
     backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
     dataChanged: boolean = false;
 
+    contactEditComp: any;
+    vcr = inject(ViewContainerRef);
+
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
 
-    @ViewChild('contactedit') contactEdit: ContactEditComponent;
-    
+    // @ViewChild('contactedit') contactEdit: ContactEditComponent;
+    // @ViewChild('contactedit', { read: ViewContainerRef, static: true })
+    // private greetviewcontainerref: ViewContainerRef | undefined;
+
+    @ViewChild('contactedit', { read: ViewContainerRef, static: true })
+    private contactEditViewContainerRef: ViewContainerRef | undefined;
+
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
                 private gaService: GoogleAnalyticsService,
                 public lpService: LandingpageService, 
                 private notificationService: NotificationService,
-                private contactService : ContactService)
+                private contactService : ContactService,
+                private vcref: ViewContainerRef)
     {
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if(sectionMode){
@@ -70,6 +81,11 @@ export class ContactComponent implements OnInit {
      */
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
 
+    /**
+     * Remove "mailto:" from the input string and return the email part.
+     * @param hasEmail Nerdm record hasEmail field
+     * @returns 
+     */
     email(hasEmail)
     {
         if(hasEmail == null || hasEmail == undefined)
@@ -94,6 +110,9 @@ export class ContactComponent implements OnInit {
         }
     }
 
+    /**
+     * Update the original record for undo purpose.
+     */
     updateOriginal(){
         if(this.hasContact) {
             this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
@@ -111,17 +130,29 @@ export class ContactComponent implements OnInit {
         }
     }
 
+    /**
+     * Indicate if this record has contact info.
+     */
     get hasContact() {
         if(!this.record) return false;
         else return !this.emptyContact(this.record[this.fieldName]);
     }
 
+    /**
+     * Indicate if this record has email.
+     */
     get hasEmail() {
         return this.hasContact && this.currentContact && this.currentContact['hasEmail'];
     }
 
+    /**
+     * Indicate if we are in edit mode.
+     */
     get isEditing() { return this.editMode==MODE.EDIT }
 
+    /**
+     * Indicate if we are in nornmal mode.
+     */
     get isNormal() { return this.editMode==MODE.NORNAL }
 
     /**
@@ -135,9 +166,7 @@ export class ContactComponent implements OnInit {
             
             if(this.mdupdsvc.fieldUpdated(this.fieldName)){
                 this.backgroundColor = 'var(--data-changed-saved)';
-            }
-            
-            if(this.dataChanged){
+            }else if(this.currentContact.dataChanged){
                 this.backgroundColor = 'var(--data-changed)';
             }
         }else{
@@ -164,16 +193,58 @@ export class ContactComponent implements OnInit {
         } 
     }
 
+    /**
+     * Start editing:
+     * Load edit component if not yet.
+     * Then init edit component and expand it.
+     */
     startEditing() {
+    // Load edit component if not yet
+        if(!this.contactEditComp) {
+            this.vcr.clear();
+            import('./contact-edit/contact-edit.component').then(
+                ({ ContactEditComponent }) => {
+                    this.contactEditComp = this.contactEditViewContainerRef?.createComponent(
+                        ContactEditComponent);
+
+                    this.showEditComp();
+                }
+            )
+        }else{
+            this.showEditComp();
+        }
+    }
+
+    /**
+     * Initialize the edit component;
+     * Set current contact;
+     * Then show the edit component.
+     */
+    showEditComp(){
+        if (this.contactEditComp) {
+            this.contactEditComp.instance.contact = this.currentContact;
+            this.contactEditComp.instance.backgroundColor = this.getRecordBackgroundColor;
+            this.contactEditComp.instance.editMode = this.editMode;
+            this.contactEditComp.instance.forceReset = false;
+            this.contactEditComp.instance.dataChanged.subscribe((data:any)=>{
+              console.log(data);
+              this.onContactChange(data);
+            })
+        }  
+
         if(this.record[this.fieldName])
             this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
         else
             this.currentContact = {} as Contact;
 
         this.setMode(MODE.EDIT);
-
     }
 
+    /**
+     * Determine if the input contact object is empty.
+     * @param contact 
+     * @returns 
+     */
     emptyContact(contact) {
         if (contact == undefined || Object.keys(contact).length === 0) {
             return true;
@@ -182,27 +253,43 @@ export class ContactComponent implements OnInit {
         return false;
     }
 
+    /**
+     * Set edit mode to normal. Hide edit block.
+     * @param refreshHelp If the help box needs be refreshed. 
+     */
     hideEditBlock(refreshHelp: boolean = true) {
         this.setMode(MODE.NORNAL, refreshHelp);
     }
 
     /**
-     * Handle requests from child component
-     * @param dataChanged parameter passed from child component
+     * Handle requests from child component:
+     * Update current contact object and set dataChanged flag.
+     * @param dataChanged object passed from child component:
+     * Action: fnChanged - fn field changed.
+     * Action: emailChanged - email field changed.
      */
     onContactChange(dataChanged: any) {
         switch(dataChanged.action) {
-            case 'dataChanged':
+            case 'fnChanged':
+                this.currentContact.fn = dataChanged.fn;
                 this.dataChanged = true;
+                this.currentContact.dataChanged = true;
+                this.contactEditComp.instance.backgroundColor = this.getRecordBackgroundColor;
                 break;
-
+            case 'emailChanged':
+                this.currentContact.hasEmail = dataChanged.email;
+                this.dataChanged = true;
+                this.currentContact.dataChanged = true;
+                this.contactEditComp.instance.backgroundColor = this.getRecordBackgroundColor;
+                break;
+    
             default:
                 break;
         }
     }
 
     /**
-     * Unde current changes on contact
+     * Unde current changes on contact. Restore from original record.
      */
     undoCurContactChanges() {
         if(this.originalRecord[this.fieldName] == undefined) {
@@ -253,8 +340,11 @@ export class ContactComponent implements OnInit {
     }
 
     /**
-     * Set the GI to different mode
+     * Set the GUI to different mode:
+     * Edit mode: expand the edit bloack.
+     * Normal mode: hide the edit block.
      * @param editmode edit mode to be set
+     * @param refreshHelp if help box needs be refreshed.
      */
     setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
@@ -287,6 +377,10 @@ export class ContactComponent implements OnInit {
             this.lpService.setEditing(sectionMode);
     }
 
+    /**
+     * Get field style string based on current field status.
+     * @returns field style
+     */
     getFieldStyle() {
         return this.mdupdsvc.getFieldStyle(this.fieldName);
     }
@@ -302,20 +396,13 @@ export class ContactComponent implements OnInit {
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             if (updateSuccess){
                 this.setMode(MODE.NORNAL, refreshHelp);
+                this.currentContact.dataChanged = false;
                 this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
             }else{
                 let msg = "Contact update failed.";
                 console.error(msg);
             }
         });
-
-        // this.updateMatadata(this.currentContact).then((success) => {
-        //     if(success){
-        //         this.setMode(MODE.NORNAL, refreshHelp);
-        //     }else{
-        //         console.error("Update failed")
-        //     }
-        // })
     }
 
     /**
@@ -357,7 +444,10 @@ export class ContactComponent implements OnInit {
         });
     }
 
-    clickContact = false;
+    /**
+     * Toggle contact detail display.
+     * @returns 
+     */
     expandContact() {
         this.clickContact = !this.clickContact;
         return this.clickContact;

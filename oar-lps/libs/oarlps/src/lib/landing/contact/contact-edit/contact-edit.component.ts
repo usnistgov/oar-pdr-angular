@@ -1,8 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 import { Contact } from '../contact';
+import { CommonModule } from '@angular/common';
+import { PeopleModule } from '../../people/people.module';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'lib-contact-edit',
+  standalone: true,
+  imports: [CommonModule, PeopleModule, FormsModule],
   templateUrl: './contact-edit.component.html',
   styleUrls: ['./contact-edit.component.css']
 })
@@ -40,13 +45,13 @@ export class ContactEditComponent implements OnInit {
 
     onFullNameChange(value) {
         this.contact.dataChanged = true;
-        this.dataChanged.next({"fn": JSON.parse(JSON.stringify(this.contact.fn)), action:"dataChanged"});
+        this.dataChanged.next({"fn": JSON.parse(JSON.stringify(this.contact.fn)), action:"fnChanged"});
     }
 
     onEmailChange(value) {
         this.contact.hasEmail = "mailto:" + value;
         this.contact.dataChanged = true;
-        this.dataChanged.next({"email": JSON.parse(JSON.stringify(this.contact.hasEmail)), action:"dataChanged"});
+        this.dataChanged.next({"email": JSON.parse(JSON.stringify(this.contact.hasEmail)), action:"emailChanged"});
     }
 
     /**
@@ -68,7 +73,7 @@ export class ContactEditComponent implements OnInit {
                     this.contact.fn = this.selected.lastName + ", " + this.selected.firstName;
 
                     this.contact.dataChanged = true;
-                    this.dataChanged.next({"fn": JSON.parse(JSON.stringify(this.contact.fn)), action:"dataChanged"});
+                    this.dataChanged.next({"fn": JSON.parse(JSON.stringify(this.contact.fn)), action:"fnChanged"});
                 }
 
                 if(this.selected.lastName)
@@ -82,7 +87,7 @@ export class ContactEditComponent implements OnInit {
                     this.email = this.selected.emailAddress;
 
                     this.contact.dataChanged = true;
-                    this.dataChanged.next({"email": JSON.parse(JSON.stringify(this.contact.hasEmail)), action:"dataChanged"});
+                    this.dataChanged.next({"email": JSON.parse(JSON.stringify(this.contact.hasEmail)), action:"emailChanged"});
                 }
     
                 break;                
