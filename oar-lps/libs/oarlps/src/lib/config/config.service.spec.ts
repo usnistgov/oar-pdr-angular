@@ -1,78 +1,65 @@
-import * as cfg from "./config"
-import * as cfgsvc from "./config.service"
-import { TransferState, StateKey } from '@angular/platform-browser';
-import * as ngenv from '../../environments/environment';
-import { IEnvironment } from '../../environments/ienvironment';
-import * as env from '../../environments/environment';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { APP_INITIALIZER } from '@angular/core';
 
-describe("config.service deepcopy", function() {
+import { Configuration, CONFIG_URL } from 'oarng';
+import { LPSConfig } from './config.model';
+import { ConfigService } from './config.service';
 
-    let a = { a: 1, b: { bc: "1.3", bd: 1.4, be: [ 1, 2.2, "3G", { z: 25, y: "24" } ] }};
-    let b = cfgsvc.deepCopy(a);
+// import { environment } from '../../environments/environment';
 
-    it("equivalent but independent", function() {
-        expect(b).toEqual(a);
+describe('ConfigService', () => {
+    let service: ConfigService;
+    let httpMock: HttpTestingController;
+    // Mock configuration object
+    let mockConfig: Configuration = { };
 
-        a.b.be[3]["x"] = "better";
-        expect(b).not.toEqual(a);
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [HttpClientTestingModule],
+            providers: [
+                { provide: CONFIG_URL, useValue: "assets/config.json" },
+                ConfigService
+            ],
+        });
+        mockConfig = {
+            links: {
+                orgHome: "https://pdr.org/",
+                portalBase: "https://data.pdr.org/"
+            }
+        };
+
+        service = TestBed.inject(ConfigService);
+        httpMock = TestBed.inject(HttpTestingController);
+    });
+
+    afterEach(() => {
+        // After every test, assert that there are no more pending requests.
+        // This throws an error if there are any requests that haven't been flushed yet.
+        httpMock.verify();
+    });
+
+    it('should fetch configuration v2 (with promise)', async () => {
+        // Create a promise. This will pause the test until the promise is resolved using await.
+        const configPromise = service.fetchConfig().toPromise();
+        // By the time the HTTP request is expected, the configPromise has already been created.
+        const req = httpMock.expectOne('assets/config.json');
         
-        a.a = 2;
-        a.b.bc = "hey";
-        a.b.be[0] = "you!";
-        expect(b).not.toEqual(a);
-    });    
-});
+        expect(req.request.method).toBe('GET');
+        // Set the HTTP response
+        req.flush(mockConfig);
 
-describe("config.service AngularEnvironmentConfigService", function() {
-    let plid : Object = "browser";
-    let ts : TransferState = new TransferState();
-    let svc = new cfgsvc.AngularEnvironmentConfigService(env, plid, ts);
+        // Wait for fetchConfig() to finish, which will hang on HttpClient.get() to finish
+        const config = await configPromise;
 
-    it("getConfig()", function() {
-        let ac : cfg.AppConfig = svc.getConfig() as cfg.AppConfig;
-
-        expect(ac instanceof cfg.AppConfig).toBe(true);
-        expect(ac.status).toBe("Dev Version");
-        expect(ac["mode"]).toBe("dev");
-        expect(ac["source"]).toBe("angular-env");
-    });
-});
-
-describe("config.service newConfigService", function() {
-
-    it("angular-env", function() {
-        let plid : Object = "browser";
-        let ts = new TransferState();
-        let svc = cfgsvc.newConfigService(env, plid, ts);
-
-        expect(svc instanceof cfgsvc.ConfigService).toBe(true);
-        expect(svc instanceof cfgsvc.AngularEnvironmentConfigService).toBe(true);
-
-        let ac : cfg.AppConfig = svc.getConfig() as cfg.AppConfig;
-        expect(ac instanceof cfg.AppConfig).toBe(true);
-        expect(ac.status).toBe("Dev Version");
-        expect(ac["mode"]).toBe("dev");
-        expect(ac["source"]).toBe("angular-env");
-    });
-
-    it("transfer-state", function() {
-        let plid : Object = "browser";
-        let data : cfg.LPSConfig = cfgsvc.deepCopy(ngenv.config);
-        data["mode"] = "prod";
-        let ts = new TransferState();
-        ts.set<cfg.LPSConfig>(cfgsvc.CONFIG_TS_KEY, data);
-        
-        let svc = cfgsvc.newConfigService(env, plid, ts);
-
-        expect(svc instanceof cfgsvc.ConfigService).toBe(true);
-        expect(svc instanceof cfgsvc.TransferStateConfigService).toBe(true);
-
-        let ac : cfg.AppConfig = svc.getConfig() as cfg.AppConfig;
-        expect(ac instanceof cfg.AppConfig).toBe(true);
-        expect(ac.status).toBe("Dev Version");
-        expect(ac["mode"]).toBe("prod");
-        expect(ac["source"]).toBe("transfer-state");
+        expect(config).toBeTruthy();
+        debugger;
+        expect(service.get("links.orgHome")).toBe("https://pdr.org/");
+        expect(service.get("links.portalBase")).toBe("https://data.pdr.org/");
+        expect(service.get("links.pdrHome")).toBe("https://data.pdr.org/pdr/");
+        expect(service.get("links.pdrIDResolver")).toBe("https://data.pdr.org/od/id/");
+        expect(service.get("PDRAPIs.mdSearch")).toBe("https://data.pdr.org/rmm/");
+        expect(service.get("PDRAPIs.mdService")).toBe("https://data.pdr.org/od/id/");
     });
 
 });
-

@@ -3,6 +3,5 @@ module.exports = {
     setupFilesAfterEnv: ['./setup-jest.ts'],
     moduleNameMapper: {
         "^lodash-es$": "lodash"
-    },
-    globalSetup: 'jest-preset-angular/global-setup'
+    }
 };
