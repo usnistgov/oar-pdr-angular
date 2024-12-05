@@ -1,7 +1,7 @@
 import { Injectable, Inject, Optional } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
-import { ConfigurationService as BaseConfigurationService } from 'oarng';
+import { ConfigurationService } from 'oarng';
 import { ReleaseInfo, RELEASE_INFO, CONFIG_URL } from 'oarng';
 import { LPSConfig } from './config.model';
 // import { RELEASE } from '../../environments/release-info';
@@ -9,7 +9,7 @@ import { LPSConfig } from './config.model';
 @Injectable({
     providedIn: 'root',
 })
-export class ConfigService extends BaseConfigurationService {
+export class AppConfig extends ConfigurationService {
 
     constructor(http: HttpClient,
                 @Optional() @Inject(RELEASE_INFO) relInfo?: ReleaseInfo,
@@ -49,7 +49,6 @@ export class ConfigService extends BaseConfigurationService {
         if (! cfg.links.nerdmAbout)
             cfg.links.nerdmAbout = cfg.links.portalBase + "od/dm/nerdm/";
 
-        debugger;
         if (! cfg.PDRAPIs)
             cfg.PDRAPIs = {}
         if (! cfg.PDRAPIs.mdSearch)

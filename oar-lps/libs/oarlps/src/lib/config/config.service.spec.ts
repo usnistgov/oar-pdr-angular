@@ -4,12 +4,12 @@ import { APP_INITIALIZER } from '@angular/core';
 
 import { Configuration, CONFIG_URL } from 'oarng';
 import { LPSConfig } from './config.model';
-import { ConfigService } from './config.service';
+import { AppConfig } from './config.service';
 
 // import { environment } from '../../environments/environment';
 
-describe('ConfigService', () => {
-    let service: ConfigService;
+describe('AppConfig', () => {
+    let service: AppConfig;
     let httpMock: HttpTestingController;
     // Mock configuration object
     let mockConfig: Configuration = { };
@@ -19,7 +19,7 @@ describe('ConfigService', () => {
             imports: [HttpClientTestingModule],
             providers: [
                 { provide: CONFIG_URL, useValue: "assets/config.json" },
-                ConfigService
+                AppConfig
             ],
         });
         mockConfig = {
@@ -29,7 +29,7 @@ describe('ConfigService', () => {
             }
         };
 
-        service = TestBed.inject(ConfigService);
+        service = TestBed.inject(AppConfig);
         httpMock = TestBed.inject(HttpTestingController);
     });
 
@@ -53,7 +53,6 @@ describe('ConfigService', () => {
         const config = await configPromise;
 
         expect(config).toBeTruthy();
-        debugger;
         expect(service.get("links.orgHome")).toBe("https://pdr.org/");
         expect(service.get("links.portalBase")).toBe("https://data.pdr.org/");
         expect(service.get("links.pdrHome")).toBe("https://data.pdr.org/pdr/");

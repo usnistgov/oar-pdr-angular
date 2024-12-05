@@ -9,7 +9,7 @@
  * This is the default version of this file.  When the app is built via `ng build --env=label`,
  * the contents of ./environment.label.ts will be used instead.  
  */
-import { LPSConfig } from '../lib/config/config';
+import { LPSConfig } from '../lib/config/config.model';
 
 export const context = {
     production: false,
@@ -19,18 +19,18 @@ export const context = {
 };
 
 export const config: LPSConfig = {
-    locations: {
+    links: {
         orgHome: "https://nist.gov/",
         portalBase: "https://oardev.nist.gov/",
         pdrHome: "https://oardev.nist.gov/pdr/",
         pdrSearch: "https://oardev.nist.gov/sdp/",
         mdService:   "https://oardev.nist.gov/rmm/",
-        taxonomyService: "https://oardev.nist.gov/rmm/taxonomy"
     },
-    mdAPI: "https://oardev.nist.gov/rmm/records/",
-    metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
-    // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "https://datapubtest.nist.gov/customization/",
+    PDRAPIs: {
+        mdSearch: "https://oardev.nist.gov/rmm/records/",
+        mdService: "https://oardev.nist.gov/od/id/",
+        metrics: "https://data.nist.gov/rmm/usagemetrics/"
+    },
     mode: "dev",
     status: "Dev Version",
     appVersion: "v1.3.X",

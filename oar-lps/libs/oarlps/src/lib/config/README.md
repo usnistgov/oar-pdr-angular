@@ -15,5 +15,9 @@ it to the assets directory is now out-of-scope of the angular
 application; this should be handled prior to starting the web (or
 node) server used to deliver the application.
 
-The extension class `ConfigService` ensures type-safety for the
-configuration data and provides default values for optional parameters.
+In this new implementation, `AppConfig` is an subclass of the common
+`ConfigurationService` class that ensures type-safety for the
+configuration data and provides default values for optional
+parameters.  Most uses of `AppConfig` uses its `get()` function to
+retrieve configuration values while specifying a default.  
+
