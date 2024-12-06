@@ -24,7 +24,6 @@
     "dev:ssr": "ng run pdr-lps:serve-ssr",
     "prerender": "ng run pdr-lps:prerender"
   },
-  "pre-commit": [],
   "private": true,
   "peerDependencies": {
     "@angular/common": "^17.3.12",
