@@ -17,7 +17,8 @@ import { LandingConstants } from '../constants';
 describe('EditControlComponent', () => {
     let component : EditControlComponent;
     let fixture : ComponentFixture<EditControlComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let authsvc : AuthService = new MockAuthService()
     let EDIT_MODES = LandingConstants.editModes;

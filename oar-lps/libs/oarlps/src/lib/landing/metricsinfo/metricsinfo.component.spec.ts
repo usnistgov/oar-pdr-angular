@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
 import { MetricsinfoComponent } from './metricsinfo.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -14,14 +13,15 @@ describe('MetricsinfoComponent', () => {
   let ts: TransferState = new TransferState();
 
   beforeEach(waitForAsync(() => {
-    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+      cfg = new AppConfig(null);
+      cfg.loadConfig(env.config);
 
     TestBed.configureTestingModule({
       declarations: [ MetricsinfoComponent ],
       imports: [HttpClientTestingModule],
       providers: [
         { provide: AppConfig, useValue: cfg }
-    ]
+      ]
     })
     .compileComponents();
   }));

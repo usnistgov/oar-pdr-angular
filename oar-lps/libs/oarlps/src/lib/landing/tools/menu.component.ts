@@ -68,12 +68,12 @@ export class MenuComponent implements OnInit {
     // signal for triggering display of the citation information
     @Output() toggle_citation = new EventEmitter<boolean>();
 
-    constructor(
-        public collectionService: CollectionService,
-        @Inject(PLATFORM_ID) private platformId: Object,
-        private cfg : AppConfig) { 
-            this.inBrowser = isPlatformBrowser(platformId);
-        }
+    constructor(public collectionService: CollectionService,
+                @Inject(PLATFORM_ID) private platformId: Object,
+                private cfg : AppConfig)
+    { 
+        this.inBrowser = isPlatformBrowser(platformId);
+    }
 
     ngOnInit(): void {
         this.allCollections = this.collectionService.loadAllCollections();
@@ -98,7 +98,7 @@ export class MenuComponent implements OnInit {
         this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, "faa faa-external-link"));
         this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, "faa faa-cart-plus"));
 
-        let searchbase = this.cfg.get("locations.pdrSearch","/sdp/")
+        let searchbase = this.cfg.get("links.pdrSearch","/sdp/")
         if (searchbase.slice(-1) != '/') searchbase += "/"
         let authlist = "";
         if (this.record['authors']) {

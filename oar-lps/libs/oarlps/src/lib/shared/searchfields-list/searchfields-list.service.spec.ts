@@ -7,19 +7,19 @@ import { RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppConfig } from '../../config/config'
 import { TransferState } from '@angular/platform-browser';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import * as env from '../../../environments/environment';
 
 describe('SearchfieldsListService', () => {
     let plid : Object = "browser";
     let ts : TransferState = new TransferState();
-    let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
 
     beforeEach(() => TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, RouterModule, RouterTestingModule],
         providers: [
             Location,
-            { provide: AppConfig,       useValue: cfg }
+            { provide: AppConfig, useValue: cfg }
         ]
     }));
 

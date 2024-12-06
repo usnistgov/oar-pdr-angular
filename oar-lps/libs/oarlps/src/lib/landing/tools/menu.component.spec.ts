@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppConfig } from '../../config/config'
 import { MenuComponent } from './menu.component';
 import { TransferState } from '@angular/platform-browser';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { testdata } from '../../../environments/environment';
+import { config, testdata } from '../../../environments/environment';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -15,7 +14,8 @@ describe('MenuComponent', () => {
   let md = testdata['test1'];
 
   beforeEach(async () => {
-    cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+    cfg = new AppConfig(null);
+    cfg.loadConfig(config);  
     await TestBed.configureTestingModule({
       declarations: [ MenuComponent ],
       providers: [

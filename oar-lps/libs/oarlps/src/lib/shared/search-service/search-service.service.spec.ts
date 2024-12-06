@@ -3,8 +3,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Observable } from 'rxjs';
 import { SearchService } from './search-service.service';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
+import { AppConfig, LPSConfig } from '../../config/config.module';
 import { TransferState } from '@angular/platform-browser';
 import * as env from '../../../environments/environment';
 import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
@@ -14,21 +13,28 @@ describe('SearchService (mockBackend)', () => {
     let response: Response;
     let fakerecords: any[];
     let testid: string = 'FF429BC1786C8B3EE0431A570681E858219';
-    let cfg: AppConfig;
+    let cfg: AppConfig = new AppConfig(null);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
 
     beforeEach(async(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
+        let cfgd: LPSConfig = {
+            links: {
+                orgHome: "https://goob.nist.gov/",
+                mdSearch: "https://goob.nist.gov/search",
+            },
+            PDRAPIs: {
+            },
+            status: "Unit Testing",
+            systemVersion: "2.test"
+        };
+        cfg.loadConfig(cfgd);
 
         TestBed.configureTestingModule({
         imports: [HttpClientTestingModule, RouterTestingModule],
         providers: [
-            { provide: AppConfig, useValue: cfg },
             // { provide: XHRBackend, useClass: MockBackend },
+            { provide: AppConfig, useValue: cfg },
             SearchService, TransferState
         ]
 

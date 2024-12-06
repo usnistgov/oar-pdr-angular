@@ -18,7 +18,8 @@ import { By } from '@angular/platform-browser';
 describe('ResourceDataComponent', () => {
     let component: ResourceDataComponent;
     let fixture: ComponentFixture<ResourceDataComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let rec : NerdmRes = require('../../../assets/sampleRecord.json');
 
     let makeComp = function() {
@@ -50,14 +51,10 @@ describe('ResourceDataComponent', () => {
         fixture.detectChanges();
 
         expect(component).toBeTruthy();
+        expect(component.sectionTitle).toBe("Data Access");
         let cmpel = fixture.nativeElement;
 
         expect(cmpel.querySelector("#dataAccess")).toBeTruthy();
-
-        // has a title
-        let el = cmpel.querySelector("h3");
-        expect(el).toBeTruthy();
-        expect(el.textContent).toContain("Data Access");
 
         // lists access pages
         expect(cmpel.querySelector("#accessPages")).toBeTruthy();

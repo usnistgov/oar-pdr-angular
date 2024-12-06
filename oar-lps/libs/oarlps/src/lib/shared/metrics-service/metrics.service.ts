@@ -9,11 +9,8 @@ import { HttpClient, HttpHeaders, HttpRequest } from '@angular/common/http';
 export class MetricsService {
     metricsBackend: string = "";
 
-    constructor(
-        private cfg: AppConfig,
-        private http: HttpClient, ) { 
-
-        this.metricsBackend = cfg.get("metricsAPI", "/unconfigured");
+    constructor(private cfg: AppConfig, private http: HttpClient, ) { 
+        this.metricsBackend = cfg.get("PDRAPIs.metricsAPI", "/rmm/usagemetrics");
     }
 
     getFileLevelMetrics(ediid: string): Observable<any> {

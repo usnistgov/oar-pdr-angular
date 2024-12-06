@@ -16,7 +16,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 describe('RefListComponent', () => {
   let component: RefListComponent;
   let fixture: ComponentFixture<RefListComponent>;
-  let cfg : AppConfig = new AppConfig(config);
+  let cfg: AppConfig = new AppConfig(null);
+  cfg.loadConfig(config);
   let authsvc : AuthService = new MockAuthService(undefined);
   let rec : NerdmRes = testdata['test1'];
 

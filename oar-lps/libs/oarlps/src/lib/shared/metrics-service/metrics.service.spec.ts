@@ -1,22 +1,27 @@
 import { inject, TestBed, waitForAsync  } from '@angular/core/testing';
 import { AppConfig } from '../../config/config';
 import { MetricsService } from './metrics.service';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TransferState } from '@angular/platform-browser';
 import * as env from '../../../environments/environment';
 
 describe('MetricsService', () => {
-    let cfg: AppConfig;
+    let cfg: AppConfig = new AppConfig(null);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
+        let cfgd = {
+            links: {
+                orgHome: "https://pdr.org/",
+                portalBase: "https://data.pdr.org/"
+            },
+            PDRAPIs: { },
+            status: "Unit Testing",
+            appVersion: "2.test"
+        }
+        cfg.loadConfig(cfgd);
 
         TestBed.configureTestingModule({
         imports: [RouterTestingModule, HttpClientTestingModule],

@@ -36,7 +36,8 @@ describe('convert functions', function() {
     beforeEach(() => {
         let cfg = JSON.parse(JSON.stringify(config));
         cfg['embedMetadata'] = [convert.SchemaLabel.SCHEMA_ORG];
-        let appcfg = new AppConfig(cfg);
+        let appcfg = new AppConfig(null);
+        appcfg.loadConfig(cfg);
         svc = new convert.NerdmConversionService(appcfg);
     });
 
@@ -46,7 +47,9 @@ describe('convert functions', function() {
         expect(svc.supportsFormat("scare")).toBeFalsy();
         expect(svc.formatsToEmbed()).toEqual([convert.SchemaLabel.SCHEMA_ORG]);
 
-        svc = new convert.NerdmConversionService(new AppConfig(config));  // embedMetadata not included
+        let appcfg: AppConfig = new AppConfig(null);
+        appcfg.loadConfig(config);
+        svc = new convert.NerdmConversionService(appcfg);  // embedMetadata not included
         expect(svc.formatsToEmbed()).toEqual([]);
     });
 

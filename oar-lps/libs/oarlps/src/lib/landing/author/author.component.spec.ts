@@ -5,7 +5,6 @@ import { AuthorComponent } from './author.component';
 import { FormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DatePipe } from '@angular/common';
@@ -13,24 +12,20 @@ import { ToastrModule } from 'ngx-toastr';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { testdata } from '../../../environments/environment';
+import { config, testdata } from '../../../environments/environment';
 import * as env from '../../../environments/environment';
 
 describe('AuthorComponent', () => {
     let component: AuthorComponent;
     let fixture: ComponentFixture<AuthorComponent>;
-    let cfg: AppConfig;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
     let authsvc: AuthService = new MockAuthService(undefined);
     let rec = testdata['test2'];
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
             imports: [HttpClientTestingModule, FormsModule, RouterTestingModule, ToastrModule.forRoot()],
             declarations: [AuthorComponent],

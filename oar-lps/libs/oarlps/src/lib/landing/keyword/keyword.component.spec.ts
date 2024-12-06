@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, fakeAsync  } from '@angular/core/testing';
 import { KeywordModule, KeywordComponent } from './keyword.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
@@ -16,17 +15,13 @@ import * as env from '../../../environments/environment';
 describe('KeywordComponent', () => {
     let component: KeywordComponent;
     let fixture: ComponentFixture<KeywordComponent>;
-    let cfg: AppConfig;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
     let authsvc: AuthService = new MockAuthService(undefined);
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
             imports: [
                 KeywordModule,

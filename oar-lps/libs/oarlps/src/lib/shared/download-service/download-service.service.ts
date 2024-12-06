@@ -32,13 +32,12 @@ export class DownloadService {
     _displayInterval = 20; 
     _overallDownloadTime = 0;
 
-    constructor(
-        private cfg: AppConfig,
-        private http: HttpClient,
-        private cartService: CartService,
-        private _FileSaverService: FileSaverService
-    ) {
-        this.distApi = this.cfg.get("distService", "/od/ds/");
+    constructor(private cfg: AppConfig,
+                private http: HttpClient,
+                private cartService: CartService,
+                private _FileSaverService: FileSaverService)
+    {
+        this.distApi = this.cfg.get("PDRAPIs.distService", "/od/ds/");
         this.setDownloadingNumber(-1);
     }
 

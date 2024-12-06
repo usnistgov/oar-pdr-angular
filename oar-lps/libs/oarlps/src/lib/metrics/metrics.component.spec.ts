@@ -4,9 +4,8 @@ import { MetricsComponent } from './metrics.component';
 import { MetricsModule } from './metrics.module';
 import { ActivatedRoute, Router, Routes } from '@angular/router';
 import * as mock from '../testing/mock.services';
-import { AppConfig } from '../config/config'
+import { AppConfig, LPSConfig } from '../config/config'
 import { TransferState } from '@angular/platform-browser';
-import { AngularEnvironmentConfigService } from '../config/config.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
 import { SearchService } from '../shared/search-service/search-service.service';
@@ -77,11 +76,13 @@ describe('MetricsComponent', () => {
     let ts : TransferState = new TransferState();
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-        cfg.editEnabled = false;
+        cfg = new AppConfig(null);
+        let cfgd: LPSConfig = JSON.parse(JSON.stringify(env.config));
+        cfgd.links.pdrSearch = "https://goob.nist.gov/search";
+        cfgd.status = "Unit Testing";
+        cfgd.systemVersion = "2.test";
+        cfgd.editEnabled = false;
+        cfg.loadConfig(cfgd);
 
         let path = "/metrics";
         let params = {};

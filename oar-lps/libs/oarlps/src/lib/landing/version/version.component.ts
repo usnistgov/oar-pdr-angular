@@ -43,10 +43,10 @@ export class VersionComponent implements OnChanges {
      * @param cfg   the app configuration data
      */
     constructor(private cfg : AppConfig,
-        public editstatsvc: EditStatusService,
-        public lpService: LandingpageService) {
-        this.lpssvc = this.cfg.get('locations.landingPageService',
-                                   'https://data.nist.gov/od/id/');
+                public editstatsvc: EditStatusService,
+                public lpService: LandingpageService)
+    {
+        this.lpssvc = this.cfg.get('links.pdrIDResolver', '/od/id/');
     }
 
     ngOnInit(): void {

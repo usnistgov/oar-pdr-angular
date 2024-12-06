@@ -16,7 +16,8 @@ describe('ResourceIdentityComponent', () => {
 
     let component : ResourceIdentityComponent;
     let fixture : ComponentFixture<ResourceIdentityComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let authsvc : AuthService = new MockAuthService(null, env);
 

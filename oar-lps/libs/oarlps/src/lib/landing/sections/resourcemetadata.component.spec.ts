@@ -12,7 +12,8 @@ import { MetricsData } from '../metrics-data';
 describe('ResourceMetadataComponent', () => {
     let component: ResourceMetadataComponent;
     let fixture: ComponentFixture<ResourceMetadataComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let record : NerdmRes = testdata['test1'];
 
     let makeComp = function() {
@@ -41,13 +42,6 @@ describe('ResourceMetadataComponent', () => {
 
     it('should initialize', () => {
         expect(component).toBeTruthy();
-        let cmpel = fixture.nativeElement;
-        expect(cmpel.querySelector("#about")).toBeTruthy();
-
-        // has a section heading
-        let el = cmpel.querySelector("h3");
-        expect(el).toBeTruthy();
-        expect(el.textContent).toContain("About This Dataset");
+        expect(component.sectionTitle).toBe("About This Dataset");
     });
-
 });

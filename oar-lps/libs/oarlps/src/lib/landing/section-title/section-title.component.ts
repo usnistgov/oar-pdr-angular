@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import * as Globals from '../../shared/globals/globals'
+import { GlobalService, ColorScheme } from '../../shared/globals/globals'
 import { D3Service } from '../../shared/d3-service/d3.service';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 
@@ -11,7 +11,7 @@ import { CollectionService } from '../../shared/collection-service/collection.se
 export class SectionTitleComponent {
     collection: string;
     svg: any;
-    colorScheme: Globals.ColorScheme;
+    colorScheme: ColorScheme;
     sectionWidth: number;
     backColor: string = '#003c97';
     maxWidth: number = 1000;
@@ -21,7 +21,7 @@ export class SectionTitleComponent {
     @Input() sectionTag: string;
    
     public constructor(
-        public globalService: Globals.GlobalService,
+        public globalService: GlobalService,
         public collectionService: CollectionService,
         public d3Service: D3Service) {
 

@@ -18,12 +18,12 @@ export class TaxonomyListService {
    * @param {HttpClient} http - The injected Http.
    * @constructor
    */
-  constructor(private http: HttpClient,
-    private cfg: AppConfig) {
-      this.taxonomyService = cfg.get("locations.taxonomyService", "/unconfigured");
+  constructor(private http: HttpClient, private cfg: AppConfig) {
+              
+      this.taxonomyService = cfg.get("links.taxonomyService", "assets/theme-taxonomy.json");
     //   console.log('this.taxonomyService', this.taxonomyService);
-      if (this.taxonomyService == "/unconfigured")
-          throw new Error("mdService endpoint not configured!");
+    //if (this.taxonomyService == "/unconfigured")
+    //    throw new Error("mdService endpoint not configured!");
   }
 
   /**
@@ -31,10 +31,9 @@ export class TaxonomyListService {
    * @return {string[]} The Observable for the HTTP request.
    */
   get(level: number): Observable<any> {
-    if (level == 0)
+      if (level != 0)
+          console.warn("taxonomy request level ignored")
       return this.http.get(this.taxonomyService);
-    else
-      return this.http.get(this.taxonomyService + '?level=' + level.toString());
   }
 
   /**

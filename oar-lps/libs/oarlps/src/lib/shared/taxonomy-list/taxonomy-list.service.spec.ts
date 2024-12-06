@@ -6,21 +6,22 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppConfig } from '../../config/config'
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
 import * as env from '../../../environments/environment';
 
 describe('TaxonomyListService', () => {
-    let cfg : AppConfig;
+    let cfg : AppConfig = new AppConfig(null);
     let plid : Object = "browser";
     let ts : TransferState = new TransferState();
 
     it('should be created', () => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
 
         TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, RouterModule, RouterTestingModule],
-        providers: [Location,{ provide: AppConfig, useValue: cfg}]
+            imports: [HttpClientTestingModule, RouterModule, RouterTestingModule],
+            providers: [
+                Location,
+                { provide: AppConfig, useValue: cfg }
+            ]
         })
 
         const service: TaxonomyListService = TestBed.inject(TaxonomyListService);

@@ -17,15 +17,13 @@ export class SearchfieldsListService {
    * @param {HttpClient} http - The injected Http.
    * @constructor
    */
-  constructor(private http: HttpClient,
-    private appConfig: AppConfig,
-    private cfg: AppConfig) {
-      this.RMMAPIURL = cfg.get("locations.mdService", "/unconfigured");
-    }
+  constructor(private http: HttpClient, private cfg: AppConfig) {
+      this.RMMAPIURL = cfg.get("PDRAPIs.mdService", "/rmm/");
+  }
 
-    ngOnInit(): void {
+  ngOnInit(): void {
 
-    }
+  }
 
   /**
    * Returns an Observable for the HTTP GET request for the JSON resource.

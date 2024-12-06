@@ -19,7 +19,8 @@ import { config, testdata } from '../../../environments/environment';
 describe('ResourceDescriptionComponent', () => {
     let component : ResourceDescriptionComponent;
     let fixture : ComponentFixture<ResourceDescriptionComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let authsvc : AuthService = new MockAuthService()
 
@@ -48,25 +49,17 @@ describe('ResourceDescriptionComponent', () => {
 
     it('should initialize', () => {
         expect(component).toBeDefined();
-        let cmpel = fixture.nativeElement;
-        
-        let el = cmpel.querySelector("h3");
-        expect(el).not.toBeNull();
-        expect(el.textContent).toContain("Description");
+        expect(component.desctitle).toBe("Description");
     });
 
     it('isDataPublication', () => {
         expect(component).toBeDefined();
         expect(component.isDataPublication()).toBeFalsy();
-        let cmpel = fixture.nativeElement;
+        expect(component.desctitle).toBe("Description");
         
         component.record['@type'].push("nrdp:DataPublication");
         expect(component.isDataPublication()).toBeTruthy();
         component.useMetadata();
-        
-        fixture.detectChanges();
-        let el = cmpel.querySelector("h3");
-        expect(el).not.toBeNull();
-        expect(el.textContent).toContain("Abstract");
+        expect(component.desctitle).toBe("Abstract");
     });
 })

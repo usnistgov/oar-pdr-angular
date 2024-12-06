@@ -12,7 +12,8 @@ import { LandingConstants } from '../constants';
 describe('VersionComponent', () => {
     let component : VersionComponent;
     let fixture : ComponentFixture<VersionComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let EDIT_MODES = LandingConstants.editModes;
 

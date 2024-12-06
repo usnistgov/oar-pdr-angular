@@ -42,13 +42,12 @@ export class IspartofComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean; 
 
-    constructor(
-        private cfg: AppConfig,
+    constructor(private cfg: AppConfig,
                 public editstatsvc: EditStatusService,
                 public mdupdsvc : MetadataUpdateService, 
                 private gaService: GoogleAnalyticsService,
-                public lpService: LandingpageService
-    ) { }
+                public lpService: LandingpageService)
+    { }
 
     ngOnInit(): void {
     }
@@ -86,7 +85,7 @@ export class IspartofComponent implements OnInit {
            
             this.isPartOf = [
                 article,
-                this.cfg.get("locations.landingPageService") + coll['@id'],
+                this.cfg.get("links.pdrIDResolver") + coll['@id'],
                 title,
                 suffix
             ];

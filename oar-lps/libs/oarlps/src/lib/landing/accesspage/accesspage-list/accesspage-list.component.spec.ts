@@ -5,7 +5,6 @@ import { UserMessageService } from '../../../frame/usermessage.service';
 import { AppConfig } from '../../../config/config';
 import { TransferState } from '@angular/platform-browser';
 import * as env from '../../../../environments/environment';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -16,7 +15,8 @@ import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analyt
 describe('AccesspageComponent', () => {
   let component: AccesspageListComponent;
   let fixture: ComponentFixture<AccesspageListComponent>;
-  let cfg: AppConfig;
+  let cfg: AppConfig = new AppConfig(null);
+  cfg.loadConfig(env.config);
   let plid: Object = "browser";
   let ts: TransferState = new TransferState();
   let authsvc: AuthService = new MockAuthService(undefined);

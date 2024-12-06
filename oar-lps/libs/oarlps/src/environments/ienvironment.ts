@@ -1,4 +1,4 @@
-import { LPSConfig } from '../lib/config/config';
+import { LPSConfig } from '../lib/config/config.model';
 
 export interface Context {
     production: boolean;

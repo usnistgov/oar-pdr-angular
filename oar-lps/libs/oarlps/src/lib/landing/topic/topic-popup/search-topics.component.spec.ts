@@ -8,7 +8,6 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TreeNode } from 'primeng/api';
 import { TestDataService } from '../../../shared/testdata-service/testDataService';
 import { AppConfig } from '../../../config/config';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -33,10 +32,8 @@ describe('SearchTopicsComponent', () => {
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-      cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-      cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-      cfg.status = "Unit Testing";
-      cfg.appVersion = "2.test";
+        cfg = new AppConfig(null);
+        cfg.loadConfig(env.config);
 
         TestBed.configureTestingModule({
             declarations: [SearchTopicsComponent],

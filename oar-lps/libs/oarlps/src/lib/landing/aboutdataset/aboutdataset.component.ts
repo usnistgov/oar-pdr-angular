@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
-import { AppConfig } from '../../config/config';
+import { ConfigurationService } from 'oarng';
+import { AppConfig } from '../../config/config.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { VersionComponent } from '../version/version.component';
@@ -80,17 +81,18 @@ export class AboutdatasetComponent implements OnChanges {
     public get jsonExpandDepth() { return this._jsonExpandDepth; }
     public set jsonExpandDepth(newValue) {this._jsonExpandDepth = newValue}
 
-    constructor(private cfg: AppConfig, 
-        public globalService: GlobalService,
-        public gaService: GoogleAnalyticsService) { 
-            this.globalService.watchLpsLeftWidth(width => {
-                this.maxWidth = width;
-            })
-        }
+    constructor(private cfgsvc: AppConfig, 
+                public globalService: GlobalService,
+                public gaService: GoogleAnalyticsService)
+    { 
+        this.globalService.watchLpsLeftWidth(width => {
+            this.maxWidth = width;
+        })
+    }
 
     ngOnInit(): void {
         this.nerdmRecord["Native JSON (NERDm)"] = this.record;
-        this.nerdmDocUrl = this.cfg.get("locations.nerdmAbout", "/unconfigured");
+        this.nerdmDocUrl = this.cfgsvc.get("links.nerdmAbout", "/od/dm/nerdm/");
         this.citetext = (new NERDResource(this.record)).getCitation();
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
@@ -116,7 +118,7 @@ export class AboutdatasetComponent implements OnChanges {
                 }
                 this.isPartOf.push([
                     article,
-                    this.cfg.get("locations.landingPageService") + coll['@id'],
+                    this.cfgsvc.get("links.pdrIDResolver", "/od/id/") + coll['@id'],
                     title,
                     suffix
                 ]);
@@ -144,17 +146,9 @@ export class AboutdatasetComponent implements OnChanges {
      * return the URL that will download the NERDm metadata for the current resource
      */
     getDownloadURL() : string {
-        let out = this.cfg.get("locations.mdService", "/unconfigured");
-        if (out.search("/rmm/") >= 0) {
-            if(!out.endsWith("records/")){
-                out += "records/";
-            }
-            out += "?@id=" + this.record['@id'];
-        }else {
-            if (out.slice(-1) != '/') out += '/';
-            out += this.record['ediid'];
-        }
-
+        let out = this.cfgsvc.get("links.pdrIDResolver", "/od/id/");
+        if (out.slice(-1) != '/') out += '/';
+        out += this.record['@id'];
         return out;
     }
 

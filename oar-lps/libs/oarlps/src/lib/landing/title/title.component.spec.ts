@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TitleComponent } from './title.component';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -22,10 +21,8 @@ describe('TitleComponent', () => {
     let authsvc : AuthService = new MockAuthService(undefined);
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
+        cfg = new AppConfig(null);
+        cfg.loadConfig(env.config)
 
         TestBed.configureTestingModule({
             imports: [FormsModule, HttpClientTestingModule, RouterTestingModule, ToastrModule.forRoot()],

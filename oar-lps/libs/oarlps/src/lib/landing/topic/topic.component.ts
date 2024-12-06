@@ -66,9 +66,10 @@ export class TopicComponent implements OnInit {
                 public lpService: LandingpageService, 
                 public globalService: GlobalService,
                 public collectionService: CollectionService,
-                private notificationService: NotificationService) {
-
-            this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
+                private notificationService: NotificationService)
+    {
+            this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI",
+                                                        "https://data.nist.gov/od/dm/nist-themes/");
 
             this.collectionOrder = this.collectionService.getCollectionForDisplay();
             this.allCollections = this.collectionService.loadAllCollections();

@@ -3,8 +3,7 @@ import { TopicModule, TopicComponent } from './topic.module';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
+import { AppConfig, LPSConfig } from '../../config/config';
 import { TransferState } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
@@ -22,10 +21,12 @@ describe('TopicComponent', () => {
     let authsvc : AuthService = new MockAuthService(undefined);
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
+        cfg = new AppConfig(null);
+        let cfgd: LPSConfig = JSON.parse(JSON.stringify(env.config));
+        cfgd.links.pdrSearch = "https://goob.nist.gov/search";
+        cfgd.status = "Unit Testing";
+        cfgd.appVersion = "2.test";
+        cfg.loadConfig(cfgd);
 
         TestBed.configureTestingModule({
             imports: [TopicModule, FormsModule, HttpClientTestingModule, RouterTestingModule,

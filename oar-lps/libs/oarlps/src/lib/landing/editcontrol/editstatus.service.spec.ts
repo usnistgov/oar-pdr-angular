@@ -1,16 +1,14 @@
 import { EditStatusService } from './editstatus.service';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { AppConfig } from '../../config/config'
+import { AppConfig, LPSConfig } from '../../config/config.module';
 import { config } from '../../../environments/environment'
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
 import { Credentials, UserAttributes } from 'oarng';
 
 describe('EditStatusService', () => {
-
+    let cfgsvc: AppConfig;
     let svc : EditStatusService = null;
     let cfgdata = null;
-    let cfg = null;
     let userAttributes: UserAttributes = {
         'userName': 'test01',
         'userLastName': 'NIST',
@@ -26,7 +24,10 @@ describe('EditStatusService', () => {
     beforeEach(() => {
         cfgdata = JSON.parse(JSON.stringify(config));
         cfgdata['editEnabled'] = true;
-        svc = new EditStatusService(new AppConfig(cfgdata));
+        cfgsvc = new AppConfig(null);
+        cfgsvc.loadConfig(cfgdata);
+        
+        svc = new EditStatusService(cfgsvc);
     });
 
     it('initialize', () => {
