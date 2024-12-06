@@ -1,7 +1,7 @@
 import { Injectable, ViewChild, PLATFORM_ID, APP_ID, Inject, Directive } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
-import { makeStateKey, TransferState } from '@angular/platform-browser';
+import { makeStateKey, TransferState } from '@angular/core';
 import { catchError, map, tap } from 'rxjs/operators';
 import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';

@@ -39,7 +39,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     ],
     providers: [
         GoogleAnalyticsService
-        // fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })

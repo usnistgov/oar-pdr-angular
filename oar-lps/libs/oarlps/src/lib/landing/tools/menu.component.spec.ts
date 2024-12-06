@@ -4,6 +4,7 @@ import { MenuComponent } from './menu.component';
 import { TransferState } from '@angular/platform-browser';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { testdata } from '../../../environments/environment';
+import * as env from '../../../environments/environment';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -15,7 +16,7 @@ describe('MenuComponent', () => {
   let md = testdata['test1'];
 
   beforeEach(async () => {
-    cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
     await TestBed.configureTestingModule({
       declarations: [ MenuComponent ],
       providers: [

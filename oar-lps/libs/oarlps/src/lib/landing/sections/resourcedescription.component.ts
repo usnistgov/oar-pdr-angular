@@ -4,7 +4,7 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { ColorScheme } from '../../shared/globals/globals';
-import * as Globals from '../../shared/globals/globals'
+import { GlobalService } from '../../shared/globals/globals'
 
 /**
  * a component that lays out the "Description" section of a landing page which includes the prose 
@@ -46,7 +46,7 @@ export class ResourceDescriptionComponent implements OnChanges {
      * create an instance of the Identity section
      */
     constructor(private cfg: AppConfig, 
-        public globalService: Globals.GlobalService,
+        public globalService: GlobalService,
                 public lpService: LandingpageService ) {
 
                 this.globalService.watchLpsLeftWidth(width => {

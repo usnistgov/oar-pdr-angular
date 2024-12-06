@@ -3,7 +3,7 @@ import { Author, Affiliation } from '../author';
 import { AuthorService } from '../author.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { NIST } from '../../../shared/globals/globals';
-import { SDSuggestion, SDSIndex, StaffDirectoryService } from 'oarng';
+import { SDSuggestion, SDSIndex } from 'oarng';
 import { timeout } from 'rxjs';
 
 @Component({
@@ -32,8 +32,7 @@ export class AuthorEditComponent implements OnInit {
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     
     constructor(
-        private authorService: AuthorService,
-        private ps: StaffDirectoryService)
+        private authorService: AuthorService)
          { }
 
     ngOnInit(): void {

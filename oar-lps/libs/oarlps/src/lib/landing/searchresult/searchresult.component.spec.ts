@@ -13,6 +13,7 @@ import { TreeModule } from 'primeng/tree';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { testdata } from '../../../environments/environment';
+import * as env from '../../../environments/environment';
 
 describe('SearchresultComponent', () => {
     let component: SearchresultComponent;
@@ -23,7 +24,7 @@ describe('SearchresultComponent', () => {
     let nrd1 = testdata['test1'];
 
     beforeEach(async () => {
-        cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
 
         await TestBed.configureTestingModule({
@@ -55,8 +56,12 @@ describe('SearchresultComponent', () => {
     });
 
     it('Should have title', () => {
+        debugger;
         expect(fixture.nativeElement.querySelectorAll('#datasetlist-heading').length).toEqual(1);
-        expect(fixture.nativeElement.querySelector('#datasetlist-heading').innerText)
-            .toEqual('Datasets in this collection');
+        const titleElement = fixture.nativeElement.querySelector('#datasetlist-heading');
+        expect(titleElement).toBeTruthy();
+        expect(titleElement.innerHTML).toEqual('Datasets in this collection');
+        // expect(fixture.nativeElement.querySelector('#datasetlist-heading').innerText)
+        //     .toEqual('Datasets in this collection');
     });
 });

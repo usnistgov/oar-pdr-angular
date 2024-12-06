@@ -1,16 +1,16 @@
 {
     "locations": {
         "orgHome": "https://nist.gov/",
-        "portalBase": "https://mdsdev.nist.gov/",
-        "pdrHome": "https://mdsdev.nist.gov/pdr/",
-        "pdrSearch": "https://mdsdev.nist.gov/sdp/",
-        "mdService":   "https://mdsdev.nist.gov/rmm/",
-        "taxonomyService": "https://mdsdev.nist.gov/rmm/taxonomy"
+        "portalBase": "https://localhost/",
+        "pdrHome": "https://localhost/pdr/",
+        "pdrSearch": "https://localhost/sdp/",
+        "mdService":   "https://localhost/rmm/",
+        "taxonomyService": "https://localhost/rmm/taxonomy"
     },
     "auth": {
-        "serviceEndpoint": "https://localhost/sso/" 
+        "serviceEndpoint": "https://localhost/sso/"
     },
-    "mdAPI": "https://mdsdev.nist.gov/midas/dap/mds3/",
+    "mdAPI": "https://localhost/midas/dap/mds3/",
     "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
     "customizationAPI": "http://localhost:9091/midas/",
     "fileManagerAPI": "https://nextcloud-dev.nist.gov",

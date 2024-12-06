@@ -4,6 +4,10 @@
         "ts/**/*"
     ],
     "compilerOptions": {
-        "composite": true
+        "emitDecoratorMetadata": true,
+        "composite": true,
+        "types": [
+        "jest"
+        ]
     }
 }

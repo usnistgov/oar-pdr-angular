@@ -1,5 +1,5 @@
 import { ModuleWithProviders, NgModule, PLATFORM_ID, APP_INITIALIZER, Optional } from '@angular/core';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig, LPSConfig, WebLocations } from './config'
 import { ConfigService, newConfigService, RemoteFileConfigService, CFG_DATA } from './config.service'

@@ -44,6 +44,7 @@ describe('EditStatusComponent', () => {
         fixture = TestBed.createComponent(EditStatusComponent);
         component = fixture.componentInstance;
         component._editmode = EDIT_MODES.EDIT_MODE;
+        component.message = "Hello";
     }
 
     beforeEach(waitForAsync(() => {
@@ -54,16 +55,16 @@ describe('EditStatusComponent', () => {
     it('should initialize', () => {
         expect(component).toBeDefined();
         expect(component.updateDetails).toBe(null);
-        expect(component.message).toBe("");
+        expect(component.message).toBe("Hello");
         expect(component.messageColor).toBe("black");
         expect(component.isProcessing).toBeFalsy();
 
         let cmpel = fixture.nativeElement;
+
         let bardiv = cmpel.querySelector(".ec-status-bar");
         expect(bardiv).not.toBeNull();
-        expect(bardiv.childElementCount).toBe(2);
+        expect(bardiv.childElementCount).toBe(1);
         expect(bardiv.firstElementChild.tagName).toEqual("SPAN");
-        expect(bardiv.firstElementChild.nextElementSibling.tagName).toEqual("SPAN");
     });
 
     it('showMessage()', () => {
@@ -102,7 +103,7 @@ describe('EditStatusComponent', () => {
         fixture.detectChanges();
         cmpel = fixture.nativeElement;
         bardiv = cmpel.querySelector(".ec-status-bar");
-        expect(bardiv.children[0].innerHTML).toContain('required field');
+        expect(bardiv.children[0].children[0].innerHTML).toContain('To see any previously edited inputs');
 
         component.setLastUpdateDetails(updateDetails);
 
@@ -110,8 +111,7 @@ describe('EditStatusComponent', () => {
         component.showLastUpdate();
         expect(component.message).toContain("Edited by test01 NIST on 2025 April 1");
         fixture.detectChanges();
-        expect(bardiv.firstElementChild.innerHTML).toContain('required field');
-        expect(bardiv.children[1].innerHTML).toContain('Edited by test01 NIST on 2025 April 1');
+        expect(bardiv.firstElementChild.firstElementChild.innerHTML).toContain('Edited by test01 NIST on 2025 April 1');
 
         component._editmode = EDIT_MODES.DONE_MODE;
         component.showLastUpdate();

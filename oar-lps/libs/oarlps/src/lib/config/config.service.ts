@@ -1,6 +1,7 @@
 import { Inject, InjectionToken } from '@angular/core';
 import { isPlatformServer } from '@angular/common';
-import { TransferState, makeStateKey, StateKey } from '@angular/platform-browser';
+import { TransferState, makeStateKey, StateKey } from '@angular/core';
+
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import * as proc from 'process';
 import * as fs from 'fs';

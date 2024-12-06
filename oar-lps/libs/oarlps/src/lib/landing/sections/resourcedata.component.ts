@@ -1,10 +1,9 @@
 import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { AppConfig } from '../../config/config';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Themes, ThemesPrefs, ColorScheme } from '../../shared/globals/globals';
-import * as Globals from '../../shared/globals/globals'
+import { GlobalService } from '../../shared/globals/globals'
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -62,8 +61,7 @@ export class ResourceDataComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig,
-                public globalService: Globals.GlobalService,
+    constructor(public globalService: GlobalService,
                 private gaService: GoogleAnalyticsService)
     { 
         this.globalService.watchCollection((collection) => {

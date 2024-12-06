@@ -204,7 +204,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     userLastName: 'Lin',
                     userEmail: "chuan.lin@nist.gov"
                 },
-                token: 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJsbmM5IiwidXNlckVtY…luIn0.LndNNCAac8oUvDHOYLm2-czvY_W-IevdBrWGXyhoL8w'
+                token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0LnVzZXJAbmlzdC5nb3YiLCJ1c2VyTmFtZSI6IlRlc3QiLCJ1c2VyTGFzdE5hbWUiOiJVc2VyIiwidXNlck9VIjoiTU1MIiwiZGlzcGxheU5hbWUiOiJUZXN0SWQiLCJyb2xlIjoibm90LXNldCIsIndpbklkIjoiVGVzdElkIiwic3ViIjoiVGVzdElkIiwiZXhwIjoxNzMzMzMxNDg4fQ.IGxe5jS7GzSsI_lxoP3tJ2qMnxxW-3mASP0pn7XqhKE'
             };
             console.log("logging in...")
             return of(new HttpResponse({ status: 200, body }));

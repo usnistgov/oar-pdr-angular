@@ -1,6 +1,6 @@
 import * as cfg from "./config"
 import * as cfgsvc from "./config.service"
-import { TransferState, StateKey } from '@angular/platform-browser';
+import { TransferState, StateKey } from '@angular/core';
 import * as ngenv from '../../environments/environment';
 import { IEnvironment } from '../../environments/ienvironment';
 import * as env from '../../environments/environment';
@@ -41,6 +41,8 @@ describe("config.service AngularEnvironmentConfigService", function() {
 describe("config.service newConfigService", function() {
 
     it("angular-env", function() {
+        debugger;
+        env.context.configEndpoint = null;
         let plid : Object = "browser";
         let ts = new TransferState();
         let svc = cfgsvc.newConfigService(env, plid, ts);
