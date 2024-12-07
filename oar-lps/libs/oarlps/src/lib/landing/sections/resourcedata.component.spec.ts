@@ -1,19 +1,15 @@
 import { ComponentFixture, TestBed, fakeAsync, waitForAsync  } from '@angular/core/testing';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ResourceDataComponent } from './resourcedata.component';
 import { AppConfig } from '../../config/config';
+import { config } from '../../../environments/environment';
+import { ResourceDataComponent } from './resourcedata.component';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { EditControlModule } from '../editcontrol/editcontrol.module';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { CartService } from '../../datacart/cart.service';
-import { config, testdata } from '../../../environments/environment';
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
-import { By } from '@angular/platform-browser';
 
 describe('ResourceDataComponent', () => {
     let component: ResourceDataComponent;
@@ -24,11 +20,13 @@ describe('ResourceDataComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ HttpClientModule, RouterTestingModule ],
+            imports: [ HttpClientModule ],
             declarations: [  ],
             providers: [
-                { provide: AppConfig, useValue: cfg },
-                GoogleAnalyticsService, UserMessageService, MetadataUpdateService, DatePipe,
+                GoogleAnalyticsService, 
+                UserMessageService, 
+                MetadataUpdateService, 
+                DatePipe,
                 CartService
             ]
         }).compileComponents();

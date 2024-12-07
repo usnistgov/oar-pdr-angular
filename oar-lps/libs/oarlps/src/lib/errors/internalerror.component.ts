@@ -25,7 +25,7 @@ We're sorry!  An internal error occurred while preparing your content.
       </p>
       <p>
 Please try loading this page again.  If the error persists, feel free to send the URL along 
-to us at <a href="mailto:datasupport@nist.gov">datasupport@nist.gov</a>. 
+to us at <a href="mailto:datasupport@nist.gov">datasupport&#64;nist.gov</a>. 
       <span *ngIf="requestedID">
 Please include the text, "PDR: {{ requestedID }}", in your email.  
       </span>

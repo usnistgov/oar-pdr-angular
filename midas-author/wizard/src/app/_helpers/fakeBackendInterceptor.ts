@@ -31,7 +31,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //     return of(new HttpResponse({ status: 200, body: testdata }));
         // }
 
-        // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET') 
+        // if (request.url.indexOf('usagemetrics/files') > -1 && request.method === 'GET')
         // {
         //   console.log("Throw error...");
         //   throw new HttpErrorResponse(
@@ -50,14 +50,14 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       // }
 
       // Generate bundle plan
-    //   if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST') 
+    //   if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST')
     //   {
     //     console.log("Record saved...");
     //     return of(new HttpResponse({ status: 200, body: bundlePlanRes }));
     //   }
 
       // Generate bundle plan internal error
-      // if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST') 
+      // if (request.url.indexOf('_bundle_plan') > -1 && request.method === 'POST')
       // {
       //   console.log("Throw error...");
       //   throw new HttpErrorResponse(
@@ -71,7 +71,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       // }
 
     // Generate bundle download internal error
-    //   if (request.url.indexOf('_bundle') > -1 && request.url.indexOf('_bundle_plan') <= 0 && request.method === 'POST') 
+    //   if (request.url.indexOf('_bundle') > -1 && request.url.indexOf('_bundle_plan') <= 0 && request.method === 'POST')
     //   {
     //     console.log("Throw error...");
     //     throw new HttpErrorResponse(
@@ -89,7 +89,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         this.toastrService.warning('You are using fake backend!', 'Warning!');
         this.msgsvc.error('You are using fake backend!');
         alert("You are using fake backend!");
-        
+
         let body: any = {
             userId: 'xyz@nist.gov',
             token: 'fake-jwt-token'
@@ -109,7 +109,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                 userLastName: 'anon',
                 userEmail: "anon@email.com"
             },
-            token: 'fake-jwt-token'
+            token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0LnVzZXJAbmlzdC5nb3YiLCJ1c2VyTmFtZSI6IlRlc3QiLCJ1c2VyTGFzdE5hbWUiOiJVc2VyIiwidXNlck9VIjoiTU1MIiwiZGlzcGxheU5hbWUiOiJUZXN0SWQiLCJyb2xlIjoibm90LXNldCIsIndpbklkIjoiVGVzdElkIiwic3ViIjoiVGVzdElkIiwiZXhwIjoxNzMzMzMxNDg4fQ.IGxe5jS7GzSsI_lxoP3tJ2qMnxxW-3mASP0pn7XqhKE'
         };
         console.log("logging in......")
         return of(new HttpResponse({ status: 200, body }));
@@ -180,7 +180,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       //     console.log("Handling /od/ds/_bundle:");
 
       //     const duplicate = request.clone({
-      // method: 'get' 
+      // method: 'get'
       //     })
       //     return next.handle(request);
       // }

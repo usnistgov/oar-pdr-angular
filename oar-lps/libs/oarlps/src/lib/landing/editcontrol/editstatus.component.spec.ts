@@ -61,6 +61,7 @@ describe('EditStatusComponent', () => {
         expect(component.isProcessing).toBeFalsy();
 
         let cmpel = fixture.nativeElement;
+
         let bardiv = cmpel.querySelector(".ec-status-bar");
         expect(bardiv).not.toBeNull();
         expect(bardiv.childElementCount).toBe(1);

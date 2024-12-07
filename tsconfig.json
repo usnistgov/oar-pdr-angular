@@ -19,7 +19,8 @@
     ],
     "compilerOptions": {
         "types": [
-            "jest", "node"
+            "jest", 
+            "node"
         ],
         "esModuleInterop": true,
         "experimentalDecorators": true,

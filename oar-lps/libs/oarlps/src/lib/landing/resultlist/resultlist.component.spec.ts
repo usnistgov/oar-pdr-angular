@@ -10,6 +10,7 @@ import { InputTextareaModule } from 'primeng/inputtextarea';
 import { config, testdata } from '../../../environments/environment';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { CollectionService } from '../../shared/collection-service/collection.service';
+import * as env from '../../../environments/environment';
 
 describe('ResultlistComponent', () => {
   let component: ResultlistComponent;

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { SDSuggestion, SDSIndex, StaffDirectoryService } from 'oarng';
-import { AutoCompleteCompleteEvent, AutoCompleteOnSelectEvent } from 'primeng/autocomplete';
+import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 
 
 @Component({
@@ -77,7 +77,7 @@ export class PeopleComponent {
         }
     }    
 
-    getFullRecord(ev: AutoCompleteOnSelectEvent) {
+    getFullRecord(ev: AutoCompleteSelectEvent) {
         let sugg = ev.value as SDSuggestion;
         
         sugg.getRecord().subscribe({

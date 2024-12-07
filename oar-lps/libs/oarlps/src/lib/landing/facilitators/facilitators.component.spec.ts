@@ -10,6 +10,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { AuthService, MockAuthService } from '../editcontrol/auth.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { config, testdata } from '../../../environments/environment';
+import { TransferState } from '@angular/core';
 
 describe('FacilitatorsComponent', () => {
     let component: FacilitatorsComponent;

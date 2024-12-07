@@ -47,11 +47,11 @@ export class ResourceDescriptionComponent implements OnChanges {
      */
     constructor(private cfg: AppConfig, 
                 public globalService: GlobalService,
-                public lpService: LandingpageService ) {
-
-                this.globalService.watchLpsLeftWidth(width => {
-                    this.maxWidth = width + 20;
-                })
+                public lpService: LandingpageService )
+    {
+        this.globalService.watchLpsLeftWidth(width => {
+            this.maxWidth = width + 20;
+        })
     }
 
     ngOnInit(): void {
