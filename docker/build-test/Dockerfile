@@ -33,7 +33,7 @@ RUN cd /tmp && arch=`cat /etc/plat-arch`  \
             && sha256sum -c node-${arch}-sha256.txt
 RUN cd /usr/local && arch=`cat /etc/plat-arch`                       \
                   && tar xJf /tmp/node-v$NODE_VERSION-linux-${arch}.tar.xz \
-                  && ln -s node-v16.17.1-linux-${arch} node          \
+                  && ln -s node-v$NODE_VERSION-linux-${arch} node          \
                   && cd bin                                          \
                   && ln -s ../node/bin/node node                     \
                   && ln -s ../node/bin/npm  npm                      \
