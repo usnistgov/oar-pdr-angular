@@ -10,6 +10,7 @@
 import { Injectable } from '@angular/core';
 
 // import { AnyObject } from 'oarng/data/data.module';
+import { Configuration } from 'oarng';
 
 /**
  * URLs to key repository URLs used as user-clickable links.  This URLs are intended to appear
@@ -28,11 +29,6 @@ export interface WebLinks {
 
     /**
      * the science portal base URL (e.g. https://data.nist.gov/)
-     */
-    portalBase?: string;
-
-    /**
-     * the base URL for PDR links
      */
     portalBase?: string;
 

@@ -13,7 +13,7 @@ import { LPSConfig } from '../lib/config/config.model';
 
 export const context = {
     production: false,
-    configEndpoint: "assets/config.json",          // set to "assets/config.json"
+    configUrl: "assets/config.json",          // set to "assets/config.json"
     useMetadataService: false,
     useCustomizationService: false
 };
@@ -37,7 +37,7 @@ export const config: LPSConfig = {
     production: context.production,
     editEnabled: false,
     distService: "https://testdata.nist.gov/od/ds/",
-    gacode: "not-set",
+    gaCode: "not-set",
     screenSizeBreakPoint: 1200,
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files

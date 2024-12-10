@@ -10,7 +10,6 @@ import { ConfigModule } from 'oarlps';
 import { BrowserModule } from '@angular/platform-browser';
 import { TransferState, StateKey } from '@angular/platform-browser';
 import { AppConfig } from 'oarlps';
-import { AngularEnvironmentConfigService } from 'oarlps';
 import { CartService } from 'oarlps';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
@@ -23,8 +22,8 @@ describe('AppComponent', () => {
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        debugger;
-        cfg = (new AngularEnvironmentConfigService(environment,plid, ts)).getConfig() as AppConfig;
+        cfg = new AppConfig(null);
+        cfg.loadConfig(JSON.parse(JSON.stringify(environment.config)));
 
         TestBed.configureTestingModule({
 

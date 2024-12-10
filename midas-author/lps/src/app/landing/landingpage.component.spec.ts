@@ -9,7 +9,6 @@ import { ToastrModule } from 'ngx-toastr';
 
 import { ModalService } from 'oarlps';
 import { LandingPageComponent } from './landingpage.component';
-import { AngularEnvironmentConfigService } from 'oarlps';
 import { AppConfig } from 'oarlps'
 import { MetadataTransfer, NerdmRes } from 'oarlps'
 import { MetadataService, TransferMetadataService } from 'oarlps'
@@ -46,7 +45,8 @@ describe('LandingPageComponent', () => {
     ];
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(environment, plid, ts)).getConfig() as AppConfig;
+        cfg = new AppConfig(null);
+        cfg.loadConfig(JSON.parse(JSON.stringify(environment.config)));
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";

@@ -86,8 +86,8 @@ enableProdMode();
             toastClass: 'toast toast-bootstrap-compatibility-fix'
         }),
         NgbModule,
+        ConfigModule,
         NerdmModule.forRoot(environment),
-        ConfigModule.forRoot(environment),
         EditControlModule.forRoot(environment),
         StaffDirModule
     ],

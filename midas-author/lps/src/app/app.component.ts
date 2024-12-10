@@ -25,7 +25,7 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        this.appVersion = this.cfg.get("appVersion", "1.0") as string;
+        this.appVersion = this.cfg.get("systemVersion", "X.X") as string;
     }
 
     ngAfterViewInit(): void {

@@ -13,27 +13,24 @@ import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: false,
-    configEndpoint: "assets/config.json",    // set to "assets/config.json" to pull from server
+    configUrl: "assets/config.json",    // set to "assets/config.json" to pull from server
     useMetadataService: true,
     useCustomizationService: true
 };
 
 export const config: LPSConfig = {
-    locations: {
+    links: {
         orgHome: "https://nist.gov/",
         portalBase: "https://mdsdev.nist.gov/",
         pdrHome: "https://mdsdev.nist.gov/pdr/",
         pdrSearch: "https://mdsdev.nist.gov/sdp/",
         mdService:   "https://mdsdev.nist.gov/rmm/",
-        taxonomyService: "https://mdsdev.nist.gov/rmm/taxonomy"
     },
-    mdAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
-    // mdAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
-    metricsAPI: "https://mdsdev.nist.gov/rmm/usagemetrics/",
-    // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "https://mdsdev.nist.gov/midas/",
-    // customizationAPI: "https://mdsdev.nist.gov/midas/",
-    fileManagerAPI: "https://nextcloud-dev.nist.gov",
+    PDRAPIs: {
+        mdSearch: "https://mdsdev.nist.gov/rmm/records/",
+        mdService: "https://mdsdev.nist.gov/od/id/",
+        metrics: "https://data.nist.gov/rmm/usagemetrics/"
+    },
     mode: "dev",
     status: "Dev Version",
     appVersion: "v1.3.X",
@@ -46,7 +43,6 @@ export const config: LPSConfig = {
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,
     standardNISTTaxonomyURI: "https://mdsdev.nist.gov/od/dm/nist-themes/",
-    portalAPI: "https://mdsdev.nist.gov/portal/landing"  
 }
 
 export const testdata: {} = {
