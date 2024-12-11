@@ -12,13 +12,14 @@ import { GoogleAnalyticsService } from 'oarlps';
 import { CartService } from 'oarlps';
 import * as environment from '../../environments/environment';
 import { MetricsData } from "./metrics-data";
-import { AngularEnvironmentConfigService } from 'oarlps';
 import { TransferState } from '@angular/platform-browser';
 
 describe('LandingBodyComponent', () => {
     let component: LandingBodyComponent;
     let fixture: ComponentFixture<LandingBodyComponent>;
-    let cfg : AppConfig = new AppConfig(environment.config);
+    let cfg : AppConfig = new AppConfig(null);
+    let cfgd = JSON.parse(JSON.stringify(environment.config));
+    cfg.loadConfig(cfgd);
     let authsvc : AuthService = new MockAuthService(undefined, environment);
     let record1 : NerdmRes = environment.testdata['test1'];
     debugger;

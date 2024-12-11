@@ -1,18 +1,28 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, async } from '@angular/core/testing';
 import { WizardService } from './wizard.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ConfigurationService } from 'oarng';
+import { LPSConfig } from 'oarlps';
+import { config, environment } from '../../../environments/environment';
 
 describe('WizardService', () => {
   let service: WizardService;
+  let cfgsvc: ConfigurationService;
 
-  beforeEach(() => {
+  beforeEach(async() => {
     TestBed.configureTestingModule({
-        imports: [ HttpClientTestingModule]
+        imports: [ HttpClientTestingModule ]
     });
+    cfgsvc = TestBed.inject(ConfigurationService);
+    cfgsvc.loadConfig(config);  
     service = TestBed.inject(WizardService);
   });
 
   it('should be created', () => {
+    debugger;
     expect(service).toBeTruthy();
+    expect(service.confValues).toBeTruthy();
+    expect(cfgsvc).toBeTruthy();
+    expect(service.confValues["dapAPI"]).toBeTruthy();
   });
 });

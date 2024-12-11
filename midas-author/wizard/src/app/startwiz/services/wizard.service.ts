@@ -23,12 +23,15 @@ export class WizardService {
     ]
 
     constructor(private httpcli: HttpClient,
-                private configSvc: ConfigurationService) { 
-                    this.confValues = this.configSvc.getConfig();
-                    this.MIDASAPI = this.confValues['MIDASAPI'];
-                }
+                private configSvc: ConfigurationService)
+    { 
+        this.confValues = this.configSvc.getConfig();
+        this.MIDASAPI = this.confValues['dapAPI'];
+        if (! this.MIDASAPI)
+            this.MIDASAPI = "/midas/dap/def/";
+    }
 
-    setToken(token: string){
+    setToken(token: string) {
         this.token = token;
     }
 
@@ -44,7 +47,7 @@ export class WizardService {
         } 
         
         return new Observable<Object>(subscriber => {
-            let url = this.MIDASAPI + this.saveapi;
+            let url = this.MIDASAPI;
             let body = JSON.stringify(md);
 
             let obs : Observable<Object> = 
