@@ -3,7 +3,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { ReferencesComponent } from './references.component';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AppConfig } from '../../config/config';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import * as env from '../../../environments/environment';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';

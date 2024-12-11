@@ -3,7 +3,7 @@ import { AppConfig } from '../../config/config';
 import { MetricsService } from './metrics.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import * as env from '../../../environments/environment';
 
 describe('MetricsService', () => {

@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AppConfig } from '../../config/config'
 import { MenuComponent } from './menu.component';
-import { TransferState } from '@angular/platform-browser';
 import { config, testdata } from '../../../environments/environment';
+import { TransferState } from '@angular/core';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;

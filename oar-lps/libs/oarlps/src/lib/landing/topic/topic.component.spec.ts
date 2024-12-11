@@ -4,7 +4,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { AppConfig, LPSConfig } from '../../config/config';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';

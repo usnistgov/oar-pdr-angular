@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TitleComponent } from './title.component';
 import { AppConfig } from '../../config/config';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DatePipe } from '@angular/common';

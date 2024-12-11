@@ -12,7 +12,7 @@ import { GoogleAnalyticsService } from 'oarlps';
 import { CartService } from 'oarlps';
 import * as environment from '../../environments/environment';
 import { MetricsData } from "./metrics-data";
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 
 describe('LandingBodyComponent', () => {
     let component: LandingBodyComponent;

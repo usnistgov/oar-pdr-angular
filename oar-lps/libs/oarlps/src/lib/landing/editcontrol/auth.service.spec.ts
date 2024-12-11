@@ -1,7 +1,7 @@
-import { async, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { of, throwError } from 'rxjs';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { AuthService, WebAuthService, MockAuthService, createAuthService } from './auth.service';
