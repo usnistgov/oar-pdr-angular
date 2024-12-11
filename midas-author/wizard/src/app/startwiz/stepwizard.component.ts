@@ -64,8 +64,12 @@ export class StepWizardComponent implements OnInit {
                 private configSvc: ConfigurationService,
                 public authService: AuthenticationService) { 
 
-            this.confValues = this.configSvc.getConfig();
-            this.PDRAPI = this.confValues['PDRAPI'];
+        this.confValues = this.configSvc.getConfig();
+        this.PDRAPI = this.confValues['dapToolBase'];
+        if (! this.PDRAPI)
+            this.PDRAPI = "/dapui/edit/od/id/"
+        if (! this.PDRAPI.endsWith("/"))
+            this.PDRAPI += "/";
     }
 
     get isAuthorized() {
