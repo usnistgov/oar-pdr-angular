@@ -14,6 +14,7 @@ import { ConfigModule } from 'oarng';
 import { GoogleAnalyticsService} from "oarlps";
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+// import { AuthenticationService, MockAuthenticationService } from 'oarng';
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         }),
     ],
     providers: [
+//        { provide: AuthenticationService, useClass: MockAuthenticationService },
         GoogleAnalyticsService
     ],
     bootstrap: [AppComponent]

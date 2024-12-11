@@ -47,6 +47,7 @@ import { OARngModule } from 'oarng';
 import { FrameModule } from 'oarng';
 import { WizardModule, StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
+// import { AuthenticationService, MockAuthenticationService } from 'oarng';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -93,6 +94,7 @@ enableProdMode();
     ],
     exports: [],
     providers: [
+//        { provide: AuthenticationService, useClass: MockAuthenticationService },
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         {
