@@ -9,7 +9,7 @@ import { TreeNode } from 'primeng/api';
 import { TestDataService } from '../../../shared/testdata-service/testDataService';
 import { AppConfig } from '../../../config/config';
 import { AngularEnvironmentConfigService } from '../../../config/config.service';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { ToastrModule } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';

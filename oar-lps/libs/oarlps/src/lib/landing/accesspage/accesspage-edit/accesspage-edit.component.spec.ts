@@ -3,7 +3,7 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { AccesspageEditComponent } from './accesspage-edit.component';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { AppConfig } from '../../../config/config';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import * as env from '../../../../environments/environment';
 import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';

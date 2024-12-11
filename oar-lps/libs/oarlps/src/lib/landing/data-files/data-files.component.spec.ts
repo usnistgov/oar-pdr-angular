@@ -12,7 +12,7 @@ import { DownloadService } from '../../shared/download-service/download-service.
 import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { AppConfig } from '../../config/config';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { ToastrModule } from 'ngx-toastr';
 import { TreeTableModule } from 'primeng/treetable';

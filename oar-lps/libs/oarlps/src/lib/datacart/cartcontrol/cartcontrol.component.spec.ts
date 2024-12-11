@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { AppConfig } from '../../config/config';
 import { CartcontrolComponent } from './cartcontrol.component';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { DownloadService } from '../../shared/download-service/download-service.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DataCart } from '../../datacart/cart';

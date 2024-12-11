@@ -5,7 +5,7 @@ import { FiltersComponent } from '../filters/filters.component';
 import { ResultlistComponent } from '../resultlist/resultlist.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config'
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { SearchService } from '../../shared/search-service/index';
 import { DropdownModule } from "primeng/dropdown";

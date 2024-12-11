@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppConfig } from '../../config/config'
 import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import * as env from '../../../environments/environment';
 
 describe('TaxonomyListService', () => {

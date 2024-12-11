@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { AppConfig } from '../../config/config';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { MetricsinfoComponent } from './metricsinfo.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as env from '../../../environments/environment';

@@ -8,7 +8,7 @@ import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import * as env from '../../../environments/environment';
 

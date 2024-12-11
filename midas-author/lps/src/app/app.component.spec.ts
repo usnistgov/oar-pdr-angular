@@ -8,7 +8,7 @@ import { FrameModule } from 'oarng';
 import { GoogleAnalyticsService } from "oarlps";
 import { ConfigModule } from 'oarlps';
 import { BrowserModule } from '@angular/platform-browser';
-import { TransferState, StateKey } from '@angular/platform-browser';
+import { TransferState, StateKey } from '@angular/core';
 import { AppConfig } from 'oarlps';
 import { AngularEnvironmentConfigService } from 'oarlps';
 import { CartService } from 'oarlps';
@@ -30,9 +30,9 @@ describe('AppComponent', () => {
 
             declarations: [
                 AppComponent,
-            ], 
+            ],
             providers: [
-                GoogleAnalyticsService, 
+                GoogleAnalyticsService,
                 CartService,
                 { provide: AppConfig, useValue: cfg },
                 MockAuthenticationService,

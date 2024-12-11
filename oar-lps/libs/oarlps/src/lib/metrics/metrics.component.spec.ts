@@ -5,7 +5,7 @@ import { MetricsModule } from './metrics.module';
 import { ActivatedRoute, Router, Routes } from '@angular/router';
 import * as mock from '../testing/mock.services';
 import { AppConfig } from '../config/config'
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { AngularEnvironmentConfigService } from '../config/config.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatePipe } from '@angular/common';
