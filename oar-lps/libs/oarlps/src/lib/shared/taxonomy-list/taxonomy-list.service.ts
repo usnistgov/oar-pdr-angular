@@ -20,7 +20,10 @@ export class TaxonomyListService {
    */
   constructor(private http: HttpClient, private cfg: AppConfig) {
               
-      this.taxonomyService = cfg.get("links.taxonomyService", "assets/theme-taxonomy.json");
+      this.taxonomyService = cfg.get("links.taxonomyBase", "assets/");
+      if (! this.taxonomyService.endsWith("/"))
+          this.taxonomyService += "/";
+      this.taxonomyService += "theme-taxonomy.json";
     //   console.log('this.taxonomyService', this.taxonomyService);
     //if (this.taxonomyService == "/unconfigured")
     //    throw new Error("mdService endpoint not configured!");
