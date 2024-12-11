@@ -36,7 +36,9 @@ export class TaxonomyListService {
   get(level: number): Observable<any> {
       if (level != 0)
           console.warn("taxonomy request level ignored")
-      return this.http.get(this.taxonomyService);
+      return this.http.get(this.taxonomyService).pipe(
+          map(taxon => { return taxon["vocab"]; })
+      );
   }
 
   /**
