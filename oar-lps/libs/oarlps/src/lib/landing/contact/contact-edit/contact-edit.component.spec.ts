@@ -5,12 +5,12 @@ describe('ContactEditComponent', () => {
   let component: ContactEditComponent;
   let fixture: ComponentFixture<ContactEditComponent>;
 
-  beforeEach(waitForAsync () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ ContactEditComponent ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContactEditComponent);
