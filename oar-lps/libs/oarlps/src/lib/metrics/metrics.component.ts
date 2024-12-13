@@ -94,7 +94,7 @@ export class MetricsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.distApi = this.cfg.get("locations.portalBase", "/unconfigured")+"od/id/";
+        this.distApi = this.cfg.get("links.portalBase", "/unconfigured/")+"od/id/";
         this.detectScreenSize();
         this.recordLevelData = new RecordLevelMetrics();
 

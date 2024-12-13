@@ -176,7 +176,7 @@ export class MenuComponent implements OnInit {
         this.findMenu.push(new menuItem("Find", "", "", this.defaultColor, true));
 
         this.findMenu.push(new menuItem(resourceLabel, "", searchbase + "#/search?q=keyword%3D" + keywordString, this.lighterColor, false, "faa faa-external-link" ))
-        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("locations.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
+        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("links.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
 
 
     }
