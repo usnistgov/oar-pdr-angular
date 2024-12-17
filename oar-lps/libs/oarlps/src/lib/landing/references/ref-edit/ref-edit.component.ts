@@ -3,9 +3,18 @@ import { Reference } from '../reference';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { HttpClient } from "@angular/common/http";
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RefAuthorComponent } from '../ref-author/ref-author.component';
 
 @Component({
     selector: 'lib-ref-edit',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        RefAuthorComponent
+    ],
     templateUrl: './ref-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ref-edit.component.css'],
     animations: [

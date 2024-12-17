@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -14,9 +14,25 @@ import {
 } from '@angular/cdk/drag-drop';
 import { Reference } from '../reference';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { CollapseModule } from '../../collapseDirective/collapse.module';
+import { TextEditModule } from '../../../text-edit/text-edit.module';
+import { RefEditComponent } from '../ref-edit/ref-edit.component';
 
 @Component({
     selector: 'lib-ref-list',
+    standalone: true,
+    imports: [
+        CommonModule,
+        ButtonModule,
+        FormsModule,
+        CollapseModule,
+        TextEditModule,
+        RefEditComponent,
+        ConfirmationDialogComponent
+    ],
     templateUrl: './ref-list.component.html',
     styleUrls: ['../../landing.component.scss', '../references.component.css', './ref-list.component.css'],
     animations: [
@@ -60,7 +76,7 @@ export class RefListComponent implements OnInit {
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-        private modalService: NgbModal,              
+        private modalService: NgbModal,  
         private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
@@ -704,14 +720,15 @@ export class RefListComponent implements OnInit {
         this.modalRef.componentInstance.message = message;
         this.modalRef.componentInstance.showWarningIcon = true;
         this.modalRef.componentInstance.showCancelButton = true;
-
-        this.modalRef.result.then((result) => {
-            if ( result ) {
-                this.undoChanges();
-            }else{
-                console.log("User changed mind.");
-            }
-        }, (reason) => {
+        
+        this.modalRef.result.then(
+            (result) => {
+                if ( result ) {
+                    this.undoChanges();
+                }else{
+                    console.log("User changed mind.");
+                }
+            }, (reason) => {
         });
     }    
 }

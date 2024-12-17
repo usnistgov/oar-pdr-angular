@@ -21,13 +21,16 @@ import { SearchresultModule } from '../searchresult/searchresult.module';
 import { DoneModule } from '../done/done.module';
 import { ButtonModule } from 'primeng/button';
 import { VisithomeModule } from '../visithome/visithome.module';
-import { ReferencesModule } from '../references/references.module';
+// import { ReferencesModule } from '../references/references.module';
 import { AccesspageModule } from '../accesspage/accesspage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { IspartofModule } from '../ispartof/ispartof.module';
 import { D3Service } from '../../shared/d3-service/d3.service';
 import { SectionTitleModule } from '../section-title/section-title.module';
 import { PeopleModule } from '../people/people.module';
+import { ContactComponent } from '../contact/contact.component';
+import { ReferencesComponent } from '../references/references.component';
+import { TitleComponent } from '../title/title.component';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -74,13 +77,15 @@ import { PeopleModule } from '../people/people.module';
         SearchresultModule,
         DoneModule,
         ButtonModule,
-        ReferencesModule,
         AccesspageModule,
         VisithomeModule,
         NgbModule,
         IspartofModule,
         SectionTitleModule,
-        PeopleModule
+        PeopleModule,
+        ContactComponent,
+        ReferencesComponent,
+        TitleComponent
     ],
     declarations: [
         ResourceDataComponent,

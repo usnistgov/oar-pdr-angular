@@ -51,7 +51,7 @@ export * from './lib/landing/tools/tools.module';
 export * from './lib/landing/tools/menu.component';
 
 export * from './lib/landing/references/references.component';
-export * from './lib/landing/references/references.module';
+// export * from './lib/landing/references/references.module';
 
 export * from './lib/datacart/cart.service';
 export * from './lib/datacart/datacart.module';
@@ -59,6 +59,7 @@ export * from './lib/datacart/cartstatus';
 export * from './lib/datacart/cartconstants';
 export * from './lib/datacart/datacart.component';
 export * from './lib/datacart/datacart.routes';
+export * from './lib/datacart/leave.guard';
 
 export * from './lib/metrics/metrics';
 export * from './lib/metrics/metrics.module';

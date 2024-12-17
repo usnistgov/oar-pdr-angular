@@ -71,7 +71,7 @@
                             </span>
                             <!-- expand button -->
                             <i style="margin-left: 1rem;" class="fas"
-                                [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" aria-hidden="true" (click)="authorExpandClick();"></i>
+                                [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" (click)="authorExpandClick();"></i>
                         </div>
                         <!-- Author editor -->
                         <div [@editExpand]="editBlockStatus" [ngStyle]="getAuthorStyle()">

@@ -9,9 +9,14 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
 import { ContactEditComponent } from './contact-edit/contact-edit.component';
+import { CommonModule } from '@angular/common';
+import { CollapseModule } from '../collapseDirective/collapse.module';
 
 @Component({
+    standalone: true,
     selector: 'app-contact',
+    imports: [ CommonModule, CollapseModule, ContactEditComponent ],
+    providers: [ ContactService ],
     templateUrl: './contact.component.html',
     styleUrls: ['../landing.component.scss'],
     animations: [
@@ -34,6 +39,9 @@ export class ContactComponent implements OnInit {
     overflowStyle: string = 'hidden';
     backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
     dataChanged: boolean = false;
+
+    startLoading: boolean = false;
+
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
@@ -165,6 +173,8 @@ export class ContactComponent implements OnInit {
     }
 
     startEditing() {
+        this.startLoading = true;
+
         if(this.record[this.fieldName])
             this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
         else

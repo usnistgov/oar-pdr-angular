@@ -36,7 +36,6 @@ import { SearchTopicsComponent } from 'oarlps';
 import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
-// import { FrameModule } from 'oarlps';
 import { OARLPSModule } from 'oarlps';
 import { environment } from '../environments/environment-impl';
 import { NerdmModule } from 'oarlps';
@@ -100,7 +99,8 @@ enableProdMode();
           useClass: LowerCaseUrlSerializer
         },
         GoogleAnalyticsService,
-        DatePipe
+        DatePipe,
+        fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

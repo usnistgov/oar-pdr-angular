@@ -72,23 +72,41 @@
     </div>
 </div>
 
+@defer (when startLoading) {
+    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+        <table style="width: 100%;">
+            <tr  style="width: 100%;">
+                <td class="edit-block" style="width: calc(100%-90px);">
+                    <lib-contact-edit #contactedit [contact]="currentContact" [backgroundColor]="getRecordBackgroundColor" [editMode]="editMode" (dataChanged)="onContactChange($event)"></lib-contact-edit>
+                </td>
+    
+                <td style="width: 90px;vertical-align: top;">
+                    <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentContact()" aria-label="edit button" [disabled]="!currentContact.dataChanged || !currentContact.fn" ngbTooltip="Save contact">
+                        <i class="fas fa-check"></i>
+                    </button>
+            
+                    <button class="edit_button" *ngIf="mdupdsvc.isEditMode && dataChanged" type="button"
+                        (click)="undoCurContactChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
+                        <i class="fas fa-undo fa-sm"></i>
+                    </button>
+                </td>          
+            </tr>
+        </table>
+    </div>
+}
 <!-- Contact editor -->
-<div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+<!-- <div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
     <table style="width: 100%;">
         <tr  style="width: 100%;">
-            <!-- Text edit area -->
             <td class="edit-block" style="width: calc(100%-90px);">
                 <lib-contact-edit #contactedit [contact]="currentContact" [backgroundColor]="getRecordBackgroundColor" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onContactChange($event)"></lib-contact-edit>
             </td>
 
-            <!-- Control buttons -->
             <td style="width: 90px;vertical-align: top;">
-                <!-- Save button -->
                 <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentContact()" aria-label="edit button" [disabled]="!currentContact.dataChanged || !currentContact.fn" ngbTooltip="Save contact">
                     <i class="fas fa-check"></i>
                 </button>
         
-                <!-- Cancel button -->
                 <button class="edit_button" *ngIf="mdupdsvc.isEditMode && dataChanged" type="button"
                     (click)="undoCurContactChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
                     <i class="fas fa-undo fa-sm"></i>
@@ -96,4 +114,4 @@
             </td>          
         </tr>
     </table>
-</div>
+</div> -->

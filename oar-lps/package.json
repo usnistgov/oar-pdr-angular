@@ -32,7 +32,7 @@
     "@angular/platform-server": "18.2.13",
     "@babel/core": "^7.16.7",
     "@fullcalendar/core": "^5.10.1",
-    "@ng-bootstrap/ng-bootstrap": "^14.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^17.0.0",
     "@nguniversal/common": "^16.2.0",
     "@nguniversal/express-engine": "^16.2.0",
     "chart.js": "^3.6.2",

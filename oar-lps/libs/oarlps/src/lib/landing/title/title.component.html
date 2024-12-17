@@ -1,57 +1,15 @@
-<div style="width: 100%;">
-    <div style="display: table; margin-bottom: 0em;width:100%;">
-        <div class="editable_container" style="width:100%;">
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode">
-                <span style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
-            </div>
+<!-- If this is the public site, only display title. Never load edit component. -->
 
-            <div class="editable_field" [ngStyle]="titleWidth">
-                <!-- Not editing -->
-                <!-- <div style="width:100%;" *ngIf="!isEditing"> -->
-                    <div *ngIf="!isEditing" style="width: fit-content;" [style.cursor]="mdupdsvc.isEditMode ? 'pointer' : 'default'" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)" (click)="startEditing()">
-                        <span *ngIf="record['title']; else noTitle"><h2>{{record.title}}</h2></span>
-                        <ng-template #noTitle>
-                            <span style="color: var(--disabled-grey-text);">{{placeholder}}</span>
-                        </ng-template>
-                    </div>  
-                <!-- </div> -->
-
-                <!-- Editing -->
-                <div *ngIf="isEditing" (click)="startEditing()" style="width: 100%; ">
-                    <h2 style="width: 100%;">
-                        <textarea #title autocomplete="off" [(ngModel)]='record.title' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" style="width: 100%;cursor: text;" libTextareaAutoresize></textarea>
-                    </h2>
-                </div>
-            </div>
-
-
-            <!-- Control buttons -->
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-                <button class="edit_button" *ngIf="!isEditing" type="button" 
-                (click)="startEditing()" aria-label="Edit title" ngbTooltip="Edit title" style="cursor: pointer">
-                    <i class="fas fa-pencil fa-sm"></i>
-                </button> 
-
-                <!-- Save button -->
-                <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing"
-                aria-label="save button" ngbTooltip="Save changes">
-                    <i class="fas fa-check icon_enabled"></i>
-                </button>
-
-                <!-- Cancel editing button: cancel current changes -->
-                <button class="edit_button" type="button" *ngIf="isEditing"
-                (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                    <i class="fas fa-undo fa-sm" data-toggle="tooltip" title="Undo current changes"></i>
-                </button>   
-                
-                <!-- Restore button, restore original value -->
-                <button class="edit_button" type="button" [disabled]="!updated" *ngIf="!isEditing && updated" 
-                    (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
-                    <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
-                </button>           
-            </div>
-        </div>
-    </div>
-</div>
-
-
+@defer (when !isPublicSite) {
+    <!-- Editing -->
+    <title-edit [record]="record" [inBrowser]="inBrowser"></title-edit>
+}
+@placeholder {
+    <!-- Not editing -->
+    <div style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+        <span *ngIf="record['title']; else noTitle"><h2>{{record.title}}</h2></span>
+        <ng-template #noTitle>
+            <span style="color: var(--disabled-grey-text);">No title.</span>
+        </ng-template>
+    </div>  
+}

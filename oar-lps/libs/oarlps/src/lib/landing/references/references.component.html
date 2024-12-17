@@ -38,7 +38,7 @@
                 </button> 
 
                 <!-- Undo all changes button -->
-                <button class="edit_button" *ngIf="refChanged || refUpdated" [disabled]="childIsEditing || childIsAdding" type="button"
+                <button #undo class="edit_button" *ngIf="refChanged || refUpdated" [disabled]="childIsEditing || childIsAdding" type="button"
                     (click)="undoAllChanges()" aria-label="Undo" ngbTooltip="Undo">
                     <i class="fas fa-undo fa-sm"></i>
                 </button>                
@@ -64,8 +64,14 @@
     </ng-template>
 </div>
 
-<div style="width: 100%;" *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
-    <lib-ref-list #reflist [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
-</div>
+<!-- Defer block for lazyloading
+    The components inside the block must be stand alone component.
+    This block will only be loaded when loadEditRefBlock is set to true.
+-->
+@defer (when loadEditRefBlock) {
+    <div style="width: 100%;" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
+        <lib-ref-list #reflist [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
+    </div>
+}
 
 

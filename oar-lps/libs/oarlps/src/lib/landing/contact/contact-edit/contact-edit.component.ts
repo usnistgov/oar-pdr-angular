@@ -1,10 +1,20 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Contact } from '../contact';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { PeopleModule } from '../../people/people.module';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
-  selector: 'lib-contact-edit',
-  templateUrl: './contact-edit.component.html',
-  styleUrls: ['./contact-edit.component.css']
+    standalone: true,
+    selector: 'lib-contact-edit',
+    imports: [        
+        CommonModule,
+        FormsModule,
+        ButtonModule,
+        PeopleModule],
+    templateUrl: './contact-edit.component.html',
+    styleUrls: ['./contact-edit.component.css']
 })
 export class ContactEditComponent implements OnInit {
     // the full record for the selected person

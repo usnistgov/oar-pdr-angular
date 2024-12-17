@@ -21,7 +21,6 @@ import { BadgeModule } from 'primeng/badge';
 import { TreetableComponent } from './treetable/treetable.component';
 import { LeaveWhileDownloadingGuard } from './leave.guard';
 
-
 @NgModule({
     declarations: [
         DatacartComponent,

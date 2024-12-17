@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastrModule } from 'ngx-toastr';
 import { CollapseModule } from '../collapseDirective/collapse.module';
-import { ContactComponent } from './contact.component';
+// import { ContactComponent } from './contact.component';
 import { ContactService } from './contact.service';
 import { ButtonModule } from 'primeng/button';
-import { ContactEditComponent } from './contact-edit/contact-edit.component';
+// import { ContactEditComponent } from './contact-edit/contact-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { PeopleModule } from '../people/people.module';
 
@@ -27,19 +27,19 @@ import { PeopleModule } from '../people/people.module';
         PeopleModule
     ],
     declarations: [
-        ContactComponent, ContactEditComponent
+        
     ],
     providers: [
         ContactService
     ],
     exports: [
-        ContactComponent, ContactEditComponent
+        
     ]
 })
 export class ContactModule { }
 
 export {
-    ContactComponent, ContactService, ContactEditComponent
+    ContactService
 };
 
     

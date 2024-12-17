@@ -8,9 +8,18 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { Reference } from './reference';
 import { RefListComponent } from './ref-list/ref-list.component';
+import { CommonModule } from '@angular/common';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+
 
 @Component({
     selector: 'app-references',
+    standalone: true,
+    imports: [
+        CommonModule,
+        RefListComponent,
+        ConfirmationDialogComponent
+    ],
     templateUrl: './references.component.html',
     styleUrls: ['../landing.component.scss', './references.component.css'],
     animations: [
@@ -32,13 +41,19 @@ export class ReferencesComponent implements OnInit {
     currentRefIndex: number = 0;
     childEditMode: string = MODE.NORNAL;
     orderChanged: boolean = false;
+    loadEditRefBlock: boolean = false;
+
+    // For warning pop up
+    modalRef: any;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
 
+    @ViewChild('undo') undo: ElementRef;
+
     constructor(public mdupdsvc : MetadataUpdateService,        
-        private ngbModal: NgbModal,                
+        private modalService: NgbModal,               
         private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
@@ -144,6 +159,7 @@ export class ReferencesComponent implements OnInit {
      * set current mode to editing.
      */
     startEditing(refreshHelp: boolean = true) {
+        this.loadEditRefBlock = true;
         this.setMode(MODE.LIST, refreshHelp);
     }
 
@@ -271,7 +287,26 @@ export class ReferencesComponent implements OnInit {
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoAllChanges() {
-        this.refList.undoAllChangesConfirmation();
+        var message = 'This will undo all reference changes.';
+
+        this.modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true });
+        this.modalRef.componentInstance.title = 'Please confirm';
+        this.modalRef.componentInstance.btnOkText = 'Confirm';
+        this.modalRef.componentInstance.btnCancelText = 'Cancel';
+        this.modalRef.componentInstance.message = message;
+        this.modalRef.componentInstance.showWarningIcon = true;
+        this.modalRef.componentInstance.showCancelButton = true;
+        
+        this.modalRef.result.then(
+            (result) => {
+                if ( result ) {
+                    this.refList.undoChanges();
+                }else{
+                    console.log("User changed mind.");
+                }
+            }, (reason) => {
+        });
+
         this.orderChanged = false; 
         this.hideEditBlock();
     }   

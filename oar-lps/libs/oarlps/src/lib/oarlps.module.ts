@@ -22,7 +22,6 @@ import { SectionTitleModule } from './landing/section-title/section-title.module
         CommonModule, 
         FrameModule, 
         AboutdatasetModule,
-        DatacartModule,
         ConfigModule,
         DirectivesModule,
         ErrorsModule,
@@ -33,7 +32,8 @@ import { SectionTitleModule } from './landing/section-title/section-title.module
         HttpClientModule,
         TextareaAutoresizeModule,
         NgSelectModule,
-        SectionTitleModule
+        SectionTitleModule,
+        DatacartModule
     ],
     providers: [
         GoogleAnalyticsService

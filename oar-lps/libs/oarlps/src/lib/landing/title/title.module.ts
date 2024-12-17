@@ -1,7 +1,7 @@
 import { NgModule }     from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TextareaAutoresizeModule } from '../../textarea-autoresize/textarea-autoresize.module';
-import { TitleComponent } from './title.component';
+// import { TitleComponent } from './title.component';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -16,18 +16,18 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         NgbModule
     ],
     declarations: [
-        TitleComponent
+
     ],
     providers: [
     ],
     exports: [
-        TitleComponent
+
     ]
 })
 export class TitleModule { }
 
 export {
-    TitleComponent
+
 };
 
     
