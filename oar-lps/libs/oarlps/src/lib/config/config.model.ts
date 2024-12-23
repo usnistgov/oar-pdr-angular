@@ -115,9 +115,9 @@ export interface PDRAPIEndpoints {
 }
 
 /**
- * Configuration for 
+ * Configuration for controlling the behavior of the editing features of the DAPTool 
  */
-export interface DAPService {
+export interface DAPEditing {
 
     /**
      * the DAP service endpoint URL 
@@ -125,10 +125,16 @@ export interface DAPService {
     serviceEndpoint: string;
 
     /**
-     * a flag indicating whether editing should be enabled.  If false, the app should not enable 
-     * metadata editing widgets.
+     * the base URL for the landing page editing app.  When the DAP draft identifier is appended 
+     * to this URL, resolving it will open up the draft in the editor.  
      */
-    editEnabled: boolean;
+    editURLBase?: string;
+
+    /**
+     * a flag indicating whether editing should be enabled.  If false (default), the app should not 
+     * enable metadata editing widgets.  
+     */
+    editEnabled?: boolean;
 }
 
 /**
@@ -167,4 +173,14 @@ export interface LPSConfig extends Configuration {
     [propName: string]: any;
 }
 
+/**
+ * the combined configuration for the DAPTool
+ */
+export interface DAPTConfig extends LPSConfig {
+
+    /**
+     * parameters specific to the creating and editing DAPs
+     */
+    dapEditing: DAPEditing;
+}
 

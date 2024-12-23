@@ -21,8 +21,6 @@ describe('WizardService', () => {
   it('should be created', () => {
     debugger;
     expect(service).toBeTruthy();
-    expect(service.confValues).toBeTruthy();
-    expect(cfgsvc).toBeTruthy();
-    expect(service.confValues["dapAPI"]).toBeTruthy();
+    expect(service.MIDASAPI).toBe("/midas/dap/def/");
   });
 });

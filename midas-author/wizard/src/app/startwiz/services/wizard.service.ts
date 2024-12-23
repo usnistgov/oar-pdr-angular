@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of, throwError, Subscriber } from 'rxjs';
-import { LPSConfig } from 'oarlps';
+import { AppConfig } from 'oarlps';
 import { ConfigurationService } from 'oarng';
 import { CollectionDataModel } from '../models/data.model';
 
@@ -12,8 +12,7 @@ export class WizardService {
     readonly saveapi : string = "dap/mds3";
     resid: string = "1234";
     token: string = "fake token"
-    confValues: LPSConfig;
-    private MIDASAPI: string;
+    MIDASAPI: string;
 
     collectionData: CollectionDataModel[] = [
         {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
@@ -23,12 +22,9 @@ export class WizardService {
     ]
 
     constructor(private httpcli: HttpClient,
-                private configSvc: ConfigurationService)
+                private configSvc: AppConfig)
     { 
-        this.confValues = this.configSvc.getConfig();
-        this.MIDASAPI = this.confValues['dapAPI'];
-        if (! this.MIDASAPI)
-            this.MIDASAPI = "/midas/dap/def/";
+        this.MIDASAPI = this.configSvc.get('dapEditing.serviceEndpont', "/midas/dap/def/");
     }
 
     setToken(token: string) {

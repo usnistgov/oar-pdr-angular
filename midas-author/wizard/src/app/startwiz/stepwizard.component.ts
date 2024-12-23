@@ -4,7 +4,7 @@ import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { WizardService } from './services/wizard.service';
-import { LPSConfig } from 'oarlps';
+import { AppConfig } from 'oarlps';
 import { UserMessageService } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 import { CollectionDataModel } from './models/data.model';
@@ -43,7 +43,6 @@ export class StepWizardComponent implements OnInit {
     currentStepSub!: Subscription;
     onSoftware: boolean = false;
     bodyHeight: number = 550;
-    confValues: LPSConfig;
     private PDRAPI: string;
     nextBtnIcon: string = "faa faa-long-arrow-right icon-white";
     nextBtnText: string = "Next";
@@ -61,13 +60,10 @@ export class StepWizardComponent implements OnInit {
                 private msgsvc: UserMessageService,
                 private cdr: ChangeDetectorRef,
                 private wizardService: WizardService,
-                private configSvc: ConfigurationService,
-                public authService: AuthenticationService) { 
-
-        this.confValues = this.configSvc.getConfig();
-        this.PDRAPI = this.confValues['dapToolBase'];
-        if (! this.PDRAPI)
-            this.PDRAPI = "/dapui/edit/od/id/"
+                private configSvc: AppConfig,
+                public authService: AuthenticationService)
+    { 
+        this.PDRAPI = this.configSvc.get('dapToolBase', "/dapui/edit/od/id/");
         if (! this.PDRAPI.endsWith("/"))
             this.PDRAPI += "/";
     }

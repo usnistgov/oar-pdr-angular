@@ -31,12 +31,13 @@ export const config: LPSConfig = {
         mdService: "https://oardev.nist.gov/od/id/",
         metrics: "https://data.nist.gov/rmm/usagemetrics/"
     },
-    dapAPI: "https://mdsdev.nist.gov/midas/dap/mds3/",
+    dapEditing: {
+        serviceEndpoint: "https://mdsdev.nist.gov/midas/dap/mds3/",
+        editEnabled: true,
+    },
+    systemVersion: "v1.3.X",
     mode: "dev",
-    status: "Dev Version",
-    appVersion: "v1.3.X",
     production: context.production,
-    editEnabled: false,
     distService: "https://testdata.nist.gov/od/ds/",
     gaCode: "not-set",
     screenSizeBreakPoint: 1200,
