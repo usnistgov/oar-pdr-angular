@@ -126,7 +126,7 @@ export class WebAuthService extends AuthService {
                 private sdsvc: StaffDirectoryService)
     {
         super();
-        this._endpoint = config.get('dapAPI', '/midas/dap/def/');
+        this._endpoint = config.get('dapEditing.serviceEndpoint', '/midas/dap/def/');
         if (!this._endpoint.endsWith('/')) this._endpoint += "/";
     }
 

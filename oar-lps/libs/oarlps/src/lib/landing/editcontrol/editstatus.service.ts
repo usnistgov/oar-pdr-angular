@@ -127,7 +127,7 @@ export class EditStatusService {
      * when running as part of the public side of the PDR.
      */
     public editingEnabled() : boolean {
-        return this.cfg.get("editEnabled", false);
+        return this.cfg.get("dapEditing.editEnabled", false);
     }
 
     /**
