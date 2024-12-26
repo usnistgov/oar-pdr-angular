@@ -34,6 +34,8 @@ export class AppErrorHandler implements ErrorHandler {
             let respstat = 500;
             if (error instanceof IDNotFound)
                 respstat = 404;
+            else if (error instanceof NotAuthorizedError)
+                respstat = 401;
             
             // this is needed if rerouting is not possible or status was already set (?)
             console.log("Setting response status to "+respstat);
@@ -45,6 +47,11 @@ export class AppErrorHandler implements ErrorHandler {
             // rerouting may not work if we've already started to build the page.  
 
             if (error instanceof IDNotFound) {
+                console.log("attempting reroute to /not-found");
+                router.navigateByUrl("/not-found/"+error.id, { skipLocationChange: true });
+            }
+            else if (error instanceof NotAuthorizedError) {
+                // in the future, we may want to route to an error page specific to this error
                 console.log("attempting reroute to /not-found");
                 router.navigateByUrl("/not-found/"+error.id, { skipLocationChange: true });
             }
@@ -72,4 +79,24 @@ export class IDNotFound {
     }
 
     public toString() : string { return this.message; }
+}
+
+/**
+ * an error indicating that the client is not authorized to access a requested record
+ */
+export class NotAuthorizedError extends Error {
+
+    public op: string = "access";
+
+    /**
+     * create the error
+     * @param id      the ID of the record user is trying to access
+     * @param opverb  a verb indicating what the user wants to do with the record.  Usually this is
+     *                "read", "write", or "update".  This value will be used in the error message.
+     *                The default value is "access".
+     */
+    constructor(public id: string, opverb: string = "access", message: string|null = null) {
+        super((message) ? message : "User is not authorized to "+opverb+" record with ID="+id);
+        this.op = opverb;
+    }
 }
