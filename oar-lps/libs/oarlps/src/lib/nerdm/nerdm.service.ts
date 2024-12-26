@@ -24,7 +24,7 @@ export abstract class MetadataService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    abstract getMetadata(id : string, ngenv?: IEnvironment) : Observable<NerdmRes>;
+    abstract getMetadata(id : string) : Observable<NerdmRes>;
 }
 
 /**
