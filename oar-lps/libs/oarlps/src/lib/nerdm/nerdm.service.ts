@@ -16,7 +16,7 @@ import { IEnvironment } from '../../environments/ienvironment';
  * a service that will retrieve a NERDm record.  Its behavior will depend on the 
  * runtime context.
  */
-export abstract class MetadataService {
+export abstract class NERDmResourceService {
 
     /**
      * retrieve the metadata associated with the current identifier.
@@ -24,17 +24,17 @@ export abstract class MetadataService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    abstract getMetadata(id : string) : Observable<NerdmRes>;
+    abstract getResource(id : string) : Observable<NerdmRes>;
 }
 
 /**
  * A Metadata service that wraps another service and which will cache its results
  */
-export class CachingMetadataService extends MetadataService {
+export class CachingNERDmResourceService extends NERDmResourceService {
 
-    private del : MetadataService;
+    private del : NERDmResourceService;
 
-    constructor(delegate : MetadataService, protected cache? : MetadataTransfer) {
+    constructor(delegate : NERDmResourceService, protected cache? : MetadataTransfer) {
         super();
         this.del = delegate;
         if (! this.cache)
@@ -49,12 +49,12 @@ export class CachingMetadataService extends MetadataService {
         return this.cache.get(id) as NerdmRes;
     }
 
-    getMetadata(id : string) : Observable<NerdmRes> {
+    getResource(id : string) : Observable<NerdmRes> {
         let rec : NerdmRes = this.queryCache(id);
         if (rec !== undefined) 
             return rxjs.of(rec);
 
-        let out$ = this.del.getMetadata(id);
+        let out$ = this.del.getResource(id);
         out$.subscribe(
             (rcrd) => { this.cacheRecord(id, rcrd.data); },
             (err) => {
@@ -68,12 +68,12 @@ export class CachingMetadataService extends MetadataService {
 }
 
 /**
- * A MetadataService that loads its metadata from a file on disk.  This implementation
- * is provided mainly for testing use of the MetadataService on the server side.  It reads 
+ * A NERDmResourceService that loads its metadata from a file on disk.  This implementation
+ * is provided mainly for testing use of the NERDmResourceService on the server side.  It reads 
  * the metadata from files from a directory specified at construction.  Each file has a name 
  * of the form, _id_`.json`.  
  */
-export class ServerDiskCacheMetadataService extends MetadataService {
+export class ServerDiskCacheResourceService extends NERDmResourceService {
 
     /**
      * create the service.  
@@ -90,7 +90,7 @@ export class ServerDiskCacheMetadataService extends MetadataService {
      * 
      * @param id   the identifier of the resource to load
      */
-    getMetadata(id : string) : Observable<NerdmRes> {
+    getResource(id : string) : Observable<NerdmRes> {
         let file : string = this.cachedir + "/" + id + ".json";
         console.log("Reading NERDm record from local file: "+file);
 
@@ -125,12 +125,12 @@ export class ServerDiskCacheMetadataService extends MetadataService {
 }
 
 /**
- * a MetadataService that pulls its data from a MetadataTransfer instance.
+ * a NERDmResourceService that pulls its data from a MetadataTransfer instance.
  *
  * This is intended for browser-side metadata retrieval in which the MetadataTransfer 
  * instance has the metadata loaded from script elements in the downloaded web page.  
  */
-export class TransferMetadataService extends MetadataService {
+export class TransferResourceService extends NERDmResourceService {
 
     /**
      * initialize the service with the MetadataTransfer cache to draw records from
@@ -145,18 +145,18 @@ export class TransferMetadataService extends MetadataService {
      * 
      * @param id   the identifier of the resource to load
      */
-    getMetadata(id : string) : Observable<NerdmRes> {
+    getResource(id : string) : Observable<NerdmRes> {
         return rxjs.of(this.mdtrx.get(id) as NerdmRes);
     }
 }
 
 /**
- * a MetadataService that retrieves its records from a metadata web service
+ * a NERDmResourceService that retrieves its records from a metadata web service
  *
  * In production, this is intended for server-side use only; however, it can also be 
  * used browser-side for development purposes.  
  */
-export class RemoteWebMetadataService extends MetadataService {
+export class RemoteWebResourceService extends NERDmResourceService {
 
     /**
      * initialize the service with the metadata web service endpoint.
@@ -179,7 +179,7 @@ export class RemoteWebMetadataService extends MetadataService {
      * 
      * @param id   the identifier of the resource to load
      */
-    getMetadata(id : string) : Observable<NerdmRes> {
+    getResource(id : string) : Observable<NerdmRes> {
         let url = this.endpoint;
         if (id.startsWith("ark:/"))
             url += "?@id=";
@@ -214,9 +214,9 @@ export class RemoteWebMetadataService extends MetadataService {
      * instantiate a caching version of this service.  
      */
     static withCaching(endpoint : string, webclient : HttpClient, inBrowser : boolean = false)
-        : CachingMetadataService
+        : CachingNERDmResourceService
     {
-        return new CachingMetadataService(new RemoteWebMetadataService(endpoint, webclient, inBrowser));
+        return new CachingNERDmResourceService(new RemoteWebResourceService(endpoint, webclient, inBrowser));
     }
 }
 
@@ -224,9 +224,9 @@ export class RemoteWebMetadataService extends MetadataService {
  * A Metadata service that wraps another service and which will transmit metadata 
  * records requested on the server down to the browser.  
  */
-export class TransmittingMetadataService extends CachingMetadataService {
+export class TransmittingResourceService extends CachingNERDmResourceService {
 
-    constructor(delegate : MetadataService, mdtrx : MetadataTransfer) {
+    constructor(delegate : NERDmResourceService, mdtrx : MetadataTransfer) {
         super(delegate, mdtrx);
     }
 }
@@ -235,7 +235,7 @@ export class TransmittingMetadataService extends CachingMetadataService {
  * A Metadata service that accesses test NERDm records stashed in the angular environment
  * property, `testdata`.  
  */
-export class AngularEnvironmentMetadataService extends MetadataService {
+export class AngularEnvironmentResourceService extends NERDmResourceService {
     ngenv: IEnvironment;
 
     constructor( ngenv: IEnvironment ) {
@@ -262,13 +262,13 @@ export class AngularEnvironmentMetadataService extends MetadataService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    getMetadata(id : string) : Observable<NerdmRes> {
+    getResource(id : string) : Observable<NerdmRes> {
         return rxjs.of(this.ngenv.testdata[id]);
     }
 }
 
 /**
- * create a MetadataService based on the runtime context
+ * create a NERDmResourceService based on the runtime context
  * 
  * @param platid     the PLATFORM_ID for determining if we are running on the server
  * @param endpoint   the base URL for the metadata web service.  The retrieval URL is 
@@ -278,49 +278,49 @@ export class AngularEnvironmentMetadataService extends MetadataService {
  *                   metadata records from the server to the browser.  If not provided 
  *                   (on the server side), none of the requested records will be transmitted.  
  */
-export function createMetadataService(ngenv: IEnvironment, platid : Object, endpoint : string, httpClient : HttpClient,
-                                      mdtrx? : MetadataTransfer)
+export function createResourceService(ngenv: IEnvironment, platid : Object, endpoint : string, 
+                                      httpClient : HttpClient, mdtrx? : MetadataTransfer)
 {
     // Note: this implementation is based on the assumption that the app only needs one
     // NERDm record--the one for the resource being displayed.  If that assumption is no
     // longer true, this implementation should be changed (which would not be hard).
 
-    let svc : MetadataService|null = null
+    let svc : NERDmResourceService|null = null
     if (isPlatformServer(platid)) {
         if (proc.env["PDR_METADATA_DIR"]) {
             // we're in a server-side development mode
             console.log("Will load NERDm records from directory cache: " +
                         proc.env["PDR_METADATA_DIR"]);
-            svc = new ServerDiskCacheMetadataService(proc.env["PDR_METADATA_DIR"]);
+            svc = new ServerDiskCacheResourceService(proc.env["PDR_METADATA_DIR"]);
         }
         else {
             // we're in a server-side production-like mode:  get the records from
             // the web service and transmit them to the browser
             console.log("Will load NERDm records from remote web service: " + endpoint);
-            svc = new RemoteWebMetadataService(endpoint, httpClient, false);
+            svc = new RemoteWebResourceService(endpoint, httpClient, false);
         }
         if (mdtrx) {
             // don't need a cache for this context; just plug in the MetadataTransfer
             console.log("  (...and transfer them to the browser via embeded JSON)");
-            return new TransmittingMetadataService(svc, mdtrx);
+            return new TransmittingResourceService(svc, mdtrx);
         }
     }
     else if (mdtrx && mdtrx.labels().length > 0) {
         // we're in the browser and the web page contains an embedded record;
         // rely on the MetadataTransfer exclusively
         console.log("Will attempt to load NERDm record from embedded JSON");
-        return new TransferMetadataService(mdtrx);
+        return new TransferResourceService(mdtrx);
     }
-    else if (ngenv.context['useMetadataService']) {
+    else if (ngenv.context['useResourceService']) {
         console.log("Will load NERDm records from remote web service: " + endpoint);
-        svc = new RemoteWebMetadataService(endpoint, httpClient, true);
+        svc = new RemoteWebResourceService(endpoint, httpClient, true);
     }
     else {
         console.log("Will use test NERDm records from the angular environment.");
-        return new AngularEnvironmentMetadataService(ngenv);
+        return new AngularEnvironmentResourceService(ngenv);
     }
 
-    return new CachingMetadataService(svc);
+    return new CachingNERDmResourceService(svc);
 }
 
 
