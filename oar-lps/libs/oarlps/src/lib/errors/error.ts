@@ -66,19 +66,15 @@ export class AppErrorHandler implements ErrorHandler {
 /**
  * a custom exception indicating a request for the landing page for a non-existent identifier
  */
-export class IDNotFound {
-
-    public message : string;
+export class IDNotFound extends Error {
 
     /**
      * create the error
      * @param id   the ID that was requested but does not exist
      */
     constructor(public id : string) {
-        this.message = "Resource identifier not found: "+id;
+        super("Resource identifier not found: "+id);
     }
-
-    public toString() : string { return this.message; }
 }
 
 /**
@@ -94,9 +90,24 @@ export class NotAuthorizedError extends Error {
      * @param opverb  a verb indicating what the user wants to do with the record.  Usually this is
      *                "read", "write", or "update".  This value will be used in the error message.
      *                The default value is "access".
+     * @param message The message explaining the error; if not provided, a default is formed from 
+     *                the other values.
      */
     constructor(public id: string, opverb: string = "access", message: string|null = null) {
         super((message) ? message : "User is not authorized to "+opverb+" record with ID="+id);
         this.op = opverb;
+    }
+}
+
+/**
+ * an error indicating that a request could not be fulfilled due to bad input
+ */
+export class BadInputError extends Error {
+
+    /**
+     * create the error
+     */
+    constructor(message: string) {
+        super(message);
     }
 }
