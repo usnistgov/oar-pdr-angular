@@ -8,7 +8,7 @@ import * as proc from 'process';
 
 import { AppConfig } from '../config/config';
 import { NerdmRes, MetadataTransfer  } from './nerdm';
-import { IDNotFound } from '../errors/error';
+import * as errors from '../errors/error';
 // import * as ngenv from '../../environments/environment';
 import { IEnvironment } from '../../environments/ienvironment';
 
@@ -19,12 +19,28 @@ import { IEnvironment } from '../../environments/ienvironment';
 export abstract class NERDmResourceService {
 
     /**
-     * retrieve the metadata associated with the current identifier.
+     * retrieve the NERDm Resource record having the given ID
      * 
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
     abstract getResource(id : string) : Observable<NerdmRes>;
+}
+
+/**
+ * A mixin interface for a metadata service that retrieves its data from a remote web service which may 
+ * require an authentication token to do so.  
+ */
+export interface SupportsAuthentication {
+    /**
+     * an authentication token that should be used to authenticate to the remote web service.
+     * <p>
+     * If this value is non-null, an implememtation should include this token in request to the 
+     * remote service.  This is typically sent as a "Bearer" token in an HTTP Authorization header.
+     * If null, the metadata service should assume that the remote service does not require an
+     * authentication token.
+     */
+    authToken: string|null;
 }
 
 /**
@@ -58,7 +74,7 @@ export class CachingNERDmResourceService extends NERDmResourceService {
         out$.subscribe(
             (rcrd) => { this.cacheRecord(id, rcrd.data); },
             (err) => {
-                if (err instanceof IDNotFound)
+                if (err instanceof errors.IDNotFound)
                     this.cacheRecord(id, null);
                 return rxjs.throwError(err);
             }
@@ -83,7 +99,7 @@ export class ServerDiskCacheResourceService extends NERDmResourceService {
     constructor(private cachedir : string) { super(); }
 
     /**
-     * retrieve the metadata associated with the current identifier.
+     * retrieve the NERDm Resource record having the given ID
      *
      * This implementation will also cache the loaded metadata to the MetadataTransfer 
      * instance (if provided at construction) for transfer to the client.
@@ -138,7 +154,7 @@ export class TransferResourceService extends NERDmResourceService {
     constructor(private mdtrx : MetadataTransfer) { super(); }
 
     /**
-     * retrieve the metadata associated with the current identifier.
+     * retrieve the NERDm Resource record having the given ID
      *
      * This implementation will also cache the loaded metadata to the MetadataTransfer 
      * instance (if provided at construction) for transfer to the client.
@@ -151,12 +167,13 @@ export class TransferResourceService extends NERDmResourceService {
 }
 
 /**
- * a NERDmResourceService that retrieves its records from a metadata web service
- *
- * In production, this is intended for server-side use only; however, it can also be 
- * used browser-side for development purposes.  
+ * a NERDmResourceService that retrieves its records from a metadata web service.  This 
+ * assumes the PDR resolver service (REST) interface for retrieving resources in which the 
+ * identifier is appended to the base service endpoint URL.
  */
-export class RemoteWebResourceService extends NERDmResourceService {
+export class RemoteWebResourceService extends NERDmResourceService implements SupportsAuthentication  {
+
+    authToken: string|null = null;
 
     /**
      * initialize the service with the metadata web service endpoint.
@@ -168,15 +185,73 @@ export class RemoteWebResourceService extends NERDmResourceService {
      */
     constructor(private endpoint : string,
                 private webclient : HttpClient,
-                private inBrowser : boolean)
+                authToken : string = null)
+    {
+        super();
+        this.authToken = authToken;
+    }
+
+    /**
+     * retrieve the metadata associated with the current identifier.
+     *
+     * @param id   the identifier of the resource to load
+     */
+    getResource(id : string) : Observable<NerdmRes> {
+        let url = this.endpoint;
+        if (! url.includes('?') && ! url.endsWith('/'))
+            url += '/';
+        url += id;
+        
+        let hdrs = { "Accept": "application/json" };
+        if (this.authToken)
+            hdrs['Authorization'] = "Bearer " + this.authToken;
+
+        return this.webclient.get(url, {headers: hdrs}).pipe(
+            rxjs.catchError(err => {
+                let msg = err.message || err.statusText;
+                if (err.status) {
+                    if (err.status == 404)
+                        throw new errors.IDNotFound(id, err);
+                    if (err.status == 401)
+                        throw new errors.NotAuthorizedError(id, "access", err);
+                    if (err.status > 500)
+                        throw new errors.ServerError(msg || "Unknown Server Error", err);
+                    else 
+                        throw new errors.OARError("Unexpected resolver response: " + msg +" (" +
+                                                  err.status + ")", err);
+                }
+                else if (err.status == 0) 
+                    throw new errors.CommError("Unexpected communication error: "+msg, url, err);
+                else
+                    throw new errors.OARError("Unexected error during retrieval from URL (" + 
+                                              url + "): " + err.toString(), err);
+            })
+        ) as Observable<NerdmRes>;
+    }
+}
+
+/**
+ * a NERDmResourceService that retrieves its records from the RMM web service.  With the use 
+ * of the PDR resolver service as preferred, this implementation is deprecated and kept only 
+ * for historical purposes.
+ */
+export class RMMResourceService extends NERDmResourceService {
+
+    /**
+     * initialize the service with the metadata web service endpoint.
+     * 
+     * @param endpoint   the web service endpoint to use.  This implementation will form 
+     *                     a retrieval URL by directly appending the desired ID.  No delimiting
+     *                     slash will be inserted, so the endpoint should include one already
+     *                     if appropriate.  
+     */
+    constructor(private endpoint : string,
+                private webclient : HttpClient)
     { super(); }
 
     /**
      * retrieve the metadata associated with the current identifier.
      *
-     * This implementation will also cache the loaded metadata to the MetadataTransfer 
-     * instance (if provided at construction) for transfer to the client.
-     * 
      * @param id   the identifier of the resource to load
      */
     getResource(id : string) : Observable<NerdmRes> {
@@ -185,8 +260,11 @@ export class RemoteWebResourceService extends NERDmResourceService {
             url += "?@id=";
         else if (id.startsWith("doi:"))
             url += "?doi=";
+        if (! url.includes('?') && ! url.endsWith('/'))
+            url += '/';
         url += id;
-        console.log("Pulling NERDm record from metadata service: " + url);
+        console.log("Pulling NERDm record from the RMM service via: " + url);
+
         let out = this.webclient.get(url) as Observable<NerdmRes>;
         return out.pipe(
             rxjsop.map<NerdmRes, NerdmRes>(data => {
@@ -204,7 +282,7 @@ export class RemoteWebResourceService extends NERDmResourceService {
             rxjsop.catchError(err => {
                 // this will get handled by our global error handler
                 if (err.status == 404) 
-                    return rxjs.throwError(new IDNotFound(id));
+                    return rxjs.throwError(new errors.IDNotFound(id));
                 return rxjs.throwError(err);
             })
         );
@@ -213,10 +291,10 @@ export class RemoteWebResourceService extends NERDmResourceService {
     /**
      * instantiate a caching version of this service.  
      */
-    static withCaching(endpoint : string, webclient : HttpClient, inBrowser : boolean = false)
+    static withCaching(endpoint : string, webclient : HttpClient)
         : CachingNERDmResourceService
     {
-        return new CachingNERDmResourceService(new RemoteWebResourceService(endpoint, webclient, inBrowser));
+        return new CachingNERDmResourceService(new RemoteWebResourceService(endpoint, webclient));
     }
 }
 
@@ -297,7 +375,7 @@ export function createResourceService(ngenv: IEnvironment, platid : Object, endp
             // we're in a server-side production-like mode:  get the records from
             // the web service and transmit them to the browser
             console.log("Will load NERDm records from remote web service: " + endpoint);
-            svc = new RemoteWebResourceService(endpoint, httpClient, false);
+            svc = new RemoteWebResourceService(endpoint, httpClient);
         }
         if (mdtrx) {
             // don't need a cache for this context; just plug in the MetadataTransfer
@@ -313,7 +391,7 @@ export function createResourceService(ngenv: IEnvironment, platid : Object, endp
     }
     else if (ngenv.context['useResourceService']) {
         console.log("Will load NERDm records from remote web service: " + endpoint);
-        svc = new RemoteWebResourceService(endpoint, httpClient, true);
+        svc = new RemoteWebResourceService(endpoint, httpClient);
     }
     else {
         console.log("Will use test NERDm records from the angular environment.");

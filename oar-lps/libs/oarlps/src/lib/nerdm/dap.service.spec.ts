@@ -1,10 +1,13 @@
+import { TestBed } from '@angular/core/testing';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import * as nerdm from './nerdm';
 import * as dapsvc from './dap.service';
 import { Observable } from 'rxjs';
 import * as rxjs from 'rxjs';
 import { IDNotFound, BadInputError } from '../errors/error';
 
-describe('LocalDAPService', function() {
+describe('LocalDAPService/LocalDAPUpdateService', function() {
 
     let svc : dapsvc.LocalDAPService;
 
@@ -117,7 +120,205 @@ describe('LocalDAPService', function() {
         await expect(svc.create("gurn").toPromise()).rejects.toThrow(BadInputError);
     });
 
+    it("setName", async () => {
+        let dap: dapsvc.DAPUpdateService = await svc.create("goober").toPromise();
 
+        expect(dap.name).toEqual("goober");
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(await dap.setName("gurn").toPromise()).toEqual("gurn");
+        expect(dap.name).toEqual("gurn");
+        expect(dap.getRecord().name).toEqual("gurn");
+    });
 
 });
 
+describe("MIDASDAPService/MIDASDAPUpdateService", function() {
+
+    let ep: string = "https://pdr.org/midas/dap"
+    let svc : dapsvc.MIDASDAPService;
+    let httpmock: HttpTestingController;
+
+    let user = "ava1";
+    let baserec : dapsvc.DAPRecord = {
+        name: "",
+        id: "mds3:0001",
+        owner: user,
+        acls: {
+            read: [ user ], write: [ user ], "delete": [ user ], admin: [ user ]
+        },
+        data: {
+            "@id": "ark:/88434/mds3-0001",
+            doi: "doi:10.18434/mds3-0001",
+            title: "",
+            contactPoint: { fn: "Astin, Alan V", hasEmail: "mailto:alan.astin@nist.gov" }
+        },
+        meta: {
+        }
+    }
+
+    function newrec(name, meta = {}, data = {}) {
+        let out = JSON.parse(JSON.stringify(baserec));
+        out.name = name;
+        out.meta = meta;
+        for (const prop in data)
+            out.data[prop] = data[prop]
+        if (out.data["title"] === undefined)
+            out.data["title"] = "";
+        return out;
+    }
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [ HttpClientTestingModule ]
+        });
+        let webcli: HttpClient = TestBed.inject(HttpClient);
+        httpmock = TestBed.inject(HttpTestingController);
+        svc = new dapsvc.MIDASDAPService(ep, webcli, "XXX");
+    });
+
+    afterEach(() => {
+        // After every test, assert that there are no more pending requests.
+        // This throws an error if there are any requests that haven't been flushed yet.
+        httpmock.verify();
+    });
+
+    it("exists", async () => {
+        let p : Promise<boolean> = svc.exists("mds3:000X").toPromise();
+        let req = httpmock.expectOne(ep+"/mds3:000X");
+
+        expect(req.request.method).toBe('HEAD');
+        req.flush("", { status: 404, statusText: "Not Found" });
+
+        expect(await p).toBe(false);
+
+        p = svc.exists("mds3:000Y").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:000Y");
+
+        expect(req.request.method).toBe('HEAD');
+        req.flush("", { status: 200, statusText: "OK" });
+
+        expect(await p).toBe(true);
+    });
+
+    it("deleteRec", async () => {
+        let p : Promise<boolean> = svc.deleteRec("mds3:000X").toPromise();
+        let req = httpmock.expectOne(ep+"/mds3:000X");
+        expect(req.request.method).toBe('DELETE');
+        req.flush("", { status: 404, statusText: "Not Found" });
+
+        await expect(p).rejects.toThrow(IDNotFound);
+
+        p = svc.deleteRec("mds3:000Y").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:000Y");
+
+        expect(req.request.method).toBe('DELETE');
+        req.flush("", { status: 200, statusText: "OK" });
+
+        expect(await p).toBe(true);
+    });
+
+    it("canEdit", async () => {
+        let p : Promise<boolean> = svc.canEdit("mds3:000X").toPromise();
+        let req = httpmock.expectOne(ep+"/mds3:000X/acls/:user");
+        expect(req.request.method).toBe('GET');
+        req.flush(true, { status: 404, statusText: "Not Found" });
+        expect(await p).toBe(false);
+
+        p = svc.canEdit("mds3:000Y").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:000Y/acls/:user");
+        expect(req.request.method).toBe('GET');
+        req.flush(true);
+        expect(await p).toBe(true);
+    });
+
+    it("create", async () => {
+        let pc = svc.create("goober").toPromise();
+        let req = httpmock.expectOne(ep);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body["name"]).toEqual("goober");
+        expect(req.request.body["data"]).toBeUndefined();
+        expect(req.request.body["meta"]).toBeUndefined();
+        req.flush(newrec("goober"));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(dap.name).toEqual("goober");
+        expect(dap.recid).toEqual("mds3:0001");
+        expect(dap.getRecord().owner).toEqual("ava1");
+        expect(dap.getRecord().data["title"]).toEqual("");
+
+        let meta = {creatorIsContact: true};
+        pc = svc.create("goober", meta).toPromise();
+        req = httpmock.expectOne(ep);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body["name"]).toEqual("goober");
+        expect(req.request.body["data"]).toBeUndefined();
+        expect(req.request.body["meta"]).toEqual({creatorIsContact: true});
+        req.flush(newrec("goober", meta));
+        dap = await pc;
+
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(dap.name).toEqual("goober");
+        expect(dap.recid).toEqual("mds3:0001");
+        expect(dap.getRecord().owner).toEqual("ava1");
+        expect(dap.getRecord().data["title"]).toEqual("");
+
+        let data = {title: "Hazah!"};
+        pc = svc.create("goober", meta, data).toPromise();
+        req = httpmock.expectOne(ep);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body["name"]).toEqual("goober");
+        expect(req.request.body["data"]).toEqual({title: "Hazah!"});
+        expect(req.request.body["meta"]).toEqual({creatorIsContact: true});
+        req.flush(newrec("goober", meta, data));
+        dap = await pc;
+
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(dap.name).toEqual("goober");
+        expect(dap.recid).toEqual("mds3:0001");
+        expect(dap.getRecord().owner).toEqual("ava1");
+        expect(dap.getRecord().data["title"]).toEqual("Hazah!");
+    });
+
+    it("edit", async () => {
+        let pc = svc.create("goober").toPromise();
+        let req = httpmock.expectOne(ep);
+        expect(req.request.method).toBe('POST');
+        req.flush(newrec("goober"));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(dap.name).toEqual("goober");
+
+        pc = svc.edit(dap.recid).toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001");
+        expect(req.request.method).toBe('GET');
+        req.flush(dap.getRecord());
+        dap = await pc;
+
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(dap.name).toEqual("goober");
+    });
+
+    it("setName", async () => {
+        let pc = svc.create("goober").toPromise();
+        let req = httpmock.expectOne(ep);
+        expect(req.request.method).toBe('POST');
+        req.flush(newrec("goober"));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(dap.name).toEqual("goober");
+
+        let p = dap.setName("gurn").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/name");
+        expect(req.request.method).toBe('PUT');
+        req.flush("gurn");
+        expect(await p).toEqual("gurn");
+
+        expect(dap.name).toEqual("gurn");
+        expect(dap.getRecord().name).toEqual("gurn");
+    });
+    
+
+});

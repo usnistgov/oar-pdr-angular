@@ -64,23 +64,41 @@ export class AppErrorHandler implements ErrorHandler {
 }
 
 /**
+ * an umbrella exception type for all specialized errors in an OAR Angular app
+ */
+export class OARError extends Error {
+
+    /**
+     * create the error
+     * @param message   the explanation for the error
+     * @param cause     (optional) another Error that this OARError is being raise in 
+     *                  reaction to
+     */
+    constructor(message : string, cause? : Error) {
+        super(message, { cause: cause });
+    }
+}
+
+/**
  * a custom exception indicating a request for the landing page for a non-existent identifier
  */
-export class IDNotFound extends Error {
+export class IDNotFound extends OARError {
 
     /**
      * create the error
      * @param id   the ID that was requested but does not exist
+     * @param cause     (optional) another Error that this OARError is being raise in 
+     *                  reaction to
      */
-    constructor(public id : string) {
-        super("Resource identifier not found: "+id);
+    constructor(public id : string, cause? : Error) {
+        super("Resource identifier not found: "+id, cause);
     }
 }
 
 /**
  * an error indicating that the client is not authorized to access a requested record
  */
-export class NotAuthorizedError extends Error {
+export class NotAuthorizedError extends OARError {
 
     public op: string = "access";
 
@@ -92,22 +110,66 @@ export class NotAuthorizedError extends Error {
      *                The default value is "access".
      * @param message The message explaining the error; if not provided, a default is formed from 
      *                the other values.
+     * @param cause   (optional) another Error that this OARError is being raise in 
+     *                reaction to
      */
-    constructor(public id: string, opverb: string = "access", message: string|null = null) {
-        super((message) ? message : "User is not authorized to "+opverb+" record with ID="+id);
+    constructor(public id: string, opverb: string = "access",
+                cause?: Error, message: string|null = null)
+    {
+        super((message) ? message : "User is not authorized to "+opverb+" record with ID="+id, cause);
         this.op = opverb;
     }
 }
 
 /**
- * an error indicating that a request could not be fulfilled due to bad input
+ * an error indicating that a service request could not be fulfilled due to bad input
  */
-export class BadInputError extends Error {
+export class BadInputError extends OARError {
 
     /**
      * create the error
+     * @param message   the explanation for the error
+     * @param cause     (optional) another Error that this OARError is being raise in 
      */
-    constructor(message: string) {
-        super(message);
+    constructor(message: string, cause?: Error) {
+        super(message, cause);
     }
 }
+
+/**
+ * an error indicating that a communication error occurred while accessing a remote
+ * service.  This may be due to a bad service endpoint, a network error, or other communication
+ * error that prevents a complete connection and response from the service.
+ */
+export class CommError extends OARError {
+
+    endpoint: string = null;
+
+    /**
+     * create the error
+     * @param message   the explanation for the error
+     * @param endpt     the endpoint (URL) being accessed
+     * @param cause     (optional) another Error that this OARError is being raise in 
+     */
+    constructor(message: string, endpt?: string, cause?: Error) {
+        super(message, cause);
+        this.endpoint = endpt;
+    }
+}
+
+/**
+ * an error indicating that a remote service experienced an unexpected server error unrelated
+ * to its client-side use.  The most typical example would be an HTTP error with a status > 500.
+ */
+export class ServerError extends OARError {
+
+    /**
+     * create the error
+     * @param message   the explanation for the error
+     * @param cause     (optional) another Error that this OARError is being raise in 
+     */
+    constructor(message: string, cause?: Error) {
+        super(message, cause);
+    }
+}
+
