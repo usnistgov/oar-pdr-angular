@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { AppConfig } from '../../config/config';
@@ -18,6 +18,11 @@ import { LandingConstants } from '../constants';
 })
 export class EditStatusService {
     public EDIT_MODES: any = LandingConstants.editModes;
+    editMode = signal("");
+
+    isEditMode: Signal<boolean> = computed(() => {
+        return (this.editMode() == this.EDIT_MODES.EDIT_MODE)
+    });
 
     /**
      * construct the service

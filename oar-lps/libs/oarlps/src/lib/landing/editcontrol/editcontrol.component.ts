@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ViewChild, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild, Input, Output, EventEmitter, HostListener, ChangeDetectorRef } from '@angular/core';
 import { Observable, of, BehaviorSubject } from 'rxjs';
 
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
@@ -12,16 +12,23 @@ import { AuthService, WebAuthService } from './auth.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes } from '../../nerdm/nerdm'
 import { AppConfig } from '../../config/config';
-import { OverlayPanel } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { deepCopy } from '../../config/config.service';
 import { LandingConstants, SubmitResponse } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
 import * as REVISION_TYPES from '../../../assets/site-constants/revision-types.json';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import * as CollectionData from '../../../assets/site-constants/collections.json';
+import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confirmation-dialog.module';
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { createAuthService } from './auth.service';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -35,6 +42,18 @@ import * as CollectionData from '../../../assets/site-constants/collections.json
  */
 @Component({
     selector: 'pdr-edit-control',
+    standalone: true,
+    imports: [
+        CommonModule, 
+        ConfirmationDialogModule, 
+        ButtonModule, 
+        OverlayPanelModule, 
+        NgbModule, 
+        NgSelectModule, 
+        FormsModule,
+        EditStatusComponent,
+        SubmitConfirmComponent
+    ],
     templateUrl: './editcontrol.component.html',
     styleUrls: ['./editcontrol.component.css']
 })
@@ -102,10 +121,11 @@ export class EditControlComponent implements OnInit, OnChanges {
      */
     public constructor(private mdupdsvc: MetadataUpdateService,
         public edstatsvc: EditStatusService,
-        private authsvc: AuthService,
+        // private authsvc: AuthService,
         private confirmDialogSvc: ConfirmationDialogService,
         private cfg: AppConfig,
         public lpService: LandingpageService, 
+        private chref: ChangeDetectorRef,
         private modalService: NgbModal,
         public globalService: GlobalService,
         private msgsvc: UserMessageService) {
@@ -137,7 +157,7 @@ export class EditControlComponent implements OnInit, OnChanges {
 
         this.edstatsvc._setLastUpdated(this.mdupdsvc.lastUpdate);
         this.edstatsvc._setAuthorized(this.isAuthorized());
-        this.edstatsvc._setUserID(this.authsvc.userID);
+        this.edstatsvc._setUserID(this.mdupdsvc.authsvc.userID);
         this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "768");
         this.portalURL = this.cfg.get("portalAPI", "https://mdsdev.nist.gov/portal/landing");
     }
@@ -257,9 +277,11 @@ export class EditControlComponent implements OnInit, OnChanges {
      * @param editmode   
      */
     _setEditMode(editmode : string){
-      this._editMode = editmode;
-      //broadcast the editmode
-      this.edstatsvc._setEditMode(editmode);
+        this._editMode = editmode;
+        //broadcast the editmode
+        this.edstatsvc.editMode.set(editmode);
+        this.edstatsvc._setEditMode(editmode);
+        this.chref.detectChanges();
     }
 
     /**
@@ -389,14 +411,15 @@ export class EditControlComponent implements OnInit, OnChanges {
               // User authorized
               if(successful){
                 console.log("Loading draft...");
-                this.statusbar.showMessage("Loading draft...", true)
-                // this.globalService.setMessage("Loading draft...");
+                // this.statusbar.showMessage("Loading draft...", true);
+                this.globalService.message.set("Loading draft......");
                 this.mdupdsvc.loadDraft().subscribe(
                     (md) => 
                     {
                         if(md)
                         {
-                            // this.globalService.setMessage("");
+                            console.log("Draft loaded.");
+                            this.globalService.message.set("");
                             this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
                             this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
                             this._setEditMode(this.EDIT_MODES.EDIT_MODE);
@@ -577,7 +600,7 @@ export class EditControlComponent implements OnInit, OnChanges {
             this.statusbar.showMessage("Authenticating/authorizing access...", true)
             // this.globalService.setMessage("Authenticating/authorizing access...");
 
-            this.authsvc.authorizeEditing(this.resID, nologin).subscribe(  // might cause redirect (see above)
+            this.mdupdsvc.authsvc.authorizeEditing(this.resID, nologin).subscribe(  // might cause redirect (see above)
                 (custsvc) => {
                     // this.globalService.setMessage("");
                     this._custsvc = custsvc;    // could be null, indicating user is not authorized.
@@ -586,19 +609,19 @@ export class EditControlComponent implements OnInit, OnChanges {
                     var msg: string = "";
                     var authenticated: boolean = false;
 
-                    if (!this.authsvc.userID) {
+                    if (!this.mdupdsvc.authsvc.userID) {
                         msg = "authentication failed";
                         this.msgsvc.error("User log in cancelled or failed.")
                     }
                     else if (!custsvc) {
-                        msg = "authorization denied for user " + this.authsvc.userID;
-                        if(this.authsvc.errorMessage)
-                            this.msgsvc.error(this.authsvc.errorMessage);
+                        msg = "authorization denied for user " + this.mdupdsvc.authsvc.userID;
+                        if(this.mdupdsvc.authsvc.errorMessage)
+                            this.msgsvc.error(this.mdupdsvc.authsvc.errorMessage);
                         else    // Default message
                             this.msgsvc.error("Sorry, you are not authorized to edit this submission.")
                     }
                     else{
-                        msg = "authorization granted for user " + this.authsvc.userID;
+                        msg = "authorization granted for user " + this.mdupdsvc.authsvc.userID;
                         authenticated = true;
                     }
 
@@ -608,7 +631,7 @@ export class EditControlComponent implements OnInit, OnChanges {
 
                     if(authenticated){
                       subscriber.next(Boolean(this._custsvc));
-                      this.edstatsvc._setUserID(this.authsvc.userID);
+                      this.edstatsvc._setUserID(this.mdupdsvc.authsvc.userID);
                       this.edstatsvc._setAuthorized(true);
                     }else{
                       subscriber.next(false);

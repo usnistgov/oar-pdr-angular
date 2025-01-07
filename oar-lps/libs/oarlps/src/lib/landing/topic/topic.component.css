@@ -1,0 +1,15 @@
+.topics-title {
+    margin-top: -1.3em; 
+    margin-bottom: 0px; 
+    background-color: white;
+    width: fit-content;
+    padding-left: 10px;
+    padding-right: 10px;
+    font-size:larger;
+}
+
+.topics-body {
+    margin-bottom: 0em; 
+    margin-left: 10px;
+    margin-bottom: -15px;
+}

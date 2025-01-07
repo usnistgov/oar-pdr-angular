@@ -6,6 +6,7 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefAuthorComponent } from '../ref-author/ref-author.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -13,6 +14,7 @@ import { RefAuthorComponent } from '../ref-author/ref-author.component';
     imports: [
         CommonModule,
         FormsModule,
+        NgbModule,
         RefAuthorComponent
     ],
     templateUrl: './ref-edit.component.html',

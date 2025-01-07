@@ -1,77 +1,13 @@
-<div class="editable_field" style="font-size: smaller;" *ngIf="isPartOf; else template">
-    <i>Part of {{isPartOf[0]}} <a href="{{isPartOf[1]}}"
-        title="view collection">{{isPartOf[2]}}</a> {{isPartOf[3]}}</i>
-</div>
-<ng-template #template>
-    Add to curated collection
-</ng-template>
+@defer(when isPublicSite) {
+    @if(isPartOf) {
+        <div class="editable_field" style="font-size: smaller;">
+            <i>Part of {{isPartOf[0]}} <a href="{{isPartOf[1]}}"
+                title="view collection">{{isPartOf[2]}}</a> {{isPartOf[3]}}</i>
+        </div>
+    }
+}
 
-<!-- Control buttons -->
-<div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-    <!-- Edit button -->
-    <button class="edit_button" *ngIf="!isEditing" type="button" 
-    (click)="startEditing()" aria-label="Edit collection" ngbTooltip="Edit collection" style="cursor: pointer">
-        <i class="fas fa-pencil fa-sm"></i>
-    </button> 
+@defer(when !isPublicSite) {
+    <ispartof-edit [record]="record" [inBrowser]="inBrowser"></ispartof-edit>
+}
 
-    <!-- Close button -->
-    <!-- <button class="edit_button" *ngIf="isEditing" type="button" [disabled]="dataChanged"
-        (click)="closeEditBlock()" aria-label="close button" ngbTooltip="Close edit block">
-        <i class="fas fa-times"></i>
-    </button>    -->
-    
-    <!-- Restore button -->
-    <button class="edit_button" *ngIf="updated" type="button"
-    (click)="restoreOriginal()">
-        <i class="fas fa-undo fa-sm"
-            aria-label="Restore original" ngbTooltip="Restore original"></i>
-    </button>              
-</div>
-
-<!-- Contact editor -->
-<div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;margin-left: 20px;" [style.overflow] = "overflowStyle">
-    <!-- <div class="main-content">
-        <p>Select the collection that this publication should be added to:</p>
-
-        <div class="radio-group">
-            <div *ngFor="let col of collectionData" class="radio">
-                <label [title]="col.displayName">
-                    <input type="radio" required name="col" [value]="col.value" [(ngModel)]="collection">
-                    {{col.displayName}}
-                </label>
-            </div>
-        </div>            
-    </div> -->
-
-    <table style="width: 100%;">
-        <tr  style="width: 100%;">
-            <!-- Text edit area -->
-            <td class="edit-block" style="width: calc(100%-90px);">
-                <div class="radio-group">
-                    <div *ngFor="let col of collectionData" class="radio">
-                        <label [title]="col.displayName">
-                            <input type="radio" required name="col" [value]="col.value" [(ngModel)]="selectedCollection" 
-                            [checked]="col.value === selectedCollection"
-                            (change)="colChanged($event)">
-                            {{col.displayName}}
-                        </label>
-                    </div>
-                </div>  
-            </td>
-
-            <!-- Control buttons -->
-            <td style="width: 90px;vertical-align: top;">
-                <!-- Save button -->
-                <button class="edit_button" type="button" (click)="saveCollection()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save collection">
-                    <i class="fas fa-check"></i>
-                </button>
-        
-                <!-- Cancel button -->
-                <button class="edit_button" type="button"
-                    (click)="undoCurCollectionChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                    <i class="fas fa-times fa-sm"></i>
-                </button>
-            </td>          
-        </tr>
-    </table>    
-</div>

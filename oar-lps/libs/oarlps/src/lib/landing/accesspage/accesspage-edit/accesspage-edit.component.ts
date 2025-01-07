@@ -1,11 +1,20 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'lib-accesspage-edit',
-  templateUrl: './accesspage-edit.component.html',
-  styleUrls: ['../../landing.component.scss', './accesspage-edit.component.css']
+    selector: 'lib-accesspage-edit',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgbModule
+    ],
+    templateUrl: './accesspage-edit.component.html',
+    styleUrls: ['../../landing.component.scss', './accesspage-edit.component.css']
 })
 export class AccesspageEditComponent implements OnInit {
     originalApage: NerdmComp = {} as NerdmComp;

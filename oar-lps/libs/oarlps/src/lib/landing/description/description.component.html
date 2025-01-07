@@ -4,63 +4,15 @@
 <div style="width: 100%;" [ngStyle]="{'max-width': maxWidth+'px'}">
     <div style="display: table; margin-bottom: 1em;width:100%;">
         <div class="editable_container" style="width:100%;">
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode">
-                <span style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
-            </div>
-
-            <div class="editable_field" [ngStyle]="descWidth">
-                <!-- Not editing -->
-                <div style="width:fit-content" *ngIf="!isEditing">
-                    <div *ngIf="isEmpty; else hasDescription">
-                        <div *ngIf="mdupdsvc.isEditMode" (click)="startEditing()" style="width:inherit;color: var(--disabled-grey-text); " [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
-                            Describe this {{resource}}.
-                        </div>
-                    </div>
-                    <ng-template #hasDescription>
-                        <div style="width:inherit; white-space: pre-wrap;padding-left: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)" (click)="startEditing()">{{description}}</div>
-                    </ng-template>
-                </div>
-
-                <!-- Editing -->
-                <div style="width:100%;" *ngIf="isEditing">
-                    <!-- <textarea #desc autocomplete="off" [placeholder]="placeholder" [(ngModel)]='description' (ngModelChange)="setBackground($event)" style="width: 100%;margin: 0px; padding: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" libTextareaAutoresize></textarea> -->
-                    <textarea #desc autocomplete="off" [(ngModel)]='description' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="{'background-color': backColor}" style="width: 100%;cursor: text !important; min-height: 6em;" libTextareaAutoresize></textarea>
-                </div>
-            </div>
-
-            <!-- Control buttons -->
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-                <!-- Edit button -->
-                <button *ngIf="!isEditing" class="edit_button" type="button" (click)="startEditing()" 
-                    aria-label="edit button" ngbTooltip="Edit description">
-                    <i class="fas fa-pencil fs-sm" data-toggle="tooltip" title="Edit description"></i>
-                </button>
-
-                <!-- Hide button - hide edit block -->
-                <button class="edit_button" *ngIf="isEditing && !dataChanged" type="button" 
-                    (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-                    <i class="fas fa-times"></i>
-                </button> 
-
-                <!-- Save button -->
-                <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing && dataChanged"
-                aria-label="save button" ngbTooltip="Save changes">
-                    <i class="fas fa-check icon_enabled" data-toggle="tooltip" title="Save description"></i>
-                </button>
-    
-                <!-- Cancel editing button -->
-                <button class="edit_button" type="button" *ngIf="isEditing && dataChanged"
-                (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                    <i class="fas fa-undo fa-sm" data-toggle="tooltip" title="Cancel editing"></i>
-                </button>
-
-                <!-- Undo button: restore original value -->
-                <button class="edit_button" type="button" *ngIf="!isEditing && updated"
-                    (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original description">
-                    <i class="fas fa-undo fa-sm"
-                        data-toggle="tooltip" title="Undo keyword changes"></i>
-                </button>                
-            </div>
+            <!-- Editable -->
+            @defer(when !isPublicSite) {
+                <desc-edit [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></desc-edit>
+            }
+            
+            <!-- Public site -->
+            @if(isPublicSite) {
+                <div class="for-public" style="width:fit-content; white-space: pre-wrap;padding-left: 0px;">{{description}}</div>
+            }
         </div>
     </div>
 </div>

@@ -1,17 +1,25 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, ChangeDetectorRef, effect } from '@angular/core';
+import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { AuthorService } from './author.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Author } from './author';
-import * as globals from '../../shared/globals/globals';
 import { AuthorListComponent } from './author-list/author-list.component';
+import { CommonModule } from '@angular/common';
+import { CollapseModule } from '../collapseDirective/collapse.module';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 
 @Component({
     selector: 'app-author',
+    standalone: true,
+    imports: [
+        CommonModule,
+        AuthorListComponent,
+        CollapseModule,
+        NgbModule
+    ],
     templateUrl: './author.component.html',
     styleUrls: ['../landing.component.scss'],
     animations: [
@@ -34,27 +42,39 @@ export class AuthorComponent implements OnInit {
     overflowStyle: string = 'hidden';
     orderChanged: boolean = false;
 
+    isPublicSite: boolean = false; 
+    
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
 
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
+                public edstatsvc: EditStatusService,
                 public lpService: LandingpageService, 
-                private notificationService: NotificationService,
-                private authorService: AuthorService) { 
+                private chref: ChangeDetectorRef,
+                public globalsvc: GlobalService,
+                private notificationService: NotificationService) { 
 
-        this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if( sectionMode ) {
-                if(sectionMode.sender == globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
-                     // Request from side bar, if not edit mode, start editing
-                    if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
-                        this.startEditing();
-                    }
-                }
+       effect(()=>{
+            let sectionMode = this.lpService.sectionMode();
+            if(sectionMode){
+                if(sectionMode.sender == SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    // Request from side bar, if not edit mode, start editing
+                   if( !this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                       this.startEditing();
+                   }
+               }else{
+                   if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                       // if(this.isEditing && this.currentContact.dataChanged){
+                       //     this.saveCurrentContact(false); // Do not refresh help text 
+                       // }
+                       this.hideEditBlock();
+                   }
+               }
             }
+        });
 
-        })
     }
 
     /**
@@ -86,8 +106,31 @@ export class AuthorComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.isPublicSite = this.globalsvc.isPublicSite();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.getAuthors();
+
+         this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if(this.authorList)
+                this.authorList.onSectionModeChanged(sectionMode);
+
+            if( sectionMode ) {
+                if(sectionMode.sender == SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                     // Request from side bar, if not edit mode, start editing
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                        this.startEditing();
+                    }
+                }else{
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        // if(this.isEditing && this.currentContact.dataChanged){
+                        //     this.saveCurrentContact(false); // Do not refresh help text 
+                        // }
+                        this.hideEditBlock();
+                    }
+                }
+            }
+
+        })        
     }
     
     /**
@@ -158,25 +201,27 @@ export class AuthorComponent implements OnInit {
             if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
             this.refreshHelpText(help_topic);
         }
-            
-        switch ( this.editMode ) {
-            case MODE.LIST:
-                this.editBlockStatus = "expanded";
-                this.setOverflowStyle();
-                this.isEditing = true;
-                break;
-
-            default: // normal
-                // Collapse the edit block
-                this.editBlockStatus = 'collapsed'
-                this.setOverflowStyle();
-                this.isEditing = false;
-                break;
-        }
 
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        switch ( this.editMode ) {
+            case MODE.LIST:
+                this.isEditing = true;
+                this.setOverflowStyle();
+                this.editBlockStatus = "expanded";                            
+                break;
+
+            default: // normal
+                // Collapse the edit block
+                this.setOverflowStyle();
+                this.isEditing = false;
+                this.editBlockStatus = 'collapsed'
+                break;
+        }
+
+        this.chref.detectChanges();
     }
 
     /*
@@ -241,6 +286,7 @@ export class AuthorComponent implements OnInit {
         this.isEditing = false;
         this.overflowStyle = 'hidden';
         this.editBlockStatus = 'collapsed';
+        this.chref.detectChanges();
     }
 
     /**
@@ -250,6 +296,10 @@ export class AuthorComponent implements OnInit {
      */
     setChildEditMode(editmode: string) {
         this.childEditMode = editmode;
+        setTimeout(() => {
+            this.chref.detectChanges();
+        }, 0);
+        
     }
 
     /*

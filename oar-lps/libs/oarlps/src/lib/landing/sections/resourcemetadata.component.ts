@@ -5,6 +5,8 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AboutdatasetComponent } from '../aboutdataset/aboutdataset.component';
 import { MetricsData } from "../metrics-data";
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * a component that lays out the "About This Dataset" section of a landing page
@@ -14,6 +16,12 @@ import { Themes, ThemesPrefs } from '../../shared/globals/globals';
  */
 @Component({
     selector:    'pdr-resource-md',
+    standalone: true,
+    imports: [
+        SectionTitleComponent, 
+        AboutdatasetComponent,
+        NgbModule
+    ],
     templateUrl: './resourcemetadata.component.html',
     styleUrls:  [
         '../landing.component.scss'

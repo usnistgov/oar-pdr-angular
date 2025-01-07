@@ -20,6 +20,15 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { DBIOrecord } from '../editcontrol/interfaces';
 import { UserMessageService } from '../../frame/usermessage.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { TreeTableModule } from 'primeng/treetable';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { BadgeModule } from 'primeng/badge';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 declare var _initAutoTracker: Function;
 
@@ -79,6 +88,12 @@ interface DataFileItem {
 @Component({
     styleUrls: ['../landing.component.scss', 'data-files.component.css'],
     selector: 'pdr-data-files',
+    standalone: true,
+    imports: [
+        CommonModule, RouterModule, BadgeModule,
+        TreeTableModule, OverlayPanelModule, ProgressSpinnerModule, 
+        ButtonModule, TooltipModule, NgbModule
+    ],
     templateUrl: `data-files.component.html`,
     providers: [ ],
     animations: [

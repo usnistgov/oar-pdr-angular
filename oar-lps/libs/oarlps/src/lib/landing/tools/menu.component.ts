@@ -7,6 +7,9 @@ import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';
 import { isPlatformBrowser } from '@angular/common';
 import { MetricsData } from "../metrics-data";
+import { CommonModule } from '@angular/common';
+import { MenuModule } from 'primeng/menu';
+import { MetricsinfoModule } from '../metricsinfo/metricsinfo.module';
 
 export class menuItem {
     title: string;
@@ -34,6 +37,12 @@ export class menuItem {
 
 @Component({
   selector: 'app-menu',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MenuModule,
+    MetricsinfoModule
+  ],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']
 })

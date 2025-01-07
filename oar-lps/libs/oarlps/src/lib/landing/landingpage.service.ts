@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SectionMode, SectionHelp, MODE, SubmitResponse } from '../shared/globals/globals';
 import { NerdmRes } from '../nerdm/nerdm';
@@ -18,6 +18,7 @@ export const HelpTopic = _helpTopic;
   providedIn: 'root'
 })
 export class LandingpageService {
+    sectionMode = signal<SectionMode>({} as SectionMode);
 
     constructor() { }
 
@@ -33,6 +34,7 @@ export class LandingpageService {
     // Broadcasting which section is in edit mode. Other section should push unsaved data to draft server and enter non-edit mode
     _editing: BehaviorSubject<SectionMode> = new BehaviorSubject<SectionMode>({} as SectionMode);
     setEditing(section: SectionMode){
+        this.sectionMode.set(section);
         this._editing.next(section);
     }
     public watchEditing(subscriber) {

@@ -1,19 +1,44 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, effect, ChangeDetectorRef } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { DescriptionPopupComponent } from '../description/description-popup/description-popup.component';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ToastrModule } from 'ngx-toastr';
+import { TextEditModule } from '../../text-edit/text-edit.module';
+import { TextareaAutoresizeModule } from '../../textarea-autoresize/textarea-autoresize.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ChipsModule } from 'primeng/chips';
+import { ChipModule } from "primeng/chip";
+import { TagModule } from 'primeng/tag';
+import { EditStatusService } from '../editcontrol/editstatus.service';
+import { LandingConstants } from '../constants';
 
 @Component({
     selector: 'app-keyword',
+    standalone: true,
+    imports: [ 
+        CommonModule,
+        FormsModule,
+        ToolbarModule,
+        TextEditModule,
+        TextareaAutoresizeModule,
+        NgbModule,
+        ChipsModule,
+        ChipModule,
+        TagModule,
+        ToastrModule
+    ],
     templateUrl: './keyword.component.html',
-    styleUrls: ['../landing.component.scss']
+    styleUrls: ['./keyword.component.css', '../landing.component.scss']
 })
 export class KeywordComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
+    @Input() isEditMode: boolean = true;
 
     @ViewChild('keyword') keywordElement: ElementRef;
     
@@ -32,30 +57,16 @@ export class KeywordComponent implements OnInit {
     keywordBreakPoint: number = 5;
     keywordDisplay: string[] = [];
     hovered: boolean = false;
+    isPublicSite: boolean = false; 
+    public EDIT_MODES: any = LandingConstants.editModes;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal, 
+                public globalsvc: GlobalService,
                 public lpService: LandingpageService,    
+                private chref: ChangeDetectorRef,
                 private notificationService: NotificationService){ 
-                    this.lpService.watchEditing((sectionMode: SectionMode) => {
-                        if( sectionMode ) {
-                            if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                                if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                    if(this.isEditing){
-                                        this.onSave(false); // Do not refresh help text 
-                                    }else{
-                                        this.setMode(MODE.NORNAL, false);
-                                    }
-                                }
-                            }else { // Request from side bar, if not edit mode, start editing
-                                if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
-                                    this.startEditing();
-                                }
-                            }
-                        }
 
-
-                    })
     }
 
     /**
@@ -84,9 +95,28 @@ export class KeywordComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.isPublicSite = this.globalsvc.isPublicSite();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.getKeywords();
         this.keywordInit();
+
+        this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if( sectionMode ) {
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        if(this.isEditing){
+                            this.onSave(false); // Do not refresh help text 
+                        }else{
+                            this.setMode(MODE.NORNAL, false);
+                        }
+                    }
+                }else { // Request from side bar, if not edit mode, start editing
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
+                        this.startEditing();
+                    }
+                }
+            }
+        })
     }
 
     /**
@@ -99,6 +129,8 @@ export class KeywordComponent implements OnInit {
             this.getKeywords();
             this.keywordInit();
         }
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -124,11 +156,11 @@ export class KeywordComponent implements OnInit {
         this.setMode(MODE.EDIT);
         this.isEditing = true;
 
-        setTimeout(()=>{ // this is not working, will get back to it later
-            if(this.keywordElement) {
-                this.keywordElement["el"].nativeElement.focus();
-            }
-        },0);  
+        // setTimeout(()=>{ // this is not working, will get back to it later
+        //     if(this.keywordElement) {
+        //         this.keywordElement["el"].nativeElement.focus();
+        //     }
+        // },0);  
     }
 
     /**
@@ -278,6 +310,8 @@ export class KeywordComponent implements OnInit {
             this.isEditing = false;
             this.dataChanged = false;
         }    
+
+        this.chref.detectChanges();
     }
 
     /**

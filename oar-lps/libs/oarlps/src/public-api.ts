@@ -40,10 +40,6 @@ export * from './lib/landing/searchresult/searchresult.component';
 export * from './lib/landing/metrics-data';
 export * from './lib/landing/nerdm.component';
 
-export * from './lib/landing/topic/topic-popup/search-topics.component';
-export * from './lib/landing/description/description-popup/description-popup.component';
-
-// export * from './lib/landing/contact/contact-popup/contact-popup.component';
 export * from './lib/landing/author/author.service';
 export * from './lib/landing/author/author.module';
 
@@ -51,7 +47,6 @@ export * from './lib/landing/tools/tools.module';
 export * from './lib/landing/tools/menu.component';
 
 export * from './lib/landing/references/references.component';
-// export * from './lib/landing/references/references.module';
 
 export * from './lib/datacart/cart.service';
 export * from './lib/datacart/datacart.module';
@@ -66,6 +61,7 @@ export * from './lib/metrics/metrics.module';
 export * from './lib/metrics/horizontal-barchart/horizontal-barchart.component';
 export * from './lib/metrics/metrics.component';
 export * from './lib/landing/metricsinfo/metricsinfo.module';
+export * from './lib/landing/metricsinfo/metricsinfo.component';
 
 export * from './lib/directives/directives.module';
 export * from './lib/directives/modal.component';

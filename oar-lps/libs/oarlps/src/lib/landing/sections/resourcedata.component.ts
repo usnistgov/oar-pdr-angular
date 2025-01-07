@@ -1,9 +1,17 @@
-import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, ViewChild, ElementRef, effect } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Themes, ThemesPrefs, ColorScheme } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals'
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { CommonModule } from '@angular/common';
+import { AccesspageComponent } from '../accesspage/accesspage.component';
+import { DataFilesComponent } from '../data-files/data-files.component';
+import { SearchresultModule } from '../searchresult/searchresult.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditStatusService } from '../editcontrol/editstatus.service';
+import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -11,6 +19,16 @@ import { GlobalService } from '../../shared/globals/globals'
  */
 @Component({
     selector:      'pdr-resource-data',
+    standalone: true,
+    imports: [
+        SectionTitleComponent,
+        CommonModule,
+        AccesspageComponent,
+        DataFilesComponent,
+        SearchresultModule,
+        AccesspagePubComponent,
+        NgbModule
+    ],
     templateUrl:   './resourcedata.component.html',
     styleUrls:   [
         './resourcedata.component.css',
@@ -46,6 +64,8 @@ export class ResourceDataComponent implements OnChanges {
     sectionTitle: string = "Data Access";
     collection: string;
     maxWidth: number = 1000;
+    isEditMode: boolean = true;
+    isPublicSite: boolean = false; 
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -62,6 +82,7 @@ export class ResourceDataComponent implements OnChanges {
      * create an instance of the Identity section
      */
     constructor(public globalService: GlobalService,
+                public edstatsvc: EditStatusService,
                 private gaService: GoogleAnalyticsService)
     { 
         this.globalService.watchCollection((collection) => {
@@ -70,10 +91,16 @@ export class ResourceDataComponent implements OnChanges {
 
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width + 20;
+        });
+
+        effect(() => {
+            this.isEditMode = this.edstatsvc.isEditMode();
         })
     }
 
     ngOnInit(): void {
+        this.isPublicSite = this.globalService.isPublicSite();
+        this.isEditMode = this.edstatsvc.isEditMode();
         this.recordType = (new NERDResource(this.record)).resourceLabel();
 
         this.colorScheme = {

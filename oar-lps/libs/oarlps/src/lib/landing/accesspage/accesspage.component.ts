@@ -1,19 +1,38 @@
-import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
 import { AccessPage } from './accessPage';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { DomSanitizer } from "@angular/platform-browser";
 import * as globals from '../../shared/globals/globals';
 import { AccesspageListComponent } from './accesspage-list/accesspage-list.component';
+import { CommonModule } from '@angular/common';
+import { TextEditModule } from '../../text-edit/text-edit.module';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ToastrModule } from 'ngx-toastr';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DropdownModule } from 'primeng/dropdown';
+import { CollapseModule } from '../collapseDirective/collapse.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'lib-accesspage',
+    standalone: true,
+    imports: [
+        CommonModule,
+        NgbModule,
+        FormsModule,
+        CollapseModule,
+        AccesspageListComponent
+    ],
     templateUrl: './accesspage.component.html',
     styleUrls: ['../landing.component.scss', './accesspage.component.css'],
     animations: [
@@ -42,48 +61,57 @@ export class AccesspageComponent implements OnInit {
     orig_aPages: NerdmComp[] = null; // Keep a copy of original access pages for undo purpose
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
+    isPublicSite: boolean = false; 
+    loadListing: boolean = false;
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
+    @Input() isEditMode: boolean = true;
 
     @ViewChild('accesspagelist') accesspagelist: AccesspageListComponent;
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
+                public globalsvc: GlobalService,
+                private chref: ChangeDetectorRef,
+                private appRef: ApplicationRef,
                 private gaService: GoogleAnalyticsService,
                 private sanitizer: DomSanitizer) { 
 
-                this.lpService.watchEditing((sectionMode: SectionMode) => {
-                    if(sectionMode){
-                        if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                            if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                if(this.editBlockExpanded){
-                                    // this.accesspagelist.saveCurApage(false, MODE.NORNAL);
-                                    this.setMode(MODE.NORNAL, false);
-                                }
-                            }
-                        }else{
-                            if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
-                                this.startEditing();
-                            }
-                        }
-                    }
-                })
     }
 
     ngOnInit(): void {
+        this.isPublicSite = this.globalsvc.isPublicSite();
+
         if (this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0){
             this.useMetadata();
         }
-    }
 
+        this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if(sectionMode){
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        if(this.editBlockExpanded){
+                            this.accesspagelist.onSectionModeChange(sectionMode);
+                            this.setMode(MODE.NORNAL, false);
+                        }
+                    }
+                }else{
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
+                        this.startEditing();
+                    }
+                }
+            }
+        })
+    }
 
     ngOnChanges(ch : SimpleChanges) {
         if (ch.record){
             this.useMetadata();  // initialize internal component data based on metadata
         }
-            
+         
+        this.chref.detectChanges();
     }
 
     get isNormal() { return this.editMode==MODE.NORNAL }
@@ -156,7 +184,7 @@ export class AccesspageComponent implements OnInit {
      * @returns div style
      */
     getStyle(){
-        if(this.mdupdsvc.isEditMode){
+        if(this.isEditMode){
             let bkcolor = this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged, undefined, this.isEditing)
 
             return bkcolor;
@@ -166,6 +194,7 @@ export class AccesspageComponent implements OnInit {
     }
 
     startEditing() {
+        this.loadListing = true;
         this.setMode(MODE.LIST)
     }
 
@@ -215,7 +244,6 @@ export class AccesspageComponent implements OnInit {
             case MODE.LIST:
                 this.openListBlock();
                 this.setOverflowStyle();
-
                 // Update help text
                 if(refreshHelp){
                     this.refreshHelpText(MODE.LIST);
@@ -245,6 +273,8 @@ export class AccesspageComponent implements OnInit {
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -286,8 +316,38 @@ export class AccesspageComponent implements OnInit {
         // }
     }
 
+    // restoreOriginal() {
+    //     this.accesspagelist.restoreOriginal();
+    // }
+
     restoreOriginal() {
-        this.accesspagelist.restoreOriginal();
+        this.editBlockExpanded = false;
+        this.undoAllApageChanges();
     }
 
+   /**
+     *  Undo editing. If no more field was edited, delete the record in staging area.
+     */
+   undoAllApageChanges() {
+        // this.record = JSON.parse(JSON.stringify(this.orig_record));
+        // this.useMetadata();
+
+        if(this.updated){
+            this.mdupdsvc.undo(this.fieldName).then((success) => {
+                if (success){
+                    this.useMetadata();
+                    // this.accessPages.forEach((apage) => {
+                    //     apage.dataChanged = false;
+                    // });
+
+                    this.setMode(MODE.NORNAL);
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                }else{
+                    let msg = "Failed to undo " + this.fieldName + " metadata";
+                    console.error(msg);
+                    return;
+                }
+            });
+        }
+    }    
 }

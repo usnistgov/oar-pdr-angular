@@ -1,9 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitResponse } from '../../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-submit-confirm',
+  standalone: true,
+  imports: [
+    CommonModule
+  ],
   templateUrl: './submit-confirm.component.html',
   styleUrls: ['./submit-confirm.component.css']
 })

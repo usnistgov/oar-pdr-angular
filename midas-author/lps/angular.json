@@ -17,7 +17,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": ["src/polyfills.ts", "zone.js"],
             "assets": [
               {
                 "glob": "**/*",
@@ -86,7 +86,7 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
             "browserTarget": "midas-lps:build",
-            "port": 4202    
+            "port": 4202
           },
           "configurations": {
             "production": {

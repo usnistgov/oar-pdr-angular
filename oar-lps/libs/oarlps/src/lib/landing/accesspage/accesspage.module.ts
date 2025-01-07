@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AccesspageListComponent } from './accesspage-list/accesspage-list.component';
-import { AccesspageEditComponent } from './accesspage-edit/accesspage-edit.component';
 import { TextEditModule } from '../../text-edit/text-edit.module';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastrModule } from 'ngx-toastr';
@@ -13,10 +11,9 @@ import { DropdownModule } from 'primeng/dropdown';
 import { LandingpageService } from '../landingpage.service';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { AccesspageComponent } from './accesspage.component';
 
 @NgModule({
-  declarations: [AccesspageEditComponent, AccesspageComponent, AccesspageListComponent],
+  declarations: [],
   imports: [
     CommonModule,
     ToolbarModule,
@@ -33,10 +30,10 @@ import { AccesspageComponent } from './accesspage.component';
   providers: [
     LandingpageService
   ],
-  exports:[AccesspageComponent, AccesspageListComponent]
+  exports:[]
 })
 export class AccesspageModule { }
 
 export {
-    AccesspageComponent, AccesspageListComponent
+    
 };

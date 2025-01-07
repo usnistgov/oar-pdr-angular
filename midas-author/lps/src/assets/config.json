@@ -11,7 +11,7 @@
         "serviceEndpoint": "https://localhost/sso/"
     },
     "mdAPI": "https://localhost/midas/dap/mds3/",
-    "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
+    "metricsAPI": "https://localhost/rmm/usagemetrics/",
     "customizationAPI": "http://localhost:9091/midas/",
     "fileManagerAPI": "https://nextcloud-dev.nist.gov",
     "mode": "dev",
@@ -19,7 +19,7 @@
     "appVersion": "v1.3.X",
     "production": false,
     "editEnabled": true,
-    "distService": "https://testdata.nist.gov/od/ds/",
+    "distService": "https://localhost/od/ds/",
     "gacode": "not-set",
     "screenSizeBreakPoint": 1200,
     "bundleSizeAlert": 500000000,

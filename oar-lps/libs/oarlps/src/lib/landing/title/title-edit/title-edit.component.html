@@ -11,52 +11,60 @@
 <div style="width: 100%;">
     <div style="display: table; margin-bottom: 0em;width:100%;">
         <div class="editable_container" style="width:100%;">
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode">
+            <div class="editable_field" *ngIf="edstatsvc.isEditMode()">
                 <span style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
             </div>
 
-            <div *ngIf="isEditing; else nonEditing" class="editable_field" [ngStyle]="titleWidth">
-                <div (click)="startEditing()" style="width: 100%; ">
+            @if(isEditing) {
+                <div class="editable_field" [ngStyle]="titleWidth">
                     <h2 style="width: 100%;">
                         <textarea #title autocomplete="off" [(ngModel)]='record.title' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" style="width: 100%;cursor: text;" libTextareaAutoresize></textarea>
                     </h2>
                 </div>
-            </div>
-
-            <ng-template #nonEditing>
-                <div class="editable_field" style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
-                    <span *ngIf="record['title']; else noTitle"><h2>{{record.title}}</h2></span>
-                    <ng-template #noTitle>
+            }
+            @else {
+                <div class="editable_field" (click)="startEditing()" style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+                    @if(record['title']) {
+                        <span ><h2>{{record.title}}</h2></span>
+                    }
+                    @else {
                         <span style="color: var(--disabled-grey-text);">{{placeholder}}</span>
-                    </ng-template>
+                    }
                 </div>
-            </ng-template>
+            }
   
             <!-- Control buttons -->
-            <div *ngIf="mdupdsvc.isEditMode" class="editable_field" style="white-space: nowrap;">
-                <button class="edit_button" type="button" *ngIf="!isEditing"
-                (click)="startEditing()" aria-label="Edit title" ngbTooltip="Edit title" style="cursor: pointer">
-                    <i class="fas fa-pencil fa-sm"></i>
-                </button> 
+            @if(edstatsvc.isEditMode()) {
+                <div *ngIf="edstatsvc.isEditMode()" class="editable_field" style="white-space: nowrap;">
+                    @if(!isEditing) {
+                        <button class="edit_button" type="button"
+                        (click)="startEditing()" aria-label="Edit title" ngbTooltip="Edit title" style="cursor: pointer">
+                            <i class="fas fa-pencil fa-sm"></i>
+                        </button> 
 
-                <!-- Save button -->
-                <button *ngIf="isEditing" class="edit_button" type="button" (click)="onSave()"
-                aria-label="save button" ngbTooltip="Save changes">
-                    <i class="fas fa-check icon_enabled"></i>
-                </button>
+                        @if( updated ) {
+                            <!-- Restore button, restore original value -->
+                            <button class="edit_button" type="button" [disabled]="!updated" 
+                                (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
+                                <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
+                            </button> 
+                        }
+                    }
+                    @else {
+                        <!-- Save button -->
+                        <button class="edit_button" type="button" (click)="onSave()"
+                        aria-label="save button" ngbTooltip="Save changes">
+                            <i class="fas fa-check icon_enabled"></i>
+                        </button>
 
-                <!-- Cancel editing button: cancel current changes -->
-                <button *ngIf="isEditing" class="edit_button" type="button"
-                (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                    <i class="fas fa-undo fa-sm" data-toggle="tooltip" title="Undo current changes"></i>
-                </button>   
-
-                <!-- Restore button, restore original value -->
-                <button *ngIf="!isEditing && updated"  class="edit_button" type="button" [disabled]="!updated" 
-                    (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
-                    <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
-                </button>   
-            </div>
+                        <!-- Cancel editing button: cancel current changes -->
+                        <button class="edit_button" type="button"
+                        (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
+                            <i class="fas fa-times fa-sm" data-toggle="tooltip" title="Undo current changes"></i>
+                        </button>   
+                    }
+                </div>
+            }
         </div>
     </div>  
 </div>

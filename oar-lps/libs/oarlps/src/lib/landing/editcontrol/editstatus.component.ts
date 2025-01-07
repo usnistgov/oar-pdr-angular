@@ -1,12 +1,13 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { Component, effect, Input, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 
 import { MetadataUpdateService } from './metadataupdate.service';
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, ResourceType } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, ResourceType, GlobalService } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
+import { CommonModule } from '@angular/common';
 
 /**
  * A panel inside the EditControlComponent that displays information about the status of 
@@ -20,6 +21,10 @@ import { LandingpageService } from '../landingpage.service';
  */
 @Component({
     selector: 'pdr-edit-status',
+    standalone: true,
+    imports: [
+        CommonModule
+    ],
     templateUrl: 'editstatus.component.html',
     styleUrls: ['editstatus.component.css']
 })
@@ -34,6 +39,7 @@ export class EditStatusComponent implements OnInit {
     _editmode: string;
     contentStatusColer: string = "var(--nist-green-default);"
     resourceType: string = "resource";
+    showMsg: boolean = false;
 
     @Input() mdrec: NerdmRes;
 
@@ -46,7 +52,15 @@ export class EditStatusComponent implements OnInit {
     constructor(
         public mdupdsvc : MetadataUpdateService, 
         public edstatsvc: EditStatusService,
+        public globalsvc: GlobalService,
+        private cdr: ChangeDetectorRef,
         public lpService: LandingpageService) {
+
+        effect(() => {
+            this.message = this.globalsvc.message();
+            this.showMessage(this.message);
+            this.cdr.detectChanges();
+        });
 
         this.EDIT_MODES = LandingConstants.editModes;
         this.mdupdsvc.updated.subscribe((details) => { 

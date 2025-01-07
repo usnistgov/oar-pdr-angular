@@ -1,15 +1,27 @@
 <!-- If this is the public site, only display title. Never load edit component. -->
 
-@defer (when !isPublicSite) {
-    <!-- Editing -->
-    <title-edit [record]="record" [inBrowser]="inBrowser"></title-edit>
-}
-@placeholder {
-    <!-- Not editing -->
-    <div style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+@defer(when isPublicSite) {
+    <div class="for-public title" style="width: fit-content;">
         <span *ngIf="record['title']; else noTitle"><h2>{{record.title}}</h2></span>
         <ng-template #noTitle>
-            <span style="color: var(--disabled-grey-text);">No title.</span>
+            <span style="color: var(--disabled-grey-text);"><h2>No title.</h2></span>
         </ng-template>
     </div>  
 }
+
+@defer(when !isPublicSite) {
+    @if(edstatsvc.isEditMode()) {
+        <!-- Editing -->
+        <title-edit [record]="record" [inBrowser]="inBrowser"></title-edit>
+    }
+    @else() {
+        <!-- preview -->
+        <div style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+            <span *ngIf="record['title']; else noTitle"><h2>{{record.title}}</h2></span>
+            <ng-template #noTitle>
+                <span style="color: var(--disabled-grey-text);">No title.</span>
+            </ng-template>
+        </div>  
+    }
+}
+

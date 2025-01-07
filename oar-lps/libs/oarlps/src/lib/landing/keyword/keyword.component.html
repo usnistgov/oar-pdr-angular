@@ -2,7 +2,9 @@
     <div class="editable_container" style="width: 100%;">
         <!-- Label -->
         <div class="editable_field" style="width: fit-content;">
-            <span *ngIf="mdupdsvc.isEditMode" style="color: rgb(173, 0, 0);margin-left: -12px;margin-right: 6px;">*</span>
+            @if(isEditMode) {
+                <span class="required-field">*</span>
+            }
             <span style="white-space: nowrap;margin-right: .5em;">
                 <strong>Subject Keywords:</strong>
             </span>
@@ -10,73 +12,85 @@
 
         <div class="editable_field" [ngStyle]="keywordWidth">
             <!-- Keywords in regular or preview mode -->
-            <div class="editable_field" *ngIf="!mdupdsvc.isEditMode || !isEditing; else editmode" style="width: 100%;">
-                <span class="editable_field ind" style="max-width: 90%;white-space: nowrap">
-                    <span 
-                        class="keywords" 
-                        [style.background-color]="bubbleColor(keyword)" 
-                        [style.border]="borderStyle(keyword)" 
-                        (mouseenter)="mouseEnter(keyword)" 
-                        (mouseover)="mouseEnter(keyword)" 
-                        (mouseout)="mouseOut(keyword)" 
-                        [style.cursor]="setCursor(keyword)" 
-                        style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
-                        (click)="keywordClick(keyword)" 
-                        *ngFor="let keyword of keywordDisplay; let i =index">
-                        <span style="display: inline-block">{{ keyword }}</span>
-                    </span> 
-                </span>
-            </div>
-
+            @if(!isEditing || !isEditMode) {
+                <div class="editable_field" style="width: 100%;">
+                    <span class="editable_field ind" style="max-width: 90%;white-space: nowrap">
+                        <span 
+                            class="keywords" 
+                            [style.background-color]="bubbleColor(keyword)" 
+                            [style.border]="borderStyle(keyword)" 
+                            (mouseenter)="mouseEnter(keyword)" 
+                            (mouseover)="mouseEnter(keyword)" 
+                            (mouseout)="mouseOut(keyword)" 
+                            [style.cursor]="setCursor(keyword)" 
+                            style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
+                            (click)="keywordClick(keyword)" 
+                            *ngFor="let keyword of keywordDisplay; let i =index">
+                            <span style="display: inline-block">{{ keyword }}</span>
+                        </span> 
+                    </span>
+                </div>
+            }
             <!-- Keywords in edit mode -->
-            <ng-template #editmode>
+            @else { 
                 <div class="editable_field" style="width:100%">
                     <!-- Editing -->
-                    <div *ngIf="isEditing; else nonEditing" style="max-width: 100%;margin-right: 3px;">
+                    @if(isEditing) {
+                        <div style="max-width: 100%;margin-right: 3px;">
                             <p-chips #keyword [(ngModel)]="keywords" (onAdd)="onAdd($event)" (onRemove)="onRemove()" addOnBlur="true" separator="," class="p-fluid" placeholder="Add keywords"></p-chips>
-                    </div>
+                        </div>
+                    }
                     <!-- nonEditing: only display tags-->
-                    <div *ngIf="!isEditing && !isEmpty">
+                    @else if(!isEmpty){
                         <div class="keywords" style="max-width: 100%;padding: 5px;display: flex;flex-wrap: wrap;min-height: 28px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
                             <span style="border: 1px solid rgb(236, 236, 236);background-color: var(--tag-blue);padding: 2px 5px;margin: 3px;border-radius: 20px;text-align: center;" *ngFor="let keyword of keywords; let i = index">
                                 {{keyword}}
                             </span>
                         </div>
-                    </div>
-                </div>            
-            </ng-template>
+                    }
+                </div>    
+            }
         </div>
 
-        
         <!-- Control buttons -->
-        <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-            <!-- Edit button -->
-            <button *ngIf="!isEditing" class="edit_button" type="button" (click)="startEditing()" aria-label="Edit keywords" ngbTooltip="Edit keywords">
-                <i class="fas fa-pencil fa-sm"></i>
-            </button>
+        @if(isEditMode) {
+            <div class="editable_field" style="white-space: nowrap;">
+                @if(!isEditing) {
+                    <!-- Edit button -->
+                    <button class="edit_button" type="button" (click)="startEditing()" aria-label="Edit keywords" ngbTooltip="Edit keywords">
+                        <i class="fas fa-pencil fa-sm"></i>
+                    </button>
+                }
 
-            <!-- Close edit block -->
-            <button *ngIf="isEditing && !dataChanged" class="edit_button" type="button" (click)="setMode()" aria-label="Close edit block" ngbTooltip="Close edit block">
-                <i class="fas fa-times"></i>
-            </button>
+                @if(isEditing && !dataChanged) {
+                    <!-- Close edit block -->
+                    <button class="edit_button" type="button" (click)="setMode()" aria-label="Close edit block" ngbTooltip="Close edit block">
+                        <i class="fas fa-times"></i>
+                    </button>
+                }
 
-            <!-- Save button -->
-            <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing && dataChanged"
-            aria-label="save button" ngbTooltip="Save changes">
-                <i class="fas fa-check fa-sm"></i>
-            </button>
+                @if(isEditing && dataChanged) {
+                    <!-- Save button -->
+                    <button class="edit_button" type="button" (click)="onSave()"
+                    aria-label="save button" ngbTooltip="Save changes">
+                        <i class="fas fa-check fa-sm"></i>
+                    </button>
 
-            <!-- Cancel editing button - Undo current changes -->
-            <button class="edit_button" type="button" *ngIf="isEditing && dataChanged"
-            (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                <i class="fas fa-undo fa-sm"></i>
-            </button>
+                    <!-- Cancel editing button - Undo current changes -->
+                    <button class="edit_button" type="button"
+                    (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
+                        <i class="fas fa-undo fa-sm"></i>
+                    </button>
+                }
 
-            <!-- Undo button - Restore original keywords -->
-            <button class="edit_button" type="button" *ngIf="!isEditing && updated"
-                (click)="restoreOriginal()" aria-label="Restore original keywords" ngbTooltip="Restore original keywords">
-                <i class="fas fa-undo fa-sm"></i>
-            </button>
-        </div>
+                @if(!isEditing && updated) {
+                    <!-- Undo button - Restore original keywords -->
+                    <button class="edit_button" type="button"
+                        (click)="restoreOriginal()" aria-label="Restore original keywords" ngbTooltip="Restore original keywords">
+                        <i class="fas fa-undo fa-sm"></i>
+                    </button>
+                }
+            </div>
+        }
     </div>
 </div>

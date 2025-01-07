@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../../nerdm/nerdm';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
@@ -8,13 +8,27 @@ import { TaxonomyListService } from '../../../shared/taxonomy-list';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { TreeTableModule } from 'primeng/treetable';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 export const ROW_COLOR = '#1E6BA1';
 
 @Component({
-  selector: 'lib-topic-edit',
-  templateUrl: './topic-edit.component.html',
-  styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
+    selector: 'lib-topic-edit',
+    standalone: true,
+    imports: [        
+        CommonModule,
+        FormsModule,
+        ButtonModule,
+        NgbModule,
+        OverlayPanelModule,
+        TreeTableModule],
+    templateUrl: './topic-edit.component.html',
+    styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
 })
 export class TopicEditComponent implements OnInit {
     fieldName = 'theme';
@@ -46,6 +60,7 @@ export class TopicEditComponent implements OnInit {
     constructor(
         public mdupdsvc: MetadataUpdateService,
         private taxonomyListService: TaxonomyListService,
+        private chref: ChangeDetectorRef,
         private notificationService: NotificationService,
         private msgsvc: UserMessageService) { }
 

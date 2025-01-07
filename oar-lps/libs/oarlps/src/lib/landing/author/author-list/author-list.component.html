@@ -29,7 +29,7 @@
                                     [disableControl]="isAdding || isEditing" 
                                     [placeHolderText]="placeholder" 
                                     [isNew]="author.isNew" 
-                                    [dataChanged]="mdupdsvc.fieldUpdated(fieldName, author['@id'])" 
+                                    [dataChanged]="onAuthorListChanged(fieldName, author['@id'])" 
                                     (command_out)="onAuthorCommand($event, i)">
                                 </lib-text-edit>
 
@@ -41,20 +41,20 @@
         </div>
 
         <!-- Control buttons for drag and drop sectioon -->
-        <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+        <div class="editable_field" style="white-space: nowrap;">
             <!-- Add button -->
-            <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add author">
+            <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add author">
                 <i [class]="addIconClass()"></i>
             </button>
 
             <!-- Hide button - hide edit block -->
-            <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="isAdding || isEditing"
+            <!-- <button class="edit_button" *ngIf="edstatsvc.isEditMode" type="button" [disabled]="isAdding || isEditing"
                 (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
                 <i class="fas fa-times"></i>
             </button>  -->
 
             <!-- Undo all changes button -->
-            <!-- <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" [disabled]="(!authorsChanged && !authorsUpdated) || isEditing || isAdding"
+            <!-- <button class="edit_button" *ngIf="edstatsvc.isEditMode" type="button" [disabled]="(!authorsChanged && !authorsUpdated) || isEditing || isAdding"
                 (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo all author changes">
                 <i [class]="undoIconClass()"></i>
             </button>  -->
@@ -74,7 +74,7 @@
                     [backgroundColor]="editAreabackgroundColor" 
                     [editMode]="editMode" 
                     [forceReset]="forceReset" 
-                    (dataChanged)="onAutherChange($event)">
+                    (dataChanged)="onAuthorChange($event)">
                 </lib-author-edit>
             </td>
 
@@ -82,12 +82,12 @@
             <td style="width: 60px;vertical-align: top; ">
                 <div style="margin-top: 1em;white-space: nowrap;">
                     <!-- Save button -->
-                    <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!currentAuthor || !currentAuthor.dataChanged" ngbTooltip="Save authors">
+                    <button class="edit_button" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!currentAuthor || !currentAuthor.dataChanged" ngbTooltip="Save authors">
                         <i class="faa faa-check"></i>
                     </button>
 
                     <!-- Cancel button -->
-                    <button class="edit_button" *ngIf="mdupdsvc.isEditMode" type="button"
+                    <button class="edit_button" type="button"
                         (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
                         <i class="fas fa-times"></i>
                     </button>

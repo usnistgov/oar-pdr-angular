@@ -29,7 +29,8 @@
     "@angular/common": "^18.2.13",
     "@angular/core": "^18.2.13",
     "@angular/platform-server": "18.2.13",
-    "rxjs": "~7.8.1"
+    "rxjs": "~7.8.1",
+    "zone.js": "~0.14.10"
   },
   "optionalDependencies": {
     "oarlps": "file:../../oar-lps/dist/oarlps"

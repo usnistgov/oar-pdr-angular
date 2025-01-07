@@ -4,16 +4,16 @@ import { FacilitatorsComponent } from './facilitators.component';
 import { AuthorModule } from '../author/author.module';
 
 @NgModule({
-  declarations: [FacilitatorsComponent],
+  declarations: [],
   imports: [
     CommonModule, AuthorModule
   ],
   exports: [
-    FacilitatorsComponent
+    
   ]
 })
 export class FacilitatorsModule { }
 
 export {
-    FacilitatorsComponent
+    
 };

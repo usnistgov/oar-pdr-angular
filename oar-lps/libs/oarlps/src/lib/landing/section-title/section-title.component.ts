@@ -2,9 +2,17 @@ import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { GlobalService, ColorScheme } from '../../shared/globals/globals'
 import { D3Service } from '../../shared/d3-service/d3.service';
 import { CollectionService } from '../../shared/collection-service/collection.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'lib-section-title',
+    standalone: true,
+    imports: [
+        CommonModule
+    ],    
+    providers: [
+        D3Service
+    ],
     templateUrl: './section-title.component.html',
     styleUrls: ['./section-title.component.css']
 })

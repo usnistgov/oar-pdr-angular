@@ -1,12 +1,13 @@
 <div style="border: 1px solid rgb(210, 210, 210);border-radius: 10px;padding: 10px;margin-bottom: 0.5em;">
-    <div style="margin-top: -1.3em; margin-bottom: 0px; background-color: white;width: fit-content;padding-left: 10px;padding-right: 10px;font-size:larger;">
-        <span *ngIf="mdupdsvc.isEditMode"
-        style="color: rgb(173, 0, 0); vertical-align: top;text-align: left; padding-right: .5em;">
-        *</span>
+    <div class="topics-title">
+        @if(isEditMode) {
+            <span style="color: rgb(173, 0, 0); vertical-align: top;text-align: left; padding-right: .5em;">
+            *</span>
+        }
         <strong>Research Areas</strong>
     </div>
 
-    <div style="margin-bottom: 0em; margin-left: 10px;margin-bottom: -15px;">
+    <div class="topics-body">
         <span style="display: table;">
             <div class="editable_container" style="display: table-row;">
                 <!-- Loop through collections and display topics -->    
@@ -19,7 +20,7 @@
 
                         <!-- If no topic, display Add {collection name} -->
                         <ng-template #noTopic>
-                            <span *ngIf="mdupdsvc.isEditMode" style="padding-right: 10px !important; white-space: nowrap;">
+                            <span *ngIf="isEditMode" style="padding-right: 10px !important; white-space: nowrap;">
                                 <strong>{{ allCollections[col].tag }}: </strong>
                             </span>
                         </ng-template>
@@ -45,53 +46,56 @@
                         </span>
                     </div>
 
-                    <!-- Control buttons -->
-                    <span *ngIf="mdupdsvc.isEditMode && showTopics(col)" style=" display: table-cell;width: 70px;">
-                        <!-- Edit button -->
-                        <button 
-                            *ngIf="!editingTopics(col)"
-                            class="edit_button" 
-                            (click)="startEditing(col)" 
-                            aria-label="edit button" 
-                            ngbTooltip="Edit topics">
+                    @if(isEditMode) {
+                        <!-- Control buttons -->
+                        <span *ngIf="isEditMode && showTopics(col)" style=" display: table-cell;width: 70px;">
+                            <!-- Edit button -->
+                            <button 
+                                *ngIf="!editingTopics(col)"
+                                class="edit_button" 
+                                (click)="startEditing(col)" 
+                                aria-label="edit button" 
+                                ngbTooltip="Edit topics">
 
-                            <i class="fas fa-pencil"></i>
-                        </button>
+                                <i class="fas fa-pencil"></i>
+                            </button>
 
-                        <!-- Close edit block -->
-                        <button 
-                            *ngIf="editingTopics(col)" 
-                            class="edit_button" 
-                            type="button" 
-                            [disabled]="dataChanged" 
-                            (click)="setMode()" 
-                            aria-label="Close edit block" 
-                            ngbTooltip="Close edit block">
+                            <!-- Close edit block -->
+                            <button 
+                                *ngIf="editingTopics(col)" 
+                                class="edit_button" 
+                                type="button" 
+                                [disabled]="dataChanged" 
+                                (click)="setMode()" 
+                                aria-label="Close edit block" 
+                                ngbTooltip="Close edit block">
 
-                            <i class="fas fa-times"></i>
-                        </button>
+                                <i class="fas fa-times"></i>
+                            </button>
 
-                        <!-- Restore original -->
-                        <button *ngIf="updated(col)" class="edit_button" type="button"
-                        (click)="restoreOriginal(col)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
-                            <i class="faa faa-undo fs-sm"></i>
-                        </button>                                 
-                    </span>
+                            <!-- Restore original -->
+                            <button *ngIf="updated(col)" class="edit_button" type="button"
+                            (click)="restoreOriginal(col)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
+                                <i class="faa faa-undo fs-sm"></i>
+                            </button>                                 
+                        </span>
+                    }
                 </div>
             </div>
         </span>
     </div>
 </div>
 
-<!-- Topic editor -->
-<div #topic *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
-    <lib-topic-edit 
-        [record]="record" 
-        [inBrowser]="inBrowser" 
-        [collection]="editCollection" 
-        [selectedTopics]="topics[editCollection]" 
-        [scheme]="editScheme"
-        (dataChangedOutput)="onDataChange($event)" 
-        (cmdOutput)="onCommandChanged($event)"></lib-topic-edit>
-</div>
-
+@defer(when isEditing) {
+    <!-- Topic editor -->
+    <div #topic [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
+        <lib-topic-edit 
+            [record]="record" 
+            [inBrowser]="inBrowser" 
+            [collection]="editCollection" 
+            [selectedTopics]="topics[editCollection]" 
+            [scheme]="editScheme"
+            (dataChangedOutput)="onDataChange($event)" 
+            (cmdOutput)="onCommandChanged($event)"></lib-topic-edit>
+    </div>
+}

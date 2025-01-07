@@ -1,20 +1,23 @@
 <span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
     <div style="display: table;">
         <div class="editable_container">
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode || hasVisitHomeURL" [pTooltip]="record[fieldName]" tooltipPosition="bottom" tooltipStyleClass="tooltip-style">
-                <div *ngIf="hasVisitHomeURL; else addButton">
-                    <a href={{record[fieldName]}} target="_blank">
-                        <button type="button" pButton type="submit" [disabled]="!inViewMode"
-                            class="home_button p-button p-component ui-button-text-empty"
-                            [ngStyle]="{'background-color': visitHomePageBtnStyle()}"
-                            (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
-                            <i class="fas fa-external-link-alt"
-                                style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
-                            Visit Home Page
-                        </button>
-                    </a>
-                </div>
-                <ng-template #addButton>
+            @defer(when isPublicSite){
+                @if(hasVisitHomeURL) {
+                    <span *ngIf="inBrowser; else visitHomeOnServer">
+                        <a href={{record[fieldName]}} target="_blank">
+                            <button type="button" pButton type="submit" [disabled]="!inViewMode"
+                                class="home_button p-button p-component ui-button-text-empty"
+                                [ngStyle]="{'background-color': visitHomePageBtnStyle()}"
+                                (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
+                                <i class="fas fa-external-link-alt"
+                                    style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
+                                Visit Home Page
+                            </button>
+                        </a>
+                    </span>
+                    <ng-template #visitHomeOnServer>Visit Home Page</ng-template>
+                }
+                @else {
                     <button type="button" pButton type="submit" 
                     class="home_button p-button p-component ui-button-text-empty"
                     [ngStyle]="{'background-color': 'var(--disabled-grey)'}">
@@ -22,32 +25,70 @@
                             style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
                             Visit Home Page
                     </button>
-                </ng-template>                
-            </div>
+                }
+            }
+            @defer(when !isPublicSite){
+                @if(edstatsvc.isEditMode() || hasVisitHomeURL) {
+                    <div class="editable_field" [pTooltip]="record[fieldName]" tooltipPosition="bottom" tooltipStyleClass="tooltip-style">
+                        @if(hasVisitHomeURL){
+                            <div>
+                                <a href={{record[fieldName]}} target="_blank">
+                                    <button type="button" pButton type="submit" [disabled]="!inViewMode"
+                                        class="home_button p-button p-component ui-button-text-empty"
+                                        [ngStyle]="{'background-color': visitHomePageBtnStyle()}"
+                                        (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
+                                        <i class="fas fa-external-link-alt"
+                                            style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
+                                        Visit Home Page
+                                    </button>
+                                </a>
+                            </div>
+                        }
+                        @else {
+                            <button type="button" pButton type="submit" 
+                            class="home_button p-button p-component ui-button-text-empty"
+                            [ngStyle]="{'background-color': 'var(--disabled-grey)'}">
+                                <i class="fas fa-external-link-alt"
+                                    style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
+                                    Visit Home Page
+                            </button>
+                        }
+                    </div>
+                }
 
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode && !inViewMode" style="margin-left: 5px; margin-top: 2px;">
-                <button *ngIf="!isEditing" class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
-                    <i class="fas fa-pencil fa-sm" title="Edit URL" aria-label="edit URL"></i>  
-                </button>   
-                
-                <!-- Hide edit window button -->
-                <button *ngIf="isEditing" class="edit_button" type="button"
-                    (click)="setMode()" aria-label="Close button" ngbTooltip="Hide edit block">
-                    <i class="fas fa-times"></i>
-                </button>    
-                
-                <!-- Restore button -->
-                <button *ngIf="updated" class="edit_button" type="button"
-                (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
-                    <i class="fas fa-undo fa-sm"></i>
-                </button>                  
-            </div>
+                @if(edstatsvc.isEditMode() && !inViewMode) {
+                    <div class="editable_field" style="margin-left: 5px; margin-top: 2px;">
+                        @if(!isEditing) {
+                            <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
+                                <i class="fas fa-pencil fa-sm" title="Edit URL" aria-label="edit URL"></i>  
+                            </button>  
+                            
+                            @if(updated) {
+                                <!-- Restore button -->
+                                <button class="edit_button" type="button"
+                                (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
+                                    <i class="fas fa-undo fa-sm"></i>
+                                </button>   
+                            }
+                        }
+                        @else {
+                            <!-- Hide edit window button -->
+                            <button class="edit_button" type="button"
+                                (click)="hideEditBlock()" aria-label="Close button" ngbTooltip="Hide edit block">
+                                <i class="fas fa-times"></i>
+                            </button>    
+                        }
+                    </div>
+                }
+            }
         </div>
     </div>
 </span>
 <ng-template #visitHomeOnServer>Visit Home Page</ng-template>
 
-<!-- Visit homepage editor -->
-<div *ngIf="mdupdsvc.isEditMode" [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
-    <lib-visithome-edit #visithomeedit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit>
-</div>
+@defer(when isEditing) {
+    <!-- Visit homepage editor -->
+    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+        <lib-visithome-edit #visithomeedit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit>
+    </div>
+}

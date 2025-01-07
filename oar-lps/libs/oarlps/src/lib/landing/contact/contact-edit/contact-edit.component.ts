@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { Contact } from '../contact';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { PeopleModule } from '../../people/people.module';
 import { ButtonModule } from 'primeng/button';
+import { PeopleComponent } from '../../people/people.component';
 
 @Component({
     standalone: true,
@@ -12,7 +12,7 @@ import { ButtonModule } from 'primeng/button';
         CommonModule,
         FormsModule,
         ButtonModule,
-        PeopleModule],
+        PeopleComponent],
     templateUrl: './contact-edit.component.html',
     styleUrls: ['./contact-edit.component.css']
 })

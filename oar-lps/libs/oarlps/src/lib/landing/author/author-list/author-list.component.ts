@@ -1,10 +1,8 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { Author } from '../author';
-import { AuthorService } from '../author.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import {
     CdkDragDrop,
@@ -12,10 +10,22 @@ import {
     CdkDragMove,
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import * as globals from '../../../shared/globals/globals';
+import { AuthorEditComponent } from '../author-edit/author-edit.component';
+import { CommonModule } from '@angular/common';
+import { TextEditModule } from '../../../text-edit/text-edit.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 
 @Component({
     selector: 'lib-author-list',
+    standalone: true,
+    imports: [
+        CommonModule,
+        AuthorEditComponent,
+        TextEditModule,
+        NgbModule
+    ],
     templateUrl: './author-list.component.html',
     styleUrls: ['../../landing.component.scss', './author-list.component.css'],
     animations: [
@@ -61,36 +71,82 @@ export class AuthorListComponent implements OnInit {
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
-                private authorService: AuthorService,
+                public edstatsvc: EditStatusService,
+                private chref: ChangeDetectorRef,
                 public lpService: LandingpageService) { 
 
-                this.lpService.watchEditing((sectionMode: SectionMode) => {
-                    if( sectionMode ) {
-                        if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
-                            if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                //If is adding but nothing changed, undo adding
-                                if(this.isAdding && !this.currentAuthor.dataChanged){
-                                    this.undoCurAuthorChanges();
-                                //If is adding or editing and something changed, save it
-                                }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
-                                    this.saveCurrentAuthor(false, true); // Do not refresh help text 
-                                }
-                                this.hideEditBlock();
-                            }
-                        }else{
-                            if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
-                                this.onAdd();
-                            }
-                        }
-                    }
+    //    effect(()=>{
+    //         let sectionMode = this.lpService.sectionMode();
+    //         if(sectionMode){
+    //             if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
+    //                 if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+    //                     //If is adding but nothing changed, undo adding
+    //                     if(this.isAdding && !this.currentAuthor.dataChanged){
+    //                         this.undoCurAuthorChanges();
+    //                     //If is adding or editing and something changed, save it
+    //                     }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
+    //                         this.saveCurrentAuthor(false, true); // Do not refresh help text 
+    //                     }
+    //                     this.hideEditBlock();
+    //                 }
+    //             }else{
+    //                 if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+    //                     this.onAdd();
+    //                 }
+    //             }
+    //         }
+    //     });
 
-                })
     }
 
     ngOnInit(): void {
+        let isEditing = this.edstatsvc.isEditMode();
         this.updateSavedRecord();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.onRecordChanged();
+
+        // this.lpService.watchEditing((sectionMode: SectionMode) => {
+        //     if( sectionMode ) {
+        //         if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
+        //             if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+        //                 //If is adding but nothing changed, undo adding
+        //                 if(this.isAdding && !this.currentAuthor.dataChanged){
+        //                     this.undoCurAuthorChanges();
+        //                 //If is adding or editing and something changed, save it
+        //                 }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
+        //                     this.saveCurrentAuthor(false, true); // Do not refresh help text 
+        //                 }
+        //                 this.hideEditBlock();
+        //             }
+        //         }else{
+        //             if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+        //                 this.onAdd();
+        //             }
+        //         }
+        //     }
+
+        // })        
+    }
+
+    onSectionModeChanged(sectionMode: SectionMode) {
+        if( sectionMode ) {
+            if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                if( sectionMode.sender != Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    //If is adding but nothing changed, undo adding
+                    if(this.isAdding && !this.currentAuthor.dataChanged){
+                        this.undoCurAuthorChanges();
+                    //If is adding or editing and something changed, save it
+                    }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
+                        this.saveCurrentAuthor(false, true); // Do not refresh help text 
+                    }
+                    this.hideEditBlock();
+                }
+            }else{
+                if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                    this.onAdd();
+                }
+            }
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -103,6 +159,8 @@ export class AuthorListComponent implements OnInit {
             this.orderChanged = false;
             this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
         }
+
+        this.chref.detectChanges();
     }
 
     get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
@@ -219,6 +277,12 @@ export class AuthorListComponent implements OnInit {
         this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
         this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+        this.editmodeOutput.next(this.editMode);
+        this.chref.detectChanges();
+    }
+
+    onAuthorListChanged(fieldName: string, author: any) {
+        this.mdupdsvc.fieldUpdated(fieldName, author);
     }
 
     onAdd() {
@@ -269,9 +333,12 @@ export class AuthorListComponent implements OnInit {
                             this.setMode(MODE.NORNAL, refreshHelp);
                         else
                             this.setMode(MODE.LIST, refreshHelp);
+
+                        // this.chref.detectChanges();
                     }else{
                         let msg = "Update failed";
                         console.error(msg);
+                        this.chref.detectChanges();
                     }
                 })
             }else{
@@ -613,6 +680,8 @@ export class AuthorListComponent implements OnInit {
             this.lpService.setEditing(sectionMode);
 
         this.editmodeOutput.next(this.editMode);
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -668,12 +737,6 @@ export class AuthorListComponent implements OnInit {
             default:
                 break;
         }
-    }
-
-    onAutherChange(event) {
-        this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
-        this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
-        this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
     }
 
     // Drag and drop

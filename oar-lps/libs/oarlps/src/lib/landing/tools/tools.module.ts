@@ -17,10 +17,10 @@ import { MetricsinfoModule } from '../metricsinfo/metricsinfo.module';
         MetricsinfoModule
     ],
     declarations: [
-        MenuComponent
+
     ],
     exports: [
-        MenuComponent
+
     ]
 })
 export class ToolsModule { }

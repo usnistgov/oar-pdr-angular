@@ -1,6 +1,5 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SearchTopicsComponent } from './topic-popup/search-topics.component';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
@@ -11,11 +10,19 @@ import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../sh
 import { TopicEditComponent } from './topic-edit/topic-edit.component';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 
 @Component({
     selector: 'app-topic',
+    standalone: true,
+    imports: [ 
+        CommonModule, 
+        TopicEditComponent,
+        NgbModule
+    ],
     templateUrl: './topic.component.html',
-    styleUrls: ['../landing.component.scss'],
+    styleUrls: ['./topic.component.css','../landing.component.scss'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -48,9 +55,9 @@ export class TopicComponent implements OnInit {
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
+    @Input() isEditMode: boolean = true;
 
     @ViewChild('topic') topicElement: ElementRef;
-    @ViewChild('topic') topicEditComp: TopicEditComponent;
 
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
     // fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
@@ -63,6 +70,7 @@ export class TopicComponent implements OnInit {
     constructor(public mdupdsvc: MetadataUpdateService,
                 private ngbModal: NgbModal,
                 private cfg: AppConfig,
+                private chref: ChangeDetectorRef,
                 public lpService: LandingpageService, 
                 public globalService: GlobalService,
                 public collectionService: CollectionService,
@@ -75,24 +83,7 @@ export class TopicComponent implements OnInit {
 
             this.globalService.watchCollection((collection) => {
                 this.collection = collection;
-            });
-
-            this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode ) {
-                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                            if(this.isEditing && this.dataChanged){
-                                this.onSave(false); // Do not refresh help text 
-                            }
-                            this.setMode(MODE.NORNAL,false);
-                        }
-                    }else { // Request from side bar, if not edit mode, start editing
-                        if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
-                            this.startEditing();
-                        }
-                    }
-                }
-            })        
+            });    
     }
 
     /**
@@ -150,10 +141,28 @@ export class TopicComponent implements OnInit {
     }
 
     ngOnInit() {
+        let editMode = this.isEditMode;
         this.colorScheme = this.collectionService.getColorScheme(this.collection);
 
         this.updateResearchTopics();
         this.originalTopics = JSON.parse(JSON.stringify(this.topics));
+
+        this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if( sectionMode ) {
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        if(this.isEditing && this.dataChanged){
+                            this.onSave(false); // Do not refresh help text 
+                        }
+                        this.setMode(MODE.NORNAL,false);
+                    }
+                }else { // Request from side bar, if not edit mode, start editing
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
+                        this.startEditing();
+                    }
+                }
+            }
+        })            
     }
 
     /**
@@ -162,6 +171,8 @@ export class TopicComponent implements OnInit {
      */
     ngOnChanges(changes: SimpleChanges): void {
         this.updateResearchTopics();
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -186,9 +197,9 @@ export class TopicComponent implements OnInit {
      * and the help side bar can update the info.
      */
     startEditing(collection: string = Collections.DEFAULT) {
-        setTimeout(()=>{ // this will make the execution after the above boolean has changed
-            this.topicElement.nativeElement.focus();
-        },0);  
+        // setTimeout(()=>{ // this will make the execution after the above boolean has changed
+        //     this.topicElement.nativeElement.focus();
+        // },0);  
 
         this.editCollection = collection;
         this.editScheme = this.allCollections[this.editCollection].taxonomyURI;
@@ -225,6 +236,7 @@ export class TopicComponent implements OnInit {
                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
                 this.record[this.fieldName] = postMessage[this.fieldName];
                 this.updateResearchTopics();
+                this.setMode(MODE.NORNAL,refreshHelp);
             } else
                 console.error("acknowledge topic update failure");
         });
@@ -247,7 +259,7 @@ export class TopicComponent implements OnInit {
         //     }
         // });
 
-        this.setMode();
+        // this.setMode();
         this.dataChanged = false;
     }
 
@@ -396,7 +408,9 @@ export class TopicComponent implements OnInit {
 
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
-            this.lpService.setEditing(sectionMode);        
+            this.lpService.setEditing(sectionMode);   
+        
+        this.chref.detectChanges();
     }
 
     /**
@@ -496,64 +510,6 @@ export class TopicComponent implements OnInit {
 
         this.topicDisplay = JSON.parse(JSON.stringify(this.topicShort));
     }    
-
-    /**
-     * Open topic pop up window
-     */
-    openModal() {
-        // Do nothing if it's not in edit mode. 
-        // This should never happen because the edit button should be disabled.
-        if (!this.mdupdsvc.isEditMode) return;
-
-        // Pop up dialog set up
-        // backdrop: 'static' - the pop up will not be closed 
-        //                      when user click outside the dialog window.
-        // windowClass: "myCustomModalClass" - pop up dialog styling defined in styles.scss
-
-        // Broadcast the status change
-        let sectionMode: SectionMode = {} as SectionMode;
-        this.editMode = MODE.EDIT;
-        sectionMode.section = 'topic';
-        sectionMode.mode = this.editMode;
-        this.lpService.setEditing(sectionMode);
-
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "myCustomModalClass"
-        };
-
-        const modalRef = this.ngbModal.open(SearchTopicsComponent, ngbModalOptions);
-
-        // let val: string[] = [];
-        // if (this.record[this.fieldName])
-        //     val = JSON.parse(JSON.stringify(this.selectedTopics));
-
-        // modalRef.componentInstance.inputValue = {};
-        // modalRef.componentInstance.inputValue[this.fieldName] = val;
-        // modalRef.componentInstance['field'] = this.fieldName;
-        // modalRef.componentInstance['title'] = "Research Topics";
-
-        // modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-        //     if (returnValue) {
-        //         var postMessage: any = {};
-        //         postMessage[this.fieldName] = returnValue[this.fieldName];
-        //         this.record[this.fieldName] = returnValue[this.fieldName];
-                
-        //         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-        //             // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-        //             if (updateSuccess) {
-        //                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
-
-        //                 this.updateResearchTopics();
-        //             } else{
-        //                 let msg = "acknowledge topic update failure";
-        //                 console.error(msg);
-        //             }
-        //         });
-        //     }
-        // })
-    }
 
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.

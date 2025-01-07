@@ -19,7 +19,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 import { LandingPageModule } from './landing/landingpage.module';
-import { LandingAboutModule } from 'oarlps';
+import { LandingAboutComponent } from 'oarlps';
 import { SharedModule } from 'oarlps';
 import { FragmentPolyfillModule } from "./fragment-polyfill.module";
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
@@ -32,7 +32,6 @@ import { MetricsModule } from 'oarlps';
 // import { ErrorComponent, UserErrorComponent } from './landing/error.component';
 import { ModalComponent } from 'oarlps';
 import { ComboBoxComponent } from 'oarlps';
-import { SearchTopicsComponent } from 'oarlps';
 import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
@@ -41,11 +40,12 @@ import { environment } from '../environments/environment-impl';
 import { NerdmModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
 import { EditControlModule } from 'oarlps';
-
+import { LandingPageComponent } from './landing/landingpage.component';
 import { OARngModule } from 'oarng';
 import { FrameModule } from 'oarng';
-import { WizardModule, StaffDirModule } from 'oarng';
+import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
+import { provideZoneChangeDetection } from '@angular/core';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -65,33 +65,36 @@ enableProdMode();
  */
 @NgModule({
     declarations: [
-        AppComponent
+      AppComponent
     ],
     imports: [
         FrameModule,
         OARLPSModule,
-        WizardModule,
         ErrorsModule,
         LandingPageModule,
         AppRoutingModule,
-        LandingAboutModule,
+        LandingAboutComponent,
         DirectivesModule,
         DatacartModule,
         MetricsModule,
         SharedModule.forRoot(),
         HttpClientModule, FormsModule, ReactiveFormsModule,
-        CommonModule, BrowserAnimationsModule, FormsModule,
+        CommonModule,
+        BrowserAnimationsModule,
+        FormsModule,
         ToastrModule.forRoot({
             toastClass: 'toast toast-bootstrap-compatibility-fix'
         }),
         NgbModule,
         NerdmModule.forRoot(environment),
         ConfigModule.forRoot(environment),
-        EditControlModule.forRoot(environment),
-        StaffDirModule
+        // EditControlModule.forRoot(environment),
+        StaffDirModule,
+        // LandingPageComponent
     ],
-    exports: [],
+    exports: [AppComponent],
     providers: [
+        provideZoneChangeDetection({ ignoreChangesOutsideZone: true }),
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         {

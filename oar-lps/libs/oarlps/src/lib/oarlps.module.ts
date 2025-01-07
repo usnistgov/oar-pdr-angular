@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, provideZoneChangeDetection } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FrameModule } from './frame/frame.module';
 import { AboutdatasetModule } from './landing/aboutdataset/aboutdataset.module';
@@ -36,6 +36,7 @@ import { SectionTitleModule } from './landing/section-title/section-title.module
         DatacartModule
     ],
     providers: [
+        provideZoneChangeDetection({ ignoreChangesOutsideZone: true }),
         GoogleAnalyticsService
     ],
     exports: []

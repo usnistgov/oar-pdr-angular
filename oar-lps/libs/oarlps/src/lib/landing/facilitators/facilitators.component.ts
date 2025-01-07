@@ -3,9 +3,18 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { CommonModule } from '@angular/common';
+import { AuthorListComponent } from '../author/author-list/author-list.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-facilitators',
+    standalone: true,
+    imports: [
+        CommonModule, 
+        NgbModule,
+        AuthorListComponent
+    ],    
     templateUrl: './facilitators.component.html',
     styleUrls: ['./facilitators.component.css', '../landing.component.scss'],
     animations: [

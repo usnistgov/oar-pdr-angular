@@ -6,8 +6,6 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { ToastrModule } from 'ngx-toastr';
 
 import { DirectivesModule } from '../../directives/directives.module';
-import { DescriptionComponent } from './description.component';
-import { DescriptionPopupComponent } from './description-popup/description-popup.component';
 import { ButtonModule } from 'primeng/button';
 import { TextareaAutoresizeModule } from '../../textarea-autoresize/textarea-autoresize.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -27,18 +25,18 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ToastrModule.forRoot()
     ],
     declarations: [
-        DescriptionComponent, DescriptionPopupComponent
+
     ],
     providers: [
     ],
     exports: [
-        DescriptionComponent, DescriptionPopupComponent
+
     ]
 })
 export class DescriptionModule { }
 
 export {
-    DescriptionComponent, DescriptionPopupComponent
+
 };
 
     

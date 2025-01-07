@@ -1,16 +1,15 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
 import { Reference } from './reference';
 import { RefListComponent } from './ref-list/ref-list.component';
 import { CommonModule } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-
 
 @Component({
     selector: 'app-references',
@@ -18,6 +17,7 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
     imports: [
         CommonModule,
         RefListComponent,
+        NgbModule,
         ConfirmationDialogComponent
     ],
     templateUrl: './references.component.html',
@@ -42,48 +42,56 @@ export class ReferencesComponent implements OnInit {
     childEditMode: string = MODE.NORNAL;
     orderChanged: boolean = false;
     loadEditRefBlock: boolean = false;
-
+    isPublicSite: boolean = false; 
     // For warning pop up
     modalRef: any;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
+    @Input() isEditMode: boolean = true;
 
     @ViewChild('undo') undo: ElementRef;
+    @ViewChild('reflist') reflist: RefListComponent;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-        private modalService: NgbModal,               
+        private modalService: NgbModal,       
+        private chref: ChangeDetectorRef,        
         private notificationService: NotificationService,
+        public globalsvc: GlobalService,
         public lpService: LandingpageService) { 
 
-            this.lpService.watchEditing((sectionMode: SectionMode) => {
-
-
-                if(sectionMode){
-                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                            if(this.editBlockExpanded == true)
-                            this.setMode(MODE.NORNAL, false);
-                        }
-                    }else{
-                        if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
-                            this.startEditing();
-                        }
-                    }
-                }
-            })
     }
 
     ngOnInit(): void {
+        this.isPublicSite = this.globalsvc.isPublicSite();
         this.resetOrigin();
+
+        this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if(this.reflist)
+                this.reflist.onSectionModeChange(sectionMode);
+
+            if(sectionMode){
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        if(this.editBlockExpanded == true)
+                        this.setMode(MODE.NORNAL, false);
+                    }
+                }else{
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                        this.startEditing();
+                    }
+                }
+            }
+        })
     }
 
     ngOnChanges(ch : SimpleChanges) {
         if (ch.record){
             this.resetOrigin();
         }
-            
+
+        this.chref.detectChanges();
     }
 
     resetOrigin() {
@@ -119,6 +127,8 @@ export class ReferencesComponent implements OnInit {
             default:
                 break;
         }
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -246,6 +256,8 @@ export class ReferencesComponent implements OnInit {
         //Broadcast the current section and mode
         if(editmode != MODE.NORNAL)
             this.lpService.setEditing(sectionMode);
+
+        this.chref.detectChanges();
     }
 
     /**

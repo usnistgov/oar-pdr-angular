@@ -1,16 +1,26 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild, effect, ChangeDetectorRef } from '@angular/core';
+import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { Themes, ThemesPrefs, AppSettings } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
 import { VisithomeEditComponent } from './visithome-edit/visithome-edit.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 
 @Component({
     selector: 'app-visithome',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        VisithomeEditComponent,
+        NgbModule
+    ],
     templateUrl: './visithome.component.html',
     styleUrls: ['./visithome.component.css', '../landing.component.scss'],
     animations: [
@@ -36,12 +46,16 @@ export class VisithomeComponent implements OnInit {
     originalRecord: any = {};
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
+    isPublicSite: boolean = false; 
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
     
     constructor(
-        public mdupdsvc : MetadataUpdateService,        
+        public mdupdsvc : MetadataUpdateService,
+        public edstatsvc: EditStatusService,        
         public lpService: LandingpageService, 
+        public globalsvc: GlobalService,
+        private chref: ChangeDetectorRef,
         private notificationService: NotificationService,
         private gaService: GoogleAnalyticsService) { 
 
@@ -55,15 +69,24 @@ export class VisithomeComponent implements OnInit {
                             this.setMode(MODE.NORNAL,false);
                         }
                     }else{
-                        if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                        if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
                             this.startEditing();
                         }
                     }
                 }
             })
+
+            effect(() => {
+                // When edit mode changed, refresh the screen
+                // Need to tell effect which signal trigger this function
+                const term = this.edstatsvc.isEditMode(); 
+                // Then refresh the screen
+                this.chref.detectChanges();
+            });
     }
 
     ngOnInit(): void {
+        this.isPublicSite = this.globalsvc.isPublicSite();
         this.updateOriginal();
     }
 
@@ -172,6 +195,7 @@ export class VisithomeComponent implements OnInit {
         this.visitHomeURL = this.record[this.fieldName];
 
         this.setMode(MODE.EDIT);
+        this.chref.detectChanges();
     }
 
     /**
@@ -187,6 +211,7 @@ export class VisithomeComponent implements OnInit {
         }
 
         this.dataChanged = false;
+        this.chref.detectChanges();
     }
 
     saveVisitHomeURL(refreshHelp: boolean = true) {
@@ -201,7 +226,7 @@ export class VisithomeComponent implements OnInit {
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             if (updateSuccess){
                 this.setMode(MODE.NORNAL, refreshHelp);
-
+                this.chref.detectChanges();
                 this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
             }else{
                 let msg = "Updating " + this.fieldName + " failed.";
@@ -296,6 +321,7 @@ export class VisithomeComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode();
+                this.chref.detectChanges();
                 this.visitHomeEdit.currentValueChanged = false;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
             }else{
@@ -325,5 +351,10 @@ export class VisithomeComponent implements OnInit {
      */
     googleAnalytics(url: string, event, title) {
         this.gaService.gaTrackEvent('homepage', event, title, url);
+    }
+
+    hideEditBlock() {
+        this.setMode();
+        this.chref.detectChanges();
     }
 }

@@ -14,17 +14,17 @@ import { VersionComponent } from './version.component';
         NgbModule
     ],
     declarations: [
-        VersionComponent
+
     ],
     providers: [ ],
     exports: [
-        VersionComponent
+
     ]
 })
 export class VersionModule { }
 
 export {
-    VersionComponent
+
 };
 
     

@@ -13,7 +13,7 @@ import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import * as env from '../../../environments/environment';
+import { env } from '../../../environments/environment';
 
 describe('ContactComponent', () => {
     let component: ContactComponent;
@@ -30,8 +30,12 @@ describe('ContactComponent', () => {
         cfg.appVersion = "2.test";
 
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, FormsModule, RouterTestingModule, ToastrModule.forRoot()],
-            declarations: [ContactComponent],
+            imports: [
+                HttpClientTestingModule, 
+                FormsModule, 
+                RouterTestingModule, 
+                ContactComponent,
+                ToastrModule.forRoot()],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 MetadataUpdateService, UserMessageService, DatePipe,

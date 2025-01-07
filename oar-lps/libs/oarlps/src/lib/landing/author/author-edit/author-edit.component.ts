@@ -1,13 +1,26 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Author, Affiliation } from '../author';
 import { AuthorService } from '../author.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { NIST } from '../../../shared/globals/globals';
 import { SDSuggestion, SDSIndex } from 'oarng';
 import { timeout } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { PeopleComponent } from '../../people/people.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'lib-author-edit',
+  standalone: true,
+        imports: [        
+            CommonModule,
+            FormsModule,
+            PeopleComponent,
+            ButtonModule,
+            NgbModule
+        ],
   templateUrl: './author-edit.component.html',
   styleUrls: ['../../landing.component.scss', './author-edit.component.css']
 })
@@ -32,12 +45,12 @@ export class AuthorEditComponent implements OnInit {
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     
     constructor(
+        private chref: ChangeDetectorRef,
         private authorService: AuthorService)
          { }
 
     ngOnInit(): void {
         if(!this.author) {
-            // this.author = this.authorService.getBlankAuthor();
             this.author = new Author("", "", "", "", [this.authorService.getBlankAffiliation("")]);
         }
 

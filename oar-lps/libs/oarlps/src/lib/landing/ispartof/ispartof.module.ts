@@ -4,11 +4,11 @@ import { IspartofComponent } from './ispartof.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  declarations: [IspartofComponent],
+  declarations: [],
   imports: [
     CommonModule,
     NgbModule
   ],
-  exports: [IspartofComponent]
+  exports: []
 })
 export class IspartofModule { }

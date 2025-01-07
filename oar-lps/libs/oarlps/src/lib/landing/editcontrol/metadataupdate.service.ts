@@ -416,6 +416,7 @@ export class MetadataUpdateService {
 
                 if(postMsg){
                     this.currentRec[fieldName] = JSON.parse(JSON.stringify(postMsg));
+                    postMsg = JSON.stringify(postMsg);
                 }else{
                     delete this.currentRec[fieldName];
                     postMsg = this.currentRec;

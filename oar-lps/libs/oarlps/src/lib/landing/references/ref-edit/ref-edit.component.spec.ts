@@ -27,8 +27,11 @@ describe('SingleRefComponent', () => {
     cfg.appVersion = "2.test";
 
     await TestBed.configureTestingModule({
-      declarations: [ RefEditComponent ],
-      imports: [ HttpClientTestingModule, NoopAnimationsModule, ToastrModule.forRoot() ],
+      imports: [ 
+        RefEditComponent,
+        HttpClientTestingModule, 
+        // NoopAnimationsModule, 
+        ToastrModule.forRoot() ],
       providers: [ 
         MetadataUpdateService, 
         DatePipe,

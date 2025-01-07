@@ -1,4 +1,4 @@
-<div class="ec-status-bar" *ngIf="_editmode != EDIT_MODES.PREVIEW_MODE && _editmode != EDIT_MODES.VIEWONLY_MODE && message">
+<div class="ec-status-bar" *ngIf="_editmode != EDIT_MODES.PREVIEW_MODE && _editmode != EDIT_MODES.VIEWONLY_MODE && showMsg">
     <span style="text-align: right;float: right;">
         <span [ngStyle]="{'color': messageColor}" [innerHTML]="message"></span>
         <i [hidden]="!isProcessing" class="faa faa-spinner faa-spin faa-stack-1x ec-status-spinner" style="width:2em;height:2em;position: inherit;"></i>

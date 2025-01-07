@@ -25,15 +25,15 @@ import { FacilitatorsModule } from '../facilitators/facilitators.module';
         FacilitatorsModule
     ],
     declarations: [
-        AboutdatasetComponent
+
     ],
     providers: [ ],
     exports: [
-        AboutdatasetComponent
+
     ]
 })
 export class AboutdatasetModule { }
 
 export {
-    AboutdatasetComponent
+
 };

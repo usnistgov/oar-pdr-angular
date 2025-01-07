@@ -5,47 +5,55 @@ import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, SubmitResponse } from '../shared/globals/globals';
 import { HelpTopic } from '../landing/landingpage.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
-  animations: [
-    trigger("togglesbar", [
-        state('sbvisible', style({
-            position: 'absolute',
-            right: '0%',
-            top: "20px",
-            bottom: "100%",
-            overflow: "auto"
-        })),
-        state('sbhidden', style({
-            position: 'absolute',
-            right: '-450%',
-            top: "20px",
-            bottom: "100%",
-            overflow: "hidden"
-        })),
-        transition('sbvisible <=> sbhidden', [
-            animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
-        ])
-    ]),
-    trigger('requiredExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-    trigger('recommendedExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-    trigger('niceToHaveExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-]
+    selector: 'app-sidebar',
+    standalone: true,
+    imports: [
+        CommonModule
+    ],
+    providers: [
+        SidebarService
+    ],
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.css'],
+    animations: [
+        trigger("togglesbar", [
+            state('sbvisible', style({
+                position: 'absolute',
+                right: '0%',
+                top: "20px",
+                bottom: "100%",
+                overflow: "auto"
+            })),
+            state('sbhidden', style({
+                position: 'absolute',
+                right: '-450%',
+                top: "20px",
+                bottom: "100%",
+                overflow: "hidden"
+            })),
+            transition('sbvisible <=> sbhidden', [
+                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
+            ])
+        ]),
+        trigger('requiredExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+        trigger('recommendedExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+        trigger('niceToHaveExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ]
 })
 export class SidebarComponent implements OnInit {
     sbarvisible : boolean = true;

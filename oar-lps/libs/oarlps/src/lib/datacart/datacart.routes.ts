@@ -7,6 +7,7 @@ export const DatacartRoutes: Routes = [
 
   {
     path: 'datacart',
+    // Testing lazy load: (moved to midas-author/lps/app-routing)
     // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
     children: [
         {   path: ':cartname',             

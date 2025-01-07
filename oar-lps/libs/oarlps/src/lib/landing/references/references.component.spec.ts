@@ -29,8 +29,10 @@ describe('ReferencesComponent', () => {
         cfg.appVersion = "2.test";
 
         await TestBed.configureTestingModule({
-        declarations: [ ReferencesComponent ],
-        imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
+        imports: [ 
+            ReferencesComponent,
+            HttpClientTestingModule, 
+            ToastrModule.forRoot() ],
         providers: [ 
             MetadataUpdateService, 
             DatePipe,

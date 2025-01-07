@@ -9,9 +9,27 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { formatBytes } from '../../utils';
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FieldsetModule } from 'primeng/fieldset';
+import { ButtonModule } from 'primeng/button';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { VersionModule } from '../version/version.module';
+import { FacilitatorsModule } from '../facilitators/facilitators.module';
 
 @Component({
     selector: 'aboutdataset-detail',
+    standalone: true,
+    imports: [
+        VersionComponent,
+        CommonModule, 
+        BrowserAnimationsModule, 
+        FieldsetModule, 
+        ButtonModule, 
+        NgxJsonViewerModule, 
+        VersionModule,
+        FacilitatorsModule
+    ],
     templateUrl: './aboutdataset.component.html',
     styleUrls: ['./aboutdataset.component.scss'],
     animations: [

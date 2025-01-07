@@ -7,7 +7,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BadgeModule } from 'primeng/badge';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { DataFilesComponent } from './data-files.component';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -21,11 +20,11 @@ import { TooltipModule } from 'primeng/tooltip';
         ButtonModule, TooltipModule, NgbModule
     ],
     declarations: [
-        DataFilesComponent
+
     ],
     providers: [ ],
     exports: [
-        DataFilesComponent
+
     ]
 })
 export class DataFilesModule { }

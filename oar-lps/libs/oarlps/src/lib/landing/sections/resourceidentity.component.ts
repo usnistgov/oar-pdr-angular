@@ -11,12 +11,32 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { TitleComponent } from '../title/title.component';
+import { IspartofComponent } from '../ispartof/ispartof.component';
+import { AuthorComponent } from '../author/author.component';
+import { FacilitatorsComponent } from '../facilitators/facilitators.component';
+import { ContactComponent } from '../contact/contact.component';
+import { VisithomeComponent } from '../visithome/visithome.component';
+import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * a component that lays out the "identity" section of a landing page
  */
 @Component({
     selector:      'pdr-resource-id',
+    standalone: true,
+    imports: [
+        CommonModule,
+        TitleComponent,
+        IspartofComponent,
+        AuthorComponent,
+        FacilitatorsComponent,
+        ContactComponent,
+        VersionComponent,
+        VisithomeComponent,
+        NgbModule
+    ],
     templateUrl:   './resourceidentity.component.html',
     styleUrls:   [
         './resourceidentity.component.css', '../landing.component.scss'

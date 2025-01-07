@@ -13,7 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-    declarations: [ VisithomeComponent, VisithomeEditComponent ],
+    declarations: [   ],
     imports: [
         CommonModule,
         ToolbarModule,
@@ -25,11 +25,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         NgbModule
     ],
     exports: [
-        VisithomeComponent, VisithomeEditComponent
+     
     ]
 })
 export class VisithomeModule { }
 
 export {
-    VisithomeComponent, VisithomeEditComponent
+    
 };

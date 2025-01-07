@@ -1,7 +1,12 @@
-import { Component, OnChanges, SimpleChanges, Input } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input, effect } from '@angular/core';
 
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { CommonModule } from '@angular/common';
+import { ReferencesComponent } from '../references/references.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 
 /**
  * a component that lays out the "references" section of a landing page.
@@ -9,6 +14,13 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
  */
 @Component({
     selector:      'pdr-resource-refs',
+    standalone: true,
+    imports: [
+        SectionTitleComponent,
+        CommonModule,
+        ReferencesComponent,
+        NgbModule
+    ],
     templateUrl:   './resourcerefs.component.html',
     styleUrls:   [
         '../landing.component.scss',
@@ -17,6 +29,7 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 })
 export class ResourceRefsComponent {
     sectionTitle: string = "References";
+    isEditMode: boolean = true;
     
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
@@ -25,8 +38,14 @@ export class ResourceRefsComponent {
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig)
-    { }
+    constructor(
+        public edstatsvc: EditStatusService,
+        private cfg: AppConfig)
+    { 
+        effect(() => {
+            this.isEditMode = this.edstatsvc.isEditMode();
+        })
+    }
 }
 
 

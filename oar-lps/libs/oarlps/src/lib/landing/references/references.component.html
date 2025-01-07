@@ -1,14 +1,27 @@
 <div class="references" id="references">
+    <!-- Public mode -->
+    <!-- <div *ngIf="mdupdsvc.isEditMode; else nonEdit"> -->
+    @if(isPublicSite) {
+        <div *ngIf="hasDisplayableReferences()">
+            <div class="reference-text for-public">
+                <div style="margin: 0em 0em .5em 1em;" *ngFor="let ref of record['references']" class="ref-entry">
+                    <span *ngIf="ref.location; else noreflink">
+                        <span class="fas fa-external-link-alt">&nbsp;</span>
+                        <a href={{ref.location}} target="blank">{{ ref['citation'] }}</a>
+                    </span>
+                    <ng-template #noreflink>
+                        <span >{{ ref['citation'] }}</span>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    }
     <!-- Edit mode -->
-    <div *ngIf="mdupdsvc.isEditMode; else nonEdit">
-        <!-- <div class="section-header">
-            <h3><b>References</b></h3>
-        </div> -->
-
+    @else if(isEditMode) {
         <div class="editable_container">
             <!-- <ng-template #hasReferences> -->
             <div class="editable_field" style="max-width: calc(100% - 70px); margin-right: 5px;">
-                <div *ngIf="mdupdsvc.isEditMode && (!record['references'] || record['references'].length == 0)"  [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" style="margin-bottom: 10px; padding-left: 10px;">
+                <div *ngIf="isEditMode && (!record['references'] || record['references'].length == 0)"  [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" style="margin-bottom: 10px; padding-left: 10px;">
                     Add references to papers and other datasets.
                 </div>
 
@@ -25,7 +38,7 @@
             <!-- </ng-template> -->
             
             <!-- Control buttons -->
-            <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;width: 1.65em;">
+            <div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap;width: 1.65em;">
                 <button class="edit_button" *ngIf="isNormal" type="button" 
                 (click)="startEditing()" aria-label="Edit reference" ngbTooltip="Edit reference" style="cursor: pointer">
                     <i class="fas fa-pencil fa-sm"></i>
@@ -44,11 +57,11 @@
                 </button>                
             </div>
         </div>
-    </div>
-    <!-- Normal/preview mode -->
-    <ng-template #nonEdit>
+    }
+    <!-- preview mode -->
+    <!-- <ng-template #nonEdit> -->
+    @else{
         <div *ngIf="hasDisplayableReferences()">
-            <div class="section-header"><h3><b>References</b></h3></div>
             <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
                 <div style="margin: 0em 0em .5em 1em;" *ngFor="let ref of record['references']" class="ref-entry">
                     <span *ngIf="ref.location; else noreflink">
@@ -61,7 +74,8 @@
                 </div>
             </div>
         </div>
-    </ng-template>
+    }
+    <!-- </ng-template> -->
 </div>
 
 <!-- Defer block for lazyloading

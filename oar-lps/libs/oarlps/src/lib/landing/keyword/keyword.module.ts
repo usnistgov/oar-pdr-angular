@@ -30,18 +30,18 @@ import { TagModule } from 'primeng/tag';
         ToastrModule.forRoot()
     ],
     declarations: [
-        KeywordComponent
+
     ],
     providers: [
     ],
     exports: [
-        KeywordComponent
+
     ]
 })
 export class KeywordModule { }
 
 export {
-    KeywordComponent
+
 };
 
     

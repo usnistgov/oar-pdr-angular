@@ -6,6 +6,9 @@ import { LandingConstants } from '../constants';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { CommonModule } from '@angular/common';
+import { CollapseModule } from '../collapseDirective/collapse.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 interface reference {
     refType?: string,
@@ -25,6 +28,12 @@ interface reference {
  */
 @Component({
     selector: 'pdr-version',
+    standalone: true,
+    imports: [
+        CommonModule,
+        CollapseModule,
+        NgbModule
+    ],
     templateUrl: './version.component.html',
     styleUrls: [ '../landing.component.scss' ]
 })

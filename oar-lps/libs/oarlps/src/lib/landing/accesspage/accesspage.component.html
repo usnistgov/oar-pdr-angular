@@ -5,7 +5,7 @@
 
     <div class="editable_container" style="padding: 0px;">
         <div class="editable_field" style="max-width: calc(100% - 1.65em);" >
-            <div *ngIf="mdupdsvc.isEditMode" style="margin-right: 10px;">
+            <div *ngIf="isEditMode" style="margin-right: 10px;">
                 Add links to relevant websites including software repositories.
             </div>
 
@@ -28,7 +28,7 @@
                                 </ng-template>
                             </span></i>
                         <div *ngIf="apage['description']">
-                            <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc] = !apage[showDesc]"><i
+                            <div style="cursor: pointer;color: #1471AE;" (click)="apage[showDesc]=!apage[showDesc];chref.detectChanges()"><i
                                     class="fas fa-caret-right" *ngIf="!apage[showDesc]"></i><i class="fas fa-caret-down"
                                     *ngIf="apage[showDesc]"></i> About this link
                             </div>
@@ -60,28 +60,44 @@
             </div>
         </div>
 
-        <!-- Control buttons -->
-        <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
-            <!-- Edit button -->
-            <button class="edit_button" *ngIf="isNormal" (click)="startEditing()" aria-label="edit button">
-                <i class="fas fa-pencil fa-sm"></i>
-            </button>
-              
-            <!-- Hide button - hide edit block -->
-            <button class="edit_button" type="button" *ngIf="!isNormal" [disabled] = 'isEditing || isAdding'
-                (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-                <i class="fas fa-times"></i>
-            </button> 
+        @if(!isPublicSite) {
+            <!-- Control buttons -->
+            <div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap;">
+                <!-- Edit button -->
+                <button class="edit_button" *ngIf="isNormal" 
+                    (click)="startEditing()" 
+                    aria-label="edit button"
+                    ngbTooltip="Edit access page">
+                    <i class="fas fa-pencil fa-sm"></i>
+                </button>
+                
+                <!-- Hide button - hide edit block -->
+                <button class="edit_button" type="button" *ngIf="!isNormal" 
+                    [disabled] = 'isEditing || isAdding'
+                    (click)="setMode()"
+                     aria-label="Hide edit block" 
+                     ngbTooltip="Hide edit block">
+                    <i class="fas fa-times"></i>
+                </button> 
 
-            <!-- Restore original value-->
-            <button *ngIf="!isEditing && updated" class="edit_button" type="button"       (click)="restoreOriginal()" aria-label="undo button" ngbTooltip="Undo changes">
-                <i class="fas fa-undo fa-sm"></i>
-            </button>
+                <!-- Restore original value-->
+                <button *ngIf="!isEditing && updated" 
+                    class="edit_button" 
+                    type="button"       
+                    (click)="restoreOriginal()" 
+                    aria-label="undo button" 
+                    ngbTooltip="Undo changes">
+                    <i class="fas fa-undo fa-sm"></i>
+                </button>
 
-        </div>
+            </div>
+        }
+
     </div>
 </div>
 
-<div style="width: 100%;" *ngIf="mdupdsvc.isEditMode" [@editExpanded]="editBlockExpanded" [style.overflow] = "overflowStyle">
-    <lib-accesspage-list #accesspagelist [record]="record" [theme]="theme" (dataCommand)="onStatusChange($event)"></lib-accesspage-list>
-</div>
+@defer(when loadListing) {
+    <div style="width: 100%;" [@editExpanded]="editBlockExpanded" [style.overflow] = "overflowStyle">
+        <lib-accesspage-list #accesspagelist [record]="record" [theme]="theme" (dataCommand)="onStatusChange($event)"></lib-accesspage-list>
+    </div>
+}

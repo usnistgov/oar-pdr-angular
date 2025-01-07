@@ -37,19 +37,19 @@ import { PeopleModule } from '../people/people.module';
         PeopleModule
     ],
     declarations: [
-        AuthorComponent, AuthorListComponent, AuthorEditComponent
+        
     ],
     providers: [
         AuthorService
     ],
     exports: [
-        AuthorComponent, AuthorListComponent, AuthorEditComponent
+        
     ]
 })
 export class AuthorModule { }
 
 export {
-    AuthorComponent, AuthorService, AuthorListComponent, AuthorEditComponent
+    AuthorService
 };
 
     

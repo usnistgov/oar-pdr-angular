@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SelectItem, TreeNode } from 'primeng/api';
 
@@ -6,6 +6,9 @@ import { SelectItem, TreeNode } from 'primeng/api';
   providedIn: 'root'
 })
 export class GlobalService {
+    isPublicSite = signal(false);
+    message = signal("");
+    
     constructor() { }
 
     /**

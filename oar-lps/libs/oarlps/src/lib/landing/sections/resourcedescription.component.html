@@ -1,18 +1,23 @@
 <div id="description" [ngStyle]="{'max-width': maxWidth+'px'}">
-        <div class="section-header">
-            <!-- <h3 style="display: inline-block;" name="description"> -->
-                <!-- <b><span [ngClass]="{'highlight': titleSelected}" [@enterAnimation]>{{desctitle}}</span></b> -->
-                <!-- <b>{{desctitle}}</b> -->
-            <!-- </h3> -->
-            <!-- <div name="description" style="width: 100%; height: 27px;" id="sectionHeader" #sectionHeader (window:resize)="onResize()"></div> -->
-            <lib-section-title [sectionTitle]="desctitle" [inBrowser]="inBrowser" sectionTag="descHeader" id="descHeader" #descHeader></lib-section-title>
+    <div class="section-header">
+        <lib-section-title [sectionTitle]="desctitle" [inBrowser]="inBrowser" sectionTag="descHeader" id="descHeader" #descHeader></lib-section-title>
+    </div>
+    <div>
+        <app-description [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></app-description>
+    </div>
 
-        </div>
-        <div>
-            <app-description [record]="record" [inBrowser]="inBrowser"></app-description>
-        </div>
-        <app-topic [record]="record" [inBrowser]="inBrowser"></app-topic>
-        <app-keyword [record]="record" [inBrowser]="inBrowser" *ngIf="recordType!='Science Theme'"></app-keyword>
+    @defer(when isPublicSite) {
+        <topic-pub [record]="record" [inBrowser]="inBrowser"></topic-pub>
+
+        <keyword-pub [record]="record" [inBrowser]="inBrowser"></keyword-pub>
+    }
+
+    @defer(when !isPublicSite){
+        <app-topic [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></app-topic>
+        @if(recordType!='Science Theme') {
+            <app-keyword [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></app-keyword>
+        }
+    }
 </div>
 
 <!-- <div class="grid" id="description" style="border: 1px solid green;margin-left: -10px;">

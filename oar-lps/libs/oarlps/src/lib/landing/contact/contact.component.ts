@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
@@ -7,15 +7,24 @@ import { ContactService } from './contact.service';
 import { Contact } from './contact';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../shared/globals/globals';
 import { ContactEditComponent } from './contact-edit/contact-edit.component';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../collapseDirective/collapse.module';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
+import { PeopleComponent } from '../people/people.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 
 @Component({
-    standalone: true,
     selector: 'app-contact',
-    imports: [ CommonModule, CollapseModule, ContactEditComponent ],
+    standalone: true,
+    imports: [ 
+        CommonModule, 
+        CollapseModule, 
+        ContactEditComponent, 
+        PeopleComponent, 
+        NgbModule 
+    ],
     providers: [ ContactService ],
     templateUrl: './contact.component.html',
     styleUrls: ['../landing.component.scss'],
@@ -40,8 +49,8 @@ export class ContactComponent implements OnInit {
     backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
     dataChanged: boolean = false;
 
-    startLoading: boolean = false;
-
+    LoadEditComp: boolean = false;
+    isPublicSite: boolean = false; 
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
@@ -50,8 +59,11 @@ export class ContactComponent implements OnInit {
     
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
+                public edstatsvc: EditStatusService,
                 private gaService: GoogleAnalyticsService,
+                public globalsvc: GlobalService,
                 public lpService: LandingpageService, 
+                private chref: ChangeDetectorRef,
                 private notificationService: NotificationService,
                 private contactService : ContactService)
     {
@@ -65,7 +77,7 @@ export class ContactComponent implements OnInit {
                         this.hideEditBlock(false);
                     }
                 }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
                         this.startEditing();
                     }
                 }
@@ -91,6 +103,7 @@ export class ContactComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.isPublicSite = this.globalsvc.isPublicSite();
         this.updateOriginal();
     }
 
@@ -138,7 +151,7 @@ export class ContactComponent implements OnInit {
      * @returns the background color of the whole record
      */
     get getRecordBackgroundColor() {
-        if(this.mdupdsvc.isEditMode){
+        if(this.edstatsvc.isEditMode()){
             this.backgroundColor = 'var(--editable)';
             
             if(this.mdupdsvc.fieldUpdated(this.fieldName)){
@@ -173,7 +186,7 @@ export class ContactComponent implements OnInit {
     }
 
     startEditing() {
-        this.startLoading = true;
+        this.LoadEditComp = true;
 
         if(this.record[this.fieldName])
             this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
@@ -181,7 +194,7 @@ export class ContactComponent implements OnInit {
             this.currentContact = {} as Contact;
 
         this.setMode(MODE.EDIT);
-
+        this.chref.detectChanges();
     }
 
     emptyContact(contact) {
@@ -227,6 +240,7 @@ export class ContactComponent implements OnInit {
         }
 
         this.setMode(MODE.NORNAL, true);
+        this.chref.detectChanges();
     }
 
     /**
@@ -312,20 +326,13 @@ export class ContactComponent implements OnInit {
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             if (updateSuccess){
                 this.setMode(MODE.NORNAL, refreshHelp);
+                this.chref.detectChanges();
                 this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
             }else{
                 let msg = "Contact update failed.";
                 console.error(msg);
             }
         });
-
-        // this.updateMatadata(this.currentContact).then((success) => {
-        //     if(success){
-        //         this.setMode(MODE.NORNAL, refreshHelp);
-        //     }else{
-        //         console.error("Update failed")
-        //     }
-        // })
     }
 
     /**
@@ -359,6 +366,7 @@ export class ContactComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode();
+                this.chref.detectChanges();
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
             }else{
                 let msg = "Failed to restore original value."

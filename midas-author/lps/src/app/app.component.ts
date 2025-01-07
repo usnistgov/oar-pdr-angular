@@ -1,9 +1,62 @@
 import { Component, AfterViewInit, OnInit, PLATFORM_ID, Inject } from '@angular/core';
-import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
+import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, RouterOutlet, RouterLink } from '@angular/router';
 // import './content/modal.less';
 import { GoogleAnalyticsService } from 'oarlps'
 import { AppConfig } from 'oarlps';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { FrameModule } from 'oarng';
+import { AppRoutingModule } from './app-routing.module';
+import { LandingPageComponent } from './landing/landingpage.component';
+import { LandingPageModule } from './landing/landingpage.module';
+import { ErrorsModule, AppErrorHandler } from 'oarlps';
+
+import { enableProdMode } from '@angular/core';
+import { ErrorHandler } from '@angular/core';
+
+import { HttpClientModule} from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DatePipe } from '@angular/common';
+
+import { ToastrModule } from 'ngx-toastr';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { LandingAboutComponent } from 'oarlps';
+import { SharedModule } from 'oarlps';
+import { FragmentPolyfillModule } from "./fragment-polyfill.module";
+
+// import { ConfigModule } from './config/config.module';
+import { DatacartModule } from 'oarlps';
+import { DirectivesModule } from 'oarlps';
+import { MetricsModule } from 'oarlps';
+import { ModalComponent } from 'oarlps';
+import { ComboBoxComponent } from 'oarlps';
+import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
+import { OARLPSModule } from 'oarlps';
+import { environment } from '../environments/environment-impl';
+import { NerdmModule } from 'oarlps';
+import { ConfigModule } from 'oarlps';
+import { EditControlModule } from 'oarlps';
+import { OARngModule } from 'oarng';
+import { WizardModule, StaffDirModule } from 'oarng';
+import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
+import {
+  APP_INITIALIZER, APP_ID,
+  CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
+} from '@angular/core';
+
+export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
+  parse(url: string): UrlTree {
+      // Optional Step: Do some stuff with the url if needed.
+
+      // If you lower it in the optional step
+      // you don't need to use "toLowerCase"
+      // when you pass it down to the next function
+      return super.parse(url.toLowerCase());
+  }
+}
+
+enableProdMode();
 
 @Component({
     selector: 'app-root',
@@ -20,7 +73,7 @@ export class AppComponent {
                 // public environmentService : EnvironmentService,
                 private cfg: AppConfig,
                 @Inject(PLATFORM_ID) private platformId: Object)
-    { 
+    {
         this.inBrowser = isPlatformBrowser(platformId);
     }
 

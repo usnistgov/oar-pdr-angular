@@ -16,6 +16,7 @@ const routes: Routes = [
     // ...DatacartRoutes,
     { path: '', redirectTo: '/about', pathMatch: 'full' },
 
+    // Copied datacart routes here to test lazyloading
     { path: 'datacart',
       // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
       children: [

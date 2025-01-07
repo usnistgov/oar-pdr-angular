@@ -1,0 +1,4 @@
+.keyword-width {
+    width: 'fit-content'; 
+    max-width: 'calc(100% - 360px)';
+}

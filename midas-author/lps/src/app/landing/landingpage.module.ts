@@ -9,10 +9,9 @@ import { NerdmModule } from 'oarlps';
 import { LandingPageComponent } from './landingpage.component';
 import { LandingBodyComponent } from './landingbody.component';
 import { NoidComponent } from './noid.component';
-import { SectionsModule } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
 import { EditControlModule } from 'oarlps';
-import { ToolsModule } from 'oarlps';
+import { MenuComponent } from 'oarlps';
 import { CitationModule } from 'oarlps';
 import { DoneModule } from 'oarlps';
 import { TaxonomyListService } from 'oarlps'
@@ -23,9 +22,10 @@ import { SearchresultModule } from 'oarlps';
 import { WizardModule } from 'oarng';
 import { SidebarModule } from 'oarlps';
 import { DownloadStatusModule } from 'oarlps';
-import { MetricsinfoModule } from 'oarlps';
+import { MetricsinfoComponent } from 'oarlps';
 import { LandingpageService } from 'oarlps';
 import { FrameModule } from 'oarlps';
+import { ResourceIdentityComponent, ResourceDataComponent, ResourceDescriptionComponent, ResourceMetadataComponent, ResourceRefsComponent } from 'oarlps';
 
 /**
  * A module supporting the complete display of landing page content associated with
@@ -38,32 +38,28 @@ import { FrameModule } from 'oarlps';
         NgbModule,
         NerdmModule,
         EditControlModule,
-        ToolsModule,
+        MenuComponent,
         CitationModule,
-        SectionsModule,
         SearchresultModule,
         DoneModule,
-        WizardModule,
         SidebarModule,
         DownloadStatusModule,
-        MetricsinfoModule,
+        MetricsinfoComponent,
         FrameModule
     ],
     declarations: [
-        LandingPageComponent, LandingBodyComponent,
-        ErrorComponent, UserErrorComponent, NoidComponent
+        ErrorComponent, UserErrorComponent
     ],
     providers: [
         MetadataUpdateService, TaxonomyListService, DatePipe,
         LandingpageService
     ],
     exports: [
-        LandingPageComponent, LandingBodyComponent,
-        ErrorComponent, UserErrorComponent, NoidComponent
+        ErrorComponent, UserErrorComponent
     ]
 })
 export class LandingPageModule { }
 
-export { LandingPageComponent, LandingBodyComponent,
-    ErrorComponent, UserErrorComponent,NoidComponent };
+export {
+    ErrorComponent, UserErrorComponent };
 

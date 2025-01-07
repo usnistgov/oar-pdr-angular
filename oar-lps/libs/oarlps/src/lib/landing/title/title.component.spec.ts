@@ -28,8 +28,7 @@ describe('TitleComponent', () => {
         cfg.appVersion = "2.test";
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, HttpClientTestingModule, RouterTestingModule, ToastrModule.forRoot()],
-            declarations: [TitleComponent],
+            imports: [FormsModule, ToastrModule.forRoot()],
             providers: [
                 MetadataUpdateService, UserMessageService, DatePipe,
                 { provide: AppConfig, useValue: cfg },

@@ -20,9 +20,9 @@ import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.componen
 import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng';
 
 @NgModule({
-    declarations: [ EditControlComponent, EditStatusComponent, SubmitConfirmComponent ],
+    declarations: [ ],
     imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule, TooltipModule, AuthModule, NgbModule, NgSelectModule, FormsModule ],
-    exports: [ EditControlComponent, EditStatusComponent ],
+    exports: [ ],
     providers: [
         HttpClient,
         { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService, StaffDirectoryService ] }

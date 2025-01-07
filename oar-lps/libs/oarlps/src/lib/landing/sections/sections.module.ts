@@ -2,14 +2,7 @@ import { NgModule }     from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NerdmModule } from '../../nerdm/nerdm.module';
 import { TitleModule } from '../title/title.module';
-import { AuthorModule } from '../author/author.module';
-import { ContactModule } from '../contact/contact.module';
-import { VersionModule } from '../version/version.module';
-import { DescriptionModule } from '../description/description.module';
-import { TopicModule } from '../topic/topic.module';
-import { KeywordModule } from '../keyword/keyword.module';
 import { CollapseModule } from '../collapseDirective/collapse.module';
-import { DataFilesModule } from '../data-files/data-files.module';
 import { AboutdatasetModule } from '../aboutdataset/aboutdataset.module';
 import { ResourceIdentityComponent } from './resourceidentity.component';
 import { ResourceDescriptionComponent } from './resourcedescription.component';
@@ -20,17 +13,7 @@ import { FacilitatorsModule } from '../facilitators/facilitators.module';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { DoneModule } from '../done/done.module';
 import { ButtonModule } from 'primeng/button';
-import { VisithomeModule } from '../visithome/visithome.module';
-// import { ReferencesModule } from '../references/references.module';
-import { AccesspageModule } from '../accesspage/accesspage.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { IspartofModule } from '../ispartof/ispartof.module';
-import { D3Service } from '../../shared/d3-service/d3.service';
-import { SectionTitleModule } from '../section-title/section-title.module';
-import { PeopleModule } from '../people/people.module';
-import { ContactComponent } from '../contact/contact.component';
-import { ReferencesComponent } from '../references/references.component';
-import { TitleComponent } from '../title/title.component';
 
 /**
  * A module for components that lay out the content of a resource landing page into sections.
@@ -63,50 +46,23 @@ import { TitleComponent } from '../title/title.component';
     imports: [
         CommonModule,
         NerdmModule,
-        TitleModule,
-        AuthorModule, 
-        ContactModule, 
-        CollapseModule, 
-        VersionModule,
-        DescriptionModule, 
-        DataFilesModule, 
-        TopicModule, 
-        KeywordModule, 
-        AboutdatasetModule, 
-        FacilitatorsModule, 
-        SearchresultModule,
         DoneModule,
         ButtonModule,
-        AccesspageModule,
-        VisithomeModule,
         NgbModule,
-        IspartofModule,
-        SectionTitleModule,
-        PeopleModule,
-        ContactComponent,
-        ReferencesComponent,
-        TitleComponent
     ],
     declarations: [
-        ResourceDataComponent,
-        ResourceIdentityComponent, 
-        ResourceDescriptionComponent, 
-        ResourceRefsComponent, ResourceMetadataComponent
+
     ],
     providers: [
-        D3Service
+
     ],
     exports: [
-        ResourceDataComponent,
-        ResourceIdentityComponent, ResourceDescriptionComponent, 
-        ResourceRefsComponent, ResourceMetadataComponent
+
     ]
 })
 export class SectionsModule { }
 
 export {
-    ResourceDataComponent,
-    ResourceIdentityComponent, ResourceDescriptionComponent, 
-    ResourceRefsComponent, ResourceMetadataComponent
+
 };
     

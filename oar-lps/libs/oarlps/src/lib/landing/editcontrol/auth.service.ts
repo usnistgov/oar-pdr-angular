@@ -162,6 +162,7 @@ export class WebAuthService extends AuthService {
                     this._creds = creds;
                     if (creds.token) {
                         this.sdsvc.setAuthToken(creds.token);
+                        this._creds.token = creds.token;
                         // the user is authenticated and authorized to edit!
                         subscriber.next(
                             new WebCustomizationService(resid, this.endpoint, this.authToken,

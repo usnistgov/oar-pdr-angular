@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, effect } from '@angular/core';
+import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -8,11 +8,17 @@ import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, SubmitResponse 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
 
 @Component({
   selector: 'title-edit',
   standalone: true,
-  imports: [ CommonModule, FormsModule, TextareaAutoresizeModule ],
+  imports: [ 
+    CommonModule, 
+    FormsModule, 
+    TextareaAutoresizeModule,
+    NgbModule
+  ],
   templateUrl: './title-edit.component.html',
   styleUrls: ['./title-edit.component.css', '../../landing.component.scss']
 })
@@ -35,26 +41,14 @@ export class TitleEditComponent {
 
     constructor(public mdupdsvc: MetadataUpdateService,
         private ngbModal: NgbModal,
+        public edstatsvc: EditStatusService,
         public lpService: LandingpageService, 
+        private chref: ChangeDetectorRef,
         private notificationService: NotificationService) {
-            this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode ) {
-                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                        if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                            if(this.isEditing){
-                                // Do not refresh hekp content because other section already updated it. 
-                                this.onSave(false); 
-                            }else{
-                                this.setMode(MODE.NORNAL, false);
-                            }
-                        }
-                    }else { // Request from side bar, if not edit mode, start editing
-                        if( !this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
-                            this.startEditing();
-                        }
-                    }
+            effect(() => {
+                if(this.edstatsvc.isEditMode()){
+                    this.chref.detectChanges();
                 }
-
             })
     }
 
@@ -69,6 +63,26 @@ export class TitleEditComponent {
 
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
+
+        this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if( sectionMode ) {
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                        if(this.isEditing){
+                            // Do not refresh hekp content because other section already updated it. 
+                            this.onSave(false); 
+                        }else{
+                            this.setMode(MODE.NORNAL, false);
+                        }
+                    }
+                }else { // Request from side bar, if not edit mode, start editing
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                        this.startEditing();
+                    }
+                }
+            }
+
+        })        
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -87,6 +101,7 @@ export class TitleEditComponent {
             if(this.titleElement) {
                 const textArea = this.titleElement.nativeElement as HTMLTextAreaElement;
                 textArea.focus();
+                // this.chref.detectChanges();
             }
         },0);  
     }
@@ -101,6 +116,7 @@ export class TitleEditComponent {
         this.isEditing = false;
         // this.setBackground(this.record['title']);
         this.dataChanged = false;
+        // this.chref.detectChanges();
     }
 
     onSave(refreshHelp: boolean = true) {
@@ -113,6 +129,7 @@ export class TitleEditComponent {
                     this.dataChanged = true;
                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
                     this.setMode(MODE.NORNAL, refreshHelp);
+                    // this.chref.detectChanges();
                     //Validate
                     // this.mdupdsvc.validate().subscribe(response => {
                     //     this.lpService.setSubmitResponse(response as SubmitResponse);
@@ -125,6 +142,7 @@ export class TitleEditComponent {
         }else{
             this.dataChanged = false;
             this.setMode(MODE.NORNAL, refreshHelp);
+            this.chref.detectChanges();
         }
         // this.setBackground(this.record['title']);
     }
@@ -144,6 +162,7 @@ export class TitleEditComponent {
         });
         // this.setBackground(this.record['title']);
         this.dataChanged = false;
+        // this.chref.detectChanges();
     }
 
     /**
@@ -185,10 +204,13 @@ export class TitleEditComponent {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORNAL){
             this.lpService.setEditing(sectionMode);
-        else
+            this.lpService.sectionMode.set(sectionMode);
+        }else
             this.isEditing = false;
+
+        this.chref.detectChanges();
     }
 
     flash: any;

@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -31,6 +31,7 @@ import { RefEditComponent } from '../ref-edit/ref-edit.component';
         CollapseModule,
         TextEditModule,
         RefEditComponent,
+        NgbModule,
         ConfirmationDialogComponent
     ],
     templateUrl: './ref-list.component.html',
@@ -78,35 +79,39 @@ export class RefListComponent implements OnInit {
     constructor(public mdupdsvc : MetadataUpdateService,        
         private modalService: NgbModal,  
         private notificationService: NotificationService,
+        private chref: ChangeDetectorRef,  
         public lpService: LandingpageService) { 
 
-            this.lpService.watchEditing((sectionMode: SectionMode) => {
-                if( sectionMode ) {
-                    if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                        if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                            if(this.dataChanged){
-                                this.saveCurRef(false); // Do not refresh help text 
-                            }else{
-                                this.setMode(MODE.NORNAL, false);
-                            }
-                        }
-                    }else{
-                            if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
-                                this.onAdd();
-                            }
-                        }
-                }
-            })
     }
 
     ngOnInit(): void {
         this.resetOriginalValue();
+    }
+    
+    onSectionModeChange(sectionMode) {
+        if( sectionMode ) {
+            if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if(this.dataChanged){
+                        this.saveCurRef(false); // Do not refresh help text 
+                    }else{
+                        this.setMode(MODE.NORNAL, false);
+                    }
+                }
+            }else{
+                    if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                        this.onAdd();
+                    }
+                }
+        }
     }
 
     ngOnChanges(ch : SimpleChanges) {
         if (ch.record){
             this.resetOriginalValue();
         }
+
+        this.chref.detectChanges();
     }
 
     resetOriginalValue() {
@@ -233,6 +238,8 @@ export class RefListComponent implements OnInit {
             this.lpService.setEditing(sectionMode);
 
         this.editmodeOutput.next(this.editMode);    
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -255,6 +262,7 @@ export class RefListComponent implements OnInit {
                     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                        this.chref.detectChanges();
                         resolve(true);
                     }else{
                         let msg = "References update failed";
@@ -270,6 +278,7 @@ export class RefListComponent implements OnInit {
                         // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                            this.chref.detectChanges();
                             resolve(true);
                         }else{
                             let msg = "References update failed";
@@ -316,6 +325,7 @@ export class RefListComponent implements OnInit {
                         this.currentRef = this.record[this.fieldName].at(-1); // last reference
                         this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;
+                        this.chref.detectChanges();
                     }else{
                         let msg = "Failed to add reference";
                         console.error(msg);
@@ -604,6 +614,8 @@ export class RefListComponent implements OnInit {
 
             this.currentRefIndex = index;
             this.currentRef = this.record[this.fieldName][index];
+
+            this.chref.detectChanges();
         }
     }
 
@@ -663,6 +675,7 @@ export class RefListComponent implements OnInit {
         this.record['references'][this.currentRefIndex] = JSON.parse(JSON.stringify(event.ref));
         this.record['references'][this.currentRefIndex].dataChanged = event.dataChanged;
         this.currentRef = this.record['references'][this.currentRefIndex];
+        this.chref.detectChanges();
     }
 
     /**

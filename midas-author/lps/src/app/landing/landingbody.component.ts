@@ -1,12 +1,10 @@
 import { Component, Input, ViewChild, ElementRef, Output, EventEmitter } from '@angular/core';
-
-import { AppConfig } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
-import { ResourceMetadataComponent } from 'oarlps';
-import { Console } from 'console';
 import { MetricsData } from "./metrics-data";
-import { MetadataUpdateService } from 'oarlps';
 import { Globals } from 'oarlps';
+import { CommonModule } from '@angular/common';
+import { ResourceIdentityComponent, ResourceDataComponent, ResourceDescriptionComponent, ResourceMetadataComponent, ResourceRefsComponent } from 'oarlps';
+import { EditStatusService } from 'oarlps';
 
 /**
  * a component that presents the landing page's presentation of the resource description
@@ -15,7 +13,7 @@ import { Globals } from 'oarlps';
  *  * front matter, providing information that identifies the resource, namely its:
  *     - title
  *     - authors
- *     - contact 
+ *     - contact
  *     - identifier
  *     - the paper this resource is a supplement to, if applicable
  *     - a link to official landing page (if different from this one)
@@ -28,10 +26,20 @@ import { Globals } from 'oarlps';
  *     - links to data access pages
  *     - statements of access policies and rights
  *  * References
- *  * Metadata 
+ *  * Metadata
  */
 @Component({
     selector:    'pdr-landing-body',
+    standalone: true,
+    imports: [
+      CommonModule,
+      ResourceIdentityComponent,
+      ResourceDataComponent,
+      ResourceDescriptionComponent,
+      ResourceIdentityComponent,
+      ResourceMetadataComponent,
+      ResourceRefsComponent
+    ],
     templateUrl: './landingbody.component.html',
     styleUrls:   [
         './landing.component.css'
@@ -65,7 +73,7 @@ export class LandingBodyComponent {
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig, public mdupdsvc : MetadataUpdateService)
+    constructor(public edstatsvc: EditStatusService)
     { }
 
     ngOnInit(): void {
@@ -73,31 +81,31 @@ export class LandingBodyComponent {
     }
     /**
      * scroll the view to the named section.  The available sections are: "top", "description",
-     * "dataAccess", "references", and "metadata".  Any other value will be treated as "top".  
+     * "dataAccess", "references", and "metadata".  Any other value will be treated as "top".
      * (Note that the "references" section may be omitted if there are no references to be displayed.)
      */
     goToSection(sectionID) {
         if(!sectionID) sectionID = "top";
 
-        switch(sectionID) { 
-            case Globals.SectionPrefs.getFieldName(Globals.Sections.DESCRIPTION): { 
-                this.description.nativeElement.scrollIntoView({behavior: 'smooth'}); 
-               break; 
-            } 
-            case Globals.SectionPrefs.getFieldName(Globals.Sections.KEYWORDS): { 
-                this.description.nativeElement.scrollIntoView({behavior: 'smooth'}); 
-               break; 
-            } 
-            case Globals.SectionPrefs.getFieldName(Globals.Sections.DATA_ACCESS): { 
-                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'}); 
-               break; 
-            } 
+        switch(sectionID) {
+            case Globals.SectionPrefs.getFieldName(Globals.Sections.DESCRIPTION): {
+                this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
+            case Globals.SectionPrefs.getFieldName(Globals.Sections.KEYWORDS): {
+                this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
+            case Globals.SectionPrefs.getFieldName(Globals.Sections.DATA_ACCESS): {
+                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
             case Globals.SectionPrefs.getFieldName(Globals.Sections.REFERENCES): {
-                this.references.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                this.references.nativeElement.scrollIntoView({behavior: 'smooth'});
                 break;
             }
             case Globals.SectionPrefs.getFieldName(Globals.Sections.ABOUT): {
-                this.about.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                this.about.nativeElement.scrollIntoView({behavior: 'smooth'});
                 break;
             }
             default: { // GO TOP
@@ -106,9 +114,9 @@ export class LandingBodyComponent {
                     left: 0,
                     behavior: 'smooth'
                   });
-                break; 
-            } 
-        } 
+                break;
+            }
+        }
     }
 
     /**
