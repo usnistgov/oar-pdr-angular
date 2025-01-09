@@ -120,6 +120,68 @@ describe('LocalDAPService/LocalDAPUpdateService', function() {
         await expect(svc.create("gurn").toPromise()).rejects.toThrow(BadInputError);
     });
 
+    it("getResource", async () => {
+        await svc.create("goober",{},{title:"It's me!"}).toPromise();
+        let data = await svc.getResource("mds3:0001").toPromise();
+        expect(data["@id"]).toEqual("ark:/88434/mds3-0001");
+        expect(data["title"]).toEqual("It's me!");
+    });
+
+    it("getData", async () => {
+        let dap: dapsvc.DAPUpdateService = await svc.create("goober",{},{title:"It's me!"}).toPromise();
+        let data = await dap.getData().toPromise();
+        expect(data["@id"]).toEqual("ark:/88434/mds3-0001");
+        expect(data["title"]).toEqual("It's me!");
+    });
+
+    it("getDataSubset", async () => {
+        let dap: dapsvc.DAPUpdateService = await svc.create("goober",{},{title:"It's me!"}).toPromise();
+        let data = await dap.getDataSubset("title").toPromise();
+        expect(data).toEqual("It's me!");
+        data = await dap.getDataSubset("contactPoint/fn").toPromise();
+        expect(data).toEqual("John Q. Nist");
+        data = await dap.getDataSubset("contactPoint").toPromise();
+        expect(data).toEqual({hasEmail: "mailto:jqn@nist.gov", fn: "John Q. Nist"});
+    });
+
+    it("setDataSubset", async () => {
+        let dap: dapsvc.DAPUpdateService = await svc.create("goober",{},{title:"It's me!"}).toPromise();
+        let data = await dap.setDataSubset("title", "Hazah!").toPromise();
+        expect(data).toEqual("Hazah!");
+        data = await dap.setDataSubset("goober", "gurn").toPromise();
+        expect(data).toEqual("gurn");
+        data = await dap.getData().toPromise();
+        expect(data["goober"]).toEqual("gurn");
+        data = await dap.setDataSubset("contactPoint/fn", "Gurn Cranston").toPromise();
+        expect(data).toEqual("Gurn Cranston");
+        data = await dap.getDataSubset("contactPoint").toPromise();
+        expect(data).toEqual({hasEmail: "mailto:jqn@nist.gov", fn: "Gurn Cranston"});
+        let cp = {hasEmail: "mailto:ava1@nist.gov", fn: "Alan V. Astin"}
+        data = await dap.setDataSubset("contactPoint", cp).toPromise();
+        expect(data).toEqual(cp);
+        data = await dap.getData().toPromise();
+        expect(data["contactPoint"]).toEqual(cp);
+    });
+
+    it("updateDataSubset", async () => {
+        let dap: dapsvc.DAPUpdateService = await svc.create("goober",{},{title:"It's me!"}).toPromise();
+        let data = await dap.updateDataSubset("title", "Hazah!").toPromise();
+        expect(data).toEqual("Hazah!");
+        data = await dap.updateDataSubset("goober", "gurn").toPromise();
+        expect(data).toEqual("gurn");
+        data = await dap.getData().toPromise();
+        expect(data["goober"]).toEqual("gurn");
+
+        data = await dap.updateDataSubset("contactPoint", {"fn": "Gurn Cranston"}).toPromise();
+        expect(data).toEqual({hasEmail: "mailto:jqn@nist.gov", fn: "Gurn Cranston"});
+
+        let cp = {hasEmail: "mailto:ava1@nist.gov", fn: "Alan V. Astin"}
+        data = await dap.updateDataSubset("contactPoint", cp).toPromise();
+        expect(data).toEqual(cp);
+        data = await dap.getData().toPromise();
+        expect(data["contactPoint"]).toEqual(cp);
+    });
+
     it("setName", async () => {
         let dap: dapsvc.DAPUpdateService = await svc.create("goober").toPromise();
 
@@ -281,23 +343,112 @@ describe("MIDASDAPService/MIDASDAPUpdateService", function() {
     });
 
     it("edit", async () => {
-        let pc = svc.create("goober").toPromise();
-        let req = httpmock.expectOne(ep);
-        expect(req.request.method).toBe('POST');
+        let pc = svc.edit("mds3:0001").toPromise();
+        let req = httpmock.expectOne(ep+"/mds3:0001");
+        expect(req.request.method).toBe('GET');
         req.flush(newrec("goober"));
         let dap: dapsvc.DAPUpdateService = await pc;
 
         expect(dap.getRecord().name).toEqual("goober");
         expect(dap.name).toEqual("goober");
 
-        pc = svc.edit(dap.recid).toPromise();
-        req = httpmock.expectOne(ep+"/mds3:0001");
+        pc = svc.edit("mds3:0019").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0019");
         expect(req.request.method).toBe('GET');
-        req.flush(dap.getRecord());
-        dap = await pc;
+        req.flush({}, {status: 404, statusText: "ID Not Found"});
+        
+    });
 
-        expect(dap.getRecord().name).toEqual("goober");
-        expect(dap.name).toEqual("goober");
+    it("getResource", async () => {
+        let p = svc.getResource("mds3:0001").toPromise();
+        let req = httpmock.expectOne(ep+"/mds3:0001/data");
+        expect(req.request.method).toBe('GET');
+        req.flush({"@id": "ark:/88434/mds3-0001", title: "It's me!"});
+
+        let data = await p;
+        expect(data["@id"]).toEqual("ark:/88434/mds3-0001");
+        expect(data["title"]).toEqual("It's me!");
+
+        p = svc.getResource("mds3:0019").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0019/data");
+        expect(req.request.method).toBe('GET');
+        req.flush({}, {status: 404, statusText: "ID Not Found"});
+        
+        await expect(p).rejects.toThrow(IDNotFound);
+    });
+
+    it("getData", async () => {
+        let meta = {creatorIsContact: true};
+        let data = {title: "Hazah!"};
+        let pc = svc.create("goober", meta, data).toPromise();
+        let req = httpmock.expectOne(ep);
+        req.flush(newrec("goober", meta, data));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        let p = dap.getData().toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/data");
+        expect(req.request.method).toBe('GET');
+        req.flush(dap.getRecord().data);
+        data = await p;
+        expect(data["@id"]).toEqual("ark:/88434/mds3-0001");
+        expect(data["title"]).toEqual("Hazah!");
+    });
+
+    it("getDataSubset", async () => {
+        let meta = {creatorIsContact: true};
+        let data = {title: "Hazah!"};
+        let pc = svc.create("goober", meta, data).toPromise();
+        let req = httpmock.expectOne(ep);
+        req.flush(newrec("goober", meta, data));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        let p = dap.getDataSubset("title").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/data/title");
+        expect(req.request.method).toEqual("GET");
+        req.flush(dap.getRecord().data["title"]);
+        expect(await p).toEqual("Hazah!");
+
+        p = dap.getDataSubset("contactPoint/fn").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/data/contactPoint/fn");
+        req.flush(dap.getRecord().data["contactPoint"]["fn"]);
+        expect(await p).toEqual("Astin, Alan V");
+    });
+
+    it("setDataSubset", async () => {
+        let pc = svc.create("goober").toPromise();
+        let req = httpmock.expectOne(ep);
+        req.flush(newrec("goober"));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        let p = dap.setDataSubset("title", "Hazah!").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/data/title");
+        expect(req.request.method).toBe('PUT');
+        req.flush("Hazah!");
+        expect(await p).toEqual("Hazah!");
+
+        let cp = {hasEmail: "mailto:goober@gurn.edu", fn: "Gurn Cranston"};
+        p = dap.setDataSubset("contactPoint/fn", cp["hasEmail"]).toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/data/contactPoint/fn");
+        req.flush(cp["hasEmail"])
+        expect(await p).toEqual(cp["hasEmail"]);
+
+        p = dap.setDataSubset("contactPoint", cp).toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/data/contactPoint");
+        req.flush(cp)
+        expect(await p).toEqual(cp);
+    });
+
+    it("updateDataSubset", async () => {
+        let pc = svc.create("goober").toPromise();
+        let req = httpmock.expectOne(ep);
+        req.flush(newrec("goober"));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        let p = dap.updateDataSubset("title", "Hazah!").toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/data/title");
+        expect(req.request.method).toBe('PATCH');
+        req.flush("Hazah!");
+        expect(await p).toEqual("Hazah!");
     });
 
     it("setName", async () => {
@@ -313,6 +464,7 @@ describe("MIDASDAPService/MIDASDAPUpdateService", function() {
         let p = dap.setName("gurn").toPromise();
         req = httpmock.expectOne(ep+"/mds3:0001/name");
         expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual('"gurn"');
         req.flush("gurn");
         expect(await p).toEqual("gurn");
 

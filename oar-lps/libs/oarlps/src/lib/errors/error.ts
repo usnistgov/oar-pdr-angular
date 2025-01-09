@@ -80,7 +80,8 @@ export class OARError extends Error {
 }
 
 /**
- * a custom exception indicating a request for the landing page for a non-existent identifier
+ * a custom exception indicating a request for a resource or its landing page with 
+ * a non-existent identifier. 
  */
 export class IDNotFound extends OARError {
 
@@ -92,6 +93,23 @@ export class IDNotFound extends OARError {
      */
     constructor(public id : string, cause? : Error) {
         super("Resource identifier not found: "+id, cause);
+    }
+}
+
+/**
+ * a custom exception indicating that a resource does not contain a requested attribute 
+ */
+export class PartNotFound extends OARError {
+
+    /**
+     * create the error
+     * @param id    the ID of the resource being requested
+     * @param part  the label or pointer to the part of the resource that does not exist
+     * @param cause     (optional) another Error that this OARError is being raise in 
+     *                  reaction to
+     */
+    constructor(public id : string, public part : string, cause? : Error) {
+        super("Part not found on resource with id="+id+": "+part, cause);
     }
 }
 

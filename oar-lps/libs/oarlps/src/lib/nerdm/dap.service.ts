@@ -84,10 +84,54 @@ export abstract class DAPUpdateService {
      */
     getRecord() : DAPRecord { return JSON.parse(JSON.stringify(this._rec)); }
 
+    /**
+     * return the DAP meta-information (the record's "meta" property).  
+     * 
+     * This default implementation returns a copy of the internally held record.
+     */
+    getMeta() : AnyObj { return this.getRecord().meta; }
+
     /** 
      * return the complete NERDm data 
      */
     abstract getData() : Observable<NerdmRes>;
+
+    /**
+     * return a particular property of the NERDm record data
+     * @param propname   the name of the property to return
+     */
+    abstract getDataSubset(propname: string) : Observable<Object>;
+
+    /**
+     * replace some property of the NERDm record data with the given value
+     */
+    abstract setDataSubset(propname: string, val: Object) : Observable<Object>;
+
+    /**
+     * update some property of the NERDm record data.  When the property is an object with 
+     * subproperties, the given object will be merged in with the existing object value, 
+     * overriding the subproperties where their names overlap.
+     */
+    abstract updateDataSubset(propname: string, val: Object) : Observable<Object>;
+
+    /**
+     * add an item to the identified list of items (e.g. adding and author to the authors list).
+     * It will be appended to the list.
+     */
+    abstract addDataItem(propname: string, item: Object) : Observable<Object>;
+
+    /**
+     * replace an item in the identified list of items (e.g. replacing author data within the authors list).
+     */
+    abstract setDataItem(propname: string, key: string|number, item: Object) : Observable<Object>;
+
+    /**
+     * update an item in the identified list of items (e.g. updating author data within the 
+     * authors list).  The item is assumed to be an object with 
+     * subproperties; the item data will be overlayed onto with the identified item, 
+     * overriding the subproperties where their names overlap.
+     */
+    abstract updateDataItem(propname: string, key: string|number, item: Object) : Observable<Object>;
 
     /**
      * change the mnemonic name of this resource
@@ -156,7 +200,7 @@ export class MIDASDAPService extends DAPService implements SupportsAuthenticatio
     }
 
     /**
-     * retrieve the metadata associated with the current identifier.
+     * retrieve the NERDm Resource metadata associated with the current identifier.
      * 
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
@@ -286,6 +330,7 @@ export class MIDASDAPService extends DAPService implements SupportsAuthenticatio
 
 function _headersFor(svc: SupportsAuthentication, meth: string) {
     let out = {};
+    meth = meth.toLowerCase();
     if (meth != "head")
         out['Accept'] = "application/json";
     if (meth == "post" || meth == "put")
@@ -300,6 +345,8 @@ function _handleWebError(error, id: string|null, url: string, opverb: string, ep
         let err = error as HttpErrorResponse;
         let msg = err.message || err.statusText;
         if (err.status) {
+            if (error.error instanceof Object && error.error["midas:message"])
+                msg = error.error["midas:message"];
             if (id && err.status == 404)
                 throw new errors.IDNotFound(id, err);
             if (err.status == 401)
@@ -313,9 +360,9 @@ function _handleWebError(error, id: string|null, url: string, opverb: string, ep
         else if (err.status == 0) 
             throw new errors.CommError("Unexpected DAP communication error: "+msg, url, err);
     }
-    else
-        throw new errors.OARError("Unexected error during "+opverb+" from URL (" + 
-                                  url + "): " + error.toString(), error);
+
+    throw new errors.OARError("Unexected error during "+opverb+" from URL (" + 
+                              url + "): " + error.toString(), error);
 }
 
 /**
@@ -357,14 +404,111 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
     }
 
     /**
+     * return some property of the NERDm record data
+     */
+    getDataSubset(propname: string) : Observable<Object> {
+        const ep = "/data/" + propname;
+        const url = this.endpoint + this.recid + ep;
+        const hdrs = _headersFor(this, "get");
+
+        return this.webclient.get(url, {headers: hdrs}).pipe(
+            catchError(err => {
+                if (err.status && err.status == 404) {
+                    if (err.message.includes("ID not found"))
+                        throw new errors.IDNotFound(this.recid);
+                    throw new errors.PartNotFound(this.recid, ep);
+                }
+                return this._handleWebError(err, url, "access", ep);
+            })
+        ) as Observable<Object>;
+    }
+
+    /**
+     * replace some property of the NERDm record data with the given value
+     */
+    setDataSubset(propname: string, val: Object) : Observable<Object> {
+        return this._updateWithMethod("PUT", propname, val);
+    }
+
+    protected _updateWithMethod(meth: string, propname: string,
+                                val: Object, key?: string|number)
+        : Observable<Object>
+    {
+        let ep = "/data/" + propname;
+        if (typeof key == 'number')
+            key = "["+key+"]";
+        if (key) 
+            ep += "/"+key;
+        const url = this.endpoint + this.recid + ep;
+        const hdrs = _headersFor(this, meth);
+        if (typeof val === "string" || val instanceof String)
+            val = '"'+val+'"';
+
+        return this.webclient.request(meth, url, {body: val, headers: hdrs}).pipe(
+            catchError(err => {
+                if (err.status && err.status == 404) {
+                    if (err.message.includes("ID not found"))
+                        throw new errors.IDNotFound(this.recid);
+                    throw new errors.PartNotFound(this.recid, ep);
+                }
+                return this._handleWebError(err, url, "update", ep);
+            })
+        ) as Observable<Object>;
+    }
+
+    /**
+     * update some property of the NERDm record data.  When the property is an object with 
+     * subproperties, the given object will be merged in with the existing object value, 
+     * overriding the subproperties where their names overlap.
+     */
+    updateDataSubset(propname: string, val: Object) : Observable<Object> {
+        return this._updateWithMethod("PATCH", propname, val);        
+    }
+
+    /**
+     * add an item to the identified list of items (e.g. adding and author to the authors list).
+     * It will be appended to the list.
+     * @param propname  the name of the property containing a list of values (e.g. "authors")
+     * @param item      the object to append to the list
+     */
+    addDataItem(propname: string, item: Object) : Observable<Object> {
+        return this._updateWithMethod("POST", propname, item);
+    }
+
+    /**
+     * replace an item to the identified list of items (e.g. adding and author to the authors list).
+     * It will be appended to the list.
+     * @param propname  the name of the property containing a list of values (e.g. "authors")
+     * @param id        the id for the particular item to repace
+     * @param item      the object to append to the list
+     */
+    setDataItem(propname: string, key: string|number, item: Object) : Observable<Object> {
+        return this._updateWithMethod("PUT", propname, item, key);
+    }
+
+    /**
+     * update an item in the identified list of items (e.g. updating author data within the 
+     * authors list).  The item is assumed to be an object with 
+     * subproperties; the item data will be overlayed onto with the identified item, 
+     * overriding the subproperties where their names overlap.
+     * @param propname  the name of the property containing a list of values (e.g. "authors")
+     * @param id        the id for the particular item to update
+     * @param item      the object to append to the list
+     */
+    updateDataItem(propname: string, key: string|number, item: Object) : Observable<Object> {
+        return this._updateWithMethod("PATCH", propname, item, key);
+    }
+
+    /**
      * change the mnemonic name of this resource
      * @return string -- the name that was set
      */
     setName(newname: string) : Observable<string> {
         const url = this.endpoint + this.recid + "/name";
         const hdrs = _headersFor(this, "put");
+        newname = '"'+newname+'"';
 
-        return this.webclient.put(url, {headers: hdrs}).pipe(
+        return this.webclient.put(url, newname, {headers: hdrs, responseType: "json"}).pipe(
             tap<string>(name => { this._rec.name = name; }),
             catchError(err => { return this._handleWebError(err, url, "change name", "/name"); })
         ) as Observable<string>;
@@ -461,19 +605,19 @@ export class LocalDAPService extends DAPService {
             meta: request.meta
         };
         for (const prop in request.data)
-            data[prop] = request.data[prop];
+            out.data[prop] = request.data[prop];
 
         if (! data['contactPoint'])
-            data['contactPoint'] = {};
+            out.data['contactPoint'] = {};
         if (! data['contactPoint']['fn'])
-            data['contactPoint']['fn'] = "John Q. Nist";
+            out.data['contactPoint']['fn'] = "John Q. Nist";
         if (! data['contactPoint']['hasEmail'])
-            data['contactPoint']['hasEmail'] = "jqn@nist.gov";
+            out.data['contactPoint']['hasEmail'] = "mailto:jqn@nist.gov";
 
         if (out['meta']['resourceType'] == "software")
-            data['@type'].unshift("nrdw:SoftwarePublication");
+            out.data['@type'].unshift("nrdw:SoftwarePublication");
         else if (out['meta']['resourceType'] == "srd")
-            data['@type'].unshift("nrdp:SRD");
+            out.data['@type'].unshift("nrdp:SRD");
 
         return out;
     }
@@ -563,6 +707,190 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
      * return the complete NERDm data 
      */
     getData() : Observable<NerdmRes> { return of(this._rec.data); }
+
+    /**
+     * return some property of the NERDm record data
+     */
+    getDataSubset(propname: string) : Observable<Object> {
+        let props = propname.split('/');
+        let out = this._rec.data
+        let top = null;
+        while (props.length > 0) {
+            top = props.shift();
+            if (out[top] == undefined)
+                return throwError(new errors.PartNotFound(this.recid, propname));
+            out = out[top];
+        }
+        return of(out);
+    }
+
+    /**
+     * replace some property of the NERDm record data with the given value
+     */
+    setDataSubset(propname: string, val: Object) : Observable<Object> {
+        let props = propname.split('/');
+        let obj = this._rec.data
+        let top = null;
+        while (props.length > 1) {
+            top = props.shift();
+            if (obj[top] == undefined || obj[top] == null)
+                obj[top] = {}
+            obj = obj[top];
+        }
+        obj[props[0]] = val;
+        this._saveRec(this._rec);
+        return of(obj[props[0]]);
+    }
+
+    /**
+     * update some property of the NERDm record data.  When the property is an object with 
+     * subproperties, the given object will be merged in with the existing object value, 
+     * overriding the subproperties where their names overlap.
+     */
+    updateDataSubset(propname: string, val: Object) : Observable<Object> {
+        let props = propname.split('/');
+        let obj = this._rec.data
+        let top = null;
+        while (props.length > 1) {
+            top = props.shift();
+            if (obj[top] == undefined || obj[top] == null) 
+                obj[top] = {}
+            obj = obj[top];
+        }
+        if (! obj[props[0]] || ! (val instanceof Object))
+            obj[props[0]] = val;
+        else if (! (val instanceof Object))
+            throw new errors.BadInputError(this.recid+": Target subset, "+propname+
+                                           ", is not currently an object");
+        else {
+            for(const p in val)
+                obj[props[0]][p] = val[p];
+        }
+        
+        this._saveRec(this._rec);
+        return of(obj[props[0]]);
+    }
+
+    /**
+     * add an item to the identified list of items (e.g. adding and author to the authors list).
+     * It will be appended to the list.
+     * @param propname  the name of the property containing a list of values (e.g. "authors")
+     * @param item      the object to append to the list
+     */
+    addDataItem(propname: string, item: Object) : Observable<Object> {
+        let props = propname.split('/');
+        let obj = this._rec.data
+        let top = null;
+        while (props.length > 1) {
+            top = props.shift();
+            if (obj[top] == undefined || obj[top] == null) 
+                obj[top] = {}
+            obj = obj[top];
+        }
+        if (! obj[props[0]])
+            obj[props[0]] = [];
+        let list = obj[props[0]];
+        list.push(item);
+        
+        this._saveRec(this._rec);
+        return of(list[list.length-1]);
+    }
+
+    /**
+     * replace an item to the identified list of items (e.g. adding and author to the authors list).
+     * It will be appended to the list.
+     * @param propname  the name of the property containing a list of values (e.g. "authors")
+     * @param id        the id for the particular item to repace
+     * @param item      the object to append to the list
+     */
+    setDataItem(propname: string, key: string|number, item: Object) : Observable<Object> {
+        let props = propname.split('/');
+        let obj = this._rec.data
+        let top = null;
+        while (props.length > 1) {
+            top = props.shift();
+            if (obj[top] == undefined || obj[top] == null) 
+                obj[top] = {}
+            obj = obj[top];
+        }
+        if (! obj[props[0]])
+            obj[props[0]] = [];
+        let list = obj[props[0]];
+
+        if (typeof key == 'number') {
+            if (key < 0 || key >= list.length)
+                return throwError(new errors.BadInputError("index, "+key+
+                                                           ", out of range for property, "+propname));
+            let id = list[key]["@id"];
+            list[key] = item;
+            if (id)
+                list[key]["@id"] = id;
+            obj = list[key]
+        }
+        else {
+            let idx = this._listIndexForID(list, key);
+            if (idx < 0)
+                return throwError(new errors.PartNotFound(this.recid, propname+"/"+key));
+            list[idx] = item
+            list[idx]["@id"] = key;
+            obj = list[key]
+        }
+        
+        this._saveRec(this._rec);
+        return of(obj);
+    }
+
+    _listIndexForID(list: Array<Object>, id: string) {
+        for(let i=0; i < list.length; i++) {
+            if (list[i]["@id"] == id)
+                return i;
+        }
+        return -1;
+    }
+
+    /**
+     * update an item in the identified list of items (e.g. updating author data within the 
+     * authors list).  The item is assumed to be an object with 
+     * subproperties; the item data will be overlayed onto with the identified item, 
+     * overriding the subproperties where their names overlap.
+     * @param propname  the name of the property containing a list of values (e.g. "authors")
+     * @param id        the id for the particular item to update
+     * @param item      the object to append to the list
+     */
+    updateDataItem(propname: string, key: string|number, item: Object) : Observable<Object> {
+        let props = propname.split('/');
+        let obj = this._rec.data
+        let top = null;
+        while (props.length > 1) {
+            top = props.shift();
+            if (obj[top] == undefined || obj[top] == null) 
+                obj[top] = {}
+            obj = obj[top];
+        }
+        if (! obj[props[0]])
+            obj[props[0]] = [];
+        let list = obj[props[0]];
+
+        if (typeof key == 'number') {
+            if (key < 0 || key >= list.length)
+                return throwError(new errors.BadInputError("index, "+key+
+                                                           ", out of range for property, "+propname));
+            obj = list[key]
+        }
+        else {
+            let idx = this._listIndexForID(list, key);
+            if (idx < 0)
+                return throwError(new errors.PartNotFound(this.recid, propname+"/"+key));
+            obj = list[idx]
+        }
+        for(const p in item) {
+            if (p != "@id")
+                obj[p] = item[p];
+        }
+        
+        this._saveRec(this._rec);
+        return of(obj);
+    }
 
     /**
      * change the mnemonic name of this resource
