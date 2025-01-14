@@ -292,7 +292,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         let returnString: string = "";
         switch(this._editMode) { 
             case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORNAL)
+                if(this._editType == this.EDIT_TYPES.NORMAL)
                     returnString = "EDIT MODE";
                 else if(this._editType == this.EDIT_TYPES.REVISE)
                     returnString = "REVISION MODE";
@@ -319,7 +319,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         let returnString: string = "";
         switch(this._editMode) { 
             case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORNAL)
+                if(this._editType == this.EDIT_TYPES.NORMAL)
                     returnString = "EDIT MODE";
                 else if(this._editType == this.EDIT_TYPES.REVISE)
                     returnString = "REVISION MODE";
@@ -345,7 +345,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         let returnString: string = "";
         switch(this._editMode) { 
             case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORNAL)
+                if(this._editType == this.EDIT_TYPES.NORMAL)
                     returnString = "fa-pencil";
                 else if(this._editType == this.EDIT_TYPES.REVISE)
                     returnString = "fa-undo";

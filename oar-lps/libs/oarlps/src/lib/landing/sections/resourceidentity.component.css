@@ -43,11 +43,13 @@
 }
 
 .right {
-    width: 50%;
+    width: fit-content;
     text-align: right;
+    float: right;
+    margin-right: 20px;
 }
 
 .left {
-    width: 50%;
+    width: auto;
     vertical-align: top;
 }

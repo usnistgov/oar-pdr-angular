@@ -1,11 +1,11 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -60,7 +60,8 @@ export class RefListComponent implements OnInit {
 
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter reference data?" will not display.
     // Default is "normal" mode.
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
+    globalsvc = inject(GlobalService);
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
@@ -91,11 +92,11 @@ export class RefListComponent implements OnInit {
     onSectionModeChange(sectionMode) {
         if( sectionMode ) {
             if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                if( sectionMode && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                     if(this.dataChanged){
                         this.saveCurRef(false); // Do not refresh help text 
                     }else{
-                        this.setMode(MODE.NORNAL, false);
+                        this.setMode(MODE.NORMAL, false);
                     }
                 }
             }else{
@@ -123,7 +124,7 @@ export class RefListComponent implements OnInit {
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
+    get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
 
@@ -228,14 +229,15 @@ export class RefListComponent implements OnInit {
 
                 // Update help text
                 if(refreshHelp){
-                    this.refreshHelpText(MODE.NORNAL);
+                    this.refreshHelpText(MODE.NORMAL);
                 }                  
                 break;
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
-            this.lpService.setEditing(sectionMode);
+        if(editmode != MODE.NORMAL)
+            this.globalsvc.sectionMode.set(sectionMode);
+            // this.lpService.setEditing(sectionMode);
 
         this.editmodeOutput.next(this.editMode);    
 
@@ -339,7 +341,7 @@ export class RefListComponent implements OnInit {
             this.updateMatadata(this.currentRef, this.currentRef["@id"]);
         }
 
-        this.setMode(MODE.NORNAL, refreshHelp);
+        this.setMode(MODE.NORMAL, refreshHelp);
     }
 
     /*
@@ -588,7 +590,7 @@ export class RefListComponent implements OnInit {
                         if(this.editMode==MODE.ADD || this.editMode==MODE.EDIT)
                             this.editMode = MODE.EDIT;
                         else    
-                            this.editMode = MODE.NORNAL;
+                            this.editMode = MODE.NORMAL;
 
                         this.editmodeOutput.next(this.editMode); 
                     }else{
@@ -714,7 +716,7 @@ export class RefListComponent implements OnInit {
      * @param refreshHelp indicates if the help text needs be refreshed
      */
     hideEditBlock(refreshHelp: boolean = true) {
-        this.setMode(MODE.NORNAL, refreshHelp);
+        this.setMode(MODE.NORMAL, refreshHelp);
 
         if(this.record)
             this.dataCommand.next({"data": this.record[this.fieldName], "action": "hideEditBlock"});

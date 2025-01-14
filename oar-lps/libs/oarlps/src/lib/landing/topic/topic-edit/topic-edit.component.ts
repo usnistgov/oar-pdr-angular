@@ -32,7 +32,7 @@ export const ROW_COLOR = '#1E6BA1';
 })
 export class TopicEditComponent implements OnInit {
     fieldName = 'theme';
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     dataChanged: boolean = false;
 
     isVisible: boolean = true;
@@ -109,11 +109,11 @@ export class TopicEditComponent implements OnInit {
 
     get isEditing() { return this.editMode==MODE.EDIT }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORMAL }
 
     reset() {
         this.dataChanged = false;
-        this.editMode = MODE.NORNAL;
+        this.editMode = MODE.NORMAL;
         this.isVisible = true;
     }
 

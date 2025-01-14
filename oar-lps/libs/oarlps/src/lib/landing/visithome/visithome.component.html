@@ -1,4 +1,26 @@
-<span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
+@if(isPublicSite) {
+    <div style="margin: 0px 10px 0px 0px;">
+        <visithpme-pub 
+            [record]="record" 
+            [inBrowser]="inBrowser"
+            [inViewMode]="inViewMode"
+            [theme]="theme">
+        </visithpme-pub>
+    </div>
+}
+@else {
+    <div style="margin: 0px 10px 0px 0px;">
+        <visithpme-midas 
+            [record]="record" 
+            [inBrowser]="inBrowser"
+            [inViewMode]="inViewMode"
+            [theme]="theme"
+            [isEditMode]="isEditMode">
+        </visithpme-midas>
+    </div>
+}
+
+<!-- <span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
     <div style="display: table;">
         <div class="editable_container">
             @defer(when isPublicSite){
@@ -64,7 +86,6 @@
                             </button>  
                             
                             @if(updated) {
-                                <!-- Restore button -->
                                 <button class="edit_button" type="button"
                                 (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
                                     <i class="fas fa-undo fa-sm"></i>
@@ -72,7 +93,6 @@
                             }
                         }
                         @else {
-                            <!-- Hide edit window button -->
                             <button class="edit_button" type="button"
                                 (click)="hideEditBlock()" aria-label="Close button" ngbTooltip="Hide edit block">
                                 <i class="fas fa-times"></i>
@@ -87,8 +107,7 @@
 <ng-template #visitHomeOnServer>Visit Home Page</ng-template>
 
 @defer(when isEditing) {
-    <!-- Visit homepage editor -->
     <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
         <lib-visithome-edit #visithomeedit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit>
     </div>
-}
+} -->

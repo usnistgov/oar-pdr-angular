@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, effect, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, inject, Input, SimpleChanges } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
@@ -30,11 +30,11 @@ export class IspartofEditComponent {
     isEditing: boolean = false;
     fieldName = SectionPrefs.getFieldName(Sections.COLLECTION);
     editBlockStatus: string = 'collapsed';
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     overflowStyle: string = 'hidden';
     selectedCollection: string = "Forensics";
     originalCollection: string = null;
-    isEditMode: boolean = false;
+    globalsvc = inject(GlobalService);
 
     collectionData = [
         {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
@@ -45,43 +45,48 @@ export class IspartofEditComponent {
 
     @Input() record: any[];
     @Input() inBrowser: boolean; 
+    @Input() isEditMode: boolean;
 
     constructor(
-        public edstatsvc: EditStatusService,
         public mdupdsvc : MetadataUpdateService, 
         private chref: ChangeDetectorRef,
-        public globalsvc: GlobalService,
         public lpService: LandingpageService
     ){
-        effect(() => {
-            //Very tricky: have to use settimeout() here. Otherwise detectChanges does not work!
-            setTimeout(() => {
-                this.isEditMode = this.edstatsvc.isEditMode();
-                this.chref.detectChanges();
-            }, 0);
-        })
+        // effect(() => {
+        //     //Very tricky: have to use settimeout() here. Otherwise detectChanges does not work!
+        //     setTimeout(() => {
+        //         this.isEditMode = this.edstatsvc.isEditMode();
+        //         this.chref.detectChanges();
+        //     }, 0);
+        // })
     }
 
     ngOnInit(): void {
-        this.isEditMode = this.edstatsvc.isEditMode();
+        // this.isEditMode = this.edstatsvc.isEditMode();
 
+        // effect(() => {
+        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                         if(this.isEditing){
                             this.saveCollection(false); // Do not refresh help text 
                         }else{
-                            this.setMode(MODE.NORNAL, false);
+                            this.setMode(MODE.NORMAL, false);
                         }
                     }
                 }else { // Request from side bar, if not edit mode, start editing
-                    if( !this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
                         this.startEditing();
                     }
                 }
             }
         })      
+    }
+
+    ngOnChanges(changes: SimpleChanges) {
+        this.chref.detectChanges();
     }
 
     /**
@@ -99,7 +104,7 @@ export class IspartofEditComponent {
     }
 
     closeEditBlock() {
-        this.setMode(MODE.NORNAL, true);
+        this.setMode(MODE.NORMAL, true);
     }
 
     /**
@@ -121,7 +126,7 @@ export class IspartofEditComponent {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -150,8 +155,10 @@ export class IspartofEditComponent {
 
         // this.getRecordBackgroundColor();
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL){
             this.lpService.setEditing(sectionMode);
+            // this.globalsvc.sectionMode.set(sectionMode);
+        }
 
         this.chref.detectChanges();
     }
@@ -177,14 +184,14 @@ export class IspartofEditComponent {
         //Save collection then close edit block
 
         this.dataChanged = false;
-        this.setMode(MODE.NORNAL, refreshHelp);
+        this.setMode(MODE.NORMAL, refreshHelp);
 
     }
 
     undoCurCollectionChanges() {
         this.selectedCollection = this.originalCollection;
         this.dataChanged = false;
-        this.setMode(MODE.NORNAL, true);
+        this.setMode(MODE.NORMAL, true);
     }
 
     colChanged(event) {

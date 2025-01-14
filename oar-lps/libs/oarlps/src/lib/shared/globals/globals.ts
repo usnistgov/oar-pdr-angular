@@ -6,9 +6,12 @@ import { SelectItem, TreeNode } from 'primeng/api';
   providedIn: 'root'
 })
 export class GlobalService {
-    isPublicSite = signal(false);
-    message = signal("");
-    
+    public isPublicSite = signal(false);
+    public message = signal("");
+    public sectionMode = signal<SectionMode>({} as SectionMode);
+    public collection = signal<string>("");
+    public sectionHelp = signal<SectionHelp>({} as SectionHelp);
+
     constructor() { }
 
     /**
@@ -137,7 +140,7 @@ export interface SectionHelp {
 }
 
 export const MODE = {
-    "NORNAL": "normal",
+    "NORMAL": "normal",
     "LIST": "list",
     "EDIT": "edit",
     "ADD": "add"

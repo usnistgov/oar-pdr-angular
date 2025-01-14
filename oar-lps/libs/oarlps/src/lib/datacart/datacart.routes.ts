@@ -11,14 +11,14 @@ export const DatacartRoutes: Routes = [
     // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
     children: [
         {   path: ':cartname',             
-            component: DatacartComponent,
-            // loadComponent: () => import('./datacart.component')
-            //     .then(mod => mod.DatacartComponent),
+            // component: DatacartComponent,
+            loadComponent: () => import('./datacart.component')
+                .then(mod => mod.DatacartComponent),
             canDeactivate: [LeaveWhileDownloadingGuard]   },
         {   path: 'ark:/:naan/:cartname',  
-            component: DatacartComponent,
-            // loadComponent: () => import('./datacart.component')
-            //     .then(mod => mod.DatacartComponent),
+            // component: DatacartComponent,
+            loadComponent: () => import('./datacart.component')
+                .then(mod => mod.DatacartComponent),
             canDeactivate: [LeaveWhileDownloadingGuard]   }
     ]
   }

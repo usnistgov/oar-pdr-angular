@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, effect, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, effect, ChangeDetectorRef, inject } from '@angular/core';
 import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
@@ -43,7 +43,7 @@ export class KeywordComponent implements OnInit {
     @ViewChild('keyword') keywordElement: ElementRef;
     
     fieldName: string = SectionPrefs.getFieldName(Sections.KEYWORDS);
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     placeholder: string = "Enter keywords separated by comma";
     isEditing: boolean = false;
     keywords: string[] = [];
@@ -59,10 +59,10 @@ export class KeywordComponent implements OnInit {
     hovered: boolean = false;
     isPublicSite: boolean = false; 
     public EDIT_MODES: any = LandingConstants.editModes;
+    globalsvc = inject(GlobalService);
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal, 
-                public globalsvc: GlobalService,
                 public lpService: LandingpageService,    
                 private chref: ChangeDetectorRef,
                 private notificationService: NotificationService){ 
@@ -100,14 +100,36 @@ export class KeywordComponent implements OnInit {
         this.getKeywords();
         this.keywordInit();
 
+        // effect(() => {
+        //     let sectionMode = this.globalsvc.sectionMode();
+
+        //     if( sectionMode ) {
+        //         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+        //             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
+        //                 if(this.isEditing){
+        //                     this.onSave(false); // Do not refresh help text 
+        //                 }else{
+        //                     this.setMode(MODE.NORMAL, false);
+        //                 }
+        //             }
+        //         }else { // Request from side bar, if not edit mode, start editing
+        //             if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
+        //                 this.startEditing();
+        //             }
+        //         }
+        //     }
+        // })
+
+        // effect(() => {
+        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                         if(this.isEditing){
                             this.onSave(false); // Do not refresh help text 
                         }else{
-                            this.setMode(MODE.NORNAL, false);
+                            this.setMode(MODE.NORMAL, false);
                         }
                     }
                 }else { // Request from side bar, if not edit mode, start editing
@@ -168,7 +190,7 @@ export class KeywordComponent implements OnInit {
      */
     cancelEditing() {
         this.getKeywords();
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.NORMAL);
         this.isEditing = false;
         this.setBackground();
     }
@@ -231,17 +253,17 @@ export class KeywordComponent implements OnInit {
                 if (updateSuccess){
                     this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
 
-                    this.setMode(MODE.NORNAL, refreshHelp);
+                    this.setMode(MODE.NORMAL, refreshHelp);
                     this.isEditing = false;
                 }else{
                     let msg = "Keywords update failed";
                     console.error(msg);
-                    this.setMode(MODE.NORNAL, refreshHelp);
+                    this.setMode(MODE.NORMAL, refreshHelp);
                     this.isEditing = false;
                 }
             });
         }else{
-            this.setMode(MODE.NORNAL, refreshHelp);
+            this.setMode(MODE.NORMAL, refreshHelp);
             this.isEditing = false;
         }
     }
@@ -266,7 +288,7 @@ export class KeywordComponent implements OnInit {
     restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode(MODE.NORNAL);
+                this.setMode(MODE.NORMAL);
 
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
             }else{
@@ -292,7 +314,7 @@ export class KeywordComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -303,8 +325,9 @@ export class KeywordComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL){
+        if(editmode != MODE.NORMAL){
             this.lpService.setEditing(sectionMode); 
+            // this.globalsvc.sectionMode.set(sectionMode);
             this.isEditing = true; 
         }else{
             this.isEditing = false;

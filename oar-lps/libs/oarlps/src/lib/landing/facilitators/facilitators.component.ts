@@ -37,11 +37,11 @@ export class FacilitatorsComponent implements OnInit {
     isCollapsedContent: boolean = true;
     isEditing: boolean = false;
     fieldName = SectionPrefs.getFieldName(Sections.FACILITATORS);
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
     orderChanged: boolean = false;
-    childEditMode: string = MODE.NORNAL;
+    childEditMode: string = MODE.NORMAL;
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
@@ -105,14 +105,14 @@ export class FacilitatorsComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
         if(refreshHelp){
-            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
+            if(editmode == MODE.NORMAL) help_topic = MODE.NORMAL;
             this.refreshHelpText(help_topic);
         }
             
@@ -132,7 +132,7 @@ export class FacilitatorsComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL)
             this.lpService.setEditing(sectionMode);
     }
 

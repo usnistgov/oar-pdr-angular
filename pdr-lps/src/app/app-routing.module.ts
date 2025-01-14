@@ -10,11 +10,28 @@ import { DatacartComponent } from 'oarlps';
 import { DoneComponent } from 'oarlps';
 import { DatacartRoutes } from 'oarlps';
 import { MetricsComponent } from 'oarlps';
+import { LeaveWhileDownloadingGuard } from 'oarlps';
 
 const routes: Routes = [
-    ...DatacartRoutes,
+    // ...DatacartRoutes,
     { path: '', redirectTo: '/about', pathMatch: 'full' },
 
+    // Copied datacart routes here to test lazyloading
+    { path: 'datacart',
+      // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
+      children: [
+          {   path: ':cartname',
+              component: DatacartComponent,
+              // loadComponent: () => import('./datacart.component')
+              //     .then(mod => mod.DatacartComponent),
+              canDeactivate: [LeaveWhileDownloadingGuard]   },
+          {   path: 'ark:/:naan/:cartname',
+              component: DatacartComponent,
+              // loadComponent: () => import('./datacart.component')
+              //     .then(mod => mod.DatacartComponent),
+              canDeactivate: [LeaveWhileDownloadingGuard]   }
+      ]
+    },
     // app paths
     { path: 'about',         component: LandingAboutComponent },
     { path: 'od/id',
@@ -29,13 +46,13 @@ const routes: Routes = [
     // { path: 'datacart/:ediid',        component: DatacartComponent      },
     { path: 'done',         component: DoneComponent },
     // error paths
-    { path: 'not-found', 
+    { path: 'not-found',
       children: [
           { path: '',                component: NotFoundComponent      },
           { path: ':id',             component: NotFoundComponent      }
       ]
     },
-    { path: 'int-error', 
+    { path: 'int-error',
       children: [
           { path: '',                component: InternalErrorComponent },
           { path: ':id',             component: InternalErrorComponent }
@@ -46,7 +63,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { initialNavigation: 'enabled' })],
+  imports: [RouterModule.forRoot(routes, { initialNavigation: 'enabledNonBlocking' })],
   exports: [RouterModule],
   // providers: [ SearchResolve ]
 })

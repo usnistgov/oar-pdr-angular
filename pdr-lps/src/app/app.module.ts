@@ -30,15 +30,8 @@ import { DatacartModule } from 'oarlps';
 import { DirectivesModule } from 'oarlps';
 import { MetricsModule } from 'oarlps';
 
-// import { ErrorComponent, UserErrorComponent } from './landing/error.component';
-import { ModalComponent } from 'oarlps';
-import { ComboBoxComponent } from 'oarlps';
-import { SearchTopicsComponent } from 'oarlps';
-import { DescriptionPopupComponent } from 'oarlps';
-import { AuthorPopupComponent } from 'oarlps';
-import { ContactPopupComponent } from 'oarlps';
 import { GoogleAnalyticsService} from "oarlps";
-// import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
+import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
 import { FrameModule } from 'oarng';
 import { OARLPSModule } from 'oarlps';
@@ -46,6 +39,7 @@ import { environment } from '../environments/environment-impl';
 import { NerdmModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
 import { EditControlModule } from 'oarlps';
+import { StaffDirModule } from 'oarng';
 
 enableProdMode();
 
@@ -79,13 +73,15 @@ enableProdMode();
         NgbModule,
         NerdmModule.forRoot(environment),
         ConfigModule.forRoot(environment),
-        EditControlModule.forRoot(environment)
+        EditControlModule.forRoot(environment),
+        StaffDirModule
     ],
     exports: [],
     providers: [
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         GoogleAnalyticsService,
+        fakeBackendProvider,
         DatePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

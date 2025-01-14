@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TitleEditComponent } from './title-edit/title-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { TitlePubComponent } from './title-pub/title-pub.component';
 
 @Component({
     selector: 'app-title',
@@ -14,6 +15,7 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
         CommonModule, 
         FormsModule, 
         TitleEditComponent,
+        TitlePubComponent,
         NgbModule 
     ],
     templateUrl: './title.component.html',
@@ -21,10 +23,9 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 })
 export class TitleComponent implements OnInit {
     @Input() record: any[];
-    @Input() inBrowser: boolean;   // false if running server-side
+    @Input() isPublicSite: boolean;   // false if running server-side
 
     fieldName: string = SectionPrefs.getFieldName(Sections.TITLE);
-    isPublicSite: boolean = false; 
 
     constructor(
         public edstatsvc: EditStatusService,

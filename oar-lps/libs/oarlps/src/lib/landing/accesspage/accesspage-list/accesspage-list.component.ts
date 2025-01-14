@@ -1,11 +1,11 @@
-import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
 import { Themes, ThemesPrefs } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -66,8 +66,9 @@ export class AccesspageListComponent implements OnInit {
 
     currentApageIndex: number = -1;
     currentApage: NerdmComp = {} as NerdmComp;
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     forceReset: boolean = false;
+    globalsvc = inject(GlobalService);
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
@@ -90,13 +91,13 @@ export class AccesspageListComponent implements OnInit {
                 // this.lpService.watchEditing((sectionMode: SectionMode) => {
                 //     if( sectionMode ) {
                 //         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                //             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                //             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                 //                 if(this.currentApage && this.currentApage.dataChanged){
-                //                     this.saveCurApage(false, MODE.NORNAL);  // Do not refresh help text 
+                //                     this.saveCurApage(false, MODE.NORMAL);  // Do not refresh help text 
                 //                 }
 
                 //                 if(this.editBlockStatus == 'expanded')
-                //                     this.setMode(MODE.NORNAL);
+                //                     this.setMode(MODE.NORMAL);
                 //             }
                 //         }else{
                 //                 if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
@@ -114,7 +115,7 @@ export class AccesspageListComponent implements OnInit {
         }
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
+    get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
 
@@ -195,13 +196,13 @@ export class AccesspageListComponent implements OnInit {
     onSectionModeChange(sectionMode) {
         if( sectionMode ) {
             if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                     if(this.currentApage && this.currentApage.dataChanged){
-                        this.saveCurApage(false, MODE.NORNAL);  // Do not refresh help text 
+                        this.saveCurApage(false, MODE.NORMAL);  // Do not refresh help text 
                     }
 
                     if(this.editBlockStatus == 'expanded')
-                        this.setMode(MODE.NORNAL);
+                        this.setMode(MODE.NORMAL);
                 }
             }else{
                     if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
@@ -535,7 +536,7 @@ export class AccesspageListComponent implements OnInit {
 
                 // Update help text
                 // if(refreshHelp){
-                //     this.refreshHelpText(MODE.NORNAL);
+                //     this.refreshHelpText(MODE.NORMAL);
                 // }                
                 break;
         }
@@ -548,7 +549,8 @@ export class AccesspageListComponent implements OnInit {
             this.refreshHelpText(editmode);
         }  
 
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL)
+            // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
 
         this.chref.detectChanges();

@@ -11,6 +11,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { IspartofEditComponent } from './ispartof-edit/ispartof-edit.component';
+import { IspartofPubComponent } from './ispartof-pub/ispartof-pub.component';
 
 @Component({
   selector: 'app-ispartof',
@@ -18,7 +19,8 @@ import { IspartofEditComponent } from './ispartof-edit/ispartof-edit.component';
   imports: [
     CommonModule,
     NgbModule,
-    IspartofEditComponent
+    IspartofEditComponent,
+    IspartofPubComponent
   ],
   templateUrl: './ispartof.component.html',
   styleUrls: ['./ispartof.component.css', '../landing.component.scss'],
@@ -36,7 +38,7 @@ export class IspartofComponent implements OnInit {
     isEditing: boolean = false;
     fieldName = SectionPrefs.getFieldName(Sections.COLLECTION);
     editBlockStatus: string = 'collapsed';
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     overflowStyle: string = 'hidden';
     selectedCollection: string = "Forensics";
     originalCollection: string = null;
@@ -52,11 +54,11 @@ export class IspartofComponent implements OnInit {
 
     @Input() record: any[];
     @Input() inBrowser: boolean; 
+    @Input() isEditMode: boolean;
 
     constructor(
         private cfg: AppConfig,
                 public mdupdsvc : MetadataUpdateService, 
-                public edstatsvc: EditStatusService,
                 private gaService: GoogleAnalyticsService,
                 public globalsvc: GlobalService,
                 private chref: ChangeDetectorRef,

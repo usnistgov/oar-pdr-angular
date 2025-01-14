@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { Reference } from '../reference';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { HttpClient } from "@angular/common/http";
@@ -51,7 +51,10 @@ export class RefEditComponent implements OnInit {
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
-    constructor(private httpClient: HttpClient, public mdupdsvc : MetadataUpdateService) { }
+    constructor(
+        private httpClient: HttpClient, 
+        private chref: ChangeDetectorRef,  
+        public mdupdsvc : MetadataUpdateService) { }
 
     ngOnInit(): void {
         if(this.isEditing) this.showAllFields = true;
@@ -79,6 +82,8 @@ export class RefEditComponent implements OnInit {
                 this.ref = {} as Reference;
             }
         }
+
+        this.chref.detectChanges();
     }
 
     get isEditing() { return this.editMode=="edit" };
@@ -109,6 +114,7 @@ export class RefEditComponent implements OnInit {
         this.showCitationData = false;
         this.showAllFields = false; // Show all fields but doi
      
+        this.chref.detectChanges();
     }
 
     onChange(updateCitation:boolean = false) {
@@ -263,6 +269,7 @@ export class RefEditComponent implements OnInit {
 
     authorExpandClick() {
         this.editBlockStatus = this.editBlockStatus=="collapsed"? "expanded" : "collapsed";
+        this.chref.detectChanges();
     }
 
     /**

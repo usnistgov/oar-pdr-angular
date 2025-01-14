@@ -37,7 +37,7 @@ import { environment } from '../environments/environment-impl';
 import { NerdmModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
 import { EditControlModule } from 'oarlps';
-import { OARngModule } from 'oarng';
+import { OARngModule, AuthenticationService } from 'oarng';
 import { WizardModule, StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import {
@@ -68,9 +68,11 @@ export class AppComponent {
     gaCode: string;
     inBrowser: boolean = false;
     appVersion: string = "1.0"
+    authToken: string|null = null;
 
     constructor(private gaService: GoogleAnalyticsService,
                 // public environmentService : EnvironmentService,
+                private authsvc: AuthenticationService,
                 private cfg: AppConfig,
                 @Inject(PLATFORM_ID) private platformId: Object)
     {
@@ -79,6 +81,14 @@ export class AppComponent {
 
     ngOnInit() {
         this.appVersion = this.cfg.get("appVersion", "1.0") as string;
+
+        this.authsvc.getCredentials().subscribe(
+          creds => {
+              if (creds.token) {
+                  this.authToken = creds.token;
+              }
+          }
+        );
     }
 
     ngAfterViewInit(): void {
@@ -89,5 +99,7 @@ export class AppComponent {
             this.gaService.appendGaTrackingCode(this.gaCode);
         }
     }
+
+
 }
 

@@ -139,7 +139,7 @@ export class SidebarComponent implements OnInit {
         // Update help content
         let generalHelp = this.helpContentAll[GENERAL]? this.helpContentAll[GENERAL] : "Default help text.<p>";
 
-        if(sectionHelp.topic == HelpTopic[MODE.NORNAL]) {
+        if(sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
             sectionHelp.section = GENERAL;
         }
 

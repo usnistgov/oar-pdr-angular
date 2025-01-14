@@ -1,13 +1,14 @@
-@defer(when isPublicSite) {
+@if(isPublicSite) {
     @if(isPartOf) {
-        <div class="editable_field" style="font-size: smaller;">
-            <i>Part of {{isPartOf[0]}} <a href="{{isPartOf[1]}}"
-                title="view collection">{{isPartOf[2]}}</a> {{isPartOf[3]}}</i>
-        </div>
+        <ispartof-pub [isPartOf]="isPartOf"></ispartof-pub>
     }
 }
-
-@defer(when !isPublicSite) {
-    <ispartof-edit [record]="record" [inBrowser]="inBrowser"></ispartof-edit>
+@else {
+    @if(isEditMode) {
+        <ispartof-edit [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></ispartof-edit>
+    }
+    @else {
+        <ispartof-pub [isPartOf]="isPartOf"></ispartof-pub>
+    }
 }
 

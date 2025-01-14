@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input, ViewChild, effect, ChangeDetectorRef } from '@angular/core';
 
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
@@ -57,11 +57,13 @@ export class ResourceIdentityComponent implements OnChanges {
     fieldName = SectionPrefs.getFieldName(Sections.DOI);
     collection: string = Collections.DEFAULT;
     maxWidth: number = 1000;
+    isEditMode: boolean = true;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() theme: string;
+    @Input() isPublicSite: boolean;
 
     /**
      * create an instance of the Identity section
@@ -71,6 +73,7 @@ export class ResourceIdentityComponent implements OnChanges {
                 public mdupdsvc : MetadataUpdateService, 
                 private gaService: GoogleAnalyticsService,
                 public globalService: GlobalService,
+                private chref: ChangeDetectorRef,
                 public lpService: LandingpageService)
     { 
         this.globalService.watchCollection((collection) => {
@@ -79,6 +82,11 @@ export class ResourceIdentityComponent implements OnChanges {
 
         this.globalService.watchLpsLeftWidth(width => {
             this.onResize(width + 20);
+        })
+
+        effect(() => {
+            this.isEditMode = this.editstatsvc.isEditMode();
+            // this.chref.detectChanges();
         })
     }
 
@@ -89,6 +97,8 @@ export class ResourceIdentityComponent implements OnChanges {
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
         });
+
+
     }
 
     onResize(width: number) {

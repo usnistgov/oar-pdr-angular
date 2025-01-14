@@ -1095,3 +1095,8 @@ export const testdata: {} = {
     }
 };
 
+export const env = {
+    context: context,
+    config: config,
+    testdata: testdata
+}

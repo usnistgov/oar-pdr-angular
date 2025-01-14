@@ -1,0 +1,95 @@
+<div style="display: table;">
+    <div class="editable_container">
+        <div class="editable_field" *ngIf="!record['authors'] || record['authors'].length==0 || edstatsvc.isEditMode()">
+            <div class="editable_field" *ngIf="edstatsvc.isEditMode()" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+                Authors:
+            </div>
+        </div>
+
+        <div class="editable_field">
+            <author-pub [record]="record"></author-pub>
+        </div>
+        
+        <!-- <div *ngIf="record['authors'] && record['authors'].length > 0" class="editable_field" style="white-space: nowrap;width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+            <div class="authorsbrief">
+                <span *ngFor="let author of record.authors; let i = index">
+                    {{ author.fn }}    
+                    <span *ngIf="author.orcid">
+                        <a href="https://orcid.org/{{ author.orcid }}" target="blank">
+                            <img src="assets/images/orcid-logo.png" style="width: 20px;">
+                        </a>
+                    </span>                            
+                    <span *ngIf="i < record.authors.length-1 ">,</span>
+                </span>
+                <span>
+                    <i style="margin-left: 0.5rem;" class="fas"
+                    [ngClass]="{'fa-caret-right': !clickAuthors, 'fa-caret-down': clickAuthors}"
+                    aria-label="Show author details"
+                    (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();"></i>
+                </span>
+            </div>
+            <div [collapse]="!isCollapsedContent" class="card card-block card-header customcard" style="width: fit-content; padding:.5em;">
+                <div class="authorsdetail" *ngIf="record.authors">
+                    <span><b>Authors:</b></span>
+                    <div *ngFor="let author of record.authors; let i = index">
+                    <div>
+                        <span>{{ author.fn}}</span>
+                        <span *ngIf="author.orcid">&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a href="https://orcid.org/{{ author.orcid }}" target="blank">
+                            <img src="assets/images/orcid-logo.png" style="width: 20px;">:
+                            {{ author.orcid }}
+                        </a>
+                        </span>                            
+                        </div>
+                        <div *ngFor="let aff of author.affiliation" style="padding-left: 1em">
+                            <i>
+                                <div>{{aff.title}}</div>
+                                <div *ngIf="aff.subunits" style="margin-left: 1em;">{{getSubunites(aff.subunits)}}</div>
+                            </i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- Never get loaded in public mode -->
+        @if(isEditMode) {
+                <!-- Control buttons -->
+                <div class="editable_field" style="white-space: nowrap;">
+                    <!-- Edit button -->
+                    <button class="edit_button" *ngIf="!isEditing" type="button" 
+                        (click)="startEditing()" aria-label="Edit author" ngbTooltip="Edit author" style="cursor: pointer">
+                        <i class="fas fa-pencil fa-sm"></i>
+                    </button> 
+
+                    <!-- Hide button - hide edit block -->
+                    <button class="edit_button" *ngIf="isEditing" [disabled]="childIsEditing || childIsAdding" type="button" 
+                        (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                        <i class="fas fa-times"></i>
+                    </button> 
+
+                    <!-- Undo all changes button -->
+                    <button class="edit_button" *ngIf="authorsChanged || authorsUpdated" type="button"
+                        (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo">
+                        <i class="fas fa-undo fa-sm"></i>
+                    </button>             
+                </div>
+        }
+    </div>
+</div>
+
+<!-- Lazy loading in edit mode. Never get loaded in public mode -->
+
+@if(isEditMode) {
+    <!-- Author editor -->
+    <div [@editExpand]="editBlockStatus" 
+        style = "width: 100%;" 
+        [style.overflow] = "overflowStyle">
+        <lib-author-list #authorlist 
+            [record]="record" 
+            [fieldName]="fieldName"
+            (dataChanged)="onAuthorChange($event)" 
+            (editmodeOutput)="setChildEditMode($event)">
+        </lib-author-list>
+    </div>
+}

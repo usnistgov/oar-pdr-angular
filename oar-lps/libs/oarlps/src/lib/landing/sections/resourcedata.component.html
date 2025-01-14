@@ -36,12 +36,11 @@
     <!-- Access pages -->
     <div id="accessPages">
         <div style="width: 100%;">
-            @defer (when isPublicSite) {
+            @if(isPublicSite) {
                 <accesspage-pub [record]="record" [theme]="theme"></accesspage-pub>
             }
-
-            @defer (when !isPublicSite) {
-                <lib-accesspage [record]="record" [theme]="theme" [isEditMode]="isEditMode"></lib-accesspage>
+            @else {
+                <accesspage-midas [record]="record" [theme]="theme" [isEditMode]="isEditMode"></accesspage-midas>
             }
         </div>
     </div>

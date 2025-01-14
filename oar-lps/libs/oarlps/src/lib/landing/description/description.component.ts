@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild, inject } from '@angular/core';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
@@ -28,17 +28,17 @@ export class DescriptionComponent implements OnInit {
     description: string = "";
     maxWidth: number = 1000;
     isPublicSite: boolean = false; 
+    globalsvc = inject(GlobalService);
     
-    constructor(
-                public globalsvc: GlobalService){
-                    
-                this.globalsvc.watchLpsLeftWidth(width => {
-                    this.onResize(width + 20);
-                })
+    constructor(){
+        this.globalsvc.watchLpsLeftWidth(width => {
+            this.onResize(width + 20);
+        })
     }
 
     ngOnInit() {
         this.isPublicSite = this.globalsvc.isPublicSite();
+        console.log("isPublicSite", this.isPublicSite);
         this.getDescription();
     }
 

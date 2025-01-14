@@ -1,6 +1,13 @@
 <div class="references" id="references">
-    <!-- Public mode -->
-    <!-- <div *ngIf="mdupdsvc.isEditMode; else nonEdit"> -->
+    @if(isPublicSite) {
+        <ref-pub [record]="record" ></ref-pub>
+    }
+    @else {
+        <ref-midas [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></ref-midas>
+    }
+</div>
+
+<!-- <div class="references" id="references">
     @if(isPublicSite) {
         <div *ngIf="hasDisplayableReferences()">
             <div class="reference-text for-public">
@@ -16,10 +23,8 @@
             </div>
         </div>
     }
-    <!-- Edit mode -->
     @else if(isEditMode) {
         <div class="editable_container">
-            <!-- <ng-template #hasReferences> -->
             <div class="editable_field" style="max-width: calc(100% - 70px); margin-right: 5px;">
                 <div *ngIf="isEditMode && (!record['references'] || record['references'].length == 0)"  [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" style="margin-bottom: 10px; padding-left: 10px;">
                     Add references to papers and other datasets.
@@ -35,22 +40,18 @@
                     </ng-template>
                 </div>
             </div>        
-            <!-- </ng-template> -->
             
-            <!-- Control buttons -->
             <div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap;width: 1.65em;">
                 <button class="edit_button" *ngIf="isNormal" type="button" 
                 (click)="startEditing()" aria-label="Edit reference" ngbTooltip="Edit reference" style="cursor: pointer">
                     <i class="fas fa-pencil fa-sm"></i>
                 </button> 
 
-                <!-- Hide button - hide edit block -->
                 <button class="edit_button" *ngIf="!isNormal" [disabled]="childIsEditing || childIsAdding" type="button" 
                     (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
                     <i class="fas fa-times"></i>
                 </button> 
 
-                <!-- Undo all changes button -->
                 <button #undo class="edit_button" *ngIf="refChanged || refUpdated" [disabled]="childIsEditing || childIsAdding" type="button"
                     (click)="undoAllChanges()" aria-label="Undo" ngbTooltip="Undo">
                     <i class="fas fa-undo fa-sm"></i>
@@ -58,8 +59,6 @@
             </div>
         </div>
     }
-    <!-- preview mode -->
-    <!-- <ng-template #nonEdit> -->
     @else{
         <div *ngIf="hasDisplayableReferences()">
             <div class="reference-text" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
@@ -75,17 +74,12 @@
             </div>
         </div>
     }
-    <!-- </ng-template> -->
 </div>
 
-<!-- Defer block for lazyloading
-    The components inside the block must be stand alone component.
-    This block will only be loaded when loadEditRefBlock is set to true.
--->
 @defer (when loadEditRefBlock) {
     <div style="width: 100%;" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
         <lib-ref-list #reflist [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
     </div>
-}
+} -->
 
 

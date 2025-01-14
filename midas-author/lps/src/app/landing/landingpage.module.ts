@@ -7,7 +7,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NerdmModule } from 'oarlps';
 import { LandingPageComponent } from './landingpage.component';
-import { LandingBodyComponent } from './landingbody.component';
+// import { LandingBodyComponent } from './landingbody.component';
 import { NoidComponent } from './noid.component';
 import { MetadataUpdateService } from 'oarlps';
 import { EditControlModule } from 'oarlps';
@@ -25,7 +25,6 @@ import { DownloadStatusModule } from 'oarlps';
 import { MetricsinfoComponent } from 'oarlps';
 import { LandingpageService } from 'oarlps';
 import { FrameModule } from 'oarlps';
-import { ResourceIdentityComponent, ResourceDataComponent, ResourceDescriptionComponent, ResourceMetadataComponent, ResourceRefsComponent } from 'oarlps';
 
 /**
  * A module supporting the complete display of landing page content associated with

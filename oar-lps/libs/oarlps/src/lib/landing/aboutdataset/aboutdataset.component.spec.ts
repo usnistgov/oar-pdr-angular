@@ -50,7 +50,7 @@ describe('AboutdatasetComponent', () => {
         let jsonViewer = cmpel.querySelector("#json-viewer");
         expect(jsonViewer).toBeTruthy();
 
-        //For nornal mode, there should be 4 expand buttons ("1", "2", "3", "View Full Tree")
+        //For normal mode, there should be 4 expand buttons ("1", "2", "3", "View Full Tree")
         let jsonExpandButtons = fixture.debugElement.queryAll(By.css('li'));
         expect(jsonExpandButtons.length).toBe(4);
 

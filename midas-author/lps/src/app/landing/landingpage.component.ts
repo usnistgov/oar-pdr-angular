@@ -1,13 +1,13 @@
-// import { GlobalService } from './../../../../../oar-lps/libs/oarlps/src/lib/shared/globals/globals';
 import {
     Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef,
     PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef,
-    effect
+    effect,
+    inject
 } from '@angular/core';
-import { ActivatedRoute, Router, NavigationEnd, RouterOutlet, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Title } from '@angular/platform-browser';
-import { HttpClientModule, HttpEventType } from '@angular/common/http';
+import { HttpEventType } from '@angular/common/http';
 
 import { AppConfig } from 'oarlps';
 import { MetadataService } from 'oarlps';
@@ -15,32 +15,27 @@ import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
-import { Globals, GlobalService } from 'oarlps';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, LandingConstants } from 'oarlps';
 import { CartService } from 'oarlps';
 import { DataCartStatus } from 'oarlps';
-import { CartConstants } from 'oarlps';
 import { RecordLevelMetrics } from 'oarlps';
 import { MetricsService } from 'oarlps';
 import { formatBytes } from 'oarlps';
-import { LandingBodyComponent } from './landingbody.component';
+import { LandingBodyComponent } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 // import { MetricsinfoComponent } from './metricsinfo/metricsinfo.component';
 import { CartActions } from 'oarlps';
-// import { initBrowserMetadataTransfer } from 'oarlps';
 import { MetricsData } from "oarlps";
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { LandingpageService } from 'oarlps';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
-import { error } from 'console';
 import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
-import { DatePipe }     from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NerdmModule } from 'oarlps';
 import { NoidComponent } from './noid.component';
 import { EditControlComponent, EditStatusComponent } from 'oarlps';
 import { MenuComponent } from 'oarlps';
@@ -51,21 +46,7 @@ import { SidebarComponent } from 'oarlps';
 import { DownloadStatusModule } from 'oarlps';
 import { MetricsinfoComponent } from 'oarlps';
 import { FrameModule } from 'oarlps';
-import { TaxonomyListService } from 'oarlps'
-import { ErrorComponent, UserErrorComponent } from './error.component';
-import { ConfigModule, StaffDirModule, WizardModule } from 'oarng';
-import { SidebarModule } from 'oarlps';
-import { LandingPageModule } from './landingpage.module';
-import { ErrorsModule } from 'oarlps';
-import { LandingAboutComponent } from 'oarlps';
-import { DirectivesModule } from 'oarlps';
-import { DatacartModule } from 'oarlps';
-import { MetricsModule } from 'oarlps';
-import { SharedModule } from 'oarlps';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { fakeBackendProvider } from '../_helpers/fakeBackendInterceptor';
-import { GoogleAnalyticsService } from 'oarlps';
-import { LowerCaseUrlSerializer } from '../app.component';
+
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -88,7 +69,6 @@ import { LowerCaseUrlSerializer } from '../app.component';
         CommonModule,
         ButtonModule,
         NgbModule,
-        EditControlComponent,
         MenuComponent,
         CitationModule,
         SearchresultModule,
@@ -99,6 +79,7 @@ import { LowerCaseUrlSerializer } from '../app.component';
         MetricsinfoComponent,
         FrameModule,
         LandingBodyComponent,
+        EditControlComponent,
         EditStatusComponent,
         FrameModule,
     ],
@@ -150,9 +131,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citetext: string = null;
     citationVisible: boolean = false;
     editEnabled: boolean = false;
-    public EDIT_MODES: any = Globals.LandingConstants.editModes;
-    editMode: string = Globals.LandingConstants.editModes.VIEWONLY_MODE;
-    editTypes = Globals.LandingConstants.editTypes;
+    public EDIT_MODES: any = LandingConstants.editModes;
+    editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
+    editTypes = LandingConstants.editTypes;
     // reviseTypes: any = Globals.LandingConstants.reviseTypes;
     arrRevisionTypes: any[] = [];
     editRequested: boolean = false;
@@ -229,11 +210,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     suggustedSections: string[] = ["title", "keyword", "references"];
     public helpContentAll:{} = questionhelp;
     helpContentUpdated: boolean = false;
-    collection: string = Globals.Collections.DEFAULT;
+    collection: string = Collections.DEFAULT;
     collectionObj: any;
     displayBanner: boolean = true;
     showStickMenu: boolean = false;
     isPublicSite: boolean = false;
+    globalsvc = inject(GlobalService);
 
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
@@ -295,6 +277,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.isPublicSite = !this.editEnabled;
         this.globalService.isPublicSite.set(this.isPublicSite);
 
+        if(this.isPublicSite) {
+          this.hideToolMenu = false;
+        }
+
         if (this.editEnabled) {
             this.edstatsvc.watchEditMode((editMode) => {
                 this.editMode = editMode;
@@ -347,11 +333,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     getCollection() {
         if(this.reqId.includes("pdr0-0001"))
-            this.collection = Globals.Collections.FORENSICS;
+            this.collection = Collections.FORENSICS;
         else if(this.reqId.includes("pdr0-0002"))
-            this.collection = Globals.Collections.SEMICONDUCTORS;
+            this.collection = Collections.SEMICONDUCTORS;
         else
-            this.collection = Globals.Collections.DEFAULT;
+            this.collection = Collections.DEFAULT;
 
         this.globalService.setCollection(this.collection);
     }
@@ -432,7 +418,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         this.editRequested = true;
                         this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
                         this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                        this.edstatsvc._setEditType(this.editTypes.NORNAL);
+                        this.edstatsvc._setEditType(this.editTypes.NORMAL);
                         this.edstatsvc.setShowLPContent(false);
                         break;
                     }

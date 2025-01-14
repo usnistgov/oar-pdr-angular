@@ -1,0 +1,47 @@
+<span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
+    <div style="display: table;">
+        <div class="editable_container">
+            <div class="editable_field" [pTooltip]="record[fieldName]" tooltipPosition="bottom" tooltipStyleClass="tooltip-style">
+                <visithpme-pub 
+                    [record]="record" 
+                    [inBrowser]="inBrowser"
+                    [inViewMode]="inViewMode"
+                    [theme]="theme">
+                </visithpme-pub>
+            </div>    
+
+            @if(edstatsvc.isEditMode() && !inViewMode) {
+                <div class="editable_field" style="margin-left: 5px; margin-top: 2px;">
+                    @if(!isEditing) {
+                        <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
+                            <i class="fas fa-pencil fa-sm" title="Edit URL" aria-label="edit URL"></i>  
+                        </button>  
+                        
+                        @if(updated) {
+                            <!-- Restore button -->
+                            <button class="edit_button" type="button"
+                            (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
+                                <i class="fas fa-undo fa-sm"></i>
+                            </button>   
+                        }
+                    }
+                    @else {
+                        <!-- Hide edit window button -->
+                        <button class="edit_button" type="button"
+                            (click)="hideEditBlock()" aria-label="Close button" ngbTooltip="Hide edit block">
+                            <i class="fas fa-times"></i>
+                        </button>    
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</span>
+<ng-template #visitHomeOnServer>Visit Home Page</ng-template>
+
+@defer(when isEditing) {
+    <!-- Visit homepage editor -->
+    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+        <lib-visithome-edit #visithomeedit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit>
+    </div>
+}

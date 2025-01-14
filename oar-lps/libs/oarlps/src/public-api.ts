@@ -4,6 +4,7 @@
 
 // export * from './lib/oarlps.service';
 // export * from './lib/oarlps.component';
+export * from './lib/landing/landingbody/landingbody.component';
 export * from './lib/oarlps.module';
 export * from './lib/frame/frame.module'
 export * from './lib/frame/headbar.component';
@@ -17,19 +18,19 @@ export * from './lib/landing/aboutdataset/aboutdataset.component';
 export * from './lib/landing/done/done.module';
 export * from './lib/landing/done/done.component';
 
-export * from './lib/landing/sections/sections.module';
-export * from './lib/landing/sections/resourcedata.component';
-export * from './lib/landing/sections/resourcedescription.component';
-export * from './lib/landing/sections/resourceidentity.component';
-export * from './lib/landing/sections/resourcemetadata.component';
-export * from './lib/landing/sections/resourcerefs.component';
+// export * from './lib/landing/sections/sections.module';
+// export * from './lib/landing/sections/resourcedata.component';
+// export * from './lib/landing/sections/resourcedescription.component';
+// export * from './lib/landing/sections/resourceidentity.component';
+// export * from './lib/landing/sections/resourcemetadata.component';
+// export * from './lib/landing/sections/resourcerefs.component';
 
 export * from './lib/landing/editcontrol/metadataupdate.service';
 export * from './lib/landing/editcontrol/editcontrol.module';
 export * from './lib/landing/editcontrol/editstatus.component';
 export * from './lib/landing/editcontrol/editcontrol.component';
 export * from './lib/landing/editcontrol/editstatus.service';
-export * from './lib/landing/editcontrol/auth.service';
+// export * from './lib/landing/editcontrol/auth.service';
 export * from './lib/landing/citation/citation.module';
 export * from './lib/landing/citation/citation.component';
 export * from './lib/landing/downloadstatus/downloadstatus.component';

@@ -5,7 +5,7 @@ import { NerdmRes } from '../nerdm/nerdm';
 import { strict } from 'assert';
 
 let _helpTopic = {};
-_helpTopic[MODE.NORNAL]  = 'general';
+_helpTopic[MODE.NORMAL]  = 'general';
 _helpTopic[MODE.LIST]  = 'list';
 _helpTopic[MODE.EDIT]  = 'edit';
 _helpTopic[MODE.ADD]  = 'add';

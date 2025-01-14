@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild, ChangeDetectorRef, importProvidersFrom } from '@angular/core';
+import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild, ChangeDetectorRef, importProvidersFrom, effect, inject } from '@angular/core';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -28,7 +28,7 @@ export class DescEditComponent {
     @Input() isEditMode: boolean = true;
 
     fieldName: string = SectionPrefs.getFieldName(Sections.DESCRIPTION);
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     isEditing: boolean = false;
     description: string = "";
     originDescription: string = "";
@@ -38,16 +38,36 @@ export class DescEditComponent {
     placeholder: string = "Please add description here.";
     maxWidth: number = 1000;
     isPublicSite: boolean = false; 
+    globalsvc = inject(GlobalService);
     
     constructor(public mdupdsvc : MetadataUpdateService,  
                 public edstatsvc: EditStatusService,      
                 private ngbModal: NgbModal,
                 private chref: ChangeDetectorRef,
-                public lpService: LandingpageService,
-                public globalsvc: GlobalService){
+                public lpService: LandingpageService){
                     
                 this.globalsvc.watchLpsLeftWidth(width => {
                     this.onResize(width + 20);
+                })
+
+                effect(()=>{
+                    let sectionMode = this.globalsvc.sectionMode()
+
+                    if( sectionMode ) {
+                        if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                            if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
+                                if(this.isEditing){
+                                    this.onSave(false); // Do not refresh help text 
+                                }else{
+                                    this.setMode(MODE.NORMAL, false);
+                                }
+                            }
+                        }else { // Request from side bar, if not edit mode, start editing
+                            if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
+                                this.startEditing();
+                            }
+                        }
+                    }
                 })
     }
 
@@ -71,14 +91,16 @@ export class DescEditComponent {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.getDescription();
 
+        // effect(()=>{
+        //     let sectionMode = this.globalsvc.sectionMode()
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                         if(this.isEditing){
                             this.onSave(false); // Do not refresh help text 
                         }else{
-                            this.setMode(MODE.NORNAL, false);
+                            this.setMode(MODE.NORMAL, false);
                         }
                     }
                 }else { // Request from side bar, if not edit mode, start editing
@@ -152,7 +174,7 @@ export class DescEditComponent {
      */
     cancelEditing() {
         this.getDescription();
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.NORMAL);
         this.setBackground(this.description);
     }
 
@@ -173,7 +195,7 @@ export class DescEditComponent {
                 // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                 if (updateSuccess){
                     this.setBackground(this.description);
-                    this.setMode(MODE.NORNAL, refreshHelp);
+                    this.setMode(MODE.NORMAL, refreshHelp);
                     this.isEditing = false;
                 }else{
                     let msg = "Description update failued";
@@ -181,7 +203,7 @@ export class DescEditComponent {
                 }
             });
         }else{
-            this.setMode(MODE.NORNAL, refreshHelp);
+            this.setMode(MODE.NORMAL, refreshHelp);
             this.isEditing = false;
         }
     }
@@ -200,7 +222,7 @@ export class DescEditComponent {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -211,7 +233,8 @@ export class DescEditComponent {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL)
+            // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);  
         else
             this.isEditing = false; 
@@ -237,7 +260,7 @@ export class DescEditComponent {
     undoEditing() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode(MODE.NORNAL);
+                this.setMode(MODE.NORMAL);
                 this.setBackground(this.description);
             }else{
                 let msg = "Failed to undo description metadata";

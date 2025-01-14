@@ -6,13 +6,12 @@
         <app-description [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></app-description>
     </div>
 
-    @defer(when isPublicSite) {
+    @if(isPublicSite) {
         <topic-pub [record]="record" [inBrowser]="inBrowser"></topic-pub>
 
         <keyword-pub [record]="record" [inBrowser]="inBrowser"></keyword-pub>
     }
-
-    @defer(when !isPublicSite){
+    @else{
         <app-topic [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></app-topic>
         @if(recordType!='Science Theme') {
             <app-keyword [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></app-keyword>

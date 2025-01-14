@@ -5,23 +5,33 @@
             <span *ngIf="recordType=='Science Theme'" class="badge version"> Beta</span>
         </span>
         <br>
-        <app-title [record]="record" [inBrowser]="inBrowser"></app-title>
+        <app-title [record]="record" [isPublicSite]="isPublicSite"></app-title>
 
-        <app-ispartof *ngIf="isDefaultCollection" [record]="record" [inBrowser]="inBrowser"></app-ispartof>
-        
+        @if(isDefaultCollection) {
+            <app-ispartof
+                [record]="record" 
+                [inBrowser]="inBrowser"
+                [isEditMode]="isEditMode">
+            </app-ispartof>
+        }
+
     </div>
     
     <div style="width: 100%;">
-        <app-author *ngIf="theme != scienceTheme" [record]="record" [inBrowser]="inBrowser"></app-author>
+        <app-author *ngIf="theme != scienceTheme" 
+            [record]="record" 
+            [inBrowser]="inBrowser" 
+            [isEditMode]="isEditMode">
+        </app-author>
 
         <!-- Facilitators -->
         <div *ngIf="theme == scienceTheme" style="width: 100%;" [ngStyle]="{'margin-bottom': record.creators? '15px' : '1.5em'}">
             <app-facilitators [record]="record" [inBrowser]="inBrowser"></app-facilitators>
         </div>
 
-        <div class="table">
+        <div class="table" style="margin: 0px;padding: 0px;">
             <div class="cell left">
-                <app-contact [record]="record" [inBrowser]="inBrowser"></app-contact>
+                <app-contact [record]="record" [isPublicSite]="isPublicSite"></app-contact>
             </div>
 
             <div class="cell right">

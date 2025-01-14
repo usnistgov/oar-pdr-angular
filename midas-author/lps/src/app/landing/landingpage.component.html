@@ -55,7 +55,7 @@
         <div *ngIf="_showData">
             <!-- landing page content -->
             <div #lpscontent class="landing-body" [@togglemain]="{value:mainBodyStatus, params:{lps_width: lpsWidth + 'px'}}" [ngStyle]="{'width': lpsWidth + 'px'}">
-                <pdr-landing-body
+                <landing-body
                   [md]="md"
                   [inBrowser]="inBrowser"
                   [editEnabled]="editEnabled"
@@ -63,12 +63,13 @@
                   [metricsData]="metricsData"
                   [showJsonViewer]="showJsonViewer"
                   [theme]="theme"
+                  [isPublicSite]="isPublicSite"
                   (dlStatus)="onDownloadStatusChanged($event)">
-                </pdr-landing-body>
+                </landing-body>
 
             </div>
 
-            @defer(when isPublicSite || !edstatsvc.isEditMode()) {
+            @if(isPublicSite || !edstatsvc.isEditMode()) {
                 <!-- <div #stickyMenu></div> -->
                 <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
                   <app-menu [record]="md" [collection]="collection" [theme]="theme" [inBrowser]="inBrowser" [metricsData]="metricsData" [showMetrics]="showMetrics" (scroll)="goToSection($event)"

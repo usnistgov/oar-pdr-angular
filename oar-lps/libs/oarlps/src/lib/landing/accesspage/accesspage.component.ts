@@ -10,7 +10,7 @@ import { AccessPage } from './accessPage';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { DomSanitizer } from "@angular/platform-browser";
 import * as globals from '../../shared/globals/globals';
-import { AccesspageListComponent } from './accesspage-list/accesspage-list.component';
+import { AccesspageMidasComponent } from './accesspage-midas/accesspage-midas.component';
 import { CommonModule } from '@angular/common';
 import { TextEditModule } from '../../text-edit/text-edit.module';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -22,6 +22,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DropdownModule } from 'primeng/dropdown';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AccesspagePubComponent } from './accesspage-pub/accesspage-pub.component';
 
 @Component({
     selector: 'lib-accesspage',
@@ -31,7 +32,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         NgbModule,
         FormsModule,
         CollapseModule,
-        AccesspageListComponent
+        AccesspageMidasComponent,
+        AccesspagePubComponent
     ],
     templateUrl: './accesspage.component.html',
     styleUrls: ['../landing.component.scss', './accesspage.component.css'],
@@ -52,7 +54,7 @@ export class AccesspageComponent implements OnInit {
     accessPages: NerdmComp[] = [];
     editBlockExpanded: boolean = false;
     fieldName: string = SectionPrefs.getFieldName(Sections.ACCESS_PAGES);
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     orig_record: any[]; //Original record or the record that's previously saved
     overflowStyle: string = 'hidden';
     dataChanged: boolean = false;
@@ -67,8 +69,6 @@ export class AccesspageComponent implements OnInit {
     @Input() record: NerdmRes = null;
     @Input() theme: string;
     @Input() isEditMode: boolean = true;
-
-    @ViewChild('accesspagelist') accesspagelist: AccesspageListComponent;
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
@@ -91,10 +91,10 @@ export class AccesspageComponent implements OnInit {
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if(sectionMode){
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                         if(this.editBlockExpanded){
-                            this.accesspagelist.onSectionModeChange(sectionMode);
-                            this.setMode(MODE.NORNAL, false);
+                            // this.accesspagelist.onSectionModeChange(sectionMode);
+                            this.setMode(MODE.NORMAL, false);
                         }
                     }
                 }else{
@@ -114,7 +114,7 @@ export class AccesspageComponent implements OnInit {
         this.chref.detectChanges();
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORMAL }
     get isListing() { return this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
@@ -235,7 +235,7 @@ export class AccesspageComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -265,13 +265,13 @@ export class AccesspageComponent implements OnInit {
 
                 // Update help text
                 if(refreshHelp){
-                    this.refreshHelpText(MODE.NORNAL);
+                    this.refreshHelpText(MODE.NORMAL);
                 }
                 break;
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL)
             this.lpService.setEditing(sectionMode);
 
         this.chref.detectChanges();
@@ -311,7 +311,7 @@ export class AccesspageComponent implements OnInit {
         //         this.setMode(MODE.EDIT);
         //         break;
         //     default: //normal
-        //         this.setMode(MODE.NORNAL);
+        //         this.setMode(MODE.NORMAL);
         //         break;
         // }
     }
@@ -340,7 +340,7 @@ export class AccesspageComponent implements OnInit {
                     //     apage.dataChanged = false;
                     // });
 
-                    this.setMode(MODE.NORNAL);
+                    this.setMode(MODE.NORMAL);
                     this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
                 }else{
                     let msg = "Failed to undo " + this.fieldName + " metadata";

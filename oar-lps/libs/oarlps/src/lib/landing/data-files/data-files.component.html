@@ -4,7 +4,7 @@
         <div *ngIf="displayMode == 'restrict'">Note:  This dataset is designated as restricted public data; this file list will not be shown in the public version of this page.</div>
     
         <!-- Display 'Download all' and 'Add all to cart' buttons and other info -->
-        <div *ngIf="editEnabled || (files && files.length  > 0)">
+        <div *ngIf="(files && files.length  > 0)">
             <div *ngIf="inBrowser; else filesLoading">
                 <div class="flex-container" style="margin-top: 2em;">
                     <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
@@ -26,7 +26,7 @@
                     <ng-template #editDisabled>
                         <div style="flex: 0 0 140px; text-align: left; padding-bottom: 0em;">
                             <span><b id="filelist-heading">Files </b> </span>
-                            <a class="fa-stack fa-lg icon-download" *ngIf="!editEnabled"
+                            <a class="fa-stack fa-lg icon-download" style="width: 50px;"
                                 (click)="downloadAllFiles()" aria-label="Download all" ngbTooltip="Download all from data cart"
                                 [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
                                 <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
@@ -38,7 +38,7 @@
                             </a>
                             <a id="routeToDatacart" target="_blank" [routerLink]="['/datacart', 'popup']"
                                 style="display:none"></a>
-                            <span *ngIf="!editEnabled" class="fa-stack fa-lg icon-cart"
+                            <span class="fa-stack fa-lg icon-cart" style="width: 50px;"
                                 (click)="toggleAllFilesInGlobalCart(files)"
                                 [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',
                                 'margin-right': '1em'}" [aria-label]="getCartProcessTooltip()" [ngbTooltip]="getCartProcessTooltip()">

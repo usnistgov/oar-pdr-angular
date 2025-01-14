@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, ChangeDetectorRef, inject, effect } from '@angular/core';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
@@ -6,10 +6,9 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import { TopicEditComponent } from './topic-edit/topic-edit.component';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 
@@ -62,17 +61,17 @@ export class TopicComponent implements OnInit {
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
     // fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     fieldName = "theme";
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
     dataChanged: boolean = false;
+    globalsvc = inject(GlobalService);
 
     constructor(public mdupdsvc: MetadataUpdateService,
                 private ngbModal: NgbModal,
                 private cfg: AppConfig,
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService, 
-                public globalService: GlobalService,
                 public collectionService: CollectionService,
                 private notificationService: NotificationService) {
 
@@ -81,7 +80,7 @@ export class TopicComponent implements OnInit {
             this.collectionOrder = this.collectionService.getCollectionForDisplay();
             this.allCollections = this.collectionService.loadAllCollections();
 
-            this.globalService.watchCollection((collection) => {
+            this.globalsvc.watchCollection((collection) => {
                 this.collection = collection;
             });    
     }
@@ -97,7 +96,7 @@ export class TopicComponent implements OnInit {
 
     get isEditing() { return this.editMode==MODE.EDIT }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORMAL }
     /**
      * a field indicating whether there is no topic.  
      */
@@ -147,14 +146,16 @@ export class TopicComponent implements OnInit {
         this.updateResearchTopics();
         this.originalTopics = JSON.parse(JSON.stringify(this.topics));
 
-        this.lpService.watchEditing((sectionMode: SectionMode) => {
+        // effect(() => {
+        //     let sectionMode = this.globalsvc.sectionMode();
+        this.lpService.watchEditing((sectionMode: SectionMode) => {            
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                         if(this.isEditing && this.dataChanged){
                             this.onSave(false); // Do not refresh help text 
                         }
-                        this.setMode(MODE.NORNAL,false);
+                        this.setMode(MODE.NORMAL,false);
                     }
                 }else { // Request from side bar, if not edit mode, start editing
                     if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
@@ -236,7 +237,7 @@ export class TopicComponent implements OnInit {
                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
                 this.record[this.fieldName] = postMessage[this.fieldName];
                 this.updateResearchTopics();
-                this.setMode(MODE.NORNAL,refreshHelp);
+                this.setMode(MODE.NORMAL,refreshHelp);
             } else
                 console.error("acknowledge topic update failure");
         });
@@ -301,7 +302,7 @@ export class TopicComponent implements OnInit {
      */
     cancelEditing() {
         this.updateResearchTopics();
-        // this.setMode(MODE.NORNAL);
+        // this.setMode(MODE.NORMAL);
         // this.dataChanged = false;
     }
 
@@ -380,7 +381,7 @@ export class TopicComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -407,7 +408,8 @@ export class TopicComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL)
+            // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);   
         
         this.chref.detectChanges();
@@ -518,7 +520,7 @@ export class TopicComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success) {
                 this.notificationService.showSuccessWithTimeout("Reverted changes to research topic.", "", 3000);
-                this.setMode(MODE.NORNAL);
+                this.setMode(MODE.NORMAL);
                 this.updateResearchTopics();
                 // this.setBackground();
             } else{

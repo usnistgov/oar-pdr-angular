@@ -1,0 +1,55 @@
+<accesspage-pub [record]="record" [theme]="theme">
+    <div class="message" style="margin-right: 10px;">
+        @if(isEditMode) {
+            Add links to relevant websites including software repositories.
+        }
+    </div>
+
+    <!-- Control buttons -->
+    <div class="editable_field controls" style="white-space: nowrap;margin-top: .5em;">
+        @if(isEditMode) {
+            @if(isNormal) {
+                <!-- Edit button -->
+                <button class="edit_button"
+                    (click)="startEditing()" 
+                    aria-label="edit button"
+                    ngbTooltip="Edit access page">
+                    <i class="fas fa-pencil fa-sm"></i>
+                </button>
+            }
+            @else {            
+                <!-- Hide button - hide edit block -->
+                <button 
+                    class="edit_button" 
+                    type="button" 
+                    [disabled] = 'isEditing || isAdding'
+                    (click)="setMode()"
+                        aria-label="Hide edit block" 
+                        ngbTooltip="Hide edit block">
+                    <i class="fas fa-times"></i>
+                </button> 
+            }
+
+            @if(!isEditing && updated) {
+                <!-- Restore original value-->
+                <button 
+                    class="edit_button" 
+                    type="button"       
+                    (click)="restoreOriginal()" 
+                    aria-label="undo button" 
+                    ngbTooltip="Undo changes">
+                    <i class="fas fa-undo fa-sm"></i>
+                </button>
+            }
+        }
+    </div>
+
+    <div class="editor">
+        @defer(when loadListing) {
+            <div style="width: 100%;" [@editExpanded]="editBlockExpanded" [style.overflow] = "overflowStyle">
+                <lib-accesspage-list #accesspagelist [record]="record" [theme]="theme" (dataCommand)="onStatusChange($event)"></lib-accesspage-list>
+            </div>
+        }   
+    </div>
+</accesspage-pub>
+

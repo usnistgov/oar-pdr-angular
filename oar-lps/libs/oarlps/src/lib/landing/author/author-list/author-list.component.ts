@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, effect, ElementRef, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
@@ -52,7 +52,8 @@ export class AuthorListComponent implements OnInit {
 
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter author data?" will not display.
     // Default is "normal" mode.
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
+    globalsvc = inject(GlobalService);
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
@@ -79,7 +80,7 @@ export class AuthorListComponent implements OnInit {
     //         let sectionMode = this.lpService.sectionMode();
     //         if(sectionMode){
     //             if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
-    //                 if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+    //                 if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
     //                     //If is adding but nothing changed, undo adding
     //                     if(this.isAdding && !this.currentAuthor.dataChanged){
     //                         this.undoCurAuthorChanges();
@@ -108,7 +109,7 @@ export class AuthorListComponent implements OnInit {
         // this.lpService.watchEditing((sectionMode: SectionMode) => {
         //     if( sectionMode ) {
         //         if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
-        //             if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+        //             if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
         //                 //If is adding but nothing changed, undo adding
         //                 if(this.isAdding && !this.currentAuthor.dataChanged){
         //                     this.undoCurAuthorChanges();
@@ -131,7 +132,7 @@ export class AuthorListComponent implements OnInit {
     onSectionModeChanged(sectionMode: SectionMode) {
         if( sectionMode ) {
             if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                if( sectionMode.sender != Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                if( sectionMode.sender != Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                     //If is adding but nothing changed, undo adding
                     if(this.isAdding && !this.currentAuthor.dataChanged){
                         this.undoCurAuthorChanges();
@@ -163,7 +164,7 @@ export class AuthorListComponent implements OnInit {
         this.chref.detectChanges();
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
+    get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
 
@@ -316,7 +317,7 @@ export class AuthorListComponent implements OnInit {
                     this.currentAuthor.dataChanged = false;
 
                     if(closeAll)
-                        this.setMode(MODE.NORNAL, refreshHelp);
+                        this.setMode(MODE.NORMAL, refreshHelp);
                     else
                         this.setMode(MODE.LIST, refreshHelp);
                 }else{
@@ -330,7 +331,7 @@ export class AuthorListComponent implements OnInit {
                 this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
                     if(success){
                         if(closeAll)
-                            this.setMode(MODE.NORNAL, refreshHelp);
+                            this.setMode(MODE.NORMAL, refreshHelp);
                         else
                             this.setMode(MODE.LIST, refreshHelp);
 
@@ -342,7 +343,7 @@ export class AuthorListComponent implements OnInit {
                     }
                 })
             }else{
-                this.setMode(MODE.NORNAL, refreshHelp);
+                this.setMode(MODE.NORMAL, refreshHelp);
             }
         }
 
@@ -406,7 +407,7 @@ export class AuthorListComponent implements OnInit {
     undoAllChanges() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode(MODE.NORNAL, true);
+                this.setMode(MODE.NORMAL, true);
                 this.orderChanged = false;
                 this.forceReset = true;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
@@ -434,7 +435,7 @@ export class AuthorListComponent implements OnInit {
         // this.editBlockStatus = 'collapsed';
 
         // Back to add mode
-        // this.editMode = MODE.NORNAL;
+        // this.editMode = MODE.NORMAL;
         // this.refreshHelpText(MODE.ADD);
         this.setMode(MODE.LIST, true)
     }
@@ -569,7 +570,7 @@ export class AuthorListComponent implements OnInit {
                         if(this.editMode==MODE.ADD || this.editMode==MODE.EDIT)
                             this.editMode = MODE.EDIT;
                         else    
-                            this.editMode = MODE.NORNAL;
+                            this.editMode = MODE.NORMAL;
 
                         this.editmodeOutput.next(this.editMode);
                     }else{
@@ -613,7 +614,7 @@ export class AuthorListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -670,13 +671,14 @@ export class AuthorListComponent implements OnInit {
 
                 // Update help text
                 if(refreshHelp){
-                    this.refreshHelpText(MODE.NORNAL);
+                    this.refreshHelpText(MODE.NORMAL);
                 }                
                 break;
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL)
+            // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
 
         this.editmodeOutput.next(this.editMode);

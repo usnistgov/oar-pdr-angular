@@ -12,7 +12,7 @@ import { NerdmRes } from '../../../nerdm/nerdm';
         NgbModule
     ],
     templateUrl: './topic-pub.component.html',
-    styleUrls: ['./topic-pub.component.css','../../landing.component.scss']
+    styleUrls: ['./topic-pub.component.css','../topic.component.css','../../landing.component.scss']
 })
 export class TopicPubComponent {
     collectionOrder: string[] = [Collections.DEFAULT];

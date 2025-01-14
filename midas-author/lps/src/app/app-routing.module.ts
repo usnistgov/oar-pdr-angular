@@ -4,34 +4,29 @@ import { LandingAboutComponent } from 'oarlps';
 import { LandingPageComponent } from './landing/landingpage.component';
 import { NoidComponent } from './landing/noid.component';
 import { NerdmComponent } from 'oarlps';
-// import { SearchResolve } from './landing/search-service.resolve';
 import { NotFoundComponent, InternalErrorComponent } from 'oarlps';
-import { DatacartComponent } from 'oarlps';
 import { DoneComponent } from 'oarlps';
-import { DatacartRoutes } from 'oarlps';
-import { MetricsComponent } from 'oarlps';
-import { LeaveWhileDownloadingGuard } from 'oarlps';
 
 const routes: Routes = [
     // ...DatacartRoutes,
     { path: '', redirectTo: '/about', pathMatch: 'full' },
 
     // Copied datacart routes here to test lazyloading
-    { path: 'datacart',
-      // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
-      children: [
-          {   path: ':cartname',
-              component: DatacartComponent,
-              // loadComponent: () => import('./datacart.component')
-              //     .then(mod => mod.DatacartComponent),
-              canDeactivate: [LeaveWhileDownloadingGuard]   },
-          {   path: 'ark:/:naan/:cartname',
-              component: DatacartComponent,
-              // loadComponent: () => import('./datacart.component')
-              //     .then(mod => mod.DatacartComponent),
-              canDeactivate: [LeaveWhileDownloadingGuard]   }
-      ]
-    },
+    // { path: 'datacart',
+    //   // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
+    //   children: [
+    //       {   path: ':cartname',
+    //           component: DatacartComponent,
+    //           // loadComponent: () => import('./datacart.component')
+    //           //     .then(mod => mod.DatacartComponent),
+    //           canDeactivate: [LeaveWhileDownloadingGuard]   },
+    //       {   path: 'ark:/:naan/:cartname',
+    //           component: DatacartComponent,
+    //           // loadComponent: () => import('./datacart.component')
+    //           //     .then(mod => mod.DatacartComponent),
+    //           canDeactivate: [LeaveWhileDownloadingGuard]   }
+    //   ]
+    // },
     // app paths
     { path: 'about',         component: LandingAboutComponent },
     { path: 'od/id',
@@ -58,7 +53,6 @@ const routes: Routes = [
           { path: ':id',             component: InternalErrorComponent }
       ]
     },
-    { path: 'metrics/:id',         component: MetricsComponent },
     { path: '**',                    component: NotFoundComponent      }
 ];
 

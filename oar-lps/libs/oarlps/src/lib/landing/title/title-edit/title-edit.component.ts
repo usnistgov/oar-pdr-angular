@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, effect } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, effect, inject } from '@angular/core';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, SubmitResponse } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
@@ -29,7 +29,7 @@ export class TitleEditComponent {
     @ViewChild('title') titleElement: ElementRef;
 
     fieldName: string = SectionPrefs.getFieldName(Sections.TITLE);
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     isEditing: boolean = false;
     backColor: string = 'white';
     originalRecord: any[];
@@ -38,18 +38,20 @@ export class TitleEditComponent {
     dataChanged: boolean = false;
 
     isPublicSite: boolean = false; //Will be decided by config: editEnabled
+    // globalsvc = inject(GlobalService);
 
     constructor(public mdupdsvc: MetadataUpdateService,
         private ngbModal: NgbModal,
         public edstatsvc: EditStatusService,
         public lpService: LandingpageService, 
         private chref: ChangeDetectorRef,
+        public globalsvc: GlobalService,
         private notificationService: NotificationService) {
             effect(() => {
                 if(this.edstatsvc.isEditMode()){
                     this.chref.detectChanges();
                 }
-            })
+            });
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
@@ -64,15 +66,19 @@ export class TitleEditComponent {
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
 
+        // this.lpService.watchEditing((sectionMode: SectionMode) => {
+
+        // effect(() => {
+        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                         if(this.isEditing){
                             // Do not refresh hekp content because other section already updated it. 
                             this.onSave(false); 
                         }else{
-                            this.setMode(MODE.NORNAL, false);
+                            this.setMode(MODE.NORMAL, false);
                         }
                     }
                 }else { // Request from side bar, if not edit mode, start editing
@@ -112,7 +118,7 @@ export class TitleEditComponent {
             this.record['title'] = title;
         })
 
-        this.setMode(MODE.NORNAL);
+        this.setMode(MODE.NORMAL);
         this.isEditing = false;
         // this.setBackground(this.record['title']);
         this.dataChanged = false;
@@ -128,7 +134,7 @@ export class TitleEditComponent {
                 if (updateSuccess){
                     this.dataChanged = true;
                     this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
-                    this.setMode(MODE.NORNAL, refreshHelp);
+                    this.setMode(MODE.NORMAL, refreshHelp);
                     // this.chref.detectChanges();
                     //Validate
                     // this.mdupdsvc.validate().subscribe(response => {
@@ -141,7 +147,7 @@ export class TitleEditComponent {
             });
         }else{
             this.dataChanged = false;
-            this.setMode(MODE.NORNAL, refreshHelp);
+            this.setMode(MODE.NORMAL, refreshHelp);
             this.chref.detectChanges();
         }
         // this.setBackground(this.record['title']);
@@ -153,7 +159,7 @@ export class TitleEditComponent {
     restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode(MODE.NORNAL);
+                this.setMode(MODE.NORMAL);
                 this.notificationService.showSuccessWithTimeout("Reverted changes to title.", "", 3000);
             }else{
                 let msg = "Failed to undo title metadata";
@@ -190,7 +196,7 @@ export class TitleEditComponent {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true, help_topic: string = MODE.EDIT) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.sender = this.fieldName;
@@ -198,15 +204,15 @@ export class TitleEditComponent {
         sectionMode.mode = this.editMode;
 
         if(refreshHelp){
-            if(editmode == MODE.NORNAL) help_topic = MODE.NORNAL;
+            if(editmode == MODE.NORMAL) help_topic = MODE.NORMAL;
 
             this.refreshHelpText(help_topic);
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL){
+        if(editmode != MODE.NORMAL){
             this.lpService.setEditing(sectionMode);
-            this.lpService.sectionMode.set(sectionMode);
+            // this.globalsvc.sectionMode.set(sectionMode);
         }else
             this.isEditing = false;
 
