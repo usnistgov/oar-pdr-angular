@@ -6,34 +6,27 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
-import { AccessPage } from '../accessPage';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { DomSanitizer } from "@angular/platform-browser";
-import * as globals from '../../../shared/globals/globals';
 import { AccesspageListComponent } from '../accesspage-list/accesspage-list.component';
 import { CommonModule } from '@angular/common';
-import { TextEditModule } from '../../../text-edit/text-edit.module';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ToastrModule } from 'ngx-toastr';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DropdownModule } from 'primeng/dropdown';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccesspagePubComponent } from '../accesspage-pub/accesspage-pub.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'accesspage-midas',
     standalone: true,
     imports: [
         CommonModule,
-        NgbModule,
+        ButtonModule,
         FormsModule,
         CollapseModule,
         AccesspageListComponent,
-        AccesspagePubComponent
+        AccesspagePubComponent,
+        TooltipModule
     ],
     templateUrl: './accesspage-midas.component.html',
     styleUrls: ['./accesspage-midas.component.scss', '../../landing.component.scss'],
@@ -279,7 +272,10 @@ export class AccesspageMidasComponent {
             // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
 
-        this.chref.detectChanges();
+        setTimeout(() => {
+            this.chref.detectChanges();
+        }, 0);
+        
     }
 
     /**

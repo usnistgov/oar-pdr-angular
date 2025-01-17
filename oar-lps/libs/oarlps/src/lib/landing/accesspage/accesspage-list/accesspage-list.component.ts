@@ -1,6 +1,6 @@
 import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
-import { Themes, ThemesPrefs } from '../../../shared/globals/globals';
+import { Themes } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
@@ -12,20 +12,13 @@ import {
     CdkDragMove,
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import { AccessPage } from '../accessPage';
 import { DomSanitizer } from "@angular/platform-browser";
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
 import { AccesspageEditComponent } from '../accesspage-edit/accesspage-edit.component';
-import { TextEditModule } from '../../../text-edit/text-edit.module';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ToastrModule } from 'ngx-toastr';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { ButtonModule } from 'primeng/button';
-import { BrowserModule } from '@angular/platform-browser';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DropdownModule } from 'primeng/dropdown';
-import { CollapseModule } from '../../collapseDirective/collapse.module';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'lib-accesspage-list',
@@ -34,8 +27,9 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
         CommonModule,
         FormsModule,
         AccesspageEditComponent,
-        TextEditModule,
-        NgbModule
+        TextEditComponent,
+        ButtonModule,
+        TooltipModule
     ],
     templateUrl: './accesspage-list.component.html',
     styleUrls: ['../../landing.component.scss', './accesspage-list.component.css'],

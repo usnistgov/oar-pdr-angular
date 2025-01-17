@@ -11,6 +11,7 @@ export class GlobalService {
     public sectionMode = signal<SectionMode>({} as SectionMode);
     public collection = signal<string>("");
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
+    public fakeBackendAlerted = signal<boolean>(false);
 
     constructor() { }
 

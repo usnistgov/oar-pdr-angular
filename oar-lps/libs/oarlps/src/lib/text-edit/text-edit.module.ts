@@ -7,7 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  declarations: [TextEditComponent],
+  declarations: [],
   imports: [
     CommonModule,
     FormsModule,
@@ -15,9 +15,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     NgbModule
   ],
-  exports: [TextEditComponent]
+  exports: []
 })
 export class TextEditModule { }
 export {
-    TextEditComponent
+    
 };

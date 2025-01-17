@@ -170,13 +170,27 @@
                         </textarea>
                     </td>
                     <td style="width: 30px !important;vertical-align: top;">
-                        <button class="edit_button" type="button"
-                            (click)="resetCitation()" aria-label="reset button">
+                        <button 
+                            class="edit_button" 
+                            type="button"
+                            (click)="resetCitation()" 
+                            aria-label="reset button"
+                            pTooltip="Reset" 
+                            tooltipPosition="top" >
                             <i class="fas fa-undo fa-sm" data-toggle="tooltip" title="Reset citation"></i>
                         </button>
-                        <button class="edit_button" type="button" *ngIf="isEditing || !useCitationData"
-                            (click)="citationLocked = !citationLocked" aria-label="reset button">
-                            <i [class]="citationLockClass()" data-toggle="tooltip" title="Reset citation"></i>
+
+                        <button 
+                            class="edit_button" 
+                            type="button" 
+                            *ngIf="isEditing || !useCitationData"
+                            (click)="citationLocked = !citationLocked" 
+                            aria-label="reset button"
+                            pTooltip="Reset" 
+                            tooltipPosition="top">
+                            <i [class]="citationLockClass()" 
+                                data-toggle="tooltip" 
+                                title="Reset citation"></i>
                         </button>
                     </td>
                 </tr>
@@ -204,13 +218,25 @@
     <!-- Control buttons -->
     <div class="editable_field" style="white-space: nowrap;">
         <!-- Save button -->
-        <button class="edit_button" type="button" (click)="commandOut('saveCurrentChanges')" aria-label="edit button" [disabled]="!ref.dataChanged" ngbTooltip="Save current changes">
+        <button 
+            class="edit_button" 
+            type="button" 
+            (click)="commandOut('saveCurrentChanges')" 
+            aria-label="edit button" 
+            [disabled]="!ref.dataChanged" 
+            pTooltip="Save current changes"
+            tooltipPosition="top" >
             <i class="fas fa-check fa-sm"></i>
         </button>
 
         <!-- Cancel button -->
-        <button class="edit_button" type="button"
-            (click)="commandOut('undoCurrentChanges')" aria-label="undo button" ngbTooltip="Undo current changes">
+        <button 
+            class="edit_button" 
+            type="button"
+            (click)="commandOut('undoCurrentChanges')" 
+            aria-label="undo button" 
+            pTooltip="Undo current changes"
+            tooltipPosition="top" >
             <i class="fas fa-times"></i>
         </button>
     </div>

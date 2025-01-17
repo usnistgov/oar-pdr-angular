@@ -11,6 +11,8 @@ import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { AuthorPubComponent } from '../author-pub/author-pub.component';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'author-midas',
@@ -20,7 +22,8 @@ import { AuthorPubComponent } from '../author-pub/author-pub.component';
         AuthorListComponent,
         AuthorPubComponent,
         CollapseModule,
-        NgbModule
+        ButtonModule,
+        TooltipModule
     ],
     templateUrl: './author-midas.component.html',
     styleUrls: ['./author-midas.component.scss', '../../landing.component.scss'],

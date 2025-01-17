@@ -10,10 +10,12 @@
         @if(isEditMode) {
             @if(isNormal) {
                 <!-- Edit button -->
-                <button class="edit_button"
+                <button
+                    class="edit_button"
                     (click)="startEditing()" 
                     aria-label="edit button"
-                    ngbTooltip="Edit access page">
+                    pTooltip="Edit access page"
+                    tooltipPosition="top" >
                     <i class="fas fa-pencil fa-sm"></i>
                 </button>
             }
@@ -24,8 +26,9 @@
                     type="button" 
                     [disabled] = 'isEditing || isAdding'
                     (click)="setMode()"
-                        aria-label="Hide edit block" 
-                        ngbTooltip="Hide edit block">
+                    aria-label="Hide edit block" 
+                    pTooltip="Hide edit block"
+                    tooltipPosition="top">
                     <i class="fas fa-times"></i>
                 </button> 
             }
@@ -37,7 +40,8 @@
                     type="button"       
                     (click)="restoreOriginal()" 
                     aria-label="undo button" 
-                    ngbTooltip="Undo changes">
+                    pTooltip="Undo changes"
+                    tooltipPosition="top">
                     <i class="fas fa-undo fa-sm"></i>
                 </button>
             }

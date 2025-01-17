@@ -1,4 +1,4 @@
-import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
+import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { CartService } from '../../datacart/cart.service';
 import { AppConfig } from '../../config/config';
@@ -90,9 +90,15 @@ interface DataFileItem {
     selector: 'pdr-data-files',
     standalone: true,
     imports: [
-        CommonModule, RouterModule, BadgeModule,
-        TreeTableModule, OverlayPanelModule, ProgressSpinnerModule, 
-        ButtonModule, TooltipModule, NgbModule
+        CommonModule, 
+        RouterModule, 
+        BadgeModule,
+        TreeTableModule, 
+        OverlayPanelModule, 
+        ProgressSpinnerModule, 
+        ButtonModule, 
+        TooltipModule, 
+        NgbModule
     ],
     templateUrl: `data-files.component.html`,
     providers: [ ],
@@ -128,7 +134,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
     // Flag to tell if this is a publishing platform
     @Input() editEnabled: boolean;    //Disable download all functionality if edit is enabled
-
+    @Input() isEditMode: boolean;
     // Download status to trigger metrics refresh in parent component
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();  
 
@@ -164,7 +170,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
-
+        
     constructor(private cfg: AppConfig,
                 private cartService: CartService,
                 private gaService: GoogleAnalyticsService,
@@ -174,7 +180,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 private notificationService: NotificationService,
                 public lpService: LandingpageService, 
                 private msgsvc: UserMessageService,
-                ngZone: NgZone)
+                private chref: ChangeDetectorRef,
+                private ngZone: NgZone)
     {
         this.cols = [
             { field: 'name', header: 'Name', width: '60%' },
@@ -262,6 +269,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
     ngOnChanges(ch: SimpleChanges) {
         if (this.record && ch.record)
             this.useMetadata();
+
+        this.chref.detectChanges();
     }
 
     useMetadata() {
@@ -821,6 +830,8 @@ export class DataFilesComponent implements OnInit, OnChanges {
             this.cols[3].width = '10%';
             this.fontSize = '12px';
         }
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -914,13 +925,31 @@ export class DataFilesComponent implements OnInit, OnChanges {
             setTimeout(() => {
                 overlaypanel.show(event);
                 this.overlaypanelOn = true;
+                this.chref.detectChanges();
             }, 100);    
         }else{
             overlaypanel.hide();
+            setTimeout(() => {
+                this.chref.detectChanges();
+            }, 0);
         }
     }    
 
     onHide() {
         this.overlaypanelOn = false;
+        setTimeout(() => {
+            this.chref.detectChanges();
+        }, 0);
+    }
+
+    hideOverlay(event, overlaypanel: OverlayPanel) {
+        console.log("event", event);
+        
+        overlaypanel.hide();
+        this.overlaypanelOn = false;
+
+        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            event.chref.detectChanges();
+        },0);          
     }
 }

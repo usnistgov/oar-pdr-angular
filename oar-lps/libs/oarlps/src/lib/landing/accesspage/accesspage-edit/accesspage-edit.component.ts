@@ -1,9 +1,10 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
+import { NerdmComp } from '../../../nerdm/nerdm';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
     selector: 'lib-accesspage-edit',
@@ -11,7 +12,8 @@ import { FormsModule } from '@angular/forms';
     imports: [
         CommonModule,
         FormsModule,
-        NgbModule
+        TooltipModule,
+        ButtonModule
     ],
     templateUrl: './accesspage-edit.component.html',
     styleUrls: ['../../landing.component.scss', './accesspage-edit.component.css']

@@ -7,6 +7,9 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefAuthorComponent } from '../ref-author/ref-author.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
+import { ButtonModule } from 'primeng/button';				
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -14,6 +17,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     imports: [
         CommonModule,
         FormsModule,
+        ButtonModule,
+        TooltipModule,
+        TextEditComponent,
         NgbModule,
         RefAuthorComponent
     ],

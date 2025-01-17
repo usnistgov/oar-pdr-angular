@@ -1,32 +1,32 @@
 {
     "locations": {
         "orgHome": "https://nist.gov/",
-        "portalBase": "https://localhost/",
-        "pdrHome": "https://localhost/pdr/",
-        "pdrSearch": "https://localhost/sdp/",
-        "mdService":   "https://localhost/rmm/",
-        "taxonomyService": "https://localhost/rmm/taxonomy"
+        "portalBase": "https://data.nist.gov/",
+        "pdrHome": "https://data.nist.gov/pdr/",
+        "pdrSearch": "https://data.nist.gov/sdp/",
+        "mdService":   "https://data.nist.gov/rmm/",
+        "taxonomyService": "https://data.nist.gov/rmm/taxonomy"
     },
     "auth": {
-        "serviceEndpoint": "https://localhost/sso/"
+        "serviceEndpoint": "https://data.nist.gov/sso/"
     },
-    "mdAPI": "https://localhost/midas/dap/mds3/",
-    "metricsAPI": "https://localhost/rmm/usagemetrics/",
-    "customizationAPI": "http://localhost:9091/midas/",
+    "mdAPI": "https://data.nist.gov/midas/dap/mds3/",
+    "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
+    "customizationAPI": "http://data.nist.gov:9091/midas/",
     "fileManagerAPI": "https://nextcloud-dev.nist.gov",
     "mode": "dev",
     "status": "Dev Version",
     "appVersion": "v1.3.X",
     "production": false,
     "editEnabled": false,
-    "distService": "https://localhost/od/ds/",
+    "distService": "https://data.nist.gov/od/ds/",
     "gacode": "not-set",
     "screenSizeBreakPoint": 1200,
     "bundleSizeAlert": 500000000,
     "delayTimeForMetricsRefresh": 300,
     "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
     "staffdir": {
-        "serviceEndpoint": "http://localhost:9092/oar1"
+        "serviceEndpoint": "http://data.nist.gov:9092/oar1"
     }
 
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
@@ -106,6 +106,19 @@ export class SidebarComponent implements OnInit {
         this.ediid = this.record["@id"];
     }
 
+    ngOnChanges(changes: SimpleChanges): void {
+        //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+        //Add '${implements OnChanges}' to the class.
+        if(changes.record){
+            this.suggustedSections = this.sidebarService.getSuggestions(this.record, this.resourceType);
+            // this.required = this.suggustedSections['required'];
+            // this.recommended = this.suggustedSections['recommended'];
+            // this.niceToHave = this.suggustedSections['niceToHave'];
+    
+            this.chref.detectChanges();
+        }
+    }
+
     get isTestData() {
         return this.ediid == "test1" || this.ediid == "test2";
     }
@@ -181,6 +194,8 @@ export class SidebarComponent implements OnInit {
         // this.required = this.suggustedSections['required'];
         // this.recommended = this.suggustedSections['recommended'];
         // this.niceToHave = this.suggustedSections['niceToHave'];
+
+        this.chref.detectChanges();
     }
 
     gotoSection(section: string) {
@@ -201,6 +216,8 @@ export class SidebarComponent implements OnInit {
         // this.section.next(sectionID);
 
         this.scroll.emit(sectionID);
+
+        this.chref.detectChanges();
     }
 
     /**

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, effect, inject } from '@angular/core';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -9,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'title-edit',
@@ -16,8 +17,9 @@ import { EditStatusService } from '../../editcontrol/editstatus.service';
   imports: [ 
     CommonModule, 
     FormsModule, 
-    TextareaAutoresizeModule,
-    NgbModule
+    ButtonModule,
+    TooltipModule,
+    TextareaAutoresizeModule
   ],
   templateUrl: './title-edit.component.html',
   styleUrls: ['./title-edit.component.css', '../../landing.component.scss']
@@ -40,8 +42,9 @@ export class TitleEditComponent {
     isPublicSite: boolean = false; //Will be decided by config: editEnabled
     // globalsvc = inject(GlobalService);
 
+    fileManagerTooltip: string = "testing";
+
     constructor(public mdupdsvc: MetadataUpdateService,
-        private ngbModal: NgbModal,
         public edstatsvc: EditStatusService,
         public lpService: LandingpageService, 
         private chref: ChangeDetectorRef,

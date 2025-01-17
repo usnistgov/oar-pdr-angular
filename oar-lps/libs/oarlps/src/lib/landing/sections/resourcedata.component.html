@@ -45,7 +45,11 @@
         </div>
     </div>
 
-    <pdr-data-files *ngIf="theme == defaultTheme" [record]="record" [inBrowser]="inBrowser" [editEnabled]="editEnabled"
+    <pdr-data-files *ngIf="theme == defaultTheme" 
+        [record]="record" 
+        [inBrowser]="inBrowser" 
+        [editEnabled]="editEnabled"
+        [isEditMode]="isEditMode"
         (dlStatus)="setDownloadStatus($event)">
     </pdr-data-files>
 

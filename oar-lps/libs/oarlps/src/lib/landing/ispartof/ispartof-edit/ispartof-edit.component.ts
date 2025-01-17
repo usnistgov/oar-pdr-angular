@@ -1,18 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, effect, inject, Input, SimpleChanges } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'ispartof-edit',
     standalone: true,
     imports: [
             CommonModule,
-            NgbModule
+            ButtonModule,
+            TooltipModule
     ],
     templateUrl: './ispartof-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ispartof-edit.component.css'],

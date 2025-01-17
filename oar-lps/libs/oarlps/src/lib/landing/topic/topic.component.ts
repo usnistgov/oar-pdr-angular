@@ -59,8 +59,8 @@ export class TopicComponent implements OnInit {
     @ViewChild('topic') topicElement: ElementRef;
 
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
-    // fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
-    fieldName = "theme";
+    fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
+    // fieldName = "theme";
     editMode: string = MODE.NORMAL; 
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';

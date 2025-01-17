@@ -43,7 +43,14 @@
         <!-- Control buttons for drag and drop sectioon -->
         <div class="editable_field" style="white-space: nowrap;">
             <!-- Add button -->
-            <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add author">
+            <button 
+                class="edit_button" 
+                type="button" 
+                (click)="onAdd()" 
+                aria-label="add button" 
+                [disabled]="isEditing || isAdding" 
+                pTooltip="Add author"
+                tooltipPosition="top" >
                 <i [class]="addIconClass()"></i>
             </button>
 

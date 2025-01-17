@@ -1,12 +1,12 @@
 <app-header [appVersion]="appVersion" titleLn1="MIDAS" titleLn2="DATA PUBLISHING">
-    <div class="bar-right daptool-navbar" style="float: right; margin: 15px 10px 0 0;color: white;">
-      <a href="/pdr/about" target="_blank"><b>About</b></a> |
-      <a href="" target="_blank"><b>Help</b></a> |
-      <a href="" target="_blank"><b>Search</b></a> |
+    <div class="bar-right daptool-navbar" style="float: right; margin: 15px 10px 0 0;color: white !important;">
+      <a href="/pdr/about" target="_blank"><b style="color: white !important;">About</b></a> |
+      <a href="" target="_blank" style="color: white !important;"><b>Help</b></a> |
+      <a href="" target="_blank" style="color: white !important;"><b>Search</b></a> |
       <!-- Datacart (Download Manager) always disabled if edit is enabled -->
-      <a href="/datacart/global_datacart"><b>Cart</b><i
+      <a href="/datacart/global_datacart" style="color: white !important;"><b>Cart</b><i
           class="faa faa-shopping-cart faa-1x"></i><span
-          class="w3-badge badge-pill badge-notify badge-style">&nbsp;10&nbsp;</span></a>
+          class="w3-badge badge-notify">{{cartLength}}</span></a>
     </div>
   </app-header>
   <div style="min-height: 58%;">

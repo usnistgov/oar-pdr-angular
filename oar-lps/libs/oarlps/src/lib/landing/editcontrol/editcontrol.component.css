@@ -133,7 +133,7 @@
     z-index: 999;
 }
 
-.overlay-title {
+/* .overlay-title {
     color: white; 
     background-color: #1c4d9b;
     width: 100%;
@@ -143,7 +143,7 @@
     font-weight: bolder;
     font-size: larger;
     margin-bottom: 1em;
-}
+} */
 
 .blue-btn2 {
     background-color:var(--nist-blue-dark2);

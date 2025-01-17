@@ -48,7 +48,14 @@
             </div>
             <div class="editable_field" style="white-space: nowrap;">
                 <!-- Add button -->
-                <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" *ngIf="!isEditing && !isAdding" ngbTooltip="Add access page">
+                <button 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="onAdd()" 
+                    aria-label="add button" 
+                    *ngIf="!isEditing && !isAdding" 
+                    pTooltip="Add access page"
+                    tooltipPosition="top">
                     <i class="fas fa-plus fa-sm"></i>
                 </button>
 

@@ -37,8 +37,14 @@
             @if(edstatsvc.isEditMode()) {
                 <div *ngIf="edstatsvc.isEditMode()" class="editable_field" style="white-space: nowrap;">
                     @if(!isEditing) {
-                        <button class="edit_button" type="button"
-                        (click)="startEditing()" aria-label="Edit title" ngbTooltip="Edit title" style="cursor: pointer">
+                        <button 
+                            class="edit_button" 
+                            type="button"
+                            (click)="startEditing()" 
+                            pTooltip="Edit title" 
+                            tooltipPosition="top" 
+                            aria-label="Edit title" 
+                            style="cursor: pointer">
                             <i class="fas fa-pencil fa-sm"></i>
                         </button> 
 

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, inject, effect } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -10,6 +10,9 @@ import { Reference } from '../reference';
 import { RefListComponent } from '../ref-list/ref-list.component';
 import { CommonModule } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
+import { RefPubComponent } from '../ref-pub/ref-pub.component';
+import { ButtonModule } from 'primeng/button';				
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'ref-midas',
@@ -17,8 +20,10 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
     imports: [
         CommonModule,
         RefListComponent,
-        NgbModule,
-        ConfirmationDialogComponent
+        ButtonModule,
+        TooltipModule,
+        ConfirmationDialogComponent,
+        RefPubComponent
     ],
     templateUrl: './ref-midas.component.html',
     styleUrls: ['../../landing.component.scss', './ref-midas.component.scss'],

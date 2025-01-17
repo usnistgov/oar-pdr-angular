@@ -12,10 +12,11 @@ import {
 } from '@angular/cdk/drag-drop';
 import { AuthorEditComponent } from '../author-edit/author-edit.component';
 import { CommonModule } from '@angular/common';
-import { TextEditModule } from '../../../text-edit/text-edit.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { ButtonModule } from 'primeng/button';				
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'lib-author-list',
@@ -23,8 +24,9 @@ import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService }
     imports: [
         CommonModule,
         AuthorEditComponent,
-        TextEditModule,
-        NgbModule
+        TextEditComponent,
+        ButtonModule,
+        TooltipModule
     ],
     templateUrl: './author-list.component.html',
     styleUrls: ['../../landing.component.scss', './author-list.component.css'],

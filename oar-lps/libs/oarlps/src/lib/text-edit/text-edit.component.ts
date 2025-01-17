@@ -1,9 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'lib-text-edit',
-  templateUrl: './text-edit.component.html',
-  styleUrls: ['../landing/landing.component.scss', './text-edit.component.css']
+    selector: 'lib-text-edit',
+    standalone: true,
+    imports: [
+        ButtonModule,
+        TooltipModule,
+        CommonModule,
+        FormsModule
+    ],
+    templateUrl: './text-edit.component.html',
+    styleUrls: ['../landing/landing.component.scss', './text-edit.component.css']
 })
 export class TextEditComponent implements OnInit {
     prevVal: string = "";

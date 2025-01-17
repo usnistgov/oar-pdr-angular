@@ -34,15 +34,20 @@ export class AccesspagePubComponent {
     overflowStyle: string = 'hidden';
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
+    isPublicSite: boolean = false; 
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
     
-    constructor( private chref: ChangeDetectorRef ) {
+    constructor( 
+        public globalsvc: GlobalService,
+        private chref: ChangeDetectorRef ) {
         
     }
 
     ngOnInit(): void {
+        this.isPublicSite = this.globalsvc.isPublicSite();
+
         if (this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0){
             this.useMetadata();
         }

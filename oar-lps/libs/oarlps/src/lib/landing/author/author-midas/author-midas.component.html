@@ -54,26 +54,46 @@
 
         <!-- Never get loaded in public mode -->
         @if(isEditMode) {
-                <!-- Control buttons -->
-                <div class="editable_field" style="white-space: nowrap;">
-                    <!-- Edit button -->
-                    <button class="edit_button" *ngIf="!isEditing" type="button" 
-                        (click)="startEditing()" aria-label="Edit author" ngbTooltip="Edit author" style="cursor: pointer">
-                        <i class="fas fa-pencil fa-sm"></i>
-                    </button> 
+            <!-- Control buttons -->
+            <div class="editable_field" style="white-space: nowrap;">
+                <!-- Edit button -->
+                <button 
+                    class="edit_button" 
+                    *ngIf="!isEditing" 
+                    type="button" 
+                    (click)="startEditing()" 
+                    aria-label="Edit author" 
+                    pTooltip="Edit author" 
+                    tooltipPosition="top" 
+                    style="cursor: pointer">
+                    <i class="fas fa-pencil fa-sm"></i>
+                </button> 
 
-                    <!-- Hide button - hide edit block -->
-                    <button class="edit_button" *ngIf="isEditing" [disabled]="childIsEditing || childIsAdding" type="button" 
-                        (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-                        <i class="fas fa-times"></i>
-                    </button> 
+                <!-- Hide button - hide edit block -->
+                <button 
+                    class="edit_button" 
+                    *ngIf="isEditing" 
+                    [disabled]="childIsEditing || childIsAdding" 
+                    type="button" 
+                    (click)="hideEditBlock()" 
+                    aria-label="Hide edit block" 
+                    pTooltip="Hide edit block"
+                    tooltipPosition="top" >
+                    <i class="fas fa-times"></i>
+                </button> 
 
-                    <!-- Undo all changes button -->
-                    <button class="edit_button" *ngIf="authorsChanged || authorsUpdated" type="button"
-                        (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo">
-                        <i class="fas fa-undo fa-sm"></i>
-                    </button>             
-                </div>
+                <!-- Undo all changes button -->
+                <button
+                    class="edit_button" 
+                    *ngIf="authorsChanged || authorsUpdated" 
+                    type="button"
+                    (click)="undoAllChanges()" 
+                    aria-label="undo button" 
+                    pTooltip="Undo"
+                    tooltipPosition="top">
+                    <i class="fas fa-undo fa-sm"></i>
+                </button>             
+            </div>
         }
     </div>
 </div>

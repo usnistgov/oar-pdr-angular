@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -18,8 +18,9 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
-import { TextEditModule } from '../../../text-edit/text-edit.module';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'lib-ref-list',
@@ -27,11 +28,11 @@ import { RefEditComponent } from '../ref-edit/ref-edit.component';
     imports: [
         CommonModule,
         ButtonModule,
+        TooltipModule,
         FormsModule,
         CollapseModule,
-        TextEditModule,
+        TextEditComponent,
         RefEditComponent,
-        NgbModule,
         ConfirmationDialogComponent
     ],
     templateUrl: './ref-list.component.html',
