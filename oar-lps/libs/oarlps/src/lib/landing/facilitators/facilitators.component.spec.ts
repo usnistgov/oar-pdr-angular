@@ -22,7 +22,7 @@ describe('FacilitatorsComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [ FacilitatorsComponent ],
+            imports: [ FacilitatorsComponent ],
             providers: [ 
                 MetadataUpdateService, 
                 UserMessageService,

@@ -8,6 +8,7 @@ import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics
 
 import { config, testdata } from '../../../environments/environment';
 import { MetricsData } from '../metrics-data';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ResourceMetadataComponent', () => {
     let component: ResourceMetadataComponent;
@@ -17,8 +18,10 @@ describe('ResourceMetadataComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ ],
-            declarations: [  ],
+            imports: [
+                ResourceMetadataComponent,
+                NoopAnimationsModule
+             ],
             providers: [
                 { provide: AppConfig, useValue: cfg },
                 GoogleAnalyticsService

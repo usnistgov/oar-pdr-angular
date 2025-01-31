@@ -32,8 +32,8 @@ describe('EditStatusComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ CommonModule ],
-            declarations: [ EditStatusComponent ],
+            imports: [ CommonModule, EditStatusComponent ],
+            declarations: [  ],
             providers: [
                 UserMessageService, MetadataUpdateService, DatePipe, EditStatusService,
                 { provide: AuthService, useValue: authsvc },
@@ -44,12 +44,14 @@ describe('EditStatusComponent', () => {
         fixture = TestBed.createComponent(EditStatusComponent);
         component = fixture.componentInstance;
         component._editmode = EDIT_MODES.EDIT_MODE;
-        component.message = "Hello";
+        component.showMsg = true;
     }
 
     beforeEach(waitForAsync(() => {
         makeComp();
         fixture.detectChanges();
+        component.message = "Hello";
+
     }));
 
     it('should initialize', () => {

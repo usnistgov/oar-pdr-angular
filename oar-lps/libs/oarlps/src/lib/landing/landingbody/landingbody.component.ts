@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild, ElementRef, Output, EventEmitter, inject } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, Output, EventEmitter, inject, effect, SimpleChanges } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { MetricsData } from "../metrics-data";
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
@@ -10,6 +10,8 @@ import { ResourceDescriptionComponent } from '../sections/resourcedescription.co
 import { ResourceMetadataComponent } from '../sections/resourcemetadata.component';
 import { ResourceRefsComponent } from '../sections/resourcerefs.component';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
+// import { AppConfig } from '../../config/config';
+import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 
 /**
  * a component that presents the landing page's presentation of the resource description
@@ -37,12 +39,12 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
     selector:    'landing-body',
     standalone: true,
     imports: [
-      CommonModule,
-      ResourceIdentityComponent,
-      ResourceDataComponent,
-      ResourceDescriptionComponent,
-      ResourceMetadataComponent,
-      ResourceRefsComponent
+        CommonModule,
+        ResourceIdentityComponent,
+        ResourceDataComponent,
+        ResourceDescriptionComponent,
+        ResourceMetadataComponent,
+        ResourceRefsComponent
     ],
     templateUrl: './landingbody.component.html',
     styleUrls:   [
@@ -52,6 +54,8 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
 export class LandingBodyComponent {
     recordType: string = "";
     globalsvc = inject(GlobalService);
+    isEditMode: boolean;
+
 
     // passed in by the parent component:
     @Input() md: NerdmRes = null;
@@ -67,6 +71,10 @@ export class LandingBodyComponent {
     @Input() showJsonViewer: boolean = false;
     @Input() theme: string;
     @Input() isPublicSite: boolean;
+    @Input() edstatsvc: EditStatusService;
+
+    @Input() landingPageURL: string;
+    @Input() landingPageServiceStr: string;
 
     @ViewChild(ResourceMetadataComponent)
     resourceMetadataComponent: ResourceMetadataComponent;
@@ -80,13 +88,30 @@ export class LandingBodyComponent {
      * create an instance of the Identity section
      */
     constructor(
-        public edstatsvc: EditStatusService,
-        public lpService: LandingpageService)
-    { }
+        // public cfg: AppConfig,
+        public lpService: LandingpageService,
+        // public metadataUpdateService: MetadataUpdateService,
+        // public authService: AuthService
+    )
+    { 
+
+    }
 
     ngOnInit(): void {
         this.recordType = (new NERDResource(this.md)).resourceLabel();
+        // this.landingPageURL = this.cfg.get('landingPageService','/od/id/') + this.md['@id'];
+        // this.landingPageServiceStr = this.cfg.get('locations.landingPageService','https://data.nist.gov/od/id/');
     }
+
+    ngOnChanges(ch: SimpleChanges) {
+        // this.aboutdatasetComponent.collapsed = !this.showNerdm;
+        if (this.edstatsvc){
+            this.edstatsvc.watchIsEditMode((isEditMode) => {
+                this.isEditMode = isEditMode;
+            })
+        }
+    }
+
     /**
      * scroll the view to the named section.  The available sections are: "top", "description",
      * "dataAccess", "references", and "metadata".  Any other value will be treated as "top".

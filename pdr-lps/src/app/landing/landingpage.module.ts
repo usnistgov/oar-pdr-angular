@@ -12,7 +12,7 @@ import { NoidComponent } from './noid.component';
 import { MetadataUpdateService } from 'oarlps';
 import { EditControlModule } from 'oarlps';
 import { MenuComponent } from 'oarlps';
-import { CitationModule } from 'oarlps';
+// import { CitationModule } from 'oarlps';
 import { DoneModule } from 'oarlps';
 import { TaxonomyListService } from 'oarlps'
 import { ErrorComponent, UserErrorComponent } from './error.component';
@@ -32,19 +32,19 @@ import { FrameModule } from 'oarlps';
  */
 @NgModule({
     imports: [
-        CommonModule,
-        ButtonModule,
-        NgbModule,
-        NerdmModule,
-        EditControlModule,
-        MenuComponent,
-        CitationModule,
-        SearchresultModule,
-        DoneModule,
-        SidebarModule,
-        DownloadStatusModule,
-        MetricsinfoComponent,
-        FrameModule
+        // CommonModule,
+        // ButtonModule,
+        // NgbModule,
+        // NerdmModule,
+        // EditControlModule,
+        // MenuComponent,
+        // CitationModule,
+        // SearchresultModule,
+        // DoneModule,
+        // SidebarModule,
+        // DownloadStatusModule,
+        // MetricsinfoComponent,
+        // FrameModule
     ],
     declarations: [
         ErrorComponent, UserErrorComponent

@@ -9,7 +9,6 @@ import { AboutdatasetComponent } from './aboutdataset.component';
 
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
 import { VersionModule } from '../version/version.module';
-import { FacilitatorsModule } from '../facilitators/facilitators.module';
 
 /**
  * module that provides interfaces for accessing and visualizing the resource's metadata in various formats
@@ -21,8 +20,7 @@ import { FacilitatorsModule } from '../facilitators/facilitators.module';
         FieldsetModule, 
         ButtonModule, 
         NgxJsonViewerModule, 
-        VersionModule,
-        FacilitatorsModule
+        VersionModule
     ],
     declarations: [
 

@@ -340,6 +340,7 @@ export class FilterTreeNode implements TreeNode {
     ediids: string[] = [];
     expanded = false;
     keyname: string = '';
+    key: string = '';
     parent = null;
     level: number = 1;
     selectable: boolean = true;
@@ -353,7 +354,11 @@ export class FilterTreeNode implements TreeNode {
         this.selectable = selectable;
         this.level = level;
         this.keyname = key;
-        if(!key) this.keyname = label;
+        this.key = key;
+        if(!key) {
+            this.keyname = label;
+            this.key = label;
+        }
     }
 
    /**
@@ -369,7 +374,7 @@ export class FilterTreeNode implements TreeNode {
         return this._upsertNodeFor(levels, item, level, searchResults, collection, taxonomyURI);
     }
 
-    _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}) : TreeNode {
+    _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}, parentKey:string = "") : TreeNode {
         let nodeLabel: string = ''; 
         // find the node corresponding to the given item in the data cart 
         for (let child of this.children) {
@@ -417,7 +422,7 @@ export class FilterTreeNode implements TreeNode {
         }
 
         // ancestor does not exist yet; create it
-        let key = levels[0];
+        let key = parentKey + levels[0];
         let label = levels[0];
         let data = item[0];
 
@@ -466,7 +471,7 @@ export class FilterTreeNode implements TreeNode {
         }
 
         if (levels.length > 1){
-            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI);
+            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI, key);
         }
         return child;
     }    

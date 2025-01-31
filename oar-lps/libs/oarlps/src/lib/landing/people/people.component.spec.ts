@@ -13,8 +13,7 @@ describe('PeopleComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [PeopleComponent],
-      imports: [ HttpClientTestingModule, StaffDirModule ],
+      imports: [ HttpClientTestingModule, StaffDirModule, PeopleComponent ],
       providers: [ 
         StaffDirectoryService
        ]

@@ -1,9 +1,8 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { LandingAboutComponent } from './landingAbout.component';
-
+import { provideRouter } from '@angular/router';
 
   describe('LandingAboutComponent', () => {
     let component: LandingAboutComponent;
@@ -13,9 +12,8 @@ import { LandingAboutComponent } from './landingAbout.component';
 
     beforeEach(waitForAsync(() => {
       TestBed.configureTestingModule({
-          declarations: [LandingAboutComponent],
-          imports: [ RouterTestingModule ],
-          providers: [ ]
+          imports: [ LandingAboutComponent ],
+          providers: [ provideRouter([]) ]
       })
         .compileComponents();
     }));

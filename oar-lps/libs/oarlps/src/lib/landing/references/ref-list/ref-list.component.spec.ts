@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { RefListComponent } from './ref-list.component';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -12,33 +12,49 @@ import { NotificationService } from '../../../shared/notification-service/notifi
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { testdata } from '../../../../environments/environment';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TransferState } from '@angular/core';
+import { AngularEnvironmentConfigService } from '../../../config/config.service';
+import * as env from '../../../../environments/environment';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideRouter } from '@angular/router';
 
 describe('RefListComponent', () => {
-  let component: RefListComponent;
-  let fixture: ComponentFixture<RefListComponent>;
-//   let cfg : AppConfig = new AppConfig(config);
-//   let authsvc : AuthService = new MockAuthService(undefined);
-  let rec : NerdmRes = testdata['test1'];
+    let component: RefListComponent;
+    let fixture: ComponentFixture<RefListComponent>;
+    let cfg: AppConfig;
+    let plid: Object = "browser";
+    let ts: TransferState = new TransferState();
+    let authsvc: AuthService = new MockAuthService(undefined);
+    let rec : NerdmRes = testdata['test1'];
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+    cfg.locations.pdrSearch = "https://goob.nist.gov/search";
+    cfg.status = "Unit Testing";
+    cfg.appVersion = "2.test";
+
+    TestBed.configureTestingModule({
         imports: [
-            // RefListComponent,
-            // NoopAnimationsModule,
-            // ToastrModule.forRoot()
+            RefListComponent,
+            NoopAnimationsModule,
+            ToastrModule.forRoot()
         ],
         providers: [
-            // { provide: AppConfig, useValue: cfg },
-            // { provide: AuthService, useValue: authsvc },
-            // MetadataUpdateService, 
-            // UserMessageService, 
-            // EditStatusService,
-            // DatePipe,
-            // AuthService
+            { provide: AppConfig, useValue: cfg },
+            { provide: AuthService, useValue: authsvc },
+            MetadataUpdateService, 
+            UserMessageService, 
+            EditStatusService,
+            DatePipe,
+            AuthService,
+            provideHttpClient(),
+            provideHttpClientTesting(), 
+            provideRouter([])
         ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RefListComponent);

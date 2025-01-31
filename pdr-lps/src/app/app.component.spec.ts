@@ -32,10 +32,11 @@ describe('AppComponent', () => {
             ], 
             providers: [
                 GoogleAnalyticsService, 
-                CartService, { provide: AppConfig, useValue: cfg },               
+                CartService, 
+                { provide: AppConfig, useValue: cfg },               
                 MockAuthenticationService,
                 AuthenticationService]
-            , imports: [RouterTestingModule, FrameModule, ConfigModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
+            , imports: [RouterTestingModule, FrameModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
         }).compileComponents();
     }));
 

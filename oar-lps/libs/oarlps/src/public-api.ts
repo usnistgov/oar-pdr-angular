@@ -18,6 +18,7 @@ export * from './lib/landing/aboutdataset/aboutdataset.component';
 export * from './lib/landing/done/done.module';
 export * from './lib/landing/done/done.component';
 
+export * from './lib/landing/editcontrol/auth.service';
 // export * from './lib/landing/sections/sections.module';
 // export * from './lib/landing/sections/resourcedata.component';
 // export * from './lib/landing/sections/resourcedescription.component';
@@ -31,8 +32,8 @@ export * from './lib/landing/editcontrol/editstatus.component';
 export * from './lib/landing/editcontrol/editcontrol.component';
 export * from './lib/landing/editcontrol/editstatus.service';
 // export * from './lib/landing/editcontrol/auth.service';
-export * from './lib/landing/citation/citation.module';
-export * from './lib/landing/citation/citation.component';
+// export * from './lib/landing/citation/citation.module';
+// export * from './lib/landing/citation/citation.component';
 export * from './lib/landing/downloadstatus/downloadstatus.component';
 export * from './lib/landing/downloadstatus/downloadstatus.module';
 export * from './lib/landing/metricsinfo/metricsinfo.component';
@@ -42,7 +43,6 @@ export * from './lib/landing/metrics-data';
 export * from './lib/landing/nerdm.component';
 
 export * from './lib/landing/author/author.service';
-export * from './lib/landing/author/author.module';
 
 export * from './lib/landing/tools/tools.module';
 export * from './lib/landing/tools/menu.component';
@@ -123,3 +123,6 @@ export * from './lib/landing/accesspage/accesspage-edit/accesspage-edit.componen
 export * from './lib/shared/testdata-service/testDataService';
 
 export * as Globals from './lib/shared/globals/globals';
+
+export * from './lib/landing/citation/citation-popup/citation-popup.component';
+export * from './lib/landing/citation/citation-display/citation-display.component';

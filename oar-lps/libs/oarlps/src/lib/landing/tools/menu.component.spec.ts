@@ -18,7 +18,7 @@ describe('MenuComponent', () => {
   beforeEach(async () => {
     cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
     await TestBed.configureTestingModule({
-      declarations: [ MenuComponent ],
+      imports: [ MenuComponent ],
       providers: [
         { provide: AppConfig,  useValue: cfg }
     ]

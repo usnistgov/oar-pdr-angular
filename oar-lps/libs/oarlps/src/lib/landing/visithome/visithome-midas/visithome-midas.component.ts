@@ -11,20 +11,20 @@ import { VisithomeEditComponent } from '../visithome-edit/visithome-edit.compone
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { VisithpmePubComponent } from '../visithpme-pub/visithpme-pub.component';
+import { VisithomePubComponent } from '../visithome-pub/visithome-pub.component';
 
 @Component({
-    selector: 'visithpme-midas',
+    selector: 'Visithome-midas',
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
         VisithomeEditComponent,
-        VisithpmePubComponent,
+        VisithomePubComponent,
         NgbModule
     ],
-    templateUrl: './visithpme-midas.component.html',
-    styleUrls: ['./visithpme-midas.component.scss', '../../landing.component.scss'],
+    templateUrl: './Visithome-midas.component.html',
+    styleUrls: ['./Visithome-midas.component.scss', '../../landing.component.scss'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -33,7 +33,7 @@ import { VisithpmePubComponent } from '../visithpme-pub/visithpme-pub.component'
         ])
     ]
 })
-export class VisithpmeMidasComponent {
+export class VisithomeMidasComponent {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() inViewMode: boolean;

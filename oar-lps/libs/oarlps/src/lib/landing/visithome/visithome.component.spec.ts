@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { VisithomeComponent } from './visithome.component';
 import { UserMessageService } from '../../frame/usermessage.service';
@@ -20,15 +20,17 @@ describe('VisithomeComponent', () => {
   let ts: TransferState = new TransferState();
   let authsvc: AuthService = new MockAuthService(undefined);
 
-  beforeEach(async () => {
+  beforeEach(waitForAsync(() => {
     cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
     cfg.locations.pdrSearch = "https://goob.nist.gov/search";
     cfg.status = "Unit Testing";
     cfg.appVersion = "2.test";
 
-    await TestBed.configureTestingModule({
-      declarations: [ VisithomeComponent ],
-      imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
+    TestBed.configureTestingModule({
+      imports: [ 
+        VisithomeComponent,
+        HttpClientTestingModule, 
+        ToastrModule.forRoot() ],
       providers: [ 
         MetadataUpdateService,
         DatePipe,
@@ -39,7 +41,7 @@ describe('VisithomeComponent', () => {
       ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(VisithomeComponent);

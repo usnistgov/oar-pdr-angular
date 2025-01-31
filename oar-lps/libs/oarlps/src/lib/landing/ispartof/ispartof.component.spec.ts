@@ -21,7 +21,7 @@ describe('IspartofComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IspartofComponent ],
+      imports: [ IspartofComponent ],
       providers: [ 
         MetadataUpdateService,
         UserMessageService,

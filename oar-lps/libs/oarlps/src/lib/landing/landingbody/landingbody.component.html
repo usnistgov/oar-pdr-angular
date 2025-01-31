@@ -7,8 +7,14 @@
             <a name="identity" #identity></a>
             <!-- <div style="margin-left: -10px;"> -->
             <div>
-                    <pdr-resource-id [record]="md" [inBrowser]="inBrowser" [theme]="theme" [isPublicSite]="isPublicSite">
-                    </pdr-resource-id>
+                <pdr-resource-id 
+                    [record]="md" 
+                    [inBrowser]="inBrowser" 
+                    [theme]="theme" 
+                    [isPublicSite]="isPublicSite"
+                    [landingPageURL]="landingPageURL"
+                    [landingPageServiceStr]="landingPageServiceStr">
+                </pdr-resource-id>
 
                 <!-- description: abstract, keywords, research areas, etc. -->
                 <a name="description" #description></a>
@@ -32,7 +38,7 @@
             <!-- About This Dataset visualization and export -->
             <a name="about" #about></a>
             <a name="references2" #references2></a>
-            @if(!edstatsvc.isEditMode()) {
+            @if(!isEditMode) {
               <pdr-resource-md
                 [record]="md"
                 [inBrowser]="inBrowser"

@@ -27,8 +27,8 @@ describe('SingleApageComponent', () => {
     cfg.appVersion = "2.test";
 
     await TestBed.configureTestingModule({
-      declarations: [ AccesspageEditComponent ],
-      imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
+      declarations: [ ],
+      imports: [ HttpClientTestingModule, ToastrModule.forRoot(), AccesspageEditComponent ],
       providers: [ 
         MetadataUpdateService, 
         DatePipe,

@@ -1,12 +1,6 @@
 import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild, inject } from '@angular/core';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NotificationService } from '../../shared/notification-service/notification.service';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
+import { SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ToolbarModule } from 'primeng/toolbar';
 import { DescEditComponent } from './desc-edit/desc-edit.component';
 
 @Component({

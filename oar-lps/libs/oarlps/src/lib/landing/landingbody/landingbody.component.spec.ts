@@ -1,39 +1,77 @@
 import { ComponentFixture, TestBed, fakeAsync, waitForAsync  } from '@angular/core/testing';
-import { DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { RouterTestingModule } from '@angular/router/testing';
 import { LandingBodyComponent } from './landingbody.component';
-import { AppConfig } from 'oarlps';
-import { NerdmRes, NerdmComp } from 'oarlps';
-import { MetadataUpdateService } from 'oarlps';
-import { UserMessageService } from 'oarlps';
-import { AuthService, WebAuthService, MockAuthService } from 'oarlps';
-import { GoogleAnalyticsService } from 'oarlps';
-import { CartService } from 'oarlps';
-import * as environment from '../../environments/environment';
-import { MetricsData } from "./metrics-data";
-import { AngularEnvironmentConfigService } from 'oarlps';
-import { TransferState } from '@angular/core';
+import { NerdmRes } from 'oarlps';
+import * as environment from '../../../environments/environment';
+import { MetricsData } from "../metrics-data";
+import { Component } from '@angular/core';
+import { ResourceIdentityComponent } from '../sections/resourceidentity.component';
+import { ResourceDataComponent } from '../sections/resourcedata.component';
+import { ResourceDescriptionComponent } from '../sections/resourcedescription.component';
+import { ResourceMetadataComponent } from '../sections/resourcemetadata.component';
+import { ResourceRefsComponent } from '../sections/resourcerefs.component';
 
 describe('LandingBodyComponent', () => {
+    @Component({
+        selector: "pdr-resource-id",
+        standalone: true,
+        template: `<div></div>`,
+    })
+    class TestResourceIdentityComponent {}
+
+    @Component({
+        selector: "pdr-resource-data",
+        standalone: true,
+        template: `<div></div>`,
+    })
+    class TestResourceDataComponent {}
+      
+    @Component({
+        selector: "pdr-resource-desc",
+        standalone: true,
+        template: `<div></div>`,
+    })
+    class TestResourceDescriptionComponent {}
+
+    @Component({
+        selector: "pdr-resource-md",
+        standalone: true,
+        template: `<div></div>`,
+    })
+    class TestResourceMetadataComponent {}
+
+    @Component({
+        selector: "pdr-resource-refs",
+        standalone: true,
+        template: `<div></div>`,
+    })
+    class TestResourceRefsComponent {}
+
     let component: LandingBodyComponent;
     let fixture: ComponentFixture<LandingBodyComponent>;
-    let cfg : AppConfig = new AppConfig(environment.config);
-    let authsvc : AuthService = new MockAuthService(undefined, environment);
     let record1 : NerdmRes = environment.testdata['test1'];
-    debugger;
 
     let makeComp = function() {
-        TestBed.configureTestingModule({
-            imports: [ HttpClientModule, RouterTestingModule ],
-            declarations: [ LandingBodyComponent ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc },
-                GoogleAnalyticsService, UserMessageService, MetadataUpdateService, DatePipe,
-                CartService
-            ]
-        }).compileComponents();
+
+        TestBed.overrideComponent(LandingBodyComponent, {
+            add: {
+                imports: [
+                    TestResourceIdentityComponent,
+                    TestResourceDataComponent,
+                    TestResourceDescriptionComponent,
+                    TestResourceMetadataComponent,
+                    TestResourceRefsComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    ResourceIdentityComponent,
+                    ResourceDataComponent,
+                    ResourceDescriptionComponent,
+                    ResourceMetadataComponent,
+                    ResourceRefsComponent
+                ],
+            },
+        });
 
         fixture = TestBed.createComponent(LandingBodyComponent);
         component = fixture.componentInstance;
@@ -47,6 +85,9 @@ describe('LandingBodyComponent', () => {
         component.md["@type"][0] = "nrdp:PublicDataResource";
         component.metricsData = new MetricsData();
         component.editEnabled = false;
+        component.landingPageURL = "testURL";
+        component.landingPageServiceStr = "serviceURL";
+
         fixture.detectChanges();
     }));
 

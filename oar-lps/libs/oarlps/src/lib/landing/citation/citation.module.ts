@@ -20,11 +20,10 @@ import { CitationDescriptionComponent, CitationPopupComponent } from './citation
         CommonModule, ButtonModule, DialogModule, SharedModule, BrowserAnimationsModule
     ],
     declarations: [
-        CitationDescriptionComponent, CitationPopupComponent
+        // CitationDescriptionComponent, CitationPopupComponent
     ],
     exports: [
-        CitationDescriptionComponent, CitationPopupComponent
+        // CitationDescriptionComponent, CitationPopupComponent
     ]
 })
 export class CitationModule { }
-

@@ -11,7 +11,8 @@
             <app-ispartof
                 [record]="record" 
                 [inBrowser]="inBrowser"
-                [isEditMode]="isEditMode">
+                [isEditMode]="isEditMode"
+                [landingPageServiceStr]="landingPageServiceStr">
             </app-ispartof>
         }
 
@@ -43,7 +44,7 @@
         <span *ngIf="doiUrl"><i> <a href="{{doiUrl}}"
                     >{{record.doi}}</a></i></span>
         <span *ngIf="!doiUrl"><i> 
-            <a href="{{ cfg.get('landingPageService','/od/id/') }}{{record['@id']}}">{{record["@id"]}}</a></i>
+            <a href="{{ landingPageURL }}">{{record["@id"]}}</a></i>
         </span>
 
         <!-- Info button -->
@@ -65,7 +66,11 @@
               </ng-template>
             </div>
         </div>
-        <pdr-version [record]="record"></pdr-version>
+        <pdr-version 
+            [record]="record"
+            [landingPageServiceStr]="landingPageServiceStr"
+            >
+        </pdr-version>
     </div>
 </div>
 

@@ -26,7 +26,10 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
  * This class also works with a UserMessageService to alert the user with messages when 
  * things go wrong.  
  */
-@Injectable()
+// @Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class MetadataUpdateService {
 
     private mdres: Subject<NerdmRes> = new Subject<NerdmRes>();

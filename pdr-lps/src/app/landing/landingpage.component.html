@@ -46,6 +46,9 @@
                     [showJsonViewer]="showJsonViewer"
                     [theme]="theme"
                     [isPublicSite]="isPublicSite"
+                    [edstatsvc]="edstatsvc"
+                    [landingPageURL]="landingPageURL"
+                    [landingPageServiceStr]="landingPageServiceStr"
                     (dlStatus)="onDownloadStatusChanged($event)">
                   </landing-body>
   
@@ -64,9 +67,9 @@
 
               <!-- citation pop-up -->
               <div *ngIf="inBrowser">
-                  <citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
+                  <lib-citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
                       (visibleChange)="setCitationVisible($event)">
-                  </citation-popup>
+                  </lib-citation-popup>
               </div>
           </div>
   

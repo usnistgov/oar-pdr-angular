@@ -5,15 +5,15 @@ import { Sections, SectionPrefs, GlobalService } from '../../../shared/globals/g
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'visithpme-pub',
+  selector: 'Visithome-pub',
   standalone: true,
   imports: [
     CommonModule
   ],
-  templateUrl: './visithpme-pub.component.html',
-  styleUrls: ['./visithpme-pub.component.scss', '../../landing.component.scss']
+  templateUrl: './Visithome-pub.component.html',
+  styleUrls: ['./Visithome-pub.component.scss', '../../landing.component.scss']
 })
-export class VisithpmePubComponent {
+export class VisithomePubComponent {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() inViewMode: boolean;

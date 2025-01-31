@@ -1,9 +1,6 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
 import { DatePipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-
-import { ToastrModule } from 'ngx-toastr';
-
 import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { ResourceDescriptionComponent } from './resourcedescription.component';
@@ -15,6 +12,7 @@ import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/aut
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 // import { DragDropModule } from '@angular/cdk/drag-drop';
 import { config, testdata } from '../../../environments/environment';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('ResourceDescriptionComponent', () => {
     let component : ResourceDescriptionComponent;
@@ -25,7 +23,9 @@ describe('ResourceDescriptionComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ HttpClientModule ],
+            imports: [ 
+                HttpClientModule,
+                ToastrModule.forRoot()  ],
             declarations: [  ],
             providers: [
                 { provide: AppConfig, useValue: cfg },

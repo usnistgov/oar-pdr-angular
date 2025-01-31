@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import {TreeNode} from 'primeng/api';
 import { TaxonomyListService, SearchfieldsListService } from '../../shared/index';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -49,7 +49,7 @@ export class TaxonomyComponent implements OnInit {
     @Input() clearAllCheckbox: boolean = false;
     @Output() filterString: EventEmitter<string> = new EventEmitter();
     
-    constructor() { 
+    constructor(private chref: ChangeDetectorRef,) { 
 
     }
 
@@ -109,6 +109,8 @@ export class TaxonomyComponent implements OnInit {
                 this.preselectNodes(node.children);
             }
         }
+
+        this.chref.detectChanges();
     }
 
     totalNode(allNodes: TreeNode) {
@@ -175,6 +177,8 @@ export class TaxonomyComponent implements OnInit {
             } 
 
         this.filterString.emit(lFilterString);
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -217,6 +221,8 @@ export class TaxonomyComponent implements OnInit {
     onNodeExpand(event) {
         if(event.node.level == 1)
             this.collectionNodeExpanded = true;
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -226,5 +232,7 @@ export class TaxonomyComponent implements OnInit {
     onNodeCollapse(event) {
         if(event.node.level == 1)
             this.collectionNodeExpanded = false;
+
+        this.chref.detectChanges();
     }
 }

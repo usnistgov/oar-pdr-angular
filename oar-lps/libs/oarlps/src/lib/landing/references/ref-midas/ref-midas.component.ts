@@ -2,7 +2,6 @@ import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeD
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
@@ -64,7 +63,6 @@ export class RefMidasComponent {
     constructor(public mdupdsvc : MetadataUpdateService,        
         private modalService: NgbModal,       
         private chref: ChangeDetectorRef,        
-        private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
     }

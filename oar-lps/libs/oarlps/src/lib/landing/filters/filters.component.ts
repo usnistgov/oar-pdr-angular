@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input, AfterViewInit, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Inject, Input, AfterViewInit, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TreeNode } from 'primeng/api';
 // import { Message } from 'primeng/components/common/api';
@@ -151,6 +151,7 @@ export class FiltersComponent implements OnInit {
         public searchFieldsListService: SearchfieldsListService,
         public searchService: SearchService,
         public collectionService: CollectionService,
+        private chref: ChangeDetectorRef,
         private cfg: AppConfig
     ) { 
 
@@ -311,6 +312,8 @@ export class FiltersComponent implements OnInit {
             this.moreOptionsText = "Show More Options...";
         else
             this.moreOptionsText = "Hide Options...";
+
+        this.chref.detectChanges();
     }   
     
     /**
@@ -1032,7 +1035,7 @@ export class FiltersComponent implements OnInit {
         let sortable: any[] = [];
         let expand = (collection != Collections.DEFAULT);
         sortable = [];
-        this.collectionThemesWithCount[collection] = new FilterTreeNode(this.collection + ' Research Topics', expand);
+        this.collectionThemesWithCount[collection] = new FilterTreeNode(this.collection + ' Research Topics', expand, this.collection + ' Research Topics');
 
         if(!this.allCollections[collection]){
             this.allCollections[collection] = {} as Collection;

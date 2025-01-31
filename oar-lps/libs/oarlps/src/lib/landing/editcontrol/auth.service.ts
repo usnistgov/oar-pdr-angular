@@ -92,7 +92,9 @@ export abstract class AuthService {
  *
  * This implementation is intended for use in production.  
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class WebAuthService extends AuthService {
 
     private _endpoint: string = null;

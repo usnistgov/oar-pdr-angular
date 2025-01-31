@@ -45,6 +45,7 @@ describe('BundleplanComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(BundleplanComponent);
         component = fixture.componentInstance;
+        component.emailSubject = "";
         fixture.detectChanges();
     });
 

@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SearchService } from '../../shared/search-service/index';
 import { ResultlistComponent } from './resultlist.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BrowserModule } from '@angular/platform-browser';
 import { AppConfig } from '../../config/config'
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/core';

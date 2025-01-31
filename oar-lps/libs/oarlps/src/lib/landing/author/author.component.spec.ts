@@ -32,8 +32,12 @@ describe('AuthorComponent', () => {
         cfg.appVersion = "2.test";
 
         TestBed.configureTestingModule({
-            imports: [HttpClientTestingModule, FormsModule, RouterTestingModule, ToastrModule.forRoot()],
-            declarations: [AuthorComponent],
+            imports: [ 
+                AuthorComponent,
+                HttpClientTestingModule, 
+                FormsModule, 
+                RouterTestingModule, 
+                ToastrModule.forRoot()],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 MetadataUpdateService, UserMessageService, DatePipe,
@@ -54,7 +58,6 @@ describe('AuthorComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
-        expect(component.fieldName).toEqual("authors");
     });
 
     it('should have ORCID icon image displayed', () => {

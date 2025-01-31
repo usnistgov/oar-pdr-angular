@@ -12,8 +12,11 @@ describe('KeywordPubComponent', () => {
     })
     .compileComponents();
 
+    let record: any = require('../../../../assets/sampleRecord.json');
     fixture = TestBed.createComponent(KeywordPubComponent);
     component = fixture.componentInstance;
+    component.record = record;
+    component.inBrowser = true;
     fixture.detectChanges();
   });
 

@@ -1,16 +1,6 @@
 import { NgModule }     from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NerdmModule } from '../../nerdm/nerdm.module';
-import { TitleModule } from '../title/title.module';
-import { CollapseModule } from '../collapseDirective/collapse.module';
-import { AboutdatasetModule } from '../aboutdataset/aboutdataset.module';
-import { ResourceIdentityComponent } from './resourceidentity.component';
-import { ResourceDescriptionComponent } from './resourcedescription.component';
-import { ResourceDataComponent } from './resourcedata.component';
-import { ResourceRefsComponent } from './resourcerefs.component';
-import { ResourceMetadataComponent } from './resourcemetadata.component';
-import { FacilitatorsModule } from '../facilitators/facilitators.module';
-import { SearchresultModule } from '../searchresult/searchresult.module';
 import { DoneModule } from '../done/done.module';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';

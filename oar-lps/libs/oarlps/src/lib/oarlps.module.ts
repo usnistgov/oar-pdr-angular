@@ -15,6 +15,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { TextareaAutoresizeModule } from './textarea-autoresize/textarea-autoresize.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { SectionTitleModule } from './landing/section-title/section-title.module';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
     declarations: [ ],
@@ -33,7 +34,8 @@ import { SectionTitleModule } from './landing/section-title/section-title.module
         TextareaAutoresizeModule,
         NgSelectModule,
         SectionTitleModule,
-        DatacartModule
+        DatacartModule,
+        ToastrModule.forRoot()
     ],
     providers: [
         provideZoneChangeDetection({ ignoreChangesOutsideZone: true }),

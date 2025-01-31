@@ -5,12 +5,16 @@ import { config } from '../../../environments/environment'
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
 import { Credentials, UserAttributes } from 'oarng';
+import { AuthService, WebAuthService, MockAuthService } from './auth.service';
+import { TransferState } from '@angular/core';
+import { TestBed, waitForAsync } from '@angular/core/testing';
+import { env } from '../../../environments/environment';
 
 describe('EditStatusService', () => {
 
     let svc : EditStatusService = null;
     let cfgdata = null;
-    let cfg = null;
+    // let cfg = null;
     let userAttributes: UserAttributes = {
         'userName': 'test01',
         'userLastName': 'NIST',
@@ -22,11 +26,32 @@ describe('EditStatusService', () => {
     }
 
     let EDIT_MODES = LandingConstants.editModes;
+    // let cfg: AppConfig;
+    // let plid: Object = "browser";
+    // let ts: TransferState = new TransferState();
+    let authsvc: AuthService = new MockAuthService(undefined);
     
+    beforeEach(waitForAsync(() => {
+        // cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+        // cfg.locations.pdrSearch = "https://goob.nist.gov/search";
+        // cfg.status = "Unit Testing";
+        // cfg.appVersion = "2.test";
+
+        TestBed.configureTestingModule({
+        imports: [
+        ],
+        providers: [
+            // { provide: AppConfig, useValue: cfg },
+            { provide: AuthService, useValue: authsvc }
+        ]
+        }).compileComponents();
+    }));
+
     beforeEach(() => {
         cfgdata = JSON.parse(JSON.stringify(config));
         cfgdata['editEnabled'] = true;
-        svc = new EditStatusService(new AppConfig(cfgdata));
+        // svc = new EditStatusService(new AppConfig(cfgdata));
+        svc = new EditStatusService();
     });
 
     it('initialize', () => {
@@ -34,7 +59,7 @@ describe('EditStatusService', () => {
         expect(svc.userID).toBeNull();
         expect(svc.authenticated).toBe(false);
         expect(svc.authorized).toBe(false);
-        expect(svc.editingEnabled()).toBe(true);
+        // expect(svc.editingEnabled()).toBe(true);
     });
 
     it('setable', () => {

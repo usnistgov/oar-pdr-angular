@@ -28,7 +28,10 @@ describe('TitleComponent', () => {
         cfg.appVersion = "2.test";
 
         TestBed.configureTestingModule({
-            imports: [FormsModule, ToastrModule.forRoot()],
+            imports: [
+                TitleComponent,
+                FormsModule, 
+                ToastrModule.forRoot()],
             providers: [
                 MetadataUpdateService, UserMessageService, DatePipe,
                 { provide: AppConfig, useValue: cfg },
@@ -43,7 +46,6 @@ describe('TitleComponent', () => {
         fixture = TestBed.createComponent(TitleComponent);
         component = fixture.componentInstance;
         component.record = record;
-        component.inBrowser = true;
         fixture.detectChanges();
     });
 

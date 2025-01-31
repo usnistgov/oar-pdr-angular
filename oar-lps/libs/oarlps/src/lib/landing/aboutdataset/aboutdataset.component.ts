@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
@@ -10,12 +9,9 @@ import { formatBytes } from '../../utils';
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FieldsetModule } from 'primeng/fieldset';
 import { ButtonModule } from 'primeng/button';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
-import { VersionModule } from '../version/version.module';
-import { FacilitatorsModule } from '../facilitators/facilitators.module';
 
 @Component({
     selector: 'aboutdataset-detail',
@@ -23,12 +19,9 @@ import { FacilitatorsModule } from '../facilitators/facilitators.module';
     imports: [
         VersionComponent,
         CommonModule, 
-        BrowserAnimationsModule, 
         FieldsetModule, 
         ButtonModule, 
-        NgxJsonViewerModule, 
-        VersionModule,
-        FacilitatorsModule
+        NgxJsonViewerModule
     ],
     templateUrl: './aboutdataset.component.html',
     styleUrls: ['./aboutdataset.component.scss'],
@@ -100,6 +93,7 @@ export class AboutdatasetComponent implements OnChanges {
 
     constructor(private cfg: AppConfig, 
         public globalService: GlobalService,
+        private chref: ChangeDetectorRef,
         public gaService: GoogleAnalyticsService) { 
             this.globalService.watchLpsLeftWidth(width => {
                 this.maxWidth = width;
@@ -149,6 +143,13 @@ export class AboutdatasetComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (this.record && this.record["_id"]) 
             delete this.record["_id"];
+
+        // this.chref.detectChanges();
+    }
+
+    toggleJsonViewer() {
+        this.showJsonViewer = !this.showJsonViewer
+        this.chref.detectChanges();
     }
 
     /**

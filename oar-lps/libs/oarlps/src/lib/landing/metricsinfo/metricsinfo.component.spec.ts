@@ -17,8 +17,7 @@ describe('MetricsinfoComponent', () => {
     cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
 
     TestBed.configureTestingModule({
-      declarations: [ MetricsinfoComponent ],
-      imports: [HttpClientTestingModule],
+      imports: [HttpClientTestingModule, MetricsinfoComponent],
       providers: [
         { provide: AppConfig, useValue: cfg }
     ]

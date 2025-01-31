@@ -28,6 +28,9 @@ import { TooltipModule } from 'primeng/tooltip';
         AccesspagePubComponent,
         TooltipModule
     ],
+    providers: [
+        MetadataUpdateService
+    ],
     templateUrl: './accesspage-midas.component.html',
     styleUrls: ['./accesspage-midas.component.scss', '../../landing.component.scss'],
     animations: [

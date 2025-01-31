@@ -1,18 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
-import { DescriptionModule, DescriptionComponent } from './description.module';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DescriptionComponent } from './description.component';
+import { HttpClientTestingModule, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
+// import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
-
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import * as env from '../../../environments/environment';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('DescriptionComponent', () => {
     let component: DescriptionComponent;
@@ -30,17 +31,20 @@ describe('DescriptionComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [
-                DescriptionModule,
-                FormsModule, HttpClientTestingModule, RouterTestingModule, ToastrModule.forRoot()
+                DescriptionComponent, 
+                FormsModule, 
+                ToastrModule.forRoot()
             ],
             declarations: [],
             providers: [
                 MetadataUpdateService, UserMessageService, DatePipe,
                 { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }
+                { provide: AuthService, useValue: authsvc },
+                provideHttpClient(),
+                provideHttpClientTesting(), 
+                provideRouter([])
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     beforeEach(() => {

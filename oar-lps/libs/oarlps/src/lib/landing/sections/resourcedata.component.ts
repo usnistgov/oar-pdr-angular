@@ -12,6 +12,7 @@ import { SearchresultModule } from '../searchresult/searchresult.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
+import { UserMessageService } from '../../frame/usermessage.service';
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -28,6 +29,10 @@ import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-
         SearchresultModule,
         AccesspagePubComponent,
         NgbModule
+    ],
+    providers: [
+        GoogleAnalyticsService,
+        UserMessageService
     ],
     templateUrl:   './resourcedata.component.html',
     styleUrls:   [
@@ -83,7 +88,7 @@ export class ResourceDataComponent implements OnChanges {
      */
     constructor(public globalService: GlobalService,
                 public edstatsvc: EditStatusService,
-                private gaService: GoogleAnalyticsService)
+                public gaService: GoogleAnalyticsService)
     { 
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
@@ -109,7 +114,7 @@ export class ResourceDataComponent implements OnChanges {
             "lighter": "#f0f7f1",
             "dark": "#1c6022",
             "hover": "#ffffff" 
-        }
+        };
     }
 
     ngOnChanges(ch : SimpleChanges) {

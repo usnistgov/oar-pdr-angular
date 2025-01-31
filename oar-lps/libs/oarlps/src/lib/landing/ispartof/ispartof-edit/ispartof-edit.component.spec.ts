@@ -1,16 +1,36 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { IspartofEditComponent } from './ispartof-edit.component';
+import { AppConfig } from '../../../config/config'
+import { AngularEnvironmentConfigService } from '../../../config/config.service';
+import * as env from '../../../../environments/environment';
+import { testdata } from '../../../../environments/environment';
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { UserMessageService } from '../../../frame/usermessage.service';
+import { AuthService } from '../../editcontrol/auth.service';
+import { DatePipe } from '@angular/common';
+import { TransferState } from '@angular/core';
+import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 
 describe('IspartofEditComponent', () => {
   let component: IspartofEditComponent;
   let fixture: ComponentFixture<IspartofEditComponent>;
+  let plid : Object = "browser";
+  let ts : TransferState = new TransferState();
+  let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+  let nrd1 = testdata['forensics'];
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [IspartofEditComponent]
-    })
-    .compileComponents();
+      imports: [IspartofEditComponent],
+      providers: [
+        MetadataUpdateService,
+        UserMessageService,
+        AuthService,
+        DatePipe,
+        GoogleAnalyticsService,
+        { provide: AppConfig,       useValue: cfg } 
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(IspartofEditComponent);
     component = fixture.componentInstance;

@@ -1,22 +1,22 @@
 @if(isPublicSite) {
     <div style="margin: 0px 10px 0px 0px;">
-        <visithpme-pub 
+        <Visithome-pub 
             [record]="record" 
             [inBrowser]="inBrowser"
             [inViewMode]="inViewMode"
             [theme]="theme">
-        </visithpme-pub>
+        </Visithome-pub>
     </div>
 }
 @else {
     <div style="margin: 0px 10px 0px 0px;">
-        <visithpme-midas 
+        <Visithome-midas 
             [record]="record" 
             [inBrowser]="inBrowser"
             [inViewMode]="inViewMode"
             [theme]="theme"
             [isEditMode]="isEditMode">
-        </visithpme-midas>
+        </Visithome-midas>
     </div>
 }
 

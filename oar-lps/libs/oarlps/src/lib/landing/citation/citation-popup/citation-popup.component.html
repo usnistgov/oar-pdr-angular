@@ -1,0 +1,6 @@
+<p-dialog #citepopup header="Citation" modal="true" [(visible)]="visible" (click)="hide()" [style]="{width: '70vw'}" [baseZIndex]="10000">
+    <p-header> Citation
+    </p-header>
+    <lib-citation-display [citetext]="citetext"></lib-citation-display>
+</p-dialog>
+

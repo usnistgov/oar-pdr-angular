@@ -15,7 +15,7 @@ import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, LandingConstants } from 'oarlps';
+import { GlobalService, LandingConstants } from 'oarlps';
 import { CartService } from 'oarlps';
 import { DataCartStatus } from 'oarlps';
 import { RecordLevelMetrics } from 'oarlps';
@@ -23,7 +23,6 @@ import { MetricsService } from 'oarlps';
 import { formatBytes } from 'oarlps';
 import { LandingBodyComponent } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-// import { MetricsinfoComponent } from './metricsinfo/metricsinfo.component';
 import { CartActions } from 'oarlps';
 import { MetricsData } from "oarlps";
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
@@ -39,7 +38,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NoidComponent } from './noid.component';
 import { EditControlComponent, EditStatusComponent } from 'oarlps';
 import { MenuComponent } from 'oarlps';
-import { CitationModule } from 'oarlps';
+import { CitationPopupComponent } from 'oarlps';
 import { DoneModule } from 'oarlps';
 import { SearchresultModule } from 'oarlps';
 import { SidebarComponent } from 'oarlps';
@@ -70,7 +69,7 @@ import { FrameModule } from 'oarlps';
         ButtonModule,
         NgbModule,
         MenuComponent,
-        CitationModule,
+        CitationPopupComponent,
         SearchresultModule,
         DoneModule,
         NoidComponent,
@@ -216,6 +215,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     showStickMenu: boolean = false;
     isPublicSite: boolean = false;
     globalsvc = inject(GlobalService);
+    landingPageURL: string;
+    landingPageServiceStr: string;
 
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
@@ -370,7 +371,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-      let isEditing = this.edstatsvc.isEditMode();
+        this.landingPageURL = this.cfg.get('landingPageService','/od/id/');
+        this.landingPageServiceStr = this.cfg.get('locations.landingPageService','https://data.nist.gov/od/id/');
+  
+        let isEditing = this.edstatsvc.isEditMode();
         this.arrRevisionTypes = REVISION_TYPES["default"];
         this.recordLevelMetrics = new RecordLevelMetrics();
         var showError: boolean = true;

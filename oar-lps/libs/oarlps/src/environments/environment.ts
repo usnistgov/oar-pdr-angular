@@ -21,13 +21,13 @@ export const context = {
 export const config: LPSConfig = {
     locations: {
         orgHome: "https://nist.gov/",
-        portalBase: "https://oardev.nist.gov/",
-        pdrHome: "https://oardev.nist.gov/pdr/",
-        pdrSearch: "https://oardev.nist.gov/sdp/",
-        mdService:   "https://oardev.nist.gov/rmm/",
-        taxonomyService: "https://oardev.nist.gov/rmm/taxonomy"
+        portalBase: "https://testdata.nist.gov/",
+        pdrHome: "https://testdata.nist.gov/pdr/",
+        pdrSearch: "https://testdata.nist.gov/sdp/",
+        mdService:   "https://testdata.nist.gov/rmm/",
+        taxonomyService: "https://testdata.nist.gov/rmm/taxonomy"
     },
-    mdAPI: "https://oardev.nist.gov/rmm/records/",
+    mdAPI: "https://testdata.nist.gov/rmm/records/",
     metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
     // customizationAPI: "https://testdata.nist.gov/customization/",
     customizationAPI: "https://datapubtest.nist.gov/customization/",

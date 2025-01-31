@@ -1,25 +1,14 @@
-import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef } from '@angular/core';
+import { Component, OnInit, SimpleChanges, Input, ChangeDetectorRef, ApplicationRef } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
-import { Themes, ThemesPrefs } from '../../shared/globals/globals';
+import { Themes } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
-import { AccessPage } from './accessPage';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { DomSanitizer } from "@angular/platform-browser";
-import * as globals from '../../shared/globals/globals';
 import { AccesspageMidasComponent } from './accesspage-midas/accesspage-midas.component';
 import { CommonModule } from '@angular/common';
-import { TextEditModule } from '../../text-edit/text-edit.module';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ToastrModule } from 'ngx-toastr';
-import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { DragDropModule } from '@angular/cdk/drag-drop';
-import { DropdownModule } from 'primeng/dropdown';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AccesspagePubComponent } from './accesspage-pub/accesspage-pub.component';
@@ -74,10 +63,7 @@ export class AccesspageComponent implements OnInit {
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
                 public globalsvc: GlobalService,
-                private chref: ChangeDetectorRef,
-                private appRef: ApplicationRef,
-                private gaService: GoogleAnalyticsService,
-                private sanitizer: DomSanitizer) { 
+                private chref: ChangeDetectorRef) { 
 
     }
 

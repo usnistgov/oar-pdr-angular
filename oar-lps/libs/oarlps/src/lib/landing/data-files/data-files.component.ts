@@ -101,7 +101,9 @@ interface DataFileItem {
         NgbModule
     ],
     templateUrl: `data-files.component.html`,
-    providers: [ ],
+    providers: [
+        UserMessageService
+     ],
     animations: [
         trigger('detailExpand', [
           state('collapsed', style({height: '0px', minHeight: '0'})),

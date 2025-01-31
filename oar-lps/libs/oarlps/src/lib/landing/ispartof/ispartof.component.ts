@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { AppConfig } from '../../config/config';
+// import { AppConfig } from '../../config/config';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { LandingConstants } from '../../landing/constants';
@@ -55,14 +55,15 @@ export class IspartofComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean; 
     @Input() isEditMode: boolean;
+    @Input() landingPageServiceStr: string;
 
     constructor(
-        private cfg: AppConfig,
-                public mdupdsvc : MetadataUpdateService, 
-                private gaService: GoogleAnalyticsService,
-                public globalsvc: GlobalService,
-                private chref: ChangeDetectorRef,
-                public lpService: LandingpageService
+        // private cfg: AppConfig,
+        public mdupdsvc : MetadataUpdateService, 
+        private gaService: GoogleAnalyticsService,
+        public globalsvc: GlobalService,
+        private chref: ChangeDetectorRef,
+        public lpService: LandingpageService
     ) { }
 
     ngOnInit(): void {
@@ -102,7 +103,8 @@ export class IspartofComponent implements OnInit {
            
             this.isPartOf = [
                 article,
-                this.cfg.get("locations.landingPageService") + coll['@id'],
+                // this.cfg.get("locations.landingPageService") + coll['@id'],
+                this.landingPageServiceStr + coll['@id'],
                 title,
                 suffix
             ];

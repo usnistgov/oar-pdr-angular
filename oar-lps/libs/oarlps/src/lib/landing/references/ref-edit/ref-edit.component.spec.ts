@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { RefEditComponent } from './ref-edit.component';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -20,17 +20,17 @@ describe('SingleRefComponent', () => {
   let ts: TransferState = new TransferState();
   let authsvc: AuthService = new MockAuthService(undefined);
 
-  beforeEach(async () => {
+  beforeEach(waitForAsync(() => {
     cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
     cfg.locations.pdrSearch = "https://goob.nist.gov/search";
     cfg.status = "Unit Testing";
     cfg.appVersion = "2.test";
 
-    await TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       imports: [ 
         RefEditComponent,
         HttpClientTestingModule, 
-        // NoopAnimationsModule, 
+        NoopAnimationsModule, 
         ToastrModule.forRoot() ],
       providers: [ 
         MetadataUpdateService, 
@@ -40,7 +40,7 @@ describe('SingleRefComponent', () => {
         UserMessageService ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RefEditComponent);

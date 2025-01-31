@@ -23,8 +23,8 @@ describe('AccesspageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AccesspageListComponent ],
-      imports: [ HttpClientTestingModule, NoopAnimationsModule, ToastrModule.forRoot() ],
+      declarations: [ ],
+      imports: [AccesspageListComponent, HttpClientTestingModule, NoopAnimationsModule, ToastrModule.forRoot() ],
       providers: [ 
         MetadataUpdateService, 
         DatePipe,

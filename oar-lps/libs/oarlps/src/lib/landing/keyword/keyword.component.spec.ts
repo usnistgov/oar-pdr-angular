@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync  } from '@angular/core/testing';
-import { KeywordModule, KeywordComponent } from './keyword.module';
+import { KeywordComponent } from './keyword.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
 import { AngularEnvironmentConfigService } from '../../config/config.service';
@@ -29,7 +29,7 @@ describe('KeywordComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [
-                KeywordModule,
+                KeywordComponent,
                 FormsModule, HttpClientTestingModule, RouterTestingModule, ToastrModule.forRoot()
             ],
             declarations: [],

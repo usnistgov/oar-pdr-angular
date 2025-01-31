@@ -36,7 +36,7 @@ describe('MetadataUpdateService', () => {
         let dp : DatePipe = TestBed.inject(DatePipe);
         let cfgdata = null;
         cfgdata = JSON.parse(JSON.stringify(config));
-        edstatsvc = new EditStatusService(new AppConfig(cfgdata));
+        edstatsvc = new EditStatusService();
         svc = new MetadataUpdateService(new UserMessageService(), edstatsvc, new MockAuthService(),dp);
         svc._setCustomizationService(new InMemCustomizationService(rec));
     }));

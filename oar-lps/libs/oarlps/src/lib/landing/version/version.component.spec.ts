@@ -5,20 +5,30 @@ import { NerdmRes } from '../../nerdm/nerdm';
 import { VersionComponent, compare_versions, normalize_date, compare_dates, compare_histories }
     from './version.component';
 import { VersionModule } from './version.module';
-
+import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { config, testdata } from '../../../environments/environment';
 import { LandingConstants } from '../constants';
+import { TransferState } from '@angular/core';
+import * as env from '../../../environments/environment';
 
 describe('VersionComponent', () => {
     let component : VersionComponent;
     let fixture : ComponentFixture<VersionComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    // let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let EDIT_MODES = LandingConstants.editModes;
+    let cfg: AppConfig;
+    let plid: Object = "browser";
+    let ts: TransferState = new TransferState();
 
     let makeComp = function() {
+        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
+        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
+        cfg.status = "Unit Testing";
+        cfg.appVersion = "2.test";
+
         TestBed.configureTestingModule({
-            imports: [ VersionModule ],
+            imports: [ VersionComponent ],
             declarations: [  ],
             providers: [
                 { provide: AppConfig, useValue: cfg }
@@ -28,6 +38,7 @@ describe('VersionComponent', () => {
         fixture = TestBed.createComponent(VersionComponent);
         component = fixture.componentInstance;
         component.record = JSON.parse(JSON.stringify(rec));
+        component.landingPageServiceStr = "od/id/";
         // fixture.detectChanges();
     }
 

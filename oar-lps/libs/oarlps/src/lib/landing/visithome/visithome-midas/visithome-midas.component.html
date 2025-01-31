@@ -2,12 +2,12 @@
     <div style="display: table;">
         <div class="editable_container">
             <div class="editable_field" [pTooltip]="record[fieldName]" tooltipPosition="bottom" tooltipStyleClass="tooltip-style">
-                <visithpme-pub 
+                <Visithome-pub 
                     [record]="record" 
                     [inBrowser]="inBrowser"
                     [inViewMode]="inViewMode"
                     [theme]="theme">
-                </visithpme-pub>
+                </Visithome-pub>
             </div>    
 
             @if(edstatsvc.isEditMode() && !inViewMode) {

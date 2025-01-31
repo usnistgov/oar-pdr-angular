@@ -5,7 +5,6 @@
 
 import { Component, Input, Output, OnInit, EventEmitter, HostListener, SimpleChanges } from '@angular/core'
 import { ComboBoxPipe } from './combo-box.pipe';
-import { BrowserModule } from '@angular/platform-browser'
 import { FormsModule } from '@angular/forms'
 
 export enum KEY_CODE {
@@ -106,9 +105,9 @@ export class ComboBoxComponent implements OnInit {
   }
 
   /*
-  *   Toogle dropDown menu
+  *   Toggle dropDown menu
   */
-  toogleDropDown(): void {
+  toggleDropDown(): void {
     this.showDropDown = !this.showDropDown;
   }
 

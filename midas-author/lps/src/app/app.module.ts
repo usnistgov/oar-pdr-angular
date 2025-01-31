@@ -26,6 +26,8 @@ import { ConfigModule } from 'oarlps';
 import { FrameModule } from 'oarng';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
+import { EditControlModule } from 'oarlps';
+import { MetadataUpdateService } from 'oarlps';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -48,25 +50,13 @@ enableProdMode();
       AppComponent
     ],
     imports: [
-        FrameModule,
-        OARLPSModule,
-        ErrorsModule,
-        LandingPageModule,
-        AppRoutingModule,
-        LandingAboutComponent,
-        DirectivesModule,
-        SharedModule.forRoot(),
-        HttpClientModule, FormsModule, ReactiveFormsModule,
-        CommonModule,
-        BrowserAnimationsModule,
-        FormsModule,
-        ToastrModule.forRoot({
-            toastClass: 'toast toast-bootstrap-compatibility-fix'
-        }),
-        NgbModule,
-        NerdmModule.forRoot(environment),
-        ConfigModule.forRoot(environment),
-        StaffDirModule
+      OARLPSModule,
+      ErrorsModule,
+      AppRoutingModule,
+      LandingAboutComponent,
+      ConfigModule.forRoot(environment),
+      StaffDirModule,
+      EditControlModule,
     ],
     exports: [AppComponent],
     providers: [
@@ -78,6 +68,7 @@ enableProdMode();
         },
         GoogleAnalyticsService,
         DatePipe,
+        MetadataUpdateService,
         fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

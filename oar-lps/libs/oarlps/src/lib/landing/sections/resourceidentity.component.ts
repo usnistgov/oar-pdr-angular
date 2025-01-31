@@ -1,6 +1,6 @@
 import { Component, OnChanges, SimpleChanges, Input, ViewChild, effect, ChangeDetectorRef } from '@angular/core';
 
-import { AppConfig } from '../../config/config';
+// import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { VersionComponent } from '../version/version.component';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
@@ -19,6 +19,7 @@ import { ContactComponent } from '../contact/contact.component';
 import { VisithomeComponent } from '../visithome/visithome.component';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserMessageService } from '../../frame/usermessage.service';
 
 /**
  * a component that lays out the "identity" section of a landing page
@@ -50,7 +51,7 @@ export class ResourceIdentityComponent implements OnChanges {
     primaryRefs: any[] = [];
     editMode: string;
     EDIT_MODES: any;
-    isPartOf: string[] = null;
+    // isPartOf: string[] = null;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
     fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
@@ -64,17 +65,20 @@ export class ResourceIdentityComponent implements OnChanges {
     @Input() inBrowser: boolean = false;
     @Input() theme: string;
     @Input() isPublicSite: boolean;
+    @Input() landingPageURL: string;
+    @Input() landingPageServiceStr: string;
 
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig,
-                public editstatsvc: EditStatusService,
-                public mdupdsvc : MetadataUpdateService, 
-                private gaService: GoogleAnalyticsService,
-                public globalService: GlobalService,
-                private chref: ChangeDetectorRef,
-                public lpService: LandingpageService)
+    constructor(
+        // public cfg: AppConfig,
+        public editstatsvc: EditStatusService,
+        public mdupdsvc : MetadataUpdateService, 
+        private gaService: GoogleAnalyticsService,
+        public globalService: GlobalService,
+        private chref: ChangeDetectorRef,
+        public lpService: LandingpageService)
     { 
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
@@ -98,7 +102,7 @@ export class ResourceIdentityComponent implements OnChanges {
             this.editMode = editMode;
         });
 
-
+        // this.landingPageURL = this.cfg.get('landingPageService','/od/id/') + this.record['@id'];
     }
 
     onResize(width: number) {
@@ -151,12 +155,12 @@ export class ResourceIdentityComponent implements OnChanges {
                     suffix = "Science Theme";
             }
            
-            this.isPartOf = [
-                article,
-                this.cfg.get("locations.landingPageService") + coll['@id'],
-                title,
-                suffix
-            ];
+            // this.isPartOf = [
+            //     article,
+            //     this.cfg.get("locations.landingPageService") + coll['@id'],
+            //     title,
+            //     suffix
+            // ];
         }
 
         if (this.record['doi'] !== undefined && this.record['doi'] !== "")

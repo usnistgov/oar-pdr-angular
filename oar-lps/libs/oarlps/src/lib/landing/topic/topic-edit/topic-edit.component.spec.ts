@@ -26,8 +26,10 @@ describe('TopicEditComponent', () => {
     cfg.appVersion = "2.test";
 
     await TestBed.configureTestingModule({
-      declarations: [ TopicEditComponent ],
-      imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
+      imports: [ 
+        TopicEditComponent,
+        HttpClientTestingModule, 
+        ToastrModule.forRoot() ],
       providers: [ 
         MetadataUpdateService, 
         DatePipe,

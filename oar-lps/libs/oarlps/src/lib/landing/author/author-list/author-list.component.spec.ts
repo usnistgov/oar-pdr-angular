@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AuthorListComponent } from './author-list.component';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -8,9 +8,10 @@ import * as env from '../../../../environments/environment';
 import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { StaffDirectoryService, StaffDirModule } from 'oarng';
 
 describe('AuthorListComponent', () => {
   let component: AuthorListComponent;
@@ -19,16 +20,23 @@ describe('AuthorListComponent', () => {
   let plid: Object = "browser";
   let ts: TransferState = new TransferState();
   let authsvc: AuthService = new MockAuthService(undefined);
-
-  beforeEach(async () => {
+  let httpMock: HttpTestingController;
+  let svcep : string = "https://mds.nist.gov/midas/nsd";
+  
+  beforeEach(waitForAsync(() => {
     cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
     cfg.locations.pdrSearch = "https://goob.nist.gov/search";
     cfg.status = "Unit Testing";
     cfg.appVersion = "2.test";
 
-    await TestBed.configureTestingModule({
-      declarations: [ AuthorListComponent ],
-      imports: [ HttpClientTestingModule, NoopAnimationsModule, ToastrModule.forRoot() ],
+    TestBed.configureTestingModule({
+      declarations: [  ],
+      imports: [ 
+        AuthorListComponent, 
+        HttpClientTestingModule, 
+        NoopAnimationsModule, 
+        StaffDirModule,
+        ToastrModule.forRoot() ],
       providers: [ 
         MetadataUpdateService, 
         { provide: AppConfig, useValue: cfg },
@@ -37,7 +45,16 @@ describe('AuthorListComponent', () => {
         DatePipe ]
     })
     .compileComponents();
-  });
+
+    httpMock = TestBed.inject(HttpTestingController);
+    let req = httpMock.expectOne('assets/config.json');
+
+    req.flush({
+        staffdir: {
+            serviceEndpoint: svcep
+        }
+    });
+  }));
 
   beforeEach(() => {
     let record: any = require('../../../../assets/sampleRecord.json');

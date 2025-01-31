@@ -11,8 +11,8 @@ import { VisithomeEditComponent } from './visithome-edit/visithome-edit.componen
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { VisithpmePubComponent } from './visithpme-pub/visithpme-pub.component';
-import { VisithpmeMidasComponent } from './visithpme-midas/visithpme-midas.component';
+import { VisithomePubComponent } from './visithome-pub/visithome-pub.component';
+import { VisithomeMidasComponent } from './visithome-midas/visithome-midas.component';
 
 @Component({
     selector: 'app-visithome',
@@ -20,8 +20,8 @@ import { VisithpmeMidasComponent } from './visithpme-midas/visithpme-midas.compo
     imports: [
         CommonModule,
         FormsModule,
-        VisithpmePubComponent,
-        VisithpmeMidasComponent,
+        VisithomePubComponent,
+        VisithomeMidasComponent,
         NgbModule
     ],
     templateUrl: './visithome.component.html',

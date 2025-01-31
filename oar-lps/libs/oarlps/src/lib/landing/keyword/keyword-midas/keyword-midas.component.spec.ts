@@ -1,21 +1,21 @@
 import { ComponentFixture, TestBed, fakeAsync  } from '@angular/core/testing';
-import { KeywordModule, KeywordComponent } from './keyword.module';
+import { KeywordMidasComponent } from './keyword-midas.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
+import { AppConfig } from '../../../config/config';
+import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { TransferState } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import * as env from '../../../environments/environment';
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { UserMessageService } from '../../../frame/usermessage.service';
+import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
+import * as env from '../../../../environments/environment';
 
-describe('KeywordComponent', () => {
-    let component: KeywordComponent;
-    let fixture: ComponentFixture<KeywordComponent>;
+describe('KeywordMidasComponent', () => {
+    let component: KeywordMidasComponent;
+    let fixture: ComponentFixture<KeywordMidasComponent>;
     let cfg: AppConfig;
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
@@ -29,7 +29,7 @@ describe('KeywordComponent', () => {
 
         TestBed.configureTestingModule({
             imports: [
-                KeywordModule,
+                KeywordMidasComponent,
                 FormsModule, HttpClientTestingModule, RouterTestingModule, ToastrModule.forRoot()
             ],
             declarations: [],
@@ -43,8 +43,8 @@ describe('KeywordComponent', () => {
     });
 
     beforeEach(() => {
-        let record: any = require('../../../assets/sampleRecord.json');
-        fixture = TestBed.createComponent(KeywordComponent);
+        let record: any = require('../../../../assets/sampleRecord.json');
+        fixture = TestBed.createComponent(KeywordMidasComponent);
         component = fixture.componentInstance;
         component.record = record;
         component.inBrowser = true;

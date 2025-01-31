@@ -21,7 +21,18 @@ import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng'
 
 @NgModule({
     declarations: [ ],
-    imports: [ CommonModule, ConfirmationDialogModule, FrameModule, ButtonModule, OverlayPanelModule, TooltipModule, AuthModule, NgbModule, NgSelectModule, FormsModule ],
+    imports: [ 
+        // CommonModule, 
+        // ConfirmationDialogModule, 
+        // FrameModule, 
+        // ButtonModule, 
+        // OverlayPanelModule, 
+        // TooltipModule, 
+        AuthModule, 
+        // NgbModule, 
+        // NgSelectModule, 
+        // FormsModule 
+    ],
     exports: [ ],
     providers: [
         HttpClient,

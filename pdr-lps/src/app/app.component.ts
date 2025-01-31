@@ -17,11 +17,12 @@ export class AppComponent {
     appVersion: string = "1.0"
     cartLength: any;
 
-    constructor(private gaService: GoogleAnalyticsService,
-                // public environmentService : EnvironmentService,
-                private cfg: AppConfig,
-                public cartService: CartService,
-                @Inject(PLATFORM_ID) private platformId: Object)
+    constructor(
+        private gaService: GoogleAnalyticsService,
+        // public environmentService : EnvironmentService,
+        private cfg: AppConfig,
+        public cartService: CartService,
+        @Inject(PLATFORM_ID) private platformId: Object)
     { 
         this.inBrowser = isPlatformBrowser(platformId);
     }

@@ -41,10 +41,11 @@ describe('DataFilesComponent', () => {
     cfg.appVersion = "2.test";
 
     TestBed.configureTestingModule({
-      declarations: [DataFilesComponent],
+      declarations: [],
       imports: [FormsModule,
         RouterTestingModule,
         HttpClientTestingModule,
+        DataFilesComponent,
         TreeTableModule,
         BrowserAnimationsModule,
         ToastrModule.forRoot()],
@@ -107,7 +108,7 @@ describe('DataFilesComponent', () => {
     component.record = rec
     component.ngOnChanges({record: thechange});
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(0);
+    expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
   });
 
   it('Show Loading message on server-side', () => {

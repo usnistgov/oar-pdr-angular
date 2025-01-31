@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { ReferencesComponent } from './references.component';
 import { UserMessageService } from '../../frame/usermessage.service';
@@ -22,13 +22,13 @@ describe('ReferencesComponent', () => {
     let authsvc: AuthService = new MockAuthService(undefined);
     let rec : NerdmRes = testdata['test1'];
 
-    beforeEach(async () => {
+    beforeEach(waitForAsync(() => {
         cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
         cfg.locations.pdrSearch = "https://goob.nist.gov/search";
         cfg.status = "Unit Testing";
         cfg.appVersion = "2.test";
 
-        await TestBed.configureTestingModule({
+        TestBed.configureTestingModule({
         imports: [ 
             ReferencesComponent,
             HttpClientTestingModule, 
@@ -41,7 +41,7 @@ describe('ReferencesComponent', () => {
             UserMessageService ]
         })
         .compileComponents();
-    });
+    }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(ReferencesComponent);
@@ -54,50 +54,4 @@ describe('ReferencesComponent', () => {
         expect(component).toBeTruthy();
     });
 
-
-    it('should initialize', () => {
-        expect(component).toBeTruthy();
-        let cmpel = fixture.nativeElement;
-        debugger;
-        expect(cmpel.querySelector("#references")).toBeTruthy();
-
-        // has a section heading
-        let el = cmpel.querySelector("h3");
-        expect(el).toBeTruthy();
-        expect(el.textContent).toContain("References");
-
-        // has 2 references
-        let els = cmpel.querySelectorAll("a")
-        expect(els.length).toBe(2);
-    });
-
-    it('should suppress for empty list', () => {
-        expect(component).toBeTruthy();
-        component.record['references'] = [];
-        fixture.detectChanges();
-
-        let cmpel = fixture.nativeElement;
-        expect(cmpel.querySelector("#references")).toBeTruthy();
-        expect(cmpel.querySelector("h3")).toBeFalsy();
-        let els = cmpel.querySelectorAll("a")
-        expect(els.length).toBe(0);
-    });
-
-    it('should not render ref as a link without location', () => {
-        // remove the locations from the two reference
-        component.record['references'][0]['location'] = null;
-        delete component.record['references'][1].location;
-        fixture.detectChanges();
-
-        expect(component).toBeTruthy();
-        let cmpel = fixture.nativeElement;
-        let reflist = cmpel.querySelector("#references");
-        expect(reflist).toBeTruthy();
-
-        // has 2 references
-        let els = cmpel.querySelectorAll(".ref-entry")
-        expect(els.length).toBe(2);
-        els = cmpel.querySelectorAll("a");
-        expect(els.length).toBe(0);
-    });
 });

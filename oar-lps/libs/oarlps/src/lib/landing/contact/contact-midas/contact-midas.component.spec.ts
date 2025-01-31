@@ -59,17 +59,18 @@ describe('ContactMidasComponent', () => {
                 ToastrModule.forRoot()],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                MetadataUpdateService, UserMessageService, DatePipe,
+                MetadataUpdateService, 
+                UserMessageService, 
+                DatePipe,
                 GoogleAnalyticsService,
                 { provide: AppConfig, useValue: cfg },
                 { provide: AuthService, useValue: authsvc }
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     }));
 
     beforeEach(() => {
-        let record: any = require('../../../assets/sampleRecord.json');
+        let record: any = require('../../../../assets/sampleRecord.json');
         fixture = TestBed.createComponent(ContactComponent);
         component = fixture.componentInstance;
         component.record = record;

@@ -64,6 +64,9 @@
                   [showJsonViewer]="showJsonViewer"
                   [theme]="theme"
                   [isPublicSite]="isPublicSite"
+                  [edstatsvc]="edstatsvc"
+                  [landingPageURL]="landingPageURL"
+                  [landingPageServiceStr]="landingPageServiceStr"
                   (dlStatus)="onDownloadStatusChanged($event)">
                 </landing-body>
 
@@ -72,8 +75,15 @@
             @if(isPublicSite || !edstatsvc.isEditMode()) {
                 <!-- <div #stickyMenu></div> -->
                 <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
-                  <app-menu [record]="md" [collection]="collection" [theme]="theme" [inBrowser]="inBrowser" [metricsData]="metricsData" [showMetrics]="showMetrics" (scroll)="goToSection($event)"
-                      (toggle_citation)="toggleCitation('large')">
+                  <app-menu
+                    [record]="md"
+                    [collection]="collection"
+                    [theme]="theme"
+                    [inBrowser]="inBrowser"
+                    [metricsData]="metricsData"
+                    [showMetrics]="showMetrics"
+                    (scroll)="goToSection($event)"
+                    (toggle_citation)="toggleCitation('large')">
                   </app-menu>
 
                   <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
@@ -109,9 +119,9 @@
 
             <!-- citation pop-up -->
             <div *ngIf="inBrowser">
-                <citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
+                <lib-citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
                     (visibleChange)="setCitationVisible($event)">
-                </citation-popup>
+                </lib-citation-popup>
             </div>
         </div>
 
