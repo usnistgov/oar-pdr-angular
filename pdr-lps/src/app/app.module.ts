@@ -40,6 +40,7 @@ import { NerdmModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
 import { EditControlModule } from 'oarlps';
 import { StaffDirModule } from 'oarng';
+import { LandingPageComponent } from './landing/landingpage.component';
 
 enableProdMode();
 
@@ -55,7 +56,7 @@ enableProdMode();
         FrameModule,
         OARLPSModule,
         ErrorsModule,
-        LandingPageModule,
+        LandingPageComponent,
         AppRoutingModule,
         LandingAboutModule,
         DirectivesModule,
@@ -66,7 +67,7 @@ enableProdMode();
         //     smooth: true
         // }),
         HttpClientModule, FormsModule, ReactiveFormsModule,
-        CommonModule, BrowserAnimationsModule, FormsModule,
+        CommonModule, BrowserAnimationsModule, 
         ToastrModule.forRoot({
             toastClass: 'toast toast-bootstrap-compatibility-fix'
         }),

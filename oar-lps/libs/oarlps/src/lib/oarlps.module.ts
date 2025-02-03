@@ -1,7 +1,6 @@
 import { NgModule, provideZoneChangeDetection } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FrameModule } from './frame/frame.module';
-import { AboutdatasetModule } from './landing/aboutdataset/aboutdataset.module';
 import { GoogleAnalyticsService} from "./shared/ga-service/google-analytics.service";
 import { ConfigModule } from './config/config.module';
 import { DatacartModule } from './datacart/datacart.module';
@@ -22,7 +21,6 @@ import { ToastrModule } from 'ngx-toastr';
     imports: [
         CommonModule, 
         FrameModule, 
-        AboutdatasetModule,
         ConfigModule,
         DirectivesModule,
         ErrorsModule,

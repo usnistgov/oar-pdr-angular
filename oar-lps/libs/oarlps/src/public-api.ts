@@ -2,8 +2,6 @@
  * Public API Surface of oarlps
  */
 
-// export * from './lib/oarlps.service';
-// export * from './lib/oarlps.component';
 export * from './lib/landing/landingbody/landingbody.component';
 export * from './lib/oarlps.module';
 export * from './lib/frame/frame.module'
@@ -13,27 +11,17 @@ export * from './lib/frame/messagebar.component';
 export * from './lib/frame/usermessage.service';
 export * from './lib/sidebar/sidebar.module';
 export * from './lib/sidebar/sidebar.component';
-export * from './lib/landing/aboutdataset/aboutdataset.module';
 export * from './lib/landing/aboutdataset/aboutdataset.component';
 export * from './lib/landing/done/done.module';
 export * from './lib/landing/done/done.component';
 
 export * from './lib/landing/editcontrol/auth.service';
-// export * from './lib/landing/sections/sections.module';
-// export * from './lib/landing/sections/resourcedata.component';
-// export * from './lib/landing/sections/resourcedescription.component';
-// export * from './lib/landing/sections/resourceidentity.component';
-// export * from './lib/landing/sections/resourcemetadata.component';
-// export * from './lib/landing/sections/resourcerefs.component';
 
 export * from './lib/landing/editcontrol/metadataupdate.service';
 export * from './lib/landing/editcontrol/editcontrol.module';
 export * from './lib/landing/editcontrol/editstatus.component';
 export * from './lib/landing/editcontrol/editcontrol.component';
 export * from './lib/landing/editcontrol/editstatus.service';
-// export * from './lib/landing/editcontrol/auth.service';
-// export * from './lib/landing/citation/citation.module';
-// export * from './lib/landing/citation/citation.component';
 export * from './lib/landing/downloadstatus/downloadstatus.component';
 export * from './lib/landing/downloadstatus/downloadstatus.module';
 export * from './lib/landing/metricsinfo/metricsinfo.component';
@@ -97,14 +85,12 @@ export * from './lib/utils';
 
 export * from './lib/nerdm/nerdm.module';
 export * from './lib/nerdm/metadatatransfer-browser.module';
-// export * from './lib/nerdm/metadatatransfer-server.module';
 export * from './lib/nerdm/nerdm';
 export * from './lib/nerdm/nerdm.service';
 export * from './lib/nerdm/nerdmconversion.service';
 
 export * from './environments/ienvironment';
 export * from './environments/environment-impl';
-// export * as envprod from './environments/environment.prod';
 
 export * from './lib/shared/common-function/common-function.service';
 export * from './lib/landing/editcontrol/metadataupdate.service';
@@ -117,7 +103,6 @@ export * from  './lib/textarea-autoresize/textarea-autoresize.directive';
 export * from  './lib/textarea-autoresize/textarea-autoresize.module';
 
 export * from './lib/landing/accesspage/accesspage.component';
-export * from './lib/landing/accesspage/accesspage.module';
 export * from './lib/landing/accesspage/accesspage-list/accesspage-list.component';
 export * from './lib/landing/accesspage/accesspage-edit/accesspage-edit.component';
 export * from './lib/shared/testdata-service/testDataService';

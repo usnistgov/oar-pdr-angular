@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { AboutdatasetComponent } from './aboutdataset.component';
-import { AboutdatasetModule } from './aboutdataset.module';
 import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
@@ -22,7 +21,7 @@ describe('AboutdatasetComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [ AboutdatasetModule, NoopAnimationsModule ],
+            imports: [ NoopAnimationsModule ],
             providers: [
                 { provide: AppConfig, useValue: cfg },
                 GoogleAnalyticsService
