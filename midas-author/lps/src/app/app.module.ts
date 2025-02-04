@@ -23,11 +23,12 @@ import { OARLPSModule } from 'oarlps';
 import { environment } from '../environments/environment-impl';
 import { NerdmModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
-import { FrameModule } from 'oarng';
+// import { FrameModule } from 'oarng';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { EditControlModule } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
+import { FooterComponent, HeaderComponent } from 'oarng';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -57,6 +58,8 @@ enableProdMode();
       ConfigModule.forRoot(environment),
       StaffDirModule,
       EditControlModule,
+      FooterComponent,
+      HeaderComponent
     ],
     exports: [AppComponent],
     providers: [

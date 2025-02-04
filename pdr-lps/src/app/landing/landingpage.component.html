@@ -1,92 +1,87 @@
-  <div style="margin: 20px 40px 20px 0;">
-      <div *ngIf="!displaySpecialMessage && _showContent">
-          <div *ngIf="md === null && edstatsvc.authorized && !edstatsvc.hasError">
-              <b>Landing page is loading...</b>
-          </div>
-  
-          @defer(when isPublicSite || !edstatsvc.isEditMode()) {
-            <!-- Menu button and the popup menu (mobile mode only) -->
-            <div style="width: 100%; height: 0px;">
-              <!-- div to keep track of the menu button position -->
-              <div #stickyButton></div>
-  
-              <button #menubtn *ngIf="!hideToolMenu && md !== null && inBrowser && mobileMode"
-                  [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" type="button" pButton
-                  icon="faa faa-list" class="ui-button ui-button-icon-only"
-                  (click)="toggleMenu($event)">
-              </button>
-  
-              <app-menu
-                  [record]="md"
-                  [ngClass]="windowScrolled ? 'sticky-menu-popup' : 'sticky-menu-popup-top'"
-                  *ngIf="!hideToolMenu && showStickMenu && mobileMode"
-                  [collection]="collection"
-                  [appendTo]="body"
-                  [theme]="theme"
-                  [inBrowser]="inBrowser"
-                  [metricsData]="metricsData"
-                  [showMetrics]="showMetrics"
-                  (scroll)="goToSection($event)"
-                  (toggle_citation)="toggleCitation('large')">
-              </app-menu>
-            </div>
-          }
-  
-          <div #stickyMenu></div>
-  
-          <div *ngIf="_showData">
-              <!-- landing page content -->
-              <div #lpscontent class="landing-body" [@togglemain]="{value:mainBodyStatus, params:{lps_width: lpsWidth + 'px'}}" [ngStyle]="{'width': lpsWidth + 'px'}">
-                  <landing-body
+<div style="margin: 20px 40px 20px 0;">
+    <div *ngIf="!displaySpecialMessage && _showContent">
+        <div *ngIf="md === null">
+            <b>Landing page is loading...</b>
+        </div>
+
+        <!-- Menu button and the popup menu (mobile mode only) -->
+        <div style="width: 100%; height: 0px;">
+            <!-- div to keep track of the menu button position -->
+            <div #stickyButton></div>
+
+            <button #menubtn *ngIf="!hideToolMenu && md !== null && inBrowser && mobileMode"
+                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" type="button" pButton
+                icon="faa faa-list" class="ui-button ui-button-icon-only"
+                (click)="toggleMenu($event)">
+            </button>
+
+            <app-menu
+                [record]="md"
+                [ngClass]="windowScrolled ? 'sticky-menu-popup' : 'sticky-menu-popup-top'"
+                *ngIf="!hideToolMenu && showStickMenu && mobileMode"
+                [collection]="collection"
+                [appendTo]="body"
+                [theme]="theme"
+                [inBrowser]="inBrowser"
+                [metricsData]="metricsData"
+                [showMetrics]="showMetrics"
+                (scroll)="goToSection($event)"
+                (toggle_citation)="toggleCitation('large')">
+            </app-menu>
+        </div>
+
+        <div #stickyMenu></div>
+
+        <div *ngIf="_showData">
+            <!-- landing page content -->
+            <div #lpscontent class="landing-body" [@togglemain]="{value:mainBodyStatus, params:{lps_width: lpsWidth + 'px'}}" [ngStyle]="{'width': lpsWidth + 'px'}">
+                <landing-body
                     [md]="md"
                     [inBrowser]="inBrowser"
-                    [editEnabled]="editEnabled"
+                    editEnabled="false"
                     [mobileMode]="mobileMode"
                     [metricsData]="metricsData"
                     [showJsonViewer]="showJsonViewer"
                     [theme]="theme"
-                    [isPublicSite]="isPublicSite"
+                    isPublicSite="true"
                     [edstatsvc]="edstatsvc"
                     [landingPageURL]="landingPageURL"
                     [landingPageServiceStr]="landingPageServiceStr"
                     (dlStatus)="onDownloadStatusChanged($event)">
-                  </landing-body>
-  
-              </div>
-  
-              @if(isPublicSite || !edstatsvc.isEditMode()) {
-                  <!-- <div #stickyMenu></div> -->
-                  <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
+                </landing-body>
+            </div>
+
+                <!-- <div #stickyMenu></div> -->
+                <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
                     <app-menu [record]="md" [collection]="collection" [theme]="theme" [inBrowser]="inBrowser" [metricsData]="metricsData" [showMetrics]="showMetrics" (scroll)="goToSection($event)"
                         (toggle_citation)="toggleCitation('large')">
                     </app-menu>
-  
-                    <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
-                  </div>
-              }
 
-              <!-- citation pop-up -->
-              <div *ngIf="inBrowser">
-                  <lib-citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
-                      (visibleChange)="setCitationVisible($event)">
-                  </lib-citation-popup>
-              </div>
-          </div>
+                    <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
+                </div>
+
+            <!-- citation pop-up -->
+            <div *ngIf="inBrowser">
+                <lib-citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
+                    (visibleChange)="setCitationVisible($event)">
+                </lib-citation-popup>
+            </div>
+        </div>
+
+        <div *ngIf="mobileMode" style="padding: 0 1.0em;">
+            <app-downloadstatus [inBrowser]="inBrowser" (downloadedKeys)="onBundleDownloadCompleted($event)">
+            </app-downloadstatus>
+        </div>
+    </div>
+</div>
   
-          <div *ngIf="mobileMode" style="padding: 0 1.0em;">
-              <app-downloadstatus [inBrowser]="inBrowser" (downloadedKeys)="onBundleDownloadCompleted($event)">
-              </app-downloadstatus>
-          </div>
-      </div>
-  </div>
-  
-  <!-- Show spinner -->
-  <div *ngIf="!_showContent">
-      <pdr-done [message]="loadingMessage"></pdr-done>
-  </div>
-  
-  <!-- Display done page -->
-  <div [ngStyle]="{'display': displaySpecialMessage? 'block' : 'none'}">
-      <pdr-done [message]='message'></pdr-done>
-  </div>
+<!-- Show spinner -->
+<div *ngIf="!_showContent">
+    <pdr-done [message]="loadingMessage"></pdr-done>
+</div>
+
+<!-- Display done page -->
+<div [ngStyle]="{'display': displaySpecialMessage? 'block' : 'none'}">
+    <pdr-done [message]='message'></pdr-done>
+</div>
   

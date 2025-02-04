@@ -1,15 +1,6 @@
-import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
-// import { AppConfig } from '../../config/config';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
-import { LandingConstants } from '../../landing/constants';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
-import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { NERDResource } from '../../nerdm/nerdm';
+import { MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
 import { IspartofEditComponent } from './ispartof-edit/ispartof-edit.component';
 import { IspartofPubComponent } from './ispartof-pub/ispartof-pub.component';
 
@@ -17,57 +8,37 @@ import { IspartofPubComponent } from './ispartof-pub/ispartof-pub.component';
   selector: 'app-ispartof',
   standalone: true,
   imports: [
-    CommonModule,
-    NgbModule,
     IspartofEditComponent,
     IspartofPubComponent
   ],
   templateUrl: './ispartof.component.html',
-  styleUrls: ['./ispartof.component.css', '../landing.component.scss'],
-  animations: [
-    trigger('editExpand', [
-    state('collapsed', style({height: '0px', minHeight: '0'})),
-    state('expanded', style({height: '*'})),
-    transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ])
-  ]
+  styleUrls: ['./ispartof.component.css', '../landing.component.scss']
 })
 export class IspartofComponent implements OnInit {
     isPartOf: string[] = null;
-    dataChanged: boolean = false;
-    isEditing: boolean = false;
-    fieldName = SectionPrefs.getFieldName(Sections.COLLECTION);
-    editBlockStatus: string = 'collapsed';
-    editMode: string = MODE.NORMAL; 
-    overflowStyle: string = 'hidden';
     selectedCollection: string = "Forensics";
     originalCollection: string = null;
 
     isPublicSite: boolean = false; 
 
-    collectionData = [
-        {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
-        {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
-        {id: 3, displayName: "Forensics", value: "Forensics"},
-        {id: 4, displayName: "Do not add to any collection", value: "None"}
-    ]
+    // collectionData = [
+    //     {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
+    //     {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
+    //     {id: 3, displayName: "Forensics", value: "Forensics"},
+    //     {id: 4, displayName: "Do not add to any collection", value: "None"}
+    // ]
 
     @Input() record: any[];
     @Input() inBrowser: boolean; 
     @Input() isEditMode: boolean;
     @Input() landingPageServiceStr: string;
 
-    constructor(
-        // private cfg: AppConfig,
-        public mdupdsvc : MetadataUpdateService, 
-        private gaService: GoogleAnalyticsService,
-        public globalsvc: GlobalService,
-        private chref: ChangeDetectorRef,
-        public lpService: LandingpageService
-    ) { }
+    constructor(public globalsvc: GlobalService) { 
+        this.isPublicSite = this.globalsvc.isPublicSite();
+    }
 
     ngOnInit(): void {
-        this.isPublicSite = this.globalsvc.isPublicSite();
+        
     }
 
     ngOnChanges(changes: SimpleChanges) {
@@ -109,16 +80,12 @@ export class IspartofComponent implements OnInit {
                 suffix
             ];
 
-            let collectionIndex = this.collectionData.findIndex(c => this.isPartOf[2].includes(c.displayName))
+            // let collectionIndex = this.collectionData.findIndex(c => this.isPartOf[2].includes(c.displayName))
 
-            if(collectionIndex >= 0) {
-                this.selectedCollection = this.collectionData[collectionIndex].value;
-                this.originalCollection = this.selectedCollection;
-            }
+            // if(collectionIndex >= 0) {
+            //     this.selectedCollection = this.collectionData[collectionIndex].value;
+            //     this.originalCollection = this.selectedCollection;
+            // }
         }
     }   
-    
-    restoreOriginal() {
-
-    }
 }

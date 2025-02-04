@@ -33,7 +33,6 @@ import { MetricsModule } from 'oarlps';
 import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 
-import { FrameModule } from 'oarng';
 import { OARLPSModule } from 'oarlps';
 import { environment } from '../environments/environment-impl';
 import { NerdmModule } from 'oarlps';
@@ -41,6 +40,8 @@ import { ConfigModule } from 'oarlps';
 import { EditControlModule } from 'oarlps';
 import { StaffDirModule } from 'oarng';
 import { LandingPageComponent } from './landing/landingpage.component';
+import { HeaderPubComponent } from 'oarng';
+import { FooterComponent } from 'oarng';
 
 enableProdMode();
 
@@ -52,22 +53,19 @@ enableProdMode();
         AppComponent
     ],
     imports: [
-        // ConfigModule,
-        FrameModule,
         OARLPSModule,
         ErrorsModule,
-        LandingPageComponent,
         AppRoutingModule,
         LandingAboutModule,
         DirectivesModule,
         DatacartModule,
         MetricsModule,
         SharedModule.forRoot(),
-        // FragmentPolyfillModule.forRoot({
-        //     smooth: true
-        // }),
-        HttpClientModule, FormsModule, ReactiveFormsModule,
-        CommonModule, BrowserAnimationsModule, 
+        HttpClientModule, 
+        FormsModule, 
+        ReactiveFormsModule,
+        CommonModule, 
+        BrowserAnimationsModule, 
         ToastrModule.forRoot({
             toastClass: 'toast toast-bootstrap-compatibility-fix'
         }),
@@ -75,7 +73,10 @@ enableProdMode();
         NerdmModule.forRoot(environment),
         ConfigModule.forRoot(environment),
         EditControlModule.forRoot(environment),
-        StaffDirModule
+        StaffDirModule,
+        HeaderPubComponent,
+        LandingPageComponent,
+        FooterComponent
     ],
     exports: [],
     providers: [

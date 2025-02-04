@@ -11,7 +11,7 @@ import { ResourceMetadataComponent } from '../sections/resourcemetadata.componen
 import { ResourceRefsComponent } from '../sections/resourcerefs.component';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 // import { AppConfig } from '../../config/config';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
+// import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 
 /**
  * a component that presents the landing page's presentation of the resource description

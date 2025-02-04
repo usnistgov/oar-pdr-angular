@@ -52,6 +52,19 @@ export class GlobalService {
         this._message.subscribe(subscriber);
     }  
 
+    /**
+     * Flag to tell the app to hide the content display or not. 
+     * Usecase: to hide server side rendering content while in edit mode and display the content when 
+     * browser side rendering is ready.
+     */
+    _showLPContent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public setShowLPContent(val: boolean){
+        this._showLPContent.next(val);
+    }
+    public watchShowLPContent(subscriber) {
+        this._showLPContent.subscribe(subscriber);
+    }
+
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
         let text = document.createElement("span"); 
         document.body.appendChild(text); 

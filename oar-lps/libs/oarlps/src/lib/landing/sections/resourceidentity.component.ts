@@ -95,6 +95,8 @@ export class ResourceIdentityComponent implements OnChanges {
     }
 
     ngOnInit(): void {
+        let i = this.isDefaultCollection;
+
         this.EDIT_MODES = LandingConstants.editModes;
 
         // Watch current edit mode set by edit controls

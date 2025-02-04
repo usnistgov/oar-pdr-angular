@@ -13,7 +13,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 
-describe('AccesspageComponent', () => {
+describe('AccesspageListComponent', () => {
   let component: AccesspageListComponent;
   let fixture: ComponentFixture<AccesspageListComponent>;
   let cfg: AppConfig;

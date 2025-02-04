@@ -206,7 +206,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     userLastName: 'Lin',
                     userEmail: "chuan.lin@nist.gov"
                 },
-                token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0LnVzZXJAbmlzdC5nb3YiLCJ1c2VyTmFtZSI6IlRlc3QiLCJ1c2VyTGFzdE5hbWUiOiJVc2VyIiwidXNlck9VIjoiTU1MIiwiZGlzcGxheU5hbWUiOiJUZXN0SWQiLCJyb2xlIjoibm90LXNldCIsIndpbklkIjoiVGVzdElkIiwic3ViIjoiVGVzdElkIiwiZXhwIjoxNzM4NDI3MTU3fQ.qO49tGtUF7TWruQbwBAeGA0kj2UA9Ue6uwF-tCBvg_I'
+                token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0LnVzZXJAbmlzdC5nb3YiLCJ1c2VyTmFtZSI6IlRlc3QiLCJ1c2VyTGFzdE5hbWUiOiJVc2VyIiwidXNlck9VIjoiTU1MIiwiZGlzcGxheU5hbWUiOiJUZXN0SWQiLCJyb2xlIjoibm90LXNldCIsIndpbklkIjoiVGVzdElkIiwic3ViIjoiVGVzdElkIiwiZXhwIjoxNzM4Nzc5NzM1fQ.fkqJxT0DqnsfeAV2YqPphxMF2UsCP7uz02HFGKr_iEo'
             };
             console.log("logging in...")
             return of(new HttpResponse({ status: 200, body }));
