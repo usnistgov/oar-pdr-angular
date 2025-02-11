@@ -73,8 +73,8 @@ export class TopicComponent implements OnInit {
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService, 
                 public collectionService: CollectionService,
-                private notificationService: NotificationService) {
-
+                private notificationService: NotificationService)
+    {
             this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
 
             this.collectionOrder = this.collectionService.getCollectionForDisplay();

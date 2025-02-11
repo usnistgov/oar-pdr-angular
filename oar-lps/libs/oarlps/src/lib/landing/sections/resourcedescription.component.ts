@@ -68,10 +68,10 @@ export class ResourceDescriptionComponent implements OnChanges {
      * create an instance of the Identity section
      */
     constructor(private cfg: AppConfig, 
-        public globalService: GlobalService,
-        public edstatsvc: EditStatusService,
-        public lpService: LandingpageService ) {
-
+                public globalService: GlobalService,
+                public edstatsvc: EditStatusService,
+                public lpService: LandingpageService ) 
+    {
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width + 20;
         })

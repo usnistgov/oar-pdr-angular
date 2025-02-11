@@ -4,7 +4,6 @@ import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationErr
 import { GoogleAnalyticsService } from 'oarlps'
 import { AppConfig } from 'oarlps';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { FrameModule } from 'oarng';
 import { AppRoutingModule } from './app-routing.module';
 import { LandingPageComponent } from './landing/landingpage.component';
 import { LandingPageModule } from './landing/landingpage.module';
@@ -80,15 +79,15 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        this.appVersion = this.cfg.get("appVersion", "1.0") as string;
+      this.appVersion = this.cfg.get("systemVersion", "X.X") as string;
 
-        this.authsvc.getCredentials().subscribe(
-          creds => {
-              if (creds.token) {
-                  this.authToken = creds.token;
-              }
-          }
-        );
+      this.authsvc.getCredentials().subscribe(
+        creds => {
+            if (creds.token) {
+                this.authToken = creds.token;
+            }
+        }
+      );
     }
 
     ngAfterViewInit(): void {

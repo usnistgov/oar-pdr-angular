@@ -13,41 +13,38 @@ import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: false,
-    // configEndpoint: "assets/config.json",    // set to "assets/config.json" to pull from server
+    configUrl: "assets/config.json",     // set to "assets/config.json" to pull from server
     useMetadataService: true,
     useCustomizationService: true
 };
 
 export const config: LPSConfig = {
-    locations: {
+    links: {
         orgHome: "https://nist.gov/",
         portalBase: "https://data.nist.gov/",
         pdrHome: "https://data.nist.gov/pdr/",
         pdrSearch: "https://data.nist.gov/sdp/",
-        mdService:   "https://data.nist.gov/rmm/",
-        taxonomyService: "https://data.nist.gov/rmm/taxonomy"
+        mdService:   "https://data.nist.gov/rmm/"
     },
-    mdAPI: "https://data.nist.gov/midas/dap/mds3/",
-    // mdAPI: "https://data.nist.gov/midas/dap/mds3/",
-    metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
-    // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "https://data.nist.gov/midas/",
-    // customizationAPI: "https://data.nist.gov/midas/",
-    fileManagerAPI: "https://nextcloud-dev.nist.gov",
-    PDRAPI:  "https://data.nist.gov/od/id/",
+    PDRAPIs: {
+        mdSearch: "https://mdsdev.nist.gov/rmm/records/",
+        mdService: "https://mdsdev.nist.gov/od/id/",
+        metrics: "https://data.nist.gov/rmm/usagemetrics/"
+    },
+    dapEditing: {
+        serviceEndpoint: "https://mdsdev.nist.gov/midas/dap/mds3/",
+        editEnabled: true,
+    },
+    systemVersion: "v1.3.X",
     mode: "dev",
-    status: "Dev Version",
-    appVersion: "v1.3.X",
     production: context.production,
-    editEnabled: false,
     distService: "https://data.nist.gov/od/ds/",
     gaCode: "not-set",
     screenSizeBreakPoint: 1200,
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,
-    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/",
-    portalAPI: "https://data.nist.gov/portal/landing"
+    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/"
 }
 
 export const testdata: {} = {

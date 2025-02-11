@@ -9,64 +9,64 @@ import { Observable, of, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class SearchfieldsListService {
-  private RMMAPIURL: string;
-  ALL: string = 'ALL FIELDS';
+    private RMMAPIURL: string;
+    ALL: string = 'ALL FIELDS';
 
-  /**
-   * Creates a new FieldsListService with the injected Http.
-   * @param {HttpClient} http - The injected Http.
-   * @constructor
-   */
-  constructor(private http: HttpClient,
-    private appConfig: AppConfig,
-    private cfg: AppConfig) {
-      this.RMMAPIURL = cfg.get("locations.mdService", "/unconfigured");
+    /**
+     * Creates a new FieldsListService with the injected Http.
+     * @param {HttpClient} http - The injected Http.
+     * @constructor
+     */
+    constructor(private http: HttpClient, private cfg: AppConfig) 
+    {
+        // this.RMMAPIURL = cfg.get("PDRAPIs.mdService", "/rmm/");
+        this.RMMAPIURL = cfg.get("links.mdService", "/rmm/");
     }
 
     ngOnInit(): void {
 
     }
 
-  /**
-   * Returns an Observable for the HTTP GET request for the JSON resource.
-   * @return {string[]} The Observable for the HTTP request.
-   */
-  get(): Observable<any> {
-    //   console.log("Getting fields from:", this.RMMAPIURL + 'fields');
-   return this.http.get(this.RMMAPIURL + 'records/fields');
-  }
-  /**
-    * Handle HTTP error
-    */
-  private handleError (error: any) {
-    // In a real world app, we might use a remote logging infrastructure
-    // We'd also dig deeper into the error to get a better message
-    let errMsg = (error.message) ? error.message :
-      error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-    console.error(errMsg); // log to console instead
-    error.message = errMsg;
-    return throwError(() => error);
-  }
+    /**
+     * Returns an Observable for the HTTP GET request for the JSON resource.
+     * @return {string[]} The Observable for the HTTP request.
+     */
+    get(): Observable<any> {
+        //   console.log("Getting fields from:", this.RMMAPIURL + 'fields');
+    return this.http.get(this.RMMAPIURL + 'records/fields');
+    }
+    /**
+        * Handle HTTP error
+        */
+    private handleError (error: any) {
+        // In a real world app, we might use a remote logging infrastructure
+        // We'd also dig deeper into the error to get a better message
+        let errMsg = (error.message) ? error.message :
+        error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        console.error(errMsg); // log to console instead
+        error.message = errMsg;
+        return throwError(() => error);
+    }
 
-  /**
-   * Get database fields for Advanced Search builder
-   */
-  getSearchFields(): Observable<SelectItem[]> {
-    return new Observable<SelectItem[]>(subscriber => {
-        this.get().subscribe(
-            (res) => {
-                let fields: SelectItem[] = this.toFieldItems(res);
-                subscriber.next(fields);
-                subscriber.complete();
-            },
-            (error) => {
-                console.error(error);
-                subscriber.next(error);
-                subscriber.complete();
-            }
-        );
-    });
-  }
+    /**
+     * Get database fields for Advanced Search builder
+     */
+    getSearchFields(): Observable<SelectItem[]> {
+        return new Observable<SelectItem[]>(subscriber => {
+            this.get().subscribe(
+                (res) => {
+                    let fields: SelectItem[] = this.toFieldItems(res);
+                    subscriber.next(fields);
+                    subscriber.complete();
+                },
+                (error) => {
+                    console.error(error);
+                    subscriber.next(error);
+                    subscriber.complete();
+                }
+            );
+        });
+    }
 
     /**
      * Advanced Search fields dropdown

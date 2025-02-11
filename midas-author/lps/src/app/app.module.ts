@@ -54,10 +54,11 @@ enableProdMode();
       OARLPSModule,
       ErrorsModule,
       AppRoutingModule,
+      NerdmModule.forRoot(environment),
       LandingAboutComponent,
-      ConfigModule.forRoot(environment),
+      ConfigModule,
       StaffDirModule,
-      EditControlModule,
+      EditControlModule.forRoot(environment),
       FooterComponent,
       HeaderComponent
     ],

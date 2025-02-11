@@ -48,7 +48,7 @@ export class ResultlistComponent implements OnInit {
     optionSelected: string;
     searchPhases: string = "";
     searchFields: string[] = ["title", "description", "keyword"];
-    PDRAPIURL: string = "https://data.nist.gov/lps/";
+    PDRAPIURL: string = "/od/id/";
     isEmail: boolean = false;
     homeBtnBackColor: string = "white";
 
@@ -97,8 +97,7 @@ export class ResultlistComponent implements OnInit {
 
     ngOnInit(): void {
         this.colorScheme = this.collectionService.getColorScheme(this.collection);
-        this.PDRAPIURL = this.cfg.get('locations.landingPageService',
-                                   'https://data.nist.gov/od/id/');
+        this.PDRAPIURL = this.cfg.get('links.pdrIDResolver', '/od/id/');
 
         let that = this;
         let urls = (new NERDResource(this.md)).dynamicSearchUrls();

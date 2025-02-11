@@ -1,32 +1,33 @@
 {
-    "locations": {
+    "links": {
         "orgHome": "https://nist.gov/",
-        "portalBase": "https://localhost/",
-        "pdrHome": "https://localhost/pdr/",
-        "pdrSearch": "https://localhost/sdp/",
-        "mdService":   "https://localhost/rmm/",
-        "taxonomyService": "https://localhost/rmm/taxonomy"
+        "portalBase": "https://mdstest.nist.gov/",
+        "pdrHome": "https://mdstest.nist.gov/pdr/",
+        "pdrSearch": "https://mdstest.nist.gov/sdp/",
+        "mdService":   "https://mdstest.nist.gov/rmm/"
+    },
+    "PDRAPIs": {
+        "mdSearch": "https://mdstest.nist.gov/rmm/records/",
+        "mdService": "https://mdstest.nist.gov/od/id/",
+        "metrics": "https://data.nist.gov/rmm/usagemetrics/"
     },
     "auth": {
-        "serviceEndpoint": "https://localhost/sso/"
+        "serviceEndpoint": "https://mdstest.nist.gov/sso/"
     },
-    "mdAPI": "https://localhost/midas/dap/mds3/",
-    "metricsAPI": "https://localhost/rmm/usagemetrics/",
-    "customizationAPI": "http://localhost:9091/midas/",
-    "fileManagerAPI": "https://nextcloud-dev.nist.gov",
+    "dapEditing": {
+      "serviceEndpoint": "https://mdstest.nist.gov/midas/dap/mds3/",
+      "editEnabled": true
+    },
+      "staffdir": {
+          "serviceEndpoint": "http://mdstest.nist.gov:9092/oar1"
+    },
     "mode": "dev",
-    "status": "Dev Version",
-    "appVersion": "v1.3.X",
+    "systemVersion": "v1.3.X",
     "production": false,
-    "editEnabled": true,
-    "distService": "https://localhost/od/ds/",
-    "gacode": "not-set",
+    "distService": "https://mdstest.nist.gov/od/ds/",
+    "gaCode": "not-set",
     "screenSizeBreakPoint": 1200,
     "bundleSizeAlert": 500000000,
     "delayTimeForMetricsRefresh": 300,
-    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
-    "staffdir": {
-        "serviceEndpoint": "http://localhost:9092/oar1"
-    }
-
+    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/"
 }

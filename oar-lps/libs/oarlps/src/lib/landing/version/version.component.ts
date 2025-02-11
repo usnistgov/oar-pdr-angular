@@ -52,11 +52,10 @@ export class VersionComponent implements OnChanges {
      * create the component
      * @param cfg   the app configuration data
      */
-    constructor(
-        // private cfg : AppConfig,
-        public editstatsvc: EditStatusService,
-        public lpService: LandingpageService) {
-        // this.lpssvc = this.cfg.get('locations.landingPageService',
+    constructor(public editstatsvc: EditStatusService,
+                public lpService: LandingpageService) 
+    {
+        // this.lpssvc = this.cfg.get('links.landingPageService',
         //                            'https://data.nist.gov/od/id/');
     }
 

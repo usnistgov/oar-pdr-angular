@@ -33,23 +33,22 @@ export class SearchService {
      * @param {Http} http - The injected Http.
      * @constructor
      */
-    constructor(
-        private http: HttpClient, 
-        private transferState: TransferState,
-        @Inject(PLATFORM_ID) private platformId: Object,
-        private cfg: AppConfig) {
-        this.landingBackend = cfg.get("mdAPI", "/unconfigured");
-        this.portalBase = cfg.get("locations.portalBase", "data.nist.gov");
+    constructor(private http: HttpClient, 
+                private transferState: TransferState,
+                @Inject(PLATFORM_ID) private platformId: Object,
+                private cfg: AppConfig) 
+    {
+        this.landingBackend = cfg.get("PDRAPIs.mdService", "/od/id/");
+        this.portalBase = cfg.get("links.portalBase", "/");
 
         if (this.landingBackend == "/unconfigured")
             throw new Error("Metadata service endpoint not configured!");
 
-        this.rmmBackend = cfg.get("locations.mdService", "/unconfigured");
+        this.rmmBackend = cfg.get("PDRAPIs.mdService", "/rmm");
         if (this.rmmBackend == "/unconfigured")
             throw new Error("mdService endpoint not configured!");
 
         if (! this.rmmBackend.endsWith("/")) this.rmmBackend += "/";
-        this.portalBase = cfg.get("locations.portalBase", "/unconfigured");
     }
 
     /**

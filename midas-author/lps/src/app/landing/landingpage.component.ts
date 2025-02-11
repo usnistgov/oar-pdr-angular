@@ -266,7 +266,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         this.reqId = this.route.snapshot.paramMap.get('id');
         this.inBrowser = isPlatformBrowser(platformId);
-        this.editEnabled = cfg.get('editEnabled', false) as boolean;
+        this.editEnabled = cfg.get('dapEditing.editEnabled', false) as boolean;
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
         this.getCollection();

@@ -159,7 +159,7 @@ export class ResourceIdentityComponent implements OnChanges {
            
             // this.isPartOf = [
             //     article,
-            //     this.cfg.get("locations.landingPageService") + coll['@id'],
+            //     this.cfg.get("links.pdrIDResolver") + coll['@id'],
             //     title,
             //     suffix
             // ];

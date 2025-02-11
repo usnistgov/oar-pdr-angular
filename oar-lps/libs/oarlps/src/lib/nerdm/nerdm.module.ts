@@ -5,7 +5,7 @@ import * as proc from 'process';
 
 import { MetadataService, createMetadataService } from './nerdm.service'
 import { MetadataTransfer } from './nerdm';
-import { AppConfig } from '../config/config';
+import { AppConfig } from '../config/config.service';
 import { IEnvironment } from '../../environments/ienvironment';
 import { environment } from '../../environments/environment-impl';
 
@@ -21,7 +21,7 @@ const PDR_METADATA_SVCEP : InjectionToken<string> =
 export function getMetadataEndpoint(platid : Object, config : AppConfig) : string {
     if (isPlatformServer(platid) && proc.env["PDR_METADATA_SVCEP"])
         return proc.env["PDR_METADATA_SVCEP"];
-    return config.get("PDRAPI", "/unconfigured");
+    return config.get("PDRAPIs.mdService", "/od/id/");
 }
 
 /**

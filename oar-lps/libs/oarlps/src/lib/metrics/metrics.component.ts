@@ -80,22 +80,21 @@ export class MetricsComponent implements OnInit {
 
     @ViewChild('panel0', { read: ElementRef }) public panel0: ElementRef<any>;
 
-    constructor(
-        private route: ActivatedRoute,
-        private cfg: AppConfig,
-        @Inject(PLATFORM_ID) private platformId: Object,
-        public commonFunctionService: CommonFunctionService,
-        private datePipe: DatePipe,
-        private searchService: SearchService,
-        public gaService: GoogleAnalyticsService,
-        public metricsService: MetricsService) { 
-
-            this.inBrowser = isPlatformBrowser(platformId);
-            this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");
-        }
+    constructor(private route: ActivatedRoute,
+                private cfg: AppConfig,
+                @Inject(PLATFORM_ID) private platformId: Object,
+                public commonFunctionService: CommonFunctionService,
+                private datePipe: DatePipe,
+                private searchService: SearchService,
+                public gaService: GoogleAnalyticsService,
+                public metricsService: MetricsService) 
+    { 
+        this.inBrowser = isPlatformBrowser(platformId);
+        this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");
+    }
 
     ngOnInit() {
-        this.distApi = this.cfg.get("locations.portalBase", "/unconfigured")+"od/id/";
+        this.distApi = this.cfg.get("links.portalBase", "/")+"od/id/";
         this.detectScreenSize();
         this.recordLevelData = new RecordLevelMetrics();
 

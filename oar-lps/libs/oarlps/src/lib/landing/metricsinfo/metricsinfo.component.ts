@@ -50,11 +50,10 @@ export class MetricsinfoComponent implements OnInit {
     delayTimeForMetricsRefresh: number = 300; 
     time: any;
 
-    constructor(
-        public commonFunctionService: CommonFunctionService,
-        public metricsService: MetricsService,
-        private cfg: AppConfig
-    ) { 
+    constructor(public commonFunctionService: CommonFunctionService,
+                public metricsService: MetricsService,
+                private cfg: AppConfig) 
+    { 
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
     }
 

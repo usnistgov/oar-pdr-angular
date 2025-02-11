@@ -1,32 +1,33 @@
 {
-    "locations": {
+    "links": {
         "orgHome": "https://nist.gov/",
-        "portalBase": "https://oardev.nist.gov/",
-        "pdrHome": "https://oardev.nist.gov/pdr/",
-        "pdrSearch": "https://oardev.nist.gov/sdp/",
-        "mdService":   "https://oardev.nist.gov/rmm/",
-        "taxonomyService": "https://oardev.nist.gov/rmm/taxonomy"
+        "portalBase": "https://data.nist.gov/",
+        "pdrHome": "https://data.nist.gov/pdr/",
+        "pdrSearch": "https://data.nist.gov/sdp/",
+        "mdService":   "https://data.nist.gov/rmm/"
+    },
+    "PDRAPIs": {
+        "mdSearch": "https://data.nist.gov/rmm/records/",
+        "mdService": "https://data.nist.gov/od/id/",
+        "metrics": "https://data.nist.gov/rmm/usagemetrics/"
     },
     "auth": {
-        "serviceEndpoint": "https://oardev.nist.gov/sso/"
+        "serviceEndpoint": "https://data.nist.gov/sso/"
     },
-    "mdAPI": "https://oardev.nist.gov/midas/dap/mds3/",
-    "metricsAPI": "https://oardev.nist.gov/rmm/usagemetrics/",
-    "customizationAPI": "http://oardev.nist.gov:9091/midas/",
-    "fileManagerAPI": "https://nextcloud-dev.nist.gov",
+    "dapEditing": {
+        "serviceEndpoint": "https://mdsdev.nist.gov/midas/dap/mds3/",
+        "editEnabled": true
+    },
+    "staffdir": {
+        "serviceEndpoint": "http://data.nist.gov:9092/oar1"
+    },
     "mode": "dev",
-    "status": "Dev Version",
-    "appVersion": "v1.3.X",
+    "systemVersion": "v1.3.X",
     "production": false,
-    "editEnabled": false,
-    "distService": "https://oardev.nist.gov/od/ds/",
-    "gacode": "not-set",
+    "distService": "https://data.nist.gov/od/ds/",
+    "gaCode": "not-set",
     "screenSizeBreakPoint": 1200,
     "bundleSizeAlert": 500000000,
     "delayTimeForMetricsRefresh": 300,
-    "standardNISTTaxonomyURI": "https://oardev.nist.gov/od/dm/nist-themes/",
-    "staffdir": {
-        "serviceEndpoint": "http://oardev.nist.gov:9092/oar1"
-    }
-
+    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/"
 }

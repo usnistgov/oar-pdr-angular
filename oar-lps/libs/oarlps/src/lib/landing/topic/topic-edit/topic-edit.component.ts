@@ -146,6 +146,8 @@ export class TopicEditComponent implements OnInit {
         if(paths) {
             paths.forEach((path) => {
                 var fullpath: string;
+                if (! path.label)
+                    path.label = path.term;
                 if (path.parent != null && path.parent != undefined && path.parent != "")
                     fullpath = path.parent + ":" + path.label;
                 else

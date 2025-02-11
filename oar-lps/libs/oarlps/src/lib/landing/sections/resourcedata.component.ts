@@ -2,8 +2,7 @@ import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, ViewC
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Themes, ThemesPrefs, ColorScheme } from '../../shared/globals/globals';
-import { GlobalService } from '../../shared/globals/globals'
+import { Themes, ThemesPrefs, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { CommonModule } from '@angular/common';
 import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
@@ -13,6 +12,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
 import { UserMessageService } from '../../frame/usermessage.service';
+import { AppConfig } from '../../config/config';
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -86,9 +86,10 @@ export class ResourceDataComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(public globalService: GlobalService,
+    constructor(private cfg: AppConfig,
+                public globalService: GlobalService,
                 public edstatsvc: EditStatusService,
-                public gaService: GoogleAnalyticsService)
+                private gaService: GoogleAnalyticsService)
     { 
         this.globalService.watchCollection((collection) => {
             this.collection = collection;

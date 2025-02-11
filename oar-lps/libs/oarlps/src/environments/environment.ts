@@ -9,35 +9,37 @@
  * This is the default version of this file.  When the app is built via `ng build --env=label`,
  * the contents of ./environment.label.ts will be used instead.  
  */
-import { LPSConfig } from '../lib/config/config';
+import { LPSConfig } from '../lib/config/config.model';
 
 export const context = {
     production: false,
-    configEndpoint: "assets/config.json",          // set to "assets/config.json"
+    configUrl: "assets/config.json",          // set to "assets/config.json"
     useMetadataService: false,
     useCustomizationService: false
 };
 
 export const config: LPSConfig = {
-    locations: {
+    links: {
         orgHome: "https://nist.gov/",
         portalBase: "https://testdata.nist.gov/",
         pdrHome: "https://testdata.nist.gov/pdr/",
         pdrSearch: "https://testdata.nist.gov/sdp/",
-        mdService:   "https://testdata.nist.gov/rmm/",
-        taxonomyService: "https://testdata.nist.gov/rmm/taxonomy"
+        mdService:   "https://testdata.nist.gov/rmm/"
     },
-    mdAPI: "https://testdata.nist.gov/rmm/records/",
-    metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
-    // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "https://datapubtest.nist.gov/customization/",
+    PDRAPIs: {
+        mdSearch: "https://oardev.nist.gov/rmm/records/",
+        mdService: "https://oardev.nist.gov/od/id/",
+        metrics: "https://data.nist.gov/rmm/usagemetrics/"
+    },
+    dapEditing: {
+        serviceEndpoint: "https://mdsdev.nist.gov/midas/dap/mds3/",
+        editEnabled: true,
+    },
+    systemVersion: "v1.3.X",
     mode: "dev",
-    status: "Dev Version",
-    appVersion: "v1.3.X",
     production: context.production,
-    editEnabled: false,
     distService: "https://testdata.nist.gov/od/ds/",
-    gacode: "not-set",
+    gaCode: "not-set",
     screenSizeBreakPoint: 1200,
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files

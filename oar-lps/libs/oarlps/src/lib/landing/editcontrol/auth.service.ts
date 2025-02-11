@@ -125,9 +125,10 @@ export class WebAuthService extends AuthService {
     constructor(config: AppConfig, 
                 private httpcli: HttpClient,
                 public authService: AuthenticationService,
-                private sdsvc: StaffDirectoryService) {
+                private sdsvc: StaffDirectoryService) 
+    {
         super();
-        this._endpoint = config.get('mdAPI', '/customization/');
+        this._endpoint = config.get('dapEditing.serviceEndpoint', '/midas/dap/def/');
         if (!this._endpoint.endsWith('/')) this._endpoint += "/";
     }
 

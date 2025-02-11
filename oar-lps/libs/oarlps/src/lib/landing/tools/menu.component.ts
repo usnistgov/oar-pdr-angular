@@ -19,19 +19,19 @@ export class menuItem {
     icon: string;
     url: string;
 
-    constructor(
-        title: string, 
-        sectionName: string = "",
-        url: string,
-        backgroundColor: string = "white", 
-        isHeader: boolean = false,
-        icon: string = ""){
-            this.title = title;
-            this.sectionName = sectionName;
-            this.url = url;
-            this.backgroundColor = backgroundColor;
-            this.isHeader = isHeader;
-            this.icon = icon;
+    constructor(title: string, 
+                sectionName: string = "",
+                url: string,
+                backgroundColor: string = "white", 
+                isHeader: boolean = false,
+                icon: string = "")
+    {
+        this.title = title;
+        this.sectionName = sectionName;
+        this.url = url;
+        this.backgroundColor = backgroundColor;
+        this.isHeader = isHeader;
+        this.icon = icon;
     }
 } 
 
@@ -77,12 +77,12 @@ export class MenuComponent implements OnInit {
     // signal for triggering display of the citation information
     @Output() toggle_citation = new EventEmitter<boolean>();
 
-    constructor(
-        public collectionService: CollectionService,
-        @Inject(PLATFORM_ID) private platformId: Object,
-        private cfg : AppConfig) { 
-            this.inBrowser = isPlatformBrowser(platformId);
-        }
+    constructor(public collectionService: CollectionService,
+                @Inject(PLATFORM_ID) private platformId: Object,
+                private cfg : AppConfig) 
+    { 
+        this.inBrowser = isPlatformBrowser(platformId);
+    }
 
     ngOnInit(): void {
         this.allCollections = this.collectionService.loadAllCollections();
@@ -107,8 +107,8 @@ export class MenuComponent implements OnInit {
         this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, "faa faa-external-link"));
         this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, "faa faa-cart-plus"));
 
-        let searchbase = this.cfg.get("locations.pdrSearch","/sdp/")
-        if (searchbase.slice(-1) != '/') searchbase += "/"
+        let searchbase = this.cfg.get("links.pdrSearch","/sdp/");
+        if (searchbase.slice(-1) != '/') searchbase += "/";
         let authlist = "";
         if (this.record['authors']) {
             for (let i = 0; i < this.record['authors'].length; i++) {
@@ -185,7 +185,7 @@ export class MenuComponent implements OnInit {
         this.findMenu.push(new menuItem("Find", "", "", this.defaultColor, true));
 
         this.findMenu.push(new menuItem(resourceLabel, "", searchbase + "#/search?q=keyword%3D" + keywordString, this.lighterColor, false, "faa faa-external-link" ))
-        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("locations.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
+        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("links.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
 
 
     }

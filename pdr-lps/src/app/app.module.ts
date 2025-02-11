@@ -71,7 +71,7 @@ enableProdMode();
         }),
         NgbModule,
         NerdmModule.forRoot(environment),
-        ConfigModule.forRoot(environment),
+        ConfigModule,
         EditControlModule.forRoot(environment),
         StaffDirModule,
         HeaderPubComponent,

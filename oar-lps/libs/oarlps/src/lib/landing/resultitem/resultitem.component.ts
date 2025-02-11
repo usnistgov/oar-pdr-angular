@@ -35,7 +35,7 @@ export class ResultitemComponent implements OnInit {
     expanded: boolean = false;
 
     @Input() resultItem: any;
-    @Input() PDRAPIURL: string = "https://data.nist.gov/lps/";
+    @Input() PDRAPIURL: string = "/od/id/";
     @Input() colorScheme: ColorScheme;
 
     constructor() { }
