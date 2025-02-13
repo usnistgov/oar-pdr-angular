@@ -1,32 +1,46 @@
-import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { ResourceMetadataComponent } from './resourcemetadata.component';
-
-import { AppConfig } from '../../config/config';
-import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-
-import { config, testdata } from '../../../environments/environment';
+import { NerdmRes } from '../../nerdm/nerdm';
+import { testdata } from '../../../environments/environment';
 import { MetricsData } from '../metrics-data';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { AboutdatasetComponent } from '../aboutdataset/aboutdataset.component';
+import { Component } from '@angular/core';
 
 describe('ResourceMetadataComponent', () => {
     let component: ResourceMetadataComponent;
     let fixture: ComponentFixture<ResourceMetadataComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let record : NerdmRes = testdata['test1'];
 
     let makeComp = function() {
-        TestBed.configureTestingModule({
-            imports: [
-                ResourceMetadataComponent,
-                NoopAnimationsModule
-             ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                GoogleAnalyticsService
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestSectionTitleComponent {}
+
+        @Component({
+            selector: "aboutdataset-detail",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestAboutdatasetComponent {}
+
+        TestBed.overrideComponent(ResourceMetadataComponent, {
+            add: {
+                imports: [
+                    TestSectionTitleComponent,
+                    TestAboutdatasetComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    SectionTitleComponent,
+                    AboutdatasetComponent
+                ],
+            },
+        });
 
         fixture = TestBed.createComponent(ResourceMetadataComponent);
         component = fixture.componentInstance;

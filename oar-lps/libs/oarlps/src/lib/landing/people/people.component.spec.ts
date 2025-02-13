@@ -3,7 +3,6 @@ import { StaffDirectoryService, StaffDirModule } from 'oarng';
 import { PeopleComponent } from './people.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
-
 describe('PeopleComponent', () => {
   let component: PeopleComponent;
   let fixture: ComponentFixture<PeopleComponent>;

@@ -5,7 +5,6 @@ import { UserMessageService } from '../../../frame/usermessage.service';
 import { AppConfig } from '../../../config/config';
 import { TransferState } from '@angular/core';
 import * as env from '../../../../environments/environment';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -15,17 +14,13 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 describe('SingleRefComponent', () => {
   let component: RefEditComponent;
   let fixture: ComponentFixture<RefEditComponent>;
-  let cfg: AppConfig;
+  let cfg: AppConfig = new AppConfig(null);
+  cfg.loadConfig(env.config);
   let plid: Object = "browser";
   let ts: TransferState = new TransferState();
   let authsvc: AuthService = new MockAuthService(undefined);
 
   beforeEach(waitForAsync(() => {
-    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-    cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-    cfg.status = "Unit Testing";
-    cfg.appVersion = "2.test";
-
     TestBed.configureTestingModule({
       imports: [ 
         RefEditComponent,

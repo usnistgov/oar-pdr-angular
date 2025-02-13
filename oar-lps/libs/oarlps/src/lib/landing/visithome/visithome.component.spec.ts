@@ -1,55 +1,51 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { VisithomeComponent } from './visithome.component';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AppConfig } from '../../config/config';
-import { TransferState } from '@angular/core';
-import * as env from '../../../environments/environment';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { DatePipe } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule } from 'ngx-toastr';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
+import { Component } from '@angular/core';
+import { VisithomePubComponent } from './visithome-pub/visithome-pub.component';
+import { VisithomeMidasComponent } from './visithome-midas/visithome-midas.component';
 
 describe('VisithomeComponent', () => {
-  let component: VisithomeComponent;
-  let fixture: ComponentFixture<VisithomeComponent>;
-  let cfg: AppConfig;
-  let plid: Object = "browser";
-  let ts: TransferState = new TransferState();
-  let authsvc: AuthService = new MockAuthService(undefined);
+    let component: VisithomeComponent;
+    let fixture: ComponentFixture<VisithomeComponent>;
 
-  beforeEach(waitForAsync(() => {
-    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-    cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-    cfg.status = "Unit Testing";
-    cfg.appVersion = "2.test";
+    beforeEach(waitForAsync(() => {
+        @Component({
+            selector: "Visithome-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVisithomePubComponent {}
 
-    TestBed.configureTestingModule({
-      imports: [ 
-        VisithomeComponent,
-        HttpClientTestingModule, 
-        ToastrModule.forRoot() ],
-      providers: [ 
-        MetadataUpdateService,
-        DatePipe,
-        { provide: AppConfig, useValue: cfg },
-        { provide: AuthService, useValue: authsvc },
-        UserMessageService,
-        GoogleAnalyticsService
-      ]
-    })
-    .compileComponents();
-  }));
+        @Component({
+            selector: "Visithome-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVisithomeMidasComponent {}
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(VisithomeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        TestBed.overrideComponent(VisithomeComponent, {
+            add: {
+                imports: [
+                    TestVisithomePubComponent,
+                    TestVisithomeMidasComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    VisithomePubComponent,
+                    VisithomeMidasComponent
+                ],
+            },
+        });
+    }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(VisithomeComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

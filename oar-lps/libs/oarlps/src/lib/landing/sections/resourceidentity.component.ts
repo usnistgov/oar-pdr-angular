@@ -1,25 +1,19 @@
 import { Component, OnChanges, SimpleChanges, Input, ViewChild, effect, ChangeDetectorRef } from '@angular/core';
-
-// import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { VersionComponent } from '../version/version.component';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { LandingConstants } from '../../landing/constants';
-import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { Themes, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { Collections, GlobalService } from '../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TitleComponent } from '../title/title.component';
 import { IspartofComponent } from '../ispartof/ispartof.component';
 import { AuthorComponent } from '../author/author.component';
 import { FacilitatorsComponent } from '../facilitators/facilitators.component';
 import { ContactComponent } from '../contact/contact.component';
 import { VisithomeComponent } from '../visithome/visithome.component';
-import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { UserMessageService } from '../../frame/usermessage.service';
 
 /**
  * a component that lays out the "identity" section of a landing page
@@ -71,14 +65,9 @@ export class ResourceIdentityComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(
-        // public cfg: AppConfig,
-        public editstatsvc: EditStatusService,
-        public mdupdsvc : MetadataUpdateService, 
-        private gaService: GoogleAnalyticsService,
-        public globalService: GlobalService,
-        private chref: ChangeDetectorRef,
-        public lpService: LandingpageService)
+    constructor(public editstatsvc: EditStatusService,
+                public globalService: GlobalService,
+                public lpService: LandingpageService)
     { 
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
@@ -192,9 +181,9 @@ export class ResourceIdentityComponent implements OnChanges {
      * @param event - action event
      * @param title - action title
      */
-    googleAnalytics(url: string, event, title) {
-        this.gaService.gaTrackEvent('homepage', event, title, url);
-    }
+    // googleAnalytics(url: string, event, title) {
+    //     this.gaService.gaTrackEvent('homepage', event, title, url);
+    // }
 
     visitHomePageBtnStyle() {
         if(this.theme == this.scienceTheme) {

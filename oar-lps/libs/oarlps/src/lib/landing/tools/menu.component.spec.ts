@@ -1,30 +1,28 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AppConfig } from '../../config/config'
 import { MenuComponent } from './menu.component';
 import { TransferState } from '@angular/core';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { testdata } from '../../../environments/environment';
-import * as env from '../../../environments/environment';
+import { config, testdata } from '../../../environments/environment';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
   let fixture: ComponentFixture<MenuComponent>;
 
-  let cfg : AppConfig;
+  let cfg = new AppConfig(null);
+  cfg.loadConfig(config);  cfg : AppConfig;
   let plid : Object = "browser";
   let ts : TransferState = new TransferState();
   let md = testdata['test1'];
 
-  beforeEach(async () => {
-    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       imports: [ MenuComponent ],
       providers: [
         { provide: AppConfig,  useValue: cfg }
     ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MenuComponent);

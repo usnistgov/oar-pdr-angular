@@ -16,8 +16,9 @@ describe('EditStatusComponent', () => {
     let component : EditStatusComponent;
     let fixture : ComponentFixture<EditStatusComponent>;
     let authsvc : AuthService = new MockAuthService(undefined);
-    let cfg : AppConfig = new AppConfig(config);
-    cfg['editEnabled'] = true;
+    let cfg : AppConfig = new AppConfig(null);
+    config['editEnabled'] = true;
+    cfg.loadConfig(config);
     let userAttributes: UserAttributes = {
         'userName': 'test01',
         'userLastName': 'NIST',

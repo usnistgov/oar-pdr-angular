@@ -1,14 +1,12 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
-import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
-import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { MetadataUpdateService } from './metadataupdate.service';
-import { AuthService, WebAuthService, MockAuthService } from './auth.service';
+import { AuthService, MockAuthService } from './auth.service';
 import { EditControlComponent } from './editcontrol.component';
 import { EditControlModule } from './editcontrol.module';
-import { CommonModule, DatePipe } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { NerdmRes } from '../../nerdm/nerdm';
 
 import { config, testdata } from '../../../environments/environment';
@@ -17,7 +15,8 @@ import { LandingConstants } from '../constants';
 describe('EditControlComponent', () => {
     let component : EditControlComponent;
     let fixture : ComponentFixture<EditControlComponent>;
-    let cfg : AppConfig = new AppConfig(config);
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let authsvc : AuthService = new MockAuthService()
     let EDIT_MODES = LandingConstants.editModes;

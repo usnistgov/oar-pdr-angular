@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { AppConfig } from '../../config/config';
 import { CartcontrolComponent } from './cartcontrol.component';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/core';
 import { DownloadService } from '../../shared/download-service/download-service.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -14,16 +13,12 @@ import * as env from '../../../environments/environment';
 describe('CartcontrolComponent', () => {
     let component: CartcontrolComponent;
     let fixture: ComponentFixture<CartcontrolComponent>;
-    let cfg: AppConfig;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
         declarations: [ CartcontrolComponent ],
         imports: [

@@ -6,27 +6,21 @@ import { ResultlistComponent } from '../resultlist/resultlist.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config'
 import { TransferState } from '@angular/core';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { SearchService } from '../../shared/search-service/index';
 import { DropdownModule } from "primeng/dropdown";
 import { TreeModule } from 'primeng/tree';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { testdata } from '../../../environments/environment';
-import * as env from '../../../environments/environment';
+import { config, testdata } from '../../../environments/environment';
 
 describe('SearchresultComponent', () => {
     let component: SearchresultComponent;
     let fixture: ComponentFixture<SearchresultComponent>;
-    let cfg : AppConfig;
-    let plid : Object = "browser";
-    let ts : TransferState = new TransferState();
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let nrd1 = testdata['test1'];
 
     beforeEach(async () => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-
         await TestBed.configureTestingModule({
         declarations: [ SearchresultComponent, FiltersComponent, ResultlistComponent ],
         imports: [
@@ -56,12 +50,8 @@ describe('SearchresultComponent', () => {
     });
 
     it('Should have title', () => {
-        debugger;
-        expect(fixture.nativeElement.querySelectorAll('#datasetlist-heading').length).toEqual(1);
-        const titleElement = fixture.nativeElement.querySelector('#datasetlist-heading');
-        expect(titleElement).toBeTruthy();
-        expect(titleElement.innerHTML).toEqual('Datasets in this collection');
-        // expect(fixture.nativeElement.querySelector('#datasetlist-heading').innerText)
-        //     .toEqual('Datasets in this collection');
-    });
+        let m = fixture.nativeElement.querySelectorAll('#datasetlist-heading');
+        expect(m.length).toEqual(1);
+        let m0 = m.item(0);
+        expect(m.item(0).innerHTML).toContain('Datasets in this collection');    });
 });

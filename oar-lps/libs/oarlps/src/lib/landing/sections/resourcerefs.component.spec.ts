@@ -1,40 +1,45 @@
-import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { ResourceRefsComponent } from './resourcerefs.component';
-import { AppConfig } from '../../config/config';
-import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { config, testdata } from '../../../environments/environment';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import * as env from '../../../environments/environment';
-import { DatePipe } from '@angular/common';
-import { ToastrModule } from 'ngx-toastr';
+import { NerdmRes } from '../../nerdm/nerdm';
+import { testdata } from '../../../environments/environment';
+import { ReferencesComponent } from '../references/references.component';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { Component } from '@angular/core';
 
 describe('ResourceRefsComponent', () => {
     let component: ResourceRefsComponent;
     let fixture: ComponentFixture<ResourceRefsComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
-    let authsvc : AuthService = new MockAuthService(null, env);
 
     let makeComp = function() {
-        TestBed.configureTestingModule({
-            imports: [
-                ResourceRefsComponent,
-                ToastrModule.forRoot()
-             ],
-            declarations: [  ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                GoogleAnalyticsService,
-                MetadataUpdateService,
-                UserMessageService,
-                { provide: AuthService, useValue: authsvc },
-                DatePipe, 
-                GoogleAnalyticsService,
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestSectionTitleComponent {}
+
+        @Component({
+            selector: "app-references",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestReferencesComponent {}
+
+        TestBed.overrideComponent(ResourceRefsComponent, {
+            add: {
+                imports: [
+                    TestSectionTitleComponent,
+                    TestReferencesComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    SectionTitleComponent,
+                    ReferencesComponent
+                ],
+            },
+        });
 
         fixture = TestBed.createComponent(ResourceRefsComponent);
         component = fixture.componentInstance;

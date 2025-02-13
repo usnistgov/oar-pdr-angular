@@ -6,10 +6,8 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
-
-import { ModalService } from 'oarlps';
+import { ModalService, LPSConfig } from 'oarlps';
 import { LandingPageComponent } from './landingpage.component';
-import { AngularEnvironmentConfigService } from 'oarlps';
 import { AppConfig } from 'oarlps'
 import { MetadataTransfer, NerdmRes } from 'oarlps'
 import { MetadataService, TransferMetadataService } from 'oarlps'
@@ -46,12 +44,13 @@ describe('LandingPageComponent', () => {
     ];
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(environment, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-        cfg.editEnabled = false;
-        debugger;
+      cfg = new AppConfig(null);
+      let cfgd: LPSConfig = JSON.parse(JSON.stringify(environment.config));
+      cfgd.links.pdrSearch = "https://goob.nist.gov/search";
+      cfgd["status"] = "Unit Testing";
+      cfgd["appVersion"] = "2.test";
+      cfgd["editEnabled"] = false;
+      cfg.loadConfig(cfgd);
 
         nrd10 = environment.testdata['test1'];
         /*

@@ -8,23 +8,18 @@ import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { FormsModule } from '@angular/forms';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { env } from '../../../../environments/environment';
 
 describe('TitleEditComponent', () => {
     let component: TitleEditComponent;
     let fixture: ComponentFixture<TitleEditComponent>;
-    let cfg: AppConfig;
+    let cfg = new AppConfig(null);
+    cfg.loadConfig(env.config)
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
     let authsvc : AuthService = new MockAuthService(undefined);
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
             imports: [FormsModule, ToastrModule.forRoot()],
             providers: [

@@ -7,7 +7,6 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { AuthService, WebAuthService, MockAuthService, createAuthService } from './auth.service';
 import { CustomizationService } from './customization.service';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { testdata, config } from '../../../environments/environment';
 import { UserMessageService } from '../../frame/usermessage.service';
 import * as env from '../../../environments/environment';
@@ -25,10 +24,8 @@ describe('WebAuthService', () => {
     let svc: AuthenticationService;
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
+        cfg = new AppConfig(null);
+        cfg.loadConfig(env.config)
 
         TestBed.configureTestingModule({
         imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],

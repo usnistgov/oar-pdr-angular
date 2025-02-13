@@ -1,26 +1,33 @@
 {
-    "locations": {
+    "links": {
         "orgHome": "https://nist.gov/",
         "portalBase": "https://localhost/",
         "pdrHome": "https://localhost/pdr/",
         "pdrSearch": "https://localhost/sdp/",
-        "mdService":   "https://localhost/rmm/",
-        "taxonomyService": "https://localhost/rmm/taxonomy"
+        "mdService":   "https://localhost/rmm/"
+    },
+    "PDRAPIs": {
+      "mdSearch": "https://localhost/rmm/records/",
+      "mdService": "https://localhost/od/id/",
+      "metrics": "https://data.nist.gov/rmm/usagemetrics/"
+    },
+    "dapEditing": {
+        "serviceEndpoint": "https://localhost/midas/dap/mds3/",
+        "editEnabled": true
+    },
+    "staffdir": {
+        "serviceEndpoint": "http://localhost:9092/oar1"
     },
     "auth": {
-        "serviceEndpoint": "https://localhost/sso/"
+      "serviceEndpoint": "https://localhost/sso/"
     },
-    "mdAPI": "https://localhost/midas/dap/mds3/",
-    "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
-    "customizationAPI": "http://localhost:9091/midas/",
-    "fileManagerAPI": "https://nextcloud-dev.nist.gov",
     "mode": "dev",
-    "status": "Dev Version",
-    "appVersion": "v1.3.X",
+    "systemVersion": "v1.3.X",
     "production": false,
     "gaCode": "not-set",
-    "screenSizeBreakPoint": 1060,
-    "MIDASAPI":  "https://localhost/midas/",
-    "PDRAPI":  "https://localhost/dapui/edit/od/id/",
-    "LANDING": "https://localhost/rmm/"
+    "distService": "https://testdata.nist.gov/od/ds/",
+    "screenSizeBreakPoint": 1200,
+    "bundleSizeAlert": 500000000,
+    "delayTimeForMetricsRefresh": 300,
+    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/"
 }

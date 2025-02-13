@@ -1,32 +1,20 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
-
 import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { VersionComponent, compare_versions, normalize_date, compare_dates, compare_histories }
     from './version.component';
-import { VersionModule } from './version.module';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { config, testdata } from '../../../environments/environment';
 import { LandingConstants } from '../constants';
-import { TransferState } from '@angular/core';
-import * as env from '../../../environments/environment';
 
 describe('VersionComponent', () => {
     let component : VersionComponent;
     let fixture : ComponentFixture<VersionComponent>;
-    // let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let EDIT_MODES = LandingConstants.editModes;
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
 
     let makeComp = function() {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
             imports: [ VersionComponent ],
             declarations: [  ],

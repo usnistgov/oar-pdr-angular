@@ -86,7 +86,7 @@
     </div>
 </div>
 
-@defer(when isEditing) {
+@if(isEditing) {
     <!-- Topic editor -->
     <div #topic [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
         <lib-topic-edit 

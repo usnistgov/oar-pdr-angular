@@ -1,38 +1,38 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { NerdmRes } from '../../nerdm/nerdm';
 import { FacilitatorsComponent } from './facilitators.component';
-import { config, testdata } from '../../../environments/environment';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
-import * as env from '../../../environments/environment';
-import { TransferState } from '@angular/core';
-import { AppConfig } from '../../config/config'
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { AuthService } from '../editcontrol/auth.service';
+import { config, testdata } from '../../../environments/environment';
+import { AppConfig } from '../../config/config';
+import { LandingpageService } from '../landingpage.service';
+import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { DatePipe } from '@angular/common';
+import { AuthService, MockAuthService } from '../editcontrol/auth.service';
 
 describe('FacilitatorsComponent', () => {
     let component: FacilitatorsComponent;
     let fixture: ComponentFixture<FacilitatorsComponent>;
     let rec : NerdmRes = testdata['test1'];
-    let plid : Object = "browser";
-    let ts : TransferState = new TransferState();
-    let cfg : AppConfig = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-    let nrd1 = testdata['forensics'];
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
+    let authsvc = new MockAuthService();  
 
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
             imports: [ FacilitatorsComponent ],
-            providers: [ 
-                MetadataUpdateService, 
-                UserMessageService,
-                AuthService,
+            providers: [
+                LandingpageService,
+                EditStatusService,
                 DatePipe,
-                { provide: AppConfig,       useValue: cfg }
+                UserMessageService,
+                { provide: AuthService, useValue: authsvc },
+                MetadataUpdateService,
+                { provide: AppConfig, useValue: cfg }
             ]
         })
         .compileComponents();
-    });
+    }));
 
     beforeEach(() => {
         fixture = TestBed.createComponent(FacilitatorsComponent);

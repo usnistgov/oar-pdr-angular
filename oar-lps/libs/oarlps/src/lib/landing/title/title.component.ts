@@ -3,10 +3,9 @@ import { EditStatusService } from '../editcontrol/editstatus.service';
 import { SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TitleEditComponent } from './title-edit/title-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { TitlePubComponent } from './title-pub/title-pub.component';
+import { TitleEditComponent } from './title-edit/title-edit.component';
 
 @Component({
     selector: 'app-title',
@@ -29,7 +28,6 @@ export class TitleComponent implements OnInit {
 
     constructor(
         public edstatsvc: EditStatusService,
-        public mdupdsvc: MetadataUpdateService,
         private chref: ChangeDetectorRef,
         public globalsvc: GlobalService ) {
 

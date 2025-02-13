@@ -1,38 +1,75 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
-import { DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { ResourceDescriptionComponent } from './resourcedescription.component';
-import { SectionsModule } from './sections.module';
-import { EditControlModule } from '../editcontrol/editcontrol.module';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-// import { DragDropModule } from '@angular/cdk/drag-drop';
-import { config, testdata } from '../../../environments/environment';
-import { ToastrModule } from 'ngx-toastr';
+import { testdata } from '../../../environments/environment';
+import { Component } from '@angular/core';
+import { DescriptionComponent } from '../description/description.component';
+import { TopicComponent } from '../topic/topic.component';
+import { KeywordComponent } from '../keyword/keyword.component';
+import { TopicPubComponent } from '../topic/topic-pub/topic-pub.component';
+import { SectionTitleComponent } from '../section-title/section-title.component';
 
 describe('ResourceDescriptionComponent', () => {
     let component : ResourceDescriptionComponent;
     let fixture : ComponentFixture<ResourceDescriptionComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
-    let authsvc : AuthService = new MockAuthService()
 
     let makeComp = function() {
-        TestBed.configureTestingModule({
-            imports: [ 
-                HttpClientModule,
-                ToastrModule.forRoot()  ],
-            declarations: [  ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }, 
-                GoogleAnalyticsService, UserMessageService, MetadataUpdateService, DatePipe
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestSectionTitleComponent {}
+
+        @Component({
+            selector: "app-description",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestDescriptionComponent {}
+
+        @Component({
+            selector: "app-topic",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTopicComponent {}
+
+        @Component({
+            selector: "app-keyword",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestKeywordComponent {}
+
+        @Component({
+            selector: "topic-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTopicPubComponent {}
+
+        TestBed.overrideComponent(ResourceDescriptionComponent, {
+            add: {
+                imports: [
+                    TestSectionTitleComponent,
+                    TestDescriptionComponent,
+                    TestTopicComponent,
+                    TestKeywordComponent,
+                    TestTopicPubComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    SectionTitleComponent,
+                    DescriptionComponent,
+                    TopicComponent,
+                    KeywordComponent,
+                    TopicPubComponent
+                ],
+            },
+        });
 
         fixture = TestBed.createComponent(ResourceDescriptionComponent);
         component = fixture.componentInstance;

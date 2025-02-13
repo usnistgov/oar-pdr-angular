@@ -11,7 +11,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { DownloadService } from '../../shared/download-service/download-service.service';
 import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/core';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { ToastrModule } from 'ngx-toastr';
@@ -35,10 +34,8 @@ describe('DataFilesComponent', () => {
     let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
     dc._forget();
 
-    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-    cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-    cfg.status = "Unit Testing";
-    cfg.appVersion = "2.test";
+    cfg = new AppConfig(null);
+    cfg.loadConfig(env.config)
 
     TestBed.configureTestingModule({
       declarations: [],

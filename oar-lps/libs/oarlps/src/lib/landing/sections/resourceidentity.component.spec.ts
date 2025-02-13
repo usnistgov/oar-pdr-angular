@@ -1,69 +1,98 @@
 import { ComponentFixture, TestBed, fakeAsync, waitForAsync  } from '@angular/core/testing';
-import { DatePipe } from '@angular/common';
-import { ToastrModule } from 'ngx-toastr';
-import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { ResourceIdentityComponent } from './resourceidentity.component';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { config, testdata, context } from '../../../environments/environment';
+import { testdata } from '../../../environments/environment';
 import * as _ from 'lodash-es';
-import * as env from '../../../environments/environment';
-import { StaffDirectoryService, StaffDirModule } from 'oarng';
-import { provideHttpClient } from '@angular/common/http';
+import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { provideRouter } from '@angular/router';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { TransferState } from '@angular/core';
+import { Component } from '@angular/core';
+import { TitleComponent } from '../title/title.component';
+import { IspartofComponent } from '../ispartof/ispartof.component';
+import { AuthorComponent } from '../author/author.component';
+import { FacilitatorsComponent } from '../facilitators/facilitators.component';
+import { ContactComponent } from '../contact/contact.component';
+import { VisithomeComponent } from '../visithome/visithome.component';
 
 describe('ResourceIdentityComponent', () => {
 
     let component : ResourceIdentityComponent;
     let fixture : ComponentFixture<ResourceIdentityComponent>;
-    // let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
-    let authsvc : AuthService = new MockAuthService(null, env);
-    let svcep : string = "https://mds.nist.gov/midas/nsd";
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
 
     let makeComp = function() {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTitleComponent {}
 
-        TestBed.configureTestingModule({
-            imports: [ 
-                ResourceIdentityComponent, 
-                StaffDirModule,
-                NoopAnimationsModule,
-                ToastrModule.forRoot() ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc },
-                DatePipe, 
-                GoogleAnalyticsService, 
-                UserMessageService, 
-                MetadataUpdateService,
-                provideHttpClient(),
-                provideHttpClientTesting(), 
-                provideRouter([])
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "accesspage-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestIspartofComponent {}
 
-        let httpMock = TestBed.inject(HttpTestingController);
-        let req = httpMock.expectOne('assets/config.json');
+        @Component({
+            selector: "accesspage-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestAuthorComponent {}
 
-        req.flush({
-            staffdir: {
-                serviceEndpoint: svcep
-            }
+        @Component({
+            selector: "pdr-data-files",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestFacilitatorsComponent {}
+
+        @Component({
+            selector: "pdr-data-files",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestContactComponent {}
+
+        @Component({
+            selector: "pdr-data-files",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVisithomeComponent {}
+
+        TestBed.overrideComponent(ResourceIdentityComponent, {
+            add: {
+                imports: [
+                    TestTitleComponent,
+                    TestIspartofComponent,
+                    TestAuthorComponent,
+                    TestFacilitatorsComponent,
+                    TestContactComponent,
+                    TestVisithomeComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    TitleComponent,
+                    IspartofComponent,
+                    AuthorComponent,
+                    FacilitatorsComponent,
+                    ContactComponent,
+                    VisithomeComponent
+                ],
+            },
         });
+
+        // let httpMock = TestBed.inject(HttpTestingController);
+        // let req = httpMock.expectOne('assets/config.json');
+
+        // req.flush({
+        //     staffdir: {
+        //         serviceEndpoint: svcep
+        //     }
+        // });
 
         fixture = TestBed.createComponent(ResourceIdentityComponent);
         component = fixture.componentInstance;

@@ -71,7 +71,7 @@
     The components inside the block must be stand alone component.
     This block will only be loaded when loadEditRefBlock is set to true.
 -->
-@defer (when loadEditRefBlock) {
+@if (loadEditRefBlock) {
     <div style="width: 100%;" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
         <lib-ref-list #reflist [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
     </div>

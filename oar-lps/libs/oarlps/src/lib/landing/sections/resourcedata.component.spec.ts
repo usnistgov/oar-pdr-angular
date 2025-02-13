@@ -1,56 +1,67 @@
 import { ComponentFixture, TestBed, fakeAsync, waitForAsync  } from '@angular/core/testing';
-import { DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-// import { RouterTestingModule } from '@angular/router/testing';
 import { ResourceDataComponent } from './resourcedata.component';
-import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { CartService } from '../../datacart/cart.service';
-import { Themes, ThemesPrefs } from '../../shared/globals/globals';
-import { AppConfig } from '../../config/config';
-import { TransferState } from '@angular/core';
-import * as env from '../../../environments/environment';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { ToastrModule } from 'ngx-toastr';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { NerdmRes } from '../../nerdm/nerdm';
+import { Themes } from '../../shared/globals/globals';
+import { AuthService, MockAuthService } from '../editcontrol/auth.service';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
+import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
+import { DataFilesComponent } from '../data-files/data-files.component';
+import { Component } from '@angular/core';
 
 describe('ResourceDataComponent', () => {
     let component: ResourceDataComponent;
     let fixture: ComponentFixture<ResourceDataComponent>;
     let rec : NerdmRes = require('../../../assets/sampleRecord.json');
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
     let authsvc: AuthService = new MockAuthService(undefined);
 
     let makeComp = function() {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestSectionTitleComponent {}
 
-        TestBed.configureTestingModule({
-            imports: [ 
-                ResourceDataComponent, 
-                HttpClientModule, 
-                NoopAnimationsModule,
-                ToastrModule.forRoot() ],
-            declarations: [  ],
-            providers: [
-                GoogleAnalyticsService, 
-                DatePipe,
-                CartService,
-                MetadataUpdateService, 
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc },
-                UserMessageService,
-                provideRouter([]) 
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "accesspage-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestAccesspageMidasComponent {}
+
+        @Component({
+            selector: "accesspage-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestAccesspagePubComponent {}
+
+        @Component({
+            selector: "pdr-data-files",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestDataFilesComponent {}
+
+        TestBed.overrideComponent(ResourceDataComponent, {
+            add: {
+                imports: [
+                    TestSectionTitleComponent,
+                    TestAccesspageMidasComponent,
+                    TestAccesspagePubComponent,
+                    TestDataFilesComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    SectionTitleComponent,
+                    AccesspageMidasComponent,
+                    AccesspagePubComponent,
+                    DataFilesComponent
+                ],
+            },
+        });
 
         fixture = TestBed.createComponent(ResourceDataComponent);
         component = fixture.componentInstance;

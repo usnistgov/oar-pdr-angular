@@ -5,7 +5,6 @@ import { UserMessageService } from '../../../frame/usermessage.service';
 import { AppConfig } from '../../../config/config';
 import { TransferState } from '@angular/core';
 import * as env from '../../../../environments/environment';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
@@ -16,7 +15,8 @@ import { StaffDirectoryService, StaffDirModule } from 'oarng';
 describe('AuthorListComponent', () => {
   let component: AuthorListComponent;
   let fixture: ComponentFixture<AuthorListComponent>;
-  let cfg: AppConfig;
+  let cfg: AppConfig = new AppConfig(null);
+  cfg.loadConfig(env.config);
   let plid: Object = "browser";
   let ts: TransferState = new TransferState();
   let authsvc: AuthService = new MockAuthService(undefined);
@@ -24,11 +24,6 @@ describe('AuthorListComponent', () => {
   let svcep : string = "https://mds.nist.gov/midas/nsd";
   
   beforeEach(waitForAsync(() => {
-    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-    cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-    cfg.status = "Unit Testing";
-    cfg.appVersion = "2.test";
-
     TestBed.configureTestingModule({
       declarations: [  ],
       imports: [ 

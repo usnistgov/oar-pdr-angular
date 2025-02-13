@@ -4,13 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { SharedModule } from 'oarlps';
-import { FrameModule } from 'oarng';
 import { GoogleAnalyticsService } from "oarlps";
 import { ConfigModule } from 'oarlps';
 import { BrowserModule } from '@angular/platform-browser';
 import { TransferState, StateKey } from '@angular/core';
 import { AppConfig } from 'oarlps';
-import { AngularEnvironmentConfigService } from 'oarlps';
 import { CartService } from 'oarlps';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
@@ -23,23 +21,23 @@ describe('AppComponent', () => {
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        debugger;
-        cfg = (new AngularEnvironmentConfigService(environment,plid, ts)).getConfig() as AppConfig;
+      cfg = new AppConfig(null);
+      cfg.loadConfig(JSON.parse(JSON.stringify(environment.config)));
 
-        TestBed.configureTestingModule({
+      TestBed.configureTestingModule({
 
-            declarations: [
-                AppComponent,
-            ],
-            providers: [
-                GoogleAnalyticsService,
-                CartService,
-                { provide: AppConfig, useValue: cfg },
-                MockAuthenticationService,
-                AuthenticationService
-            ]
-            , imports: [RouterTestingModule, FrameModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
-        }).compileComponents();
+          declarations: [
+              AppComponent,
+          ],
+          providers: [
+              GoogleAnalyticsService,
+              CartService,
+              { provide: AppConfig, useValue: cfg },
+              MockAuthenticationService,
+              AuthenticationService
+          ]
+          , imports: [RouterTestingModule, BrowserModule, HttpClientTestingModule, ToastrModule.forRoot()],
+      }).compileComponents();
     }));
 
     it('should create the app', waitForAsync(() => {

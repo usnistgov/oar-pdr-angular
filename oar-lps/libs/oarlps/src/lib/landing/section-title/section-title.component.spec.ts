@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { SectionTitleComponent } from './section-title.component';
 
 describe('SectionTitleComponent', () => {

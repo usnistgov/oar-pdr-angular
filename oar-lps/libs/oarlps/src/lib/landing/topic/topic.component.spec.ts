@@ -4,7 +4,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
 import { TransferState } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
@@ -16,17 +15,11 @@ import * as env from '../../../environments/environment';
 describe('TopicComponent', () => {
     let component: TopicComponent;
     let fixture: ComponentFixture<TopicComponent>;
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
+    let cfg = new AppConfig(null);
+    cfg.loadConfig(env.config)
     let authsvc : AuthService = new MockAuthService(undefined);
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
             imports: [
                 TopicComponent,

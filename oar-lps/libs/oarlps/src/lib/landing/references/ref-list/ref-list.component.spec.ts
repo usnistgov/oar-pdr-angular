@@ -13,7 +13,6 @@ import { NerdmRes } from '../../../nerdm/nerdm';
 import { testdata } from '../../../../environments/environment';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferState } from '@angular/core';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import * as env from '../../../../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
@@ -22,18 +21,12 @@ import { provideRouter } from '@angular/router';
 describe('RefListComponent', () => {
     let component: RefListComponent;
     let fixture: ComponentFixture<RefListComponent>;
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
     let authsvc: AuthService = new MockAuthService(undefined);
     let rec : NerdmRes = testdata['test1'];
 
   beforeEach(waitForAsync(() => {
-    cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-    cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-    cfg.status = "Unit Testing";
-    cfg.appVersion = "2.test";
-
     TestBed.configureTestingModule({
         imports: [
             RefListComponent,

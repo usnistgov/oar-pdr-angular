@@ -1,6 +1,4 @@
 import { Component, OnChanges, SimpleChanges, Input, effect } from '@angular/core';
-
-import { AppConfig } from '../../config/config';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { CommonModule } from '@angular/common';
@@ -38,9 +36,7 @@ export class ResourceRefsComponent {
     /**
      * create an instance of the Identity section
      */
-    constructor(
-        public edstatsvc: EditStatusService,
-        private cfg: AppConfig)
+    constructor(public edstatsvc: EditStatusService)
     { 
         effect(() => {
             this.isEditMode = this.edstatsvc.isEditMode();

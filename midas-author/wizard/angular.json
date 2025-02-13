@@ -31,11 +31,11 @@
                                 "output": "./assets/"
                             }
                         ],
-                        "styles": [  
+                        "styles": [
                             "../../node_modules/primeng/resources/primeng.css",
                             "../../node_modules/primeicons/primeicons.css",
                             "../../node_modules/primeflex/primeflex.css",
-                            "../../node_modules/primeng/resources/themes/saga-blue/theme.css",                          
+                            "../../node_modules/primeng/resources/themes/saga-blue/theme.css",
                             "../../node_modules/oarng/src/assets/styles/font-awesome/css/font-awesome.min.css",
                             "../../node_modules/ngx-toastr/toastr.css",
                             "src/styles.css"
@@ -49,8 +49,8 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "500kb",
-                                    "maximumError": "2mb"
+                                    "maximumWarning": "2.7mb",
+                                    "maximumError": "3.2mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",

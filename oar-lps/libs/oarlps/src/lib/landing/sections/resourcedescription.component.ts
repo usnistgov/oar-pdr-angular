@@ -5,15 +5,15 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { ColorScheme } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals'
-import { SectionTitleComponent } from '../section-title/section-title.component';
 import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionComponent } from '../description/description.component';
 import { TopicComponent } from '../topic/topic.component';
 import { KeywordComponent } from '../keyword/keyword.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopicPubComponent } from '../topic/topic-pub/topic-pub.component';
 import { KeywordPubComponent } from '../keyword/keyword-pub/keyword-pub.component';
 import { EditStatusService } from '../editcontrol/editstatus.service';
+import { SectionTitleComponent } from '../section-title/section-title.component';
 
 /**
  * a component that lays out the "Description" section of a landing page which includes the prose 
@@ -67,10 +67,8 @@ export class ResourceDescriptionComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig, 
-                public globalService: GlobalService,
-                public edstatsvc: EditStatusService,
-                public lpService: LandingpageService ) 
+    constructor(public globalService: GlobalService,
+                public edstatsvc: EditStatusService ) 
     {
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width + 20;

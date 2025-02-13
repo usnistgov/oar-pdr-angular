@@ -1,11 +1,10 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AccesspageListComponent } from './accesspage-list.component';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { AppConfig } from '../../../config/config';
 import { TransferState } from '@angular/core';
 import * as env from '../../../../environments/environment';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
 import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -16,13 +15,14 @@ import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analyt
 describe('AccesspageListComponent', () => {
   let component: AccesspageListComponent;
   let fixture: ComponentFixture<AccesspageListComponent>;
-  let cfg: AppConfig;
+  let cfg: AppConfig = new AppConfig(null);
+  cfg.loadConfig(env.config);
   let plid: Object = "browser";
   let ts: TransferState = new TransferState();
   let authsvc: AuthService = new MockAuthService(undefined);
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
       declarations: [ ],
       imports: [AccesspageListComponent, HttpClientTestingModule, NoopAnimationsModule, ToastrModule.forRoot() ],
       providers: [ 
@@ -34,7 +34,7 @@ describe('AccesspageListComponent', () => {
         GoogleAnalyticsService ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AccesspageListComponent);

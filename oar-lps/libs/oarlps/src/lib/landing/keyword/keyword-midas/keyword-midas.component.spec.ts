@@ -2,31 +2,23 @@ import { ComponentFixture, TestBed, fakeAsync  } from '@angular/core/testing';
 import { KeywordMidasComponent } from './keyword-midas.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../../config/config';
-import { AngularEnvironmentConfigService } from '../../../config/config.service';
-import { TransferState } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
+import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
 import * as env from '../../../../environments/environment';
 
 describe('KeywordMidasComponent', () => {
     let component: KeywordMidasComponent;
     let fixture: ComponentFixture<KeywordMidasComponent>;
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
     let authsvc: AuthService = new MockAuthService(undefined);
 
     beforeEach(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
             imports: [
                 KeywordMidasComponent,

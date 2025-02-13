@@ -1,30 +1,30 @@
 {
     "links": {
         "orgHome": "https://nist.gov/",
-        "portalBase": "https://mdstest.nist.gov/",
-        "pdrHome": "https://mdstest.nist.gov/pdr/",
-        "pdrSearch": "https://mdstest.nist.gov/sdp/",
-        "mdService":   "https://mdstest.nist.gov/rmm/"
+        "portalBase": "https://localhost/",
+        "pdrHome": "https://localhost/pdr/",
+        "pdrSearch": "https://localhost/sdp/",
+        "mdService":   "https://localhost/rmm/"
     },
     "PDRAPIs": {
-        "mdSearch": "https://mdstest.nist.gov/rmm/records/",
-        "mdService": "https://mdstest.nist.gov/od/id/",
+        "mdSearch": "https://localhost/rmm/records/",
+        "mdService": "https://localhost/od/id/",
         "metrics": "https://data.nist.gov/rmm/usagemetrics/"
     },
     "auth": {
-        "serviceEndpoint": "https://mdstest.nist.gov/sso/"
+        "serviceEndpoint": "https://localhost/sso/"
     },
     "dapEditing": {
-      "serviceEndpoint": "https://mdstest.nist.gov/midas/dap/mds3/",
+      "serviceEndpoint": "https://localhost/midas/dap/mds3/",
       "editEnabled": true
     },
       "staffdir": {
-          "serviceEndpoint": "http://mdstest.nist.gov:9092/oar1"
+          "serviceEndpoint": "http://localhost:9092/oar1"
     },
     "mode": "dev",
     "systemVersion": "v1.3.X",
     "production": false,
-    "distService": "https://mdstest.nist.gov/od/ds/",
+    "distService": "https://localhost/od/ds/",
     "gaCode": "not-set",
     "screenSizeBreakPoint": 1200,
     "bundleSizeAlert": 500000000,

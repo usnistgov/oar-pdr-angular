@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TitleComponent } from './title.component';
 import { AppConfig } from '../../config/config';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { TransferState } from '@angular/core';
+import { Component, TransferState } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DatePipe } from '@angular/common';
@@ -12,33 +11,45 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import * as env from '../../../environments/environment';
+import { TitlePubComponent } from './title-pub/title-pub.component';
+import { TitleEditComponent } from './title-edit/title-edit.component';
 
 describe('TitleComponent', () => {
     let component: TitleComponent;
     let fixture: ComponentFixture<TitleComponent>;
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
+    let cfg = new AppConfig(null);
+    cfg.loadConfig(env.config)
     let authsvc : AuthService = new MockAuthService(undefined);
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
-        TestBed.configureTestingModule({
-            imports: [
-                TitleComponent,
-                FormsModule, 
-                ToastrModule.forRoot()],
-            providers: [
-                MetadataUpdateService, UserMessageService, DatePipe,
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }
-            ]
+        @Component({
+            selector: "accesspage-pub",
+            standalone: true,
+            template: `<div></div>`,
         })
-            .compileComponents();
+        class TestTitlePubComponent {}
+
+        @Component({
+            selector: "pdr-data-files",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTitleEditComponent {}
+
+        TestBed.overrideComponent(TitleComponent, {
+            add: {
+                imports: [
+                    TestTitlePubComponent,
+                    TestTitleEditComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    TitlePubComponent,
+                    TitleEditComponent
+                ],
+            },
+        });
     }));
 
     beforeEach(() => {

@@ -12,8 +12,8 @@ describe('ContactEditComponent', () => {
   let httpMock: HttpTestingController;
   let svcep : string = "https://mds.nist.gov/midas/nsd";
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
         imports: [ HttpClientTestingModule, ContactEditComponent, PeopleModule, StaffDirModule ],
         providers: [ 
             StaffDirectoryService
@@ -29,7 +29,7 @@ describe('ContactEditComponent', () => {
             serviceEndpoint: svcep
         }
     });
-  });
+  }));
 
   beforeEach(() => {
     service = TestBed.inject(StaffDirectoryService);

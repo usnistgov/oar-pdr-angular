@@ -7,10 +7,10 @@ import { AppConfig } from '../../config/config';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
-import { TopicEditComponent } from './topic-edit/topic-edit.component';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
 import { EditStatusService } from '../editcontrol/editstatus.service';
+import { TopicEditComponent } from './topic-edit/topic-edit.component';
 
 @Component({
     selector: 'app-topic',
