@@ -39,7 +39,7 @@ import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 // import { FrameModule } from 'oarlps';
 import { OARLPSModule } from 'oarlps';
 import { environment } from '../environments/environment-impl';
-import { NerdmModule } from 'oarlps';
+import { DAPModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
 import { EditControlModule } from 'oarlps';
 
@@ -88,7 +88,7 @@ enableProdMode();
         }),
         NgbModule,
         ConfigModule,
-        NerdmModule.forRoot(environment),
+        DAPModule.forRoot(environment),
         EditControlModule.forRoot(environment),
         StaffDirModule
     ],

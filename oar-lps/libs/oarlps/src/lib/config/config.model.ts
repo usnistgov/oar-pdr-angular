@@ -176,7 +176,7 @@ export interface LPSConfig extends Configuration {
 /**
  * the combined configuration for the DAPTool
  */
-export interface DAPTConfig extends LPSConfig {
+export interface DAPConfig extends LPSConfig {
 
     /**
      * parameters specific to the creating and editing DAPs

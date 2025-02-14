@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FiltersComponent } from './filters.component';
 import { AppConfig } from '../../config/config'
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { SearchService } from '../../shared/search-service/index';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';

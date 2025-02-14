@@ -1,16 +1,19 @@
 import { Injectable, EventEmitter, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
 import { UserMessageService } from '../../frame/usermessage.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { Observable, of, throwError, Subscriber } from 'rxjs';
+import { DAPService, DAPUpdateService } from '../../nerdm/dap.service';
+import * as daperrs from '../../errors/error';
+import { Observable, map, switchMap, tap, of, catchError, throwError, Subscriber } from 'rxjs';
 import { UpdateDetails, DBIOrecord } from './interfaces';
 import { AuthService, WebAuthService } from './auth.service';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
-import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
+import { AuthenticationService, Credentials, StaffDirService } from 'oarng';
 
 /**
  * a service that receives updates to the resource metadata from update widgets.
@@ -30,13 +33,14 @@ import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 export class MetadataUpdateService {
 
     private mdres: Subject<NerdmRes> = new Subject<NerdmRes>();
-    private custsvc: CustomizationService = null;
+    private custsvc: DAPUpdateService = null;
     private originalDraftRec: NerdmRes = null;  //
     private currentRec: NerdmRes = null;    //Current saved record
     private origfields: {} = {};   // keeps track of orginal metadata so that they can be undone
     public  EDIT_MODES: any;
     _dbioRecord: DBIOrecord = null;
 
+    private creds: Credentials = null;
     private _lastupdate: UpdateDetails = {} as UpdateDetails;   // null object means unknown
     get lastUpdate() { return this._lastupdate; }
     set lastUpdate(updateDetails: UpdateDetails) {
@@ -88,15 +92,29 @@ export class MetadataUpdateService {
      *                  server.  
      */
     constructor(private msgsvc: UserMessageService,
-        private edstatsvc: EditStatusService,
-        public authsvc: AuthService,
-        private datePipe: DatePipe) { 
-          this.EDIT_MODES = LandingConstants.editModes;
+                private edstatsvc: EditStatusService,
+                protected dapsvc: DAPService,
+                private datePipe: DatePipe,
+                protected authsvc?: AuthenticationService,
+                protected staffsvc?: StaffDirService)
+    { 
+        this.EDIT_MODES = LandingConstants.editModes;
 
-          this.edstatsvc.watchEditMode((editMode) => {
+        this.edstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
-          });
-        }
+        });
+
+        if (authsvc) 
+            this.authsvc.getCredentials(true).subscribe(
+                (creds) => {
+                    this.creds = creds;
+                    this._lastUpdate.userAttributes = this.creds.userAttributes;
+                },
+                (err) => {
+                    console.warn("Failed to get credentials from authentication service: "+err.toString());
+                }
+            );
+    }
 
     /*
      * subscribe to updates to the metadata.  This is intended for connecting the 
@@ -106,17 +124,76 @@ export class MetadataUpdateService {
         this.mdres.subscribe(controller);
     }
 
-    public setOriginalMetadata(md: NerdmRes) {
+    public cacheMetadata(md: NerdmRes) {
         this.currentRec = JSON.parse(JSON.stringify(md));
-        this.mdres.next(md as NerdmRes);
+        if (! this.originalDraftRec)
+            this.originalDraftRec = JSON.parse(JSON.stringify(md));
+        this.mdres.next(JSON.parse(JSON.stringify(md)) as NerdmRes);
     }
 
-    public resetOriginal() {
+    public resetMetadata() {
       this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
     }
 
-    _setCustomizationService(svc: CustomizationService): void {
-        this.custsvc = svc;
+    /**
+     * set this service to open the record with the given identifier for editing.  This willl 
+     * retrieve and cache a copy of the DAP data.  
+     * @return boolean indicating whether the currently authenticated user is authorized to edit
+     *         this record
+     * @throws Error   if a problem occurred while opening up the record
+     */
+    public startEditing(recid: string) : Observable<boolean> {
+        return this.dapsvc.edit(recid).pipe(
+            tap((recsvc) => {
+                if (! recsvc.canEdit())
+                    throw new daperrs.NotAuthorizedError(recid, "write");
+                this.custsvc = recsvc;
+                let rec = this.custsvc.getRecord()
+                if (rec.status?.modified) 
+                    this._lastUpdate = {
+                        userAttributes: { userName: rec.status?.byWho },
+                        _updateDate: (new Date(rec.status.modified)).toLocalString()
+                    };
+                if (rec.status?.byWho && staffsvc) {
+                    // TODO: use staff directory to look up user who made last edit
+                }
+            }),
+            switchMap((recsvc) => {
+                return recsvc.getData();
+            }),
+            tap((data) => {
+                this.cacheMetadata(data as NerdmRes);
+                this.checkUpdatedFields(data as NerdmRes);
+            }),
+            map((data) => {
+                return true;
+            }),
+            catchError((err) => {
+                if (err instanceof daperrs.NotAuthorizedError) 
+                    return of(false);
+                throw err;
+            })
+        );
+    }
+
+    public discardEdits() : Observable<boolean> {
+        if (! this.custsvc)
+            return of(false);
+
+        return this.custsvc.setData(this.originalDraftRec).pipe(
+            tap((data) => {
+                this.originalDraftRec = null;
+                this.fieldReset();
+                this.cacheMetadata(data);
+            }),
+            map((data) => {
+                return true;
+            }),
+            catchError((err) => {
+                console.error("Failed to reset DAP data: "+err.message);
+                return of(false);
+            })
+        );
     }
 
     /**
@@ -147,7 +224,9 @@ export class MetadataUpdateService {
      *             take care of reporting the reason.  This allows the caller in charge of 
      *             getting updates to have its UI react accordingly.
      */
-    public update(subsetname: string, md: {}, id: string = undefined, subsetnameAPI: string = undefined): Promise<boolean> {
+    public update(subsetname: string, md: {}, id: string = undefined,
+                  subsetnameAPI: string = undefined): Promise<boolean>
+    {
         let body: any;
         let updateWholeRecord: boolean = false;
         let fieldName = subsetname.split("-")[0];
@@ -219,33 +298,30 @@ export class MetadataUpdateService {
             updateWholeRecord = true;
         }
 
-        return new Promise<boolean>((resolve, reject) => {
-            // this.custsvc.updateMetadata(md, subsetname, id, subsetnameAPI).subscribe({
-            this.custsvc.updateMetadata(body, updateWholeRecord?undefined:fieldName, id, subsetnameAPI).subscribe({
-                next: (res) => {
-                    console.log("###DBG  Draft data returned from server:\n  ", res);
-                    
-                    this.stampUpdateDate();
-                    this.updateInMemoryRec(res, fieldName, id, updateWholeRecord);
-                    // this.mdres.next(this.currentRec);
-                    resolve(true);
-                },
-                error: (err) => {
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') {
-                        console.error("Failed to save metadata changes: user error:" + err.message);
-                        this.msgsvc.error(err.message);
-                    }
-                    else {
-                        console.error("Failed to save metadata changes: server/system error:" + err.message);
-                        this.msgsvc.syserror(err.message,
-                            "There was an problem while updating the " + subsetname + ". ");
-                    }
-                    resolve(false);
-                }
-            });
-        });
-        // }
+        let obs = 
+        if (updateWholeRecord) 
+            obs = this.custsvc.setData(body);
+        else if (id)
+            obs = this.custsvc.setDataItem(subsetname, id, body);
+        else
+            obs = this.custsvc.setDataSubset(subsetname, body);
+
+        return obs.pipe(
+            tap((data) => {
+                // console.log("###DBG  Draft data returned from server:\n  ", res);
+                this.stampUpdateDate();
+                this.updateInMemoryRec(data, fieldName, id, updateWholeRecord);
+                // this.mdres.next(this.currentRec);
+            }),
+            map<Object, boolean>((data) => {
+                return true;
+            }),
+            catchError((err) => {
+                console.error("Failed to save metadata changes: " + err.message)
+                this.msgsvc.error("Warning: there was a problem while updating " + subsetname);
+                return of(null);
+            })
+        ).toPromise();
     }
 
     /**
@@ -254,7 +330,9 @@ export class MetadataUpdateService {
      * @param subsetname - optional - subset name
      * @param id - optional - id of a subset item 
      */
-    public updateInMemoryRec(res: any, subsetname: string = undefined, id: string = undefined, updateWholeRecord: boolean = false) {
+    public updateInMemoryRec(res: any, subsetname: string = undefined, id: string = undefined,
+                             updateWholeRecord: boolean = false)
+    {
         if(updateWholeRecord){
             this.currentRec = res as NerdmRes;
         }else if(!subsetname) { // Update the whole record
@@ -285,44 +363,25 @@ export class MetadataUpdateService {
     }
     
     public add(md: any, subsetname: string = undefined, subsetnameAPI: string = undefined):Observable<Object> {
-        return new Observable<Object>(subscriber => {
-            this.custsvc.add(md, subsetname, subsetnameAPI).subscribe({
-                next: (res) => {
-                    let obj = res as Object[];
-                    this.currentRec[subsetname] = JSON.parse(JSON.stringify(res));
+        return this.custsvc.addDataItem(subsetnameAPI || subsetname, md).pipe(
+            tap((res) => {
+                if (! this.currentRec[subsetname])
+                    this.currentRec[subsetname] = [];
+                this.currentRec[subsetname].push(res);
 
-                    obj.forEach(sub => {
-                        let key = subsetname + sub['@id'];
-                        this.origfields[key] = {};
-                        this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
-                    })
-                    // let key = subsetname + obj['@id'];
-                    // this.origfields[key] = {};
-                    // this.origfields[key][subsetname] = JSON.parse(JSON.stringify(this.currentRec[subsetname]));
+                let key = subsetname + res['@id'];
+                this.origfields[key] = {
+                    subsetname: JSON.parse(JSON.stringify(this.currentRec[subsetname]));
+                };
 
-                    this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
-                    // resolve(true);
-                    subscriber.next(JSON.parse(JSON.stringify(this.currentRec[subsetname])));
-                    subscriber.complete();
-                },
-                error: (err) => {
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') {
-                        console.error("Failed to update metadata changes: user error:" + err.message);
-                        this.msgsvc.error(err.message)
-                    }
-                    else {
-                        console.error("Failed to update metadata changes: server/system error:" +
-                            err.message);
-                        this.msgsvc.syserror(err.message,
-                            "There was an problem while updating changes to the " + subsetname + ". ")
-                    }
-                    // resolve(false);
-                    subscriber.next(null);
-                    subscriber.complete();
-                }
-            });
-        });
+                this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+            }),
+            catchError((err) => {
+                console.error("Failed to add to "+subsetname+": " + err.message)
+                this.msgsvc.error("Warning: there was a problem while adding to " + subsetname);
+                return of(null);
+            })
+        );
     }
 
     /**
@@ -339,7 +398,10 @@ export class MetadataUpdateService {
      *             response allows the caller in charge of getting updates to have its UI react
      *             accordingly.
      */
-    public undo(subsetname: string, id: string = undefined, subsetnameAPI: string = undefined, originalValue: any = null) {
+    public undo(subsetname: string, id: string = undefined, subsetnameAPI: string = undefined,
+                originalValue: any = null)
+        : Promise<boolean>
+    {
         let updateWholeRecord: boolean = false;
         let key = id? subsetname + id : subsetname;
         let fieldName = subsetname.split("-")[0];
@@ -352,119 +414,72 @@ export class MetadataUpdateService {
             });
         }
 
-        // if there are no other updates registered, we will just request that the the draft be
-        // deleted on the server.  So is this the only update we have registered?
+        let postMsg: any = undefined;
+        if (id) {
+            if (this.originalDraftRec[fieldName]) {
+                let index = this.originalDraftRec[fieldName].findIndex(x => x["@id"] == id);
+                if(index >= 0) 
+                    postMsg = this.originalDraftRec[fieldName][index];
+            }
 
-        let finalUndo: boolean = true;
-        if(!id){
+            if (this.currentRec[fieldName]) {
+                let currentElementIndex = this.currentRec[fieldName].findIndex(x => x["@id"] == id);
+                if (this.originalDraftRec[fieldName]) {
+                    this.currentRec[fieldName][currentElementIndex] =
+                        JSON.parse(JSON.stringify(this.originalDraftRec[fieldName].find(x => x["@id"] == id)));
+                    postMsg = this.currentRec[fieldName][currentElementIndex];
+                }
+            }
+            // delete specific origfield
+            delete this.origfields[key];
+        }
+        else {
+            postMsg = originalValue;
+            if (!originalValue) 
+                postMsg this.originalDraftRec[fieldName];
+
+            if (postMsg)
+                this.currentRec[fieldName] = JSON.parse(JSON.stringify(postMsg));
+            else {
+                delete this.currentRec[fieldName];
+                postMsg = this.currentRec
+                updateWholeRecord = true
+            }
+
+            //Delete all origfields related to the subset
             Object.keys(this.origfields).forEach((fKey) => {
-                finalUndo = finalUndo && (fKey.indexOf(subsetname) >= 0);
+                if (fKey.includes(subsetname)) 
+                    delete this.origfields[fKey];
             })
-        }else{
-            finalUndo = Object.keys(this.origfields).length == 1 &&
-            this.origfields[key] !== undefined;
         }
 
-        if (finalUndo) {
-            // Last set to be undone; just delete the draft on the server
-            console.log("Last undo; discarding draft on server.");
-            this.origfields = {};
-            this.forgetUpdateDate();
-        }
+        if (postMsg) {
+            let obs = null;
+            if (updateWholeRecord)
+                obs = this.custsvc.setData(postMsg);
+            else if (id)
+                obs = this.custsvc.setDataItem(subsetnameAPI || fieldName, id, postMsg);
+            else
+                obs = this.custsvc.setDataSubset(subsetnameAPI || fieldName, postMsg);
 
-        // Other updates are still registered; just undo the specified one
-        return new Promise<boolean>((resolve, reject) => {
-            let postMsg: any;
-
-            // undo specific id
-            if(id){
-                if(this.originalDraftRec[fieldName]) {
-                    let index = this.originalDraftRec[fieldName].findIndex(x => x["@id"] == id);
-                    if(index >= 0) {
-                        postMsg = this.originalDraftRec[fieldName][index];
-                    }else {
-                        postMsg = undefined;
-                        // resolve(false);
-                    }
-                }else{
-                    postMsg = undefined;
-                }
-
-                // Locate the current rec because the index may not be the same as in original record
-                if(this.currentRec[fieldName]){
-                    let currentElementIndex = this.currentRec[fieldName].findIndex(x => x["@id"] == id);
-
-                    if(this.originalDraftRec[fieldName]){
-                        this.currentRec[fieldName][currentElementIndex] = JSON.parse(JSON.stringify(this.originalDraftRec[fieldName].find(x => x["@id"] == id)));
-
-                        postMsg = this.currentRec[fieldName][currentElementIndex];
-                    }else{ //Original record does not have reference, current ref was newly added
-                        postMsg = undefined;
-                    }                    
-                }else{
-                    postMsg = undefined;
-                }
-                // delete specific origfield
-                delete this.origfields[key];
-
-            }else {    // undo the whole subset
-                if(originalValue) {
-                    postMsg = originalValue;
-                }else {
-                    postMsg = this.originalDraftRec[fieldName];
-                }
-
-                if(postMsg){
-                    this.currentRec[fieldName] = JSON.parse(JSON.stringify(postMsg));
-                }else{
-                    delete this.currentRec[fieldName];
-                    postMsg = this.currentRec;
-
-                    updateWholeRecord = true;
-                }
-
-                //Delete all origfields related to the subset
-                Object.keys(this.origfields).forEach((fKey) => {
-                    if(fKey.includes(subsetname)) {
-                        delete this.origfields[fKey];
-                    }
+            return obs.pipe(
+                tap((res) => {
+                    this.stampUpdateDate();
+                    this.updateInMemoryRec(res, fieldName, id, updateWholeRecord);
+                    this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
+                }),
+                map((res) => { return true; })
+                catchError((err) => {
+                    console.error("Failed to undo metadata changes: " + err.message);
+                    this.msgsvc.syserror(err.message,
+                                         "There was a problem while undoing changes to the " +
+                                         subsetname + ". ");
+                    return of(false);
                 })
-            }
+            ).toPromise();
+        }
 
-            if(postMsg){
-                let body: any;
-                if(Array.isArray(postMsg) || typeof postMsg === 'string')
-                    body = postMsg
-                else
-                    body = JSON.stringify(postMsg);
-
-                this.custsvc.updateMetadata(body, updateWholeRecord?undefined:fieldName, id, subsetnameAPI).subscribe({
-                    next: (res) => {
-                        this.updateInMemoryRec(res, fieldName, id, updateWholeRecord);
-                        this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
-                        // this.mdres.next(res as NerdmRes);
-                        resolve(true);
-                    },
-                    error: (err) => {
-                        // err will be a subtype of CustomizationError
-                        if (err.type == 'user') {
-                            console.error("Failed to undo metadata changes: user error:" + err.message);
-                            this.msgsvc.error(err.message)
-                        }
-                        else {
-                            console.error("Failed to undo metadata changes: server/system error:" +
-                                err.message);
-                            this.msgsvc.syserror(err.message,
-                                "There was an problem while undoing changes to the " + subsetname + ". ")
-                        }
-                        resolve(false);
-                    }
-                });
-            }else{
-                resolve(true);
-            }
-        });
-        // }
+        return of(true).toPromise();
     }
 
     /**
@@ -489,7 +504,7 @@ export class MetadataUpdateService {
             newdate = new Date(mdrec._updateDetails[mdrec._updateDetails.length - 1]._updateDate);
 
             this.lastUpdate = {
-                'userAttributes': this.authsvc.userAttributes,
+                'userAttributes': (this.creds) ? this.creds.userAttributes : {},
                 '_updateDate': newdate.toLocaleString()
             }
         } else {
@@ -571,38 +586,32 @@ export class MetadataUpdateService {
      * @param onSuccess - optional - callback function
      * @returns subset or particular item of the subset
      */
-    public loadSavedSubsetFromServer(subsetname: string, id: string = undefined, onSuccess?: () => void): Observable<Object> {
-        return new Observable<Object>(subscriber => {
-            if (!this.custsvc) {
-                console.error("Attempted to update without authorization!  Ignoring update.");
-                return;
-            }
-            this.custsvc.getSubset(subsetname, id).subscribe({
-                next:(res) => {
-                    subscriber.next(res);
-                    subscriber.complete();
-                    if (onSuccess) onSuccess(); 
-                },
-                error:(err) => {
-                    console.error("err", err);
-                    
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') 
-                    {
-                        console.error("Failed to retrieve draft metadata changes: user error:" + err.message);
-                        this.msgsvc.error(err.message);
-                    }
-                    else 
-                    {
-                        console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
-                        this.msgsvc.syserror(err.message);
-                    }
+    public loadSavedSubsetFromServer(subsetname: string, id: string = undefined,
+                                     onSuccess?: () => void)
+        : Observable<Object>
+    {
+        if (!this.custsvc) {
+            console.error("Attempted to update without authorization!  Ignoring update.");
+            return of({});
+        }
 
-                    subscriber.next(null);
-                    subscriber.complete();
-                }
+        let obs = null;
+        if (id)
+            obs = this.custsvc.getDataItem(subsetname, id);
+        else
+            obs = this.custsvc.getDataSubset(subsetname)
+
+        return obs.pipe(
+            tap((res) => {
+                if (onSuccess) onSuccess();
+            }),
+            catchError((err) => {
+                // console.error("err", err);
+                console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
+                this.msgsvc.syserror(err.message);
+                return of(null);
             })
-        });
+        );
     }
 
     /**
@@ -612,61 +621,47 @@ export class MetadataUpdateService {
      * to the controller for display to the user.  
      */
     public loadDraft(dataOnly: boolean = false, onSuccess?: () => void): Observable<Object> {
-        return new Observable<Object>(subscriber => {
-            if (!this.custsvc) {
-                console.error("Attempted to update without authorization!  Ignoring update.");
-                return;
-            }
-            this.custsvc.getDraftMetadata(dataOnly).subscribe({
-                next: (res) => {
-                    if(res) {
-                        if(!dataOnly){
-                            this.originalDraftRec = JSON.parse(JSON.stringify(res));
-                            this.currentRec = JSON.parse(JSON.stringify(res));
-                        }else{
-                            console.log("Load data only...")
-                            if(res["components"]) {
-                                this.originalDraftRec["components"] = JSON.parse(JSON.stringify(res["components"]));
-                                this.currentRec["components"] = JSON.parse(JSON.stringify(res["components"]));
-                            }
+        if (!this.custsvc) {
+            console.error("Attempted to update without authorization!  Ignoring update.");
+            return of({});
+        }
+        return this.custsvc.getData().pipe(
+            tap((res) => {
+                if(res) {
+                    if(!dataOnly){
+                        this.originalDraftRec = JSON.parse(JSON.stringify(res));
+                        this.currentRec = JSON.parse(JSON.stringify(res));
+                    }else{
+                        console.log("Load data only...")
+                        if(res["components"]) {
+                            this.originalDraftRec["components"] =
+                                JSON.parse(JSON.stringify(res["components"]));
+                            this.currentRec["components"] = JSON.parse(JSON.stringify(res["components"]));
                         }
-                    }else {
-                        this.originalDraftRec = {} as NerdmRes;
-                        this.currentRec = {} as NerdmRes;
                     }
-
-                    this.mdres.next(this.currentRec as NerdmRes);
-                    subscriber.next(this.currentRec as NerdmRes);
-                    subscriber.complete();
-                    if (onSuccess) onSuccess();
-                },
-                error: (err) => {
-                  console.error("err", err);
-                  this.edstatsvc.setShowLPContent(true);
-                  
-                  if(err.statusCode == 404)
-                  {
-                    this.resetOriginal();
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
-                  }else{
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') 
-                    {
-                        console.error("Failed to retrieve draft metadata changes: user error:" + err.message);
-                        this.msgsvc.error(err.message);
-                    }
-                    else 
-                    {
-                        console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
-                        this.msgsvc.syserror(err.message);
-                    }
-                  }
-
-                  subscriber.next(null);
-                  subscriber.complete();
+                }else {
+                    this.originalDraftRec = {} as NerdmRes;
+                    this.currentRec = {} as NerdmRes;
                 }
-            });
-        });
+
+                this.mdres.next(this.currentRec as NerdmRes);
+                if (onSuccess) onSuccess();
+            }),
+            catchError((err) => {
+                console.error("err", err);
+                this.edstatsvc.setShowLPContent(true);
+                  
+                if (err instanceof daperrs.IDNotFound) {
+                    this.resetMetadata();
+                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                }
+                else {
+                    console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
+                    this.msgsvc.syserror(err.message);
+                }
+                return of(null);
+            })
+        );
     }
 
     /**
@@ -675,59 +670,40 @@ export class MetadataUpdateService {
      * @returns DBIO object
      */
     public loadDBIOrecord(onSuccess?: () => void): Observable<Object> {
-        return new Observable<Object>(subscriber => {
-            if (!this.custsvc) {
-                console.error("Attempted to fetch without authorization!  Ignoring...");
-                return;
-            }
-
-            this.custsvc.getDBIOrecord().subscribe({
-                next: (res) => {
-                    this._dbioRecord = res as DBIOrecord;
-                    if(this._dbioRecord && this._dbioRecord.file_space && this._dbioRecord.file_space.location){
-                        this.setFileManagerUrl(this._dbioRecord.file_space.location)
-                    }
-
-                    subscriber.next(res as DBIOrecord);
-                    subscriber.complete();
-                    if (onSuccess) onSuccess();
-                },
-                error: (err) => {
-                  console.error("err", err);
-                  this.edstatsvc.setShowLPContent(true);
-                  
-                  if(err.statusCode == 404)
-                  {
-                    this.msgsvc.error(err.message);
-                  }else{
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') 
-                    {
-                        console.error("Failed to retrieve DBIO record: user error:" + err.message);
-                        this.msgsvc.error(err.message);
-                    }
-                    else 
-                    {
-                        console.error("Failed to retrieve DBIO record: server error:" + err.message);
-                        this.msgsvc.syserror(err.message);
-                    }
-                  }
-
-                  subscriber.next(null);
-                  subscriber.complete();
+        if (!this.custsvc) {
+            console.error("Attempted to update without authorization!  Ignoring update.");
+            return of({});
+        }
+        return this.dapsvc.getRec(this.custsvc.recid).pipe(
+            tap((res) => {
+                this._dbioRecord = res as DBIOrecord;
+                if(this._dbioRecord && this._dbioRecord.file_space && this._dbioRecord.file_space.location){
+                    this.setFileManagerUrl(this._dbioRecord.file_space.location)
                 }
+
+                if (onSuccess) onSuccess();
+            }),
+            catchError((err) => {
+                console.error("err", err);
+                this.edstatsvc.setShowLPContent(true);
+                  
+                if (err instanceof daperrs.IDNotFound) {
+                    this.msgsvc.error(err.message);
+                }
+                else {
+                    console.error("Failed to retrieve DBIO record: server error:" + err.message);
+                    this.msgsvc.syserror(err.message);
+                }
+                return of(null);
             });
-        });
+        );
     }
 
     /**
      * record the current date/time as the last time this data was updated.
      */
     public stampUpdateDate(): UpdateDetails {
-        this.lastUpdate = {
-            'userAttributes': this.authsvc.userAttributes,
-            '_updateDate': this.datePipe.transform(new Date(), "MMM d, y, h:mm:ss a")
-        }
+        this.lastUpdate._updateDate = this.datePipe.transform(new Date(), "MMM d, y, h:mm:ss a")
         return this.lastUpdate;
     }
 
@@ -788,127 +764,62 @@ export class MetadataUpdateService {
     /**
      * load files from the file manager.
      */
-     public loadDataFiles(onSuccess?: () => void): Observable<Object> {
-        return new Observable<Object>(subscriber => {
-            if (!this.custsvc) {
-                console.error("Attempted to update without authorization!  Ignoring update.");
-                return;
-            }
-            this.custsvc.getDataFiles().subscribe({
-                next: (res) => {
-                  subscriber.next(res as NerdmComp[]);
-                  subscriber.complete();
-                  if (onSuccess) onSuccess();
-                },
-                error: (err) => {
-                  console.error("err", err);
-                  
-                  if(err.statusCode == 404)
-                  {
-                    // handle 404
-                  }else{
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') 
-                    {
-                        console.error("Failed to retrieve data files: user error:" + err.message);
-                        this.msgsvc.error(err.message);
-                    }
-                    else 
-                    {
-                        console.error("Failed to retrieve data files: server error:" + err.message);
-                        this.msgsvc.syserror(err.message);
-                    }
-                  }
-
-                  subscriber.next(null);
-                  subscriber.complete();
+    public loadDataFiles(onSuccess?: () => void): Observable<Object> {
+        if (!this.custsvc) {
+            console.error("Attempted to update without authorization!  Ignoring update.");
+            return of({});
+        }
+        return this.custsvc.getDataSubset("pdr:files").pipe(
+            tap((res) => {
+                if (onSuccess) onSuccess();
+            }),
+            catchError((err) => {
+                console.error("err", err);
+                 
+                if (err instanceof daperrs.IDNotFound) {
+                    this.msgsvc.error(err.message);
                 }
+                else {
+                    console.error("Failed to retrieve data files: server error:" + err.message);
+                    this.msgsvc.syserror(err.message);
+                }
+                return of(null);
             });
-        });
+        );
     }   
     
     /**
      * load metadata from the server.
      */
     public loadMetaData(): Observable<Object> {
-        return new Observable<Object>(subscriber => {
-            if (!this.custsvc) {
-                console.error("Attempted to update without authorization!  Ignoring update.");
-                return;
-            }
-            this.custsvc.getMidasMeta().subscribe({
-                next: (res) => {
-                    subscriber.next(res);
-                    subscriber.complete();
-                },
-                error: (err) => {
-                  console.error("err", err);
-                  
-                  if(err.statusCode == 404)
-                  {
-                    // handle 404
-                  }else{
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') 
-                    {
-                        console.error("Failed to retrieve metadata: user error:" + err.message);
-                        this.msgsvc.error(err.message);
-                    }
-                    else 
-                    {
-                        console.error("Failed to retrieve metadata: server error:" + err.message);
-                        this.msgsvc.syserror(err.message);
-                    }
-                  }
-
-                  subscriber.next(null);
-                  subscriber.complete();
-                }
-            });
-        });
+        if (!this.custsvc) {
+            console.error("Attempted to update without authorization!  Ignoring update.");
+            return of({});
+        }
+        return of(this.custsvc.getMeta());
     }      
 
     /**
      * Validate the status from backend
      */
     public validate(): Observable<Object> {
-        return new Observable<Object>(subscriber => {
-            if (!this.custsvc) {
-                console.error("Attempted to validate without authorization!  Ignoring validate.");
-                return;
-            }
-            this.custsvc.validate().subscribe({
-                next: (res) => {
-                    subscriber.next(res);
-                    subscriber.complete();
-                },
-                error: (err) => {
-                  console.error("err", err);
-                  
-                  if(err.statusCode == 404)
-                  {
-                    // handle 404
-                  }else{
-                    // err will be a subtype of CustomizationError
-                    if (err.type == 'user') 
-                    {
-                        console.error("Failed to validate: user error:" + err.message);
-                        this.msgsvc.error(err.message);
-                    }
-                    else 
-                    {
-                        console.error("Failed to validate: server error:" + err.message);
-                        this.msgsvc.syserror(err.message);
-                    }
-                  }
-
-                  subscriber.next(null);
-                  subscriber.complete();
-                }
+        if (!this.custsvc) {
+            console.error("Attempted to update without authorization!  Ignoring validate.");
+            return of({});
+        }
+        return this.custsvc.validate().pipe(
+            catchError((err) => {
+                console.error("err", err);
+                console.error("Failed to validate: server error:" + err.message);
+                this.msgsvc.syserror(err.message);
+                return of(null);
             });
-        });
+        );
     }      
 
+    /*
+     * NOT USED
+     *
     public getEnvelop(): Observable<Object> {
         return new Observable<Object>(subscriber => {
             if (!this.custsvc) {
@@ -946,4 +857,5 @@ export class MetadataUpdateService {
             });
         });
     }      
+     */
 }

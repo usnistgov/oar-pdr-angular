@@ -6,8 +6,9 @@
         "outDir": "../../out-tsc/spec",
         "types": [
         "jest", 
-        "node"
-        ]
+            "node"
+        ],
+        "target": "es2022"
     },
     "files": [
     ],
