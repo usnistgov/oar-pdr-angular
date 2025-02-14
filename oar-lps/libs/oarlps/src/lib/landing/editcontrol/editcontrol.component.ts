@@ -8,8 +8,9 @@ import { MessageBarComponent } from '../../frame/messagebar.component';
 import { EditStatusComponent } from './editstatus.component';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { EditStatusService } from './editstatus.service';
-import { AuthService, WebAuthService } from './auth.service';
-import { CustomizationService } from './customization.service';
+// import { AuthService, WebAuthService } from './auth.service';
+// import { CustomizationService } from './customization.service';
+import { AuthenticationService } from 'oarng';
 import { NerdmRes } from '../../nerdm/nerdm'
 import { AppConfig } from '../../config/config';
 import { OverlayPanel } from 'primeng/overlaypanel';
@@ -101,14 +102,15 @@ export class EditControlComponent implements OnInit, OnChanges {
      *                           message bar
      */
     public constructor(private mdupdsvc: MetadataUpdateService,
-        public edstatsvc: EditStatusService,
-        private authsvc: AuthService,
-        private confirmDialogSvc: ConfirmationDialogService,
-        private cfg: AppConfig,
-        public lpService: LandingpageService, 
-        private modalService: NgbModal,
-        public globalService: GlobalService,
-        private msgsvc: UserMessageService) {
+                       public edstatsvc: EditStatusService,
+                       private authsvc: AuthenticationService,
+                       private confirmDialogSvc: ConfirmationDialogService,
+                       private cfg: AppConfig,
+                       public lpService: LandingpageService, 
+                       private modalService: NgbModal,
+                       public globalService: GlobalService,
+                       private msgsvc: UserMessageService)
+    {
 
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
@@ -189,6 +191,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges() {
+        /**********
         if (this.mdrec instanceof Object && Object.keys(this.mdrec) && Object.keys(this.mdrec).length > 0) {
             if (!this.resID)
                 this._resid = this.mdrec['ediid'];
@@ -198,6 +201,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                 // this.mdupdsvc.setOriginalMetadata(this.originalRecord)
             }
         }
+        */
     }
 
     loadBannerUrl() {
@@ -375,6 +379,46 @@ export class EditControlComponent implements OnInit, OnChanges {
      *                  the app will remain with editing turned off if the user is not logged in.  
      */
     public startEditing(nologin: boolean = false): void {
+        if(! this.inBrowser)
+            return;
+
+        if (this._editMode == this.EDIT_MODES.EDIT_MODE) {
+            this.edstatsvc.setShowLPContent(true);
+            return;
+        }
+
+        this.mdupdservice.startEditing(this.resID).subscribe(
+            (authorized) => {
+                if (authorized) {
+                    // User authorized
+                    console.log("Loading draft...");
+                    this.statusbar.showMessage("Loading draft...", true)
+                    // this.globalService.setMessage("Loading draft...");
+                    this.edstatsvc.setShowLPContent(true);
+                    this._setEditMode(this.EDIT_MODES.EDIT_MODE);
+                }
+                else {
+                    // not authorized; switch to preview mode
+                    this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this.statusbar.showMessage("You are not authorized to edit this record");
+                }
+            },
+            (err) => {
+                console.error("Failed to start editing "+this.resID+": "+err.message);
+                this.statusbar.showMessage("Failure loading for editing: "+err.message, true)
+            }
+        );
+    }
+
+    /**
+     * start (or resume) editing of the resource metadata.  Calling this will cause editing widgets to 
+     * appear on the landing page, allowing the user to edit various fields.
+     * 
+     * @param nologin   if false (default) and the user is not logged in, the browser will be redirected 
+     *                  to the authentication service.  If true, redirection will not occur; instead, 
+     *                  the app will remain with editing turned off if the user is not logged in.  
+     */
+    public startEditing(nologin: boolean = false): void {
       if(this.inBrowser){
         var _mdrec = this.mdrec;
         if (this._custsvc) {
@@ -429,7 +473,6 @@ export class EditControlComponent implements OnInit, OnChanges {
                 // this.globalService.setMessage("Authentication failed.");
             }
         );
-      }
     }
 
     /**

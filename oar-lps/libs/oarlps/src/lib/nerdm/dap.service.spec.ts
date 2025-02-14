@@ -235,7 +235,7 @@ describe("MIDASDAPService/MIDASDAPUpdateService", function() {
         });
         let webcli: HttpClient = TestBed.inject(HttpClient);
         httpmock = TestBed.inject(HttpTestingController);
-        svc = new dapsvc.MIDASDAPService(ep, webcli, "XXX");
+        svc = (new dapsvc.MIDASDAPService(webcli)).withEndpoint(ep);
     });
 
     afterEach(() => {

@@ -5,7 +5,8 @@ import { HttpClient, HttpResponse, HttpErrorResponse } from '@angular/common/htt
 import { NERDmResourceService, SupportsAuthentication } from './nerdm.service';
 import * as errors from '../errors/error';
 import { AnyObj, Credentials } from 'oarng';
-import { NerdmRes } from 'oarlps';
+import { NerdmRes } from './nerdm';
+import { IEnvironment } from '../../environments/ienvironment';
 
 /**
  * An interface that defines the minimum data needed to create a new DAP record
@@ -74,6 +75,15 @@ export abstract class DAPUpdateService {
     get name() : string { return this._rec.name; }
 
     /**
+     * return true if the current user has write-access to the current record.  
+     */
+    canEdit() : Observable<boolean> {
+        if (this._rec['userPerms'])
+            return this._rec['userPerms'].findIndex((el) => el == "write") >= 0;
+        return true;
+    }
+
+    /**
      * return the full DAP record that includes the DBIO envelope (containing record name, ACLs,
      * etc.)  The state of this record should correspond with the last successful interaction with 
      * the service.  Note that the data property will not contain the full NERDm metadata, but rather a 
@@ -95,6 +105,11 @@ export abstract class DAPUpdateService {
      * return the complete NERDm data 
      */
     abstract getData() : Observable<NerdmRes>;
+
+    /** 
+     * replace the entire NERDm record with the given data
+     */
+    abstract setData(val: Object) : Observable<NerdmRes>;
 
     /**
      * return a particular property of the NERDm record data
@@ -121,6 +136,11 @@ export abstract class DAPUpdateService {
     abstract addDataItem(propname: string, item: Object) : Observable<Object>;
 
     /**
+     * return the one item from a data property list (e.g. an author from the authors list)
+     */
+    abstract getDataItem(propname: string, key: string|number) : Observable<Object>;
+
+    /**
      * replace an item in the identified list of items (e.g. replacing author data within the authors list).
      */
     abstract setDataItem(propname: string, key: string|number, item: Object) : Observable<Object>;
@@ -138,6 +158,11 @@ export abstract class DAPUpdateService {
      * @return string -- the name that was set
      */
     abstract setName(newname: string) : Observable<string>;
+
+    /**
+     * review and validate the status of the record and return recommendations
+     */
+    abstract validate() : Observable<Object>;
 }
 
 /**
@@ -176,6 +201,12 @@ export abstract class DAPService extends NERDmResourceService {
      * if the user does not have delete permission.  
      */
     abstract deleteRec(id : string) : Observable<boolean>;
+
+    /**
+     * return the DBIO record with the given ID.  Note for DAP records, the data property will 
+     * not be complete but rather will be a summary.
+     */
+    abstract getRec(id : string) : Observable<Object>; 
 }
 
 /**
@@ -185,18 +216,51 @@ export abstract class DAPService extends NERDmResourceService {
 export class MIDASDAPService extends DAPService implements SupportsAuthentication  {
 
     authToken: string|null = null;
+    protected _ep: string|null = null;
 
     /**
      * initialize the service with the DAP service endpoint
      */
-    constructor(private endpoint : string,
-                private webclient : HttpClient,
+    constructor(private webclient : HttpClient,
+                private configSvc?: AppConfig,
                 authToken : string|null = null)
     {
         super();
         this.authToken = authToken;
-        if (! this.endpoint.endsWith('/'))
-            this.endpoint += '/';
+    }
+
+    /**
+     * the endpoint URL for the customization web service 
+     */
+    get endpoint(): string {
+        if (! this._ep && this.configSvc) {
+            const ep: string = this.configSvc.get<string>("dapEditing.serviceEndpoint", "/midas/dap/def");
+            if (! ep)
+                // perhaps configuration has not been resolved yet?
+                throw new Error("Incomplete DAP service configuration: missing 'serviceEndpoint'");
+            this.withEndpoint(ep);
+        }
+        return this._ep;
+    }
+
+    /**
+     * set the DAP service endpoint URL.  This will override anything from the configuration service.
+     * As it returns this DAPService instance, it is intended for setting the endpoint at construction 
+     * time without the need for a AppConfig instance (e.g. in a unit test) like this:
+     * ```
+     *    svc = (new MIDASDAPService(httpClient)).withEndpoint(ep);
+     * ```
+     */
+    withEndpoint(dapurl: string) : MIDASDAPService {
+        this._ep = dapurl;
+        if (! this._ep.endsWith('/'))
+            this._ep += '/';
+        return this;
+    }
+
+    withToken(token: string) : MIDASDAPService {
+        this.authToken = token;
+        return this;
     }
 
     /**
@@ -326,6 +390,18 @@ export class MIDASDAPService extends DAPService implements SupportsAuthenticatio
         ) as Observable<DAPUpdateService>;
     }
 
+    /**
+     * return the DAP record with its DBIO envelope having the given identifier.
+     */
+    getRec(id : string) : Observable<DAPUpdateService> {
+        const url = this.endpoint + id;
+        const hdrs = _headersFor(this, "get");
+
+        return this.webclient.get(url, {headers: hdrs}).pipe(
+            catchError(err => { return _handleWebError(err, id, url, "access", "DAP record"); })
+        ) as Observable<DAPUpdateService>;
+    }
+
 }
 
 function _headersFor(svc: SupportsAuthentication, meth: string) {
@@ -366,7 +442,7 @@ function _handleWebError(error, id: string|null, url: string, opverb: string, ep
 }
 
 /**
- * an interface for editing a particular DAP record
+ * a DAPUpdateService that pushes changes to a DAP record to a remote MIDAS web service
  */
 export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsAuthentication {
 
@@ -423,6 +499,13 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
         ) as Observable<Object>;
     }
 
+    /** 
+     * replace the entire NERDm record with the given data
+     */
+    setData(val: Object) : Observable<NerdmRes> {
+        return this._updateWithMethod("PUT", null, val);
+    }
+
     /**
      * replace some property of the NERDm record data with the given value
      */
@@ -434,7 +517,10 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
                                 val: Object, key?: string|number)
         : Observable<Object>
     {
-        let ep = "/data/" + propname;
+        let ep = "/data"
+        if (propname)
+            ep += "/"+propname
+
         if (typeof key == 'number')
             key = "["+key+"]";
         if (key) 
@@ -463,6 +549,31 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
      */
     updateDataSubset(propname: string, val: Object) : Observable<Object> {
         return this._updateWithMethod("PATCH", propname, val);        
+    }
+
+    /**
+     * return the one item from a data property list (e.g. an author from the authors list)
+     */
+    getDataItem(propname: string, key: string|number) : Observable<Object> {
+        let ep = "/data/" + propname
+
+        if (typeof key == 'number')
+            key = "["+key+"]";
+        if (key) 
+            ep += "/"+key;
+        const url = this.endpoint + this.recid + ep;
+        const hdrs = _headersFor(this, "get");
+
+        return this.webclient.get(url, {headers: hdrs}).pipe(
+            catchError(err => {
+                if (err.status && err.status == 404) {
+                    if (err.message.includes("ID not found"))
+                        throw new errors.IDNotFound(this.recid);
+                    throw new errors.PartNotFound(this.recid, ep);
+                }
+                return this._handleWebError(err, url, "access", ep);
+            })
+        ) as Observable<Object>;
     }
 
     /**
@@ -512,6 +623,20 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
             tap<string>(name => { this._rec.name = name; }),
             catchError(err => { return this._handleWebError(err, url, "change name", "/name"); })
         ) as Observable<string>;
+    }
+
+    /**
+     * review and validate the status of the record and return recommendations
+     */
+    validate(message : string = "") : Observable<Object> {
+        const url = this.endpoint + this.recid + "/status";
+        const hdrs = _headersFor(this, "put");
+        let body = {
+            "action": "validate"
+        };
+        if (message) body["message"] = message; 
+
+        return this.webclient.put(url, body, {headers: hdrs, responseType: "json"});
     }
 }
 
@@ -658,6 +783,17 @@ export class LocalDAPService extends DAPService {
         return of(new LocalStoreDAPUpdateService(id, this.store));
     }
 
+
+    /**
+     * return the DAP record with its DBIO envelope having the given identifier.
+     */
+    getRec(id : string) : Observable<DAPUpdateService> {
+        let rec: DAPRecord = JSON.parse(this.store.getItem(id));
+        if (! rec)
+            return throwError(new errors.IDNotFound(id));
+        return of(rec);
+    }    
+
     /**
      * retrieve the metadata associated with the current identifier.
      * 
@@ -672,6 +808,9 @@ export class LocalDAPService extends DAPService {
     }
 }
 
+/**
+ * a DAPUpdateService that pushes its updates to local browser storage for testing purposes
+ */
 export class LocalStoreDAPUpdateService extends DAPUpdateService {
 
     public constructor(recid: string, public store: Storage) {
@@ -769,6 +908,24 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
         
         this._saveRec(this._rec);
         return of(obj[props[0]]);
+    }
+
+    /**
+     * return the one item from a data property list (e.g. an author from the authors list)
+     */
+    getDataItem(propname: string, key: string|number) : Observable<Object> {
+        return this.getDataSubset(propname).pipe(
+            map((data) => {
+                if (! Array.isArray(data))
+                    throw new errors.PartNotFound(this.recid, propname+"/"+key);
+                if (typeof key === 'number')
+                    return data[key];
+                let out = data.find(el => el["@id"] == key);
+                if (! out)
+                    throw new errors.PartNotFound(this.recid, propname+"/"+key);
+                return out;
+            })
+        );
     }
 
     /**
@@ -901,4 +1058,23 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
         this._saveRec(this._rec);
         return of(this._rec.name);
     }
+}
+
+/**
+ * a factory function for instantiating a DAPService.  
+ */
+export function createDAPService(ngenv: IEnvironment,
+                                 httpClient?: HttpClient,
+                                 cfgsvc?: AppConfig)
+{
+    let svc : DAPService|null = null;
+    if (ngenv.context['useMIDASDAPService']) {
+        if (! httpClient)
+            throw new errors.OARError("Unable to instantiate MIDASDAPService: HttpClient not available");
+        svc = new MIDASDAPService(httpClient, cfgsvc)
+    }
+    else
+        svc = new LocalDAPService();
+
+    return svc;
 }

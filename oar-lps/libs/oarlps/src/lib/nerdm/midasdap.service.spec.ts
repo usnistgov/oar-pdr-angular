@@ -52,7 +52,7 @@ describeif(process.env.OAR_MIDAS_URL && process.env.OAR_MIDAS_DIR)("MIDASDAPServ
             imports: [ HttpClientModule ]
         });
         let webcli: HttpClient = TestBed.inject(HttpClient);
-        svc = new dapsvc.MIDASDAPService(dapep, webcli, token);
+        svc = (new dapsvc.MIDASDAPService(webcli)).withEndpoint(dapep).withToken(token);
     });
 
     afterEach(async () => {

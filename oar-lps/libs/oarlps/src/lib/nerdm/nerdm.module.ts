@@ -3,7 +3,7 @@ import { isPlatformServer } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import * as proc from 'process';
 
-import { MetadataService, createMetadataService } from './nerdm.service'
+import { NERDmResourceService, createResourceService } from './nerdm.service'
 import { MetadataTransfer } from './nerdm';
 import { AppConfig } from '../config/config.service';
 import { IEnvironment } from '../../environments/ienvironment';
@@ -37,7 +37,7 @@ export function getMetadataEndpoint(platid : Object, config : AppConfig) : strin
           deps: [ PLATFORM_ID, AppConfig ] },
 
         // The metadata service
-        { provide: MetadataService, useFactory: createMetadataService,
+        { provide: NERDmResourceService, useFactory: createResourceService,
           deps: [ environment, PLATFORM_ID, PDR_METADATA_SVCEP, HttpClient, MetadataTransfer ] },
     ],
     exports: [ ]
