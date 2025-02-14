@@ -1,8 +1,8 @@
-import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, ViewChild, ElementRef, effect } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, effect } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Themes, ThemesPrefs, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { trigger, style, animate, transition } from '@angular/animations';
+import { Themes, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';

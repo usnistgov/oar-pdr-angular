@@ -2,7 +2,7 @@ import { Component, Input, SimpleChanges, ChangeDetectorRef } from '@angular/cor
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { ContactService } from '../contact.service';
 import { Contact } from '../contact';
-import { LandingpageService, HelpTopic } from '../../landingpage.service';
+import { LandingpageService } from '../../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';

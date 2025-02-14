@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, inject } from '@angular/core';
 import { SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { DescEditComponent } from './desc-edit/desc-edit.component';

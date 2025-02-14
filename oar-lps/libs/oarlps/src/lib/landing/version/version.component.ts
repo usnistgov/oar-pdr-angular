@@ -1,10 +1,8 @@
 import { Component, OnChanges, Input } from '@angular/core';
-
-// import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../collapseDirective/collapse.module';
@@ -53,11 +51,7 @@ export class VersionComponent implements OnChanges {
      * @param cfg   the app configuration data
      */
     constructor(public editstatsvc: EditStatusService,
-                public lpService: LandingpageService) 
-    {
-        // this.lpssvc = this.cfg.get('links.landingPageService',
-        //                            'https://data.nist.gov/od/id/');
-    }
+                public lpService: LandingpageService) { }
 
     ngOnInit(): void {
         // Watch current edit mode set by edit controls

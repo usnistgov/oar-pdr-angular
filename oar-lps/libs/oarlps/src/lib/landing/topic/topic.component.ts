@@ -1,15 +1,14 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, ChangeDetectorRef, inject, effect } from '@angular/core';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Component, OnInit, Input, ElementRef, SimpleChanges, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { NerdmRes } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
-import { EditStatusService } from '../editcontrol/editstatus.service';
 import { TopicEditComponent } from './topic-edit/topic-edit.component';
 
 @Component({
@@ -68,28 +67,22 @@ export class TopicComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     constructor(public mdupdsvc: MetadataUpdateService,
-                private ngbModal: NgbModal,
                 private cfg: AppConfig,
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService, 
                 public collectionService: CollectionService,
                 private notificationService: NotificationService)
     {
-            this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
+        this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
 
-            this.collectionOrder = this.collectionService.getCollectionForDisplay();
-            this.allCollections = this.collectionService.loadAllCollections();
+        this.collectionOrder = this.collectionService.getCollectionForDisplay();
+        this.allCollections = this.collectionService.loadAllCollections();
 
-            this.globalsvc.watchCollection((collection) => {
-                this.collection = collection;
-            });    
+        this.globalsvc.watchCollection((collection) => {
+            this.collection = collection;
+        });    
     }
 
-    /**
-     * a field indicating if this data has beed edited
-     */
-    // get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
-    
     updated(collection: string = Collections.DEFAULT) { 
         return this.mdupdsvc.fieldUpdated(this.fieldName + "-" + collection); 
     }
@@ -97,17 +90,6 @@ export class TopicComponent implements OnInit {
     get isEditing() { return this.editMode==MODE.EDIT }
 
     get isNormal() { return this.editMode==MODE.NORMAL }
-    /**
-     * a field indicating whether there is no topic.  
-     */
-    get isEmpty() {
-        return false;
-        // if(this.recordType == "Science Theme"){
-        //     return this.scienceThemeTopics.length <= 0 && this.selectedTopics.length <= 0;
-        // }else{
-        //     return this.selectedTopics.length <= 0;
-        // }
-    }
 
     get topicWidth() {
         if(this.isEditing){

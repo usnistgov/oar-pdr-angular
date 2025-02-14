@@ -12,13 +12,11 @@ import { EditStatusService } from '../../landing/editcontrol/editstatus.service'
 import { LandingConstants } from '../../landing/constants';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { AppSettings } from '../../shared/globals/globals';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../shared/notification-service/notification.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections } from '../../shared/globals/globals';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { SectionPrefs, Sections } from '../../shared/globals/globals';
+import { LandingpageService } from '../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { DBIOrecord } from '../editcontrol/interfaces';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';

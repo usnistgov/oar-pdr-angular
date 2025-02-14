@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, effect, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, effect, ChangeDetectorRef } from '@angular/core';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
@@ -26,11 +26,10 @@ export class TitleComponent implements OnInit {
 
     fieldName: string = SectionPrefs.getFieldName(Sections.TITLE);
 
-    constructor(
-        public edstatsvc: EditStatusService,
-        private chref: ChangeDetectorRef,
-        public globalsvc: GlobalService ) {
-
+    constructor(public edstatsvc: EditStatusService,
+                private chref: ChangeDetectorRef,
+                public globalsvc: GlobalService ) 
+    {
         effect(() => {
             const term = this.edstatsvc.isEditMode();
             this.chref.detectChanges();

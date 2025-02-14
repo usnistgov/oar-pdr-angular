@@ -25,9 +25,6 @@ export class MetricsinfoComponent implements OnInit {
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;
 
-    // Record level metrics data
-    // @Input() recordLevelMetrics : RecordLevelMetrics|null = new RecordLevelMetrics();
-
     @Input() inBrowser: boolean = false;
 
     // Record level metrics data

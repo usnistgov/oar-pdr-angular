@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ViewChild, effect, ChangeDetectorRef, inject } from '@angular/core';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, SimpleChanges, ViewChild, effect, ChangeDetectorRef, inject } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
-import { Themes, ThemesPrefs, AppSettings } from '../../../shared/globals/globals';
+import { Themes } from '../../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
@@ -41,7 +41,6 @@ export class VisithomeMidasComponent {
 
     fieldName = SectionPrefs.getFieldName(Sections.VISIT_HOME_PAGE);
     scienceTheme = Themes.SCIENCE_THEME;
-    // backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
     editMode: string = MODE.NORMAL; 
     visitHomeURL: string = "";
     dataChanged: boolean = false;
@@ -53,46 +52,26 @@ export class VisithomeMidasComponent {
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
     
-    constructor(
-        public mdupdsvc : MetadataUpdateService,
-        public edstatsvc: EditStatusService,        
-        public lpService: LandingpageService, 
-        private chref: ChangeDetectorRef,
-        private notificationService: NotificationService,
-        private gaService: GoogleAnalyticsService) { 
-
-            // this.lpService.watchEditing((sectionMode: SectionMode) => {
-            //     if(sectionMode){
-            //         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-            //             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-            //                 if(this.isEditing && this.dataChanged){
-            //                     this.saveVisitHomeURL(false); // Do not refresh help text 
-            //                 }
-            //                 this.setMode(MODE.NORMAL,false);
-            //             }
-            //         }else{
-            //             if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
-            //                 this.startEditing();
-            //             }
-            //         }
-            //     }
-            // })
-
-            effect(() => {
-                // When edit mode changed, refresh the screen
-                // Need to tell effect which signal trigger this function
-                const term = this.edstatsvc.isEditMode(); 
-                // Then refresh the screen
-                this.chref.detectChanges();
-            });
+    constructor(public mdupdsvc : MetadataUpdateService,
+                public edstatsvc: EditStatusService,        
+                public lpService: LandingpageService, 
+                private chref: ChangeDetectorRef,
+                private notificationService: NotificationService,
+                private gaService: GoogleAnalyticsService) 
+    { 
+        effect(() => {
+            // When edit mode changed, refresh the screen
+            // Need to tell effect which signal trigger this function
+            const term = this.edstatsvc.isEditMode(); 
+            // Then refresh the screen
+            this.chref.detectChanges();
+        });
     }
 
     ngOnInit(): void {
         this.isPublicSite = this.globalsvc.isPublicSite();
         this.updateOriginal();
 
-        // effect(() => {
-        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if(sectionMode){
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {

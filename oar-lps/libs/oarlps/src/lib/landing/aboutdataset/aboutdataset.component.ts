@@ -1,11 +1,10 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-import { ConfigurationService } from 'oarng';
 import { AppConfig } from '../../config/config.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { VersionComponent } from '../version/version.component';
 import { MetricsData } from "../metrics-data";
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { formatBytes } from '../../utils';
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals';

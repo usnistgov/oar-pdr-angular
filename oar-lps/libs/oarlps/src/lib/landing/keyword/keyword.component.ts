@@ -1,21 +1,5 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, effect, ChangeDetectorRef, inject } from '@angular/core';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { NotificationService } from '../../shared/notification-service/notification.service';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ToastrModule } from 'ngx-toastr';
-import { TextEditModule } from '../../text-edit/text-edit.module';
-import { TextareaAutoresizeModule } from '../../textarea-autoresize/textarea-autoresize.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ChipsModule } from 'primeng/chips';
-import { ChipModule } from "primeng/chip";
-import { TagModule } from 'primeng/tag';
-import { EditStatusService } from '../editcontrol/editstatus.service';
-import { LandingConstants } from '../constants';
+import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
+import { SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
 import { KeywordPubComponent } from './keyword-pub/keyword-pub.component';
 import { KeywordMidasComponent } from './keyword-midas/keyword-midas.component';
 
@@ -23,16 +7,6 @@ import { KeywordMidasComponent } from './keyword-midas/keyword-midas.component';
     selector: 'app-keyword',
     standalone: true,
     imports: [ 
-        CommonModule,
-        FormsModule,
-        ToolbarModule,
-        TextEditModule,
-        TextareaAutoresizeModule,
-        NgbModule,
-        ChipsModule,
-        ChipModule,
-        TagModule,
-        ToastrModule,
         KeywordPubComponent,
         KeywordMidasComponent
     ],

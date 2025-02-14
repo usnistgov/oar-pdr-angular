@@ -1,16 +1,14 @@
-import { Injectable, EventEmitter, ViewChild } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
-
 import { UserMessageService } from '../../frame/usermessage.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { Observable, of, throwError, Subscriber } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UpdateDetails, DBIOrecord } from './interfaces';
-import { AuthService, WebAuthService } from './auth.service';
+import { AuthService } from './auth.service';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
-import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
 
 /**
  * a service that receives updates to the resource metadata from update widgets.

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, Simp
 import {TreeNode} from 'primeng/api';
 import { TaxonomyListService, SearchfieldsListService } from '../../shared/index';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes, FilterTreeNode } from '../../shared/globals/globals';
+import { Collections, ColorScheme } from '../../shared/globals/globals';
 
 @Component({
   selector: 'app-taxonomy',

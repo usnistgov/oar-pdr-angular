@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { RefMidasComponent } from './ref-midas/ref-midas.component';

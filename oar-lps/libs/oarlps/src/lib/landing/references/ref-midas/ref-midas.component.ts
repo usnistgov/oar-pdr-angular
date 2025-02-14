@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, inject, effect } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';

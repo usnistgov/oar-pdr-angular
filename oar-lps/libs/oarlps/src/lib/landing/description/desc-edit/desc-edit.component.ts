@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, ElementRef, SimpleChanges, ViewChild, ChangeDetectorRef, importProvidersFrom, effect, inject } from '@angular/core';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Component, Input, SimpleChanges, ChangeDetectorRef, effect, inject } from '@angular/core';
+import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';

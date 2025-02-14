@@ -1,7 +1,6 @@
-import { Component, OnInit, Inject, Input, AfterViewInit, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TreeNode } from 'primeng/api';
-// import { Message } from 'primeng/components/common/api';
 import { Message } from 'primeng/api';
 import { TaxonomyListService, SearchfieldsListService } from '../../shared/index';
 import * as _ from 'lodash-es';
@@ -9,7 +8,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { SearchService } from '../../shared/search-service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme } from '../../shared/globals/globals';
+import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';

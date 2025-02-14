@@ -10,8 +10,6 @@ import { ResourceDescriptionComponent } from '../sections/resourcedescription.co
 import { ResourceMetadataComponent } from '../sections/resourcemetadata.component';
 import { ResourceRefsComponent } from '../sections/resourcerefs.component';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-// import { AppConfig } from '../../config/config';
-// import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 
 /**
  * a component that presents the landing page's presentation of the resource description
@@ -87,24 +85,13 @@ export class LandingBodyComponent {
     /**
      * create an instance of the Identity section
      */
-    constructor(
-        // public cfg: AppConfig,
-        public lpService: LandingpageService,
-        // public metadataUpdateService: MetadataUpdateService,
-        // public authService: AuthService
-    )
-    { 
-
-    }
+    constructor(public lpService: LandingpageService){ }
 
     ngOnInit(): void {
         this.recordType = (new NERDResource(this.md)).resourceLabel();
-        // this.landingPageURL = this.cfg.get('landingPageService','/od/id/') + this.md['@id'];
-        // this.landingPageServiceStr = this.cfg.get('locations.landingPageService','https://data.nist.gov/od/id/');
     }
 
     ngOnChanges(ch: SimpleChanges) {
-        // this.aboutdatasetComponent.collapsed = !this.showNerdm;
         if (this.edstatsvc){
             this.edstatsvc.watchIsEditMode((isEditMode) => {
                 this.isEditMode = isEditMode;

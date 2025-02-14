@@ -1,8 +1,6 @@
-import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, ChangeDetectorRef, effect } from '@angular/core';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { Component, Input, SimpleChanges } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { Author } from '../author';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
@@ -25,9 +23,7 @@ export class AuthorPubComponent {
 
     @Input() record: any[];
 
-    constructor() { 
-
-    }
+    constructor() { }
 
     ngOnInit() {
         this.getAuthors();

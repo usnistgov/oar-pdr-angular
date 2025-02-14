@@ -1,10 +1,9 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { Author, Affiliation } from '../author';
 import { AuthorService } from '../author.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
+import { Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { NIST } from '../../../shared/globals/globals';
-import { SDSuggestion, SDSIndex } from 'oarng';
-import { timeout } from 'rxjs';
+import { SDSuggestion } from 'oarng';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';

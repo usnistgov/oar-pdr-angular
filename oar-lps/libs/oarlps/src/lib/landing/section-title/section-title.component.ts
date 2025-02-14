@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GlobalService, ColorScheme } from '../../shared/globals/globals'
 import { D3Service } from '../../shared/d3-service/d3.service';
 import { CollectionService } from '../../shared/collection-service/collection.service';

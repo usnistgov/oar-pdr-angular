@@ -1,6 +1,6 @@
 import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef, inject, effect } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
-import { Themes, ThemesPrefs } from '../../../shared/globals/globals';
+import { Themes } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';

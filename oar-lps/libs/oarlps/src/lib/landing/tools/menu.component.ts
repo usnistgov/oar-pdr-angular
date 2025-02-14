@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { Themes, ThemesPrefs, Collections } from '../../shared/globals/globals';
+import { NerdmRes } from '../../nerdm/nerdm';
 import { CartConstants } from '../../datacart/cartconstants';
 import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';

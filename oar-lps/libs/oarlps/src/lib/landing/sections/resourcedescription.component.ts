@@ -1,8 +1,6 @@
-import { Component, OnChanges, Input, ViewChild, ElementRef, effect } from '@angular/core';
-import { AppConfig } from '../../config/config';
+import { Component, OnChanges, Input, effect } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { ColorScheme } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals'
 import { CommonModule } from '@angular/common';

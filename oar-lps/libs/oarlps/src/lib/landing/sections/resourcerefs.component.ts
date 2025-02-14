@@ -1,5 +1,5 @@
-import { Component, OnChanges, SimpleChanges, Input, effect } from '@angular/core';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { Component, Input, effect } from '@angular/core';
+import { NerdmRes } from '../../nerdm/nerdm';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { CommonModule } from '@angular/common';
 import { ReferencesComponent } from '../references/references.component';

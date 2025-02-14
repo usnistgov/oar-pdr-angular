@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { NerdmRes, NERDResource } from '../../../nerdm/nerdm';
-import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
+import { NerdmRes } from '../../../nerdm/nerdm';
+import { MODE } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
@@ -57,20 +56,13 @@ export class TopicEditComponent implements OnInit {
     @ViewChild('panel0', { read: ElementRef, static: true }) public panel0: ElementRef<any>;
 
 
-    constructor(
-        public mdupdsvc: MetadataUpdateService,
-        private taxonomyListService: TaxonomyListService,
-        private chref: ChangeDetectorRef,
-        private notificationService: NotificationService,
-        private msgsvc: UserMessageService) { }
+    constructor(public mdupdsvc: MetadataUpdateService,
+                private taxonomyListService: TaxonomyListService,
+                private msgsvc: UserMessageService) { }
 
     ngOnInit(): void {
         //Clone this.nistTaxonomyTopics
         // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
-
-        // for(let obj of this.selectedTopicObjs) {
-        //     this.selectedTopics.push(obj.tag);
-        // }
 
         this.taxonomyListService.get(0).subscribe((result) => {
             if (result != null && result != undefined)
@@ -209,21 +201,6 @@ export class TopicEditComponent implements OnInit {
     onSave(refreshHelp: boolean = true) {
         this.dataChanged = false;
         this.cmdOutput.emit({'command':'saveTopics','selectedTopics':this.selectedTopics});
-
-        // let postMessage: any = {};
-
-        // postMessage[this.fieldName] = this.selectedTopics;
-        // this.record[this.fieldName] = this.selectedTopics;
-        // console.log("postMessage", postMessage);
-        // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-        //     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-        //     if (updateSuccess) {
-        //         this.dataChanged = false;
-        //         this.commandOut('saveTopics');
-        //         this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
-        //     } else
-        //         console.error("acknowledge topic update failure");
-        // });
     }
 
     /**

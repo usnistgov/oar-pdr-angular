@@ -21,6 +21,8 @@ import { RELEASE } from '../environments/release-info';
 import { ServiceModule } from './service/service.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastModule } from 'primeng/toast';
+import { HeaderComponent } from 'oarng';
+import { FooterComponent } from 'oarng';
 
 @NgModule({
     declarations: [
@@ -46,7 +48,9 @@ import { ToastModule } from 'primeng/toast';
         BrowserAnimationsModule,
         AuthModule,
         ServiceModule,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        HeaderComponent,
+        FooterComponent
     ],
     providers: [
         { provide: RELEASE_INFO, useValue: RELEASE },

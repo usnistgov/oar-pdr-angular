@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild, Inject, PLATFORM_ID, HostListener, ElementRef } from '@angular/core';
-// import { userInfo } from 'os';
 import { CommonFunctionService } from '../shared/common-function/common-function.service';
 import { ActivatedRoute } from '@angular/router';
 import { MetricsService } from '../shared/metrics-service/metrics.service';
 import { AppConfig } from '../config/config';
 import { TreeNode } from 'primeng/api';
-import { saveAs } from 'file-saver-es';
 import { RecordLevelMetrics } from './metrics';
 import { DatePipe } from '@angular/common';
 import { HorizontalBarchartComponent } from './horizontal-barchart/horizontal-barchart.component';

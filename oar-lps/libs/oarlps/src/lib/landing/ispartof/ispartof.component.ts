@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { NERDResource } from '../../nerdm/nerdm';
-import { MODE, Sections, SectionPrefs, GlobalService } from '../../shared/globals/globals';
+import { GlobalService } from '../../shared/globals/globals';
 import { IspartofEditComponent } from './ispartof-edit/ispartof-edit.component';
 import { IspartofPubComponent } from './ispartof-pub/ispartof-pub.component';
 
@@ -21,13 +21,6 @@ export class IspartofComponent implements OnInit {
 
     isPublicSite: boolean = false; 
 
-    // collectionData = [
-    //     {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
-    //     {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
-    //     {id: 3, displayName: "Forensics", value: "Forensics"},
-    //     {id: 4, displayName: "Do not add to any collection", value: "None"}
-    // ]
-
     @Input() record: any[];
     @Input() inBrowser: boolean; 
     @Input() isEditMode: boolean;
@@ -37,9 +30,7 @@ export class IspartofComponent implements OnInit {
         this.isPublicSite = this.globalsvc.isPublicSite();
     }
 
-    ngOnInit(): void {
-        
-    }
+    ngOnInit(): void {}
 
     ngOnChanges(changes: SimpleChanges) {
         if (this.recordLoaded())

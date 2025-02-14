@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, effect, inject } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, effect } from '@angular/core';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -45,16 +44,17 @@ export class TitleEditComponent {
     fileManagerTooltip: string = "testing";
 
     constructor(public mdupdsvc: MetadataUpdateService,
-        public edstatsvc: EditStatusService,
-        public lpService: LandingpageService, 
-        private chref: ChangeDetectorRef,
-        public globalsvc: GlobalService,
-        private notificationService: NotificationService) {
-            effect(() => {
-                if(this.edstatsvc.isEditMode()){
-                    this.chref.detectChanges();
-                }
-            });
+                public edstatsvc: EditStatusService,
+                public lpService: LandingpageService, 
+                private chref: ChangeDetectorRef,
+                public globalsvc: GlobalService,
+                private notificationService: NotificationService) 
+    {
+        effect(() => {
+            if(this.edstatsvc.isEditMode()){
+                this.chref.detectChanges();
+            }
+        });
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }

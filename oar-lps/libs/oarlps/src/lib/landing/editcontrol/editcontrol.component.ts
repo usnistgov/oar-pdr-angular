@@ -1,34 +1,27 @@
-import { Component, OnInit, OnChanges, ViewChild, Input, Output, EventEmitter, HostListener, ChangeDetectorRef } from '@angular/core';
-import { Observable, of, BehaviorSubject } from 'rxjs';
-
+import { Component, OnInit, OnChanges, ViewChild, Input, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Observable, of } from 'rxjs';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
-import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { MessageBarComponent } from '../../frame/messagebar.component';
 import { EditStatusComponent } from './editstatus.component';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { EditStatusService } from './editstatus.service';
-import { AuthService, WebAuthService } from './auth.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes } from '../../nerdm/nerdm'
 import { AppConfig } from '../../config/config';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { deepCopy } from '../../config/config.service';
-import { LandingConstants, SubmitResponse } from '../../shared/globals/globals';
+import { LandingConstants, SubmitResponse, Collections, GlobalService } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
 import * as REVISION_TYPES from '../../../assets/site-constants/revision-types.json';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
-import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import * as CollectionData from '../../../assets/site-constants/collections.json';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confirmation-dialog.module';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
-import { createAuthService } from './auth.service';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 

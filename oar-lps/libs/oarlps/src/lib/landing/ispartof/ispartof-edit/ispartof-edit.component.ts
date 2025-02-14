@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, effect, inject, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, Input, SimpleChanges } from '@angular/core';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';

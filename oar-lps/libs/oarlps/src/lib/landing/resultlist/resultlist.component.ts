@@ -1,14 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
-import { timeout } from 'rxjs-compat/operator/timeout';
-import { ThisReceiver } from '@angular/compiler';
-import * as e from 'express';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
-import * as CollectionData from '../../../assets/site-constants/collections.json';
+import { Collections, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 
 @Component({

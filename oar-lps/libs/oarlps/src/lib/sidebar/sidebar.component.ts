@@ -70,25 +70,17 @@ export class SidebarComponent implements OnInit {
     showNiceToHave: boolean = false;
     ediid: string = "";
 
-    // helpContent: any = {
-    //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
-    // }
-
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: string = "";
     @Input() resourceType: string = "resource";
     @Output() sbarvisible_out = new EventEmitter<boolean>();
-    // @Output() section = new EventEmitter<string>();
 
     // signal for scrolling to a section within the page
     @Output() scroll = new EventEmitter<string>();
 
     constructor(private chref: ChangeDetectorRef,
                 public lpService: LandingpageService,
-                public sidebarService: SidebarService) { 
-
-
-    }
+                public sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";

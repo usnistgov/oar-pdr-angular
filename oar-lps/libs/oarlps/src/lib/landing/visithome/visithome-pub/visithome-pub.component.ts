@@ -24,9 +24,8 @@ export class VisithomePubComponent {
     visitHomeURL: string = "";
     overflowStyle: string = 'hidden';
     
-    constructor(
-        public globalsvc: GlobalService,
-        private gaService: GoogleAnalyticsService) { 
+    constructor(public globalsvc: GlobalService,
+                private gaService: GoogleAnalyticsService) { 
     }
 
     ngOnInit(): void {
