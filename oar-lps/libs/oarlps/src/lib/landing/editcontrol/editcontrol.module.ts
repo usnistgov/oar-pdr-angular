@@ -18,6 +18,9 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
 import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng';
+import { DAPModule } from '../../nerdm/dap.module';
+import { MetadataUpdateService } from './metadataupdate.service';
+import { EditStatusService } from './editstatus.service';
 
 @NgModule({
     declarations: [ ],
@@ -29,6 +32,7 @@ import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng'
         // OverlayPanelModule, 
         // TooltipModule, 
         AuthModule, 
+        DAPModule
         // NgbModule, 
         // NgSelectModule, 
         // FormsModule 
@@ -36,6 +40,8 @@ import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng'
     exports: [ ],
     providers: [
         HttpClient,
+        MetadataUpdateService,
+        EditStatusService,
         { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService, StaffDirectoryService ] }
     ]
 })

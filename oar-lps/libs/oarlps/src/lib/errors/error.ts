@@ -3,7 +3,7 @@
  */
 import { ErrorHandler, Injector, Injectable, Inject, PLATFORM_ID, Optional } from "@angular/core";
 import { isPlatformServer } from '@angular/common';
-import { Router } from "@angular/router";
+import { Router }                             from "@angular/router";
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 

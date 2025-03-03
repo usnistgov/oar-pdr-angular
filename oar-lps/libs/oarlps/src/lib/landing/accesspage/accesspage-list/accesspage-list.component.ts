@@ -74,9 +74,10 @@ export class AccesspageListComponent implements OnInit {
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
+    @Input() mdupdsvc : MetadataUpdateService;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
 
-    constructor(public mdupdsvc : MetadataUpdateService,
+    constructor(
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
                 private chref: ChangeDetectorRef,
@@ -268,7 +269,7 @@ export class AccesspageListComponent implements OnInit {
                 this.removeAccessPage(index);
                 break;
             case 'restore':
-                this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]["@id"]).then((success) => {
+                this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]["@id"], this.FieldNameAPI).then((success) => {
                     if (success) {
                         this.currentApageIndex = 0;
                         this.currentApage = this.record[this.fieldName][this.currentApageIndex];
@@ -372,11 +373,11 @@ export class AccesspageListComponent implements OnInit {
      */
     saveCurApage(refreshHelp: boolean = true, editmode: string = MODE.LIST) {
         let postMessage = {};
-        this.record[this.fieldName] = JSON.parse(JSON.stringify([this.accessPages, this.nonAccessPages]));
+        // this.record[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
         
-        this.record[this.fieldName].dataChanged = false;
+        // this.record[this.fieldName].dataChanged = false;
 
-        postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.accessPages));
+        postMessage = JSON.parse(JSON.stringify(this.currentApage));
 
         // console.log('saveCurApage (body)', postMessage);
         // console.log('saveCurApage (body)', JSON.stringify(postMessage));
@@ -385,12 +386,13 @@ export class AccesspageListComponent implements OnInit {
             if(!this.emptyRecord(this.currentApageIndex)){
                 this.mdupdsvc.add(postMessage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {
                     if (rec){
-                        this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
-                        this.accessPages = this.selectAccessPages();
-                        this.selectApage(this.accessPages.length - 1);
+                        // this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
+                        // this.accessPages = this.selectAccessPages();
+                        // this.selectApage(this.accessPages.length - 1);
 
                         this.currentApage.dataChanged = false;
                         this.currentOrderChanged = false;
+                        this.record[this.fieldName].dataChanged = false;
                         this.setMode(editmode, refreshHelp);
                     }else{
                         let msg = "Failed to add reference";

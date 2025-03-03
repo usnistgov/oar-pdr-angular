@@ -47,7 +47,7 @@ export class AuthorMidasComponent {
     overflowStyle: string = 'hidden';
     orderChanged: boolean = false;
     globalsvc = inject(GlobalService);
-    
+
     @Input() record: any[];
     @Input() isEditMode: boolean;
 
@@ -179,7 +179,7 @@ export class AuthorMidasComponent {
             this.overflowStyle = 'hidden';
             setTimeout(() => {
                 this.overflowStyle = 'visible';
-            }, 1000);
+            }, 0);
         } 
     }
 
@@ -308,5 +308,6 @@ export class AuthorMidasComponent {
         this.authorList.undoAllChanges();
         this.setMode(MODE.NORMAL, true);
         this.orderChanged = false;
+        this.hideEditBlock();
     }   
 }

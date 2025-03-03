@@ -885,7 +885,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 {
                     if(md)
                     {
-                        this.mdupdsvc.setOriginalMetadata(md as NerdmRes);
+                        this.mdupdsvc.cacheMetadata(md as NerdmRes);
                         this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
 
                         if (md['components']) 
@@ -899,18 +899,18 @@ export class DataFilesComponent implements OnInit, OnChanges {
                     }
 
                     this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                },
-                error: (err) => 
-                {
-                    if(err.statusCode == 404)
-                    {
-                        console.error("404 error.");
-                        this.mdupdsvc.resetOriginal();
-                        this.msgsvc.error(err.message);
-                    }
-
-                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
                 }
+                // error: (err) => 
+                // {
+                //     if(err.statusCode == 404)
+                //     {
+                //         console.error("404 error.");
+                //         this.mdupdsvc.resetOriginal();
+                //         this.msgsvc.error(err.message);
+                //     }
+
+                //     this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+                // }
             });
         });
     }

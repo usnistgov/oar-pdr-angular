@@ -15,7 +15,9 @@ export const context = {
     production: false,
     configUrl: "assets/config.json",          // set to "assets/config.json"
     useMetadataService: false,
-    useCustomizationService: false
+    // useCustomizationService: false,
+    useMIDASDAPService: false,
+    useResourceService: true
 };
 
 export const config: LPSConfig = {

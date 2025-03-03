@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { CommonModule, DatePipe } from '@angular/common';
-import { of, throwError } from 'rxjs';
+import { map, tap, of, throwError } from 'rxjs';
 
 import { MetadataUpdateService } from './metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
-import { CustomizationService, InMemCustomizationService } from './customization.service';
-import { MockAuthService } from './auth.service';
+import { DAPService, LocalDAPService } from '../../nerdm/dap.service';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { EditStatusService } from './editstatus.service';
 import { AppConfig } from '../../config/config'
@@ -20,6 +19,7 @@ describe('MetadataUpdateService', () => {
     let resmd : NerdmRes = null;
     let svc : MetadataUpdateService = null;
     let edstatsvc : EditStatusService;
+    let dapsvc : DAPService = new LocalDAPService();
 
     let subscriber = {
         next: (md) => {
@@ -33,17 +33,25 @@ describe('MetadataUpdateService', () => {
             imports: [ CommonModule ],
             providers: [ DatePipe ]
         });
+
         let dp : DatePipe = TestBed.inject(DatePipe);
-        let cfgdata = null;
-        cfgdata = JSON.parse(JSON.stringify(config));
-        edstatsvc = new EditStatusService();
-        svc = new MetadataUpdateService(new UserMessageService(), edstatsvc, new MockAuthService(),dp);
-        svc._setCustomizationService(new InMemCustomizationService(rec));
+        let cfgdata = JSON.parse(JSON.stringify(config));
+        edstatsvc = new EditStatusService(new AppConfig(cfgdata));
+        svc = new MetadataUpdateService(new UserMessageService(), edstatsvc, dapsvc, dp);
+
+        dapsvc.create("testrec", {}, rec).pipe(
+            map((updater) => { return updater.recid; }),
+            tap((id) => { svc.startEditing(id); })
+        );
     }));
+
+    afterEach(() => {
+        localStorage.clear();
+    });
 
     it('returns initial draft metadata', () => {
         var md = null;
-        debugger
+        debugger;
         svc.subscribe({
             next: (res) => { md = res; },
             error: (err) => { throw err; }
@@ -68,7 +76,7 @@ describe('MetadataUpdateService', () => {
         expect(svc.lastUpdate).toEqual({} as UpdateDetails);
 
         var md = null;
-        svc.setOriginalMetadata(resmd);
+        svc.cacheMetadata(resmd);
 
 
         debugger
@@ -94,7 +102,7 @@ describe('MetadataUpdateService', () => {
         expect(svc.fieldUpdated('gurn')).toBeFalsy();
 
         var md = null;
-        svc.setOriginalMetadata(rec);
+        svc.cacheMetadata(rec);
 
         svc.update('gurn', {'goober': "gurn", 'title': "Dr."});
         svc.subscribe({
@@ -127,7 +135,7 @@ describe('MetadataUpdateService', () => {
         expect(svc.fieldUpdated('gurn')).toBeFalsy();
 
         var md = null;
-        svc.setOriginalMetadata(rec);
+        svc.cacheMetadata(rec);
         svc.subscribe({
             next: (res) => { 
                 md = res; 

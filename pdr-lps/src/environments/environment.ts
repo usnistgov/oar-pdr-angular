@@ -14,8 +14,10 @@ import { LPSConfig } from 'oarlps';
 export const context = {
     production: false,
     configUrl: "assets/config.json",     // set to "assets/config.json" to pull from server
-    useMetadataService: true,
-    useCustomizationService: true
+    useResourceService: true,
+    useCustomizationService: false,
+    useMIDASDAPService: false,
+    useMetadataService: false
 };
 
 export const config: LPSConfig = {
@@ -33,7 +35,7 @@ export const config: LPSConfig = {
     },
     dapEditing: {
         serviceEndpoint: "https://mdsdev.nist.gov/midas/dap/mds3/",
-        editEnabled: true,
+        editEnabled: false,
     },
     systemVersion: "v1.3.X",
     mode: "dev",

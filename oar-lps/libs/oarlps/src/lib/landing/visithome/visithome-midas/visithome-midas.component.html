@@ -42,6 +42,15 @@
 @defer(when isEditing) {
     <!-- Visit homepage editor -->
     <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
-        <lib-visithome-edit #visithomeedit [visitHomeURL]="visitHomeURL" [editMode]="editMode" [dataChanged]="dataChanged" [updated]='updated' [backgroundColor]="backgroundColor" (dataChangedOutput)="onDataChange($event)" (cmdOutput)="onCommandChanged($event)"></lib-visithome-edit>
+        <lib-visithome-edit 
+            #visithomeedit 
+            [visitHomeURL]="visitHomeURL" 
+            [editMode]="editMode" 
+            [dataChanged]="dataChanged" 
+            [updated]='updated' 
+            [backgroundColor]="backgroundColor" 
+            (dataChangedOutput)="onDataChange($event)" 
+            (cmdOutput)="onCommandChanged($event)">
+        </lib-visithome-edit>
     </div>
 }

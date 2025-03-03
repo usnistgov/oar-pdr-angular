@@ -49,9 +49,15 @@
     </div>
 
     <div class="editor">
-        @defer(when loadListing) {
+        @defer(when isListing) {
             <div style="width: 100%;" [@editExpanded]="editBlockExpanded" [style.overflow] = "overflowStyle">
-                <lib-accesspage-list #accesspagelist [record]="record" [theme]="theme" (dataCommand)="onStatusChange($event)"></lib-accesspage-list>
+                <lib-accesspage-list 
+                    #accesspagelist 
+                    [record]="record" 
+                    [theme]="theme" 
+                    [mdupdsvc]="mdupdsvc"
+                    (dataCommand)="onStatusChange($event)">
+                </lib-accesspage-list>
             </div>
         }   
     </div>

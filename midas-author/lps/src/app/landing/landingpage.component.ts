@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
 
 import { AppConfig } from 'oarlps';
-import { MetadataService } from 'oarlps';
+import { NERDmResourceService } from 'oarlps';
 import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
@@ -46,6 +46,7 @@ import { SidebarComponent } from 'oarlps';
 import { DownloadStatusModule } from 'oarlps';
 import { MetricsinfoComponent } from 'oarlps';
 import { FrameModule } from 'oarlps';
+import { AuthenticationService } from 'oarng';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -82,8 +83,7 @@ import { FrameModule } from 'oarlps';
         FrameModule
     ],
     providers: [
-        Title,
-        EditStatusService
+        Title
     ],
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss'],
@@ -251,7 +251,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 @Inject(PLATFORM_ID) private platformId: Object,
                 public titleSv: Title,
                 private cfg: AppConfig,
-                private mdserv: MetadataService,
+                private nerdmReserv: NERDmResourceService,
                 public edstatsvc: EditStatusService,
                 private cartService: CartService,
                 private mdupdsvc: MetadataUpdateService,
@@ -259,6 +259,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
+                public authsvc: AuthenticationService,
                 public lpService: LandingpageService)
     {
         // Init the size of landing page body and the help box
@@ -403,44 +404,63 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
               // For now, always go to edit mode.
               // let param = queryParams.get("editmode");
               let param = queryParams.get("editenabled");
-              if (param){
-                this.editRequested = (param.toLowerCase() == 'true');
-                param = "edit";
+              if (param && param.toLocaleLowerCase() == 'true'){
+                this.editRequested = true;
+
+                this.mdupdsvc.isAuthorized(this.reqId).subscribe((result) => {
+                  this.globalService.setAuthorized(result);
+                  if(result) {
+                    this.editRequested = true;
+                    this.isEditMode = true;
+                    this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
+                    this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
+                    this.edstatsvc._setEditType(this.editTypes.NORMAL);
+                    this.edstatsvc.setShowLPContent(false);
+                  }
+                  else {
+                    this.editRequested = false;
+                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this.edstatsvc.setShowLPContent(true);
+                  }
+                });
               }else{
-                param = "";
+                this.editRequested = false;
+                this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                this.edstatsvc.setShowLPContent(true);
+                this.globalService.setAuthorized(false);
               }
 
-              switch(param.toLowerCase()) {
-                  case "revise": {
-                      this.editRequested = true;
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
-                      this.edstatsvc._setEditType(this.editTypes.REVISE);
-                      this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                      this.edstatsvc.setShowLPContent(false);
-                      break;
-                  }
-                  case "edit": {
-                      this.editRequested = true;
-                      this.isEditMode = true;
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
-                      this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                      this.edstatsvc._setEditType(this.editTypes.NORMAL);
-                      this.edstatsvc.setShowLPContent(false);
-                      break;
-                  }
-                  case "done": {
-                      this.editRequested = false;
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.DONE_MODE);
-                      this.edstatsvc.setShowLPContent(true);
-                      break;
-                  }
-                  default: { // preview
-                      this.editRequested = false;
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                      this.edstatsvc.setShowLPContent(true);
-                      break;
-                  }
-              }
+              // switch(param.toLowerCase()) {
+              //     case "revise": {
+              //         this.editRequested = true;
+              //         this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
+              //         this.edstatsvc._setEditType(this.editTypes.REVISE);
+              //         this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
+              //         this.edstatsvc.setShowLPContent(false);
+              //         break;
+              //     }
+              //     case "edit": {
+              //         this.editRequested = true;
+              //         this.isEditMode = true;
+              //         this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
+              //         this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
+              //         this.edstatsvc._setEditType(this.editTypes.NORMAL);
+              //         this.edstatsvc.setShowLPContent(false);
+              //         break;
+              //     }
+              //     case "done": {
+              //         this.editRequested = false;
+              //         this.edstatsvc._setEditMode(this.EDIT_MODES.DONE_MODE);
+              //         this.edstatsvc.setShowLPContent(true);
+              //         break;
+              //     }
+              //     default: { // preview
+              //         this.editRequested = false;
+              //         this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+              //         this.edstatsvc.setShowLPContent(true);
+              //         break;
+              //     }
+              // }
 
               // if editEnabled = true, we don't want to display the data that came from mdserver
               // Will set the display to true after the authentication process. If authentication failed,
@@ -453,108 +473,59 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
           // Retrive Nerdm record and keep it in case we need to display it in preview mode
           // use case: user manually open PDR landing page but the record was not edited by MIDAS
           // This part will only be executed if "editEnabled=true" is not in URL parameter.
-          this.mdupdsvc.authsvc.authorizeEditing(this.reqId).subscribe({
-            next: (custsvc) => {
-                this.mdupdsvc._setCustomizationService(custsvc);
-                // this.mdupdsvc.validate().subscribe(response => {
-                //     this.lpService.setSubmitResponse(response as Globals.SubmitResponse);
-                // })
+          if(this.authsvc.isAuthenticated) {
+            this.mdupdsvc.startEditing(this.reqId).subscribe({
+              next: (success) => {
+                console.log("Status", success);
+                console.log("Record loaded", this.md);
 
-                this.mdupdsvc.loadDraft().subscribe({
-                    next: (data) => {
-                        // successful metadata request
-                        this.md = data as NerdmRes;
+                this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
-                        if (!this.md) {
-                            // id not found; reroute
-                            console.error("No data found for ID=" + this.reqId);
-                            metadataError = "not-found";
-                        }
-                        else{
-                            this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
-
-                            if(this.inBrowser){
-                                if(this.editEnabled){
-                                    this.metricsData.hasCurrentMetrics = false;
-                                    this.showMetrics = true;
-                                }else{
-                                    if(this.theme == Themes.DEFAULT_THEME){
-                                        console.log("Getting metrics...");
-                                        this.getMetrics();
-                                    }
-
-                                }
-                            }
-
-                            // proceed with rendering of the component
-                            this.useMetadata();
-
-                            // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                            // in editing mode.  This is done in concert with the authentication process that can involve
-                            // redirection to an authentication server; on successful authentication, the server can
-                            // redirect the browser back to this landing page with editing turned on.
-                            if (this.inBrowser) {
-                                // Display content after 15sec no matter what
-                                setTimeout(() => {
-                                    this.edstatsvc.setShowLPContent(true);
-                                }, 15000);
-
-                                if (this.editRequested) {
-                                    showError = false;
-                                    // console.log("Returning from authentication redirection (editmode="+
-                                    //             this.editRequested+")");
-
-                                    // Need to pass reqID (resID) because the resID in editControlComponent
-                                    // has not been set yet and the startEditing function relies on it.
-                                    this.edstatsvc.startEditing(this.reqId);
-                                }
-                                else
-                                    showError = true;
-                            }
+                if(this.inBrowser){
+                    if(this.editEnabled){
+                        this.metricsData.hasCurrentMetrics = false;
+                        this.showMetrics = true;
+                    }else{
+                        if(this.theme == Themes.DEFAULT_THEME){
+                            console.log("Getting metrics...");
+                            this.getMetrics();
                         }
 
-                        if (showError) {
-                            if (metadataError == "not-found") {
-                                if (this.editRequested) {
-                                    console.log("ID not found...");
-                                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
-                                    this.setMessage();
-                                    this.displaySpecialMessage = true;
-                                }
-                                else {
-                                    this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                                }
-                            }
-                        }
-
-                        this.mdupdsvc.loadDBIOrecord().subscribe({
-                            next: (dbio) => {
-                                // console.log("dbio", dbio)
-                            },
-                            error: (err) => {
-                                console.error(err);
-                            }
-                        });
-                    },
-                    error: (err) => {
-                        console.error("Failed to retrieve metadata: ", err);
-                        this.edstatsvc.setShowLPContent(true);
-                        if (err instanceof IDNotFound) {
-                            metadataError = "not-found";
-                            this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                        }
-                        else {
-                            metadataError = "int-error";
-                            // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-                            this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-                        }
                     }
-                })
-            },
-            error: (err) => {
-                console.error("Authentication failed: "+JSON.stringify(err));
-            }
-        });
+                }
+
+                // proceed with rendering of the component
+                this.useMetadata();
+
+                // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                // in editing mode.  This is done in concert with the authentication process that can involve
+                // redirection to an authentication server; on successful authentication, the server can
+                // redirect the browser back to this landing page with editing turned on.
+                if (this.inBrowser) {
+                    // Display content after 15sec no matter what
+                    setTimeout(() => {
+                        this.edstatsvc.setShowLPContent(true);
+                    }, 15000);
+
+                    if (this.editRequested) {
+                        showError = false;
+                        // console.log("Returning from authentication redirection (editmode="+
+                        //             this.editRequested+")");
+
+                        // Need to pass reqID (resID) because the resID in editControlComponent
+                        // has not been set yet and the startEditing function relies on it.
+                        this.edstatsvc.startEditing(this.reqId);
+                    }
+                    else
+                        showError = true;
+                }
+
+              },
+              error: (err) => {
+                console.log("Load error", err);
+              }
+            })
+          };
 
       }else{
         this.editRequested = false;
@@ -568,7 +539,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
       let metadataError = "";
       var showError: boolean = true;
 
-      this.mdserv.getMetadata(this.reqId).subscribe(
+      this.nerdmReserv.getResource(this.reqId).subscribe(
         (data) => {
           // successful metadata request
           this.md = data;
@@ -936,7 +907,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         // set the document title
         this.setDocumentTitle();
-        this.mdupdsvc.setOriginalMetadata(this.md);
+        this.mdupdsvc.cacheMetadata(this.md);
 
         this.showData();
     }

@@ -48,4 +48,22 @@ export class RefPubComponent {
             return true;
         return false;
     }
+
+    /**
+     * Return the link text of the given reference.  The text returned will be one of
+     * the following, in order or preference:
+     * 1. the value of the citation property (if set and is not empty)
+     * 2. the value of the label property (if set and is not empty)
+     * 3. to "URL: " appended by the value of the location property.
+     * @param ref   the NERDm reference object
+     */
+    getReferenceText(ref){
+        if(ref['citation'] && ref['citation'].trim() != "") 
+            return ref['citation'];
+        if(ref['label'] && ref['label'].trim() != "")
+            return ref['label'];
+        if(ref['location'] && ref['location'].trim() != "")
+            return ref['location'];
+        return " ";
+    }      
 }

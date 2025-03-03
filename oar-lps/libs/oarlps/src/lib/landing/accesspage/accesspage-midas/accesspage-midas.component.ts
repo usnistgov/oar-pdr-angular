@@ -28,9 +28,6 @@ import { TooltipModule } from 'primeng/tooltip';
         AccesspagePubComponent,
         TooltipModule
     ],
-    providers: [
-        MetadataUpdateService
-    ],
     templateUrl: './accesspage-midas.component.html',
     styleUrls: ['./accesspage-midas.component.scss', '../../landing.component.scss'],
     animations: [
@@ -60,7 +57,6 @@ export class AccesspageMidasComponent {
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
     isPublicSite: boolean = false; 
-    loadListing: boolean = false;
     globalsvc = inject(GlobalService);
 
     @Input() record: NerdmRes = null;
@@ -194,7 +190,6 @@ export class AccesspageMidasComponent {
     }
 
     startEditing() {
-        this.loadListing = true;
         this.setMode(MODE.LIST)
     }
 

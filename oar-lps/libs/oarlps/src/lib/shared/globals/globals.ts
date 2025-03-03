@@ -53,6 +53,18 @@ export class GlobalService {
     }  
 
     /**
+     * Set/get the width of the left side landing page 
+     */
+    _authorized : BehaviorSubject<boolean> =
+        new BehaviorSubject<boolean>(false);
+    public setAuthorized(val : boolean) { 
+        this._authorized.next(val); 
+    }
+    public watchAuthorized(subscriber) {
+        this._authorized.subscribe(subscriber);
+    }  
+
+    /**
      * Flag to tell the app to hide the content display or not. 
      * Usecase: to hide server side rendering content while in edit mode and display the content when 
      * browser side rendering is ready.
@@ -189,7 +201,8 @@ _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
 _fieldName[Sections.ACCESS_PAGES] = "components";
 _fieldName[Sections.DESCRIPTION] = "description";
-_fieldName[Sections.TOPICS] = "topic";
+_fieldName[Sections.TOPICS] = "theme";
+// _fieldName[Sections.TOPICS] = "topic";
 _fieldName[Sections.KEYWORDS] = "keyword";
 _fieldName[Sections.IDENTITY] = "identity";
 _fieldName[Sections.AUTHORS] = "identity";

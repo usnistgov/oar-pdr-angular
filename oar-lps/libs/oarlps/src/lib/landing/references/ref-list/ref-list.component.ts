@@ -314,19 +314,19 @@ export class RefListComponent implements OnInit {
         if(this.isAdding){
             if(this.currentRef.dataChanged){
                 var postMessage: any = {};
-                postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+                postMessage = JSON.parse(JSON.stringify(this.currentRef));
 
                 //Delete temp keys
-                postMessage[this.fieldName].forEach(ref => {
-                    delete ref['isNew'];
-                    delete ref['dataChanged'];
-                });
+                // postMessage[this.fieldName].forEach(ref => {
+                //     delete ref['isNew'];
+                //     delete ref['dataChanged'];
+                // });
 
                 this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
-                        this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
-                        this.currentRef = this.record[this.fieldName].at(-1); // last reference
-                        this.currentRefIndex = this.record[this.fieldName].length - 1;
+                        // this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
+                        // this.currentRef = this.record[this.fieldName].at(-1); // last reference
+                        // this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;
                         this.chref.detectChanges();
                     }else{

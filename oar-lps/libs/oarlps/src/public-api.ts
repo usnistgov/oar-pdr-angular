@@ -111,3 +111,5 @@ export * as Globals from './lib/shared/globals/globals';
 
 export * from './lib/landing/citation/citation-popup/citation-popup.component';
 export * from './lib/landing/citation/citation-display/citation-display.component';
+
+export * from './lib/nerdm/dap.module';

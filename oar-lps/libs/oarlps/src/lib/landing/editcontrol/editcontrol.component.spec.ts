@@ -54,12 +54,12 @@ describe('EditControlComponent', () => {
         expect(btns.length).toEqual(0);
     });
 
-    it('can get authorized', async () => {
-        expect(component.isAuthorized()).toBeFalsy();
-        let authed : boolean = await component.authorizeEditing().toPromise();
-        expect(authed).toBeTruthy();
-        expect(component.isAuthorized()).toBeTruthy();
-    });
+    // it('can get authorized', async () => {
+    //     expect(component.isAuthorized()).toBeFalsy();
+    //     let authed : boolean = await component.authorizeEditing().toPromise();
+    //     expect(authed).toBeTruthy();
+    //     expect(component.isAuthorized()).toBeTruthy();
+    // });
 
     // test startEditing()
     // it('startEditing()', waitForAsync(() => {

@@ -25,15 +25,15 @@ export class CitationPopupComponent {
     @Output() visibleChange = new EventEmitter<boolean>();
 
     ngOnInit() {
-        console.log("citetext", this.citetext);
-        console.log("visible", this.visible);
-        console.log("width", this.width);
+        // console.log("citetext", this.citetext);
+        // console.log("visible", this.visible);
+        // console.log("width", this.width);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log("citetext", this.citetext);
-        console.log("visible", this.visible);
-        console.log("width", this.width);
+        // console.log("citetext", this.citetext);
+        // console.log("visible", this.visible);
+        // console.log("width", this.width);
     }
 
     _setVisible(yesno : boolean) : void {

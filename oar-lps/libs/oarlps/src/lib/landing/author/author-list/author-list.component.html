@@ -89,7 +89,12 @@
             <td style="width: 60px;vertical-align: top; ">
                 <div style="margin-top: 1em;white-space: nowrap;">
                     <!-- Save button -->
-                    <button class="edit_button" type="button" (click)="saveCurrentAuthor()" aria-label="edit button" [disabled]="!currentAuthor || !currentAuthor.dataChanged" ngbTooltip="Save authors">
+                    <button class="edit_button" 
+                            type="button" 
+                            (click)="saveCurrentAuthor()" 
+                            aria-label="edit button" 
+                            [disabled]="!currentAuthor || !currentAuthor.dataChanged" 
+                            ngbTooltip="Save authors">
                         <i class="faa faa-check"></i>
                     </button>
 

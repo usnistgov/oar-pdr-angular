@@ -213,7 +213,7 @@ export class TopicComponent implements OnInit {
 
         postMessage[this.fieldName] = this.restoreTopics(this.topics);
 
-        this.mdupdsvc.update(field, postMessage).then((updateSuccess) => {
+        this.mdupdsvc.update(field, postMessage, null, this.fieldName).then((updateSuccess) => {
             // console.log("###DBG  update sent; success: "+updateSuccess.toString());
             if (updateSuccess) {
                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);

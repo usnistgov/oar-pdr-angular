@@ -12,7 +12,8 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
-import { LandingPageModule } from './landing/landingpage.module';
+// import { LandingPageModule } from './landing/landingpage.module';
+import { LandingPageComponent } from './landing/landingpage.component';
 import { LandingAboutComponent } from 'oarlps';
 import { SharedModule } from 'oarlps';
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
@@ -21,13 +22,14 @@ import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { OARLPSModule } from 'oarlps';
 import { environment } from '../environments/environment-impl';
-import { NerdmModule } from 'oarlps';
+// import { NerdmModule } from 'oarlps';
+import { DAPModule } from 'oarlps';
 import { ConfigModule } from 'oarlps';
 // import { FrameModule } from 'oarng';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { EditControlModule } from 'oarlps';
-import { MetadataUpdateService } from 'oarlps';
+// import { MetadataUpdateService } from 'oarlps';
 import { FooterComponent, HeaderComponent } from 'oarng';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
@@ -54,13 +56,14 @@ enableProdMode();
       OARLPSModule,
       ErrorsModule,
       AppRoutingModule,
-      NerdmModule.forRoot(environment),
+      DAPModule.forRoot(environment),
       LandingAboutComponent,
       ConfigModule,
       StaffDirModule,
       EditControlModule.forRoot(environment),
       FooterComponent,
-      HeaderComponent
+      HeaderComponent,
+      LandingPageComponent
     ],
     exports: [AppComponent],
     providers: [
@@ -72,7 +75,6 @@ enableProdMode();
         },
         GoogleAnalyticsService,
         DatePipe,
-        MetadataUpdateService,
         fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

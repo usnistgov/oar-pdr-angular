@@ -16,7 +16,7 @@
     },
     "dapEditing": {
         "serviceEndpoint": "https://mdsdev.nist.gov/midas/dap/mds3/",
-        "editEnabled": true
+        "editEnabled": false
     },
     "staffdir": {
         "serviceEndpoint": "http://data.nist.gov:9092/oar1"

@@ -10,7 +10,7 @@ import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
 
 import { AppConfig } from 'oarlps';
-import { MetadataService } from 'oarlps';
+import { NERDmResourceService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
 import { GlobalService, LandingConstants } from 'oarlps';
@@ -243,7 +243,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 @Inject(PLATFORM_ID) private platformId: Object,
                 public titleSv: Title,
                 private cfg: AppConfig,
-                private mdserv: MetadataService,
+                private nerdmReserv: NERDmResourceService,
                 private cartService: CartService,
                 public metricsService: MetricsService,
                 public breakpointObserver: BreakpointObserver,
@@ -342,7 +342,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let metadataError = "";
         var showError: boolean = true;
 
-        this.mdserv.getMetadata(this.reqId).subscribe(
+        this.nerdmReserv.getResource(this.reqId).subscribe(
             (data) => {
             // successful metadata request
             this.md = data;

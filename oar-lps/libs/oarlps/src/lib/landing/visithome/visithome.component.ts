@@ -50,7 +50,6 @@ export class VisithomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.isPublicSite = this.globalsvc.isPublicSite();
-        console.log('this.isPublicSite', this.isPublicSite);
     }
 
     ngOnChanges(changes: SimpleChanges): void {

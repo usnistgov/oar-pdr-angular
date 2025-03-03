@@ -16,7 +16,7 @@ import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { ButtonModule } from 'primeng/button';				
-import { TooltipModule } from 'primeng/tooltip';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'lib-author-list',
@@ -26,7 +26,7 @@ import { TooltipModule } from 'primeng/tooltip';
         AuthorEditComponent,
         TextEditComponent,
         ButtonModule,
-        TooltipModule
+        NgbModule 
     ],
     templateUrl: './author-list.component.html',
     styleUrls: ['../../landing.component.scss', './author-list.component.css'],
@@ -103,7 +103,6 @@ export class AuthorListComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        let isEditing = this.edstatsvc.isEditMode();
         this.updateSavedRecord();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.onRecordChanged();
@@ -156,6 +155,7 @@ export class AuthorListComponent implements OnInit {
         if(changes.record){
             this.updateSavedRecord();
             this.onRecordChanged();
+
         }
 
         if(changes.forceReset){
@@ -205,9 +205,12 @@ export class AuthorListComponent implements OnInit {
     }
 
     onRecordChanged() {
-        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0)
+        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0){
             this.currentAuthors = JSON.parse(JSON.stringify(this.record[this.fieldName]));
 
+            this.currentAuthor = this.record[this.fieldName].at(-1); // last author
+            this.currentAuthorIndex = this.record[this.fieldName].length - 1;
+        }
     }
 
     authorUpdated(index: number) {
@@ -285,7 +288,7 @@ export class AuthorListComponent implements OnInit {
     }
 
     onAuthorListChanged(fieldName: string, author: any) {
-        this.mdupdsvc.fieldUpdated(fieldName, author);
+        return this.mdupdsvc.fieldUpdated(fieldName, author);
     }
 
     onAdd() {
@@ -306,16 +309,17 @@ export class AuthorListComponent implements OnInit {
         let postMessage: any = {}; 
 
         if(this.isAdding) {  // Temp disable this function
-            postMessage[this.fieldName] = [];
-            this.record[this.fieldName].forEach(author => {
-                postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
-            });
+            // postMessage[this.fieldName] = [];
+            // this.record[this.fieldName].forEach(author => {
+            //     postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
+            // });
+            postMessage = JSON.parse(JSON.stringify(this.currentAuthor));
 
             this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                 if (rec){
-                    this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
-                    this.currentAuthor = this.record[this.fieldName].at(-1); // last author
-                    this.currentAuthorIndex = this.record[this.fieldName].length - 1;
+                    // this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
+                    // this.currentAuthor = this.record[this.fieldName].at(-1); // last author
+                    // this.currentAuthorIndex = this.record[this.fieldName].length - 1;
                     this.currentAuthor.dataChanged = false;
 
                     if(closeAll)
@@ -336,7 +340,6 @@ export class AuthorListComponent implements OnInit {
                             this.setMode(MODE.NORMAL, refreshHelp);
                         else
                             this.setMode(MODE.LIST, refreshHelp);
-
                         // this.chref.detectChanges();
                     }else{
                         let msg = "Update failed";
@@ -413,7 +416,8 @@ export class AuthorListComponent implements OnInit {
                 this.orderChanged = false;
                 this.forceReset = true;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
+                // this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
+                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
             }else{
                 let msg = "Failed to undo keywords metadata";
                 console.error(msg);   

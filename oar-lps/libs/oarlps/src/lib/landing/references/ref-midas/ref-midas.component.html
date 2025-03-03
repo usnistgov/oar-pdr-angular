@@ -7,7 +7,8 @@
                 Add references to papers and other datasets.
             </div>
 
-            <div [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" *ngFor="let ref of record['references']" style="padding-left: 10px; padding-top: 5px;min-height: 1.65em;">
+            <ref-pub [record]="record" ></ref-pub>
+            <!-- <div [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" *ngFor="let ref of record['references']" style="padding-left: 10px; padding-top: 5px;min-height: 1.65em;">
                 <span *ngIf="ref.location; else noreflink">
                     <span class="fas fa-external-link-alt">&nbsp;</span>
                     <a href={{ref.location}} target="blank">{{ ref['location'] }}</a>
@@ -15,7 +16,7 @@
                 <ng-template #noreflink>
                     <span >{{ ref['citation'] }}</span>
                 </ng-template>
-            </div>
+            </div> -->
         </div>        
         <!-- </ng-template> -->
         

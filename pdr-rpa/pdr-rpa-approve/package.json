@@ -26,6 +26,7 @@
     "ng-sidebar": "^9.1.1",
     "primeflex": "^3.3.1",
     "tslib": "^2.6.0",
+    "fs": "0.0.2",
     "zone.js": "~0.14.10"
   },
   "optionalDependencies": {

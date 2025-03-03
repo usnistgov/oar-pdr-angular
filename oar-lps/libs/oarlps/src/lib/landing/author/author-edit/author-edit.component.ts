@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Author, Affiliation } from '../author';
 import { AuthorService } from '../author.service';
 import { Sections, SectionPrefs } from '../../../shared/globals/globals';
@@ -60,7 +60,7 @@ export class AuthorEditComponent implements OnInit {
             this.orcidValid = true;
         }
     }
-    
+
     get isAuthor() {
         return this.fieldName == SectionPrefs.getFieldName(Sections.AUTHORS);
     }
