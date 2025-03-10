@@ -14,6 +14,9 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { env } from '../../../../environments/environment';
+import { HttpClient, HttpHandler, HttpRequest } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
 
 describe('ContactMidasComponent', () => {
     let component: ContactComponent;
@@ -23,6 +26,9 @@ describe('ContactMidasComponent', () => {
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
     let authsvc: AuthService = new MockAuthService(undefined);
+    let svcep : string = "https://mds.nist.gov/midas/nsd";
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -34,12 +40,17 @@ describe('ContactMidasComponent', () => {
                 ToastrModule.forRoot()],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                MetadataUpdateService, 
                 UserMessageService, 
+                HttpHandler,
                 DatePipe,
-                GoogleAnalyticsService,
                 { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                },
+                GoogleAnalyticsService
             ]
         }).compileComponents();
     }));

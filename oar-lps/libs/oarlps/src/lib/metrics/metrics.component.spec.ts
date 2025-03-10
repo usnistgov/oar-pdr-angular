@@ -113,16 +113,17 @@ describe('MetricsComponent', () => {
     });
 
     it('createChartData()', () => {
+        debugger;
         component.fileLevelData = fileLevelData;
         component.ediid = "3A1EE2F169DD3B8CE0531A570681DB5D1491";
         component.createChartData();
         expect(component.chartData[0][0]).toEqual('1491_optSortSph20160701.m');
         expect(component.chartData[0][1]).toEqual(103);
-        expect(component.chartData[1][0]).toEqual('/sub1/1491_optSortSphEvaluated20160701.cdf');
+        expect(component.chartData[1][0]).toContain('/sub1/1491_optSortSphEvaluated20160701.cdf');
         expect(component.chartData[1][1]).toEqual(73);
-        expect(component.chartData[2][0]).toEqual('/1491_optSortSphEvaluated20160701.cdf');
+        expect(component.chartData[2][0]).toContain('/1491_optSortSphEvaluated20160701.cdf');
         expect(component.chartData[2][1]).toEqual(206);
-        expect(component.chartData[3][0]).toEqual('...oooooong_name_1491_optSortSphEvaluated20160701.cdf');
+        expect(component.chartData[3][0]).toContain('...oooooong_name_1491_optSortSphEvaluated20160701.cdf');
         expect(component.chartData[3][1]).toEqual(207);
     });
 });

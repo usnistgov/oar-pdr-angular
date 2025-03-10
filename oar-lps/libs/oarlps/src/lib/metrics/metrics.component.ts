@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Inject, PLATFORM_ID, HostListener, ElementRef } from '@angular/core';
+import { NgModule, Component, OnInit, ViewChild, Inject, PLATFORM_ID, HostListener, ElementRef } from '@angular/core';
 import { CommonFunctionService } from '../shared/common-function/common-function.service';
 import { ActivatedRoute } from '@angular/router';
 import { MetricsService } from '../shared/metrics-service/metrics.service';
@@ -12,24 +12,46 @@ import { isPlatformBrowser } from '@angular/common';
 import { NerdmRes } from '../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
 import { HttpEventType } from '@angular/common/http';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TreeTableModule } from 'primeng/treetable';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TreeModule } from 'primeng/tree';
+import { FieldsetModule } from 'primeng/fieldset';
+import { DialogModule } from 'primeng/dialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 const MOBIL_LABEL_LIMIT = 20;
 const DESKTOP_LABEL_LIMIT = 50;
 
 @Component({
     selector: 'app-metrics',
+    standalone: true,
+    imports: [
+        NgbModule, 
+        TreeModule, 
+        FieldsetModule, 
+        DialogModule, 
+        OverlayPanelModule, 
+        TreeTableModule, 
+        ButtonModule,
+        CommonModule, 
+        FormsModule,
+        HorizontalBarchartComponent
+    ],
     templateUrl: './metrics.component.html',
     styleUrls: ['./metrics.component.css', '../landing/landing.component.scss']
 })
 export class MetricsComponent implements OnInit {
-
     imageURL: string = 'assets/images/sdp-background.jpg';
     inBrowser: boolean = false;
-    distApi: string;
+    lps: string;
     pdrHomeUrl: string = "";
 
     // Data
     ediid: string;
+    pdrid: string;
     files: TreeNode[] = [];
     fileLevelData: any;
     firstTimeLogged: string = '';
@@ -41,8 +63,12 @@ export class MetricsComponent implements OnInit {
     metricsData: any[] = [];
     totalFileLevelSuccessfulGet: number = 0;
     totalFileSize: number = 0;
+    totalFileSizeForDisplay: string = "";
     totalFilesinChart: number = 0;
     noDatasetSummary: boolean = false;
+    totalDatasetDownloads: number = 0;
+    totalUniqueUsers: number = 0;
+    totalDownloadSizeInByte: number = 0;
 
     // Chart
     chartData: Array<any>;
@@ -52,7 +78,7 @@ export class MetricsComponent implements OnInit {
     visible: boolean = true;
     cols: any[] = [];
     fontSize: string = '16px';  // Default font size
-    noChartData: boolean = false;
+    noChartData: boolean = true;
 
     //Display
     screenSizeBreakPoint: number;
@@ -78,21 +104,23 @@ export class MetricsComponent implements OnInit {
 
     @ViewChild('panel0', { read: ElementRef }) public panel0: ElementRef<any>;
 
-    constructor(private route: ActivatedRoute,
-                private cfg: AppConfig,
-                @Inject(PLATFORM_ID) private platformId: Object,
-                public commonFunctionService: CommonFunctionService,
-                private datePipe: DatePipe,
-                private searchService: SearchService,
-                public gaService: GoogleAnalyticsService,
-                public metricsService: MetricsService) 
-    { 
-        this.inBrowser = isPlatformBrowser(platformId);
-        this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");
-    }
+    constructor(
+        private route: ActivatedRoute,
+        private cfg: AppConfig,
+        @Inject(PLATFORM_ID) private platformId: Object,
+        public commonFunctionService: CommonFunctionService,
+        private datePipe: DatePipe,
+        private searchService: SearchService,
+        public gaService: GoogleAnalyticsService,
+        public metricsService: MetricsService) { 
+
+            this.inBrowser = isPlatformBrowser(platformId);
+            this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");
+        }
 
     ngOnInit() {
-        this.distApi = this.cfg.get("links.portalBase", "/")+"od/id/";
+        this.lps = this.cfg.get("locations.landingPageService", "/od/id/");
+
         this.detectScreenSize();
         this.recordLevelData = new RecordLevelMetrics();
 
@@ -107,110 +135,27 @@ export class MetricsComponent implements OnInit {
         if(this.inBrowser){
             this.route.params.subscribe(queryParams => {
                 this.ediid = queryParams.id;
-                this.pdrHomeUrl = this.distApi + this.ediid;
+                this.pdrHomeUrl = this.lps + this.ediid;
                 // Get dataset title
                 this.searchService.searchById(this.ediid, true).subscribe(md => {
                     if(md) {
                         this.record = md as NerdmRes;
                         this.datasetTitle = md['title'];
-
+                        this.pdrid = md['@id'];
+        
                         this.createNewDataHierarchy();
                         if (this.files.length != 0){
                             this.files = <TreeNode[]>this.files[0].data;
-
-                            // Get metrics details (file level)
-                            this.metricsService.getFileLevelMetrics(this.ediid).subscribe(async (event) => {
-                                // Some large dataset might take a while to download. Only handle the response
-                                // when it finishes downloading
-                                if(event.type == HttpEventType.Response){
-                                    let response = await event.body.text();
-                                    this.fileLevelData = JSON.parse(response);
-
-                                    if(this.fileLevelData.FilesMetrics != undefined && this.fileLevelData.FilesMetrics.length > 0){
-                                        this.totalFileLevelSuccessfulGet = 0;
-                                        this.totalFilesinChart = 0;
-                                        this.cleanupFileLevelData(this.files);
-                                        this.fileLevelData.FilesMetrics = this.metricsData;
-                                        this.handleSum(this.files);
-
-                                        if(this.fileLevelData.FilesMetrics.length > 0){
-                                            this.noChartData = false;
-                                            this.createChartData();
-                                            this.lastDownloadDate = this.getLastDownloadDate()
-                                        }else{
-                                            this.noChartData = true;
-                                        }
-                                    }else{
-                                        this.noChartData = true;
-                                    }
-                                }
-                            },
-                            (err) => {
-                                let dateTime = new Date();
-                                console.error("err", err);
-                                this.errorMsg = JSON.stringify(err);
-                                this.hasError = true;
-                                console.error('this.hasError', this.hasError);
-                                this.emailSubject = 'PDR: Error getting file level metrics data';
-                                this.emailBody =
-                                    'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'
-                                    + '[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]' + '%0D%0A%0D%0A'
-                                    + 'ediid:' + this.ediid + '%0D%0A'
-                                    + 'Time: ' + dateTime.toString() + '%0D%0A%0D%0A'
-                                    + 'Error message:%0D%0A' + JSON.stringify(err);
-            
-                                this.readyDisplay = true;
-                            });                            
                         }else{
                             this.noChartData = true;
                         }
-
-                        this.readyDisplay = true;
+        
                         this.expandToLevel(this.files, true, 0, 1);
+
+                        //Fetch metrics data regardless if there is chat data or not
+                        this.getMetricsData();
                     }
-                })
-
-                this.metricsService.getRecordLevelMetrics(this.ediid).subscribe(async (event) => {
-                    switch (event.type) {
-                        case HttpEventType.Response:
-                            // this.recordLevelData = JSON.parse(JSON.stringify(event.body));
-                            this.recordLevelData = JSON.parse(await event.body.text());
-
-                            if(this.recordLevelData.DataSetMetrics != undefined && this.recordLevelData.DataSetMetrics.length > 0){
-                                this.firstTimeLogged = this.datePipe.transform(this.recordLevelData.DataSetMetrics[0].first_time_logged, "MMM d, y");
-
-                                this.recordLevelTotalDownloads = this.recordLevelData.DataSetMetrics[0].success_get;
-
-                                // this.xAxisLabel = "Total Downloads Since " + this.firstTimeLogged;
-                                this.datasetSubtitle = "Metrics Since " + this.firstTimeLogged;
-                                this.noDatasetSummary = false;
-                            }else{
-                                this.noDatasetSummary = true;
-                            }
-
-                            break;
-                        default:
-                            break;
-                    }
-
-                },
-                (err) => {
-                    let dateTime = new Date();
-                    console.error("err", err);
-                    this.errorMsg = JSON.stringify(err);
-                    this.hasError = true;
-                    console.error('this.hasError', this.hasError);
-
-                    this.emailSubject = 'PDR: Error getting file level metrics data';
-                    this.emailBody =
-                        'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'
-                        + '[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]' + '%0D%0A%0D%0A'
-                        + 'ediid:' + this.ediid + '%0D%0A'
-                        + 'Time: ' + dateTime.toString() + '%0D%0A%0D%0A'
-                        + 'Error message:%0D%0A' + JSON.stringify(err);
-
-                    this.readyDisplay = true;
-                });
+                })                              
             });
         }
     }
@@ -241,33 +186,171 @@ export class MetricsComponent implements OnInit {
     }
 
     /**
-     * Remove outdated data from the metrics
+     * Get metrics data
+     * Get record level data first then file level.
+     */
+    getMetricsData() {
+        // Get record level metrics data
+        let that = this;
+        this.metricsService.getRecordLevelMetrics(this.ediid).subscribe(async (event) => {
+            switch (event.type) {
+                case HttpEventType.Response:
+                    // this.recordLevelData = JSON.parse(JSON.stringify(event.body));
+                    that.recordLevelData = JSON.parse(await event.body.text());
+                    if(that.recordLevelData.DataSetMetrics != undefined && that.recordLevelData.DataSetMetrics.length > 0){
+
+                        if(that.handleRecordLevelData(that)) {
+                            //Get file level data
+                            that.getFileLevelMetricsData();
+                        }
+
+                        // this.xAxisLabel = "Total Downloads Since " + that.firstTimeLogged;
+                        that.datasetSubtitle = "Metrics Since " + that.firstTimeLogged;
+                    }else{
+                        that.noDatasetSummary = true;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+        },
+        (err) => {
+            let dateTime = new Date();
+            console.log("err", err);
+            that.errorMsg = JSON.stringify(err);
+            that.hasError = true;
+            console.log('this.hasError', that.hasError);
+
+            that.emailSubject = 'PDR: Error getting file level metrics data';
+            that.emailBody =
+                'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'
+                + '[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]' + '%0D%0A%0D%0A'
+                + 'ediid:' + that.ediid + '%0D%0A'
+                + 'Time: ' + dateTime.toString() + '%0D%0A%0D%0A'
+                + 'Error message:%0D%0A' + JSON.stringify(err);
+
+                that.readyDisplay = true;
+        });
+    }
+
+    getFileLevelMetricsData() {
+        // Get file level metrics data
+        let that = this;
+        this.metricsService.getFileLevelMetrics(this.ediid).subscribe(async (event) => {
+            // Some large dataset might take a while to download. Only handle the response
+            // when it finishes downloading
+            if(event.type == HttpEventType.Response){
+                let response = await event.body.text();
+                that.fileLevelData = JSON.parse(response);
+
+                if(that.fileLevelData.FilesMetrics != undefined && that.fileLevelData.FilesMetrics.length > 0){
+                    that.totalFileLevelSuccessfulGet = 0;
+                    that.totalFilesinChart = 0;
+                    that.cleanupFileLevelData(this.files);
+                    that.fileLevelData.FilesMetrics = that.metricsData;
+                    that.handleSum(that.files);
+                    if(that.fileLevelData.FilesMetrics.length > 0){
+                        that.noChartData = that.noDatasetSummary;
+                        // this.noChartData = false;
+                        that.createChartData();
+                        that.lastDownloadDate = that.getLastDownloadDate()
+                    }else{
+                        that.noChartData = true;
+                    }
+                }else{
+                    that.noChartData = true;
+                }
+
+                that.readyDisplay = true;
+            }
+        },
+        (err) => {
+            let dateTime = new Date();
+            console.log("err", err);
+            that.errorMsg = JSON.stringify(err);
+            that.hasError = true;
+            console.log('this.hasError', that.hasError);
+            that.emailSubject = 'PDR: Error getting file level metrics data';
+            that.emailBody =
+                'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'
+                + '[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]' + '%0D%0A%0D%0A'
+                + 'ediid:' + that.ediid + '%0D%0A'
+                + 'Time: ' + dateTime.toString() + '%0D%0A%0D%0A'
+                + 'Error message:%0D%0A' + JSON.stringify(err);
+
+            that.readyDisplay = true;
+        });                                 
+    }
+
+    /**
+     * Handle record level data.
+     * If only one record in DataSetMetrics, just use it. Otherwise check if pdrid matches 
+     * Nerdm record's pdrid. If yes, use it. Otherwise return false.
+     * @returns true if there is valid record level data record
+     */
+    handleRecordLevelData(that: any) {
+        let met: any = null;
+
+        if(this.recordLevelData.DataSetMetrics && this.recordLevelData.DataSetMetrics.length > 1) {
+            for(let metrics of this.recordLevelData.DataSetMetrics) {
+                if(metrics["pdrid"] && (metrics["pdrid"].toLowerCase() == 'nan' || metrics["pdrid"].trim() == this.pdrid) && metrics["last_time_logged"]){
+                    met = metrics;
+                }
+            }
+        }else{
+            met = this.recordLevelData.DataSetMetrics[0];
+        }
+
+        if(met) {
+            that.firstTimeLogged = this.datePipe.transform(met.first_time_logged, "MMM d, y");
+            that.recordLevelTotalDownloads = met.success_get;
+            that.totalDatasetDownloads = met.record_download;
+            that.totalUniqueUsers = met.number_users;
+            that.totalDownloadSizeInByte = met.total_size_download;
+
+            that.noDatasetSummary = false;
+            that.noChartData = false;
+        }else{
+            console.error("Unable to handle multiple record level metrics data. Either missing pdrid or pdrid mismatch.", this.recordLevelData.DataSetMetrics);
+
+            this.noDatasetSummary = true;
+            this.noChartData = true;
+        }
+
+        return !this.noDatasetSummary;
+    }
+
+    /**
+     * Remove outdated data and sha files from the metrics
      */
     cleanupFileLevelData(files: TreeNode[]){
         let metricsData: any[] = [];
-
         for(let node of files){
-            let found = this.fileLevelData.FilesMetrics.find(x => x.filepath.substr(x.filepath.indexOf(this.ediid)+this.ediid.length).trim() == node.data.filePath.trim());
-            if(found){
-                metricsData.push(found);
-                node.data.success_get = found.success_get;
-                if(!node.data.download_size || node.data.download_size == 0){
-                    node.data.download_size = found.download_size;
+            //Only check leaf
+            if(node.children.length <= 0) {
+                let found = this.metricsService.findFileLevelMatch(this.fileLevelData.FilesMetrics, node.data.ediid, node.data.pdrid, node.data.filePath);
+
+                if(found){
+                    metricsData.push(found);
+                    node.data.success_get = found.success_get;
+                    if(!node.data.download_size || node.data.download_size == 0){
+                        node.data.download_size = found.download_size;
+                    }
+
+                    this.totalFileLevelSuccessfulGet += found.success_get;
+                    this.totalFilesinChart += 1;
+
+                    node.data.inChart = true;
+                    if(node.parent){
+                        node.parent.data.inChart = true;
+                    }
                 }
 
-                this.totalFileLevelSuccessfulGet += found.success_get;
-                this.totalFilesinChart += 1;
-
-                node.data.inChart = true;
-                if(node.parent){
-                    node.parent.data.inChart = true;
-                }
-            }
-
-            if(node.children.length > 0){
-                this.cleanupFileLevelData(node.children);
-            }else{
                 this.filescount = this.filescount + 1;
+            }else {
+                this.cleanupFileLevelData(node.children);
             }
         }
 
@@ -284,12 +367,12 @@ export class MetricsComponent implements OnInit {
      */
     handleSum(files: TreeNode[]){
         this.totalFileSize = 0;
-        if(files) {
-            files.forEach(child => {
-                const {downloads, fileSize} = this.sumFolder(child);
-                this.totalFileSize += fileSize;
-            })
+        for(let child of files) {
+            const {downloads, fileSize} = this.sumFolder(child);
+            this.totalFileSize += fileSize;
         }
+
+        this.totalFileSizeForDisplay = this.commonFunctionService.formatBytes(this.totalFileSize, 2);
     }
 
     /**
@@ -298,16 +381,22 @@ export class MetricsComponent implements OnInit {
      * @returns 
      */
     sumFolder(node: TreeNode){
-        if (node.children && node.children.length > 0) {
-            node.children.forEach(child => {
+        if (node.children.length > 0) {
+            for(let child of node.children) {
                 const {downloads, fileSize} = this.sumFolder(child);              
                 node.data.success_get += downloads;
                 node.data.download_size += fileSize;
-            });
+            };
         }
     
         var downloads = node.data.success_get;
-        var fileSize = node.data.download_size;
+
+        var fileSize;
+        if(!node.data.download_size || node.data.download_size == 'nan')
+            fileSize = 0;
+        else
+            fileSize = node.data.download_size;
+
         return {downloads, fileSize};
     }
 
@@ -340,9 +429,9 @@ export class MetricsComponent implements OnInit {
         // Add summary
         csv = "# Record id," + this.ediid + "\r\n"
             + "# Total file downloads," + this.recordLevelTotalDownloads + "\r\n"
-            + "# Total dataset downloads," + this.TotalDatasetDownloads + "\r\n"
+            + "# Total dataset downloads," + this.totalDatasetDownloads + "\r\n"
             + "# Total bytes downloaded," + this.totalDownloadSizeInByte + "\r\n"
-            + "# Total unique users," + this.TotalUniqueUsers + "\r\n"
+            + "# Total unique users," + this.totalUniqueUsers + "\r\n"
             + "\r\n" + csv;
 
         // Create link and download
@@ -356,33 +445,11 @@ export class MetricsComponent implements OnInit {
     }
 
     /**
-     * Return total dataset downloads
-     */
-    get TotalDatasetDownloads() {
-        if(this.recordLevelData.DataSetMetrics[0] != undefined){
-            return this.recordLevelData.DataSetMetrics[0].record_download;
-        }else{
-            return ""
-        }
-    }
-
-    /**
      * Return total download size from file level summary
      */
-    get TotalFileSize() {
-        return this.commonFunctionService.formatBytes(this.totalFileSize, 2);
-    }
-
-    /**
-     * Get total unique users
-     */
-    get TotalUniqueUsers() {
-        if(this.recordLevelData.DataSetMetrics[0] != undefined){
-            return this.recordLevelData.DataSetMetrics[0].number_users;
-        }else{
-            return ""
-        }
-    }
+    // get TotalFileSize() {
+    //     return this.commonFunctionService.formatBytes(this.totalFileSize, 2);
+    // }
 
     /**
      * Save the bar chart as a png file
@@ -445,7 +512,7 @@ export class MetricsComponent implements OnInit {
                     filenameDisp = "..." + filename.substr(filename.length - this.maxLabelLength);
                 }
 
-                filenameWithPath = this.fileLevelData.FilesMetrics[i].filepath.substr(this.fileLevelData.FilesMetrics[i].filepath.indexOf(this.ediid)+this.ediid.length+1);
+                filenameWithPath = this.fileLevelData.FilesMetrics[i].filepath;
                 filenameWithPath = decodeURI(filenameWithPath);
                 filenameWithPath = '/' + filenameWithPath.replace(new RegExp('%20', 'g'), " ").trim();
                 filenameWithPathDisp = filenameWithPath;
@@ -484,9 +551,6 @@ export class MetricsComponent implements OnInit {
                 }
             }
         }
-
-        // var sum = this.chartData.reduce((sum, current) => sum + current[1], 0);
-        // this.recordLevelTotalDownloads = sum;
     }
 
     /**
@@ -495,9 +559,9 @@ export class MetricsComponent implements OnInit {
      */
     getLastDownloadDate(){
         if (this.fileLevelData.FilesMetrics.length) {
-            var lastDownloadTime = this.fileLevelData.FilesMetrics.reduce((m,v,i) => (v.timestamp > m.timestamp) && i ? v : m).timestamp;
+            var lastDownloadTime = this.fileLevelData.FilesMetrics.reduce((m,v,i) => (v.last_time_logged > m.last_time_logged) && i ? v : m).last_time_logged;
 
-            return this.datePipe.transform(this.fileLevelData.FilesMetrics.reduce((m,v,i) => (v.timestamp > m.timestamp) && i ? v : m).timestamp, "MMM d, y");
+            return this.datePipe.transform(this.fileLevelData.FilesMetrics.reduce((m,v,i) => (v.last_time_logged > m.last_time_logged) && i ? v : m).last_time_logged, "MMM d, y");
         }
     }
 
@@ -505,23 +569,28 @@ export class MetricsComponent implements OnInit {
      * Get total recordset level download size
      */
     get totalDownloadSize() {
-        if(this.recordLevelData.DataSetMetrics[0] != undefined){
-            return this.commonFunctionService.formatBytes(this.recordLevelData.DataSetMetrics[0].total_size, 2);
-        }else{
-            return ""
-        }
+        return this.commonFunctionService.formatBytes(this.totalDownloadSizeInByte, 2);
+        // if(this.recordLevelData.DataSetMetrics[0] != undefined){
+        //     return this.commonFunctionService.formatBytes(this.recordLevelData.DataSetMetrics[0].total_size, 2);
+        // }else{
+        //     return ""
+        // }
     }
 
     /**
      * Get total recordset level download size in bytes
+     * 01/08/2024 Discussed with Deoyani, use "total_size_download" in record level data. 
+     * No need to add file level data anymore.
      */
-    get totalDownloadSizeInByte() {
-        if(this.recordLevelData.DataSetMetrics[0] != undefined){
-            return this.recordLevelData.DataSetMetrics[0].total_size;
-        }else{
-            return ""
-        }
-    }
+    // get totalDownloadSizeInByte() {
+    //     let totalDownload = 0;
+
+    //     if(this.recordLevelData != undefined) {
+    //         totalDownload += this.recordLevelData.DataSetMetrics[0]["total_size_download"];
+    //     }
+
+    //     return totalDownload;
+    // }
 
      /**
      * Reture style for Title column of the file tree
@@ -593,7 +662,7 @@ export class MetricsComponent implements OnInit {
     createNewDataHierarchy() {
         var testdata: TreeNode = {}
         if (this.record['components'] != null) {
-            testdata["data"] = this.arrangeIntoTree(this.record['components']);
+            testdata["data"] = this.arrangeIntoTree(this.record['components'], this.record['@id']);
             this.files.push(testdata);
         }
     }
@@ -603,14 +672,15 @@ export class MetricsComponent implements OnInit {
      * @param paths 
      * @returns 
      */
-    private arrangeIntoTree(paths) {
+    private arrangeIntoTree(paths, pdrid) {
         const tree: TreeNode[] = [];
         // This example uses the underscore.js library.
         var i = 1;
         var tempfiletest = "";
 
-        paths.forEach((path) => {
-            if (path.filepath && !path['@type'].includes('nrd:Hidden')) {
+        for(let path of paths) {
+            //Remove hidden type files and sha files 
+            if (path.filepath && !path['@type'].includes('nrd:Hidden') && !path.filepath.endsWith('sha256')) {
                 if (!path.filepath.startsWith("/"))
                     path.filepath = "/" + path.filepath;
 
@@ -618,7 +688,7 @@ export class MetricsComponent implements OnInit {
                 pathParts.shift(); // Remove first blank element from the parts array.
                 let currentLevel = tree; // initialize currentLevel to root
 
-                pathParts.forEach((part) => {
+                for(let part of pathParts) {
                     // check to see if the path already exists.
                     const existingPath = currentLevel.filter(level => level.data.name === part);
                     if (existingPath.length > 0) {
@@ -635,6 +705,7 @@ export class MetricsComponent implements OnInit {
                             data: {
                                 cartId: tempId,
                                 ediid: this.ediid,
+                                pdrid: pdrid,
                                 name: part,
                                 mediatype: path.mediaType,
                                 size: path.size,
@@ -654,10 +725,10 @@ export class MetricsComponent implements OnInit {
                         currentLevel.push(newPart);
                         currentLevel = newPart.children;
                     }
-                });
+                };
             }
             i = i + 1;
-        });
+        };
         return tree;
     }
 

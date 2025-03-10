@@ -5,17 +5,13 @@ import * as env from '../../../../environments/environment';
 import { testdata } from '../../../../environments/environment';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
-import { AuthService } from '../../editcontrol/auth.service';
+import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
-import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { DAPService, LocalDAPService, createDAPService } from '../../../nerdm/dap.service';
-import { NerdmRes } from '../../../nerdm/nerdm';
-import { map, tap } from 'rxjs';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { config } from '../../../../environments/environment'
-import { DAPModule } from '../../../nerdm/dap.module';
-import { HttpClient, HttpRequest, HttpResponse, HttpHandler, HttpEvent, HttpInterceptor, HTTP_INTERCEPTORS, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 import { environment } from '../../../../environments/environment-impl';
+
 
 describe('IspartofEditComponent', () => {
     let component: IspartofEditComponent;
@@ -23,20 +19,24 @@ describe('IspartofEditComponent', () => {
     let cfg: AppConfig = new AppConfig(null);
     cfg.loadConfig(env.config);
     let nrd1 = testdata['forensics'];
+    let authsvc : AuthService = new MockAuthService(undefined);
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
     
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [IspartofEditComponent, DAPModule],
+      imports: [IspartofEditComponent],
       providers: [
-        MetadataUpdateService,
-        UserMessageService,
-        AuthService,
-        DatePipe,
+        UserMessageService, 
         HttpHandler,
-        GoogleAnalyticsService,
+        DatePipe,
         { provide: AppConfig, useValue: cfg },
-        { provide: DAPService, useFactory: createDAPService,
-            deps: [ environment, HttpClient, AppConfig ] }, 
+        { provide: AuthService, useValue: authsvc },
+        { provide: DAPService, useFactory: createDAPService, 
+            deps: [ environment, HttpClient, AppConfig ] },
+        { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+            new UserMessageService(), edstatsvc, dapsvc, null)
+        } 
       ]
     }).compileComponents();
 

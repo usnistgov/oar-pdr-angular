@@ -9,6 +9,9 @@ import { LandingpageService } from '../landingpage.service';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { DatePipe } from '@angular/common';
 import { AuthService, MockAuthService } from '../editcontrol/auth.service';
+import * as env from '../../../environments/environment';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
 
 describe('FacilitatorsComponent', () => {
     let component: FacilitatorsComponent;
@@ -17,6 +20,8 @@ describe('FacilitatorsComponent', () => {
     let cfg: AppConfig = new AppConfig(null);
     cfg.loadConfig(config);
     let authsvc = new MockAuthService();  
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -24,11 +29,16 @@ describe('FacilitatorsComponent', () => {
             providers: [
                 LandingpageService,
                 EditStatusService,
+                UserMessageService, 
+                HttpHandler,
                 DatePipe,
-                UserMessageService,
+                { provide: AppConfig, useValue: cfg },
                 { provide: AuthService, useValue: authsvc },
-                MetadataUpdateService,
-                { provide: AppConfig, useValue: cfg }
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                }
             ]
         })
         .compileComponents();

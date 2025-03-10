@@ -224,7 +224,9 @@ export class CartTreeNode implements TreeNode {
 @Component({
   selector: 'app-treetable',
   templateUrl: './treetable.component.html',
-  styleUrls: ['./treetable.component.css', '../datacart.component.css']
+  styleUrls: ['./treetable.component.css', 
+              '../datacart.component.css',
+              '../../landing/landing.component.scss']
 })
 export class TreetableComponent implements OnInit, AfterViewInit {
     public CART_CONSTANTS: any;

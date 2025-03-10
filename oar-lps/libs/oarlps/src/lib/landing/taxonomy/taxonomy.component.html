@@ -7,7 +7,13 @@
                 (click)="collectionNodeExpanded = !collectionNodeExpanded;chref.detectChanges()">
             </i>
             <span style="float: right;margin-right: 5px;margin-top: -3px;">
-                <p-checkbox [(ngModel)]="allChecked" [binary]="true" inputId="binary" (click)="updateCheckbox()" > </p-checkbox>
+                <p-checkbox 
+                    class="ptree-checkbox"
+                    [(ngModel)]="allChecked" 
+                    [binary]="true" 
+                    inputId="binary" 
+                    (click)="updateCheckbox()" > 
+                </p-checkbox>
                 <!-- <i class="faa faa-minus-square" style="color: rgb(0, 157, 255);font-size: 20px;"></i> -->
             </span>
             <span style="cursor: pointer;" (click)="collectionNodeExpanded = !collectionNodeExpanded;chref.detectChanges()">

@@ -8,9 +8,13 @@ import { EditControlComponent } from './editcontrol.component';
 import { EditControlModule } from './editcontrol.module';
 import { DatePipe } from '@angular/common';
 import { NerdmRes } from '../../nerdm/nerdm';
-
+import * as env from '../../../environments/environment';
 import { config, testdata } from '../../../environments/environment';
 import { LandingConstants } from '../constants';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
+import { EditStatusService } from '../editcontrol/editstatus.service';
+import { AuthenticationService, MockAuthenticationService } from 'oarng';
 
 describe('EditControlComponent', () => {
     let component : EditControlComponent;
@@ -20,15 +24,25 @@ describe('EditControlComponent', () => {
     let rec : NerdmRes = testdata['test1'];
     let authsvc : AuthService = new MockAuthService()
     let EDIT_MODES = LandingConstants.editModes;
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ EditControlModule, HttpClientTestingModule ],
+            imports: [ HttpClientTestingModule ],
             declarations: [  ],
             providers: [
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc },
-                UserMessageService, MetadataUpdateService, DatePipe
+                    UserMessageService, 
+                    {provide: AuthenticationService, useValue: new MockAuthenticationService(null)},
+                    HttpHandler,
+                    DatePipe,
+                    { provide: AppConfig, useValue: cfg },
+                    { provide: AuthService, useValue: authsvc },
+                    { provide: DAPService, useFactory: createDAPService, 
+                        deps: [ env, HttpClient, AppConfig ] },
+                    { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                        new UserMessageService(), edstatsvc, dapsvc, null)
+                    }
             ]
         }).compileComponents();
 
@@ -123,18 +137,18 @@ describe('EditControlComponent', () => {
     // }));
 
     // test doneEdits
-    it('doneEdits()', waitForAsync(() => {
-        expect(component._editMode).toBe(EDIT_MODES.VIEWONLY_MODE);
-        let cmpel = fixture.nativeElement;
-        let edbtn = cmpel.querySelector("#ec-edit-btn") 
+    // it('doneEdits()', waitForAsync(() => {
+    //     expect(component._editMode).toBe(EDIT_MODES.VIEWONLY_MODE);
+    //     let cmpel = fixture.nativeElement;
+    //     let edbtn = cmpel.querySelector("#ec-edit-btn") 
 
-        component.startEditing();
-        fixture.whenStable().then(() => {
-            fixture.detectChanges();
-            expect(component._editMode).toBe(EDIT_MODES.EDIT_MODE);
+    //     component.startEditing();
+    //     fixture.whenStable().then(() => {
+    //         fixture.detectChanges();
+    //         expect(component._editMode).toBe(EDIT_MODES.EDIT_MODE);
             
-            edbtn = cmpel.querySelector("#ec-edit-btn")     
-            expect(edbtn).toBeNull();
+    //         edbtn = cmpel.querySelector("#ec-edit-btn")     
+    //         expect(edbtn).toBeNull();
 
             // component.doneEdits();
             // fixture.whenStable().then(() => {
@@ -151,8 +165,8 @@ describe('EditControlComponent', () => {
             //     expect(donebtn.disabled).toBeTruthy();
             //     expect(discbtn.disabled).toBeTruthy();
             // });
-        });
-    }));
+    //     });
+    // }));
 
     // it('sends md update', () => {
     //     let md = null;

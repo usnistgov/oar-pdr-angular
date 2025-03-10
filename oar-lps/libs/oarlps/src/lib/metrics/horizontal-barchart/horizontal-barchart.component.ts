@@ -1,13 +1,34 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import * as d3 from 'd3';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TreeTableModule } from 'primeng/treetable';
+import { ButtonModule } from 'primeng/button';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TreeModule } from 'primeng/tree';
+import { FieldsetModule } from 'primeng/fieldset';
+import { DialogModule } from 'primeng/dialog';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 const barWidth: number = 30;
 
 @Component({
-  selector: 'app-horizontal-barchart',
-  templateUrl: './horizontal-barchart.component.html',
-  styleUrls: ['./horizontal-barchart.component.css'],
-  encapsulation: ViewEncapsulation.None
+    selector: 'app-horizontal-barchart',
+    standalone: true,
+    imports: [
+        NgbModule, 
+        TreeModule, 
+        FieldsetModule, 
+        DialogModule, 
+        OverlayPanelModule, 
+        TreeTableModule, 
+        ButtonModule,
+        CommonModule, 
+        FormsModule
+    ],
+    templateUrl: './horizontal-barchart.component.html',
+    styleUrls: ['./horizontal-barchart.component.css'],
+    encapsulation: ViewEncapsulation.None
 })
 export class HorizontalBarchartComponent implements OnInit {
     @ViewChild('chart', { static: true }) private chartContainer: ElementRef;
@@ -40,7 +61,6 @@ export class HorizontalBarchartComponent implements OnInit {
 
             this.createChart();
             if (this.data) {
-                console.log("Updating chart...");
                 this.updateChart();
             }
         }
@@ -97,8 +117,8 @@ export class HorizontalBarchartComponent implements OnInit {
 
         var maxTextWidth = 0;
         var labels = this.chart.selectAll(".label").data(this.data).text((d) => `${d[0]}`);
-        labels.each((d) => {
-            maxTextWidth = Math.max(maxTextWidth, d.getComputedTextLength());
+        labels.each(function() {
+            maxTextWidth = Math.max(maxTextWidth, this.getComputedTextLength());
         }).remove();
 
         return maxTextWidth;

@@ -57,6 +57,7 @@ export class MetricsinfoComponent implements OnInit {
     ngOnInit(): void {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
+        console.log("metricsData", this.metricsData);
     }
 
     get totalUsers() {
@@ -79,5 +80,9 @@ export class MetricsinfoComponent implements OnInit {
             return formatBytes(this.metricsData.totalDownloadSize, 2);
         else
             return "";
+    }
+
+    get hasCurrentMetrics() {
+        return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
     }
 }

@@ -11,6 +11,9 @@ import { LandingConstants } from '../constants';
 import { AppConfig } from '../../config/config';
 import { config, testdata } from '../../../environments/environment';
 import { Credentials, UserAttributes } from 'oarng';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
+import * as env from '../../../environments/environment';
 
 describe('EditStatusComponent', () => {
     let component : EditStatusComponent;
@@ -36,9 +39,16 @@ describe('EditStatusComponent', () => {
             imports: [ CommonModule, EditStatusComponent ],
             declarations: [  ],
             providers: [
-                UserMessageService, MetadataUpdateService, DatePipe, EditStatusService,
-                { provide: AuthService, useValue: authsvc },
-                { provide: AppConfig, useValue: cfg }
+                    UserMessageService, 
+                    HttpHandler,
+                    DatePipe,
+                    { provide: AppConfig, useValue: cfg },
+                    { provide: AuthService, useValue: authsvc },
+                    { provide: DAPService, useFactory: createDAPService, 
+                        deps: [ env, HttpClient, AppConfig ] },
+                    { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                        new UserMessageService(), edstatsvc, dapsvc, null)
+                    }
             ]
         }).compileComponents();
 
@@ -47,6 +57,8 @@ describe('EditStatusComponent', () => {
         component._editmode = EDIT_MODES.EDIT_MODE;
         component.showMsg = true;
     }
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
     beforeEach(waitForAsync(() => {
         makeComp();

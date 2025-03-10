@@ -18,17 +18,18 @@ const routes: Routes = [
 
     // Copied datacart routes here to test lazyloading
     { path: 'datacart',
-      // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
+    //   loadChildren: () => import('oarlps').then(m => m.DatacartModule),
       children: [
           {   path: ':cartname',
               component: DatacartComponent,
-              // loadComponent: () => import('./datacart.component')
-              //     .then(mod => mod.DatacartComponent),
-              canDeactivate: [LeaveWhileDownloadingGuard]   },
+            //   loadComponent: () => import('oarlps')
+            //       .then(mod => mod.DatacartComponent),
+              canDeactivate: [LeaveWhileDownloadingGuard]   
+            },
           {   path: 'ark:/:naan/:cartname',
               component: DatacartComponent,
-              // loadComponent: () => import('./datacart.component')
-              //     .then(mod => mod.DatacartComponent),
+            //   loadComponent: () => import('oarlps')
+            //       .then(mod => mod.DatacartComponent),
               canDeactivate: [LeaveWhileDownloadingGuard]   }
       ]
     },
@@ -58,7 +59,10 @@ const routes: Routes = [
           { path: ':id',             component: InternalErrorComponent }
       ]
     },
-    { path: 'metrics/:id',         component: MetricsComponent },
+    { path: 'metrics/:id',         
+        loadComponent: () => import('oarlps')
+        .then(mod => mod.MetricsComponent),
+    },
     { path: '**',                    component: NotFoundComponent      }
 ];
 

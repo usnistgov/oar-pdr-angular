@@ -575,3 +575,10 @@ a:visited {
     font-size: larger;
     margin-bottom: .5em;
 }
+
+/* Target the container of the checkbox */
+.ptree-checkbox {
+    border: 1px solid lightblue;
+    padding-bottom: 2px;
+    border-radius: 5px;
+}

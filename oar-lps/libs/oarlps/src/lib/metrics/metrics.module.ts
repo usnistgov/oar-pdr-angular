@@ -14,14 +14,14 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 @NgModule({
     declarations: [ 
-        MetricsComponent, 
-        HorizontalBarchartComponent
+        // MetricsComponent, 
+        // HorizontalBarchartComponent
     ],
     imports: [
         NgbModule, TreeModule, FieldsetModule, DialogModule, OverlayPanelModule, TreeTableModule, ButtonModule,CommonModule, FormsModule
     ],
     exports: [
-        MetricsComponent, HorizontalBarchartComponent
+        // MetricsComponent, HorizontalBarchartComponent
     ],
     providers: [
         MetricsService

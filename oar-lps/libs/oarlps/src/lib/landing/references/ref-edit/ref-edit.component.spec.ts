@@ -10,40 +10,51 @@ import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { HttpClient, HttpHandler } from '@angular/common/http';
 
 describe('SingleRefComponent', () => {
-  let component: RefEditComponent;
-  let fixture: ComponentFixture<RefEditComponent>;
-  let cfg: AppConfig = new AppConfig(null);
-  cfg.loadConfig(env.config);
-  let plid: Object = "browser";
-  let ts: TransferState = new TransferState();
-  let authsvc: AuthService = new MockAuthService(undefined);
+    let component: RefEditComponent;
+    let fixture: ComponentFixture<RefEditComponent>;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
+    let plid: Object = "browser";
+    let ts: TransferState = new TransferState();
+    let authsvc: AuthService = new MockAuthService(undefined);
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [ 
-        RefEditComponent,
-        HttpClientTestingModule, 
-        NoopAnimationsModule, 
-        ToastrModule.forRoot() ],
-      providers: [ 
-        MetadataUpdateService, 
-        DatePipe,
-        { provide: AppConfig, useValue: cfg },
-        { provide: AuthService, useValue: authsvc },
-        UserMessageService ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [ 
+                RefEditComponent,
+                HttpClientTestingModule, 
+                NoopAnimationsModule, 
+                ToastrModule.forRoot() ],
+            providers: [ 
+                UserMessageService, 
+                HttpHandler,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                },
+            ]
+        })
+        .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RefEditComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(RefEditComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

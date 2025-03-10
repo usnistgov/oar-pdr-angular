@@ -90,7 +90,7 @@
     <div>
         <b>Access Metrics</b>
     </div>
-    <div *ngIf="metricsData.hasCurrentMetrics; else noMetrics">
+    <div *ngIf="hasCurrentMetrics; else noMetrics">
         Number of unique downloads of some or all of this dataset: {{metricsData.totalDatasetDownload}}<br>
         Number of unique users downloading this dataset: {{metricsData.totalUsers}}<br>
         Total number of bytes delivered from this dataset: {{totalDownloadSize}}<br>

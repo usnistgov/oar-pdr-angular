@@ -206,7 +206,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
                     userLastName: 'Lin',
                     userEmail: "chuan.lin@nist.gov"
                 },
-                token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0LnVzZXJAbmlzdC5nb3YiLCJ1c2VyTmFtZSI6IlRlc3QiLCJ1c2VyTGFzdE5hbWUiOiJVc2VyIiwidXNlck9VIjoiTU1MIiwiZGlzcGxheU5hbWUiOiJUZXN0SWQiLCJyb2xlIjoibm90LXNldCIsIndpbklkIjoiVGVzdElkIiwic3ViIjoiVGVzdElkIiwiZXhwIjoxNzM5NTQzNDY4fQ.S3nuXw2k3F1XrgLC28d0HoymPAjC94IO1KlBF_hswJE'
+                token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyRW1haWwiOiJ0ZXN0LnVzZXJAbmlzdC5nb3YiLCJ1c2VyTmFtZSI6IlRlc3QiLCJ1c2VyTGFzdE5hbWUiOiJVc2VyIiwidXNlck9VIjoiTU1MIiwiZGlzcGxheU5hbWUiOiJUZXN0SWQiLCJyb2xlIjoibm90LXNldCIsIndpbklkIjoiVGVzdElkIiwic3ViIjoiVGVzdElkIiwiZXhwIjoxNzQxNDQ3NzA5fQ.byzlJmWJXJ-g_rR1XvKKzSpl8KRoqR5ANd2LMsekHzs'
             };
             console.log("logging in...")
             return of(new HttpResponse({ status: 200, body }));
@@ -218,6 +218,17 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         //     throw new HttpErrorResponse(
         //             {"status": 401}
         //     );
+        // }
+
+        // if (request.url.indexOf('https://localhost/midas/dap/mds3/mds3:0001/data/authors') > -1 && request.method === 'POST') {
+        //   let body = {
+        //     "familyName": "Doe",
+        //     "fn": "Jon  Doe",
+        //     "givenName": "John",
+        //     "@type": "foaf:Person",
+        //     "@id": "auth_9"
+        //   };
+        //   return of(new HttpResponse({ status: 200, body: body }));
         // }
 
         if (request.url.indexOf('od/id/test3') > -1 && request.method === 'GET') {
@@ -243,33 +254,39 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         // }
 
         if (request.url.indexOf('/rmm/taxonomy') > -1 && request.method === 'GET') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
+          alert('You are using fake backend!' + '/rmm/taxonomy');
+          this.toastrService.warning('You are using fake backend!', 'Warning!');
 
-            return of(new HttpResponse({ status: 200, body: taxonomy }));
+          return of(new HttpResponse({ status: 200, body: taxonomy }));
         }
 
-        if (request.url.indexOf('data/theme') > -1 && request.method === 'PUT') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
-            return of(new HttpResponse({ status: 200, body: request.body }));
-        }
+        // if (request.url.indexOf('data/theme') > -1 && request.method === 'PUT') {
+        //   alert('You are using fake backend!' + 'data/theme');
+        //   this.toastrService.warning('You are using fake backend!', 'Warning!');
+        //   return of(new HttpResponse({ status: 200, body: request.body }));
+        // }
 
         if (request.url.indexOf('midas/dap/mds3/pdr0-0001') > -1 && request.method === 'GET') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
+          alert('You are using fake backend!' + 'midas/dap/mds3/pdr0-0001');
+          this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: forensics }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/pdr0-0002') > -1 && request.method === 'GET') {
+          alert('You are using fake backend!' + 'midas/dap/mds3/pdr0-0002');
           this.toastrService.warning('You are using fake backend!', 'Warning!');
           return of(new HttpResponse({ status: 200, body: chips }));
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'GET') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
+          alert('You are using fake backend!' + 'midas/dap/mds3/test2');
+          this.toastrService.warning('You are using fake backend!', 'Warning!');
             return of(new HttpResponse({ status: 200, body: nerdm }));
         }
 
         if ((request.url.indexOf('midas/dap/mds3/test2') > -1 || request.url.indexOf('midas/dap/mds3/pdr0-0002') > -1 || request.url.indexOf('midas/dap/mds3/pdr0-0001') > -1) && request.method === 'PUT') {
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
+          alert('You are using fake backend!' + 'midas/dap/mds3/test2, pdr0-0001, pdr0-0002, PUT');
+          this.toastrService.warning('You are using fake backend!', 'Warning!');
             let requestBody = JSON.parse(request.body);
             if(Array.isArray(requestBody)) {
                 requestBody.forEach(item => {
@@ -288,7 +305,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2') > -1 && request.method === 'DELETE') {
-            if(!this.globalsvc.fakeBackendAlerted()) {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test2, DELETE');
+          if(!this.globalsvc.fakeBackendAlerted()) {
                 alert('You are using fake backend for authentication!');
                 this.globalsvc.fakeBackendAlerted.set(true);
             }
@@ -296,7 +314,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if ((request.url.indexOf('midas/dap/mds3/test2') > -1  || request.url.indexOf('midas/dap/mds3/pdr0-0002') > -1  || request.url.indexOf('midas/dap/mds3/pdr0-0001') > -1) && request.method === 'PATCH') {
-            if(!this.globalsvc.fakeBackendAlerted()) {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test2, pdr0-0001, pdr0-0002, PATCH');
+
+          if(!this.globalsvc.fakeBackendAlerted()) {
                 alert('You are using fake backend for authentication!');
                 this.globalsvc.fakeBackendAlerted.set(true);
             }
@@ -305,7 +325,8 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if (request.url.indexOf('midas/dap/mds3/test2/data/references') > -1 && request.method === 'POST') {
-            if(!this.globalsvc.fakeBackendAlerted()) {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test2/data/references, POST');
+          if(!this.globalsvc.fakeBackendAlerted()) {
                 alert('You are using fake backend for authentication!');
                 this.globalsvc.fakeBackendAlerted.set(true);
             }
@@ -320,7 +341,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
 //      Empty record
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'GET') {
-            if(!this.globalsvc.fakeBackendAlerted()) {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test1, GET');
+
+          if(!this.globalsvc.fakeBackendAlerted()) {
                 alert('You are using fake backend for authentication!');
                 this.globalsvc.fakeBackendAlerted.set(true);
             }
@@ -329,6 +352,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PUT') {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test1, PUT');
             if(!this.globalsvc.fakeBackendAlerted()) {
                 alert('You are using fake backend for authentication!');
                 this.globalsvc.fakeBackendAlerted.set(true);
@@ -348,6 +372,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'DELETE') {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test1, DELETE');
             if(!this.globalsvc.fakeBackendAlerted()) {
                 alert('You are using fake backend for authentication!');
                 this.globalsvc.fakeBackendAlerted.set(true);
@@ -357,6 +382,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1') > -1 && request.method === 'PATCH') {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test1, PATCH');
             if(!this.globalsvc.fakeBackendAlerted()) {
                 alert('You are using fake backend for authentication!');
                 this.globalsvc.fakeBackendAlerted.set(true);
@@ -366,6 +392,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         }
 
         if (request.url.indexOf('midas/dap/mds3/test1/data/references') > -1 && request.method === 'POST') {
+          alert('You are using fake backend!' + 'midas/dap/mds3/test1/data/references, POST');
             let body: any = request.body as any;
             let obj = JSON.parse(body);
             obj["@id"] = this.readableRandomStringMaker(6);

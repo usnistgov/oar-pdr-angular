@@ -20,7 +20,7 @@ describe('HorizontalBarchartComponent', () => {
     beforeEach(async() => {
         TestBed.configureTestingModule({
         imports: [ FormsModule ],
-        declarations: [ HorizontalBarchartComponent ]
+        declarations: [  ]
         })
         .compileComponents();
 

@@ -1,3 +1,9 @@
+<div *ngIf="theme == scienceTheme">
+    <!-- Banner for Science Theme -->
+    <div class="science-theme-banner" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')','margin-bottom':'-1em'}">
+    </div>
+</div>
+
 <div style="margin: 20px 40px 20px 0;">
     <div *ngIf="!displaySpecialMessage && _showContent">
         <div *ngIf="md === null">

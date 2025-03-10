@@ -208,4 +208,8 @@ export class AboutdatasetComponent implements OnChanges {
         }, 2000);
 
     }
+
+    get hasCurrentMetrics() {
+        return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
+    }
 }

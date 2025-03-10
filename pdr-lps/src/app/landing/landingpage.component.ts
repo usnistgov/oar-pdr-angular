@@ -117,6 +117,7 @@ import { FrameModule } from 'oarlps';
     ]
 })
 export class LandingPageComponent implements OnInit, AfterViewInit {
+    pdrid: string;
     layoutCompact: boolean = true;
     layoutMode: string = 'horizontal';
     profileMode: string = 'inline';
@@ -162,7 +163,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     bottomBarHeight: number = 170;
     showMetrics: boolean = false;
     recordType: string = "";
-    imageURL: string = 'assets/images/fingerprint.jpg';
+    imageURL: string = '';
     theme: string;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
@@ -353,6 +354,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 metadataError = "not-found";
             }
             else{
+                this.pdrid = this.md["@id"];
                 this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
                 if(this.inBrowser){
@@ -397,67 +399,34 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
      getMetrics() {
         let ediid = this.md.ediid;
+        let that = this;
         this.metricsService.getFileLevelMetrics(ediid).subscribe(async (event) => {
             // Some large dataset might take a while to download. Only handle the response
             // when download is completed
             if(event.type == HttpEventType.Response){
                 let response = await event.body.text();
 
-                this.fileLevelMetrics = JSON.parse(response);
+                that.fileLevelMetrics = JSON.parse(response);
 
-                if(this.fileLevelMetrics.FilesMetrics != undefined && this.fileLevelMetrics.FilesMetrics.length > 0 && this.md.components){
+                if(that.fileLevelMetrics.FilesMetrics != undefined && that.fileLevelMetrics.FilesMetrics.length > 0 && that.md.components){
                     // check if there is any current metrics data
-                    for(let i = 1; i < this.md.components.length; i++){
-                        let filepath = this.md.components[i].filepath;
+                    for(let i = 1; i < that.md.components.length; i++){
+                        let filepath = that.md.components[i].filepath;
                         if(filepath) filepath = filepath.trim();
 
-                        this.metricsData.hasCurrentMetrics = this.fileLevelMetrics.FilesMetrics.find(x => x.filepath.substr(x.filepath.indexOf(ediid)+ediid.length+1).trim() == filepath) != undefined;
-                        if(this.metricsData.hasCurrentMetrics) break;
+                        that.metricsData.hasCurrentMetrics = that.fileLevelMetrics.FilesMetrics.find(x => x.filepath.substr(x.filepath.indexOf(ediid)+ediid.length+1).trim() == filepath) != undefined;
+                        if(that.metricsData.hasCurrentMetrics) break;
                     }
                 }else{
-                    this.metricsData.hasCurrentMetrics = false;
+                    that.metricsData.hasCurrentMetrics = false;
                 }
 
-                if(this.metricsData.hasCurrentMetrics){
-                    this.metricsService.getRecordLevelMetrics(ediid).subscribe(async (event) => {
-                        if(event.type == HttpEventType.Response){
-                            this.recordLevelMetrics = JSON.parse(await event.body.text());
+                // if(that.metricsData.hasCurrentMetrics){
 
-                            let hasFile = false;
-
-                            if(this.md.components && this.md.components.length > 0){
-                                this.md.components.forEach(element => {
-                                    if(element.filepath){
-                                        hasFile = true;
-                                        return;
-                                    }
-                                });
-                            }
-
-                            if(hasFile){
-                                //Now check if there is any metrics data
-                                this.metricsData.totalDatasetDownload = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].record_download : 0;
-
-                                this.metricsData.totalDownloadSize = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].total_size : 0;
-
-                                this.metricsData.totalUsers = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].number_users : 0;
-
-                                this.metricsData.totalUsers = this.metricsData.totalUsers == undefined? 0 : this.metricsData.totalUsers;
-                            }
-
-                            this.metricsData.dataReady = true;
-                        }
-                    },
-                    (err) => {
-                        console.error("Failed to retrieve dataset metrics: ", err);
-                        this.metricsData.hasCurrentMetrics = false;
-                        this.showMetrics = true;
-                        this.metricsData.dataReady = true;
-                    });
-                }else{
-                    this.metricsData.dataReady = true;
-                }
-                this.showMetrics = true;
+                // }else{
+                //     that.metricsData.dataReady = true;
+                // }
+                that.showMetrics = true;
             }
         },
         (err) => {
@@ -466,7 +435,84 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.showMetrics = true;
             this.metricsData.dataReady = true; // ready to display message
         });
+
+        //Get record level metrics
+        this.metricsService.getRecordLevelMetrics(ediid).subscribe(async (event) => {
+            if(event.type == HttpEventType.Response){
+                let response = await event.body.text();
+
+                that.recordLevelMetrics = JSON.parse(await event.body.text());
+                that.handleRecordLevelData();
+
+                // let hasFile = false;
+
+                // if(that.md.components && that.md.components.length > 0){
+                //     that.md.components.forEach(element => {
+                //         if(element.filepath){
+                //             hasFile = true;
+                //             return;
+                //         }
+                //     });
+                // }
+
+                // if(hasFile){
+                //     //Now check if there is any metrics data
+                //     that.metricsData.totalDatasetDownload = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].record_download : 0;
+
+                //     that.metricsData.totalDownloadSize = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].total_size : 0;
+
+                //     that.metricsData.totalUsers = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].number_users : 0;
+
+                //     that.metricsData.totalUsers = that.metricsData.totalUsers == undefined? 0 : that.metricsData.totalUsers;
+                // }
+
+                // that.metricsData.dataReady = true;
+            }
+        },
+        (err) => {
+            console.error("Failed to retrieve dataset metrics: ", err);
+            this.metricsData.hasCurrentMetrics = false;
+            this.showMetrics = true;
+            this.metricsData.dataReady = true;
+        });
     }
+
+    /**
+     * Handle record level data.
+     * If only one record in DataSetMetrics, just use it. Otherwise check if pdrid matches 
+     * Nerdm record's pdrid. If yes, use it. Otherwise return false.
+     * @returns true if there is valid record level data record
+     */
+    handleRecordLevelData() {
+        let met: any = null;
+
+        if(this.recordLevelMetrics.DataSetMetrics) {
+            if(this.recordLevelMetrics.DataSetMetrics.length > 1) {
+                for(let metrics of this.recordLevelMetrics.DataSetMetrics) {
+                    if(metrics["pdrid"] && (metrics["pdrid"].toLowerCase() == 'nan' || metrics["pdrid"].trim() == this.pdrid) && metrics["last_time_logged"]){
+                        met = metrics;
+                    }
+                }
+            }else if(this.recordLevelMetrics.DataSetMetrics.length == 1){
+                met = this.recordLevelMetrics.DataSetMetrics[0];
+            }
+        }
+
+        if(met) {
+            this.metricsData.totalDatasetDownload = met.record_download;
+            this.metricsData.totalDownloadSize = met["total_size_download"];
+            this.metricsData.totalUsers = met.number_users;
+
+            this.metricsData.hasCurrentMetrics = true;
+            this.metricsData.dataReady = true;
+            this.showMetrics = true;
+        }else{
+            this.metricsData.hasCurrentMetrics = false;
+            this.showMetrics = true;
+            this.metricsData.dataReady = true;
+        }
+    }
+
 
     /**
      * Detect window scroll
@@ -550,7 +596,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     get totalDownloadSize() {
         if(this.recordLevelMetrics.DataSetMetrics[0] != undefined)
-            return formatBytes(this.recordLevelMetrics.DataSetMetrics[0].total_size, 2);
+            return formatBytes(this.recordLevelMetrics.DataSetMetrics[0].total_size_download, 2);
         else
             return "";
     }

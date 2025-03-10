@@ -11,6 +11,9 @@ import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import * as env from '../../../environments/environment';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 
 describe('TopicComponent', () => {
     let component: TopicComponent;
@@ -18,6 +21,8 @@ describe('TopicComponent', () => {
     let cfg = new AppConfig(null);
     cfg.loadConfig(env.config)
     let authsvc : AuthService = new MockAuthService(undefined);
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -29,9 +34,16 @@ describe('TopicComponent', () => {
                 ToastrModule.forRoot()],
             declarations: [],
             providers: [
-                MetadataUpdateService, UserMessageService, DatePipe,
+                UserMessageService, 
+                HttpHandler,
+                DatePipe,
                 { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                }
             ]
         })
             .compileComponents();

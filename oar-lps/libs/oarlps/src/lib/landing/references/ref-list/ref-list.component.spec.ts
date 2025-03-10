@@ -17,6 +17,8 @@ import * as env from '../../../../environments/environment';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 
 describe('RefListComponent', () => {
     let component: RefListComponent;
@@ -25,38 +27,43 @@ describe('RefListComponent', () => {
     cfg.loadConfig(config);
     let authsvc: AuthService = new MockAuthService(undefined);
     let rec : NerdmRes = testdata['test1'];
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-        imports: [
-            RefListComponent,
-            NoopAnimationsModule,
-            ToastrModule.forRoot()
-        ],
-        providers: [
-            { provide: AppConfig, useValue: cfg },
-            { provide: AuthService, useValue: authsvc },
-            MetadataUpdateService, 
-            UserMessageService, 
-            EditStatusService,
-            DatePipe,
-            AuthService,
-            provideHttpClient(),
-            provideHttpClientTesting(), 
-            provideRouter([])
-        ]
-    })
-    .compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [
+                RefListComponent,
+                NoopAnimationsModule,
+                ToastrModule.forRoot()
+            ],
+            providers: [
+                UserMessageService, 
+                HttpHandler,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                },
+                provideHttpClient(),
+                provideHttpClientTesting(), 
+                provideRouter([])
+            ]
+        })
+        .compileComponents();
+    }));
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RefListComponent);
-    component = fixture.componentInstance;
-    component.record = rec;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(RefListComponent);
+        component = fixture.componentInstance;
+        component.record = rec;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

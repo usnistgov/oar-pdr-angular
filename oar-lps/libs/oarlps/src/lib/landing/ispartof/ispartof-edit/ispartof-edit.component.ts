@@ -52,21 +52,9 @@ export class IspartofEditComponent {
         public mdupdsvc : MetadataUpdateService, 
         private chref: ChangeDetectorRef,
         public lpService: LandingpageService
-    ){
-        // effect(() => {
-        //     //Very tricky: have to use settimeout() here. Otherwise detectChanges does not work!
-        //     setTimeout(() => {
-        //         this.isEditMode = this.edstatsvc.isEditMode();
-        //         this.chref.detectChanges();
-        //     }, 0);
-        // })
-    }
+    ){ }
 
     ngOnInit(): void {
-        // this.isEditMode = this.edstatsvc.isEditMode();
-
-        // effect(() => {
-        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {

@@ -10,6 +10,10 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
 import * as env from '../../../../environments/environment';
+import { DAPService, LocalDAPService, createDAPService } from '../../../nerdm/dap.service';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { environment } from '../../../../environments/environment-impl';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
 
 describe('KeywordMidasComponent', () => {
     let component: KeywordMidasComponent;
@@ -17,7 +21,9 @@ describe('KeywordMidasComponent', () => {
     let cfg: AppConfig = new AppConfig(null);
     cfg.loadConfig(env.config);
     let authsvc: AuthService = new MockAuthService(undefined);
-
+    let edstatsvc = new EditStatusService();
+    let dapsvc : DAPService = new LocalDAPService();
+    
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -26,9 +32,16 @@ describe('KeywordMidasComponent', () => {
             ],
             declarations: [],
             providers: [
-                MetadataUpdateService, UserMessageService, DatePipe,
+                UserMessageService, 
+                HttpHandler,
+                DatePipe,
                 { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ environment, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                } 
             ]
         })
             .compileComponents();

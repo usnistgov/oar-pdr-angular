@@ -21,132 +21,141 @@ import * as env from '../../../environments/environment';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
 
 describe('DataFilesComponent', () => {
-  let component: DataFilesComponent;
-  let fixture: ComponentFixture<DataFilesComponent>;
-  let cfg: AppConfig;
-  let plid: Object = "browser";
-  let ts: TransferState = new TransferState();
-  let authsvc: AuthService = new MockAuthService(undefined);
+    let component: DataFilesComponent;
+    let fixture: ComponentFixture<DataFilesComponent>;
+    let cfg: AppConfig;
+    let plid: Object = "browser";
+    let ts: TransferState = new TransferState();
+    let authsvc: AuthService = new MockAuthService(undefined);
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
-  beforeEach(waitForAsync(() => {
-    let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
-    dc._forget();
+    beforeEach(waitForAsync(() => {
+        let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
+        dc._forget();
 
-    cfg = new AppConfig(null);
-    cfg.loadConfig(env.config)
+        cfg = new AppConfig(null);
+        cfg.loadConfig(env.config)
 
-    TestBed.configureTestingModule({
-      declarations: [],
-      imports: [FormsModule,
-        RouterTestingModule,
-        HttpClientTestingModule,
-        DataFilesComponent,
-        TreeTableModule,
-        BrowserAnimationsModule,
-        ToastrModule.forRoot()],
-      schemas: [NO_ERRORS_SCHEMA],
-      providers: [
-        CartService,
-        DownloadService,
-        TestDataService,
-        GoogleAnalyticsService,
-        EditStatusService,
-        DatePipe,
-        MetadataUpdateService,
-        UserMessageService,
-        { provide: AuthService, useValue: authsvc },
-        { provide: AppConfig, useValue: cfg }]
-    })
-      .compileComponents();
-  }));
+        TestBed.configureTestingModule({
+            declarations: [],
+            imports: [FormsModule,
+                RouterTestingModule,
+                HttpClientTestingModule,
+                DataFilesComponent,
+                TreeTableModule,
+                BrowserAnimationsModule,
+                ToastrModule.forRoot()],
+            schemas: [NO_ERRORS_SCHEMA],
+            providers: [
+                UserMessageService, 
+                HttpHandler,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                },
+                CartService,
+                DownloadService,
+                TestDataService,
+                GoogleAnalyticsService
+            ]
+        })
+        .compileComponents();
+    }));
 
-  beforeEach(() => {
-    let record: any = require('../../../assets/sampleRecord.json');
-    fixture = TestBed.createComponent(DataFilesComponent);
-    component = fixture.componentInstance;
-    component.record = record;
-    component.inBrowser = true;
-    component.ngOnChanges({});
-    fixture.detectChanges();
-  });
-
-  afterEach(() => {
-    localStorage.clear();
-    sessionStorage.clear();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-    expect(component.files.length > 0).toBeTruthy();
-    expect(component.fileCount).toBe(2);
-    expect(component.downloadStatus).not.toBe("downloaded");
-    expect(component.allInCart).toBeFalsy();
-  });
-
-  it('Should have title Files', () => {
-    component.editEnabled = true;
-    fixture.detectChanges();
-    fakeAsync(() => {
-        expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
-        expect(fixture.nativeElement.querySelector('#filelist-heading').innerText).toEqual('Files ');
+    beforeEach(() => {
+        let record: any = require('../../../assets/sampleRecord.json');
+        fixture = TestBed.createComponent(DataFilesComponent);
+        component = fixture.componentInstance;
+        component.record = record;
+        component.inBrowser = true;
+        component.ngOnChanges({});
+        fixture.detectChanges();
     });
-  });
 
-  it('Should have file tree table', () => {
-    expect(fixture.nativeElement.querySelectorAll('th').length).toBeGreaterThan(0);
-  });
+    afterEach(() => {
+        localStorage.clear();
+        sessionStorage.clear();
+    });
 
-  it('Empty display when there are no files', () => {
-    let rec: any = JSON.parse(JSON.stringify(require('../../../assets/sampleRecord.json')));
-    rec['components'] = []
-    let thechange = new SimpleChange(component.record, rec, false);
-    component.record = rec
-    component.ngOnChanges({record: thechange});
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+        expect(component.files.length > 0).toBeTruthy();
+        expect(component.fileCount).toBe(2);
+        expect(component.downloadStatus).not.toBe("downloaded");
+        expect(component.allInCart).toBeFalsy();
+    });
 
-  it('Show Loading message on server-side', () => {
-    expect(component.inBrowser).toBeTruthy();
-    let pel = fixture.nativeElement.querySelector('p');  // Should be null
-    if (pel)
-        expect(pel.textContent.includes("oading file list...")).toBeFalsy();
-    component.inBrowser = false;
-    fixture.detectChanges();
-    pel = fixture.nativeElement.querySelector('p');
-    expect(pel).toBeTruthy();
-    expect(pel.textContent.includes("oading file list...")).toBeTruthy();
-  });
+    it('Should have title Files', () => {
+        component.editEnabled = true;
+        fixture.detectChanges();
+        fakeAsync(() => {
+            expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
+            expect(fixture.nativeElement.querySelector('#filelist-heading').innerText).toEqual('Files ');
+        });
+    });
 
-  it('toggleAllFilesInGlobalCart() should be called', () => {
-    let cmpel = fixture.nativeElement;
-    let aels = cmpel.querySelectorAll(".icon-cart")[0];
-    jest.spyOn(component, 'toggleAllFilesInGlobalCart');
-    aels.click();
-    expect(component.toggleAllFilesInGlobalCart).toHaveBeenCalled();
-  });
+    it('Should have file tree table', () => {
+        expect(fixture.nativeElement.querySelectorAll('th').length).toBeGreaterThan(0);
+    });
 
-  it('_updateNodesFromCart()', waitForAsync(() => {
-    let dc: DataCart = DataCart.openCart("goob");
-    dc.addFile(component.ediid, component.record.components[1]);
-    dc.addFile(component.ediid, component.record.components[2]);
-    let status = component._updateNodesFromCart(component.files, dc);
-    expect(status[0]).toBeTruthy();
-    expect(status[1]).toBeFalsy();
-  }));
+    it('Empty display when there are no files', () => {
+        let rec: any = JSON.parse(JSON.stringify(require('../../../assets/sampleRecord.json')));
+        rec['components'] = []
+        let thechange = new SimpleChange(component.record, rec, false);
+        component.record = rec
+        component.ngOnChanges({record: thechange});
+        fixture.detectChanges();
+        expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
+    });
 
-  it('toggleAllFilesInGlobalCart()', fakeAsync(() => {
-    let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
-    expect(dc.size()).toBe(0);
-    component.toggleAllFilesInGlobalCart();
-    tick(1);
-    dc.restore();
-    expect(dc.size()).toBe(2);
-    component.toggleAllFilesInGlobalCart()
-    tick(1);
-    dc.restore();
-    expect(dc.size()).toBe(0);
-  }));
+    it('Show Loading message on server-side', () => {
+        expect(component.inBrowser).toBeTruthy();
+        let pel = fixture.nativeElement.querySelector('p');  // Should be null
+        if (pel)
+            expect(pel.textContent.includes("oading file list...")).toBeFalsy();
+        component.inBrowser = false;
+        fixture.detectChanges();
+        pel = fixture.nativeElement.querySelector('p');
+        expect(pel).toBeTruthy();
+        expect(pel.textContent.includes("oading file list...")).toBeTruthy();
+    });
+
+    it('toggleAllFilesInGlobalCart() should be called', () => {
+        let cmpel = fixture.nativeElement;
+        let aels = cmpel.querySelectorAll(".icon-cart")[0];
+        jest.spyOn(component, 'toggleAllFilesInGlobalCart');
+        aels.click();
+        expect(component.toggleAllFilesInGlobalCart).toHaveBeenCalled();
+    });
+
+    it('_updateNodesFromCart()', waitForAsync(() => {
+        let dc: DataCart = DataCart.openCart("goob");
+        dc.addFile(component.ediid, component.record.components[1]);
+        dc.addFile(component.ediid, component.record.components[2]);
+        let status = component._updateNodesFromCart(component.files, dc);
+        expect(status[0]).toBeTruthy();
+        expect(status[1]).toBeFalsy();
+    }));
+
+    it('toggleAllFilesInGlobalCart()', fakeAsync(() => {
+        let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
+        expect(dc.size()).toBe(0);
+        component.toggleAllFilesInGlobalCart();
+        tick(1);
+        dc.restore();
+        expect(dc.size()).toBe(2);
+        component.toggleAllFilesInGlobalCart()
+        tick(1);
+        dc.restore();
+        expect(dc.size()).toBe(0);
+    }));
 });

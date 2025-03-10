@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import {TreeNode} from 'primeng/api';
+import { TreeNode } from 'primeng/api';
 import { TaxonomyListService, SearchfieldsListService } from '../../shared/index';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Collections, ColorScheme } from '../../shared/globals/globals';

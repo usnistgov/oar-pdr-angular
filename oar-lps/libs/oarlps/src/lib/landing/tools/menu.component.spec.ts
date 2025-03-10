@@ -3,6 +3,8 @@ import { AppConfig } from '../../config/config'
 import { MenuComponent } from './menu.component';
 import { TransferState } from '@angular/core';
 import { config, testdata } from '../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -16,8 +18,10 @@ describe('MenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ MenuComponent ],
+      imports: [ MenuComponent, HttpClientTestingModule ],
       providers: [
+        HttpClient,
+        HttpTestingController,
         { provide: AppConfig,  useValue: cfg }
     ]
     })

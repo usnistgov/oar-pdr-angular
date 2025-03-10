@@ -34,11 +34,12 @@ import { Observable } from 'rxjs';
 import * as rxjs from 'rxjs';
 import * as fs from 'fs';
 import { IDNotFound, PartNotFound, BadInputError, OARError } from '../errors/error';
+import { AppConfig } from '../config/config';
+import * as env from '../../environments/environment';
 
 const describeif = (cond) => { return (cond) ? describe : describe.skip; };
 
 describeif(process.env.OAR_MIDAS_URL && process.env.OAR_MIDAS_DIR)("MIDASDAPService", () => {
-
     let dapep = process.env.OAR_MIDAS_URL;
     if (dapep)
         dapep += ((process.env.OAR_MIDAS_URL.endsWith("/")) ? "" : "/") + "dap/mds3";
@@ -46,27 +47,30 @@ describeif(process.env.OAR_MIDAS_URL && process.env.OAR_MIDAS_DIR)("MIDASDAPServ
     const datadir = process.env.OAR_MIDAS_DIR;
     let lastseq = 0;
     let svc : dapsvc.MIDASDAPService;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ HttpClientModule ]
         });
         let webcli: HttpClient = TestBed.inject(HttpClient);
-        svc = new dapsvc.MIDASDAPService(dapep, webcli, token);
+//        svc = new dapsvc.MIDASDAPService(dapep, webcli, token);
+        svc = new dapsvc.MIDASDAPService(webcli, cfg, token);
     });
 
     afterEach(async () => {
         expect(fs).toBeTruthy();
         expect(fs.promises).toBeTruthy()
         expect(fs.promises.mkdir).toBeTruthy()
-        expect(fs.promises.rm).toBeTruthy()
+        // expect(fs.promises.rm).toBeTruthy()
         //let modkeys = "fs.promises:"
         //for (let key in fs)
         //    modkeys += " "+key;
         //expect(modkeys).toEqual("what?");
         //expect(fs.rmSync).toBeTruthy()
-        await fs.promises.rm(datadir+"/nerdm", {recursive: true});
-        await fs.promises.rm(datadir+"/dbfiles", {recursive: true});
+        // await fs.promises.rm(datadir+"/nerdm", {recursive: true});
+        // await fs.promises.rm(datadir+"/dbfiles", {recursive: true});
         await fs.promises.mkdir(datadir+"/dbfiles");
     });
 

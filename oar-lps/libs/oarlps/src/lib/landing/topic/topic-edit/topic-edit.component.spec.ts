@@ -9,6 +9,10 @@ import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/
 import { DatePipe } from '@angular/common';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
+import * as env from '../../../../environments/environment';
 
 describe('TopicEditComponent', () => {
     let component: TopicEditComponent;
@@ -18,19 +22,27 @@ describe('TopicEditComponent', () => {
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
     let authsvc: AuthService = new MockAuthService(undefined);
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-        imports: [ 
-            TopicEditComponent,
-            HttpClientTestingModule, 
-            ToastrModule.forRoot() ],
-        providers: [ 
-            MetadataUpdateService, 
-            DatePipe,
-            { provide: AppConfig, useValue: cfg },
-            { provide: AuthService, useValue: authsvc },
-            UserMessageService ]
+            imports: [ 
+                TopicEditComponent,
+                HttpClientTestingModule, 
+                ToastrModule.forRoot() ],
+            providers: [ 
+                UserMessageService, 
+                HttpHandler,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                },
+            ]
         })
         .compileComponents();
     }));

@@ -130,7 +130,10 @@ export class AccesspageListComponent implements OnInit {
     }
 
     get updated() {
-        return this.mdupdsvc.anyFieldUpdated(this.fieldName);        
+        if(this.mdupdsvc)
+            return this.mdupdsvc.anyFieldUpdated(this.fieldName);        
+        else
+            return false;
     }
 
     /**

@@ -9,7 +9,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { MetricsData } from "../metrics-data";
 import { CommonModule } from '@angular/common';
 import { MenuModule } from 'primeng/menu';
-import { MetricsinfoModule } from '../metricsinfo/metricsinfo.module';
+import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
 
 export class menuItem {
     title: string;
@@ -41,7 +41,7 @@ export class menuItem {
   imports: [
     CommonModule,
     MenuModule,
-    MetricsinfoModule
+    MetricsinfoComponent
   ],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']

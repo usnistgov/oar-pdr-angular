@@ -7,7 +7,7 @@
 
     <div class="metrics-info">
         <div *ngIf="metricsData.dataReady">
-            <div *ngIf="metricsData.hasCurrentMetrics; else noMetrics">
+            <div *ngIf="hasCurrentMetrics; else noMetrics">
                 <ul style="font-size: 14px;">
                     <li>
                         {{metricsData.totalDatasetDownload}} dataset downloads
@@ -20,7 +20,7 @@
                     </li>
                 </ul>
                 <div style="width: 100%;text-align: right;margin-top: -15px;font-size: small;">
-                    <a *ngIf="metricsData.hasCurrentMetrics" href="{{metricsData.url}}" target="_blank"><span data-toggle="tooltip" title="More Metrics Data"><i class="faa faa-bar-chart" style="margin-right: 5px;"></i>More...</span></a>
+                    <a *ngIf="hasCurrentMetrics" href="{{metricsData.url}}" target="_blank"><span data-toggle="tooltip" title="More Metrics Data"><i class="faa faa-bar-chart" style="margin-right: 5px;"></i>More...</span></a>
                 </div>
             </div>
             <ng-template #noMetrics>

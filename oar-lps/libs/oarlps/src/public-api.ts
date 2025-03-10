@@ -88,6 +88,7 @@ export * from './lib/nerdm/metadatatransfer-browser.module';
 export * from './lib/nerdm/nerdm';
 export * from './lib/nerdm/nerdm.service';
 export * from './lib/nerdm/nerdmconversion.service';
+export * from './lib/nerdm/dap.service';
 
 export * from './environments/ienvironment';
 export * from './environments/environment-impl';
