@@ -8,10 +8,13 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component } from '@angular/core';
 import { TitleComponent } from '../title/title.component';
 import { IspartofComponent } from '../ispartof/ispartof.component';
-import { AuthorComponent } from '../author/author.component';
-import { FacilitatorsComponent } from '../facilitators/facilitators.component';
-import { ContactComponent } from '../contact/contact.component';
-import { VisithomeComponent } from '../visithome/visithome.component';
+import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
+import { ContactPubComponent } from '../contact/contact-pub/contact-pub.component';
+import { ContactMidasComponent } from '../contact/contact-midas/contact-midas.component';
+import { AuthorPubComponent } from '../author/author-pub/author-pub.component';
+import { AuthorMidasComponent } from '../author/author-midas/author-midas.component';
+import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
+import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
 
 describe('ResourceIdentityComponent', () => {
 
@@ -28,59 +31,77 @@ describe('ResourceIdentityComponent', () => {
         class TestTitleComponent {}
 
         @Component({
-            selector: "accesspage-midas",
+            selector: "app-ispartof",
             standalone: true,
             template: `<div></div>`,
         })
         class TestIspartofComponent {}
 
         @Component({
-            selector: "accesspage-pub",
+            selector: "author-pub",
             standalone: true,
             template: `<div></div>`,
         })
-        class TestAuthorComponent {}
+        class TestAuthorPubComponent {}
 
         @Component({
-            selector: "pdr-data-files",
+            selector: "author-midas",
             standalone: true,
             template: `<div></div>`,
         })
-        class TestFacilitatorsComponent {}
+        class TestAuthorMidasComponent {}
 
         @Component({
-            selector: "pdr-data-files",
+            selector: "contact-pub",
             standalone: true,
             template: `<div></div>`,
         })
-        class TestContactComponent {}
+        class TestContactPubComponent {}
 
         @Component({
-            selector: "pdr-data-files",
+            selector: "contact-midas",
             standalone: true,
             template: `<div></div>`,
         })
-        class TestVisithomeComponent {}
+        class TestContactMidasComponent {}
+
+        @Component({
+            selector: "Visithome-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVisithomePubComponent {}
+
+        @Component({
+            selector: "Visithome-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVisithomeMidasComponent {}
 
         TestBed.overrideComponent(ResourceIdentityComponent, {
             add: {
                 imports: [
                     TestTitleComponent,
                     TestIspartofComponent,
-                    TestAuthorComponent,
-                    TestFacilitatorsComponent,
-                    TestContactComponent,
-                    TestVisithomeComponent
+                    TestAuthorPubComponent,
+                    TestAuthorMidasComponent,
+                    TestVisithomePubComponent,
+                    TestVisithomeMidasComponent,
+                    TestContactPubComponent,
+                    TestContactMidasComponent
                 ],
             },
             remove: {
                 imports: [
                     TitleComponent,
                     IspartofComponent,
-                    AuthorComponent,
-                    FacilitatorsComponent,
-                    ContactComponent,
-                    VisithomeComponent
+                    ContactPubComponent,
+                    ContactMidasComponent,
+                    VisithomePubComponent,
+                    VisithomeMidasComponent,
+                    AuthorPubComponent,
+                    AuthorMidasComponent
                 ],
             },
         });

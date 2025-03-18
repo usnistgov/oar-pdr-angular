@@ -1,17 +1,14 @@
 import { Component, OnInit, OnChanges, ViewChild, Input, HostListener, ChangeDetectorRef } from '@angular/core';
-import { Observable, of } from 'rxjs';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { MessageBarComponent } from '../../frame/messagebar.component';
 import { EditStatusComponent } from './editstatus.component';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { EditStatusService } from './editstatus.service';
-// import { CustomizationService } from './customization.service';
-import { DAPService, DAPUpdateService } from '../../nerdm/dap.service';
+import { DAPUpdateService } from '../../nerdm/dap.service';
 import { NerdmRes } from '../../nerdm/nerdm'
 import { AppConfig } from '../../config/config';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-import { deepCopy } from '../../config/config.service';
 import { LandingConstants, SubmitResponse, Collections, GlobalService } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
 import * as REVISION_TYPES from '../../../assets/site-constants/revision-types.json';

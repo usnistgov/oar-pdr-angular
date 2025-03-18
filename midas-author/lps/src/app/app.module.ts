@@ -31,6 +31,7 @@ import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { EditControlModule } from 'oarlps';
 // import { MetadataUpdateService } from 'oarlps';
 import { FooterComponent, HeaderComponent } from 'oarng';
+import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -56,7 +57,6 @@ enableProdMode();
       OARLPSModule,
       ErrorsModule,
       AppRoutingModule,
-      DAPModule.forRoot(environment),
       LandingAboutComponent,
       ConfigModule,
       StaffDirModule,
@@ -75,7 +75,7 @@ enableProdMode();
         },
         GoogleAnalyticsService,
         DatePipe,
-        fakeBackendProvider
+        // fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

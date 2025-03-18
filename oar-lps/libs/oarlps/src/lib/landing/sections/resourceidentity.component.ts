@@ -10,10 +10,15 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TitleComponent } from '../title/title.component';
 import { IspartofComponent } from '../ispartof/ispartof.component';
-import { AuthorComponent } from '../author/author.component';
-import { FacilitatorsComponent } from '../facilitators/facilitators.component';
-import { ContactComponent } from '../contact/contact.component';
-import { VisithomeComponent } from '../visithome/visithome.component';
+import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
+import { FacilitatorsPubComponent } from '../facilitators-to be removed/facilitators-pub/facilitators-pub.component';
+import { FacilitatorsMidasComponent } from '../facilitators-to be removed/facilitators-midas/facilitators-midas.component';
+import { AuthorPubComponent } from '../author/author-pub/author-pub.component';
+import { AuthorMidasComponent } from '../author/author-midas/author-midas.component';
+import { ContactPubComponent } from '../contact/contact-pub/contact-pub.component';
+import { ContactMidasComponent } from '../contact/contact-midas/contact-midas.component';
+import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
+import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
 
 /**
  * a component that lays out the "identity" section of a landing page
@@ -25,11 +30,16 @@ import { VisithomeComponent } from '../visithome/visithome.component';
         CommonModule,
         TitleComponent,
         IspartofComponent,
-        AuthorComponent,
         FacilitatorsComponent,
-        ContactComponent,
+        ContactPubComponent,
+        ContactMidasComponent,
         VersionComponent,
-        VisithomeComponent,
+        VisithomePubComponent,
+        VisithomeMidasComponent,
+        FacilitatorsPubComponent,
+        FacilitatorsMidasComponent,
+        AuthorPubComponent,
+        AuthorMidasComponent,
         NgbModule
     ],
     templateUrl:   './resourceidentity.component.html',
@@ -54,11 +64,14 @@ export class ResourceIdentityComponent implements OnChanges {
     maxWidth: number = 1000;
     isEditMode: boolean = true;
 
+    authorFieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
+    facilitatorsFieldName = SectionPrefs.getFieldName(Sections.FACILITATORS);
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() theme: string;
-    @Input() isPublicSite: boolean;
+    @Input() isPublicSite: boolean = true;
     @Input() landingPageURL: string;
     @Input() landingPageServiceStr: string;
 
@@ -84,6 +97,8 @@ export class ResourceIdentityComponent implements OnChanges {
     }
 
     ngOnInit(): void {
+        console.log("facilitatorsFieldName", this.facilitatorsFieldName);
+        console.log("this.record", this.record);
         let i = this.isDefaultCollection;
 
         this.EDIT_MODES = LandingConstants.editModes;
@@ -100,6 +115,9 @@ export class ResourceIdentityComponent implements OnChanges {
         this.maxWidth = width;
     }
 
+    get isScienceTheme() {
+        return this.theme == this.scienceTheme;
+    }
     /**
      * Decide if currently in view only mode
      */

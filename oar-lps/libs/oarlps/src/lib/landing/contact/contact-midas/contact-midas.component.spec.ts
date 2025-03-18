@@ -1,7 +1,6 @@
-import { ContactMidasComponent } from './contact-midas.component';
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ContactComponent } from '../contact.component';
+import { ContactMidasComponent } from './contact-midas.component';
 import { FormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppConfig } from '../../../config/config';
@@ -19,8 +18,8 @@ import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/da
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 
 describe('ContactMidasComponent', () => {
-    let component: ContactComponent;
-    let fixture: ComponentFixture<ContactComponent>;
+    let component: ContactMidasComponent;
+    let fixture: ComponentFixture<ContactMidasComponent>;
     let cfg: AppConfig = new AppConfig(null);
     cfg.loadConfig(env.config);
     let plid: Object = "browser";
@@ -36,7 +35,7 @@ describe('ContactMidasComponent', () => {
                 HttpClientTestingModule, 
                 FormsModule, 
                 RouterTestingModule, 
-                ContactComponent,
+                ContactMidasComponent,
                 ToastrModule.forRoot()],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
@@ -57,7 +56,7 @@ describe('ContactMidasComponent', () => {
 
     beforeEach(() => {
         let record: any = require('../../../../assets/sampleRecord.json');
-        fixture = TestBed.createComponent(ContactComponent);
+        fixture = TestBed.createComponent(ContactMidasComponent);
         component = fixture.componentInstance;
         component.record = record;
         fixture.detectChanges();

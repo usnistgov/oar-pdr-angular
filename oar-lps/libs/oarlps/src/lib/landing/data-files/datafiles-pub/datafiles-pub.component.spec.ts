@@ -1,83 +1,47 @@
-import { NO_ERRORS_SCHEMA, SimpleChange, SimpleChanges } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
-import { fakeAsync, tick, ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
-import { DataFilesComponent } from './data-files.component';
+import { DatafilesPubComponent } from './datafiles-pub.component';
+import { ComponentFixture, fakeAsync, TestBed, tick, waitForAsync  } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { CartService } from '../../datacart/cart.service';
-import { DataCart } from '../../datacart/cart';
-import { CartConstants } from '../../datacart/cartconstants';
+import { CartService } from '../../../datacart/cart.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { DownloadService } from '../../shared/download-service/download-service.service';
-import { TestDataService } from '../../shared/testdata-service/testDataService';
-import { AppConfig } from '../../config/config';
-import { TransferState } from '@angular/core';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { ToastrModule } from 'ngx-toastr';
 import { TreeTableModule } from 'primeng/treetable';
-import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
-import * as env from '../../../environments/environment';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
+import { DataCart } from '../../../datacart/cart';
+import { CartConstants } from '../../../datacart/cartconstants';
+import { SimpleChange } from '@angular/core';
 
-describe('DataFilesComponent', () => {
-    let component: DataFilesComponent;
-    let fixture: ComponentFixture<DataFilesComponent>;
-    let cfg: AppConfig;
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
-    let authsvc: AuthService = new MockAuthService(undefined);
-    let dapsvc : DAPService = new LocalDAPService();
-    let edstatsvc = new EditStatusService();
+describe('DatafilesPubComponent', () => {
+    let component: DatafilesPubComponent;
+    let fixture: ComponentFixture<DatafilesPubComponent>;
+    let dc: DataCart;
 
     beforeEach(waitForAsync(() => {
-        let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
-        dc._forget();
-
-        cfg = new AppConfig(null);
-        cfg.loadConfig(env.config)
-
         TestBed.configureTestingModule({
-            declarations: [],
             imports: [FormsModule,
                 RouterTestingModule,
                 HttpClientTestingModule,
-                DataFilesComponent,
+                DatafilesPubComponent,
                 TreeTableModule,
                 BrowserAnimationsModule,
-                ToastrModule.forRoot()],
-            schemas: [NO_ERRORS_SCHEMA],
+                ToastrModule.forRoot()
+            ],
             providers: [
-                UserMessageService, 
-                HttpHandler,
-                DatePipe,
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc },
-                { provide: DAPService, useFactory: createDAPService, 
-                    deps: [ env, HttpClient, AppConfig ] },
-                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
-                },
                 CartService,
-                DownloadService,
-                TestDataService,
-                GoogleAnalyticsService
             ]
         })
         .compileComponents();
     }));
 
     beforeEach(() => {
-        let record: any = require('../../../assets/sampleRecord.json');
-        fixture = TestBed.createComponent(DataFilesComponent);
+        let record: any = require('../../../../assets/sampleRecord.json');
+        fixture = TestBed.createComponent(DatafilesPubComponent);
         component = fixture.componentInstance;
         component.record = record;
         component.inBrowser = true;
         component.ngOnChanges({});
+        dc = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
+        dc._forget();
         fixture.detectChanges();
     });
 
@@ -107,8 +71,29 @@ describe('DataFilesComponent', () => {
         expect(fixture.nativeElement.querySelectorAll('th').length).toBeGreaterThan(0);
     });
 
+    it('toggleAllFilesInGlobalCart() should be called', () => {
+        let cmpel = fixture.nativeElement;
+        let aels = cmpel.querySelectorAll(".icon-cart")[0];
+        jest.spyOn(component, 'toggleAllFilesInGlobalCart');
+        aels.click();
+        expect(component.toggleAllFilesInGlobalCart).toHaveBeenCalled();
+    });
+
+    it('toggleAllFilesInGlobalCart()', fakeAsync(() => {
+        dc = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
+        expect(dc.size()).toBe(0);
+        component.toggleAllFilesInGlobalCart();
+        tick(1);
+        dc.restore();
+        expect(dc.size()).toBe(2);
+        component.toggleAllFilesInGlobalCart()
+        tick(1);
+        dc.restore();
+        expect(dc.size()).toBe(0);
+    }));
+
     it('Empty display when there are no files', () => {
-        let rec: any = JSON.parse(JSON.stringify(require('../../../assets/sampleRecord.json')));
+        let rec: any = JSON.parse(JSON.stringify(require('../../../../assets/sampleRecord.json')));
         rec['components'] = []
         let thechange = new SimpleChange(component.record, rec, false);
         component.record = rec

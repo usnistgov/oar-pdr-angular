@@ -1,13 +1,15 @@
-<div style="display: table;margin: 0px !important;padding: 0px !important;max-width: 600px;">
+<div class="contact-rapper">
     <div class="editable_container">
         <!-- Display required field indicator -->
         <div class="editable_field" *ngIf="edstatsvc.isEditMode()">
-            <span *ngIf="edstatsvc.isEditMode()" style="color: rgb(173, 0, 0);margin-left: -20px;margin-right: 6px;">*</span>
+            <span *ngIf="edstatsvc.isEditMode()" class="red-star">
+                *
+            </span>
         </div>
 
         <!-- Label -->
         @if(edstatsvc.isEditMode() || hasContact) {
-            <div class="editable_field" style="margin-left: -8px;">
+            <div class="editable_field" style="margin-left: 0px;">
                 <span style="margin-right: 0.5em;">Contact:</span>
             </div>
         }
@@ -16,78 +18,51 @@
             <contact-pub [record]="record"></contact-pub>
         </div>
 
-        <!-- @if(hasContact){
-            <div class="editable_field" style="max-width:calc(100% - 4em);">
-                <div style="padding-right: 0.5em;">
-                    <strong>
-                        <a *ngIf="hasEmail"
-                            href="{{currentContact.hasEmail}}" target="_top">
-                            {{currentContact.fn}}</a>
-                        <span *ngIf="!hasEmail">{{currentContact.fn}}</span>
-                    </strong>.
-
-                    <i style="cursor: pointer; margin-left: 0.5rem;" class="fas"
-                    [ngClass]="{'fa-caret-right': !clickContact, 'fa-caret-down': clickContact}"
-                    aria-hidden="true"
-                    (click)="closeContent = !closeContent; clickContact=expandContact();"></i>
-
-                    <div [collapse]="!closeContent" class="card card-body bg-faded">
-                        <span class="" *ngIf="currentContact.fn">
-                            <span>{{currentContact.fn}}</span>
-                        </span>
-                        @if(hasEmail){
-                            <span *ngIf="hasEmail">
-                                <br><strong>Email:</strong>
-                                <a *ngIf="hasEmail" href="{{currentContact.hasEmail}}"
-                                    target="_top">
-                                    {{email(currentContact.hasEmail)}}
-                                </a>
-                            </span>
-                        }
-
-                        @if(currentContact.address){
-                            <div *ngIf="currentContact.address">
-                                <span><b>Address:</b></span>
-                                <div *ngFor="let address of currentContact.address"
-                                    style="padding-left: 1em;">
-                                    {{address}}
-                                </div>
-                            </div>
-                        }
-                    </div>
-                </div>
-            </div>
-        } -->
-
         <!-- Control buttons -->
-        @defer(when !isPublicSite) { 
-            @if(edstatsvc.isEditMode()){
-                <div class="editable_field" style="white-space: nowrap;">
-                    @if(!isEditing) {
-                        <!-- Edit button -->
-                        <button class="edit_button" type="button" 
-                        (click)="startEditing()" aria-label="Edit contact" ngbTooltip="Edit contact" style="cursor: pointer">
-                            <i class="fas fa-pencil fa-sm"></i>
-                        </button> 
+        @if(edstatsvc.isEditMode()){
+            <div class="editable_field" style="white-space: nowrap;">
+                @if(!isEditing) {
+                    <!-- Edit button -->
+                    <button 
+                        class="edit_button" 
+                        type="button" 
+                        (click)="startEditing()" 
+                        aria-label="Edit contact" 
+                        ngbTooltip="Edit contact" 
+                        style="cursor: pointer">
 
-                        @if(updated) {
-                            <!-- Restore button -->
-                            <button class="edit_button" type="button"
+                        <i class="fas fa-pencil fa-sm"></i>
+                    </button> 
+
+                    @if(updated) {
+                        <!-- Restore button -->
+                        <button 
+                            class="edit_button" 
+                            type="button"
                             (click)="restoreOriginal()">
-                                <i class="fas fa-undo fa-sm"
-                                    aria-label="Restore original" ngbTooltip="Restore original"></i>
-                            </button>  
-                        }
-                    }
-                    @else{
-                        <!-- Close button -->
-                        <button class="edit_button" *ngIf="isEditing" type="button" [disabled]="currentContact.dataChanged"
-                            (click)="closeEditBlock()" aria-label="close button" ngbTooltip="Close edit block">
-                            <i class="fas fa-times"></i>
+
+                            <i class="fas fa-undo fa-sm"
+                               aria-label="Restore original" 
+                               ngbTooltip="Restore original">
+                            </i>
                         </button>  
                     }
-                </div>
-            }
+                }
+                @else{
+                    <!-- Close button -->
+                    <button 
+                        class="edit_button" 
+                        *ngIf="isEditing" 
+                        type="button" 
+                        [disabled]="currentContact.dataChanged"
+                        (click)="closeEditBlock()" 
+                        aria-label="close button" 
+                        ngbTooltip="Close edit block">
+
+                        <i class="fas fa-times"></i>
+                    </button>  
+                }
+            </div>
         }
     </div>
 </div>
@@ -97,16 +72,36 @@
         <table style="width: 100%;">
             <tr  style="width: 100%;">
                 <td class="edit-block" style="width: calc(100%-90px);">
-                    <lib-contact-edit #contactedit [contact]="currentContact" [backgroundColor]="getRecordBackgroundColor" [editMode]="editMode" (dataChanged)="onContactChange($event)"></lib-contact-edit>
+                    <lib-contact-edit 
+                        #contactedit 
+                        [contact]="currentContact" 
+                        [backgroundColor]="getRecordBackgroundColor" 
+                        [editMode]="editMode" 
+                        (dataChanged)="onContactChange($event)">
+                    </lib-contact-edit>
                 </td>
     
                 <td style="width: 90px;vertical-align: top;">
-                    <button class="edit_button" *ngIf="edstatsvc.isEditMode()" type="button" (click)="saveCurrentContact()" aria-label="edit button" [disabled]="!currentContact.dataChanged || !currentContact.fn" ngbTooltip="Save contact">
+                    <button 
+                        class="edit_button" 
+                        *ngIf="edstatsvc.isEditMode()" 
+                        type="button" 
+                        (click)="saveCurrentContact()" 
+                        aria-label="edit button" 
+                        [disabled]="!currentContact.dataChanged || !currentContact.fn" 
+                        ngbTooltip="Save contact">
+
                         <i class="fas fa-check"></i>
                     </button>
             
-                    <button class="edit_button" *ngIf="edstatsvc.isEditMode() && dataChanged" type="button"
-                        (click)="undoCurContactChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
+                    <button 
+                        class="edit_button" 
+                        *ngIf="edstatsvc.isEditMode() && dataChanged" 
+                        type="button"
+                        (click)="undoCurContactChanges()" 
+                        aria-label="undo button" 
+                        ngbTooltip="Undo current changes">
+
                         <i class="fas fa-undo fa-sm"></i>
                     </button>
                 </td>          

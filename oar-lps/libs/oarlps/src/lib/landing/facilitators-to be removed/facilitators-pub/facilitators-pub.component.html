@@ -1,0 +1,61 @@
+@if(record['facilitators']) {
+    <div class="facilitator">
+        <div class="editable_container">
+            <div class="editable_field" style="max-width:calc(100% - 4em);">
+                <span *ngFor="let facilitator of record.facilitators; let i = index" 
+                    (click)="isCollapsedContent = !isCollapsedContent; clickFacilitators = expandClick();"
+                    style="cursor: pointer;">
+                    {{facilitator.fn.trim()}}<span *ngIf="record.facilitators && i < record.facilitators.length-1; else theEnd">,</span><ng-template #theEnd>..</ng-template>
+                </span>
+                <i style="margin-left: 0.5rem;" class="fas"
+                    [ngClass]="{'fa-caret-right': !clickFacilitators, 'fa-caret-down': clickFacilitators}"
+                    aria-hidden="true"
+                    (click)="isCollapsedContent = !isCollapsedContent; clickFacilitators = expandClick();">
+                </i>
+
+                <div [@detailExpand]="!isCollapsedContent ? 'expanded' : 'collapsed'" class="facilitator-detail">
+                    <div class="facilitatorsdetail">
+                        <div *ngFor="let facilitator of record.facilitators; let i = index" style="padding-left: 1em;">
+                            <div>
+                                <span>{{ facilitator.jobTitle }} : {{facilitator.fn}} </span>
+                                <span *ngIf="facilitator.orcid">&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href="https://orcid.org/{{ author.orcid }}" target="blank">
+                                    <img src="assets/images/orcid-logo.png" style="width: 20px;">:
+                                        {{ facilitator.orcid }}
+                                    </a>
+                                </span>                            
+                            </div>
+                            <div *ngFor="let aff of facilitator.affiliation" style="padding-left: 1em">
+                                <i>
+                                    <div>{{aff.title}}</div>
+                                    <div *ngIf="aff.subunits" style="margin-left: 1em;">{{getSubunites(aff.subunits)}}</div>
+                                </i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control buttons -->
+                <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
+                    <!-- Edit button -->
+                    <button class="edit_button" *ngIf="!isEditing" type="button" 
+                        (click)="startEditing()" aria-label="Edit author" ngbTooltip="Edit author" style="cursor: pointer">
+                        <i class="fas fa-pencil fa-sm"></i>
+                    </button> 
+
+                    <!-- Hide button - hide edit block -->
+                    <button class="edit_button" *ngIf="isEditing" [disabled]="childIsEditing || childIsAdding" type="button" 
+                        (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                        <i class="fas fa-times"></i>
+                    </button> 
+
+                    <!-- Undo all changes button -->
+                    <button class="edit_button" *ngIf="authorsChanged || authorsUpdated" type="button"
+                        (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo">
+                        <i class="fas fa-undo fa-sm"></i>
+                    </button>             
+                </div>
+            </div>
+        </div>
+    </div>
+}

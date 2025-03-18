@@ -1,23 +1,23 @@
 import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { TreeNode } from 'primeng/api';
-import { CartService } from '../../datacart/cart.service';
-import { AppConfig } from '../../config/config';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { DataCart, DataCartItem } from '../../datacart/cart';
-import { DownloadStatus } from '../../datacart/cartconstants';
-import { DataCartStatus } from '../../datacart/cartstatus';
-import { formatBytes } from '../../utils';
-import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
-import { LandingConstants } from '../../landing/constants';
+import { CartService } from '../../../datacart/cart.service';
+import { AppConfig } from '../../../config/config';
+import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
+import { NerdmRes, NerdmComp } from '../../../nerdm/nerdm';
+import { DataCart, DataCartItem } from '../../../datacart/cart';
+import { DownloadStatus } from '../../../datacart/cartconstants';
+import { DataCartStatus } from '../../../datacart/cartstatus';
+import { formatBytes } from '../../../utils';
+import { EditStatusService } from '../../../landing/editcontrol/editstatus.service';
+import { LandingConstants } from '../../../landing/constants';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { NotificationService } from '../../shared/notification-service/notification.service';
-import { SectionPrefs, Sections } from '../../shared/globals/globals';
-import { LandingpageService } from '../landingpage.service';
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { SectionPrefs, Sections } from '../../../shared/globals/globals';
+import { LandingpageService } from '../../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { UserMessageService } from '../../frame/usermessage.service';
+import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TreeTableModule } from 'primeng/treetable';
@@ -27,65 +27,11 @@ import { BadgeModule } from 'primeng/badge';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { FrameModule } from '../../../frame/frame.module';
+import { DataFileItem } from '../data-files-to-be-deleted.component';
 
-declare var _initAutoTracker: Function;
-
-/**
- * the structure used as the data item in a TreeNode displaying a file or collection component
- */
-interface DataFileItem {
-
-    /**
-     * a unique key for identifying this item
-     */
-    key : string;
-
-    /**
-     * the name of the file or collection
-     */
-    name : string;
-
-    /**
-     * the NERDm component metadata
-     */
-    comp : NerdmComp;
-
-    /**
-     * a display rendering of the size of the file
-     */
-    size : string;
-
-    /**
-     * a display rendering of the file's media type
-     */
-    mediaType : string;
-
-    /**
-     * true if the component is currently in the global data cart
-     */
-    isInCart? : boolean;
-
-    /**
-     * a label indicating the download status of this file
-     */
-    downloadStatus? : string;
-
-    /**
-     * a number representing the progress toward completing the download of this file. 
-     * (Note: use of this feature is currently disabled.)
-     */
-    downloadProgress? : number;
-}
-
-/**
- * A component that displays the hierarchical collection of files available as downloadable 
- * distributions.  
- *
- * This implementation is based on the TreeTable component from primeng.  
- */
 @Component({
-    styleUrls: ['../landing.component.scss', 'data-files.component.css'],
-    selector: 'pdr-data-files',
+    selector: 'lib-datafiles-pub',
     standalone: true,
     imports: [
         CommonModule, 
@@ -98,10 +44,12 @@ interface DataFileItem {
         TooltipModule, 
         NgbModule
     ],
-    templateUrl: `data-files.component.html`,
-    providers: [
-        UserMessageService
-     ],
+    templateUrl: './datafiles-pub.component.html',
+    styleUrls: [
+        '../../landing.component.scss', 
+        '../data-files.component.css',
+        './datafiles-pub.component.css'
+    ],
     animations: [
         trigger('detailExpand', [
           state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -127,14 +75,12 @@ interface DataFileItem {
         )
     ]
 })
-export class DataFilesComponent implements OnInit, OnChanges {
+export class DatafilesPubComponent {
 
     @Input() record: NerdmRes;
     @Input() inBrowser: boolean;   // false if running server-side
-
-    // Flag to tell if this is a publishing platform
-    @Input() editEnabled: boolean;    //Disable download all functionality if edit is enabled
-    @Input() isEditMode: boolean;
+    @Input() editEnabled: boolean = false;  // For edit mode display control
+    @Input() editMode: string;  // For edit mode display control
     // Download status to trigger metrics refresh in parent component
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();  
 
@@ -158,8 +104,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
     appWidth: number = 800;   // default value used in server context
     appHeight: number = 900;  // default value used in server context
     fontSize: string = "16px";
-    EDIT_MODES: any;
-    editMode: string;
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
@@ -167,17 +111,13 @@ export class DataFilesComponent implements OnInit, OnChanges {
     fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     overlaypanelOn: boolean = false;
     refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
+    EDIT_MODES: any;
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
         
-    constructor(private cfg: AppConfig,
-                private cartService: CartService,
-                private gaService: GoogleAnalyticsService,
-                public editstatsvc: EditStatusService,
+    constructor(private cartService: CartService,
                 public breakpointObserver: BreakpointObserver,
-                public mdupdsvc : MetadataUpdateService, 
-                private notificationService: NotificationService,
                 public lpService: LandingpageService, 
                 private msgsvc: UserMessageService,
                 private chref: ChangeDetectorRef,
@@ -198,23 +138,10 @@ export class DataFilesComponent implements OnInit, OnChanges {
                 });
             };
         }
-        
-        this.EDIT_MODES = LandingConstants.editModes;
-        this.fileManagerBaseUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
-
-        this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
-            if (fileManagerUrl) {
-                this.fileManagerUrl = fileManagerUrl;
-            }
-        });
     }
 
     ngOnInit() {
-        // if(this.record && !this.record["keyword"]) this.record["keyword"] = [];
-
-        this.editstatsvc.watchEditMode((editMode) => {
-            this.editMode = editMode;
-        });
+        this.EDIT_MODES = LandingConstants.editModes;
 
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
         this.breakpointObserver
@@ -267,8 +194,9 @@ export class DataFilesComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(ch: SimpleChanges) {
-        if (this.record && ch.record)
+        if (this.record && ch.record){
             this.useMetadata();
+        }
 
         this.chref.detectChanges();
     }
@@ -628,6 +556,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
             }
         }, 0);
     }
+
     _addAllWithinToCart(node: TreeNode, cart: DataCart, selected: boolean = false) : void {
         if (node && node.children && node.children.length > 0) {
             for(let child of node.children) 
@@ -644,7 +573,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
                   selected: boolean =false, dosave: boolean =true) : DataCartItem
     {
         if (cart && file.filepath && file.downloadURL) {
-            let added: DataCartItem = cart.addFile(this.ediid, file, selected, dosave);
+            let added: DataCartItem = cart.addFile(this.ediid, file, selected, dosave, this.msgsvc);
             added['resTitle'] = this.record['title'];
             return added;
         }
@@ -864,92 +793,5 @@ export class DataFilesComponent implements OnInit, OnChanges {
             this.hashCopied = false;
         }, 2000);
 
-    }
-
-    /**
-     * Open url in a new tab
-     */
-    openFileManager() {
-        if(this.fileManagerUrl)
-            window.open(this.fileManagerUrl, 'blank');
-    }
-
-    /**
-     * Reload data files
-     */
-    reloadFiles() {
-        this.refreshFilesIcon = "faa faa-spinner faa-spin icon-white";
-        this.mdupdsvc.loadDataFiles().subscribe( data => {
-            this.mdupdsvc.loadDraft(true).subscribe({
-                next: (md) => 
-                {
-                    if(md)
-                    {
-                        this.mdupdsvc.cacheMetadata(md as NerdmRes);
-                        this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
-
-                        if (md['components']) 
-                            this.record['components'] = JSON.parse(JSON.stringify(md['components']));
-                        else
-                            this.record['components'] = []
-                        
-                        this.buildTree(this.record['components']);
-                    }else{
-                        this.msgsvc.error("Fail to retrive updated dataset.");
-                    }
-
-                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                }
-                // error: (err) => 
-                // {
-                //     if(err.statusCode == 404)
-                //     {
-                //         console.error("404 error.");
-                //         this.mdupdsvc.resetOriginal();
-                //         this.msgsvc.error(err.message);
-                //     }
-
-                //     this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                // }
-            });
-        });
-    }
-
-    /**
-     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert 
-     * the data to its previous state.
-     */
-    public showLargeFileManagerHelpPopup(event, overlaypanel: OverlayPanel): void {
-        if(!this.overlaypanelOn){
-            overlaypanel.hide();
-            setTimeout(() => {
-                overlaypanel.show(event);
-                this.overlaypanelOn = true;
-                this.chref.detectChanges();
-            }, 100);    
-        }else{
-            overlaypanel.hide();
-            setTimeout(() => {
-                this.chref.detectChanges();
-            }, 0);
-        }
-    }    
-
-    onHide() {
-        this.overlaypanelOn = false;
-        setTimeout(() => {
-            this.chref.detectChanges();
-        }, 0);
-    }
-
-    hideOverlay(event, overlaypanel: OverlayPanel) {
-        console.log("event", event);
-        
-        overlaypanel.hide();
-        this.overlaypanelOn = false;
-
-        setTimeout(()=>{ // this will make the execution after the above boolean has changed
-            event.chref.detectChanges();
-        },0);          
     }
 }

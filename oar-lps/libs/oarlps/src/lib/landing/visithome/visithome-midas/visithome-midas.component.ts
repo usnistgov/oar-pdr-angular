@@ -47,7 +47,6 @@ export class VisithomeMidasComponent {
     originalRecord: any = {};
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
-    isPublicSite: boolean = false; 
     globalsvc = inject(GlobalService);
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
@@ -69,7 +68,6 @@ export class VisithomeMidasComponent {
     }
 
     ngOnInit(): void {
-        this.isPublicSite = this.globalsvc.isPublicSite();
         this.updateOriginal();
 
         this.lpService.watchEditing((sectionMode: SectionMode) => {

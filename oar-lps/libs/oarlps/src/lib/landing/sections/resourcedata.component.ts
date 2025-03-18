@@ -11,7 +11,8 @@ import { UserMessageService } from '../../frame/usermessage.service';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
-import { DataFilesComponent } from '../data-files/data-files.component';
+import { DatafilesPubComponent } from '../data-files/datafiles-pub/datafiles-pub.component';
+import { DatafilesMidasComponent } from '../data-files/datafiles-midas/datafiles-midas.component';
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -24,14 +25,11 @@ import { DataFilesComponent } from '../data-files/data-files.component';
         SectionTitleComponent,
         CommonModule,
         AccesspageMidasComponent,
-        DataFilesComponent,
+        DatafilesPubComponent,
+        DatafilesMidasComponent,
         SearchresultModule,
         AccesspagePubComponent,
         NgbModule
-    ],
-    providers: [
-        GoogleAnalyticsService,
-        UserMessageService
     ],
     templateUrl:   './resourcedata.component.html',
     styleUrls:   [
@@ -69,13 +67,13 @@ export class ResourceDataComponent implements OnChanges {
     collection: string;
     maxWidth: number = 1000;
     isEditMode: boolean = true;
-    isPublicSite: boolean = false; 
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() editEnabled: boolean; 
     @Input() theme: string = "default";
+    @Input() isPublicSite: boolean = true;
 
     // pass out download status for metrics refresh
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();
@@ -103,7 +101,6 @@ export class ResourceDataComponent implements OnChanges {
     }
 
     ngOnInit(): void {
-        this.isPublicSite = this.globalService.isPublicSite();
         this.isEditMode = this.edstatsvc.isEditMode();
         this.recordType = (new NERDResource(this.record)).resourceLabel();
 

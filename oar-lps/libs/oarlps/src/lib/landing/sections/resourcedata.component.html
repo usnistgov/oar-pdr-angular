@@ -37,21 +37,48 @@
     <div id="accessPages">
         <div style="width: 100%;">
             @if(isPublicSite) {
-                <accesspage-pub [record]="record" [theme]="theme"></accesspage-pub>
+                <accesspage-pub 
+                    [record]="record" 
+                    [theme]="theme">
+                </accesspage-pub>
             }
             @else {
-                <accesspage-midas [record]="record" [theme]="theme" [isEditMode]="isEditMode"></accesspage-midas>
+                <accesspage-midas 
+                    [record]="record" 
+                    [theme]="theme" 
+                    [isEditMode]="isEditMode">
+                </accesspage-midas>
             }
         </div>
     </div>
 
-    <pdr-data-files *ngIf="theme == defaultTheme" 
+    @if(theme == defaultTheme) {
+        @if(isPublicSite){
+            <lib-datafiles-pub
+                [record]="record" 
+                [inBrowser]="inBrowser" 
+                [editEnabled] = false
+                (dlStatus)="setDownloadStatus($event)">
+            </lib-datafiles-pub>
+        }
+        @else{
+            <lib-datafiles-midas
+                [record]="record" 
+                [inBrowser]="inBrowser" 
+                [editEnabled]="editEnabled"
+                [isEditMode]="isEditMode"
+                (dlStatus)="setDownloadStatus($event)">
+            </lib-datafiles-midas>
+        }
+    }
+    <!-- <pdr-data-files *ngIf="theme == defaultTheme" 
         [record]="record" 
         [inBrowser]="inBrowser" 
         [editEnabled]="editEnabled"
         [isEditMode]="isEditMode"
+        [isPublicSite]="isPublicSite"
         (dlStatus)="setDownloadStatus($event)">
-    </pdr-data-files>
+    </pdr-data-files> -->
 
     <div *ngIf="hasDRS" style="margin-top: 2em;margin-right: 0px;">
         <app-searchresult [record]="record" [inBrowser]="inBrowser" [collection]="collection">

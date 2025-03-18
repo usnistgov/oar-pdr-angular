@@ -2,9 +2,10 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { ResourceRefsComponent } from './resourcerefs.component';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { testdata } from '../../../environments/environment';
-import { ReferencesComponent } from '../references/references.component';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { Component } from '@angular/core';
+import { RefMidasComponent } from '../references/ref-midas/ref-midas.component';
+import { RefPubComponent } from '../references/ref-pub/ref-pub.component';
 
 describe('ResourceRefsComponent', () => {
     let component: ResourceRefsComponent;
@@ -20,23 +21,32 @@ describe('ResourceRefsComponent', () => {
         class TestSectionTitleComponent {}
 
         @Component({
-            selector: "app-references",
+            selector: "ref-pub",
             standalone: true,
             template: `<div></div>`,
         })
-        class TestReferencesComponent {}
+        class TestRefPubComponent {}
+
+        @Component({
+            selector: "ref-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestRefMidasComponent {}
 
         TestBed.overrideComponent(ResourceRefsComponent, {
             add: {
                 imports: [
                     TestSectionTitleComponent,
-                    TestReferencesComponent
+                    TestRefPubComponent,
+                    TestRefMidasComponent
                 ],
             },
             remove: {
                 imports: [
                     SectionTitleComponent,
-                    ReferencesComponent
+                    RefPubComponent,
+                    RefMidasComponent
                 ],
             },
         });

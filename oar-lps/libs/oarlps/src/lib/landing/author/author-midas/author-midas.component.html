@@ -1,13 +1,18 @@
 <div style="display: table;">
     <div class="editable_container">
-        <div class="editable_field" *ngIf="!record['authors'] || record['authors'].length==0 || edstatsvc.isEditMode()">
+        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || edstatsvc.isEditMode()">
             <div class="editable_field" *ngIf="edstatsvc.isEditMode()" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
-                Authors:
+                @if(isScienceTheme){
+                    Facilitators:
+                }
+                @else {
+                    Authors:
+                }
             </div>
         </div>
 
         <div class="editable_field">
-            <author-pub [record]="record"></author-pub>
+            <author-pub [record]="record" [fieldName]="fieldName"></author-pub>
         </div>
 
         @if(isEditMode) {

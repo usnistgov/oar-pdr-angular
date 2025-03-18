@@ -11,22 +11,6 @@ const routes: Routes = [
     // ...DatacartRoutes,
     { path: '', redirectTo: '/about', pathMatch: 'full' },
 
-    // Copied datacart routes here to test lazyloading
-    // { path: 'datacart',
-    //   // loadChildren: () => import('./datacart.module').then(m => m.DatacartModule),
-    //   children: [
-    //       {   path: ':cartname',
-    //           component: DatacartComponent,
-    //           // loadComponent: () => import('./datacart.component')
-    //           //     .then(mod => mod.DatacartComponent),
-    //           canDeactivate: [LeaveWhileDownloadingGuard]   },
-    //       {   path: 'ark:/:naan/:cartname',
-    //           component: DatacartComponent,
-    //           // loadComponent: () => import('./datacart.component')
-    //           //     .then(mod => mod.DatacartComponent),
-    //           canDeactivate: [LeaveWhileDownloadingGuard]   }
-    //   ]
-    // },
     // app paths
     { path: 'about',         component: LandingAboutComponent },
     { path: 'od/id',
@@ -37,8 +21,6 @@ const routes: Routes = [
       ]
     },
     { path: 'nerdm',                 component: NerdmComponent         },
-    // If ediid='global', local normal cart. Otherwise, load the cart with key=ediid
-    // { path: 'datacart/:ediid',        component: DatacartComponent      },
     { path: 'done',         component: DoneComponent },
     // error paths
     { path: 'not-found',

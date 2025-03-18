@@ -1,0 +1,54 @@
+<topic-pub 
+    [record]="record" 
+    [inBrowser]="inBrowser"
+    [isEditMode]="isEditMode">
+
+    <!-- <ng-template #tmpl let-col> -->
+    <div class="controls editable_field">    
+        <!-- Control buttons -->
+            <!-- Edit button -->
+            <button 
+                *ngIf="!editingTopics(col)"
+                class="edit_button" 
+                (click)="startEditing(col)" 
+                aria-label="edit button" 
+                ngbTooltip="Edit topics">
+
+                <i class="fas fa-pencil"></i>
+            </button>
+
+            <!-- Close edit block -->
+            <button 
+                *ngIf="editingTopics(col)" 
+                class="edit_button" 
+                type="button" 
+                [disabled]="dataChanged" 
+                (click)="setMode()" 
+                aria-label="Close edit block" 
+                ngbTooltip="Close edit block">
+
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Restore original -->
+            <button *ngIf="updated(col)" class="edit_button" type="button"
+            (click)="restoreOriginal(col)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
+                <i class="faa faa-undo fs-sm"></i>
+            </button>                                 
+    </div>
+    <!-- </ng-template> -->
+</topic-pub>
+
+@if(isEditing) {
+    <!-- Topic editor -->
+    <div #topic [@editExpand]="editBlockStatus" style = "width: 100%;" [style.overflow] = "overflowStyle">
+        <lib-topic-edit 
+            [record]="record" 
+            [inBrowser]="inBrowser" 
+            [collection]="editCollection" 
+            [selectedTopics]="topics[editCollection]" 
+            [scheme]="editScheme"
+            (dataChangedOutput)="onDataChange($event)" 
+            (cmdOutput)="onCommandChanged($event)"></lib-topic-edit>
+    </div>
+}

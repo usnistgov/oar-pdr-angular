@@ -4,8 +4,9 @@ import { ResourceDescriptionComponent } from './resourcedescription.component';
 import { testdata } from '../../../environments/environment';
 import { Component } from '@angular/core';
 import { DescriptionComponent } from '../description/description.component';
-import { TopicComponent } from '../topic/topic.component';
-import { KeywordComponent } from '../keyword/keyword.component';
+import { TopicMidasComponent } from '../topic/topic-midas/topic-midas.component';
+import { KeywordPubComponent } from '../keyword/keyword-pub/keyword-pub.component';
+import { KeywordMidasComponent } from '../keyword/keyword-midas/keyword-midas.component';
 import { TopicPubComponent } from '../topic/topic-pub/topic-pub.component';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 
@@ -37,11 +38,18 @@ describe('ResourceDescriptionComponent', () => {
         class TestTopicComponent {}
 
         @Component({
-            selector: "app-keyword",
+            selector: "keyword-pub",
             standalone: true,
             template: `<div></div>`,
         })
-        class TestKeywordComponent {}
+        class TestKeywordPubComponent {}
+
+        @Component({
+            selector: "keyword-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestKeywordMidasComponent {}
 
         @Component({
             selector: "topic-pub",
@@ -50,13 +58,21 @@ describe('ResourceDescriptionComponent', () => {
         })
         class TestTopicPubComponent {}
 
+        @Component({
+            selector: "topic-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTopicMidasComponent {}
+
         TestBed.overrideComponent(ResourceDescriptionComponent, {
             add: {
                 imports: [
                     TestSectionTitleComponent,
                     TestDescriptionComponent,
-                    TestTopicComponent,
-                    TestKeywordComponent,
+                    TestTopicMidasComponent,
+                    TestKeywordPubComponent,
+                    TestKeywordMidasComponent,
                     TestTopicPubComponent
                 ],
             },
@@ -64,8 +80,9 @@ describe('ResourceDescriptionComponent', () => {
                 imports: [
                     SectionTitleComponent,
                     DescriptionComponent,
-                    TopicComponent,
-                    KeywordComponent,
+                    TopicMidasComponent,
+                    KeywordPubComponent,
+                    KeywordMidasComponent,
                     TopicPubComponent
                 ],
             },

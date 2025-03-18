@@ -6,7 +6,6 @@ import { SelectItem, TreeNode } from 'primeng/api';
   providedIn: 'root'
 })
 export class GlobalService {
-    public isPublicSite = signal(false);
     public message = signal("");
     public sectionMode = signal<SectionMode>({} as SectionMode);
     public collection = signal<string>("");
@@ -206,12 +205,12 @@ _fieldName[Sections.TOPICS] = "theme";
 _fieldName[Sections.KEYWORDS] = "keyword";
 _fieldName[Sections.IDENTITY] = "identity";
 _fieldName[Sections.AUTHORS] = "identity";
-_fieldName[Sections.FACILITATORS] = "identity";
+// _fieldName[Sections.FACILITATORS] = "identity";
+_fieldName[Sections.FACILITATORS] = "facilitators";
 _fieldName[Sections.ABOUT] = "about";
 _fieldName[Sections.REFERENCES] = "references";
 _fieldName[Sections.AUTHORS] = "authors";
 _fieldName[Sections.DATA_ACCESS] = "dataAccess";
-_fieldName[Sections.FACILITATORS] = "facilitators";
 _fieldName[Sections.SIDEBAR] = "sidebar";
 _fieldName[Sections.CONTACT] = "contactPoint";
 _fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";

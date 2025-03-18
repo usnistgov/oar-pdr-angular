@@ -1,23 +1,23 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
-import { TopicComponent } from './topic.component';
+import { TopicMidasComponent } from './topic-midas.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormsModule } from '@angular/forms';
-import { AppConfig } from '../../config/config';
+import { AppConfig } from '../../../config/config';
 import { TransferState } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { ToastrModule } from 'ngx-toastr';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import * as env from '../../../environments/environment';
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { UserMessageService } from '../../../frame/usermessage.service';
+import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
+import * as env from '../../../../environments/environment';
 import { HttpClient, HttpHandler } from '@angular/common/http';
-import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
-import { EditStatusService } from '../editcontrol/editstatus.service';
+import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
 
-describe('TopicComponent', () => {
-    let component: TopicComponent;
-    let fixture: ComponentFixture<TopicComponent>;
+describe('TopicMidasComponent', () => {
+    let component: TopicMidasComponent;
+    let fixture: ComponentFixture<TopicMidasComponent>;
     let cfg = new AppConfig(null);
     cfg.loadConfig(env.config)
     let authsvc : AuthService = new MockAuthService(undefined);
@@ -27,7 +27,7 @@ describe('TopicComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                TopicComponent,
+                TopicMidasComponent,
                 FormsModule, 
                 HttpClientTestingModule, 
                 RouterTestingModule,
@@ -50,8 +50,8 @@ describe('TopicComponent', () => {
     }));
 
     beforeEach(() => {
-        let record: any = require('../../../assets/sampleRecord.json');
-        fixture = TestBed.createComponent(TopicComponent);
+        let record: any = require('../../../../assets/sampleRecord.json');
+        fixture = TestBed.createComponent(TopicMidasComponent);
         component = fixture.componentInstance;
         component.record = record;
         component.inBrowser = true;

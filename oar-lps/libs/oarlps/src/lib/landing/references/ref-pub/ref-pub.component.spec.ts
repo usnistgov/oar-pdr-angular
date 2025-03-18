@@ -8,7 +8,7 @@ describe('RefPubComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-        imports: [RefPubComponent]
+            imports: [RefPubComponent]
         })
         .compileComponents();
 

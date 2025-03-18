@@ -19,7 +19,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
-import { LandingPageModule } from './landing/landingpage.module';
+// import { LandingPageModule } from './landing/landingpage.module';
 import { LandingAboutModule } from 'oarlps';
 import { SharedModule } from 'oarlps';
 import { FragmentPolyfillModule } from "./fragment-polyfill.module";
@@ -42,6 +42,7 @@ import { StaffDirModule } from 'oarng';
 import { LandingPageComponent } from './landing/landingpage.component';
 import { HeaderPubComponent } from 'oarng';
 import { FooterComponent } from 'oarng';
+import { FrameModule } from 'oarlps';
 
 enableProdMode();
 
@@ -72,7 +73,6 @@ enableProdMode();
         NgbModule,
         NerdmModule.forRoot(environment),
         ConfigModule,
-        EditControlModule.forRoot(environment),
         StaffDirModule,
         HeaderPubComponent,
         LandingPageComponent,
@@ -83,7 +83,7 @@ enableProdMode();
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         GoogleAnalyticsService,
-        fakeBackendProvider,
+        // fakeBackendProvider,
         DatePipe
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

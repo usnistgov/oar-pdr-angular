@@ -1,9 +1,7 @@
 import { Component, Input, SimpleChanges, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { ContactService } from '../contact.service';
 import { Contact } from '../contact';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -51,7 +49,6 @@ export class ContactMidasComponent {
     dataChanged: boolean = false;
 
     LoadEditComp: boolean = false;
-    isPublicSite: boolean = false; 
     globalsvc = inject(GlobalService);
 
     @Input() record: any[];
@@ -62,11 +59,9 @@ export class ContactMidasComponent {
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
                 public edstatsvc: EditStatusService,
-                private gaService: GoogleAnalyticsService,
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
-                private notificationService: NotificationService,
-                private contactService : ContactService)
+                private notificationService: NotificationService)
     {
 
     }
@@ -89,7 +84,6 @@ export class ContactMidasComponent {
     }
 
     ngOnInit() {
-        this.isPublicSite = this.globalsvc.isPublicSite();
         this.updateOriginal();
 
         // effect(() => {

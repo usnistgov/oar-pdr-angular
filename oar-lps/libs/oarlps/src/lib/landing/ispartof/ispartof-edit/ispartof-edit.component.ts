@@ -29,7 +29,7 @@ export class IspartofEditComponent {
     isPartOf: string[] = null;
     dataChanged: boolean = false;
     isEditing: boolean = false;
-    fieldName = SectionPrefs.getFieldName(Sections.COLLECTION);
+    fieldName = SectionPrefs.getFieldName(Sections.FACILITATORS);
     editBlockStatus: string = 'collapsed';
     editMode: string = MODE.NORMAL; 
     overflowStyle: string = 'hidden';

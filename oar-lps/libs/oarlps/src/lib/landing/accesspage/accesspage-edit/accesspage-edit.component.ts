@@ -75,7 +75,6 @@ export class AccesspageEditComponent implements OnInit {
     }
 
     onChange() {
-        // console.log("accessPage02", this.accessPage)
         if(this.accessPage)
             this.accessPage.dataChanged = true;
 

@@ -29,40 +29,38 @@
 
 <!-- Editor -->
 <!-- Lazy loading in edit mode. Never get loaded in public mode -->
-@defer() {
-    @if(isEditing){
-        <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;margin-left: 20px;" [style.overflow] = "overflowStyle">
-            <table style="width: 100%;">
-                <tr  style="width: 100%;">
-                    <!-- Text edit area -->
-                    <td class="edit-block" style="width: calc(100%-90px);">
-                        <div class="radio-group">
-                            <div *ngFor="let col of collectionData" class="radio">
-                                <label [title]="col.displayName">
-                                    <input type="radio" required name="col" [value]="col.value" [(ngModel)]="selectedCollection" 
-                                    [checked]="col.value === selectedCollection"
-                                    (change)="colChanged($event)">
-                                    {{col.displayName}}
-                                </label>
-                            </div>
-                        </div>  
-                    </td>
+@if(isEditing){
+    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;margin-left: 20px;" [style.overflow] = "overflowStyle">
+        <table style="width: 100%;">
+            <tr  style="width: 100%;">
+                <!-- Text edit area -->
+                <td class="edit-block" style="width: calc(100%-90px);">
+                    <div class="radio-group">
+                        <div *ngFor="let col of collectionData" class="radio">
+                            <label [title]="col.displayName">
+                                <input type="radio" required name="col" [value]="col.value" [(ngModel)]="selectedCollection" 
+                                [checked]="col.value === selectedCollection"
+                                (change)="colChanged($event)">
+                                {{col.displayName}}
+                            </label>
+                        </div>
+                    </div>  
+                </td>
 
-                    <!-- Control buttons -->
-                    <td style="width: 90px;vertical-align: top;">
-                        <!-- Save button -->
-                        <button class="edit_button" type="button" (click)="saveCollection()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save collection">
-                            <i class="fas fa-check"></i>
-                        </button>
-                
-                        <!-- Cancel button -->
-                        <button class="edit_button" type="button"
-                            (click)="undoCurCollectionChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                            <i class="fas fa-times fa-sm"></i>
-                        </button>
-                    </td>          
-                </tr>
-            </table>    
-        </div>
-    }
+                <!-- Control buttons -->
+                <td style="width: 90px;vertical-align: top;">
+                    <!-- Save button -->
+                    <button class="edit_button" type="button" (click)="saveCollection()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save collection">
+                        <i class="fas fa-check"></i>
+                    </button>
+            
+                    <!-- Cancel button -->
+                    <button class="edit_button" type="button"
+                        (click)="undoCurCollectionChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
+                        <i class="fas fa-times fa-sm"></i>
+                    </button>
+                </td>          
+            </tr>
+        </table>    
+    </div>
 }

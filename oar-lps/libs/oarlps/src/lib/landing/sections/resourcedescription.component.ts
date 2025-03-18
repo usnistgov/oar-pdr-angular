@@ -6,28 +6,28 @@ import { GlobalService } from '../../shared/globals/globals'
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionComponent } from '../description/description.component';
-import { TopicComponent } from '../topic/topic.component';
-import { KeywordComponent } from '../keyword/keyword.component';
+import { TopicMidasComponent } from '../topic/topic-midas/topic-midas.component';
 import { TopicPubComponent } from '../topic/topic-pub/topic-pub.component';
 import { KeywordPubComponent } from '../keyword/keyword-pub/keyword-pub.component';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { SectionTitleComponent } from '../section-title/section-title.component';
+import { KeywordMidasComponent } from '../keyword/keyword-midas/keyword-midas.component';
 
 /**
  * a component that lays out the "Description" section of a landing page which includes the prose 
  * description, subject keywords, and research topics.
  */
 @Component({
-    selector:      'pdr-resource-desc',
+    selector: 'pdr-resource-desc',
     standalone: true,
     imports: [
         SectionTitleComponent,
         CommonModule,
         DescriptionComponent,
-        TopicComponent,
-        KeywordComponent,
+        TopicMidasComponent,
         TopicPubComponent,
         KeywordPubComponent,
+        KeywordMidasComponent,
         NgbModule
     ],    
     templateUrl:   './resourcedescription.component.html',
@@ -55,13 +55,13 @@ export class ResourceDescriptionComponent implements OnChanges {
     titleSelected: boolean = false;
     colorScheme: ColorScheme;
     maxWidth: number = 1000;
-    isPublicSite: boolean = false; 
     isEditMode: boolean = true;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
-    
+    @Input() isPublicSite: boolean = true;
+
     /**
      * create an instance of the Identity section
      */
@@ -78,7 +78,6 @@ export class ResourceDescriptionComponent implements OnChanges {
     }
 
     ngOnInit(): void {
-        this.isPublicSite = this.globalService.isPublicSite();
         this.recordType = (new NERDResource(this.record)).resourceLabel();
 
         this.colorScheme = {

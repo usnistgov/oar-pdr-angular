@@ -21,15 +21,13 @@ const routes: Routes = [
     //   loadChildren: () => import('oarlps').then(m => m.DatacartModule),
       children: [
           {   path: ':cartname',
-              component: DatacartComponent,
-            //   loadComponent: () => import('oarlps')
-            //       .then(mod => mod.DatacartComponent),
+              loadComponent: () => import('oarlps')
+                  .then(mod => mod.DatacartComponent),
               canDeactivate: [LeaveWhileDownloadingGuard]   
             },
           {   path: 'ark:/:naan/:cartname',
-              component: DatacartComponent,
-            //   loadComponent: () => import('oarlps')
-            //       .then(mod => mod.DatacartComponent),
+              loadComponent: () => import('oarlps')
+                  .then(mod => mod.DatacartComponent),
               canDeactivate: [LeaveWhileDownloadingGuard]   }
       ]
     },

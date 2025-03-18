@@ -1,6 +1,6 @@
 <div id="resourcebody" style="width: 100%;">
-    <div class="landing-body" style="overflow:visible;">
-        <div *ngIf="md" style="overflow:visible;">
+    <div class="landing-body" *ngIf="md" style="width: 100%; overflow:visible;">
+        <!-- <div *ngIf="md" style="overflow:visible;"> -->
             <!-- sections of the landing page body -->
             <!-- identity information -->
 
@@ -18,7 +18,11 @@
 
                 <!-- description: abstract, keywords, research areas, etc. -->
                 <a name="description" #description></a>
-                   <pdr-resource-desc [record]="md" [inBrowser]="inBrowser"></pdr-resource-desc>
+                   <pdr-resource-desc 
+                    [record]="md" 
+                    [inBrowser]="inBrowser"
+                    [isPublicSite]="isPublicSite">
+                </pdr-resource-desc>
             </div>
 
             <!-- data access, include available files -->
@@ -28,12 +32,17 @@
                     [inBrowser]="inBrowser"
                     [editEnabled]="editEnabled"
                     [theme]="theme"
+                    [isPublicSite]="isPublicSite"
                     (dlStatus)="setDownloadStatus($event)">
                 </pdr-resource-data>
 
             <!-- references -->
             <a name="references" #references></a>
-                <pdr-resource-refs [record]="md" [inBrowser]="inBrowser"></pdr-resource-refs>
+                <pdr-resource-refs 
+                    [record]="md" 
+                    [inBrowser]="inBrowser"
+                    [isPublicSite]="isPublicSite">
+                </pdr-resource-refs>
 
             <!-- About This Dataset visualization and export -->
             <a name="about" #about></a>
@@ -48,6 +57,6 @@
                 [theme]="theme">
               </pdr-resource-md>
             }
-        </div>
+        <!-- </div> -->
     </div>
 </div>

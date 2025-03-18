@@ -36,6 +36,7 @@
     display: table;
     width: 100%;
     margin: 0px;
+    padding: 0px;
 }
 
 .cell {
@@ -52,4 +53,13 @@
 .left {
     width: auto;
     vertical-align: top;
+}
+
+.contact {
+    padding: 0px;
+}
+
+.visithome {
+    margin: 0px;
+    padding: 0px;
 }

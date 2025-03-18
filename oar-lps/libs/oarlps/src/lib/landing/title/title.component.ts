@@ -22,7 +22,7 @@ import { TitleEditComponent } from './title-edit/title-edit.component';
 })
 export class TitleComponent implements OnInit {
     @Input() record: any[];
-    @Input() isPublicSite: boolean;   // false if running server-side
+    @Input() isPublicSite: boolean = true;   
 
     fieldName: string = SectionPrefs.getFieldName(Sections.TITLE);
 
@@ -37,6 +37,5 @@ export class TitleComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isPublicSite = this.globalsvc.isPublicSite();
     }
 }

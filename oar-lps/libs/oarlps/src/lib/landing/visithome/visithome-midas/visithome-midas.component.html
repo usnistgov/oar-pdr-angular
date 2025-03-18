@@ -39,7 +39,7 @@
 </span>
 <ng-template #visitHomeOnServer>Visit Home Page</ng-template>
 
-@defer(when isEditing) {
+@if(isEditing) {
     <!-- Visit homepage editor -->
     <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
         <lib-visithome-edit 

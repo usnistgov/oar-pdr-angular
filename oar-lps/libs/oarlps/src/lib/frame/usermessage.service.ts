@@ -19,7 +19,9 @@ export interface Message {
  * This class can be extended to modify or decorate messages of particular types 
  * with, say, extra information. 
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UserMessageService {
 
     private msg : Subject<Message> = new Subject<Message>();

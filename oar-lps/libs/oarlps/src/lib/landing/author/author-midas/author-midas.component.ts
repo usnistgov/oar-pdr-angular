@@ -36,7 +36,6 @@ import { TooltipModule } from 'primeng/tooltip';
     ]
 })
 export class AuthorMidasComponent {
-    fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     editMode: string = MODE.NORMAL; 
     childEditMode: string = MODE.NORMAL;
     originAuthors: any[] = [];
@@ -50,6 +49,8 @@ export class AuthorMidasComponent {
 
     @Input() record: any[];
     @Input() isEditMode: boolean;
+    @Input() fieldName: string;
+    @Input() isScienceTheme: boolean = false;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal,
@@ -92,30 +93,6 @@ export class AuthorMidasComponent {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.getAuthors();
 
-        // this.lpService.watchEditing((sectionMode: SectionMode) => {
-        //     if(this.authorList)
-        //         this.authorList.onSectionModeChanged(sectionMode);
-
-        //     if( sectionMode ) {
-        //         if(sectionMode.sender == SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-        //              // Request from side bar, if not edit mode, start editing
-        //             if( !this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
-        //                 this.startEditing();
-        //             }
-        //         }else{
-        //             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-        //                 // if(this.isEditing && this.currentContact.dataChanged){
-        //                 //     this.saveCurrentContact(false); // Do not refresh help text 
-        //                 // }
-        //                 this.hideEditBlock();
-        //             }
-        //         }
-        //     }
-
-        // });
-        
-        // effect(()=>{
-        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {    
             if(this.authorList)
                 this.authorList.onSectionModeChanged(sectionMode);

@@ -8,29 +8,27 @@
             <div *ngIf="inBrowser; else filesLoading">
                 <div class="flex-container" style="margin-top: 2em;">
                     <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
-                    <div *ngIf="editEnabled; else editDisabled"
-                        style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
-                        <span><b id="filelist-heading">Files</b></span>
-                        <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all" ngbTooltip="Download all from data cart">
-                            <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
-                            <i class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
-                        </span>
-                        <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;" aria-label="Add all to data cart" ngbTooltip="Add all to data cart">
-                            <i class="far fa-circle fa-stack-1x fa-lg"></i>
-                            <i class="fas fa-cart-plus fa-stack-1x fa-xs"></i>
-                            <!-- <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
-                            <i class="far fa-cart-plus fa-stack-1x fa-xs" aria-hidden="true"></i> -->
-                        </span>
-                        <span class="w3-badge badge-notify grey-background-color" style="margin-left:-3em;">{{cartLength}}</span>
-                    </div>
-                    <ng-template #editDisabled>
+                    @if(editEnabled == true) {
+                        <div style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
+                            <span><b id="filelist-heading">Files</b></span>
+                            <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all" ngbTooltip="Download all disabled in edit mode">
+                                <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                                <i class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
+                            </span>
+                            <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;" aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
+                                <i class="far fa-circle fa-stack-1x fa-lg"></i>
+                                <i class="fas fa-cart-plus fa-stack-1x fa-xs"></i>
+                            </span>
+                            <span class="w3-badge badge-notify grey-background-color" style="margin-left:-3em;">{{cartLength}}</span>
+                        </div>
+                    }
+                    @else {
                         <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
                             <span><b id="filelist-heading">Files </b> </span>
                             <a class="fa-stack fa-lg icon-download" style="width: 30px;"
                                 (click)="downloadAllFiles()" aria-label="Download all" ngbTooltip="Download all from data cart"
                                 [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
                                 <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
-                                <!-- <i class="fas fa-download fa-stack-1x" aria-hidden="true"></i> -->
                                 <i *ngIf="!isAddingToDownloadAllCart; else show_spinner1" 
                                     class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
                                 <ng-template #show_spinner1><i class="fas fa-spinner fa-spin fa-stack-1x spinner fa-xs"
@@ -50,7 +48,7 @@
                                 <span class="w3-badge badge-notify" style="margin-right:0em;">{{cartLength}}</span>
                             </span>
                         </div>
-                    </ng-template>
+                    }
                     <div style="flex-grow: 8; text-align: left; padding-top: .8em;">
                         <span class="grey-color">Click on the file/row in the table below to view more
                             details.</span>

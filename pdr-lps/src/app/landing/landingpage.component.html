@@ -4,10 +4,14 @@
     </div>
 </div>
 
+<div [ngStyle]="{'width': lpsWidth + 'px'}">
+    <pdr-message [defSysErrorPrefix]="'There was a problem loading your record.'"></pdr-message>
+</div>
+
 <div style="margin: 20px 40px 20px 0;">
     <div *ngIf="!displaySpecialMessage && _showContent">
-        <div *ngIf="md === null">
-            <b>Landing page is loading...</b>
+        <div *ngIf="md === null" style="width: 100%; text-align: center;">
+            <b><i class="fas fa-spinner fa-spin fa-lg"></i> Landing page is loading...</b>
         </div>
 
         <!-- Menu button and the popup menu (mobile mode only) -->
@@ -49,7 +53,7 @@
                     [metricsData]="metricsData"
                     [showJsonViewer]="showJsonViewer"
                     [theme]="theme"
-                    isPublicSite="true"
+                    [isPublicSite]=true
                     [edstatsvc]="edstatsvc"
                     [landingPageURL]="landingPageURL"
                     [landingPageServiceStr]="landingPageServiceStr"

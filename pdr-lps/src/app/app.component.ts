@@ -1,9 +1,13 @@
+// import { UserMessageService } from './../../../oar-lps/libs/oarlps/src/lib/frame/usermessage.service';
+// import { MessageBarComponent } from './../../../oar-lps/libs/oarlps/src/lib/frame/messagebar.component';
 import { Component, AfterViewInit, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError } from '@angular/router';
 import { GoogleAnalyticsService } from 'oarlps'
 import { AppConfig } from 'oarlps';
 import { isPlatformBrowser } from '@angular/common';
 import { CartService } from 'oarlps';
+import { MessageBarComponent } from 'oarlps';
+import { UserMessageService } from 'oarlps';
 
 @Component({
     selector: 'app-root',
@@ -22,7 +26,8 @@ export class AppComponent {
         // public environmentService : EnvironmentService,
         private cfg: AppConfig,
         public cartService: CartService,
-        @Inject(PLATFORM_ID) private platformId: Object)
+        @Inject(PLATFORM_ID) private platformId: Object,
+        public msgSvc: UserMessageService)
     { 
         this.inBrowser = isPlatformBrowser(platformId);
     }

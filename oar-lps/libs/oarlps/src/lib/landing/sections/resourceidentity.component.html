@@ -5,38 +5,100 @@
             <span *ngIf="recordType=='Science Theme'" class="badge version"> Beta</span>
         </span>
         <br>
-        <app-title [record]="record" [isPublicSite]="isPublicSite"></app-title>
+        <app-title 
+            [record]="record" 
+            [isPublicSite]="isPublicSite">
+        </app-title>
 
         @if(isDefaultCollection) {
             <app-ispartof
                 [record]="record" 
                 [inBrowser]="inBrowser"
                 [isEditMode]="isEditMode"
-                [landingPageServiceStr]="landingPageServiceStr">
+                [landingPageServiceStr]="landingPageServiceStr"
+                [isPublicSite]="isPublicSite">
             </app-ispartof>
         }
 
     </div>
     
     <div style="width: 100%;">
-        <app-author *ngIf="theme != scienceTheme" 
-            [record]="record" 
-            [inBrowser]="inBrowser" 
-            [isEditMode]="isEditMode">
-        </app-author>
-
+        @if(theme != scienceTheme) {
+            @if(isPublicSite) {
+                @if(record[authorFieldName] && record[authorFieldName].length > 0) {
+                    <author-pub 
+                        [record]="record" 
+                        [fieldName]="authorFieldName"
+                        [isScienceTheme] = "isScienceTheme">
+                    </author-pub>
+                }
+            }
+            @else {
+                <author-midas 
+                    [record]="record" 
+                    [isEditMode]="isEditMode"
+                    [fieldName]="authorFieldName"
+                    [isScienceTheme]="isScienceTheme">
+                </author-midas>
+            }
+        }
         <!-- Facilitators -->
-        <div *ngIf="theme == scienceTheme" style="width: 100%;" [ngStyle]="{'margin-bottom': record.creators? '15px' : '1.5em'}">
-            <app-facilitators [record]="record" [inBrowser]="inBrowser"></app-facilitators>
-        </div>
+        @else {
+            @if(isPublicSite) {
+                @if(record[facilitatorsFieldName] && record[facilitatorsFieldName].length > 0) {
+                    <div style="width: 100%;" 
+                         [ngStyle]="{'margin-bottom': record.creators? '15px' : '0.5em'}">
+
+                        <author-pub 
+                            [record]="record" 
+                            [fieldName]="facilitatorsFieldName"
+                            [isScienceTheme]="isScienceTheme">
+                        </author-pub>
+                    </div>
+                }
+            }
+            @else{
+                <!-- To be implemented when we are ready to edit collection page -->
+                <!-- <lib-facilitators-midas>
+
+                </lib-facilitators-midas> -->
+            }
+        }
 
         <div class="table" style="margin: 0px;padding: 0px;">
             <div class="cell left">
-                <app-contact [record]="record" [isPublicSite]="isPublicSite"></app-contact>
+                @if(isPublicSite) {
+                    <div class="editable_field" style="margin: 5px 5px 5px 0px;">
+                        <contact-pub class="contact" [record]="record"></contact-pub>
+                    </div>
+                }
+                @else {
+                    <div class="editable_field" style="margin: 5px 5px 5px 0px;">
+                        <contact-midas class="contact" [record]="record" [inBrowser]="inBrowser"></contact-midas>
+                    </div>
+                }
             </div>
 
             <div class="cell right">
-                <app-visithome [record]="record" [inBrowser]="inBrowser" [inViewMode]="inViewMode" [theme]="theme"></app-visithome>
+                @if(isPublicSite) {
+                    <Visithome-pub 
+                        class="visithome"
+                        [record]="record" 
+                        [inBrowser]="inBrowser"
+                        [inViewMode]="inViewMode"
+                        [theme]="theme">
+                    </Visithome-pub>
+                }
+                @else {
+                    <Visithome-midas 
+                        class="visithome"
+                        [record]="record" 
+                        [inBrowser]="inBrowser"
+                        [inViewMode]="inViewMode"
+                        [theme]="theme"
+                        [isEditMode]="isEditMode">
+                    </Visithome-midas>
+                }
             </div>
         </div>
 

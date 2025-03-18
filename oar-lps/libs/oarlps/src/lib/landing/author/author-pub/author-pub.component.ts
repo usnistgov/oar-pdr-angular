@@ -1,6 +1,5 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { Author } from '../author';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
@@ -17,11 +16,12 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
     styleUrls: ['./author-pub.component.scss', '../../landing.component.scss']
 })
 export class AuthorPubComponent {
-    fieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
     authors: Author[] = [];
     overflowStyle: string = 'hidden';
 
     @Input() record: any[];
+    @Input() fieldName: string;
+    @Input() isScienceTheme: boolean = false;
 
     constructor() { }
 

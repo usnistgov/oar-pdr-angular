@@ -2,5 +2,19 @@
     <lib-section-title [sectionTitle]="sectionTitle" [inBrowser]="inBrowser" sectionTag="refHeader" id="refHeader" #refHeader></lib-section-title>
 </div>
 
-<app-references [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></app-references>
+<!-- <app-references 
+    [record]="record" 
+    [inBrowser]="inBrowser" 
+    [isEditMode]="isEditMode"
+    [isPublicSite]="isPublicSite">
+</app-references> -->
+
+<div class="references" id="references">
+    @if(isPublicSite) {
+        <ref-pub [record]="record" ></ref-pub>
+    }
+    @else {
+        <ref-midas [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></ref-midas>
+    }
+</div>
 

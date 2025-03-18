@@ -8,41 +8,20 @@
                 </td>
                 <td>
                     <span 
-                    class="keywords" 
-                    [style.background-color]="bubbleColor(keyword)" 
-                    [style.border]="borderStyle(keyword)" 
-                    (mouseenter)="mouseEnter(keyword)" 
-                    (mouseover)="mouseEnter(keyword)" 
-                    (mouseout)="mouseOut(keyword)" 
-                    [style.cursor]="setCursor(keyword)" 
-                    style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
-                    (click)="keywordClick(keyword)" 
-                    *ngFor="let keyword of keywordDisplay; let i =index">
-                    <span style="display: inline-block;white-space: nowrap">{{ keyword }}</span>
-                </span> 
+                        class="keywords" 
+                        [style.background-color]="bubbleColor(keyword)" 
+                        [style.border]="borderStyle(keyword)" 
+                        (mouseenter)="mouseEnter(keyword)" 
+                        (mouseover)="mouseEnter(keyword)" 
+                        (mouseout)="mouseOut(keyword)" 
+                        [style.cursor]="setCursor(keyword)" 
+                        style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
+                        (click)="keywordClick(keyword)" 
+                        *ngFor="let keyword of keywordDisplay; let i =index">
+                        <span style="display: inline-block;white-space: nowrap">{{ keyword }}</span>
+                    </span> 
                 </td>
             </tr>
         </table>
-        <!-- <div class="editable_field" style="width: fit-content;">
-            <span style="white-space: nowrap;margin-right: .5em;">
-                <strong>Subject Keywords:</strong>
-            </span>
-        </div>
-
-        <div class="editable_field keyword-width">
-            <span 
-                class="keywords" 
-                [style.background-color]="bubbleColor(keyword)" 
-                [style.border]="borderStyle(keyword)" 
-                (mouseenter)="mouseEnter(keyword)" 
-                (mouseover)="mouseEnter(keyword)" 
-                (mouseout)="mouseOut(keyword)" 
-                [style.cursor]="setCursor(keyword)" 
-                style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
-                (click)="keywordClick(keyword)" 
-                *ngFor="let keyword of keywordDisplay; let i =index">
-                <span style="display: inline-block;white-space: nowrap">{{ keyword }}</span>
-            </span> 
-        </div> -->
     </div>
 </div>

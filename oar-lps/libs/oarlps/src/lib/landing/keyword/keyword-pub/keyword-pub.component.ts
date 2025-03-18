@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { SectionPrefs, Sections } from '../../../shared/globals/globals';
 
 @Component({
   selector: 'keyword-pub',
@@ -16,6 +17,7 @@ export class KeywordPubComponent {
     keywordLong: string[] = [];
     keywordBreakPoint: number = 5;
     hovered: boolean = false;
+    fieldName: string = SectionPrefs.getFieldName(Sections.KEYWORDS);
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
@@ -43,15 +45,15 @@ export class KeywordPubComponent {
      * Generate short and long keyword list for display
      */
     keywordInit() {
-        if(this.record['keyword']) {
-            if(this.record['keyword'].length > 5) {
-                this.keywordShort = JSON.parse(JSON.stringify(this.record['keyword'])).slice(0, this.keywordBreakPoint);
+        if(this.record[this.fieldName]) {
+            if(this.record[this.fieldName].length > 5) {
+                this.keywordShort = JSON.parse(JSON.stringify(this.record[this.fieldName])).slice(0, this.keywordBreakPoint);
                 this.keywordShort.push("Show more...");
-                this.keywordLong = JSON.parse(JSON.stringify(this.record['keyword']));
+                this.keywordLong = JSON.parse(JSON.stringify(this.record[this.fieldName]));
                 this.keywordLong.push("Show less...");                
             }else {
-                this.keywordShort = JSON.parse(JSON.stringify(this.record['keyword']));
-                this.keywordLong = JSON.parse(JSON.stringify(this.record['keyword']));
+                this.keywordShort = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+                this.keywordLong = JSON.parse(JSON.stringify(this.record[this.fieldName]));
             }
         }else{
             this.keywordShort = [];

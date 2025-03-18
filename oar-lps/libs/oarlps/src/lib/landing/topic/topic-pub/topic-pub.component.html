@@ -1,5 +1,10 @@
 <div style="border: 1px solid rgb(210, 210, 210);border-radius: 10px;padding: 10px;margin-bottom: 0.5em;">
     <div class="topics-title">
+        @if(isEditMode) {
+            <span style="color: rgb(173, 0, 0); vertical-align: top;text-align: left; padding-right: .5em;">
+            *</span>
+        }
+
         <strong>Research Areas</strong>
     </div>
 
@@ -10,9 +15,19 @@
                 <div *ngFor="let col of collectionOrder; let i =index" style="margin-bottom: .3em;">
                     <div *ngIf="showTopics(col)" style=" display: table-cell;max-width: calc(100%-70px) !important;">
                         <!-- Display collection name -->
-                        <span *ngIf="topics[col] && topics[col].length > 0; else noTopic" style="font-weight: 500;white-space: nowrap;" >
-                            <strong>{{ allCollections[col].tag }}: </strong>
-                        </span>
+                        @if(topics[col] && topics[col].length > 0){
+                            <span style="font-weight: 500;white-space: nowrap;" >
+                                <strong>{{ allCollections[col].tag }}: </strong>
+                            </span>
+                        }
+                        @else{
+                            <!-- If no topic and is edit mode, display Add {collection name} -->
+                            @if(isEditMode){
+                                <span style="padding-right: 10px !important; white-space: nowrap;">
+                                    <strong>{{ allCollections[col].tag }}: </strong>
+                                </span> 
+                            }
+                        }
 
                         <!-- Display topics in bubbles -->
                         <span *ngIf="topics[col] && topics[col].length > 0" style="padding-left: 20px;">
@@ -34,6 +49,16 @@
                             </span>
                         </span>
                     </div>
+
+                    @if(isEditMode && showTopics(col)) {
+                        <div style=" display: table-cell; width: 70px;">
+                            <ng-content select=".controls"></ng-content>
+                        </div>
+                    }
+
+                    <!-- <ng-container *ngTemplateOutlet="tmplRef;
+                        context: {$implicit: col}">
+                    </ng-container> -->
                 </div>
             </div>
         </span>

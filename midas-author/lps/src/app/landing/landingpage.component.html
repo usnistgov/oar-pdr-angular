@@ -1,17 +1,16 @@
+<!-- Will enable image banner when collection page is ready for editing -->
 <!-- <div *ngIf="theme == scienceTheme && displayBanner">
     <div class="science-theme-banner" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')','margin-bottom':'-1em'}">
     </div>
 </div> -->
 
-@if(!isPublicSite){
-  <!-- edit control panel (visible when editing is enabled) -->
-  <pdr-edit-control *ngIf="editEnabled" [inBrowser]="inBrowser" [(mdrec)]="md" [requestID]="requestId"></pdr-edit-control>
+<!-- edit control panel (visible when editing is enabled) -->
+<pdr-edit-control *ngIf="editEnabled" [inBrowser]="inBrowser" [(mdrec)]="md" [requestID]="requestId"></pdr-edit-control>
 
-  <!-- error messages go here -->
-  <div [ngStyle]="{'width': lpsWidth + 'px'}">
-    <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message>
-  </div>
-}
+<!-- error messages go here -->
+<div [ngStyle]="{'width': lpsWidth + 'px'}">
+  <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message>
+</div>
 
 <!-- status message bar -->
 <!-- <pdr-edit-status [(mdrec)]="md"></pdr-edit-status> -->
@@ -22,7 +21,7 @@
             <b>Landing page is loading...</b>
         </div>
 
-        @defer(when isPublicSite || !edstatsvc.isEditMode()) {
+        @if(!edstatsvc.isEditMode()) {
           <!-- Menu button and the popup menu (mobile mode only) -->
           <div style="width: 100%; height: 0px;">
             <!-- div to keep track of the menu button position -->
@@ -63,7 +62,7 @@
                   [metricsData]="metricsData"
                   [showJsonViewer]="showJsonViewer"
                   [theme]="theme"
-                  [isPublicSite]="isPublicSite"
+                  [isPublicSite]=false
                   [edstatsvc]="edstatsvc"
                   [landingPageURL]="landingPageURL"
                   [landingPageServiceStr]="landingPageServiceStr"
@@ -72,7 +71,7 @@
 
             </div>
 
-            @if(isPublicSite || !edstatsvc.isEditMode()) {
+            @if(!edstatsvc.isEditMode()) {
                 <!-- <div #stickyMenu></div> -->
                 <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
                   <app-menu
@@ -90,31 +89,30 @@
                 </div>
             }
 
-            @defer(when !isPublicSite) {
-              @if(edstatsvc.isEditMode()) {
-                <!-- Drag bar to resize the help box -->
-                <div #splitter
-                  *ngIf="showSplitter"
-                  class="splitter"
-                  (mousedown)="onMousedown($event)"
-                  (mouseup)="onMouseUp($event)"
-                  [ngStyle]="{'height': splitterHeight + 'px','padding-top': splitterPaddingTop + 'px'}">
-                    <div id="separator" style="opacity: .3;">||</div>
-                </div>
 
-                <!-- The help box at the right side -->
-                <app-sidebar
-                  *ngIf="hideToolMenu"
-                  class='normal-sdbar'
-                  [record]="md"
-                  [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}"
-                  [@togglesbar]="{value: mainBodyStatus, params:{help_width: helpWidth + 'px'}}"
-                  [helpContentAll]="helpContentAll"
-                  [resourceType]="resourceType"
-                  (sbarvisible_out)="updateSidebarStatus($event)"
-                  (scroll)="goToSection($event)">
-                </app-sidebar>
-              }
+            @if(edstatsvc.isEditMode()) {
+              <!-- Drag bar to resize the help box -->
+              <div #splitter
+                *ngIf="showSplitter"
+                class="splitter"
+                (mousedown)="onMousedown($event)"
+                (mouseup)="onMouseUp($event)"
+                [ngStyle]="{'height': splitterHeight + 'px','padding-top': splitterPaddingTop + 'px'}">
+                  <div id="separator" style="opacity: .3;">||</div>
+              </div>
+
+              <!-- The help box at the right side -->
+              <app-sidebar
+                *ngIf="hideToolMenu"
+                class='normal-sdbar'
+                [record]="md"
+                [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}"
+                [@togglesbar]="{value: mainBodyStatus, params:{help_width: helpWidth + 'px'}}"
+                [helpContentAll]="helpContentAll"
+                [resourceType]="resourceType"
+                (sbarvisible_out)="updateSidebarStatus($event)"
+                (scroll)="goToSection($event)">
+              </app-sidebar>
             }
 
             <!-- citation pop-up -->

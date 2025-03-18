@@ -5,34 +5,11 @@
             @if(isEditMode) {
                 <span class="required-field">*</span>
             }
-            <!-- <span style="white-space: nowrap;margin-right: .5em;">
-                <strong>Subject Keywords:</strong>
-            </span> -->
         </div>
 
         <div class="editable_field" style="width: fit-content; max-width: calc(100% - 80px)">
             <!-- Keywords in regular or preview mode -->
-            <!-- @if(!isEditing || !isEditMode) { -->
                 <keyword-pub [record]="record" [inBrowser]="inBrowser"></keyword-pub>
-
-                <!-- <div class="editable_field" style="width: 100%;">
-                    <span class="editable_field ind" style="max-width: 90%;white-space: nowrap">
-                        <span 
-                            class="keywords" 
-                            [style.background-color]="bubbleColor(keyword)" 
-                            [style.border]="borderStyle(keyword)" 
-                            (mouseenter)="mouseEnter(keyword)" 
-                            (mouseover)="mouseEnter(keyword)" 
-                            (mouseout)="mouseOut(keyword)" 
-                            [style.cursor]="setCursor(keyword)" 
-                            style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
-                            (click)="keywordClick(keyword)" 
-                            *ngFor="let keyword of keywordDisplay; let i =index">
-                            <span style="display: inline-block">{{ keyword }}</span>
-                        </span> 
-                    </span>
-                </div> -->
-            <!-- } -->
         </div>
 
         <!-- Control buttons -->

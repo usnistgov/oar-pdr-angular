@@ -39,6 +39,7 @@ export class ResourceMetadataComponent implements OnChanges {
     @Input() metricsData: MetricsData;
     @Input() showJsonViewer: boolean = false;
     @Input() theme: string;
+    @Input() isPublicSite: boolean = true;
 
     @ViewChild(AboutdatasetComponent, { static: true })
     aboutdatasetComponent: AboutdatasetComponent;

@@ -19,15 +19,13 @@ export class IspartofComponent implements OnInit {
     selectedCollection: string = "Forensics";
     originalCollection: string = null;
 
-    isPublicSite: boolean = false; 
-
     @Input() record: any[];
     @Input() inBrowser: boolean; 
     @Input() isEditMode: boolean;
     @Input() landingPageServiceStr: string;
+    @Input() isPublicSite: boolean = true;  
 
     constructor(public globalsvc: GlobalService) { 
-        this.isPublicSite = this.globalsvc.isPublicSite();
     }
 
     ngOnInit(): void {}

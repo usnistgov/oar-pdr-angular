@@ -46,7 +46,6 @@ export class RefMidasComponent {
     childEditMode: string = MODE.NORMAL;
     orderChanged: boolean = false;
     loadEditRefBlock: boolean = false;
-    isPublicSite: boolean = false; 
     globalsvc = inject(GlobalService);
     
     // For warning pop up
@@ -68,7 +67,6 @@ export class RefMidasComponent {
     }
 
     ngOnInit(): void {
-        this.isPublicSite = this.globalsvc.isPublicSite();
         this.resetOrigin();
 
         // effect(() => {

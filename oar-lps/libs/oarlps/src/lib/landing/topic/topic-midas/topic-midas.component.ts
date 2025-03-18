@@ -1,26 +1,28 @@
-import { Component, OnInit, Input, ElementRef, SimpleChanges, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, Input, ElementRef, SimpleChanges, ViewChild, ChangeDetectorRef, inject, ContentChild, TemplateRef } from '@angular/core';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NotificationService } from '../../shared/notification-service/notification.service';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { NerdmRes } from '../../nerdm/nerdm';
-import { AppConfig } from '../../config/config';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { NerdmRes } from '../../../nerdm/nerdm';
+import { AppConfig } from '../../../config/config';
+import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
-import { CollectionService } from '../../shared/collection-service/collection.service';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../../shared/globals/globals';
+import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
-import { TopicEditComponent } from './topic-edit/topic-edit.component';
+import { TopicEditComponent } from '../topic-edit/topic-edit.component';
+import { TopicPubComponent } from '../topic-pub/topic-pub.component';
 
 @Component({
-    selector: 'app-topic',
+    selector: 'topic-midas',
     standalone: true,
     imports: [ 
         CommonModule, 
         TopicEditComponent,
+        TopicPubComponent,
         NgbModule
     ],
-    templateUrl: './topic.component.html',
-    styleUrls: ['./topic.component.css','../landing.component.scss'],
+    templateUrl: './topic-midas.component.html',
+    styleUrls: ['../topic.component.css','../../landing.component.scss'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),
@@ -29,7 +31,7 @@ import { TopicEditComponent } from './topic-edit/topic-edit.component';
         ])
     ]
 })
-export class TopicComponent implements OnInit {
+export class TopicMidasComponent implements OnInit {
     selectedTopics: any[] = [];
     scienceThemeTopics: any[] = [];
     recordType: string = "";
@@ -56,7 +58,8 @@ export class TopicComponent implements OnInit {
     @Input() isEditMode: boolean = true;
 
     @ViewChild('topic') topicElement: ElementRef;
-
+    @ContentChild('tmpl') tmplRef: TemplateRef<any>;
+    
     //05-12-2020 Ray asked to read topic data from 'theme' instead of 'topic'
     fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     // fieldName = "theme";
@@ -65,6 +68,8 @@ export class TopicComponent implements OnInit {
     overflowStyle: string = 'hidden';
     dataChanged: boolean = false;
     globalsvc = inject(GlobalService);
+    //Use NIST collection only for now
+    col: string = "NIST";
 
     constructor(public mdupdsvc: MetadataUpdateService,
                 private cfg: AppConfig,
@@ -103,24 +108,6 @@ export class TopicComponent implements OnInit {
         return collection == Collections.DEFAULT;
     }
 
-    showTopics(collection) {
-        //Always display NIST R&D, then only display the collection terms that the article is part of
-        if(this.isDefaultCollection(collection))
-            return true;
-        else {
-            //Loop through "isPartOf" field
-            if(this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
-            this.record['isPartOf'].length > 0) {
-                for(let c of this.record['isPartOf']) {
-                    return (c.title.toLowerCase().indexOf(collection.toLowerCase()) > -1)
-                }
-            }else{
-                return false;
-            }
-        }
-
-    }
-
     ngOnInit() {
         let editMode = this.isEditMode;
         this.colorScheme = this.collectionService.getColorScheme(this.collection);
@@ -128,8 +115,6 @@ export class TopicComponent implements OnInit {
         this.updateResearchTopics();
         this.originalTopics = JSON.parse(JSON.stringify(this.topics));
 
-        // effect(() => {
-        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {            
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
@@ -513,88 +498,88 @@ export class TopicComponent implements OnInit {
     }
 
     /**
-     * Function to Check record has topics
+     * Function to Check if record has topics
      */
-    checkTopics() {
-        if (Array.isArray(this.record[this.fieldName])) {
-            if (this.record[this.fieldName].length > 0)
-                return true;
-            else
-                return false;
-        }
-        else {
-            return false;
-        }
-    }
+    // checkTopics() {
+    //     if (Array.isArray(this.record[this.fieldName])) {
+    //         if (this.record[this.fieldName].length > 0)
+    //             return true;
+    //         else
+    //             return false;
+    //     }
+    //     else {
+    //         return false;
+    //     }
+    // }
 
     /**
      * Set bubble color based on content
      * @param topic 
      */
-    bubbleColor(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-            return "#e6ecff";
-        }else{
-            return "#ededed";
-        }
-    }
+    // bubbleColor(topic) {
+    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+    //         return "#e6ecff";
+    //     }else{
+    //         return "#ededed";
+    //     }
+    // }
 
     /**
      * Set border for "More..." and "Less..." button when mouse over
      * @param keyword 
      * @returns 
      */    
-    borderStyle(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-            if(this.hovered){
-                return "1px solid blue";
-            }else{
-                return "1px solid #ededed";
-            }
-        }else{
-            return "1px solid #ededed";
-        }
-    }
+    // borderStyle(topic) {
+    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+    //         if(this.hovered){
+    //             return "1px solid blue";
+    //         }else{
+    //             return "1px solid #ededed";
+    //         }
+    //     }else{
+    //         return "1px solid #ededed";
+    //     }
+    // }
 
     /**
      * Set cursor type for "More..." and "Less..." button
      * @param topic 
      * @returns 
      */
-    setCursor(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-            return "pointer";
-        }else{
-            return "";
-        }
-    }
+    // setCursor(topic) {
+    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+    //         return "pointer";
+    //     }else{
+    //         return "";
+    //     }
+    // }
 
-    mouseEnter(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-            this.hovered = true;
-        }
-    }
+    // mouseEnter(topic) {
+    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+    //         this.hovered = true;
+    //     }
+    // }
 
-    mouseOut(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-            this.hovered = false;
-        }
-    }
+    // mouseOut(topic) {
+    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+    //         this.hovered = false;
+    //     }
+    // }
 
     /**
      * Display short/long list based on which button was clicked.
      * @param topic 
      */
-    topicClick(topic, collection) {
-        if(topic.tag == "Show more...") {
-            this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicLong[collection]));
-        }
+    // topicClick(topic, collection) {
+    //     if(topic.tag == "Show more...") {
+    //         this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicLong[collection]));
+    //     }
 
-        if(topic.tag == "Show less...") {
-            this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicShort[collection]));
-        }
+    //     if(topic.tag == "Show less...") {
+    //         this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicShort[collection]));
+    //     }
 
-        this.hovered = false;
-    }
+    //     this.hovered = false;
+    // }
 
 }

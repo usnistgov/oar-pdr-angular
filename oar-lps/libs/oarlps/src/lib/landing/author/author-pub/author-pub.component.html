@@ -1,8 +1,11 @@
 <div style="display: table;">
     <div class="editable_container">
-        <div *ngIf="record['authors'] && record['authors'].length > 0" class="editable_field" style="white-space: nowrap;width: fit-content;">
+        <div *ngIf="record[fieldName] && record[fieldName].length > 0" 
+             class="editable_field" 
+             style="white-space: nowrap;width: fit-content;">
+
             <div class="authorsbrief">
-                @for(author of record.authors; track $index) {
+                @for(author of record[fieldName]; track $index) {
                     <span>
                         {{ author.fn }}    
                         <span *ngIf="author.orcid">
@@ -10,11 +13,11 @@
                                 <img src="assets/images/orcid-logo.png" style="width: 20px;">
                             </a>
                         </span>                            
-                        <span *ngIf="$index < record.authors.length-1 ">,</span>
+                        <span *ngIf="$index < record[fieldName].length-1 ">,</span>
                     </span>
                 }
 
-                <span>
+                <span style="cursor: pointer;">
                     <i style="margin-left: 0.5rem;" class="fas"
                     [ngClass]="{'fa-caret-right': !clickAuthors, 'fa-caret-down': clickAuthors}"
                     aria-label="Show author details"
@@ -22,9 +25,16 @@
                 </span>
             </div>
             <div [collapse]="!isCollapsedContent" class="card card-block card-header customcard" style="width: fit-content; padding:.5em;">
-                <div class="authorsdetail" *ngIf="record.authors">
-                    <span><b>Authors:</b></span>
-                    @for(author of record.authors; track author.fn) {
+                <div class="authorsdetail">
+                    <span><b>
+                        @if(isScienceTheme) {
+                            Facilitatiors:
+                        }
+                        @else {
+                            Authors:
+                        }
+                    </b></span>
+                    @for(author of record[fieldName]; track author.fn) {
                         <div>
                             <div>
                                 <span>{{ author.fn}}</span>

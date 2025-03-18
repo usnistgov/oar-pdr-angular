@@ -57,7 +57,6 @@ export class KeywordMidasComponent {
     keywordBreakPoint: number = 5;
     keywordDisplay: string[] = [];
     hovered: boolean = false;
-    isPublicSite: boolean = false; 
     public EDIT_MODES: any = LandingConstants.editModes;
     globalsvc = inject(GlobalService);
 
@@ -95,33 +94,10 @@ export class KeywordMidasComponent {
     }
 
     ngOnInit() {
-        this.isPublicSite = this.globalsvc.isPublicSite();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.getKeywords();
         this.keywordInit();
 
-        // effect(() => {
-        //     let sectionMode = this.globalsvc.sectionMode();
-
-        //     if( sectionMode ) {
-        //         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-        //             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-        //                 if(this.isEditing){
-        //                     this.onSave(false); // Do not refresh help text 
-        //                 }else{
-        //                     this.setMode(MODE.NORMAL, false);
-        //                 }
-        //             }
-        //         }else { // Request from side bar, if not edit mode, start editing
-        //             if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
-        //                 this.startEditing();
-        //             }
-        //         }
-        //     }
-        // })
-
-        // effect(() => {
-        //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
@@ -347,15 +323,15 @@ export class KeywordMidasComponent {
      * Generate short and long keyword list for display
      */
     keywordInit() {
-        if(this.record['keyword']) {
-            if(this.record['keyword'].length > 5) {
-                this.keywordShort = JSON.parse(JSON.stringify(this.record['keyword'])).slice(0, this.keywordBreakPoint);
+        if(this.record[this.fieldName]) {
+            if(this.record[this.fieldName].length > 5) {
+                this.keywordShort = JSON.parse(JSON.stringify(this.record[this.fieldName])).slice(0, this.keywordBreakPoint);
                 this.keywordShort.push("Show more...");
-                this.keywordLong = JSON.parse(JSON.stringify(this.record['keyword']));
+                this.keywordLong = JSON.parse(JSON.stringify(this.record[this.fieldName]));
                 this.keywordLong.push("Show less...");                
             }else {
-                this.keywordShort = JSON.parse(JSON.stringify(this.record['keyword']));
-                this.keywordLong = JSON.parse(JSON.stringify(this.record['keyword']));
+                this.keywordShort = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+                this.keywordLong = JSON.parse(JSON.stringify(this.record[this.fieldName]));
             }
         }else{
             this.keywordShort = [];

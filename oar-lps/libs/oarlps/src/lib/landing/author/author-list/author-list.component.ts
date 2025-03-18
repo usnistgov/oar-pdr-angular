@@ -78,56 +78,13 @@ export class AuthorListComponent implements OnInit {
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService) { 
 
-    //    effect(()=>{
-    //         let sectionMode = this.lpService.sectionMode();
-    //         if(sectionMode){
-    //             if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
-    //                 if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-    //                     //If is adding but nothing changed, undo adding
-    //                     if(this.isAdding && !this.currentAuthor.dataChanged){
-    //                         this.undoCurAuthorChanges();
-    //                     //If is adding or editing and something changed, save it
-    //                     }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
-    //                         this.saveCurrentAuthor(false, true); // Do not refresh help text 
-    //                     }
-    //                     this.hideEditBlock();
-    //                 }
-    //             }else{
-    //                 if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
-    //                     this.onAdd();
-    //                 }
-    //             }
-    //         }
-    //     });
-
-    }
+     }
 
     ngOnInit(): void {
         this.updateSavedRecord();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.onRecordChanged();
 
-        // this.lpService.watchEditing((sectionMode: SectionMode) => {
-        //     if( sectionMode ) {
-        //         if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
-        //             if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-        //                 //If is adding but nothing changed, undo adding
-        //                 if(this.isAdding && !this.currentAuthor.dataChanged){
-        //                     this.undoCurAuthorChanges();
-        //                 //If is adding or editing and something changed, save it
-        //                 }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
-        //                     this.saveCurrentAuthor(false, true); // Do not refresh help text 
-        //                 }
-        //                 this.hideEditBlock();
-        //             }
-        //         }else{
-        //             if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
-        //                 this.onAdd();
-        //             }
-        //         }
-        //     }
-
-        // })        
     }
 
     onSectionModeChanged(sectionMode: SectionMode) {
@@ -797,7 +754,6 @@ export class AuthorListComponent implements OnInit {
 
         this.currentAuthorIndex = event.item.data;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-        // this.dataChanged.next({"authors": this.record[this.fieldName], "action": "dataChanged"});
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;

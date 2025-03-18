@@ -80,28 +80,8 @@ export class AccesspageListComponent implements OnInit {
     constructor(
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
-                private chref: ChangeDetectorRef,
-                private sanitizer: DomSanitizer) { 
+                private chref: ChangeDetectorRef) { 
 
-                // this.lpService.watchEditing((sectionMode: SectionMode) => {
-                //     if( sectionMode ) {
-                //         if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                //             if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-                //                 if(this.currentApage && this.currentApage.dataChanged){
-                //                     this.saveCurApage(false, MODE.NORMAL);  // Do not refresh help text 
-                //                 }
-
-                //                 if(this.editBlockStatus == 'expanded')
-                //                     this.setMode(MODE.NORMAL);
-                //             }
-                //         }else{
-                //                 if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
-                //                     this.onAdd();
-                //                 }
-                //             }
-                //     }
-
-                // })
     }
 
     ngOnInit(): void {
@@ -135,17 +115,6 @@ export class AccesspageListComponent implements OnInit {
         else
             return false;
     }
-
-    /**
-     * Hide this edit block
-     * @param refreshHelp indicates if the help text needs be refreshed
-     */
-    // hideEditBlock(refreshHelp: boolean = true) {
-    //     this.setMode(MODE.LIST, refreshHelp);
-
-    //     if(this.record)
-    //         this.dataCommand.next({"data": this.record[this.fieldName], "action": "listing"});
-    // }
 
     ngOnChanges(ch : SimpleChanges) {
         if (ch.record){
@@ -382,9 +351,6 @@ export class AccesspageListComponent implements OnInit {
 
         postMessage = JSON.parse(JSON.stringify(this.currentApage));
 
-        // console.log('saveCurApage (body)', postMessage);
-        // console.log('saveCurApage (body)', JSON.stringify(postMessage));
-
         if(this.isAdding){
             if(!this.emptyRecord(this.currentApageIndex)){
                 this.mdupdsvc.add(postMessage, this.fieldName, this.FieldNameAPI).subscribe((rec) => {
@@ -494,18 +460,11 @@ export class AccesspageListComponent implements OnInit {
         switch ( this.editMode ) {
             case MODE.LIST:
                 this.editBlockStatus = 'collapsed';
-
-                // if(refreshHelp){
-                //     this.refreshHelpText(MODE.LIST);
-                // }
+                
                 break;
             case MODE.EDIT:
                 this.openEditBlock();
 
-                // Update help text
-                // if(refreshHelp){
-                //     this.refreshHelpText(MODE.EDIT);
-                // }
                 break;
             case MODE.ADD:
                 //Append a blank access page to the record and set current access page.
@@ -523,20 +482,12 @@ export class AccesspageListComponent implements OnInit {
                 this.currentApage = this.accessPages[this.currentApageIndex];
 
                 this.openEditBlock();
-
-                // Update help text
-                // if(refreshHelp){
-                //     this.refreshHelpText(MODE.ADD);
-                // }                
+               
                 break;
             default: // normal
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
-
-                // Update help text
-                // if(refreshHelp){
-                //     this.refreshHelpText(MODE.NORMAL);
-                // }                
+              
                 break;
         }
 

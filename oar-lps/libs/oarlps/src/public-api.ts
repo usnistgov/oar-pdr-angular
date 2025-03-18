@@ -35,8 +35,6 @@ export * from './lib/landing/author/author.service';
 export * from './lib/landing/tools/tools.module';
 export * from './lib/landing/tools/menu.component';
 
-export * from './lib/landing/references/references.component';
-
 export * from './lib/datacart/cart.service';
 export * from './lib/datacart/datacart.module';
 export * from './lib/datacart/cartstatus';
@@ -103,7 +101,6 @@ export * from './lib/text-edit/text-edit.component';
 export * from  './lib/textarea-autoresize/textarea-autoresize.directive';
 export * from  './lib/textarea-autoresize/textarea-autoresize.module';
 
-export * from './lib/landing/accesspage/accesspage.component';
 export * from './lib/landing/accesspage/accesspage-list/accesspage-list.component';
 export * from './lib/landing/accesspage/accesspage-edit/accesspage-edit.component';
 export * from './lib/shared/testdata-service/testDataService';

@@ -1,4 +1,4 @@
-import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, ChangeDetectorRef, ApplicationRef, inject, effect } from '@angular/core';
+import { Component, SimpleChanges, Input, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
 import { Themes } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -6,8 +6,6 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
-import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
-import { DomSanitizer } from "@angular/platform-browser";
 import { AccesspageListComponent } from '../accesspage-list/accesspage-list.component';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -56,7 +54,6 @@ export class AccesspageMidasComponent {
     orig_aPages: NerdmComp[] = null; // Keep a copy of original access pages for undo purpose
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
-    isPublicSite: boolean = false; 
     globalsvc = inject(GlobalService);
 
     @Input() record: NerdmRes = null;
@@ -68,22 +65,15 @@ export class AccesspageMidasComponent {
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
-                private chref: ChangeDetectorRef,
-                private appRef: ApplicationRef,
-                private gaService: GoogleAnalyticsService,
-                private sanitizer: DomSanitizer) { 
+                private chref: ChangeDetectorRef) { 
 
     }
 
     ngOnInit(): void {
-        this.isPublicSite = this.globalsvc.isPublicSite();
-
         if (this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0){
             this.useMetadata();
         }
 
-        // effect(()=>{
-        //     let sectionMode = this.globalsvc.sectionMode()
         this.lpService.watchEditing((sectionMode: SectionMode) => {   
             if(sectionMode){
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
@@ -299,20 +289,6 @@ export class AccesspageMidasComponent {
      */
     onStatusChange(status: string) {
         this.setMode(status);
-        // switch(status) {
-        //     case 'listing':
-        //         this.setMode(MODE.LIST);
-        //         break;
-        //     case 'adding':
-        //         this.setMode(MODE.ADD);
-        //         break;
-        //     case 'editing':
-        //         this.setMode(MODE.EDIT);
-        //         break;
-        //     default: //normal
-        //         this.setMode(MODE.NORMAL);
-        //         break;
-        // }
     }
 
     // restoreOriginal() {

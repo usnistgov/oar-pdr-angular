@@ -1,0 +1,90 @@
+<lib-datafiles-pub
+    [record]="record" 
+    [inBrowser]="inBrowser" 
+    [editEnabled] = true
+    [editMode] = editMode
+    (dlStatus)="setDownloadStatus($event)">
+        <div class="controls">
+            @if(isEditMode) {
+                <div style="width: 100%; height: 40px; margin-top: 10px;">
+                    <!-- Refresh Files button -->
+                    <button 
+                        pButton 
+                        type="submit" 
+                        class="p-button-sm light-blue-btn" 
+                        id="btn-fm" 
+                        (click)="reloadFiles()" 
+                        label="Refresh Files" 
+                        [icon]="refreshFilesIcon" 
+                        iconPos="left" 
+                        style="float: right;">
+                    </button>
+    
+                    <!-- Manage Files button -->
+                    <button 
+                        pButton 
+                        [pTooltip]="fileManagerTooltip" 
+                        tooltipPosition="bottom" 
+                        tooltipStyleClass="tooltip-style" 
+                        type="submit" 
+                        class="p-button-sm light-blue-btn" 
+                        id="btn-fm" label="Manage Files" 
+                        icon="fas fa-external-link-alt fa-1x icon-white" 
+                        iconPos="left" 
+                        style="margin-right: 10px; float: right;" 
+                        (click)="openFileManager()">
+                    </button>
+    
+                    <!-- <button pButton [pTooltip]="fileManagerUrl" tooltipPosition="bottom" tooltipStyleClass="tooltip-style" type="submit" class="p-button-sm light-blue-btn" id="btn-fm" label="Manage Files" icon="fas fa-external-link-alt fa-1x icon-white" iconPos="left" style="margin-right: 10px; float: right;" (click)="openFileManager()">
+                    </button> -->
+                </div>
+
+                <div style="width: 100%;">
+                    <span (click)="showLargeFileManagerHelpPopup($event,op1)" class="large-collection-upload-help" title="How to upload large dataset" ngbTooltip="How to upload large dataset" >
+                        Learn alternate ways to upload for large datasets 
+                        <!-- Info button -->
+                        <i class="fas fa-info-circle link-icon"></i> 
+                    </span>
+                </div>
+            }
+        </div>
+</lib-datafiles-pub>
+
+
+<!-- Popup dialog for control button help -->
+<p-overlayPanel class="fileDialog" #op1 [dismissable]="true" [showCloseIcon]="false" (onHide)="onHide()"
+[style]="{'display':'inline-block','position':'related','left':'20%','right':'5%','max-width':'800px'}" appendToBody=true>
+    <div class="overlay-title">
+        <span class="popup-title">Alternate ways to upload for large datasets</span>
+    </div>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <td>Uploading a large number of files can sometimes be easier to do by mounting the upload directory directly onto your computer.  Once you have mounted the drive, you can view the directory with your OS's file manager application and drag-and-drop files directly from your machine.<p></p>
+                Consult the MIDAS Manual for detailed mounting instructions.  The drive to mount for your current draft publication is as follows:</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid lightgray;text-align: center;">  
+                    Windows: \\cfscloud.nist.gov\midas_uploads\2672<br>
+                    Mac: smb://cfscloud.nist.gov/midas_uploads/2672
+                </td>
+            </tr>
+            <tr>
+                <td>Contact ITAC (itac&#64;nist.gov or at x5375) if you have any problems or further questions about mounting this drive.</td>
+            </tr>
+        </tbody>
+    </table>
+    <div style="height: .2em; width: 100%; background-color: #1c4d9b; margin: -1em 0 .5em 0;"></div>
+    <div>
+        <button pButton 
+            type="button" 
+            tooltipPosition="bottom" 
+            class="btn btn-labeled light-blue-btn"
+            (click)="hideOverlay(this,op1)" 
+            label="Close" 
+            style="margin-bottom: .5em;">
+        </button>
+    </div>
+</p-overlayPanel>
+    

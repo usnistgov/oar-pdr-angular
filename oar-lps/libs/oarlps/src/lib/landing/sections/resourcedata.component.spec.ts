@@ -6,8 +6,10 @@ import { AuthService, MockAuthService } from '../editcontrol/auth.service';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
-import { DataFilesComponent } from '../data-files/data-files.component';
+import { DatafilesPubComponent } from '../data-files/datafiles-pub/datafiles-pub.component';
+import { DatafilesMidasComponent } from '../data-files/datafiles-midas/datafiles-midas.component';
 import { Component } from '@angular/core';
+import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 
 describe('ResourceDataComponent', () => {
     let component: ResourceDataComponent;
@@ -38,6 +40,20 @@ describe('ResourceDataComponent', () => {
         class TestAccesspagePubComponent {}
 
         @Component({
+            selector: "lib-datafiles-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestDatafilesPubComponent {}
+
+        @Component({
+            selector: "lib-datafiles-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestDatafilesMidasComponent {}
+
+        @Component({
             selector: "pdr-data-files",
             standalone: true,
             template: `<div></div>`,
@@ -50,7 +66,9 @@ describe('ResourceDataComponent', () => {
                     TestSectionTitleComponent,
                     TestAccesspageMidasComponent,
                     TestAccesspagePubComponent,
-                    TestDataFilesComponent
+                    TestDatafilesPubComponent,
+                    TestDatafilesMidasComponent
+                    
                 ],
             },
             remove: {
@@ -58,7 +76,8 @@ describe('ResourceDataComponent', () => {
                     SectionTitleComponent,
                     AccesspageMidasComponent,
                     AccesspagePubComponent,
-                    DataFilesComponent
+                    DatafilesPubComponent,
+                    DatafilesMidasComponent
                 ],
             },
         });
@@ -68,7 +87,15 @@ describe('ResourceDataComponent', () => {
     }
 
     beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            providers: [
+                GoogleAnalyticsService
+            ]
+        })
+        .compileComponents();
+
         makeComp();
+
         component.inBrowser = true;
         component.record = JSON.parse(JSON.stringify(rec));
         component.theme = Themes.DEFAULT_THEME;

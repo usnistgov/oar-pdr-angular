@@ -1,3 +1,4 @@
+// import { MessageBarComponent } from './../../../../oar-lps/libs/oarlps/src/lib/frame/messagebar.component';
 import {
     Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef,
     PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef,
@@ -43,7 +44,8 @@ import { SidebarComponent } from 'oarlps';
 import { DownloadStatusModule } from 'oarlps';
 import { MetricsinfoComponent } from 'oarlps';
 import { FrameModule } from 'oarlps';
-
+import { environment } from '../../environments/environment-impl';
+import { UserMessageService, MessageBarComponent } from 'oarlps';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -69,15 +71,13 @@ import { FrameModule } from 'oarlps';
         SearchresultModule,
         DoneModule,
         DownloadStatusModule,
-        FrameModule,
         LandingBodyComponent,
         CitationPopupComponent,
         MetricsinfoComponent,
         NoidComponent,
         SidebarComponent,
         MenuComponent,
-        // EditControlComponent,
-        // EditStatusComponent,
+        FrameModule
     ],
     providers: [
         Title
@@ -250,7 +250,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
-                public lpService: LandingpageService)
+                public lpService: LandingpageService,
+                public msgSvc: UserMessageService)
     {
         // Init the size of landing page body and the help box
         this.updateScreenSize();
@@ -265,8 +266,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
         });
-
-        this.globalService.isPublicSite.set(true);
 
         this.hideToolMenu = false;
     }

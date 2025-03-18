@@ -15,15 +15,13 @@ import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
 import { IDNotFound } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, LandingConstants } from 'oarlps';
-import { CartService } from 'oarlps';
+import { GlobalService, LandingConstants } from 'oarlps';
 import { DataCartStatus } from 'oarlps';
 import { RecordLevelMetrics } from 'oarlps';
 import { MetricsService } from 'oarlps';
 import { formatBytes } from 'oarlps';
 import { LandingBodyComponent } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-// import { MetricsinfoComponent } from './metricsinfo/metricsinfo.component';
 import { CartActions } from 'oarlps';
 import { MetricsData } from "oarlps";
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
@@ -34,10 +32,7 @@ import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { NoidComponent } from './noid.component';
-import { EditControlComponent, EditStatusComponent } from 'oarlps';
+import { EditControlComponent } from 'oarlps';
 import { MenuComponent } from 'oarlps';
 import { CitationPopupComponent } from 'oarlps';
 import { DoneModule } from 'oarlps';
@@ -67,19 +62,15 @@ import { AuthenticationService } from 'oarng';
     standalone: true,
     imports: [
         CommonModule,
-        // ButtonModule,
-        // NgbModule,
         MenuComponent,
         CitationPopupComponent,
         SearchresultModule,
         DoneModule,
-        // NoidComponent,
         SidebarComponent,
         DownloadStatusModule,
         MetricsinfoComponent,
         LandingBodyComponent,
         EditControlComponent,
-        // EditStatusComponent,
         FrameModule
     ],
     providers: [
@@ -228,9 +219,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     @ViewChild(LandingBodyComponent)
     landingBodyComponent: LandingBodyComponent;
 
-    // @ViewChild(MetricsinfoComponent)
-    // metricsinfoComponent: MetricsinfoComponent;
-
     @ViewChild('stickyButton') btnElement: ElementRef;
     @ViewChild('stickyMenu') menuElement: ElementRef;
     @ViewChild('lpscontent') lpscontent: ElementRef;
@@ -253,7 +241,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 private cfg: AppConfig,
                 private nerdmReserv: NERDmResourceService,
                 public edstatsvc: EditStatusService,
-                private cartService: CartService,
                 private mdupdsvc: MetadataUpdateService,
                 public metricsService: MetricsService,
                 public breakpointObserver: BreakpointObserver,
@@ -277,13 +264,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.goToSection(currentSection);
         });
 
-        this.isPublicSite = !this.editEnabled;
-        this.globalService.isPublicSite.set(this.isPublicSite);
-
-        if(this.isPublicSite) {
-          this.hideToolMenu = false;
-        }
-
         if (this.editEnabled) {
             this.edstatsvc.watchEditMode((editMode) => {
                 this.editMode = editMode;
@@ -300,7 +280,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 if( this.hideToolMenu && this.editMode != this.EDIT_MODES.PREVIEW_MODE && this.editMode != this.EDIT_MODES.VIEWONLY_MODE){
                   this.helpWidth = this.helpWidthDefault;
                 }
-                // this.setLpsWidth();
             });
 
             this.mdupdsvc.subscribe(
@@ -376,14 +355,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
       this.landingPageURL = this.cfg.get('landingPageService','/od/id/');
       this.landingPageServiceStr = this.cfg.get('locations.landingPageService','https://data.nist.gov/od/id/');
 
-      let isEditing = this.edstatsvc.isEditMode();
       this.arrRevisionTypes = REVISION_TYPES["default"];
       this.recordLevelMetrics = new RecordLevelMetrics();
-      var showError: boolean = true;
-      let metadataError = "";
       this.displaySpecialMessage = false;
       this.CART_ACTIONS = CartActions.cartActions;
-      // this.imageURL = 'assets/images/METIS-Banner-Op1.png';
 
       // Only listen to storage change if we are not in edit mode
       if(this.inBrowser && !this.editEnabled){
@@ -429,7 +404,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this.edstatsvc.setShowLPContent(true);
                 this.globalService.setAuthorized(false);
               }
-
+              // Will enable following for revision mode
               // switch(param.toLowerCase()) {
               //     case "revise": {
               //         this.editRequested = true;
@@ -497,6 +472,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 // proceed with rendering of the component
                 this.useMetadata();
 
+                let showError: boolean;
                 // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
                 // in editing mode.  This is done in concert with the authentication process that can involve
                 // redirection to an authentication server; on successful authentication, the server can
@@ -519,7 +495,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     else
                         showError = true;
                 }
+                //Display error if any
+                if(showError) {
 
+                }
               },
               error: (err) => {
                 console.log("Load error", err);
@@ -689,7 +668,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                 //Now check if there is any metrics data
                                 this.metricsData.totalDatasetDownload = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].record_download : 0;
 
-                                this.metricsData.totalDownloadSize = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].total_size : 0;
+                                this.metricsData.totalDownloadSize = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].total_size_download : 0;
 
                                 this.metricsData.totalUsers = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].number_users : 0;
 
@@ -801,7 +780,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     get totalDownloadSize() {
         if(this.recordLevelMetrics.DataSetMetrics[0] != undefined)
-            return formatBytes(this.recordLevelMetrics.DataSetMetrics[0].total_size, 2);
+            return formatBytes(this.recordLevelMetrics.DataSetMetrics[0].total_size_download, 2);
         else
             return "";
     }
@@ -1117,7 +1096,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     setLpsWidth() {
       if(this.hideToolMenu){
           this.lpsWidth = window.innerWidth - this.helpWidth - 160;
-          // this.globalService.setLpsLeftWidth(this.lpsWidth);
           this.globalService.setLpsLeftWidth(this.lpsWidth - this.widthForSplitter);
       }else{
           // this.mainBodyStatus = "mainsquished";

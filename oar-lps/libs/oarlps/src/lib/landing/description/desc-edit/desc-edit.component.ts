@@ -37,7 +37,6 @@ export class DescEditComponent {
     resource: string = "resource";
     placeholder: string = "Please add description here.";
     maxWidth: number = 1000;
-    isPublicSite: boolean = false; 
     globalsvc = inject(GlobalService);
     
     constructor(public mdupdsvc : MetadataUpdateService,  
@@ -87,7 +86,6 @@ export class DescEditComponent {
     }
 
     ngOnInit() {
-        this.isPublicSite = this.globalsvc.isPublicSite();
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
         this.getDescription();
 

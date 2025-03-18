@@ -50,7 +50,9 @@ import { FrameModule } from 'oarlps';
         ErrorComponent, UserErrorComponent
     ],
     providers: [
-        MetadataUpdateService, TaxonomyListService, DatePipe,
+        // MetadataUpdateService, 
+        TaxonomyListService, 
+        DatePipe,
         LandingpageService
     ],
     exports: [

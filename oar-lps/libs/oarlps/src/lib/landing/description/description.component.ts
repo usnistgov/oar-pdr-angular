@@ -17,11 +17,11 @@ export class DescriptionComponent implements OnInit {
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() isEditMode: boolean = true;
+    @Input() isPublicSite: boolean = true;  
     
     fieldName: string = SectionPrefs.getFieldName(Sections.DESCRIPTION);
     description: string = "";
     maxWidth: number = 1000;
-    isPublicSite: boolean = false; 
     globalsvc = inject(GlobalService);
     
     constructor(){
@@ -31,8 +31,6 @@ export class DescriptionComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.isPublicSite = this.globalsvc.isPublicSite();
-        console.log("isPublicSite", this.isPublicSite);
         this.getDescription();
     }
 

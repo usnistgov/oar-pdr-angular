@@ -6,7 +6,7 @@ import { UserMessageService } from '../../frame/usermessage.service';
 import { config, testdata } from '../../../environments/environment';
 import { AppConfig } from '../../config/config';
 import { LandingpageService } from '../landingpage.service';
-import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 import { DatePipe } from '@angular/common';
 import { AuthService, MockAuthService } from '../editcontrol/auth.service';
 import * as env from '../../../environments/environment';
