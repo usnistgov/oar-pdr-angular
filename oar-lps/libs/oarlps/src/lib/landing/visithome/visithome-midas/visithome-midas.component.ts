@@ -23,8 +23,8 @@ import { VisithomePubComponent } from '../visithome-pub/visithome-pub.component'
         VisithomePubComponent,
         NgbModule
     ],
-    templateUrl: './Visithome-midas.component.html',
-    styleUrls: ['./Visithome-midas.component.scss', '../../landing.component.scss'],
+    templateUrl: './visithome-midas.component.html',
+    styleUrls: ['./visithome-midas.component.scss', '../../landing.component.scss'],
     animations: [
         trigger('editExpand', [
         state('collapsed', style({height: '0px', minHeight: '0'})),

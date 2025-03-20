@@ -103,10 +103,10 @@
         </div>
 
         <span>Identifier: </span>
-        <span *ngIf="doiUrl"><i> <a href="{{doiUrl}}"
-                    >{{record.doi}}</a></i></span>
-        <span *ngIf="!doiUrl"><i> 
-            <a href="{{ landingPageURL }}">{{record["@id"]}}</a></i>
+        <span *ngIf="doiUrl">
+            <i> 
+                <a href="{{doiUrl}}">{{doiLabel}}</a>
+            </i>
         </span>
 
         <!-- Info button -->

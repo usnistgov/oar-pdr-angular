@@ -68,8 +68,6 @@ export class TopicMidasComponent implements OnInit {
     overflowStyle: string = 'hidden';
     dataChanged: boolean = false;
     globalsvc = inject(GlobalService);
-    //Use NIST collection only for now
-    col: string = "NIST";
 
     constructor(public mdupdsvc: MetadataUpdateService,
                 private cfg: AppConfig,
@@ -180,8 +178,8 @@ export class TopicMidasComponent implements OnInit {
         // }
 
         //For old topic structure (theme)
-        if(this.topics && this.topics["NIST"]) {
-            for(let topic of this.topics["NIST"]) {
+        if(this.topics && this.topics[collection]) {
+            for(let topic of this.topics[collection]) {
                 this.selectedTopics.push(topic);
             } 
         }

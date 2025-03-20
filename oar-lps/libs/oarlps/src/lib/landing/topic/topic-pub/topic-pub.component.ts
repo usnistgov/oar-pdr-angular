@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges, AfterContentInit, ContentChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NerdmRes } from '../../../nerdm/nerdm';
@@ -15,7 +15,7 @@ import { CollectionService } from '../../../shared/collection-service/collection
     templateUrl: './topic-pub.component.html',
     styleUrls: ['./topic-pub.component.css','../topic.component.css','../../landing.component.scss']
 })
-export class TopicPubComponent {
+export class TopicPubComponent implements AfterContentInit {
     collectionOrder: string[] = [Collections.DEFAULT];
     topics: any = {};
 
@@ -32,6 +32,9 @@ export class TopicPubComponent {
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() isEditMode: boolean = false;
+
+    @ContentChild('contentTemplate') contentTemplate!: TemplateRef<any>;
+    componentData = { message: 'Initial data from child' };
 
     constructor(private chref: ChangeDetectorRef,
                 public collectionService: CollectionService)
@@ -65,6 +68,12 @@ export class TopicPubComponent {
     ngOnInit() {
         this.allCollections = this.collectionService.loadAllCollections();
         this.updateResearchTopics();
+    }
+
+    ngAfterContentInit() {
+        setTimeout(() => {
+          this.componentData = { message: 'Updated data from child' };
+        }, 2000);
     }
 
     /**

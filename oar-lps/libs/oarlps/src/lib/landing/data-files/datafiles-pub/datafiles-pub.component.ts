@@ -112,6 +112,8 @@ export class DatafilesPubComponent {
     overlaypanelOn: boolean = false;
     refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
     EDIT_MODES: any;
+    filesReady: boolean = false;
+    skipReload: boolean = true;
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -121,6 +123,7 @@ export class DatafilesPubComponent {
                 public lpService: LandingpageService, 
                 private msgsvc: UserMessageService,
                 private chref: ChangeDetectorRef,
+                public edstatsvc: EditStatusService,
                 private ngZone: NgZone)
     {
         this.cols = [
@@ -195,7 +198,10 @@ export class DatafilesPubComponent {
 
     ngOnChanges(ch: SimpleChanges) {
         if (this.record && ch.record){
-            this.useMetadata();
+            if(!this.skipReload)
+                this.useMetadata();
+            else    
+            this.skipReload = false;
         }
 
         this.chref.detectChanges();
@@ -204,6 +210,7 @@ export class DatafilesPubComponent {
     useMetadata() {
         this.ediid = this.record['ediid']
         this.buildTree(this.record['components']);
+        this.edstatsvc.setShowLPContent(true);
     }
 
     /**
@@ -331,6 +338,7 @@ export class DatafilesPubComponent {
         this.files = [...root.children];
         this.fileCount = count;
         this.updateStatusFromCart();
+        this.filesReady = true;
     }
 
     /**

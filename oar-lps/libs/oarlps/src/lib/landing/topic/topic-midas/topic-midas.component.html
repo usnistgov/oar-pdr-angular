@@ -3,40 +3,38 @@
     [inBrowser]="inBrowser"
     [isEditMode]="isEditMode">
 
-    <!-- <ng-template #tmpl let-col> -->
-    <div class="controls editable_field">    
+    <ng-template #contentTemplate let-data="col">
         <!-- Control buttons -->
-            <!-- Edit button -->
-            <button 
-                *ngIf="!editingTopics(col)"
-                class="edit_button" 
-                (click)="startEditing(col)" 
-                aria-label="edit button" 
-                ngbTooltip="Edit topics">
+        <!-- Edit button -->
+        <button 
+            *ngIf="!editingTopics(col)"
+            class="edit_button" 
+            (click)="startEditing(col)" 
+            aria-label="edit button" 
+            ngbTooltip="Edit topics">
 
-                <i class="fas fa-pencil"></i>
-            </button>
+            <i class="fas fa-pencil"></i>
+        </button>
 
-            <!-- Close edit block -->
-            <button 
-                *ngIf="editingTopics(col)" 
-                class="edit_button" 
-                type="button" 
-                [disabled]="dataChanged" 
-                (click)="setMode()" 
-                aria-label="Close edit block" 
-                ngbTooltip="Close edit block">
+        <!-- Close edit block -->
+        <button 
+            *ngIf="editingTopics(col)" 
+            class="edit_button" 
+            type="button" 
+            [disabled]="dataChanged" 
+            (click)="setMode()" 
+            aria-label="Close edit block" 
+            ngbTooltip="Close edit block">
 
-                <i class="fas fa-times"></i>
-            </button>
+            <i class="fas fa-times"></i>
+        </button>
 
-            <!-- Restore original -->
-            <button *ngIf="updated(col)" class="edit_button" type="button"
-            (click)="restoreOriginal(col)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
-                <i class="faa faa-undo fs-sm"></i>
-            </button>                                 
-    </div>
-    <!-- </ng-template> -->
+        <!-- Restore original -->
+        <button *ngIf="updated(col)" class="edit_button" type="button"
+        (click)="restoreOriginal(col)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
+            <i class="faa faa-undo fs-sm"></i>
+        </button>     
+    </ng-template>
 </topic-pub>
 
 @if(isEditing) {

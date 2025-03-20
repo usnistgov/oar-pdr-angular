@@ -205,10 +205,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     displayBanner: boolean = true;
     showStickMenu: boolean = false;
     isPublicSite: boolean = false;
-    globalsvc = inject(GlobalService);
+    // globalsvc = inject(GlobalService);
     isEditMode: boolean = false;
     landingPageURL: string;
     landingPageServiceStr: string;
+    pubLandingPageURL: string = "http://localhost:4201/od/id/"
 
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
@@ -352,8 +353,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-      this.landingPageURL = this.cfg.get('landingPageService','/od/id/');
-      this.landingPageServiceStr = this.cfg.get('locations.landingPageService','https://data.nist.gov/od/id/');
+      this.landingPageURL = this.cfg.get('PDRAPIs.mdService','/od/id/');
+      this.landingPageServiceStr = this.cfg.get('PDRAPIs.mdService','https://data.nist.gov/od/id/');
 
       this.arrRevisionTypes = REVISION_TYPES["default"];
       this.recordLevelMetrics = new RecordLevelMetrics();
@@ -390,18 +391,20 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
                     this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
                     this.edstatsvc._setEditType(this.editTypes.NORMAL);
-                    this.edstatsvc.setShowLPContent(false);
                   }
                   else {
                     this.editRequested = false;
                     this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this._showContent = true;
                     this.edstatsvc.setShowLPContent(true);
                   }
+
                 });
               }else{
                 this.editRequested = false;
                 this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                 this.edstatsvc.setShowLPContent(true);
+                this._showContent = true;
                 this.globalService.setAuthorized(false);
               }
               // Will enable following for revision mode
@@ -449,6 +452,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
           // use case: user manually open PDR landing page but the record was not edited by MIDAS
           // This part will only be executed if "editEnabled=true" is not in URL parameter.
           if(this.authsvc.isAuthenticated) {
+            this.globalService.setAuthenticated(true);
             this.mdupdsvc.startEditing(this.reqId).subscribe({
               next: (success) => {
                 console.log("Status", success);
@@ -478,10 +482,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 // redirection to an authentication server; on successful authentication, the server can
                 // redirect the browser back to this landing page with editing turned on.
                 if (this.inBrowser) {
-                    // Display content after 15sec no matter what
-                    setTimeout(() => {
-                        this.edstatsvc.setShowLPContent(true);
-                    }, 15000);
+                    this.edstatsvc.setShowLPContent(true);
 
                     if (this.editRequested) {
                         showError = false;
@@ -501,19 +502,33 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
               },
               error: (err) => {
+                this.globalService.setAuthorized(false);
                 console.log("Load error", err);
               }
             })
-          };
-
+          }else{
+            //Not authenticated:
+            this.globalService.setAuthenticated(false);
+            this.displayOnly();
+          }
       }else{
-        this.editRequested = false;
-        this.edstatsvc.setShowLPContent(true);
-        this._showContent = true;
-        this.loadPublicData();
+        this.displayOnly();
       }
     }
 
+    displayOnly() {
+      this._showContent = false;
+      this.editRequested = false;
+      this.loadPublicData();
+      this.isPublicSite = true;
+      this.edstatsvc.setShowLPContent(true);
+      this._showContent = true;
+    }
+
+    /**
+     * Load public data. This is used when user is not authenticated or authorized
+     * to edit the draft data.
+     */
     loadPublicData() {
       let metadataError = "";
       var showError: boolean = true;
@@ -552,7 +567,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                   // Display content after 15sec no matter what
                   setTimeout(() => {
                       this.edstatsvc.setShowLPContent(true);
-                  }, 15000);
+                      // this._showContent = true;
+                  }, 1000);
 
                   if (this.editRequested) {
                       showError = false;
@@ -585,6 +601,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
       (err) => {
           console.error("Failed to retrieve metadata: ", err);
           this.edstatsvc.setShowLPContent(true);
+          this._showContent = true;
           if (err instanceof IDNotFound) {
               metadataError = "not-found";
               this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });

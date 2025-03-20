@@ -51,6 +51,7 @@ export class ResourceIdentityComponent implements OnChanges {
 
     recordType: string = "";
     doiUrl: string = null;
+    doiLabel: string = "";
     showHomePageLink: boolean = true;
     primaryRefs: any[] = [];
     editMode: string;
@@ -172,8 +173,17 @@ export class ResourceIdentityComponent implements OnChanges {
             // ];
         }
 
-        if (this.record['doi'] !== undefined && this.record['doi'] !== "")
+        if (this.record['doi'] !== undefined && this.record['doi'] !== ""){
             this.doiUrl = "https://doi.org/" + this.record['doi'].substring(4);
+            this.doiLabel = this.doiUrl;
+        }else if(this.record['landingPage']){
+            this.doiUrl = this.record['landingPage'];
+            this.doiLabel = this.record['@id'];
+        }
+        else{
+            this.doiUrl = this.landingPageURL + this.record["@id"];
+            this.doiLabel = this.record["@id"];
+        }
 
         this.primaryRefs = (new NERDResource(this.record)).getPrimaryReferences();
         for (let ref of this.primaryRefs) {

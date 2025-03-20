@@ -40,7 +40,7 @@ export class GlobalService {
     }  
 
     /**
-     * Set/get the width of the left side landing page 
+     * Set/get message to display 
      */
     _message : BehaviorSubject<string> =
         new BehaviorSubject<string>("");
@@ -52,7 +52,7 @@ export class GlobalService {
     }  
 
     /**
-     * Set/get the width of the left side landing page 
+     * Set/get user's authorization info 
      */
     _authorized : BehaviorSubject<boolean> =
         new BehaviorSubject<boolean>(false);
@@ -62,6 +62,18 @@ export class GlobalService {
     public watchAuthorized(subscriber) {
         this._authorized.subscribe(subscriber);
     }  
+
+    /**
+     * Set/get user's authentication info 
+     */
+    _authenticated : BehaviorSubject<boolean> =
+        new BehaviorSubject<boolean>(false);
+    public setAuthenticated(val : boolean) { 
+        this._authenticated.next(val); 
+    }
+    public watchAuthenticated(subscriber) {
+        this._authenticated.subscribe(subscriber);
+    } 
 
     /**
      * Flag to tell the app to hide the content display or not. 

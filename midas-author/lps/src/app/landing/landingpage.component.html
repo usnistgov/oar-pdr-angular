@@ -5,7 +5,11 @@
 </div> -->
 
 <!-- edit control panel (visible when editing is enabled) -->
-<pdr-edit-control *ngIf="editEnabled" [inBrowser]="inBrowser" [(mdrec)]="md" [requestID]="requestId"></pdr-edit-control>
+
+<pdr-edit-control *ngif="!isPublicSite && editEnabled"
+  [inBrowser]="inBrowser"
+  [(mdrec)]="md">
+</pdr-edit-control>
 
 <!-- error messages go here -->
 <div [ngStyle]="{'width': lpsWidth + 'px'}">

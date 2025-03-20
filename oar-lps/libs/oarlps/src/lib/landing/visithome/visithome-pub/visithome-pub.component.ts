@@ -10,8 +10,8 @@ import { CommonModule } from '@angular/common';
   imports: [
     CommonModule
   ],
-  templateUrl: './Visithome-pub.component.html',
-  styleUrls: ['./Visithome-pub.component.scss', '../../landing.component.scss']
+  templateUrl: './visithome-pub.component.html',
+  styleUrls: ['./visithome-pub.component.scss', '../../landing.component.scss']
 })
 export class VisithomePubComponent {
     @Input() record: any[];

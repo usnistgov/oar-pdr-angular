@@ -83,7 +83,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     /**
      * the ID that was used to request the landing page
      */
-    @Input() requestID: string;
+    // @Input() requestID: string;
 
     /**
      * the original resource identifier
@@ -417,7 +417,6 @@ export class EditControlComponent implements OnInit, OnChanges {
                 console.log("Loading draft...");
                 this.statusbar.showMessage("Loading draft...", true)
                 // this.globalService.setMessage("Loading draft...");
-                this.edstatsvc.setShowLPContent(true);
                 this._setEditMode(this.EDIT_MODES.EDIT_MODE);
             }
             else {
@@ -425,10 +424,12 @@ export class EditControlComponent implements OnInit, OnChanges {
                 this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                 this.statusbar.showMessage("You are not authorized to edit this record");
             }
+            this.edstatsvc.setShowLPContent(true);
         },
         (err) => {
             console.error("Failed to start editing "+this.resID+": "+err.message);
-            this.statusbar.showMessage("Failure loading for editing: "+err.message, true)
+            this.statusbar.showMessage("Failure loading for editing: "+err.message, true);
+            this.edstatsvc.setShowLPContent(true);
         }
     );
 }

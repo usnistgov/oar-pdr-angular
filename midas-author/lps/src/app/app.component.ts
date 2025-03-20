@@ -43,6 +43,7 @@ import {
   APP_INITIALIZER, APP_ID,
   CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
 } from '@angular/core';
+import { GlobalService } from 'oarlps';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -73,6 +74,7 @@ export class AppComponent {
                 // public environmentService : EnvironmentService,
                 private authsvc: AuthenticationService,
                 private cfg: AppConfig,
+                public globalService: GlobalService,
                 @Inject(PLATFORM_ID) private platformId: Object)
     {
         this.inBrowser = isPlatformBrowser(platformId);

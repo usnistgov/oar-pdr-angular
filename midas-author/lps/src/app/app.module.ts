@@ -30,7 +30,7 @@ import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { EditControlModule } from 'oarlps';
 // import { MetadataUpdateService } from 'oarlps';
-import { FooterComponent, HeaderComponent } from 'oarng';
+import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
 import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
@@ -63,6 +63,7 @@ enableProdMode();
       EditControlModule.forRoot(environment),
       FooterComponent,
       HeaderComponent,
+      HeaderPubComponent,
       LandingPageComponent
     ],
     exports: [AppComponent],

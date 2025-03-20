@@ -5,7 +5,8 @@
     
         <!-- Display 'Download all' and 'Add all to cart' buttons and other info -->
         <!-- <div *ngIf="(files && files.length  > 0)"> -->
-            <div *ngIf="inBrowser; else filesLoading">
+            @defer(when inBrowser && filesReady) {
+            <!-- <div *ngIf="inBrowser; else filesLoading"> -->
                 <div class="flex-container" style="margin-top: 2em;">
                     <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
                     @if(editEnabled == true) {
@@ -168,15 +169,18 @@
 
                 <ng-content select=".controls"></ng-content>
 
-            </div>
-            <ng-template #filesLoading>
+            <!-- </div> -->
+            }
+            @placeholder {
                 <div>
                     <b>Files </b>
                 </div>
                 <p>
-                    <i>Loading file list...</i>
+                    <i class="fas fa-spinner fa-spin"></i> Loading file list...
                 </p>
-            </ng-template>
+            }
+            <!-- <ng-template #filesLoading> -->
+            <!-- </ng-template> -->
         <!-- </div> -->
     </div>
     

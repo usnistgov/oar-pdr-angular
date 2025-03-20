@@ -9,7 +9,7 @@
     </div>
 
     <div class="topics-body">
-        <span style="display: table;">
+        <span style="display: table; margin-bottom: -10px;">
             <div class="editable_container" style="display: table-row;">
                 <!-- Loop through collections and display topics -->    
                 <div *ngFor="let col of collectionOrder; let i =index" style="margin-bottom: .3em;">
@@ -51,9 +51,16 @@
                     </div>
 
                     @if(isEditMode && showTopics(col)) {
-                        <div style=" display: table-cell; width: 70px;">
+                        <!-- <div style=" display: table-cell; width: 70px;">
                             <ng-content select=".controls"></ng-content>
+                        </div> -->
+
+                        <div style=" display: table-cell; width: 70px;">
+                            <ng-container 
+                                *ngTemplateOutlet="contentTemplate; context: { data: col }">
+                            </ng-container>
                         </div>
+
                     }
 
                     <!-- <ng-container *ngTemplateOutlet="tmplRef;
