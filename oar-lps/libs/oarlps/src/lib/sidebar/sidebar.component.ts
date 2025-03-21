@@ -1,51 +1,59 @@
-import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { NerdmRes, NERDResource } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, SubmitResponse } from '../shared/globals/globals';
 import { HelpTopic } from '../landing/landingpage.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-sidebar',
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css'],
-  animations: [
-    trigger("togglesbar", [
-        state('sbvisible', style({
-            position: 'absolute',
-            right: '0%',
-            top: "20px",
-            bottom: "100%",
-            overflow: "auto"
-        })),
-        state('sbhidden', style({
-            position: 'absolute',
-            right: '-450%',
-            top: "20px",
-            bottom: "100%",
-            overflow: "hidden"
-        })),
-        transition('sbvisible <=> sbhidden', [
-            animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
-        ])
-    ]),
-    trigger('requiredExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-    trigger('recommendedExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-    trigger('niceToHaveExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-]
+    selector: 'app-sidebar',
+    standalone: true,
+    imports: [
+        CommonModule
+    ],
+    providers: [
+        SidebarService
+    ],
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.css'],
+    animations: [
+        trigger("togglesbar", [
+            state('sbvisible', style({
+                position: 'absolute',
+                right: '0%',
+                top: "20px",
+                bottom: "100%",
+                overflow: "auto"
+            })),
+            state('sbhidden', style({
+                position: 'absolute',
+                right: '-450%',
+                top: "20px",
+                bottom: "100%",
+                overflow: "hidden"
+            })),
+            transition('sbvisible <=> sbhidden', [
+                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
+            ])
+        ]),
+        trigger('requiredExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+        trigger('recommendedExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+        trigger('niceToHaveExpand', [
+            state('collapsed', style({height: '0px', minHeight: '0'})),
+            state('expanded', style({height: '*'})),
+            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ]
 })
 export class SidebarComponent implements OnInit {
     sbarvisible : boolean = true;
@@ -62,25 +70,17 @@ export class SidebarComponent implements OnInit {
     showNiceToHave: boolean = false;
     ediid: string = "";
 
-    // helpContent: any = {
-    //     "title": "<p>With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later. <p> <i>[Helpful examples, links to policy and guideance]</i>", "description": "Placeholder for description editing help."
-    // }
-
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: string = "";
     @Input() resourceType: string = "resource";
     @Output() sbarvisible_out = new EventEmitter<boolean>();
-    // @Output() section = new EventEmitter<string>();
 
     // signal for scrolling to a section within the page
     @Output() scroll = new EventEmitter<string>();
 
     constructor(private chref: ChangeDetectorRef,
                 public lpService: LandingpageService,
-                public sidebarService: SidebarService) { 
-
-
-    }
+                public sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
@@ -96,6 +96,19 @@ export class SidebarComponent implements OnInit {
         });
         
         this.ediid = this.record["@id"];
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+        //Add '${implements OnChanges}' to the class.
+        if(changes.record){
+            this.suggustedSections = this.sidebarService.getSuggestions(this.record, this.resourceType);
+            // this.required = this.suggustedSections['required'];
+            // this.recommended = this.suggustedSections['recommended'];
+            // this.niceToHave = this.suggustedSections['niceToHave'];
+    
+            this.chref.detectChanges();
+        }
     }
 
     get isTestData() {
@@ -131,7 +144,7 @@ export class SidebarComponent implements OnInit {
         // Update help content
         let generalHelp = this.helpContentAll[GENERAL]? this.helpContentAll[GENERAL] : "Default help text.<p>";
 
-        if(sectionHelp.topic == HelpTopic[MODE.NORNAL]) {
+        if(sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
             sectionHelp.section = GENERAL;
         }
 
@@ -173,6 +186,8 @@ export class SidebarComponent implements OnInit {
         // this.required = this.suggustedSections['required'];
         // this.recommended = this.suggustedSections['recommended'];
         // this.niceToHave = this.suggustedSections['niceToHave'];
+
+        this.chref.detectChanges();
     }
 
     gotoSection(section: string) {
@@ -193,6 +208,8 @@ export class SidebarComponent implements OnInit {
         // this.section.next(sectionID);
 
         this.scroll.emit(sectionID);
+
+        this.chref.detectChanges();
     }
 
     /**

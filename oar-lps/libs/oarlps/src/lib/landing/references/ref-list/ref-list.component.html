@@ -26,7 +26,7 @@
                                     [editButton]="false" 
                                     [deleteButton]="true" 
                                     [editOnlyButton]="true"
-                                    [restoreButton]="false" 
+                                    [restoreButton]="true" 
                                     [disableControl]="isAdding || isEditing" 
                                     [placeHolderText]="placeholder" 
                                     [isNew]="reference.isNew" 
@@ -45,7 +45,14 @@
         <!-- Control buttons for drag and drop sectioon -->
         <div class="editable_field" style="white-space: nowrap;">
             <!-- Add button -->
-            <button class="edit_button" type="button" (click)="onAdd()" aria-label="add button" [disabled]="isEditing || isAdding" ngbTooltip="Add references">
+            <button 
+                class="edit_button" 
+                type="button" 
+                (click)="onAdd()" 
+                aria-label="add button" 
+                [disabled]="isEditing || isAdding" 
+                pTooltip="Add references"
+                tooltipPosition="top" >
                 <i [class]="addIconClass()"></i>
             </button>
         </div>
@@ -55,3 +62,5 @@
         <lib-ref-edit [currentRef]="currentRef" [editMode]="editMode" [forceReset]="forceReset" (dataChanged)="onReferenceChange($event)"  (cmdOutput)="onCommandChanged($event)"></lib-ref-edit>
     </div>
 </div>
+
+

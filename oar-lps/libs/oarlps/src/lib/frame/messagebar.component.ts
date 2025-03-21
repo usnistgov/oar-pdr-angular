@@ -21,8 +21,8 @@ export class MessageBarComponent {
 
     @Input() defSysErrorPrefix : string = "There was an internal hiccup.";
     // bgcolor : string = "#FCF9CD";
-
-    public constructor(@Optional() private svc : UserMessageService) {
+    // public constructor(@Optional() private svc : UserMessageService) {
+    public constructor(svc : UserMessageService) {
         if (svc) {
             svc.subscribe({
                 next: (msg) => {

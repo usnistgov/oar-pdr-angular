@@ -8,8 +8,7 @@ describe('SidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SidebarComponent ],
-      imports: [BrowserAnimationsModule]
+      imports: [BrowserAnimationsModule, SidebarComponent]
     })
     .compileComponents();
   });

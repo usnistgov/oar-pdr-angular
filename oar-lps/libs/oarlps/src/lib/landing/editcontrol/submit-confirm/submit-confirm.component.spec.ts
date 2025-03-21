@@ -8,8 +8,7 @@ describe('SubmitConfirmComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SubmitConfirmComponent ],
-      providers: [ NgbActiveModal]
+      providers: [ NgbActiveModal, SubmitConfirmComponent ]
     })
     .compileComponents();
   });

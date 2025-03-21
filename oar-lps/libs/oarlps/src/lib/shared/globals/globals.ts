@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SelectItem, TreeNode } from 'primeng/api';
 
@@ -6,6 +6,12 @@ import { SelectItem, TreeNode } from 'primeng/api';
   providedIn: 'root'
 })
 export class GlobalService {
+    public message = signal("");
+    public sectionMode = signal<SectionMode>({} as SectionMode);
+    public collection = signal<string>("");
+    public sectionHelp = signal<SectionHelp>({} as SectionHelp);
+    public fakeBackendAlerted = signal<boolean>(false);
+
     constructor() { }
 
     /**
@@ -34,7 +40,7 @@ export class GlobalService {
     }  
 
     /**
-     * Set/get the width of the left side landing page 
+     * Set/get message to display 
      */
     _message : BehaviorSubject<string> =
         new BehaviorSubject<string>("");
@@ -44,6 +50,43 @@ export class GlobalService {
     public watchMessage(subscriber) {
         this._message.subscribe(subscriber);
     }  
+
+    /**
+     * Set/get user's authorization info 
+     */
+    _authorized : BehaviorSubject<boolean> =
+        new BehaviorSubject<boolean>(false);
+    public setAuthorized(val : boolean) { 
+        this._authorized.next(val); 
+    }
+    public watchAuthorized(subscriber) {
+        this._authorized.subscribe(subscriber);
+    }  
+
+    /**
+     * Set/get user's authentication info 
+     */
+    _authenticated : BehaviorSubject<boolean> =
+        new BehaviorSubject<boolean>(false);
+    public setAuthenticated(val : boolean) { 
+        this._authenticated.next(val); 
+    }
+    public watchAuthenticated(subscriber) {
+        this._authenticated.subscribe(subscriber);
+    } 
+
+    /**
+     * Flag to tell the app to hide the content display or not. 
+     * Usecase: to hide server side rendering content while in edit mode and display the content when 
+     * browser side rendering is ready.
+     */
+    _showLPContent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public setShowLPContent(val: boolean){
+        this._showLPContent.next(val);
+    }
+    public watchShowLPContent(subscriber) {
+        this._showLPContent.subscribe(subscriber);
+    }
 
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
         let text = document.createElement("span"); 
@@ -134,7 +177,7 @@ export interface SectionHelp {
 }
 
 export const MODE = {
-    "NORNAL": "normal",
+    "NORMAL": "normal",
     "LIST": "list",
     "EDIT": "edit",
     "ADD": "add"
@@ -169,16 +212,17 @@ _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
 _fieldName[Sections.ACCESS_PAGES] = "components";
 _fieldName[Sections.DESCRIPTION] = "description";
-_fieldName[Sections.TOPICS] = "topic";
+_fieldName[Sections.TOPICS] = "theme";
+// _fieldName[Sections.TOPICS] = "topic";
 _fieldName[Sections.KEYWORDS] = "keyword";
 _fieldName[Sections.IDENTITY] = "identity";
 _fieldName[Sections.AUTHORS] = "identity";
-_fieldName[Sections.FACILITATORS] = "identity";
+// _fieldName[Sections.FACILITATORS] = "identity";
+_fieldName[Sections.FACILITATORS] = "facilitators";
 _fieldName[Sections.ABOUT] = "about";
 _fieldName[Sections.REFERENCES] = "references";
 _fieldName[Sections.AUTHORS] = "authors";
 _fieldName[Sections.DATA_ACCESS] = "dataAccess";
-_fieldName[Sections.FACILITATORS] = "facilitators";
 _fieldName[Sections.SIDEBAR] = "sidebar";
 _fieldName[Sections.CONTACT] = "contactPoint";
 _fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";
@@ -333,6 +377,7 @@ export class FilterTreeNode implements TreeNode {
     ediids: string[] = [];
     expanded = false;
     keyname: string = '';
+    key: string = '';
     parent = null;
     level: number = 1;
     selectable: boolean = true;
@@ -346,7 +391,11 @@ export class FilterTreeNode implements TreeNode {
         this.selectable = selectable;
         this.level = level;
         this.keyname = key;
-        if(!key) this.keyname = label;
+        this.key = key;
+        if(!key) {
+            this.keyname = label;
+            this.key = label;
+        }
     }
 
    /**
@@ -362,7 +411,7 @@ export class FilterTreeNode implements TreeNode {
         return this._upsertNodeFor(levels, item, level, searchResults, collection, taxonomyURI);
     }
 
-    _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}) : TreeNode {
+    _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}, parentKey:string = "") : TreeNode {
         let nodeLabel: string = ''; 
         // find the node corresponding to the given item in the data cart 
         for (let child of this.children) {
@@ -410,7 +459,7 @@ export class FilterTreeNode implements TreeNode {
         }
 
         // ancestor does not exist yet; create it
-        let key = levels[0];
+        let key = parentKey + levels[0];
         let label = levels[0];
         let data = item[0];
 
@@ -459,7 +508,7 @@ export class FilterTreeNode implements TreeNode {
         }
 
         if (levels.length > 1){
-            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI);
+            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI, key);
         }
         return child;
     }    

@@ -99,7 +99,7 @@
     </div>
 
     <div *ngIf="!searching && !isActive && !mobileMode" class="collapsedFilterBox"
-        [style.background-image]="collapedFilerColor" (click)="this.isActive = !this.isActive;setFilterWidth()">
+        [style.background-image]="collapedFilerColor" (click)="this.isActive = !this.isActive;setFilterWidth();chref.detectChanges()">
 
         <!-- Collapsed filters -->
         <div>

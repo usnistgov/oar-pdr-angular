@@ -26,7 +26,8 @@ describe('serializeMetadataTransferFactory', function() {
 
         let cfg = JSON.parse(JSON.stringify(config));
         cfg['embedMetadata'] = [SchemaLabel.SCHEMA_ORG];
-        appcfg = new AppConfig(cfg);
+        appcfg = new AppConfig(null);
+        appcfg.loadConfig(cfg)
     });
 
     it('assumptions', function() {

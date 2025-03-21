@@ -1,0 +1,111 @@
+<div class="contact-rapper">
+    <div class="editable_container">
+        <!-- Display required field indicator -->
+        <div class="editable_field" *ngIf="edstatsvc.isEditMode()">
+            <span *ngIf="edstatsvc.isEditMode()" class="red-star">
+                *
+            </span>
+        </div>
+
+        <!-- Label -->
+        @if(edstatsvc.isEditMode() || hasContact) {
+            <div class="editable_field" style="margin-left: 0px;">
+                <span style="margin-right: 0.5em;">Contact:</span>
+            </div>
+        }
+
+        <div class="editable_field" style="min-width: fit-content;">
+            <contact-pub [record]="record"></contact-pub>
+        </div>
+
+        <!-- Control buttons -->
+        @if(edstatsvc.isEditMode()){
+            <div class="editable_field" style="white-space: nowrap;">
+                @if(!isEditing) {
+                    <!-- Edit button -->
+                    <button 
+                        class="edit_button" 
+                        type="button" 
+                        (click)="startEditing()" 
+                        aria-label="Edit contact" 
+                        ngbTooltip="Edit contact" 
+                        style="cursor: pointer">
+
+                        <i class="fas fa-pencil fa-sm"></i>
+                    </button> 
+
+                    @if(updated) {
+                        <!-- Restore button -->
+                        <button 
+                            class="edit_button" 
+                            type="button"
+                            (click)="restoreOriginal()">
+
+                            <i class="fas fa-undo fa-sm"
+                               aria-label="Restore original" 
+                               ngbTooltip="Restore original">
+                            </i>
+                        </button>  
+                    }
+                }
+                @else{
+                    <!-- Close button -->
+                    <button 
+                        class="edit_button" 
+                        *ngIf="isEditing" 
+                        type="button" 
+                        [disabled]="currentContact.dataChanged"
+                        (click)="closeEditBlock()" 
+                        aria-label="close button" 
+                        ngbTooltip="Close edit block">
+
+                        <i class="fas fa-times"></i>
+                    </button>  
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@defer (when LoadEditComp) {
+    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+        <table style="width: 100%;">
+            <tr  style="width: 100%;">
+                <td class="edit-block" style="width: calc(100%-90px);">
+                    <lib-contact-edit 
+                        #contactedit 
+                        [contact]="currentContact" 
+                        [backgroundColor]="getRecordBackgroundColor" 
+                        [editMode]="editMode" 
+                        (dataChanged)="onContactChange($event)">
+                    </lib-contact-edit>
+                </td>
+    
+                <td style="width: 90px;vertical-align: top;">
+                    <button 
+                        class="edit_button" 
+                        *ngIf="edstatsvc.isEditMode()" 
+                        type="button" 
+                        (click)="saveCurrentContact()" 
+                        aria-label="edit button" 
+                        [disabled]="!currentContact.dataChanged || !currentContact.fn" 
+                        ngbTooltip="Save contact">
+
+                        <i class="fas fa-check"></i>
+                    </button>
+            
+                    <button 
+                        class="edit_button" 
+                        *ngIf="edstatsvc.isEditMode() && dataChanged" 
+                        type="button"
+                        (click)="undoCurContactChanges()" 
+                        aria-label="undo button" 
+                        ngbTooltip="Undo current changes">
+
+                        <i class="fas fa-undo fa-sm"></i>
+                    </button>
+                </td>          
+            </tr>
+        </table>
+    </div>
+}

@@ -26,7 +26,8 @@ describe('serializeMetadataTransferFactory', function() {
 
         let cfg = JSON.parse(JSON.stringify(config));
         cfg['embedMetadata'] = [SchemaLabel.SCHEMA_ORG];
-        appcfg = new AppConfig(cfg);
+        appcfg = new AppConfig(null);
+        appcfg.loadConfig(cfg);
     });
 
     it('assumptions', function() {
@@ -44,7 +45,7 @@ describe('serializeMetadataTransferFactory', function() {
         scripts = doc.head.getElementsByClassName('structured-data');
         expect(scripts.length).toEqual(1);
         // console.log("el1", el);
-        
+
         expect(scripts[0].tagName).toBe("SCRIPT");
         expect(scripts[0].getAttribute("id")).toBe("NERDm#Resource:boring");
         expect(scripts[0].getAttribute("type")).toBe("application/ld+json");

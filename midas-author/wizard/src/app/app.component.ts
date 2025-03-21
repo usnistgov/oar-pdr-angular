@@ -1,7 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 // import * as footerlinks from '../assets/site-constants/footer-links.json';
 import { GoogleAnalyticsService } from 'oarlps'
-import { LPSConfig } from 'oarlps';
+import { AppConfig } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 import { ToastrService } from 'ngx-toastr';
 
@@ -14,24 +14,21 @@ import { ToastrService } from 'ngx-toastr';
     }
 })
 export class AppComponent {
-    title = 'OAR Module Demo: Wizard';
+    title = 'Create a New DAP';
     clientHeight: number = 500;
     footbarHeight!: number;
-    appVersion: string = "1.0";
+    appVersion: string;
     gaCode: string;
-    confValues: LPSConfig;
 
     @ViewChild('footbar') elementView!: ElementRef;
 
-    constructor(
-        private configSvc: ConfigurationService,
-        private toastrService: ToastrService,
-        public gaService: GoogleAnalyticsService) { 
-            this.clientHeight = window.innerHeight; 
-
-            this.confValues = this.configSvc.getConfig();
-            this.appVersion = this.confValues['appVersion'];
-            this.gaCode = this.confValues['gaCode'] as string;
+    constructor(private cfg: AppConfig,
+                private toastrService: ToastrService,
+                public gaService: GoogleAnalyticsService)
+    {
+      this.clientHeight = window.innerHeight;
+      this.appVersion = this.cfg.get<string>('systemVersion', '0.0');
+      this.gaCode = this.cfg.get<string>('gaCode', '');
     }
 
     ngOnInit(): void {

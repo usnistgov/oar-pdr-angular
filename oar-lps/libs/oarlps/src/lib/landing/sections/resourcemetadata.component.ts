@@ -1,10 +1,10 @@
 import { Component, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/core';
-
-import { AppConfig } from '../../config/config';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
-import { AboutdatasetComponent } from '../aboutdataset/aboutdataset.component';
+import { NerdmRes } from '../../nerdm/nerdm';
 import { MetricsData } from "../metrics-data";
-import { Themes, ThemesPrefs } from '../../shared/globals/globals';
+import { ThemesPrefs } from '../../shared/globals/globals';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { AboutdatasetComponent } from '../aboutdataset/aboutdataset.component';
 
 /**
  * a component that lays out the "About This Dataset" section of a landing page
@@ -14,6 +14,12 @@ import { Themes, ThemesPrefs } from '../../shared/globals/globals';
  */
 @Component({
     selector:    'pdr-resource-md',
+    standalone: true,
+    imports: [
+        SectionTitleComponent, 
+        AboutdatasetComponent,
+        NgbModule
+    ],
     templateUrl: './resourcemetadata.component.html',
     styleUrls:  [
         '../landing.component.scss'
@@ -33,6 +39,7 @@ export class ResourceMetadataComponent implements OnChanges {
     @Input() metricsData: MetricsData;
     @Input() showJsonViewer: boolean = false;
     @Input() theme: string;
+    @Input() isPublicSite: boolean = true;
 
     @ViewChild(AboutdatasetComponent, { static: true })
     aboutdatasetComponent: AboutdatasetComponent;
@@ -40,7 +47,7 @@ export class ResourceMetadataComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig)
+    constructor()
     { }
 
     ngOnChanges(ch: SimpleChanges) {

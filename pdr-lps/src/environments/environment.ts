@@ -1,47 +1,52 @@
 /*
  * Angular build-time environments data.
- * 
+ *
  * Environment Label: dev (default)
  *
- * When building under the dev environment mode, the contents of this file will get built into 
- * the application.  
+ * When building under the dev environment mode, the contents of this file will get built into
+ * the application.
  *
  * This is the default version of this file.  When the app is built via `ng build --env=label`,
- * the contents of ./environment.label.ts will be used instead.  
+ * the contents of ./environment.label.ts will be used instead.
  */
 import { LPSConfig } from 'oarlps';
 
 export const context = {
     production: false,
-    useMetadataService: true,
-    useCustomizationService: true
+    configUrl: "assets/config.json",     // set to "assets/config.json" to pull from server
+    useResourceService: true,
+    useCustomizationService: false,
+    useMIDASDAPService: false,
+    useMetadataService: false
 };
 
 export const config: LPSConfig = {
-    locations: {
+    links: {
         orgHome: "https://nist.gov/",
-        portalBase: "https://oardev.nist.gov/",
-        pdrHome: "https://oardev.nist.gov/pdr/",
-        pdrSearch: "https://oardev.nist.gov/sdp/",
-        mdService:   "https://oardev.nist.gov/rmm/",
-        taxonomyService: "https://oardev.nist.gov/rmm/taxonomy"
+        portalBase: "https://data.nist.gov/",
+        pdrHome: "https://data.nist.gov/pdr/",
+        pdrSearch: "https://data.nist.gov/sdp/",
+        mdService:   "https://data.nist.gov/rmm/"
     },
-    mdAPI: "https://oardev.nist.gov/rmm/records/",
-    metricsAPI: "https://data.nist.gov/rmm/usagemetrics/",
-    // customizationAPI: "https://testdata.nist.gov/customization/",
-    customizationAPI: "https://datapubtest.nist.gov/customization/",
+    PDRAPIs: {
+        mdSearch: "https://mdsdev.nist.gov/rmm/records/",
+        mdService: "https://mdsdev.nist.gov/od/id/",
+        metrics: "https://data.nist.gov/rmm/usagemetrics/"
+    },
+    dapEditing: {
+        serviceEndpoint: "https://mdsdev.nist.gov/midas/dap/mds3/",
+        editEnabled: false,
+    },
+    systemVersion: "v1.3.X",
     mode: "dev",
-    status: "Dev Version",
-    appVersion: "v1.3.X",
     production: context.production,
-    editEnabled: false,
-    distService: "https://testdata.nist.gov/od/ds/",
-    gacode: "not-set",
-    screenSizeBreakPoint: 1060,
+    distService: "https://data.nist.gov/od/ds/",
+    gaCode: "not-set",
+    screenSizeBreakPoint: 1200,
     bundleSizeAlert: 500000000,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,
-    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/"  
+    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/"
 }
 
 export const testdata: {} = {
@@ -105,25 +110,39 @@ export const testdata: {} = {
         ],
         "references": [
             {
-                "refType":"IsDocumentedBy",
+                "refType":"IsSupplementTo",
                 "title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses",
                 "issued":"2020-02",
+                "publishYear":"2002",
                 "citation":"Gerbig, Y. B., & Michaels, C. A. (2020). In-situ Raman spectroscopic measurements of the deformation region in indented glasses. Journal of Non-Crystalline Solids, 530, 119828. doi:10.1016/j.jnoncrysol.2019.119828\n",
                 "label":"Journal of Non-Crystalline Solids: In-situ Raman spectroscopic measurements of the deformation region in indented glasses",
                 "location":"https://doi.org/10.1016/j.jnoncrysol.2019.119828",
                 "@id":"#ref:10.1016/j.jnoncrysol.2019.119828",
                 "@type":["schema:Article"],
-                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"]
+                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"],
+                "authors":["Gerbig, Y. B.", "Michaels, C. A."],
+                "vol":"15",
+                "volNumber":"20",
+                "pages":"12345",
+                "doi":"10.1016/j.jnoncrysol.2019.119828",
+                "inPreparation":"yes"
             },
             {
-                "refType":"IsCitedBy",
+                "refType":"References",
                 "title":"Indentation device forin situRaman spectroscopic and optical studies",
                 "issued":"2012-12",
+                "publishYear":"2012",
                 "citation":"Gerbig, Y. B., Michaels, C. A., Forster, A. M., Hettenhouser, J. W., Byrd, W. E., Morris, D. J., & Cook, R. F. (2012). Indentation device forin situRaman spectroscopic and optical studies. Review of Scientific Instruments, 83(12), 125106. doi:10.1063/1.4769995\n",
                 "location":"https://doi.org/10.1063/1.4769995",
                 "@id":"#ref:10.1063/1.4769995",
                 "@type":["schema:Article"],
-                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"]
+                "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"],
+                "authors":["Gerbig, Y. B.", "Michaels, C. A.", "Forster, A. M.", "J. W., Byrd, W. E.", "Morris, D. J.", "Cook, R. F."],
+                "vol":"53",
+                "volNumber":"12",
+                "pages":"125106",
+                "doi":"10.1063/1.4769995",
+                "inPreparation":"no"
             }
         ],
         "accessLevel": "public",
@@ -140,7 +159,7 @@ export const testdata: {} = {
                 "downloadURL": "http://nigos.nist.gov:8080/nist/sd/32/NIST_SD32_MEDS-I_face.zip",
                 "filepath": "NIST_SD32_MEDS-I_face.zip",
                 "@type": [
-                    "nrdp:Hidden",
+                    "nrdp:Hidde",
                     "nrdp:AccessPage",
                     "dcat:Distribution"
                 ],
@@ -1068,7 +1087,7 @@ export const testdata: {} = {
                     "nrda:DynamicResourceSet", "nrdp:SearchPage"
                 ],
                 "searchURL": "/rmm/records?isPartOf.@id=ark:/88434/mds9911",
-                "accessURL": "http://localhost:5555/#/search?q=isPartOf.@id%3Dark:/88434/mds9911&alternateView=forensics",
+                "accessURL": "http://data.nist.gov:5555/#/search?q=isPartOf.@id%3Dark:/88434/mds9911&alternateView=forensics",
                 "title": "All Forensics Data Collection",
                 "description": "The search URL here queries all the data which is part of Forensics data collection."
             },
@@ -1090,7 +1109,7 @@ export const testdata: {} = {
                 "title": "Biometrics Data Collection",
                 "description": "Search URL for the biometrics data collection."
             }
-    
+
         ]
     }
 };

@@ -1,7 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'lib-visithome-edit',
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    NgbModule
+  ],
   templateUrl: './visithome-edit.component.html',
   styleUrls: ['./visithome-edit.component.css', '../../landing.component.scss']
 })

@@ -5,8 +5,10 @@
         "emitDecoratorMetadata": true,
         "outDir": "../../out-tsc/spec",
         "types": [
-        "jest", "node"
-        ]
+            "jest", 
+            "node"
+        ],
+        "target": "es2022"
     },
     "files": [
     ],

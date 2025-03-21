@@ -92,7 +92,9 @@ export abstract class AuthService {
  *
  * This implementation is intended for use in production.  
  */
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class WebAuthService extends AuthService {
 
     private _endpoint: string = null;
@@ -123,9 +125,10 @@ export class WebAuthService extends AuthService {
     constructor(config: AppConfig, 
                 private httpcli: HttpClient,
                 public authService: AuthenticationService,
-                private sdsvc: StaffDirectoryService) {
+                private sdsvc: StaffDirectoryService) 
+    {
         super();
-        this._endpoint = config.get('mdAPI', '/customization/');
+        this._endpoint = config.get('dapEditing.serviceEndpoint', '/midas/dap/def/');
         if (!this._endpoint.endsWith('/')) this._endpoint += "/";
     }
 
@@ -162,6 +165,7 @@ export class WebAuthService extends AuthService {
                     this._creds = creds;
                     if (creds.token) {
                         this.sdsvc.setAuthToken(creds.token);
+                        this._creds.token = creds.token;
                         // the user is authenticated and authorized to edit!
                         subscriber.next(
                             new WebCustomizationService(resid, this.endpoint, this.authToken,

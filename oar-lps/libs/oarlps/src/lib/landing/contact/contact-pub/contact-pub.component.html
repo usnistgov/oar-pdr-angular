@@ -1,0 +1,42 @@
+@if(hasContact){
+    <div style="max-width:calc(100% - 4em);width: fit-content;">
+        <div style="padding-right: 0.5em;white-space: nowrap">
+            <strong>
+                <a *ngIf="hasEmail"
+                    href="{{currentContact.hasEmail}}" target="_top">
+                    {{currentContact.fn}}</a>
+                <span *ngIf="!hasEmail" style="white-space: nowrap">{{currentContact.fn}}</span>
+            </strong>.
+
+            <i style="cursor: pointer; margin-left: 0.5rem;" class="fas"
+            [ngClass]="{'fa-caret-right': !clickContact, 'fa-caret-down': clickContact}"
+            aria-hidden="true"
+            (click)="closeContent = !closeContent; clickContact=expandContact();"></i>
+
+            <div [collapse]="!closeContent" class="card card-body bg-faded" style="width: fit-content;">
+                <span class="" *ngIf="currentContact.fn">
+                    <span>{{currentContact.fn}}</span>
+                </span>
+                @if(hasEmail){
+                    <span *ngIf="hasEmail">
+                        <br><strong>Email:</strong>
+                        <a *ngIf="hasEmail" href="{{currentContact.hasEmail}}"
+                            target="_top">
+                            {{email(currentContact.hasEmail)}}
+                        </a>
+                    </span>
+                }
+
+                @if(currentContact.address){
+                    <div *ngIf="currentContact.address">
+                        <span><b>Address:</b></span>
+                        <div *ngFor="let address of currentContact.address"
+                            style="padding-left: 1em;">
+                            {{address}}
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+}

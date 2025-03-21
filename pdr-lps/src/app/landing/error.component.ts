@@ -6,17 +6,17 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
 
 @Component({
-  styleUrls: ['landing.component.scss'],
+  styleUrls: ['landing.component.css'],
   selector: 'error-template',
   template: `
   <div class="grid">
       <div class = "col-12 col-md-12 col-lg-12 col-sm-12">
-        <h3 id="error" name="error"><b>Error</b></h3><br>   
+        <h3 id="error" name="error"><b>Error</b></h3><br>
         <div>
         The landing page for the given ID cannot be displayed due to an internal error.  <br>
-        Please contact us at 
-        <a href="mailto:datasupport@nist.gov?subject=PDR: {{ searchid }}&body= ">datasupport@nist.gov</a> to report the problem. If possible, include the 
-        string "PDR: {{ searchid }}" in your email report.  
+        Please contact us at
+        <a href="mailto:datasupport@nist.gov?subject=PDR: {{ searchid }}&body= ">datasupport&#64;nist.gov</a> to report the problem. If possible, include the
+        string "PDR: {{ searchid }}" in your email report.
         </div>
       </div>
    </div>
@@ -42,10 +42,10 @@ export class ErrorComponent {
   template: `
     <div class="grid">
         <div class = "col-12 col-md-12 col-lg-12 col-sm-12">
-          <h3 id="uerror" name="uerror"><b>Error</b></h3><br>   
+          <h3 id="uerror" name="uerror"><b>Error</b></h3><br>
           <div>
             The landing page for the given ID cannot be displayed due to some error.  <br>
-            Please make sure you have requested  correct id <b>{{ searchid }}</b> in your query and try again.  
+            Please make sure you have requested  correct id <b>{{ searchid }}</b> in your query and try again.
           </div>
         </div>
      </div>
@@ -63,7 +63,7 @@ export class UserErrorComponent implements OnInit {
       this.response.statusCode = 404;
       this.errorcode = this.response.statusCode;
       this.response.statusMessage = "There is an user error!";
-      console.log(this.errorcode);
+      console.error(this.errorcode);
     }
   }
 }

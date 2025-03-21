@@ -27,9 +27,9 @@ describe('AppComponent', () => {
         expect(app).toBeTruthy();
     });
 
-    it("should have as title 'OAR Module Demo: Wizard'", () => {
+    it("should have as title 'Create a New DAP'", () => {
         const fixture = TestBed.createComponent(AppComponent);
         const app = fixture.componentInstance;
-        expect(app.title).toEqual('OAR Module Demo: Wizard');
+        expect(app.title).toEqual('Create a New DAP');
     });
 });

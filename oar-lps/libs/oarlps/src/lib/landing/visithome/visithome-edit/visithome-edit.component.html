@@ -28,7 +28,12 @@
         <!-- Control buttons -->
         <td style="width: 30px;vertical-align: top;">
             <!-- Save button -->
-            <button class="edit_button" type="button" (click)="commandOut('saveURL')" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
+            <button class="edit_button" 
+                    type="button" 
+                    (click)="commandOut('saveURL')" 
+                    aria-label="edit button" 
+                    [disabled]="!dataChanged" 
+                    ngbTooltip="Save changes">
                 <i class="fas fa-check"></i>
             </button>
     

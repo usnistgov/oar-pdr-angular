@@ -11,15 +11,15 @@ import { LandingAboutComponent } from './landingAbout.component';
         CommonModule
     ],
     declarations: [
-        LandingAboutComponent
+        
     ],
     providers: [ ],
     exports: [
-        LandingAboutComponent
+        
     ]
 })
 export class LandingAboutModule { }
 
 export {
-    LandingAboutComponent
+    
 };

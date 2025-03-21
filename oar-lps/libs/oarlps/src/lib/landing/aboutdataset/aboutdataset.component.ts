@@ -1,17 +1,28 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
-
-import { AppConfig } from '../../config/config';
+import { ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { AppConfig } from '../../config/config.service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { VersionComponent } from '../version/version.component';
 import { MetricsData } from "../metrics-data";
-import { trigger, state, style, animate, transition } from '@angular/animations';
+import { trigger, style, animate, transition } from '@angular/animations';
 import { formatBytes } from '../../utils';
 import { Themes, ThemesPrefs } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
+import { FieldsetModule } from 'primeng/fieldset';
+import { ButtonModule } from 'primeng/button';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
 
 @Component({
     selector: 'aboutdataset-detail',
+    standalone: true,
+    imports: [
+        VersionComponent,
+        CommonModule, 
+        FieldsetModule, 
+        ButtonModule, 
+        NgxJsonViewerModule
+    ],
     templateUrl: './aboutdataset.component.html',
     styleUrls: ['./aboutdataset.component.scss'],
     animations: [
@@ -80,18 +91,19 @@ export class AboutdatasetComponent implements OnChanges {
     public get jsonExpandDepth() { return this._jsonExpandDepth; }
     public set jsonExpandDepth(newValue) {this._jsonExpandDepth = newValue}
 
-    constructor(private cfg: AppConfig, 
-        public globalService: GlobalService,
-        public gaService: GoogleAnalyticsService) { 
-            this.globalService.watchLpsLeftWidth(width => {
-                this.maxWidth = width;
-            })
-        }
+    constructor(private cfgsvc: AppConfig, 
+                private chref: ChangeDetectorRef,
+                public globalService: GlobalService,
+                public gaService: GoogleAnalyticsService)
+    { 
+        this.globalService.watchLpsLeftWidth(width => {
+            this.maxWidth = width;
+        })
+    }
 
     ngOnInit(): void {
         this.nerdmRecord["Native JSON (NERDm)"] = this.record;
-        this.nerdmDocUrl = this.cfg.get("locations.nerdmAbout", "/unconfigured");
-        this.citetext = (new NERDResource(this.record)).getCitation();
+        this.nerdmDocUrl = this.cfgsvc.get("links.nerdmAbout", "/od/dm/nerdm/");        this.citetext = (new NERDResource(this.record)).getCitation();
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
         // set the isPartOf rendering, listing all of the collections this dataset is formally
@@ -116,7 +128,7 @@ export class AboutdatasetComponent implements OnChanges {
                 }
                 this.isPartOf.push([
                     article,
-                    this.cfg.get("locations.landingPageService") + coll['@id'],
+                    this.cfgsvc.get("links.pdrIDResolver", "/od/id/") + coll['@id'],
                     title,
                     suffix
                 ]);
@@ -131,6 +143,13 @@ export class AboutdatasetComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         if (this.record && this.record["_id"]) 
             delete this.record["_id"];
+
+        // this.chref.detectChanges();
+    }
+
+    toggleJsonViewer() {
+        this.showJsonViewer = !this.showJsonViewer
+        this.chref.detectChanges();
     }
 
     /**
@@ -144,16 +163,9 @@ export class AboutdatasetComponent implements OnChanges {
      * return the URL that will download the NERDm metadata for the current resource
      */
     getDownloadURL() : string {
-        let out = this.cfg.get("locations.mdService", "/unconfigured");
-        if (out.search("/rmm/") >= 0) {
-            if(!out.endsWith("records/")){
-                out += "records/";
-            }
-            out += "?@id=" + this.record['@id'];
-        }else {
-            if (out.slice(-1) != '/') out += '/';
-            out += this.record['ediid'];
-        }
+        let out = this.cfgsvc.get("links.pdrIDResolver", "/od/id/");
+        if (out.slice(-1) != '/') out += '/';
+        out += this.record['@id'];
 
         return out;
     }
@@ -195,5 +207,9 @@ export class AboutdatasetComponent implements OnChanges {
             this.citeCopied = false;
         }, 2000);
 
+    }
+
+    get hasCurrentMetrics() {
+        return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
     }
 }

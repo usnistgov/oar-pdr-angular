@@ -1,12 +1,13 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-
+import { Component, effect, Input, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, ResourceType } from '../../shared/globals/globals';
+import { Sections, SectionPrefs, ResourceType, GlobalService } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 /**
  * A panel inside the EditControlComponent that displays information about the status of 
@@ -20,6 +21,11 @@ import { LandingpageService } from '../landingpage.service';
  */
 @Component({
     selector: 'pdr-edit-status',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+    ],
     templateUrl: 'editstatus.component.html',
     styleUrls: ['editstatus.component.css']
 })
@@ -34,6 +40,7 @@ export class EditStatusComponent implements OnInit {
     _editmode: string;
     contentStatusColer: string = "var(--nist-green-default);"
     resourceType: string = "resource";
+    showMsg: boolean = true;
 
     @Input() mdrec: NerdmRes;
 
@@ -46,7 +53,15 @@ export class EditStatusComponent implements OnInit {
     constructor(
         public mdupdsvc : MetadataUpdateService, 
         public edstatsvc: EditStatusService,
+        public globalsvc: GlobalService,
+        private cdr: ChangeDetectorRef,
         public lpService: LandingpageService) {
+
+        effect(() => {
+            this.message = this.globalsvc.message();
+            this.showMessage(this.message);
+            this.cdr.detectChanges();
+        });
 
         this.EDIT_MODES = LandingConstants.editModes;
         this.mdupdsvc.updated.subscribe((details) => { 
@@ -171,9 +186,19 @@ export class EditStatusComponent implements OnInit {
       switch(this._editmode){
         case this.EDIT_MODES.EDIT_MODE:
             // We are editing the metadata (and are logged in)
-            if (this.updateDetails)
-                this.showMessage("Edited by " + this.updateDetails.userAttributes.userName + " " + this.updateDetails.userAttributes.userLastName + " on " + this.updateDetails._updateDate);
-            else
+            if (this.updateDetails){
+                let user = "Unknown user";
+                if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userName)
+                    user = this.updateDetails.userAttributes.userName;
+                if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userLastName)
+                    user = user + " " + this.updateDetails.userAttributes.userLastName;
+
+                let date = "";
+                if(this.updateDetails._updateDate)
+                    date = " on " + this.updateDetails._updateDate;
+
+                this.showMessage("Edited by " + user + date);
+            }else
                 this.showMessage('');
           break;
         case this.EDIT_MODES.PREVIEW_MODE:

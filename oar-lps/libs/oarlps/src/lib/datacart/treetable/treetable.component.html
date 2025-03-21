@@ -38,10 +38,14 @@
                 </tr>
             </ng-template>
             <ng-template let-rowNode let-rowData="rowData" let-i="rowIndex" pTemplate="body">
-                <tr style="background: #FFFFFF">
+                <tr style="background: #FFFFFF; border-bottom: 1px solid lightgray">
                     <td [ngStyle]="bodyStyle(titleWidth)">
                         <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                        &nbsp;<p-treeTableCheckbox [value]="rowNode"></p-treeTableCheckbox>
+                        &nbsp;
+                        <p-treeTableCheckbox 
+                            [value]="rowNode" 
+                            class="ptree-checkbox">
+                        </p-treeTableCheckbox>
                         <span *ngIf="rowData.cartItem">
                             <a (click)="openDetails($event,rowData,op3) " style="color: #1471AE; cursor: pointer;"
                                 data-toggle="tooltip" title="Click for more details">

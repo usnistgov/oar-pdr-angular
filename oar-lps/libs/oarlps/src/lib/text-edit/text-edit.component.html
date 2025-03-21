@@ -21,42 +21,99 @@
             <!-- Controls -->
             <td class="control-wrapper" [style.width]="controlBoxWidth" [style.border-left]="controlBorderStyle()">
                 <!-- Edit/Save button-->
-                <button *ngIf="editButton" class="edit_button" type="button" (click)="editSave()" [disabled]="disableControl" aria-label="Edit button" ngbTooltip="Edit this item">
+                <button 
+                    *ngIf="editButton" 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="editSave()" 
+                    [disabled]="disableControl" 
+                    aria-label="Edit button" 
+                    pTooltip="Edit this item"
+                    tooltipPosition="top" >
                     <i [class]="getEditIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
 
                 <!-- Custom button -->
-                <button *ngIf="customButton" class="edit_button" type="button" (click)="cust();" [disabled]="disableControl" [aria-label]="custBtnTooltip" [ngbTooltip]="custBtnTooltip">
+                <button 
+                    *ngIf="customButton" 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="cust();" 
+                    [disabled]="disableControl" 
+                    [aria-label]="custBtnTooltip" 
+                    [pTooltip]="custBtnTooltip"
+                    tooltipPosition="top" >
                     <i [class]="custBtnIcon"></i>
                 </button>
 
                 <!-- Edit only button-->
-                <button *ngIf="editOnlyButton" class="edit_button" type="button" (click)="edit()" [disabled]="editing || disableControl" aria-label="Edit button" ngbTooltip="Edit this item">
+                <button 
+                    *ngIf="editOnlyButton" 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="edit()" 
+                    [disabled]="editing || disableControl" 
+                    aria-label="Edit button" 
+                    pTooltip="Edit this item"
+                    tooltipPosition="top" >
                     <i [class]="getEditOnlyIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
 
                 <!-- Delete/undoEdit button-->
-                <button *ngIf="deleteButton" class="edit_button" type="button" (click)="removeUndo()" [disabled]="disableControl" aria-label="Delete button" ngbTooltip="Delete this item">
+                <button 
+                    *ngIf="deleteButton" 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="removeUndo()" 
+                    [disabled]="disableControl" 
+                    aria-label="Delete button" 
+                    pTooltip="Delete this item"
+                    tooltipPosition="top">
                     <i [class]="getDelIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('delete')"></i>
                 </button>
 
                 <!-- Restore button-->
-                <button *ngIf="restoreButton" class="edit_button" type="button" (click)="restore()" [disabled]="disableControl || !dataChanged || isNew" aria-label="Restore button" ngbTooltip="Restore from original value" data-container="body">
+                <button 
+                    *ngIf="restoreButton" 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="restore()" 
+                    [disabled]="disableControl || !dataChanged || isNew" 
+                    aria-label="Restore button" 
+                    pTooltip="Restore from original value" 
+                    data-container="body"
+                    tooltipPosition="top">
                     <i class="fas fa-undo fa-sm"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>
 
                 <!-- Plus button-->
-                <button *ngIf="plusButton" class="edit_button" type="button" (click)="add()" [disabled]="disableControl" aria-label="Add button" ngbTooltip="Add new item">
+                <button 
+                    *ngIf="plusButton" 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="add()" 
+                    [disabled]="disableControl" 
+                    aria-label="Add button" 
+                    pTooltip="Add new item"
+                    tooltipPosition="top">
                     <i class="faa faa-plus"
                         data-toggle="tooltip" [title]="Add"></i>
                 </button>
 
                 <!-- Submit button-->
-                <button *ngIf="submitButton" class="edit_button" type="button" (click)="submit()" [disabled]="disableControl" aria-label="submit button" [ngbTooltip]="submitTooltip">
+                <button 
+                    *ngIf="submitButton" 
+                    class="edit_button" 
+                    type="button" 
+                    (click)="submit()" 
+                    [disabled]="disableControl" 
+                    aria-label="submit button" 
+                    [pTooltip]="submitTooltip"
+                    tooltipPosition="top">
                     <i class="faa faa-check-circle"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>

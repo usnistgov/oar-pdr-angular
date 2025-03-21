@@ -1,17 +1,35 @@
-import { Component, OnChanges, Input, ViewChild, ElementRef } from '@angular/core';
-import { AppConfig } from '../../config/config';
+import { Component, OnChanges, Input, effect } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { ColorScheme } from '../../shared/globals/globals';
-import * as Globals from '../../shared/globals/globals'
+import { GlobalService } from '../../shared/globals/globals'
+import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DescriptionComponent } from '../description/description.component';
+import { TopicMidasComponent } from '../topic/topic-midas/topic-midas.component';
+import { TopicPubComponent } from '../topic/topic-pub/topic-pub.component';
+import { KeywordPubComponent } from '../keyword/keyword-pub/keyword-pub.component';
+import { EditStatusService } from '../editcontrol/editstatus.service';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { KeywordMidasComponent } from '../keyword/keyword-midas/keyword-midas.component';
 
 /**
  * a component that lays out the "Description" section of a landing page which includes the prose 
  * description, subject keywords, and research topics.
  */
 @Component({
-    selector:      'pdr-resource-desc',
+    selector: 'pdr-resource-desc',
+    standalone: true,
+    imports: [
+        SectionTitleComponent,
+        CommonModule,
+        DescriptionComponent,
+        TopicMidasComponent,
+        TopicPubComponent,
+        KeywordPubComponent,
+        KeywordMidasComponent,
+        NgbModule
+    ],    
     templateUrl:   './resourcedescription.component.html',
     styleUrls:   [
         '../landing.component.scss'
@@ -37,21 +55,26 @@ export class ResourceDescriptionComponent implements OnChanges {
     titleSelected: boolean = false;
     colorScheme: ColorScheme;
     maxWidth: number = 1000;
+    isEditMode: boolean = true;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
-    
+    @Input() isPublicSite: boolean = true;
+
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig, 
-        public globalService: Globals.GlobalService,
-                public lpService: LandingpageService ) {
+    constructor(public globalService: GlobalService,
+                public edstatsvc: EditStatusService ) 
+    {
+        this.globalService.watchLpsLeftWidth(width => {
+            this.maxWidth = width + 20;
+        })
 
-                this.globalService.watchLpsLeftWidth(width => {
-                    this.maxWidth = width + 20;
-                })
+        effect(() => {
+            this.isEditMode = this.edstatsvc.isEditMode();
+        })
     }
 
     ngOnInit(): void {

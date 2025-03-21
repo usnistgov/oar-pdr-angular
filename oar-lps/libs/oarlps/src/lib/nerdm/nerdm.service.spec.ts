@@ -3,10 +3,10 @@ import * as nerdsvc from './nerdm.service';
 import { Observable } from 'rxjs';
 import * as rxjs from 'rxjs';
 
-describe('TransferMetadataService', function() {
+describe('TransferResourceService', function() {
 
     let trx : nerdm.MetadataTransfer;
-    let svc : nerdsvc.MetadataService;
+    let svc : nerdsvc.NERDmResourceService;
     let tdata : nerdm.NerdmRes = {
         "@id":  "ark:/88888/goober",
         ediid: "goober",
@@ -16,15 +16,15 @@ describe('TransferMetadataService', function() {
     beforeEach(() => {
         trx = new nerdm.MetadataTransfer();
         trx.set("goober", tdata);
-        svc = new nerdsvc.TransferMetadataService(trx);
+        svc = new nerdsvc.TransferResourceService(trx);
     });
 
-    it("getMetadata", function(done) {
-        let t1 = svc.getMetadata("goober");
+    it("getResource", function(done) {
+        let t1 = svc.getResource("goober");
         t1.subscribe((data) => { expect(data).toEqual(tdata); },
                      (err)  => { fail(err); });
 
-        let t2 = svc.getMetadata("gomer");
+        let t2 = svc.getResource("gomer");
         t2.subscribe((data) => { expect(data).toBeUndefined(); },
                      (err)  => { fail(err);  });
 
@@ -33,16 +33,16 @@ describe('TransferMetadataService', function() {
 
 });
 
-class FailingMetadataService extends nerdsvc.MetadataService {
-    getMetadata(id : string) : Observable<nerdm.NerdmRes> {
+class FailingResourceService extends nerdsvc.NERDmResourceService {
+    getResource(id : string) : Observable<nerdm.NerdmRes> {
         throw new Error("delegate service resorted to.");
     }
 };
 
-describe('CachingMetadataService', function() {
+describe('CachingNERDmResourceService', function() {
 
     let trx : nerdm.MetadataTransfer;
-    let svc : nerdsvc.MetadataService;
+    let svc : nerdsvc.NERDmResourceService;
     let tdata : nerdm.NerdmRes = {
         "@id":  "ark:/88888/goober",
         ediid: "goober",
@@ -52,26 +52,26 @@ describe('CachingMetadataService', function() {
     beforeEach(() => {
         trx = new nerdm.MetadataTransfer();
         trx.set("goober", tdata);
-        svc = new nerdsvc.CachingMetadataService(new FailingMetadataService(), trx);
+        svc = new nerdsvc.CachingNERDmResourceService(new FailingResourceService(), trx);
     });
 
-    it('getMetadata() via cache', function(done) {
-        let t1 = svc.getMetadata("goober");
+    it('getResource() via cache', function(done) {
+        let t1 = svc.getResource("goober");
         t1.subscribe((data) => { expect(data).toEqual(tdata); },
                      (err)  => { fail(err); },
                      ()     => { done(); });
     });
 
-    it('getMetadata() via delegate', function() {
-        expect(() => { svc.getMetadata("gomer") }).toThrowError();
+    it('getResource() via delegate', function() {
+        expect(() => { svc.getResource("gomer") }).toThrowError();
     });
 });
 
-describe('TransmittingMetadataService', function() {
+describe('TransmittingResourceService', function() {
     // Note: this does not demonstrate caching to the MetadatService
 
     let trx : nerdm.MetadataTransfer;
-    let svc : nerdsvc.MetadataService;
+    let svc : nerdsvc.NERDmResourceService;
     let tdata : nerdm.NerdmRes = {
         "@id":  "ark:/88888/goober",
         ediid: "goober",
@@ -82,32 +82,32 @@ describe('TransmittingMetadataService', function() {
         trx = new nerdm.MetadataTransfer();
     });
 
-    it('getMetadata() via cache', function(done) {
+    it('getResource() via cache', function(done) {
         trx.set("goober", tdata);
-        svc = new nerdsvc.TransmittingMetadataService(new FailingMetadataService(), trx);
+        svc = new nerdsvc.TransmittingResourceService(new FailingResourceService(), trx);
 
-        let t1 = svc.getMetadata("goober");
+        let t1 = svc.getResource("goober");
         t1.subscribe((data) => { expect(data).toEqual(tdata); },
                      (err)  => { fail(err); },
                      ()     => { done(); });
     });
 
-    it('getMetadata() via delegate', function() {
+    it('getResource() via delegate', function() {
         trx.set("goober", tdata);
-        svc = new nerdsvc.TransmittingMetadataService(new FailingMetadataService(), trx);
+        svc = new nerdsvc.TransmittingResourceService(new FailingResourceService(), trx);
 
-        expect(() => { svc.getMetadata("gomer") }).toThrowError();
+        expect(() => { svc.getResource("gomer") }).toThrowError();
     });
 
-    it('getMetadata() caching to MetadataTransfer', function(done) {
+    it('getResource() caching to MetadataTransfer', function(done) {
         let cache : nerdm.MetadataTransfer = new nerdm.MetadataTransfer();
         cache.set("goober", tdata);
-        svc = new nerdsvc.TransmittingMetadataService(
-                  new nerdsvc.CachingMetadataService(
-                      new FailingMetadataService(), cache), trx);
+        svc = new nerdsvc.TransmittingResourceService(
+                  new nerdsvc.CachingNERDmResourceService(
+                      new FailingResourceService(), cache), trx);
         expect(trx.labels().length).toBe(0);
 
-        svc.getMetadata("goober").subscribe(
+        svc.getResource("goober").subscribe(
             (data) => {
                 // successfully pulled data from underlying service
                 expect(data).toEqual(tdata);

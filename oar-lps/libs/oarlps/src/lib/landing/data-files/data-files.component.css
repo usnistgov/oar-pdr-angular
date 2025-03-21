@@ -40,4 +40,7 @@ body .p-treetable .p-treetable-data tr.p-state-highlight .p-row-editor a {
     margin-left: 0.5em;
 }
 
-
+.large-collection-upload-help {
+    float: right;
+    cursor: pointer;
+}

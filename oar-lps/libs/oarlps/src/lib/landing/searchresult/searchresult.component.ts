@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, HostListener, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { NerdmRes } from '../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes, FilterTreeNode } from '../../shared/globals/globals';
+import { Collections } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals';
 
 @Component({
