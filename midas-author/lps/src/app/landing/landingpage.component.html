@@ -6,10 +6,12 @@
 
 <!-- edit control panel (visible when editing is enabled) -->
 
-<pdr-edit-control *ngif="!isPublicSite && editEnabled"
-  [inBrowser]="inBrowser"
-  [(mdrec)]="md">
-</pdr-edit-control>
+@defer(when !isPublicSite && editEnabled){
+  <pdr-edit-control
+    [inBrowser]="inBrowser"
+    [(mdrec)]="md">
+  </pdr-edit-control>
+}
 
 <!-- error messages go here -->
 <div [ngStyle]="{'width': lpsWidth + 'px'}">
