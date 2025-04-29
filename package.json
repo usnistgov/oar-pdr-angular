@@ -10,12 +10,12 @@
         "pdr-rpa/pdr-rpa-approve"
     ],
     "scripts": {
-        "build-lib": "npm run build oarng --prefix ./lib",
-        "build-oarlps": "npm run build oarlps --prefix ./oar-lps",
-        "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps",
-        "build-midaslps": "npm run build midas-lps --prefix ./midas-author/lps",
-        "build-midaswiz": "npm run build step-wizard --prefix ./midas-author/wizard",
-        "build-midas": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./midas-author/wizard && npm run build midas-lps --prefix ./midas-author/lps",
+        "build-lib": "npm run build oarng --prefix ./lib --watch",
+        "build-oarlps": "npm run build oarlps --prefix ./oar-lps --watch",
+        "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps --watch",
+        "build-midaslps": "npm run build midas-lps --prefix ./midas-author/lps --watch",
+        "build-midaswiz": "npm run build step-wizard --prefix ./midas-author/wizard --watch",
+        "build-midas": "npm run build oarng --prefix ./lib && npm run build step-wizard --prefix ./midas-author/wizard && npm run build midas-lps --prefix ./midas-author/lps --watch",
         "build-rpa-request": "npm run build pdr-rpa-request --prefix ./pdr-rpa/pdr-rpa-request",
         "build-rpa-approve": "npm run build pdr-rpa-approve --prefix ./pdr-rpa/pdr-rpa-approve",
         "build-all": "npm run build-lib; npm run build-oarlps; npm run build-sw; npm run build-midaslps; npm run build-rpa-request; npm run build-rpa-approve",

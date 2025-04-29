@@ -44,6 +44,7 @@ export const config: LPSConfig = {
     gaCode: "not-set",
     screenSizeBreakPoint: 1200,
     bundleSizeAlert: 500000000,
+    downloadableFileLimit: 300,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
     delayTimeForMetricsRefresh: 300,
     standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/"

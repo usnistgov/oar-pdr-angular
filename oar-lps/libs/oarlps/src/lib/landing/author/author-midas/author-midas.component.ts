@@ -46,6 +46,7 @@ export class AuthorMidasComponent {
     overflowStyle: string = 'hidden';
     orderChanged: boolean = false;
     globalsvc = inject(GlobalService);
+    editingStarted: boolean = false; // Signal child component editing started
 
     @Input() record: any[];
     @Input() isEditMode: boolean;
@@ -195,6 +196,7 @@ export class AuthorMidasComponent {
             case MODE.LIST:
                 this.isEditing = true;
                 this.setOverflowStyle();
+                this.editingStarted = true;
                 this.editBlockStatus = "expanded";                            
                 break;
 
@@ -202,6 +204,7 @@ export class AuthorMidasComponent {
                 // Collapse the edit block
                 this.setOverflowStyle();
                 this.isEditing = false;
+                this.editingStarted = false;
                 this.editBlockStatus = 'collapsed'
                 break;
         }

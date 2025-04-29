@@ -1,32 +1,14 @@
 // import { MessageBarComponent } from './../../../../oar-lps/libs/oarlps/src/lib/frame/messagebar.component';
 import {
     Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef,
-    PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef,
-    effect,
-    inject
+    PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
-
-import { AppConfig } from 'oarlps';
-import { NERDmResourceService } from 'oarlps';
-import { NerdmRes, NERDResource } from 'oarlps';
-import { IDNotFound } from 'oarlps';
-import { GlobalService, LandingConstants } from 'oarlps';
-import { CartService } from 'oarlps';
-import { DataCartStatus } from 'oarlps';
-import { RecordLevelMetrics } from 'oarlps';
-import { MetricsService } from 'oarlps';
-import { formatBytes } from 'oarlps';
-import { LandingBodyComponent } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { CartActions } from 'oarlps';
-import { MetricsData } from "oarlps";
-import { Themes, ThemesPrefs, Collections } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
-import { LandingpageService } from 'oarlps';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
@@ -35,17 +17,13 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NoidComponent } from './noid.component';
-import { EditControlComponent, EditStatusComponent } from 'oarlps';
-import { MenuComponent } from 'oarlps';
-import { CitationPopupComponent } from 'oarlps';
-import { DoneModule } from 'oarlps';
-import { SearchresultModule } from 'oarlps';
-import { SidebarComponent } from 'oarlps';
-import { DownloadStatusModule } from 'oarlps';
-import { MetricsinfoComponent } from 'oarlps';
-import { FrameModule } from 'oarlps';
-import { environment } from '../../environments/environment-impl';
-import { UserMessageService, MessageBarComponent } from 'oarlps';
+import { CitationPopupComponent, DoneModule, SearchresultModule, DownloadStatusModule } from 'oarlps';
+import { SidebarComponent, MetricsinfoComponent, MessageBarComponent } from 'oarlps';
+import { AppConfig, NERDmResourceService, NerdmRes, NERDResource, IDNotFound } from 'oarlps';
+import { GlobalService, LandingConstants, CartService, DataCartStatus, CartActions } from 'oarlps';
+import { RecordLevelMetrics, MetricsService, MetricsData, formatBytes } from 'oarlps';
+import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps';
+import { Themes, ThemesPrefs, Collections } from 'oarlps';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -77,7 +55,7 @@ import { UserMessageService, MessageBarComponent } from 'oarlps';
         NoidComponent,
         SidebarComponent,
         MenuComponent,
-        FrameModule
+        MessageBarComponent
     ],
     providers: [
         Title
@@ -250,8 +228,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
-                public lpService: LandingpageService,
-                public msgSvc: UserMessageService)
+                public lpService: LandingpageService)
     {
         // Init the size of landing page body and the help box
         this.updateScreenSize();

@@ -55,6 +55,7 @@ export class AccesspageMidasComponent {
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
     globalsvc = inject(GlobalService);
+    isPublicSite: boolean = false;
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;

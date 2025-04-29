@@ -18,10 +18,14 @@
                 }
 
                 <span style="cursor: pointer;">
-                    <i style="margin-left: 0.5rem;" class="fas"
-                    [ngClass]="{'fa-caret-right': !clickAuthors, 'fa-caret-down': clickAuthors}"
-                    aria-label="Show author details"
-                    (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();"></i>
+                    <i  class="fas expand-btn amplifiable"
+                        [class.amplified]="isMouseOver"
+                        (mouseover)="isMouseOver = true"
+                        (mouseleave)="isMouseOver = false"
+                        [ngClass]="{'fa-caret-right': !clickAuthors, 'fa-caret-down': clickAuthors}"
+                        aria-label="Show author details"
+                        (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();">
+                    </i>
                 </span>
             </div>
             <div [collapse]="!isCollapsedContent" class="card card-block card-header customcard" style="width: fit-content; padding:.5em;">

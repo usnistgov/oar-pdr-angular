@@ -7,8 +7,8 @@
 <div [ngStyle]="{'width': lpsWidth + 'px'}">
     <pdr-message [defSysErrorPrefix]="'There was a problem loading your record.'"></pdr-message>
 </div>
-
-<div style="margin: 20px 40px 20px 0;">
+<!-- <div style="margin: 20px 40px 20px 0;"></div> -->
+<div class="landingcard">
     <div *ngIf="!displaySpecialMessage && _showContent">
         <div *ngIf="md === null" style="width: 100%; text-align: center;">
             <b><i class="fas fa-spinner fa-spin fa-lg"></i> Landing page is loading...</b>

@@ -3,13 +3,13 @@
     [inBrowser]="inBrowser"
     [isEditMode]="isEditMode">
 
-    <ng-template #contentTemplate let-data="col">
+    <ng-template #contentTemplate let-data="data">
         <!-- Control buttons -->
         <!-- Edit button -->
         <button 
-            *ngIf="!editingTopics(col)"
+            *ngIf="!editingTopics(data)"
             class="edit_button" 
-            (click)="startEditing(col)" 
+            (click)="startEditing(data)" 
             aria-label="edit button" 
             ngbTooltip="Edit topics">
 
@@ -18,7 +18,7 @@
 
         <!-- Close edit block -->
         <button 
-            *ngIf="editingTopics(col)" 
+            *ngIf="editingTopics(data)" 
             class="edit_button" 
             type="button" 
             [disabled]="dataChanged" 
@@ -30,8 +30,8 @@
         </button>
 
         <!-- Restore original -->
-        <button *ngIf="updated(col)" class="edit_button" type="button"
-        (click)="restoreOriginal(col)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
+        <button *ngIf="updated(data)" class="edit_button" type="button"
+        (click)="restoreOriginal(data)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
             <i class="faa faa-undo fs-sm"></i>
         </button>     
     </ng-template>

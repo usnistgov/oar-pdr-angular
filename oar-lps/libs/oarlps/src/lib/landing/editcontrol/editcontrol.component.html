@@ -1,6 +1,6 @@
 <!-- Edit Control button bar -->
 <div class="edit-control-buttons science-theme-background" *ngIf="_editMode != EDIT_MODES.VIEWONLY_MODE" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')'}">
-    <div *ngIf="screenWidth > screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE" style="color: white; text-align: right; margin: 0em .5em 0em 3em; padding: .4em .5em .4em .5em; font-size: 20px; font-weight:bolder !important;">
+    <div *ngIf="screenWidth > screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE" id="current-mode">
         <span *ngIf="message" style="margin-left: 1em;margin-right: 1em;font-size:12px">{{message}}</span>
         <span *ngIf="message" style="border: 1px solid white; color: white;cursor: pointer;" (click)="message=''"><i class="fas fa-times"></i></span>
         {{currentMode}}
@@ -206,7 +206,10 @@
 </div>
 
 <!-- status message bar -->
-<pdr-edit-status [(mdrec)]="mdrec"></pdr-edit-status>
+ <div id="statusbar">
+    <pdr-edit-status [(mdrec)]="mdrec"></pdr-edit-status>
+ </div>
+
 
 <!-- error messages go here -->
 <!-- <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message> -->

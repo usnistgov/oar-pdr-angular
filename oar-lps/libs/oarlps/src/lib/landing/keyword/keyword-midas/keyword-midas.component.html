@@ -55,11 +55,19 @@
 
         <!-- Keywords in edit mode -->
         @if(isEditing && isEditMode){
-            <div style="width:100%">
+            <div style="width:100%" >
                 <!-- Editing -->
                 @if(isEditing) {
-                    <div style="max-width: 100%;margin-right: 3px;">
-                        <p-chips #keyword [(ngModel)]="keywords" (onAdd)="onAdd($event)" (onRemove)="onRemove()" addOnBlur="true" separator="," class="p-fluid" placeholder="Add keywords"></p-chips>
+                    <div style="max-width: 100%;margin-right: 3px;" >
+                        <p-chips 
+                            #keyword [(ngModel)]="keywords" 
+                            (onAdd)="onAdd($event)" 
+                            (onRemove)="onRemove()" 
+                            addOnBlur="true" 
+                            separator="," 
+                            class="p-fluid" 
+                            placeholder="Add keywords">
+                        </p-chips>
                     </div>
                 }
                 <!-- nonEditing: only display tags-->

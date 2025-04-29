@@ -14,8 +14,7 @@ import { environment } from '../../environments/environment-impl';
 @NgModule({
     declarations: [
         HeadbarComponent,
-        FootbarComponent,
-        MessageBarComponent
+        FootbarComponent
     ],
     providers: [
         UserMessageService
@@ -24,7 +23,7 @@ import { environment } from '../../environments/environment-impl';
         CommonModule,       // provides template directives
         RouterModule        // allow use of [routerLink]
     ],
-    exports: [ HeadbarComponent, FootbarComponent, MessageBarComponent ]
+    exports: [ HeadbarComponent, FootbarComponent ]
 })
 export class FrameModule {
     public static forRoot(): ModuleWithProviders<FrameModule> {

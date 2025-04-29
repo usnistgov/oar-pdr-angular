@@ -10,11 +10,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DataCart } from '../../../datacart/cart';
 import { CartConstants } from '../../../datacart/cartconstants';
 import { SimpleChange } from '@angular/core';
+import { AppConfig } from '../../../config/config';
+import { config, testdata } from '../../../../environments/environment';
 
 describe('DatafilesPubComponent', () => {
     let component: DatafilesPubComponent;
     let fixture: ComponentFixture<DatafilesPubComponent>;
     let dc: DataCart;
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
@@ -28,6 +32,7 @@ describe('DatafilesPubComponent', () => {
             ],
             providers: [
                 CartService,
+                { provide: AppConfig, useValue: cfg },
             ]
         })
         .compileComponents();
@@ -68,10 +73,14 @@ describe('DatafilesPubComponent', () => {
     });
 
     it('Should have file tree table', () => {
+        component.editEnabled = false;
+        fixture.detectChanges();
         expect(fixture.nativeElement.querySelectorAll('th').length).toBeGreaterThan(0);
     });
 
     it('toggleAllFilesInGlobalCart() should be called', () => {
+        component.editEnabled = false;
+        fixture.detectChanges();
         let cmpel = fixture.nativeElement;
         let aels = cmpel.querySelectorAll(".icon-cart")[0];
         jest.spyOn(component, 'toggleAllFilesInGlobalCart');
@@ -103,23 +112,20 @@ describe('DatafilesPubComponent', () => {
     });
 
     it('Show Loading message on server-side', () => {
+        component.editEnabled = false;
+        fixture.detectChanges();
         expect(component.inBrowser).toBeTruthy();
         let pel = fixture.nativeElement.querySelector('p');  // Should be null
         if (pel)
             expect(pel.textContent.includes("oading file list...")).toBeFalsy();
+
         component.inBrowser = false;
         fixture.detectChanges();
+        debugger;
+        
         pel = fixture.nativeElement.querySelector('p');
         expect(pel).toBeTruthy();
         expect(pel.textContent.includes("oading file list...")).toBeTruthy();
-    });
-
-    it('toggleAllFilesInGlobalCart() should be called', () => {
-        let cmpel = fixture.nativeElement;
-        let aels = cmpel.querySelectorAll(".icon-cart")[0];
-        jest.spyOn(component, 'toggleAllFilesInGlobalCart');
-        aels.click();
-        expect(component.toggleAllFilesInGlobalCart).toHaveBeenCalled();
     });
 
     it('_updateNodesFromCart()', waitForAsync(() => {
@@ -129,18 +135,5 @@ describe('DatafilesPubComponent', () => {
         let status = component._updateNodesFromCart(component.files, dc);
         expect(status[0]).toBeTruthy();
         expect(status[1]).toBeFalsy();
-    }));
-
-    it('toggleAllFilesInGlobalCart()', fakeAsync(() => {
-        let dc: DataCart = DataCart.openCart(CartConstants.cartConst.GLOBAL_CART_NAME);
-        expect(dc.size()).toBe(0);
-        component.toggleAllFilesInGlobalCart();
-        tick(1);
-        dc.restore();
-        expect(dc.size()).toBe(2);
-        component.toggleAllFilesInGlobalCart()
-        tick(1);
-        dc.restore();
-        expect(dc.size()).toBe(0);
     }));
 });

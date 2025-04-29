@@ -361,7 +361,10 @@ export class AccesspageListComponent implements OnInit {
 
                         this.currentApage.dataChanged = false;
                         this.currentOrderChanged = false;
-                        this.record[this.fieldName].dataChanged = false;
+                        
+                        if(this.record[this.fieldName] && this.record[this.fieldName][this.currentApageIndex])
+                            this.record[this.fieldName][this.currentApageIndex].dataChanged = false;
+
                         this.setMode(editmode, refreshHelp);
                     }else{
                         let msg = "Failed to add reference";

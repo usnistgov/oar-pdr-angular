@@ -6,10 +6,12 @@
 
 <!-- edit control panel (visible when editing is enabled) -->
 
-<pdr-edit-control *ngif="!isPublicSite && editEnabled"
-  [inBrowser]="inBrowser"
-  [(mdrec)]="md">
-</pdr-edit-control>
+@if(!isPublicSite && editEnabled){
+    <pdr-edit-control
+      [inBrowser]="inBrowser"
+      [(mdrec)]="md">
+    </pdr-edit-control>
+}
 
 <!-- error messages go here -->
 <div [ngStyle]="{'width': lpsWidth + 'px'}">
@@ -19,7 +21,7 @@
 <!-- status message bar -->
 <!-- <pdr-edit-status [(mdrec)]="md"></pdr-edit-status> -->
 
-<div style="margin: 20px 40px 20px 0;">
+<div class="landingcard">
     <div *ngIf="!displaySpecialMessage && _showContent">
         <div *ngIf="md === null && edstatsvc.authorized && !edstatsvc.hasError">
             <b>Landing page is loading...</b>
@@ -57,7 +59,11 @@
 
         <div *ngIf="_showData">
             <!-- landing page content -->
-            <div #lpscontent class="landing-body" [@togglemain]="{value:mainBodyStatus, params:{lps_width: lpsWidth + 'px'}}" [ngStyle]="{'width': lpsWidth + 'px'}">
+            <div
+              #lpscontent
+              class="landing-body"
+              [@togglemain]="{value:mainBodyStatus, params:{lps_width: lpsWidth + 'px'}}"
+              [ngStyle]="{'width': lpsWidth + 'px'}">
                 <landing-body
                   [md]="md"
                   [inBrowser]="inBrowser"

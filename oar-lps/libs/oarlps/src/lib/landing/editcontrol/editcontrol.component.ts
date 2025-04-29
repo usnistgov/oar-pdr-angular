@@ -643,27 +643,43 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     submitReview() {
-        console.log("Submit for review...")
+        console.log("Submit for review...");
+        // Finalizing
+        this.mdupdsvc.finalize("finalize", "preparing for submission").subscribe(
+            (result) => {
+                //Finalize with no error. Then refresh Nerdm record
+                this.mdupdsvc.loadDraft(true).subscribe((result) => {
+                    //Once Nerdm record refreshed. Suggestions will automatically refreshed as well
+                    //Then display the pop up window
 
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "modal-small",
-            size: 'lg'
-        };
-
-        this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
-        this.modalRef.componentInstance.submitResponse = this.submitResponse;
-        // this.modalRef.componentInstance.zipData = this.zipData;
-        // this.modalRef.componentInstance.totalFiles = blob.filesCount;
-        this.modalRef.componentInstance.returnValue.subscribe((returnValue) => {
-            if ( returnValue ) {
-                console.log("Return value", returnValue);
-            }else{
-                console.log("User canceled submit.");
+                    let ngbModalOptions: NgbModalOptions = {
+                        backdrop: 'static',
+                        keyboard: false,
+                        windowClass: "modal-small",
+                        size: 'lg'
+                    };
+            
+                    this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
+                    this.modalRef.componentInstance.submitResponse = this.submitResponse;
+                    this.modalRef.componentInstance.returnValue.subscribe(
+                        (submit) => {
+                            if ( submit ) {
+                                console.log("Return value", submit);
+                                // DBIO Web Service Action:  PATCH /dap/mds3/id/status    
+                                // with input: { "action": "submit" }
+                                this.mdupdsvc.finalize("submit").subscribe((result) => {
+                                    console.log(result)
+                                })
+                            }else{
+                                console.log("User canceled submit.");//Do nothing
+                            }
+                        }, 
+                        (reason) => {
+                            console.log("User canceled submit.");//Do nothing
+                        }
+                    );
+                })
             }
-        }, (reason) => {
-            console.log("User canceled submit.");
-        });
+        )
     }
 }

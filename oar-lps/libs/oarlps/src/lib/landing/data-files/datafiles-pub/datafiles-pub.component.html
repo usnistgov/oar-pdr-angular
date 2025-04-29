@@ -2,11 +2,22 @@
 <!-- <div id="filelisting"> -->
     <div id="filelisting" *ngIf="displayMode != 'restrict_preview'" [ngClass]="displayMode == 'restrict' ? 'restrict-public' : ''">
         <div *ngIf="displayMode == 'restrict'">Note:  This dataset is designated as restricted public data; this file list will not be shown in the public version of this page.</div>
-    
+
+        <div *ngIf="!inBrowser">
+            <div>
+                <b>Files </b>
+            </div>
+            <p>
+                <i class="fas fa-spinner fa-spin"></i> Loading file list...
+            </p>
+        </div>
+
         <!-- Display 'Download all' and 'Add all to cart' buttons and other info -->
-        <!-- <div *ngIf="(files && files.length  > 0)"> -->
-            @defer(when inBrowser && filesReady) {
+            <!-- <div *ngIf="(files && files.length  > 0)"> -->
+            
+            <!-- @defer(when inBrowser && filesReady) { -->
             <!-- <div *ngIf="inBrowser; else filesLoading"> -->
+            <div *ngIf="(inBrowser && filesReady);else loading">
                 <div class="flex-container" style="margin-top: 2em;">
                     <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
                     @if(editEnabled == true) {
@@ -27,7 +38,7 @@
                         <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
                             <span><b id="filelist-heading">Files </b> </span>
                             <a class="fa-stack fa-lg icon-download" style="width: 30px;"
-                                (click)="downloadAllFiles()" aria-label="Download all" ngbTooltip="Download all from data cart"
+                                (click)="downloadAllFiles()" aria-label="Download all" [ngbTooltip]="downloadAllTooltip"
                                 [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
                                 <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                                 <i *ngIf="!isAddingToDownloadAllCart; else show_spinner1" 
@@ -40,7 +51,7 @@
                             <span class="fa-stack fa-lg icon-cart" style="width: 30px;"
                                 (click)="toggleAllFilesInGlobalCart(files)"
                                 [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',
-                                'margin-right': '0em'}" [aria-label]="getCartProcessTooltip()" [ngbTooltip]="getCartProcessTooltip()">
+                                'margin-right': '0em'}" [aria-label]="cartProcessTooltip" [ngbTooltip]="cartProcessTooltip">
                                 <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                                 <i *ngIf="!isTogglingAllInGlobalCart; else show_spinner" 
                                     class="fas fa-cart-plus fa-stack-1x fa-xs" aria-hidden="true"></i>
@@ -55,8 +66,30 @@
                             details.</span>
                     </div>
                     <div class="grey-color" style="flex-grow: 2; text-align: right;padding-top: 0.8em;">
-                        Total No. files: {{ fileCount }}
+                        Total No. files: 
+                        <span 
+                        [ngStyle]="{color: fileCountColor}"
+                        (click)="showBulkDesc = !showBulkDesc"
+                        style="cursor:pointer">
+                        {{ fileCount }}
+                        <!-- Info button -->
+                        <i *ngIf="largeDataset"
+                            class="faa faa-info-circle" 
+                            title="Large dataset" 
+                            style="margin-left: 10px;"></i> 
+                    </span>
                     </div>
+                </div>
+                <!-- Expandable description of bulk downloading -->
+                <div [@detailExpand]="showBulkDesc ? 'expanded' : 'collapsed'"
+                    style="width: 100%; text-align: right;background-color: rgb(254, 250, 219);padding-right: 10px;" 
+                    *ngIf="largeDataset">
+                    This dataset is very large. So we have built a special area for accessing it. See our  
+                    <a href="{{bulkDownloadURL}}" target="_blank">
+                        <i class="faa faa-hand-o-right"></i>
+                        <span style="text-decoration: underline; margin-left: 5px;">dedicated page</span> 
+                    </a>
+                    for downloaing large data.
                 </div>
     
                 <!-- Display tree table -->
@@ -170,15 +203,7 @@
                 <ng-content select=".controls"></ng-content>
 
             <!-- </div> -->
-            }
-            @placeholder {
-                <div>
-                    <b>Files </b>
-                </div>
-                <p>
-                    <i class="fas fa-spinner fa-spin"></i> Loading file list...
-                </p>
-            }
+
             <!-- <ng-template #filesLoading> -->
             <!-- </ng-template> -->
         <!-- </div> -->

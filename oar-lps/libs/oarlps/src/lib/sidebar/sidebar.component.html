@@ -13,69 +13,20 @@
     </div>
 
     <div style="background-color: rgb(231, 231, 231); text-align: center;padding: 2px;">
-        <div *ngIf="!hasRequiredItems && !hasRecommendedItems && !hasNiceToHaveItems; else nextSteps">
+        <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
             {{msgCompleted}}
         </div>
         <ng-template #nextSteps>
             Next Steps:
         </ng-template>
     </div>
-    <div *ngIf="isTestData" style="margin: 10px;">
-         <div *ngIf="hasRequiredItems"> 
-            <div class="subtitle">
-                <span style="margin-right: 5px;">&#8226;</span>
-                Required:
-                <i class="fas expand-btn"
-                    [ngClass]="{'fa-caret-right': !showRequired, 'fa-caret-down': showRequired}"
-                    aria-label="Show required steps"
-                    (click)="showRequired = !showRequired;"></i>
-            </div>
-            <div class="steps" [@requiredExpand]="showRequired ? 'expanded' : 'collapsed'">
-                <div *ngFor="let section of submitResponse.validation.failures" (click)="gotoSection(section.target)"class="stepitem">
-                    <i>{{section.title}} - {{section.description}}</i>
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="hasRecommendedItems"> 
-            <div class="subtitle">
-                <span style="margin-right: 5px;">&#8226;</span>
-                Recommended:
-                <i class="fas expand-btn"
-                [ngClass]="{'fa-caret-right': !showRecommeded, 'fa-caret-down': showRecommeded}"
-                aria-label="Show recommended steps"
-                (click)="showRecommeded = !showRecommeded;"></i>
-            </div>
-            <div class="steps" [@requiredExpand]="showRecommeded ? 'expanded' : 'collapsed'">
-                <div *ngFor="let section of submitResponse.validation.warnings; let i = index" (click)="gotoSection(section.target)" class="stepitem">
-                    <i>{{section.title}} - {{section.description}}</i>
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="hasNiceToHaveItems"> 
-            <div class="subtitle">
-                <span style="margin-right: 5px;">&#8226;</span>
-                Nice to have:
-                <i class="fas expand-btn"
-                [ngClass]="{'fa-caret-right': !showNiceToHave, 'fa-caret-down': showNiceToHave}"
-                aria-label="Show recommended steps"
-                (click)="showNiceToHave = !showNiceToHave;"></i>
-            </div>
-            <div class="steps" [@requiredExpand]="showNiceToHave ? 'expanded' : 'collapsed'">
-                <div *ngFor="let section of submitResponse.validation.recommendations" (click)="gotoSection(section.target)" class="stepitem">
-                    <i>{{section.title}} - {{section.description}}</i>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- keep this old suggestion for demo purpose -->
     <div *ngIf="!isTestData" style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
 
-        <div *ngIf="(!suggustedSections['required'] || suggustedSections['required'].length == 0) 
-            && (!suggustedSections['recommended'] || suggustedSections['recommended'].length == 0) 
-            && (!suggustedSections['niceToHave'] || suggustedSections['niceToHave'].length == 0)">
+        <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
+            && (!suggestions['warn'] || suggestions['warn'].length == 0) 
+            && (!suggestions['rec'] || suggestions['rec'].length == 0)">
             {{msgCompleted}}
         </div>
         <!-- <ng-template #nextSteps>
@@ -83,31 +34,31 @@
         </ng-template> -->
         
 
-        <div *ngIf="suggustedSections['required'] && suggustedSections['required'].length > 0"> 
-            <div class="subtitle"><span style="margin-right: 5px;">&#8226;</span>Required:</div>
-            <div class="steps">
-                <div *ngFor="let section of suggustedSections['required']" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
-                    <i>Add {{section}}</i>
-                </div>
-            </div>
+        <div *ngIf="hasRequiredItems"> 
+            <suggestions 
+                suggestionLabel="Required"
+                [suggestions]="suggestions['req']"
+                showSug="true"
+                (gotoSectionName)="gotoSection($event)">
+            </suggestions>
         </div>
 
-        <div *ngIf="(!suggustedSections['required'] || suggustedSections['required'].length == 0) && (suggustedSections['recommended'] && suggustedSections['recommended'].length > 0)"> 
-            <div class="subtitle"><span style="margin-right: 5px;">&#8226;</span>Recommended:</div>        
-            <div class="steps">
-                <div *ngFor="let section of suggustedSections['recommended']" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
-                    <i>Add {{section}}</i>
-                </div>
-            </div>
+        <div *ngIf="hasWarnItems"> 
+            <suggestions 
+                suggestionLabel="Warning"
+                [suggestions]="suggestions['warn']"
+                [showSug]="expandWarning"
+                (gotoSectionName)="gotoSection($event)">
+            </suggestions>
         </div>
 
-        <div *ngIf="(!suggustedSections['recommended'] || suggustedSections['recommended'].length == 0) && (!suggustedSections['required'] || suggustedSections['required'].length == 0) && (suggustedSections['niceToHave'] && suggustedSections['niceToHave'].length > 0)"> 
-            <div class="subtitle"><span style="margin-right: 5px;">&#8226;</span>Nice to have:</div>        
-            <div class="steps">
-                <div *ngFor="let section of suggustedSections['niceToHave']" (click)="gotoSection(section)" style="cursor: pointer; color: var(--nist-blue-dark3)">
-                    <i>Add {{section}}</i>
-                </div>
-            </div>        
+        <div *ngIf="hasRecommendedItems"> 
+            <suggestions 
+                suggestionLabel="Recommended"
+                [suggestions]="suggestions['rec']"
+                [showSug]="expandRec"
+                (gotoSectionName)="gotoSection($event)">
+            </suggestions>
         </div>
     </div>
 

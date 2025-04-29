@@ -11,7 +11,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TextEditModule } from '../../../text-edit/text-edit.module';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ChipsModule } from 'primeng/chips';
+import { Chips, ChipsModule } from 'primeng/chips';
 import { ChipModule } from "primeng/chip";
 import { TagModule } from 'primeng/tag';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
@@ -59,6 +59,8 @@ export class KeywordMidasComponent {
     hovered: boolean = false;
     public EDIT_MODES: any = LandingConstants.editModes;
     globalsvc = inject(GlobalService);
+
+    @ViewChild('keyword') public chipsElement: Chips;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
                 private ngbModal: NgbModal, 
@@ -153,6 +155,13 @@ export class KeywordMidasComponent {
     startEditing() {
         this.setMode(MODE.EDIT);
         this.isEditing = true;
+
+        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            if(this.chipsElement) {
+                this.chipsElement.inputViewChild.nativeElement.focus();
+                this.chref.detectChanges();
+            }
+        },0); 
     }
 
     /**

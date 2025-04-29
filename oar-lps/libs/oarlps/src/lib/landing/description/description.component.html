@@ -1,17 +1,15 @@
 <!-- Description header 
   -  Red * only display in edit mode indicating this is a required field
   -->
-<div style="width: 100%;" [ngStyle]="{'max-width': maxWidth+'px'}">
-    <div style="display: table; margin-bottom: 1em;width:100%;">
-        <div class="editable_container" style="width:100%;">
-            <!-- Public site -->
-            @if(isPublicSite) {
-                <div class="for-public" style="width:fit-content; white-space: pre-wrap;padding-left: 0px;">{{description}}</div>
-            }
-            <!-- Editable -->
-            @else {
-                <desc-edit [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></desc-edit>
-            }
-        </div>
-    </div>
+<div class="editable_container" style="width: 100%; margin-bottom: 1em;" [ngStyle]="{'max-width': maxWidth+'px'}" >
+    <!-- <div class="editable_container" style="width:100%;"> -->
+        <!-- Public site -->
+        @if(isPublicSite) {
+            <div class="for-public" style="width:fit-content; white-space: pre-wrap;padding-left: 0px;">{{description}}</div>
+        }
+        <!-- Editable -->
+        @else {
+            <desc-edit [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></desc-edit>
+        }
+    <!-- </div> -->
 </div>

@@ -1,0 +1,25 @@
+<div class="subtitle">
+    <span style="margin-right: 5px;">
+        &#8226;
+    </span>
+    {{suggestionLabel}}:
+    <i class="fas expand-btn amplifiable"
+       [class.amplified]="isMouseOver"
+       (mouseover)="isMouseOver = true"
+       (mouseleave)="isMouseOver = false"
+       [ngClass]="{'fa-caret-right': !showSuggestions, 'fa-caret-down': showSuggestions}"
+       aria-label="Show warning steps"
+       (click)="showSuggestions = !showSuggestions;">
+    </i>
+</div>
+
+<div class="steps" [@suggestionExpand]="showSuggestions ? 'expanded' : 'collapsed'">
+    <div *ngFor="let suggestion of suggestions">
+        <!-- <i>{{section.summary}}</i> -->
+        <suggestion-details 
+            [suggestion]="suggestion"
+            [textOnly]="textOnly"
+            (gotoSectionName)="gotoSection($event)">
+        </suggestion-details>
+    </div>
+</div>

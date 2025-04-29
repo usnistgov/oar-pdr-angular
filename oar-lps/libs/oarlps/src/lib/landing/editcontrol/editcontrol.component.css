@@ -2,6 +2,8 @@
     background-color: #153971;
     color: #FFFFFF; 
     height: 100px;
+    padding-left: 4em; 
+    padding-right: 4em;
 }
 
 .science-theme-background {
@@ -123,7 +125,7 @@
 }
 
 #ec-info-btn {
-    margin: 10px 1em auto 0.2em;
+    margin: 10px 0em auto 0.2em;
     font-size: 30px;
     cursor: pointer;
     float: right;
@@ -241,4 +243,17 @@ a:link, a:visited, a:hover, a:active {
     width: 100%;
     background-size: cover;
     background-position-y: 25%;
+}
+
+#statusbar {
+    padding-right: 4em;
+}
+
+#current-mode {
+    color: white; 
+    text-align: right; 
+    margin-left: 3em; 
+    padding: .4em 0em .4em .5em; 
+    font-size: 20px; 
+    font-weight:bolder !important;
 }

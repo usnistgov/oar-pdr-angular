@@ -4,34 +4,18 @@ import {
 } from '@angular/core';
 import { enableProdMode } from '@angular/core';
 import { ErrorHandler } from '@angular/core';
-import { HttpClientModule} from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
-import { CommonModule, DatePipe } from '@angular/common';
-import { ToastrModule } from 'ngx-toastr';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { DatePipe } from '@angular/common';
 import { AppComponent } from './app.component';
-// import { LandingPageModule } from './landing/landingpage.module';
 import { LandingPageComponent } from './landing/landingpage.component';
-import { LandingAboutComponent } from 'oarlps';
-import { SharedModule } from 'oarlps';
-import { ErrorsModule, AppErrorHandler } from 'oarlps';
-import { DirectivesModule } from 'oarlps';
-import { GoogleAnalyticsService} from "oarlps";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
-import { OARLPSModule } from 'oarlps';
 import { environment } from '../environments/environment-impl';
-// import { NerdmModule } from 'oarlps';
-import { DAPModule } from 'oarlps';
-import { ConfigModule } from 'oarlps';
-// import { FrameModule } from 'oarng';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
-import { EditControlModule } from 'oarlps';
-// import { MetadataUpdateService } from 'oarlps';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
-import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng';
+import { OARLPSModule, ConfigModule, EditControlModule, UserMessageService,
+         GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
+ } from 'oarlps';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -76,6 +60,7 @@ enableProdMode();
         },
         GoogleAnalyticsService,
         DatePipe,
+        UserMessageService,
         // fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

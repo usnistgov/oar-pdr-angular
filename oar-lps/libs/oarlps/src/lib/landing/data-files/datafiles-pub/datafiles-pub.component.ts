@@ -1,8 +1,6 @@
 import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { CartService } from '../../../datacart/cart.service';
-import { AppConfig } from '../../../config/config';
-import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { NerdmRes, NerdmComp } from '../../../nerdm/nerdm';
 import { DataCart, DataCartItem } from '../../../datacart/cart';
 import { DownloadStatus } from '../../../datacart/cartconstants';
@@ -12,11 +10,8 @@ import { EditStatusService } from '../../../landing/editcontrol/editstatus.servi
 import { LandingConstants } from '../../../landing/constants';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { SectionPrefs, Sections } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -24,11 +19,12 @@ import { TreeTableModule } from 'primeng/treetable';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BadgeModule } from 'primeng/badge';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
-import { FrameModule } from '../../../frame/frame.module';
 import { DataFileItem } from '../data-files-to-be-deleted.component';
+import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { BulkConfirmComponent } from '../bulk-confirm/bulk-confirm.component';
+import { AppConfig } from '../../../config/config';
 
 @Component({
     selector: 'lib-datafiles-pub',
@@ -115,6 +111,11 @@ export class DatafilesPubComponent {
     filesReady: boolean = false;
     skipReload: boolean = true;
 
+    modalRef: any; // For bulk download confirm pop up
+    bulkDownloadURL: string = "";
+    downloadableFileLimit: number = 300; // Max number of files downloadable through lps 
+    showBulkDesc: boolean = false;
+
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
         
@@ -123,7 +124,9 @@ export class DatafilesPubComponent {
                 public lpService: LandingpageService, 
                 private msgsvc: UserMessageService,
                 private chref: ChangeDetectorRef,
+                private modalService: NgbModal,
                 public edstatsvc: EditStatusService,
+                private cfg: AppConfig,
                 private ngZone: NgZone)
     {
         this.cols = [
@@ -144,6 +147,8 @@ export class DatafilesPubComponent {
     }
 
     ngOnInit() {
+        this.downloadableFileLimit = +this.cfg.get("downloadableFileLimit", "300");
+
         this.EDIT_MODES = LandingConstants.editModes;
 
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
@@ -196,6 +201,23 @@ export class DatafilesPubComponent {
         else return "File Manager URL is not available."
     }
 
+    /**
+     * Text color of file counts. Red for large dataset. Black for normal dataset.
+     */
+    get fileCountColor() {
+        if(this.largeDataset)
+            return "red";
+        else    
+            return "color:rgb(107, 107, 107)";
+    }
+
+    get downloadAllTooltip() {
+        if(this.largeDataset)
+            return "Bulk download from dedicated page";
+        else 
+            return "Download all from data cart";
+    } 
+
     ngOnChanges(ch: SimpleChanges) {
         if (this.record && ch.record){
             if(!this.skipReload)
@@ -208,7 +230,11 @@ export class DatafilesPubComponent {
     }
 
     useMetadata() {
-        this.ediid = this.record['ediid']
+        this.ediid = this.record['ediid'];
+
+        if(this.ediid)
+            this.bulkDownloadURL = '/bulkdownload/' + this.ediid.replace('ark:/88434/', '');
+
         this.buildTree(this.record['components']);
         this.edstatsvc.setShowLPContent(true);
     }
@@ -272,8 +298,10 @@ export class DatafilesPubComponent {
      * 3. "@type" must end with "File".
      */
     buildTree(comps: NerdmComp[]) : void {
-        if (! this.record['components'])
+        if (! this.record['components']){
+            this.filesReady = true;
             return;
+        }
 
         let makeNodeData = (name: string, parentKey: string, comp: NerdmComp, isLeaf: boolean = false) => {
             let key = (parentKey) ? parentKey + '/' + name : name;
@@ -603,50 +631,64 @@ export class DatafilesPubComponent {
         return true;
     }
 
+    get largeDataset() {
+        return this.fileCount > this.downloadableFileLimit;
+    }
+
     /** 
-     * Either add/remove all files to/from the global data cart.  This responds to the user clicking 
+     * If this is a large dataset (number of files exceeds the limit), do bulk download.
+     * Otherwise, either add/remove all files to/from the global data cart.  This responds to the user clicking 
      * on the "add all to cart" icon.  If all files are already in the cart, all files will be removed;
      * otherwise, all not in the cart will be added.
      */
     toggleAllFilesInGlobalCart() : void {
-        if (! this.globalDataCart) return;
-        this.isTogglingAllInGlobalCart = true;
-        setTimeout(() => {
-            if (this.allInCart) {
-                this.globalDataCart.removeMatchingFiles(this.ediid, '', false);
-                this.allInCart = false;
-            }
-            else {
-                for (let child of this.files) 
-                    this._addAllWithinToCart(child, this.globalDataCart, false);
-                this.allInCart = true;
-            }
-            this.globalDataCart.save();
-            this.isTogglingAllInGlobalCart = false;
-        }, 0);
+        if(this.largeDataset) {
+            this.bulkDownloadConfirm();
+        }else{        
+            if (! this.globalDataCart) return;
+            this.isTogglingAllInGlobalCart = true;
+            setTimeout(() => {
+                if (this.allInCart) {
+                    this.globalDataCart.removeMatchingFiles(this.ediid, '', false);
+                    this.allInCart = false;
+                }
+                else {
+                    for (let child of this.files) 
+                        this._addAllWithinToCart(child, this.globalDataCart, false);
+                    this.allInCart = true;
+                }
+                this.globalDataCart.save();
+                this.isTogglingAllInGlobalCart = false;
+            }, 0);
+        }
     }
 
     /**
-     * open up an exclusive cart and start to download all files from this dataset.  This
+     * If this is a large dataset (number of files exceeds the limit), do bulk download.
+     * Otherwise, open up an exclusive cart and start to download all files from this dataset.  This
      * responds to the user clicking on the download-all icon.  
      */
     downloadAllFiles() {
-        let cartName : string = this.ediid;
-        if (cartName.startsWith("ark:/"))
-            cartName = cartName.replace(/^ark:\/\d+\//, '');
-        let downloadAllCart = this.cartService.getCart(cartName);
-        downloadAllCart.setDisplayName(this.record['title'], false);
-        this.isAddingToDownloadAllCart = true;
-        this.dlStatus.emit("downloading"); // for reseting metrics refresh flag
-        
-        setTimeout(() => {
-            for (let child of this.files) 
-                this._addAllWithinToCart(child, downloadAllCart, true);
+        if(this.largeDataset) {
+            this.bulkDownloadConfirm();
+        }else{
+            let cartName : string = this.ediid;
+            if (cartName.startsWith("ark:/"))
+                cartName = cartName.replace(/^ark:\/\d+\//, '');
+            let downloadAllCart = this.cartService.getCart(cartName);
+            downloadAllCart.setDisplayName(this.record['title'], false);
+            this.isAddingToDownloadAllCart = true;
+            this.dlStatus.emit("downloading"); // for reseting metrics refresh flag
+            
+            setTimeout(() => {
+                for (let child of this.files) 
+                    this._addAllWithinToCart(child, downloadAllCart, true);
 
-            downloadAllCart.save();
-            this.isAddingToDownloadAllCart = false;
-            window.open('/datacart/'+cartName+'?downloadSelected=true', cartName);
-        }, 0);
+                downloadAllCart.save();
+                this.isAddingToDownloadAllCart = false;
+                window.open('/datacart/'+cartName+'?downloadSelected=true', cartName);
+            }, 0);
+        }
     }
 
     /**
@@ -698,11 +740,15 @@ export class DatafilesPubComponent {
     /**
      * Return tooltip text based on select status
      */
-    getCartProcessTooltip() {
-        if (this.allInCart)
-            return 'Remove all from cart';
-        else
-            return 'Add all to cart';
+    get cartProcessTooltip() {
+        if(this.largeDataset) {
+            return "Bulk download from dedicated page";
+        }else {
+            if (this.allInCart)
+                return 'Remove all from cart';
+            else
+                return 'Add all to cart';
+        }
     }
 
     /**
@@ -802,4 +848,36 @@ export class DatafilesPubComponent {
         }, 2000);
 
     }
+
+    /**
+     * Popup dialog to confirm bulk download.
+     */
+    bulkDownloadConfirm() {
+        if(this.bulkDownloadURL == "") {
+            console.error("Bulk download URL is not available.");
+            return;
+        }
+
+        let ngbModalOptions: NgbModalOptions = {
+            backdrop: 'static',
+            keyboard: false,
+            windowClass: "modal-small",
+            size: 'lg'
+        };
+
+        this.modalRef = this.modalService.open(BulkConfirmComponent, ngbModalOptions);
+        this.modalRef.componentInstance.returnValue.subscribe(
+            (submit) => {
+                if ( submit ) {
+                    console.log("Return value", submit);
+                    window.open(this.bulkDownloadURL, "_blank");
+                }else{
+                    console.log("User canceled submit.");//Do nothing
+                }
+            }, 
+            (reason) => {
+                console.log("User canceled submit.");//Do nothing
+            }
+        );
+    }    
 }

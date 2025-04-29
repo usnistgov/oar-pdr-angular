@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { Themes, ThemesPrefs, Collections } from '../../shared/globals/globals';
 import { NerdmRes } from '../../nerdm/nerdm';
@@ -60,6 +60,7 @@ export class MenuComponent implements OnInit {
     recordType: string = "";
     scienceTheme = Themes.SCIENCE_THEME;
     inBrowser: boolean = false;
+    bulkDownloadURL: string;
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -85,6 +86,9 @@ export class MenuComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        if(this.record)
+            this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
+
         this.allCollections = this.collectionService.loadAllCollections();
 
         this.setColor();
@@ -94,6 +98,11 @@ export class MenuComponent implements OnInit {
         this.buildMenu();
     }
 
+    ngOnChanges(ch: SimpleChanges) {
+        if (this.record && ch.record)
+            this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
+    }
+    
     buildMenu() {
         this.gotoMenu.push(new menuItem("Go To...", "", "", this.defaultColor, true));
         this.gotoMenu.push(new menuItem("Top", "top", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
@@ -106,6 +115,7 @@ export class MenuComponent implements OnInit {
         this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, "faa faa-angle-double-right"));
         this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, "faa faa-external-link"));
         this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, "faa faa-cart-plus"));
+        this.useMenu.push(new menuItem("Bulk Download", "bulk", "", this.lighterColor, false, "faa faa-download"));
 
         let searchbase = this.cfg.get("links.pdrSearch","/sdp/");
         if (searchbase.slice(-1) != '/') searchbase += "/";
@@ -227,6 +237,10 @@ export class MenuComponent implements OnInit {
                 this.toggleCitation();
                 break; 
             } 
+            case "bulk": { 
+                this.bulkdownload();
+                break; 
+            } 
             case "": { 
                 if(url)
                     window.open(url,'_blank');
@@ -239,4 +253,11 @@ export class MenuComponent implements OnInit {
          } 
         
     }    
+
+    /**
+     * Open bulk download page in a separated tab.
+     */
+    bulkdownload() {
+        window.open(this.bulkDownloadURL, "_blank");  
+    }
 }

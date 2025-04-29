@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { AccesspagePubComponent } from './accesspage-pub.component';
 
 describe('AccesspagePubComponent', () => {
@@ -8,7 +8,8 @@ describe('AccesspagePubComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AccesspagePubComponent]
+      imports: [AccesspagePubComponent],
+      providers: [ GoogleAnalyticsService ]
     })
     .compileComponents();
 

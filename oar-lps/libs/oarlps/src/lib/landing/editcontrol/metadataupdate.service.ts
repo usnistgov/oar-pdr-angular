@@ -2,7 +2,6 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
-
 import { UserMessageService } from '../../frame/usermessage.service';
 import { CustomizationService } from './customization.service';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
@@ -14,6 +13,8 @@ import { AuthService } from './auth.service';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from './editstatus.service';
 import { AuthenticationService, Credentials, StaffDirectoryService } from 'oarng';
+import { LandingpageService } from '../landingpage.service';
+import { ReviewResponse } from '../../shared/globals/globals';
 
 /**
  * a service that receives updates to the resource metadata from update widgets.
@@ -36,7 +37,8 @@ import { AuthenticationService, Credentials, StaffDirectoryService } from 'oarng
 export class MetadataUpdateService {
 
     private mdres: Subject<NerdmRes> = new Subject<NerdmRes>();
-    private dapUpdtSvc: DAPUpdateService = null;
+    // private dapUpdtSvc: DAPUpdateService = null;
+    private dapUpdtSvc: MIDASDAPUpdateService = null;
     private originalDraftRec: NerdmRes = null;  //
     private currentRec: NerdmRes = null;    //Current saved record
     private origfields: {} = {};   // keeps track of orginal metadata so that they can be undone
@@ -52,7 +54,8 @@ export class MetadataUpdateService {
     }
 
     private _fileManagerUrl: BehaviorSubject<string> = new BehaviorSubject<string>("");
-    
+    suggestions: ReviewResponse = {} as ReviewResponse;
+
     /**
      * Set the number of files downloaded
      * @param fileDownloadedCount 
@@ -99,7 +102,8 @@ export class MetadataUpdateService {
                 protected dapsvc: DAPService,
                 private datePipe: DatePipe,
                 protected authsvc?: AuthenticationService,
-                protected staffsvc?: StaffDirectoryService) 
+                protected staffsvc?: StaffDirectoryService,
+                public lpService?: LandingpageService ) 
     { 
         this.EDIT_MODES = LandingConstants.editModes;
 
@@ -152,7 +156,7 @@ export class MetadataUpdateService {
             tap((recsvc) => {
                 if (! recsvc.canEdit())
                     throw new daperrs.NotAuthorizedError(recid, "write");
-                this.dapUpdtSvc = recsvc;
+                this.dapUpdtSvc = recsvc as MIDASDAPUpdateService;
                 
                 let rec = this.dapUpdtSvc.getRecord()
                 if (rec.status?.modified) 
@@ -302,11 +306,11 @@ export class MetadataUpdateService {
         }
 
         // If no body, remove this field from curent record
-        if(!body) {
-            delete this.currentRec[fieldName];
-            body = JSON.stringify(this.currentRec);
-            updateWholeRecord = true;
-        }
+        // if(!body) {
+        //     delete this.currentRec[fieldName];
+        //     body = JSON.stringify(this.currentRec);
+        //     updateWholeRecord = true;
+        // }
 
         let obs; 
         if (updateWholeRecord) 
@@ -321,7 +325,6 @@ export class MetadataUpdateService {
                 // console.log("###DBG  Draft data returned from server:\n  ", res);
                 this.stampUpdateDate();
                 this.updateInMemoryRec(data, fieldName, id, updateWholeRecord);
-                // this.mdres.next(this.currentRec);
             }),
             map<Object, boolean>((data) => {
                 return true;
@@ -820,10 +823,13 @@ export class MetadataUpdateService {
      */
     public validate(): Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to update without authorization!  Ignoring validate.");
+            console.error("Attempted to validate without authorization!  Ignoring validate.");
             return of({});
         }
-        return this.dapUpdtSvc.validate().pipe(
+        return this.dapUpdtSvc.review().pipe(
+            tap((suggestions) => {
+                this.suggestions = suggestions as ReviewResponse;
+            }),
             catchError((err) => {
                 console.error("err", err);
                 console.error("Failed to validate: server error:" + err.message);
@@ -831,6 +837,42 @@ export class MetadataUpdateService {
                 return of(null);
             }));
     }      
+
+    /**
+     * Validate the status from backend
+     */
+    public finalize(action: string="finalize", message: string = ""): Observable<Object> {
+        if (!this.dapUpdtSvc) {
+            console.error("Attempted to finalize without authorization!  Ignoring finalize.");
+            return of({});
+        }
+        return this.dapUpdtSvc.finalize(action, message).pipe(
+            tap((status) => {
+                //Do nothing to the return message for now. Just proceed.
+            }),
+            catchError((err) => {
+                console.error("err", err);
+                console.error("Failed to finalize: server error:" + err.message);
+                this.msgsvc.syserror(err.message);
+                return of(null);
+            }));
+    }   
+
+    public hasRequiredItems() {
+        return this.suggestions && this.suggestions.req &&  this.suggestions.req.length > 0;
+    }
+
+    public hasWarnItems() {
+        return this.suggestions && this.suggestions.warn &&  this.suggestions.warn.length > 0;
+    }
+
+    public hasRecommendedItems() {
+        return this.suggestions && this.suggestions.rec &&  this.suggestions.rec.length > 0;
+    }
+
+    public getSuggestions(): ReviewResponse {
+        return this.suggestions;
+    }
 
     /*
      * NOT USED

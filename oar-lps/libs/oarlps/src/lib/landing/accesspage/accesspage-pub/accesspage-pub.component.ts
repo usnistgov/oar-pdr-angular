@@ -6,7 +6,7 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { Themes } from '../../../shared/globals/globals';
-
+import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 
 @Component({
     selector: 'accesspage-pub',
@@ -37,8 +37,9 @@ export class AccesspagePubComponent {
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
+    @Input() isPublicSite: boolean = true;
     
-    constructor( 
+    constructor( private gaService: GoogleAnalyticsService,
         public globalsvc: GlobalService,
         private chref: ChangeDetectorRef ) {
         
@@ -94,5 +95,15 @@ export class AccesspagePubComponent {
      */
     getStyle(){
         return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
+    }    
+
+    /**
+     * Google Analytics track event
+     * @param url - URL that user visit
+     * @param event - action event
+     * @param title - action title
+     */
+    googleAnalytics(url: string, event, title) {
+        this.gaService.gaTrackEvent('accesspage', event, title, url);
     }    
 }

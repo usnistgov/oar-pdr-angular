@@ -5,15 +5,15 @@
     style="width: 17px;" ngbTooltip="People lookup">
 
     <p-autoComplete 
-    styleClass="autocomplete"
-    [placeholder]="placeHolderText"
-    [(ngModel)]="selectedSuggestion" 
-    [suggestions]="suggestions" 
-    (completeMethod)="set_suggestions($event)"
-    (onSelect)="getFullRecord($event)"
-    field="display"
-    inputId="person"
-    appendTo="body"
-    id="searchicon"
-/>
+        styleClass="autocomplete"
+        [placeholder]="placeHolderText"
+        [(ngModel)]="selectedSuggestion" 
+        [suggestions]="suggestions" 
+        (completeMethod)="set_suggestions($event)"
+        (onSelect)="getFullRecord($event)"
+        field="display"
+        inputId="person"
+        appendTo="body"
+        id="searchicon"
+    />
 </div>

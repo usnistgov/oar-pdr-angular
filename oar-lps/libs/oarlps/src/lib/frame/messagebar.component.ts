@@ -1,5 +1,6 @@
 import { Component, Optional, Input } from '@angular/core';
 import { UserMessageService, Message } from './usermessage.service';
+import { CommonModule } from '@angular/common';
 
 /**
  * A Component that can receive and display messages.
@@ -11,6 +12,8 @@ import { UserMessageService, Message } from './usermessage.service';
  */
 @Component({
     selector: 'pdr-message',
+    standalone: true,
+    imports: [CommonModule],
     templateUrl: 'messagebar.component.html',
     styleUrls: [ 'messagebar.component.css'   ]
 })

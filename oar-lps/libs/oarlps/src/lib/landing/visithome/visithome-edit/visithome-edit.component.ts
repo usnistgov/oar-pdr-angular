@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { LandingpageService } from '../../landingpage.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 
 @Component({
   selector: 'lib-visithome-edit',
@@ -25,17 +27,32 @@ export class VisithomeEditComponent implements OnInit {
     @Input() editMode: string;
     @Input() dataChanged: boolean = false;
     @Input() updated: boolean = false;
+    @Input() startEditing: boolean = false;
     @Input() backgroundColor: string = 'var(--editable)';
     @Output() dataChangedOutput: EventEmitter<any> = new EventEmitter();
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
-    constructor() { }
+    @ViewChild('url') urlElement: ElementRef;
+    
+    constructor(private chref: ChangeDetectorRef) { }
 
     ngOnInit(): void {
         this.originalURL = this.visitHomeURL;
 
         if(this.originalURL == null || this.originalURL == undefined)
             this.originalURL = "Not available.";
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes.startEditing) {
+            setTimeout(()=>{ // this will make the execution after the above boolean has changed
+                if(this.urlElement) {
+                    const textArea = this.urlElement.nativeElement as HTMLTextAreaElement;
+                    textArea.focus();
+                    this.chref.detectChanges();
+                }
+            },0); 
+        }
     }
 
     /*

@@ -588,3 +588,18 @@ a:visited {
     margin-left: -10px;
     margin-right: 6px;
 }
+
+.amplifiable {
+    transition: transform 0.2s ease-in-out;
+}
+
+.amplified {
+    transform: scale(3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.expand-btn {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    color: var(--nist-blue-dark3);
+}

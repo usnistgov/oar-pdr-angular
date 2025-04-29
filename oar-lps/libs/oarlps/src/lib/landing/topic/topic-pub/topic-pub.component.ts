@@ -18,6 +18,7 @@ import { CollectionService } from '../../../shared/collection-service/collection
 export class TopicPubComponent implements AfterContentInit {
     collectionOrder: string[] = [Collections.DEFAULT];
     topics: any = {};
+    newTopics: any = {}; // For using topics field instead of theme
 
     //For display
     topicBreakPoint: number = 5;

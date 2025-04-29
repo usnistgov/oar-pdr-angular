@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChanges, ChangeDetectorRef, effect, inject } from '@angular/core';
+import { Component, Input, SimpleChanges, ChangeDetectorRef, effect, inject, ViewChild, ElementRef } from '@angular/core';
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -38,6 +38,8 @@ export class DescEditComponent {
     placeholder: string = "Please add description here.";
     maxWidth: number = 1000;
     globalsvc = inject(GlobalService);
+    
+    @ViewChild('desc') descElement: ElementRef;
     
     constructor(public mdupdsvc : MetadataUpdateService,  
                 public edstatsvc: EditStatusService,      
@@ -165,6 +167,14 @@ export class DescEditComponent {
     startEditing() {
         this.isEditing = true;
         this.setMode(MODE.EDIT);
+
+        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+            if(this.descElement) {
+                const textArea = this.descElement.nativeElement as HTMLTextAreaElement;
+                textArea.focus();
+                this.chref.detectChanges();
+            }
+        },0);  
     }
 
     /**

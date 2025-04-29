@@ -51,6 +51,7 @@ export class AuthorListComponent implements OnInit {
     placeholder: string = "Enter author data below";
     editBlockStatus: string = 'collapsed';
     orderChanged: boolean = false;
+    originalRecordLoaded: boolean = false;
 
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter author data?" will not display.
     // Default is "normal" mode.
@@ -60,6 +61,7 @@ export class AuthorListComponent implements OnInit {
     @Input() record: any[];
     @Input() forceReset: boolean = false;
     @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
+    @Input() startEditing: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
     
@@ -81,10 +83,7 @@ export class AuthorListComponent implements OnInit {
      }
 
     ngOnInit(): void {
-        this.updateSavedRecord();
-        this.originalRecord = JSON.parse(JSON.stringify(this.record));
-        this.onRecordChanged();
-
+        // this.onRecordChanged();
     }
 
     onSectionModeChanged(sectionMode: SectionMode) {
@@ -113,11 +112,20 @@ export class AuthorListComponent implements OnInit {
             this.updateSavedRecord();
             this.onRecordChanged();
 
+            if(!this.originalRecordLoaded) {
+                this.originalRecord = JSON.parse(JSON.stringify(this.record));
+            }
+            this.originalRecordLoaded = true;
         }
 
         if(changes.forceReset){
             this.orderChanged = false;
             this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
+        }
+
+        if(changes.startEditing){
+            if(!this.record[this.fieldName] || this.record[this.fieldName].length == 0)
+                this.onAdd();
         }
 
         this.chref.detectChanges();
@@ -582,12 +590,11 @@ export class AuthorListComponent implements OnInit {
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-            
+
         switch ( this.editMode ) {
             case MODE.LIST:
                 this.editBlockStatus = 'collapsed';
 
-                // Back to add mode
                 if(refreshHelp){
                     this.refreshHelpText(MODE.LIST);
                 }

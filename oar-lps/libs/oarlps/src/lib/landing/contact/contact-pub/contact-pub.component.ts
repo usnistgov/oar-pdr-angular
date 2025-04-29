@@ -23,7 +23,8 @@ export class ContactPubComponent {
     currentContact: Contact = {} as Contact;
     fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
     overflowStyle: string = 'hidden';
-
+    isMouseOver: boolean = false;
+    
     @Input() record: any[];
     
     constructor(

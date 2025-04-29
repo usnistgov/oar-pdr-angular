@@ -183,6 +183,7 @@ export class TopicMidasComponent implements OnInit {
                 this.selectedTopics.push(topic);
             } 
         }
+
         this.setMode(MODE.EDIT);
     }
 

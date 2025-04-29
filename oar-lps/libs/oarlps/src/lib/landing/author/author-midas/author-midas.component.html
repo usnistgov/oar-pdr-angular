@@ -70,6 +70,7 @@
         <lib-author-list #authorlist 
             [record]="record" 
             [fieldName]="fieldName"
+            [startEditing]="editingStarted"
             (dataChanged)="onAuthorChange($event)" 
             (editmodeOutput)="setChildEditMode($event)">
         </lib-author-list>

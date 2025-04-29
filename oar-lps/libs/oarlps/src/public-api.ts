@@ -17,6 +17,8 @@ export * from './lib/landing/done/done.component';
 
 export * from './lib/landing/editcontrol/auth.service';
 
+export * from './lib/sidebar/sidebar.service';
+
 export * from './lib/landing/editcontrol/metadataupdate.service';
 export * from './lib/landing/editcontrol/editcontrol.module';
 export * from './lib/landing/editcontrol/editstatus.component';
@@ -111,3 +113,8 @@ export * from './lib/landing/citation/citation-popup/citation-popup.component';
 export * from './lib/landing/citation/citation-display/citation-display.component';
 
 export * from './lib/nerdm/dap.module';
+ 
+export * from './lib/frame/messagebar.component';
+export * from './lib/frame/usermessage.service';
+
+export * from './lib/bulk-download/bulk-download.component';

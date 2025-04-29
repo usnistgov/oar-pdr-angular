@@ -164,6 +164,16 @@ export abstract class DAPUpdateService {
      */
     abstract validate() : Observable<Object>;
 
+    /**
+     * review the status of the record and return recommendations
+     */
+    abstract review() : Observable<Object>;
+
+    /**
+     *  Requests the record to be “finalized”
+     */
+    abstract finalize(): Observable<Object>;
+
 }
 
 /**
@@ -248,6 +258,7 @@ export class MIDASDAPService extends DAPService implements SupportsAuthenticatio
         if (! url.endsWith('/')) url += '/';
         url += ediid + "/acls/write/:user";
         console.log("Authentication request url: ", url);
+        console.log("Authentication request hdrs: ", JSON.stringify(hdrs));
   
         return this.webclient.get(url, {headers: hdrs}).pipe() as Observable<any>;
     }
@@ -692,6 +703,27 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
 
         return this.webclient.put(url, body, {headers: hdrs, responseType: "json"});
     }
+
+    /**
+     * review and validate the status of the record and return recommendations
+     */
+    review(message : string = "") : Observable<Object> {
+        const url = this.endpoint + this.recid + "/status/todo";
+        const hdrs = _headersFor(this, "get");
+
+        return this.webclient.get(url, {headers: hdrs, responseType: "json"});
+    }
+
+    finalize(action: string = "finalize", message: string = ""): Observable<Object> {
+        const url = this.endpoint + this.recid + "/status";
+        const hdrs = _headersFor(this, "patch");
+        let body = {
+            "action": action
+        };
+        if (message) body["message"] = message; 
+
+        return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
+    }
 }
 
 /**
@@ -1133,7 +1165,22 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
         return of({
             'REQ': [], 'WARN': [], 'REC': []
         });
-   }
+    }
+
+    /**
+     * review and validate the status of the record and return recommendations
+     */
+    review(message: string = '') : Observable<Object> {
+        return of({
+            'REQ': [], 'WARN': [], 'REC': []
+        });
+    }    
+
+    finalize(action: string='finalize', message: string = ''): Observable<Object> {
+        return of({
+            'REQ': [], 'WARN': [], 'REC': []
+        });
+    }
 }
 
 /**

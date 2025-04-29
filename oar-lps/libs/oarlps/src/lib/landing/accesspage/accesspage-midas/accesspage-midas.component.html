@@ -1,4 +1,4 @@
-<accesspage-pub [record]="record" [theme]="theme">
+<accesspage-pub [record]="record" [theme]="theme" [isPublicSite]="isPublicSite">
     <div class="message" style="margin-right: 10px;">
         @if(isEditMode) {
             Add links to relevant websites including software repositories.
@@ -6,7 +6,7 @@
     </div>
 
     <!-- Control buttons -->
-    <div class="editable_field controls" style="white-space: nowrap;margin-top: .5em;">
+    <div class="controls" style="white-space: nowrap;">
         @if(isEditMode) {
             @if(isNormal) {
                 <!-- Edit button -->

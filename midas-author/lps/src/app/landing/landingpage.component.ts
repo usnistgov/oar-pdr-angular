@@ -1,46 +1,29 @@
 import {
     Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef,
     PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef,
-    effect,
-    inject
+    effect
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
-
-import { AppConfig } from 'oarlps';
-import { NERDmResourceService } from 'oarlps';
-import { EditStatusService } from 'oarlps';
 import { NerdmRes, NERDResource } from 'oarlps';
-import { IDNotFound } from 'oarlps';
-import { MetadataUpdateService } from 'oarlps';
-import { GlobalService, LandingConstants } from 'oarlps';
-import { DataCartStatus } from 'oarlps';
-import { RecordLevelMetrics } from 'oarlps';
-import { MetricsService } from 'oarlps';
-import { formatBytes } from 'oarlps';
-import { LandingBodyComponent } from 'oarlps';
+import { NERDmResourceService, EditStatusService, MetadataUpdateService, GlobalService,
+         MetricsService, LandingConstants, IDNotFound } from 'oarlps';
+import { AppConfig, DataCartStatus, RecordLevelMetrics, formatBytes, CartActions,
+         MetricsData } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { CartActions } from 'oarlps';
-import { MetricsData } from "oarlps";
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
-import { LandingpageService } from 'oarlps';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
-import { EditControlComponent } from 'oarlps';
-import { MenuComponent } from 'oarlps';
-import { CitationPopupComponent } from 'oarlps';
-import { DoneModule } from 'oarlps';
-import { SearchresultModule } from 'oarlps';
-import { SidebarComponent } from 'oarlps';
-import { DownloadStatusModule } from 'oarlps';
-import { MetricsinfoComponent } from 'oarlps';
-import { FrameModule } from 'oarlps';
+import { DownloadStatusModule, SearchresultModule, DoneModule, LandingpageService } from 'oarlps';
+import { MetricsinfoComponent, MessageBarComponent, SidebarComponent, CitationPopupComponent,
+         MenuComponent, EditControlComponent, LandingBodyComponent
+ } from 'oarlps';
 import { AuthenticationService } from 'oarng';
 
 /**
@@ -71,7 +54,7 @@ import { AuthenticationService } from 'oarng';
         MetricsinfoComponent,
         LandingBodyComponent,
         EditControlComponent,
-        FrameModule
+        MessageBarComponent
     ],
     providers: [
         Title
@@ -192,6 +175,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     pageYOffset: number = 0;
     widthForSplitter: number = 60;
     splitterX: number = 1000;
+    gapForSplitter: number = 180;
 
     scrollMaxHeight: number;
     wordMapping: any = wordMapping;
@@ -293,6 +277,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         this.updateHelpContent();
                     }
 
+                    this.globalService.setCurrentRec(this.md);
                     this.showData();
                 }
             );
@@ -905,6 +890,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.setDocumentTitle();
         this.mdupdsvc.cacheMetadata(this.md);
 
+        //For fakebackend use
+        this.globalService.setCurrentRec(this.md);
+
         this.showData();
     }
 
@@ -1043,7 +1031,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }else {
             if(this.sidebarVisible){
               this.helpWidth = window.innerWidth * 0.35;
-              this.lpsWidth = window.innerWidth - this.helpWidth - 140;
+              this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
 
               this.mainBodyStatus = "mainsquished";
 
@@ -1084,7 +1072,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                   if(helpWidth) this.helpWidth = helpWidth;
                   else this.helpWidth = this.helpWidth - diff;
 
-                  this.lpsWidth = window.innerWidth - this.helpWidth - 120;
+                  this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
 
                   this.helpMaxWidth = window.innerWidth / 2;
                   this.sidebarHeight = window.innerHeight - this.topBarHeight - 50;
@@ -1112,7 +1100,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     setLpsWidth() {
       if(this.hideToolMenu){
-          this.lpsWidth = window.innerWidth - this.helpWidth - 160;
+          this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
           this.globalService.setLpsLeftWidth(this.lpsWidth - this.widthForSplitter);
       }else{
           // this.mainBodyStatus = "mainsquished";

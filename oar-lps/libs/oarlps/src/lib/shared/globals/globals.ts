@@ -76,6 +76,18 @@ export class GlobalService {
     } 
 
     /**
+     * Set/get current record 
+     */
+    _currentRec : BehaviorSubject<any> =
+        new BehaviorSubject<any>({});
+    public setCurrentRec(val : any) { 
+        this._currentRec.next(val); 
+    }
+    public watchCurrentRec(subscriber) {
+        this._currentRec.subscribe(subscriber);
+    } 
+
+    /**
      * Flag to tell the app to hide the content display or not. 
      * Usecase: to hide server side rendering content while in edit mode and display the content when 
      * browser side rendering is ready.
@@ -279,23 +291,29 @@ export class ResourceType {
     static readonly DATA = 'data';
 }
 
-export interface responseDetails {
+export interface Suggestion {
     "id": string,       //a unique identifier for the finding
-    "target": string,   //a name of a data property that the detected issue concerns; 
+    "subject": string,   //a name of a data property that the detected issue concerns; 
                         //this is the primary property that needs to be corrected
-    "title": string,    //a short (e.g. single sentence) description or title for the detected issue
-    "description": string[] //a more detailed description of the issue.  Each element in the list can be
+    "summary": string,    //a short (e.g. single sentence) description or title for the detected issue
+    "details": string[] //a more detailed description of the issue.  Each element in the list can be
                             //considered a different paragraph.  The first element should summarize the
                             //problem, while subsequent elements can provide tips on how to correct the issue.
+}
+
+export interface ReviewResponse {
+    "req": Suggestion[],
+    "warn": Suggestion[],
+    "rec": Suggestion[]
 }
 
 export interface SubmitResponse {
     "action": string,   //e.g. "validate"
     "message": string,  //this will be the message that was provided in the input or a default message if not provided
     "validation": {
-        "failures": responseDetails[],
-        "warnings": responseDetails[],
-        "recommendations": responseDetails[],
+        "failures": Suggestion[],
+        "warnings": Suggestion[],
+        "recommendations": Suggestion[],
     }
 }
 

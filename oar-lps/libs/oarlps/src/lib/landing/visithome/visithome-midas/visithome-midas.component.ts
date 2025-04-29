@@ -3,10 +3,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
-import { Themes } from '../../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, Themes } from '../../../shared/globals/globals';
 import { VisithomeEditComponent } from '../visithome-edit/visithome-edit.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -48,6 +47,7 @@ export class VisithomeMidasComponent {
     editBlockStatus: string = 'collapsed';
     overflowStyle: string = 'hidden';
     globalsvc = inject(GlobalService);
+    editStarted: boolean = false;
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
     
@@ -279,6 +279,7 @@ export class VisithomeMidasComponent {
         switch ( this.editMode ) {
             case MODE.EDIT:
                 this.editBlockStatus = 'expanded';
+                this.editStarted = true;
                 this.setOverflowStyle();
                 break;
  
@@ -286,6 +287,7 @@ export class VisithomeMidasComponent {
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed';
                 this.dataChanged = false;
+                this.editStarted = false;
                 this.setOverflowStyle();
                 break;
         }
