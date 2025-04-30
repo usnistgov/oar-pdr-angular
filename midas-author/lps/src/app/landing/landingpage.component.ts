@@ -291,7 +291,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
           // Triggered by isEditMode()
           this.edstatsvc.isEditMode();
           // Refresh page
-          this.chref.detectChanges();
+          // this.chref.detectChanges();
         })
     }
 

@@ -60,7 +60,7 @@ export class MenuComponent implements OnInit {
     recordType: string = "";
     scienceTheme = Themes.SCIENCE_THEME;
     inBrowser: boolean = false;
-    bulkDownloadURL: string;
+    bulkDownloadURL: string = "";
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -86,7 +86,7 @@ export class MenuComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if(this.record)
+        if(this.record && this.record.ediid)
             this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
 
         this.allCollections = this.collectionService.loadAllCollections();
@@ -99,7 +99,7 @@ export class MenuComponent implements OnInit {
     }
 
     ngOnChanges(ch: SimpleChanges) {
-        if (this.record && ch.record)
+        if (this.record && ch.record && this.record.ediid)
             this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
     }
     
