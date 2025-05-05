@@ -12,8 +12,6 @@ import { CommonModule } from '@angular/common';
  */
 @Component({
     selector: 'pdr-message',
-    standalone: true,
-    imports: [CommonModule],
     templateUrl: 'messagebar.component.html',
     styleUrls: [ 'messagebar.component.css'   ]
 })
