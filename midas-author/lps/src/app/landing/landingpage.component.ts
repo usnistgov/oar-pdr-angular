@@ -22,7 +22,7 @@ import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
 import { DownloadStatusModule, SearchresultModule, DoneModule, LandingpageService } from 'oarlps';
 import { MetricsinfoComponent, MessageBarComponent, SidebarComponent, CitationPopupComponent,
-         MenuComponent, EditControlComponent, LandingBodyComponent
+         MenuComponent, EditControlComponent, LandingBodyComponent, FrameModule
  } from 'oarlps';
 import { AuthenticationService } from 'oarng';
 
@@ -54,7 +54,7 @@ import { AuthenticationService } from 'oarng';
         MetricsinfoComponent,
         LandingBodyComponent,
         EditControlComponent,
-        MessageBarComponent
+        FrameModule
     ],
     providers: [
         Title
