@@ -17,7 +17,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NoidComponent } from './noid.component';
-import { CitationPopupComponent, DoneModule, SearchresultModule, DownloadStatusModule } from 'oarlps';
+import { CitationPopupComponent, DoneModule, SearchresultModule, DownloadStatusModule, FrameModule } from 'oarlps';
 import { SidebarComponent, MetricsinfoComponent, MessageBarComponent } from 'oarlps';
 import { AppConfig, NERDmResourceService, NerdmRes, NERDResource, IDNotFound } from 'oarlps';
 import { GlobalService, LandingConstants, CartService, DataCartStatus, CartActions } from 'oarlps';
@@ -55,7 +55,7 @@ import { Themes, ThemesPrefs, Collections } from 'oarlps';
         NoidComponent,
         SidebarComponent,
         MenuComponent,
-        MessageBarComponent
+        FrameModule
     ],
     providers: [
         Title

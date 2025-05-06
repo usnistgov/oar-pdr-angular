@@ -3,9 +3,9 @@ import { ActivatedRoute, Router, Routes } from '@angular/router';
 import { BulkDownloadComponent } from './bulk-download.component';
 import * as mock from '../testing/mock.services';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { TransferState } from '@angular/platform-browser';
+import { TransferState } from '@angular/core';
 import { AppConfig } from '../config/config';
-import { AngularEnvironmentConfigService } from '../config/config.service';
+import * as env from '../../environments/environment';
 
 describe('BulkDownloadComponent', () => {
   let component: BulkDownloadComponent;
@@ -20,11 +20,13 @@ describe('BulkDownloadComponent', () => {
     let params = {};
     let r : unknown = new mock.MockActivatedRoute(path, params);
     route = r as ActivatedRoute;
-    cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
+    cfg = new AppConfig(null);
+    cfg.loadConfig(env.config)
+    // cfg = (new AngularEnvironmentConfigService(plid, ts)).getConfig() as AppConfig;
 
     await TestBed.configureTestingModule({
-      declarations: [ BulkDownloadComponent ],
-      imports: [ NoopAnimationsModule ],
+      declarations: [  ],
+      imports: [ NoopAnimationsModule, BulkDownloadComponent ],
       providers: [
         { provide: ActivatedRoute,  useValue: route },
         { provide: AppConfig, useValue: cfg },

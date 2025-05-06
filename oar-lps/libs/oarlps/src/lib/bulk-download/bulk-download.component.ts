@@ -50,7 +50,7 @@ export class BulkDownloadComponent implements OnInit {
                 private cfg : AppConfig)
     {
         this.inBrowser = isPlatformBrowser(platformId);
-        this.pdrbase = cfg.get<string>("locations.portalBase", "/");
+        this.pdrbase = cfg.get<string>("links.portalBase", "/");
         if (! this.pdrbase.endsWith('/'))
             this.pdrbase += '/';
     }

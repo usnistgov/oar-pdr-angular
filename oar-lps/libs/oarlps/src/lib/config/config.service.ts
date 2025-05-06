@@ -48,6 +48,8 @@ export class AppConfig extends ConfigurationService {
             cfg.links.pdrIDResolver = cfg.links.portalBase + "od/id/";
         if (! cfg.links.nerdmAbout)
             cfg.links.nerdmAbout = cfg.links.portalBase + "od/dm/nerdm/";
+        if (! cfg.links.homeURL)
+            cfg.links.homeURL = cfg.links.portalBase;
 
         if (! cfg.PDRAPIs)
             cfg.PDRAPIs = {}

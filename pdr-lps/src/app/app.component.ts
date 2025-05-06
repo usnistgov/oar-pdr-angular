@@ -6,7 +6,6 @@ import { GoogleAnalyticsService } from 'oarlps'
 import { AppConfig } from 'oarlps';
 import { isPlatformBrowser } from '@angular/common';
 import { CartService } from 'oarlps';
-import { MessageBarComponent } from 'oarlps';
 import { UserMessageService } from 'oarlps';
 
 @Component({
@@ -20,6 +19,7 @@ export class AppComponent {
     inBrowser: boolean = false;
     appVersion: string = "1.0"
     cartLength: any;
+    homeButtonLink: string = "";
 
     constructor(
         private gaService: GoogleAnalyticsService,
@@ -34,6 +34,7 @@ export class AppComponent {
 
     ngOnInit() {
         this.appVersion = this.cfg.get("appVersion", "1.0") as string;
+        this.homeButtonLink = this.cfg.get("links.portalBase", "") as string;
 
         if(this.inBrowser){
             let globalcart = this.cartService.getGlobalCart();

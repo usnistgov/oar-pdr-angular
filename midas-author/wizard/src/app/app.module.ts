@@ -11,7 +11,7 @@ import { InputTextModule } from "primeng/inputtext";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfigModule } from 'oarlps';
-import { GoogleAnalyticsService} from "oarlps";
+import { GoogleAnalyticsService } from "oarlps";
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent, HeaderComponent } from 'oarng';

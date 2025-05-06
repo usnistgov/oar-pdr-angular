@@ -4,7 +4,8 @@
         "portalBase": "https://localhost/",
         "pdrHome": "https://localhost/pdr/",
         "pdrSearch": "https://localhost/sdp/",
-        "mdService":   "https://localhost/rmm/"
+        "mdService":   "https://localhost/rmm/",
+        "homeURL": "https://localhost/"
     },
     "PDRAPIs": {
         "mdSearch": "https://localhost/rmm/records/",

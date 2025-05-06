@@ -8,7 +8,7 @@ describe('MessageBarComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ MessageBarComponent ],
+            declarations: [ MessageBarComponent ],
             providers: []
         }).compileComponents();
 
