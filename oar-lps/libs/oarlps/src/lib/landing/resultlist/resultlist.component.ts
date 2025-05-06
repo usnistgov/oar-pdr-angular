@@ -1,14 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
-import { timeout } from 'rxjs-compat/operator/timeout';
-import { ThisReceiver } from '@angular/compiler';
-import * as e from 'express';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
-import * as CollectionData from '../../../assets/site-constants/collections.json';
+import { Collections, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 
 @Component({
@@ -48,7 +44,7 @@ export class ResultlistComponent implements OnInit {
     optionSelected: string;
     searchPhases: string = "";
     searchFields: string[] = ["title", "description", "keyword"];
-    PDRAPIURL: string = "https://data.nist.gov/lps/";
+    PDRAPIURL: string = "/od/id/";
     isEmail: boolean = false;
     homeBtnBackColor: string = "white";
 
@@ -97,8 +93,7 @@ export class ResultlistComponent implements OnInit {
 
     ngOnInit(): void {
         this.colorScheme = this.collectionService.getColorScheme(this.collection);
-        this.PDRAPIURL = this.cfg.get('locations.landingPageService',
-                                   'https://data.nist.gov/od/id/');
+        this.PDRAPIURL = this.cfg.get('links.pdrIDResolver', '/od/id/');
 
         let that = this;
         let urls = (new NERDResource(this.md)).dynamicSearchUrls();

@@ -1,10 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { SDSuggestion, SDSIndex, StaffDirectoryService } from 'oarng';
-import { AutoCompleteCompleteEvent, AutoCompleteOnSelectEvent } from 'primeng/autocomplete';
+import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 
 
 @Component({
   selector: 'lib-people',
+  standalone:true,
+  imports: [
+    CommonModule, AutoCompleteModule, FormsModule
+  ],
   templateUrl: './people.component.html',
   styleUrls: ['./people.component.css']
 })
@@ -77,7 +83,7 @@ export class PeopleComponent {
         }
     }    
 
-    getFullRecord(ev: AutoCompleteOnSelectEvent) {
+    getFullRecord(ev: AutoCompleteSelectEvent) {
         let sugg = ev.value as SDSuggestion;
         
         sugg.getRecord().subscribe({

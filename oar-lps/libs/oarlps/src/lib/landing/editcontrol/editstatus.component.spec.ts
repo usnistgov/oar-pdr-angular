@@ -11,13 +11,17 @@ import { LandingConstants } from '../constants';
 import { AppConfig } from '../../config/config';
 import { config, testdata } from '../../../environments/environment';
 import { Credentials, UserAttributes } from 'oarng';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
+import * as env from '../../../environments/environment';
 
 describe('EditStatusComponent', () => {
     let component : EditStatusComponent;
     let fixture : ComponentFixture<EditStatusComponent>;
     let authsvc : AuthService = new MockAuthService(undefined);
-    let cfg : AppConfig = new AppConfig(config);
-    cfg['editEnabled'] = true;
+    let cfg : AppConfig = new AppConfig(null);
+    config['editEnabled'] = true;
+    cfg.loadConfig(config);
     let userAttributes: UserAttributes = {
         'userName': 'test01',
         'userLastName': 'NIST',
@@ -32,38 +36,50 @@ describe('EditStatusComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ CommonModule ],
-            declarations: [ EditStatusComponent ],
+            imports: [ CommonModule, EditStatusComponent ],
+            declarations: [  ],
             providers: [
-                UserMessageService, MetadataUpdateService, DatePipe, EditStatusService,
-                { provide: AuthService, useValue: authsvc },
-                { provide: AppConfig, useValue: cfg }
+                    UserMessageService, 
+                    HttpHandler,
+                    DatePipe,
+                    { provide: AppConfig, useValue: cfg },
+                    { provide: AuthService, useValue: authsvc },
+                    { provide: DAPService, useFactory: createDAPService, 
+                        deps: [ env, HttpClient, AppConfig ] },
+                    { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                        new UserMessageService(), edstatsvc, dapsvc, null)
+                    }
             ]
         }).compileComponents();
 
         fixture = TestBed.createComponent(EditStatusComponent);
         component = fixture.componentInstance;
         component._editmode = EDIT_MODES.EDIT_MODE;
+        component.showMsg = true;
     }
+    let dapsvc : DAPService = new LocalDAPService();
+    let edstatsvc = new EditStatusService();
 
     beforeEach(waitForAsync(() => {
         makeComp();
         fixture.detectChanges();
+        component.message = "Hello";
+
     }));
 
     it('should initialize', () => {
         expect(component).toBeDefined();
         expect(component.updateDetails).toBe(null);
-        expect(component.message).toBe("");
+        expect(component.message).toBe("Hello");
         expect(component.messageColor).toBe("black");
         expect(component.isProcessing).toBeFalsy();
 
         let cmpel = fixture.nativeElement;
+
         let bardiv = cmpel.querySelector(".ec-status-bar");
         expect(bardiv).not.toBeNull();
-        expect(bardiv.childElementCount).toBe(2);
+        expect(bardiv.childElementCount).toBe(1);
         expect(bardiv.firstElementChild.tagName).toEqual("SPAN");
-        expect(bardiv.firstElementChild.nextElementSibling.tagName).toEqual("SPAN");
     });
 
     it('showMessage()', () => {
@@ -102,7 +118,7 @@ describe('EditStatusComponent', () => {
         fixture.detectChanges();
         cmpel = fixture.nativeElement;
         bardiv = cmpel.querySelector(".ec-status-bar");
-        expect(bardiv.children[0].innerHTML).toContain('required field');
+        expect(bardiv.children[0].children[0].innerHTML).toContain('To see any previously edited inputs');
 
         component.setLastUpdateDetails(updateDetails);
 
@@ -110,8 +126,7 @@ describe('EditStatusComponent', () => {
         component.showLastUpdate();
         expect(component.message).toContain("Edited by test01 NIST on 2025 April 1");
         fixture.detectChanges();
-        expect(bardiv.firstElementChild.innerHTML).toContain('required field');
-        expect(bardiv.children[1].innerHTML).toContain('Edited by test01 NIST on 2025 April 1');
+        expect(bardiv.firstElementChild.firstElementChild.innerHTML).toContain('Edited by test01 NIST on 2025 April 1');
 
         component._editmode = EDIT_MODES.DONE_MODE;
         component.showLastUpdate();

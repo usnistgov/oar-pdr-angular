@@ -7,52 +7,60 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { NerdmModule } from 'oarlps';
 import { LandingPageComponent } from './landingpage.component';
-import { LandingBodyComponent } from './landingbody.component';
+// import { LandingBodyComponent } from './landingbody.component';
 import { NoidComponent } from './noid.component';
-import { SectionsModule } from 'oarlps';
 import { MetadataUpdateService } from 'oarlps';
 import { EditControlModule } from 'oarlps';
-import { ToolsModule } from 'oarlps';
-import { CitationModule } from 'oarlps';
+import { MenuComponent } from 'oarlps';
+// import { CitationModule } from 'oarlps';
 import { DoneModule } from 'oarlps';
 import { TaxonomyListService } from 'oarlps'
 import { ErrorComponent, UserErrorComponent } from './error.component';
 // import { ForensicslandingbodyModule } from './forensicslandingbody/forensicslandingbody.module';
 // import { ForensicssearchresultModule } from './forensicssearchresult/forensicssearchresult.module';
 import { SearchresultModule } from 'oarlps';
-
+import { WizardModule } from 'oarng';
+import { SidebarModule } from 'oarlps';
+import { DownloadStatusModule } from 'oarlps';
+import { MetricsinfoComponent } from 'oarlps';
+import { LandingpageService } from 'oarlps';
+import { FrameModule } from 'oarlps';
 
 /**
- * A module supporting the complete display of landing page content associated with 
+ * A module supporting the complete display of landing page content associated with
  * a resource identifier
  */
 @NgModule({
     imports: [
-        CommonModule,
-        ButtonModule,
-        NgbModule,
-        NerdmModule,
-        EditControlModule,
-        ToolsModule,
-        CitationModule,
-        SectionsModule,
-        SearchresultModule,
-        DoneModule
+        // CommonModule,
+        // ButtonModule,
+        // NgbModule,
+        // NerdmModule,
+        // EditControlModule,
+        // MenuComponent,
+        // CitationModule,
+        // SearchresultModule,
+        // DoneModule,
+        // SidebarModule,
+        // DownloadStatusModule,
+        // MetricsinfoComponent,
+        // FrameModule
     ],
     declarations: [
-        LandingPageComponent, LandingBodyComponent, 
-        ErrorComponent, UserErrorComponent, NoidComponent
+        ErrorComponent, UserErrorComponent
     ],
     providers: [
-        MetadataUpdateService, TaxonomyListService, DatePipe
+        // MetadataUpdateService, 
+        TaxonomyListService, 
+        DatePipe,
+        LandingpageService
     ],
     exports: [
-        LandingPageComponent, LandingBodyComponent, 
-        ErrorComponent, UserErrorComponent, NoidComponent
+        ErrorComponent, UserErrorComponent
     ]
 })
 export class LandingPageModule { }
 
-export { LandingPageComponent, LandingBodyComponent, 
-    ErrorComponent, UserErrorComponent,NoidComponent };
-    
+export {
+    ErrorComponent, UserErrorComponent };
+

@@ -52,7 +52,7 @@
                     <div style="clear: both;"></div>
                     <div class="min-height-20">
                         <span class="float-left">Total dataset downloads</span>
-                        <span class="float-right">{{TotalDatasetDownloads}}</span>
+                        <span class="float-right">{{totalDatasetDownloads}}</span>
                     </div>
                     <div style="clear: both;"></div>
                     <div class="min-height-20">
@@ -62,7 +62,7 @@
                     <div style="clear: both;"></div>
                     <div class="min-height-20">
                         <span class="float-left">Total unique users</span>
-                        <span class="float-right">{{TotalUniqueUsers}}</span>
+                        <span class="float-right">{{totalUniqueUsers}}</span>
                     </div>
                     <div style="clear: both;"></div>
                     <div class="min-height-20">
@@ -101,17 +101,17 @@
                         <div style="clear: both;"></div>
                         <div class="min-height-20">
                             <span class="float-left-mobile">Total dataset downloads</span>
-                            <span class="float-right-mobile">{{TotalDatasetDownloads}}</span>
+                            <span class="float-right-mobile">{{totalDatasetDownloads}}</span>
                         </div>
                         <div style="clear: both;"></div>
                         <div class="min-height-20">
                             <span class="float-left-mobile">Total bytes downloaded</span>
-                            <span class="float-right-mobile">{{totalDownloadSize}}</span>
+                            <span class="float-right-mobile">{{totalDownloadSize}} hello</span>
                         </div>
                         <div style="clear: both;"></div>
                         <div class="min-height-20">
                             <span class="float-left-mobile">Total unique users</span>
-                            <span class="float-right-mobile">{{TotalUniqueUsers}}</span>
+                            <span class="float-right-mobile">{{totalUniqueUsers}}</span>
                         </div>
                         <div style="clear: both;"></div>
                         <div class="min-height-20">
@@ -143,13 +143,16 @@
     <div *ngIf="hasError" class="message-container">
         An error occurred while downloading metrics data. For tech support, please email <a 
             href="mailto:datasupport@nist.gov?subject={{emailSubject}}&body={{emailBody}}"
-            (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport@nist.gov.
+            (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport&#64;nist.gov.
         </a> 
     </div>
 </div>
 
 <!-- Display file level data summary -->
-<div *ngIf="filescount > 0" style="margin: 1em auto 0em auto; width: 100%; text-align: right;font-size: small;padding-right: 45px;">Total No. files: {{filescount}}, Total dataset size: {{TotalFileSize}}</div>
+<div *ngIf="filescount > 0" 
+     style="margin: 1em auto 0em auto; width: 100%; text-align: right;font-size: small;padding-right: 45px;">
+     Total No. files: {{filescount}}, Total dataset size: {{totalFileSize}}
+</div>
 
 <!-- Display tree table -->
 <div #panel0 id="panel0" *ngIf="inBrowser; else filesLoading" class="flex-container" >

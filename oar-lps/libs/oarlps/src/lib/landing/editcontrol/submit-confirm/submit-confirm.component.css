@@ -1,15 +1,15 @@
 #btn-submit {
-    width:200px; 
-    background-color:green;
+    width:300px; 
+    background-color:var(--nist-green-default);
     color:white;
     margin-right: 1em;
 }
 
 #btn-cancel {
-    width:200px;
-    background-color:rgb(94, 94, 94);
+    width:300px;
+    background-color:var(--nist-green-default);
     color:white;
-    border-color: grey;
+    /* border-color: grey; */
     margin-right: 1%;
 }
 
@@ -42,4 +42,8 @@
 
 .steps {
     margin-left: 2em;
+}
+
+.details {
+    margin-left: 4em;
 }

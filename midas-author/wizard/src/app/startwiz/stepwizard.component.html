@@ -14,37 +14,37 @@
             <!-- <div class="step-page-container"> -->
             <div class="form-step">
                 <ng-container [ngSwitch]="currentStep?.stepIndex">
-                    <ng-container *ngSwitchCase="'1'">
+                    <ng-container *ngSwitchCase="1">
                         <div class="step-page">
                             <app-pubtype [dataModel]="dataModel" [steps]="steps"></app-pubtype>
                         </div>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'7'">
+                    <ng-container *ngSwitchCase="7">
                         <div class="step-page">
                             <app-collection [dataModel]="dataModel" [steps]="steps"></app-collection>
                         </div>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'2'">
+                    <ng-container *ngSwitchCase="2">
                         <div class="step-page">
                             <app-contactinfo [dataModel]="dataModel" [steps]="steps"></app-contactinfo>
                         </div>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'3'">
+                    <ng-container *ngSwitchCase="3">
                         <div class="step-page">
                             <app-files [dataModel]="dataModel" [steps]="steps"></app-files>
                         </div>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'4'">
+                    <ng-container *ngSwitchCase="4">
                         <div class="step-page">
                             <app-softwareinfo [dataModel]="dataModel" [steps]="steps"></app-softwareinfo>
                         </div>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'5'">
+                    <ng-container *ngSwitchCase="5">
                         <div class="step-page">
                             <app-associated-papers [dataModel]="dataModel" [steps]="steps"></app-associated-papers>
                         </div>
                     </ng-container>
-                    <ng-container *ngSwitchCase="'6'">
+                    <ng-container *ngSwitchCase="6">
                         <div class="step-page">
                             <app-recordname [dataModel]="dataModel" [steps]="steps"></app-recordname>
                         </div>

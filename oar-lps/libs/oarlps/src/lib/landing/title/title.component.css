@@ -1,8 +1,9 @@
 .title {
-    width: 100%;
+    /* width: 100%;
     margin: 0px; 
     padding: 0px;
     font-family: sans-serif !important;
     font-size: 1.5em;
-    font-weight: bold;
+    font-weight: bold; */
+    font-size: 20px;
 }

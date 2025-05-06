@@ -1,9 +1,20 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'lib-text-edit',
-  templateUrl: './text-edit.component.html',
-  styleUrls: ['../landing/landing.component.scss', './text-edit.component.css']
+    selector: 'lib-text-edit',
+    standalone: true,
+    imports: [
+        ButtonModule,
+        TooltipModule,
+        CommonModule,
+        FormsModule
+    ],
+    templateUrl: './text-edit.component.html',
+    styleUrls: ['../landing/landing.component.scss', './text-edit.component.css']
 })
 export class TextEditComponent implements OnInit {
     prevVal: string = "";
@@ -35,7 +46,7 @@ export class TextEditComponent implements OnInit {
     //Output actions: "Delete", "Cancel", "Save", etc.
     @Output() command_out = new EventEmitter<any>();
 
-    constructor() { 
+    constructor(private chref: ChangeDetectorRef) { 
     }
 
     ngOnInit(): void {
@@ -83,9 +94,11 @@ export class TextEditComponent implements OnInit {
             this.currentVal = this.textField;
         }
 
-        if(changes.dataSavedToServer) {
+        if(changes.dataChanged) {
             console.log("Data changed.", changes.dataChanged);
         }
+
+        this.chref.detectChanges();
     }
 
     /**

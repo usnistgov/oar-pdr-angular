@@ -1,0 +1,31 @@
+@if(inBrowser){
+    <div style="display: table;">
+        <div class="editable_container">
+            @if(hasVisitHomeURL) {
+                <a href={{record[fieldName]}} target="_blank">
+                    <button type="button" pButton type="submit" [disabled]="!inViewMode"
+                        class="home_button p-button p-component ui-button-text-empty"
+                        [ngStyle]="{'background-color': visitHomePageBtnStyle()}"
+                        (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
+                        <i class="fas fa-external-link-alt"
+                            style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
+                        Visit Home Page
+                    </button>
+                </a>
+            }
+            @else {
+                <button type="button" pButton type="submit" 
+                class="home_button p-button p-component ui-button-text-empty"
+                [ngStyle]="{'background-color': 'var(--disabled-grey)'}">
+                    <i class="fas fa-external-link-alt"
+                        style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
+                        Visit Home Page
+                </button>
+            }
+        </div>
+    </div>
+}
+@else {
+    Visit Home Page
+}
+

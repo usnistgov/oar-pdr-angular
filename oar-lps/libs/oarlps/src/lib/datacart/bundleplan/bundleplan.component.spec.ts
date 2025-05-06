@@ -8,23 +8,18 @@ import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
-import { TransferState } from '@angular/platform-browser';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
+import { TransferState } from '@angular/core';
 import * as env from '../../../environments/environment';
 
 describe('BundleplanComponent', () => {
     let component: BundleplanComponent;
     let fixture: ComponentFixture<BundleplanComponent>;
-    let cfg: AppConfig;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
 
     beforeEach(waitForAsync(() => {
-        cfg = (new AngularEnvironmentConfigService(env, plid, ts)).getConfig() as AppConfig;
-        cfg.locations.pdrSearch = "https://goob.nist.gov/search";
-        cfg.status = "Unit Testing";
-        cfg.appVersion = "2.test";
-
         TestBed.configureTestingModule({
         declarations: [ BundleplanComponent ],
         schemas: [NO_ERRORS_SCHEMA],
@@ -45,6 +40,7 @@ describe('BundleplanComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(BundleplanComponent);
         component = fixture.componentInstance;
+        component.emailSubject = "";
         fixture.detectChanges();
     });
 

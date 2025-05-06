@@ -2,10 +2,9 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AboutdatasetComponent } from './aboutdataset.component';
-import { AboutdatasetModule } from './aboutdataset.module';
-import { AppConfig } from '../../config/config';
+import { AppConfig, LPSConfig } from '../../config/config.module';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { config, testdata } from '../../../environments/environment';
@@ -15,19 +14,37 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import * as _ from 'lodash-es';
 
 describe('AboutdatasetComponent', () => {
+    let service: AppConfig;
+    let httpMock: HttpTestingController;
+    // Mock configuration object
+    let mockConfig: LPSConfig;
+
     let component: AboutdatasetComponent;
     let fixture: ComponentFixture<AboutdatasetComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
 
     beforeEach(waitForAsync(() => {
+        mockConfig = {
+            links: {
+                orgHome: "https://pdr.org/",
+                portalBase: "https://data.pdr.org/"
+            },
+            PDRAPIs: { }
+        };
+
         TestBed.configureTestingModule({
-            imports: [ AboutdatasetModule, NoopAnimationsModule ],
+            imports: [ AboutdatasetComponent, NoopAnimationsModule, HttpClientTestingModule ],
             providers: [
                 { provide: AppConfig, useValue: cfg },
+                AppConfig,
                 GoogleAnalyticsService
             ]
         }).compileComponents();
+
+        service = TestBed.inject(AppConfig);
+        service.loadConfig(mockConfig);
     }));
 
     beforeEach(() => {
@@ -50,7 +67,7 @@ describe('AboutdatasetComponent', () => {
         let jsonViewer = cmpel.querySelector("#json-viewer");
         expect(jsonViewer).toBeTruthy();
 
-        //For nornal mode, there should be 4 expand buttons ("1", "2", "3", "View Full Tree")
+        //For normal mode, there should be 4 expand buttons ("1", "2", "3", "View Full Tree")
         let jsonExpandButtons = fixture.debugElement.queryAll(By.css('li'));
         expect(jsonExpandButtons.length).toBe(4);
 
@@ -133,6 +150,6 @@ describe('AboutdatasetComponent', () => {
 
     it('getDownloadURL()', () => {
         let url = component.getDownloadURL().substring(component.getDownloadURL().split("/", 3).join("/").length);
-        expect(url).toEqual("/rmm/records/?@id=ark:/88434/mds0000fbk");
+        expect(url).toEqual("/od/id/ark:/88434/mds0000fbk");
     });
 });

@@ -1,29 +1,38 @@
 <div id="description" [ngStyle]="{'max-width': maxWidth+'px'}">
-        <div class="section-header">
-            <!-- <h3 style="display: inline-block;" name="description"> -->
-                <!-- <b><span [ngClass]="{'highlight': titleSelected}" [@enterAnimation]>{{desctitle}}</span></b> -->
-                <!-- <b>{{desctitle}}</b> -->
-            <!-- </h3> -->
-            <!-- <div name="description" style="width: 100%; height: 27px;" id="sectionHeader" #sectionHeader (window:resize)="onResize()"></div> -->
-            <lib-section-title [sectionTitle]="desctitle" [inBrowser]="inBrowser" sectionTag="descHeader" id="descHeader" #descHeader></lib-section-title>
-
-        </div>
-        <div>
-            <app-description [record]="record" [inBrowser]="inBrowser"></app-description>
-        </div>
-        <app-topic [record]="record" [inBrowser]="inBrowser"></app-topic>
-        <app-keyword [record]="record" [inBrowser]="inBrowser" *ngIf="recordType!='Science Theme'"></app-keyword>
-</div>
-
-<!-- <div class="grid" id="description" style="border: 1px solid green;margin-left: -10px;">
-    <div class="col-12 col-md-12 col-lg-12 col-sm-12">
-        <div class="section-header">
-            <h3 style="display: inline-block;" name="description"><b>{{desctitle}}</b></h3>
-        </div>
-        <div>
-            <app-description [record]="record" [inBrowser]="inBrowser"></app-description>
-        </div>
-        <app-topic [record]="record" [inBrowser]="inBrowser"></app-topic>
-        <app-keyword [record]="record" [inBrowser]="inBrowser" *ngIf="recordType!='Science Theme'"></app-keyword>
+    <div class="section-header">
+        <lib-section-title [sectionTitle]="desctitle" [inBrowser]="inBrowser" sectionTag="descHeader" id="descHeader" #descHeader></lib-section-title>
     </div>
-</div> -->
+    <div>
+        <app-description 
+            [record]="record" 
+            [inBrowser]="inBrowser" 
+            [isEditMode]="isEditMode"
+            [isPublicSite]="isPublicSite">
+        </app-description>
+    </div>
+
+    @if(isPublicSite) {
+        <topic-pub 
+            [record]="record" 
+            [inBrowser]="inBrowser"
+            [isEditMode]="isEditMode">
+        </topic-pub>
+    }
+    @else{
+        <topic-midas 
+            [record]="record" 
+            [inBrowser]="inBrowser" 
+            [isEditMode]="isEditMode">
+        </topic-midas>
+    }
+
+    @if(recordType!='Science Theme') {
+        @if(isPublicSite) {
+            <keyword-pub [record]="record" [inBrowser]="inBrowser"></keyword-pub>
+        }
+        @else {
+            <keyword-midas [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></keyword-midas>
+        }
+    }
+
+</div>

@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, OnInit, Output, HostListener, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { Themes, ThemesPrefs, Collections } from '../../shared/globals/globals';
+import { NerdmRes } from '../../nerdm/nerdm';
 import { CartConstants } from '../../datacart/cartconstants';
 import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';
 import { isPlatformBrowser } from '@angular/common';
 import { MetricsData } from "../metrics-data";
+import { CommonModule } from '@angular/common';
+import { MenuModule } from 'primeng/menu';
+import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
 
 export class menuItem {
     title: string;
@@ -16,24 +19,30 @@ export class menuItem {
     icon: string;
     url: string;
 
-    constructor(
-        title: string, 
-        sectionName: string = "",
-        url: string,
-        backgroundColor: string = "white", 
-        isHeader: boolean = false,
-        icon: string = ""){
-            this.title = title;
-            this.sectionName = sectionName;
-            this.url = url;
-            this.backgroundColor = backgroundColor;
-            this.isHeader = isHeader;
-            this.icon = icon;
+    constructor(title: string, 
+                sectionName: string = "",
+                url: string,
+                backgroundColor: string = "white", 
+                isHeader: boolean = false,
+                icon: string = "")
+    {
+        this.title = title;
+        this.sectionName = sectionName;
+        this.url = url;
+        this.backgroundColor = backgroundColor;
+        this.isHeader = isHeader;
+        this.icon = icon;
     }
 } 
 
 @Component({
   selector: 'app-menu',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MenuModule,
+    MetricsinfoComponent
+  ],
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.css']
 })
@@ -51,6 +60,7 @@ export class MenuComponent implements OnInit {
     recordType: string = "";
     scienceTheme = Themes.SCIENCE_THEME;
     inBrowser: boolean = false;
+    bulkDownloadURL: string = "";
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -68,14 +78,17 @@ export class MenuComponent implements OnInit {
     // signal for triggering display of the citation information
     @Output() toggle_citation = new EventEmitter<boolean>();
 
-    constructor(
-        public collectionService: CollectionService,
-        @Inject(PLATFORM_ID) private platformId: Object,
-        private cfg : AppConfig) { 
-            this.inBrowser = isPlatformBrowser(platformId);
-        }
+    constructor(public collectionService: CollectionService,
+                @Inject(PLATFORM_ID) private platformId: Object,
+                private cfg : AppConfig) 
+    { 
+        this.inBrowser = isPlatformBrowser(platformId);
+    }
 
     ngOnInit(): void {
+        if(this.record && this.record.ediid)
+            this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
+
         this.allCollections = this.collectionService.loadAllCollections();
 
         this.setColor();
@@ -85,6 +98,11 @@ export class MenuComponent implements OnInit {
         this.buildMenu();
     }
 
+    ngOnChanges(ch: SimpleChanges) {
+        if (this.record && ch.record && this.record.ediid)
+            this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
+    }
+    
     buildMenu() {
         this.gotoMenu.push(new menuItem("Go To...", "", "", this.defaultColor, true));
         this.gotoMenu.push(new menuItem("Top", "top", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
@@ -97,9 +115,10 @@ export class MenuComponent implements OnInit {
         this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, "faa faa-angle-double-right"));
         this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, "faa faa-external-link"));
         this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, "faa faa-cart-plus"));
+        this.useMenu.push(new menuItem("Bulk Download", "bulk", "", this.lighterColor, false, "faa faa-download"));
 
-        let searchbase = this.cfg.get("locations.pdrSearch","/sdp/")
-        if (searchbase.slice(-1) != '/') searchbase += "/"
+        let searchbase = this.cfg.get("links.pdrSearch","/sdp/");
+        if (searchbase.slice(-1) != '/') searchbase += "/";
         let authlist = "";
         if (this.record['authors']) {
             for (let i = 0; i < this.record['authors'].length; i++) {
@@ -176,7 +195,7 @@ export class MenuComponent implements OnInit {
         this.findMenu.push(new menuItem("Find", "", "", this.defaultColor, true));
 
         this.findMenu.push(new menuItem(resourceLabel, "", searchbase + "#/search?q=keyword%3D" + keywordString, this.lighterColor, false, "faa faa-external-link" ))
-        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("locations.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
+        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("links.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
 
 
     }
@@ -218,6 +237,10 @@ export class MenuComponent implements OnInit {
                 this.toggleCitation();
                 break; 
             } 
+            case "bulk": { 
+                this.bulkdownload();
+                break; 
+            } 
             case "": { 
                 if(url)
                     window.open(url,'_blank');
@@ -230,4 +253,11 @@ export class MenuComponent implements OnInit {
          } 
         
     }    
+
+    /**
+     * Open bulk download page in a separated tab.
+     */
+    bulkdownload() {
+        window.open(this.bulkDownloadURL, "_blank");  
+    }
 }

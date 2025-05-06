@@ -4,7 +4,7 @@ import { DataModel } from './models/data.model';
 import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { WizardService } from './services/wizard.service';
-import { LPSConfig } from 'oarlps';
+import { AppConfig } from 'oarlps';
 import { UserMessageService } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 import { CollectionDataModel } from './models/data.model';
@@ -17,8 +17,8 @@ export class AuthStatus {
 }
 
 /**
- * A specialized Error indicating a error originating with from client action/inaction; the 
- * message is assumed to be one directed at the user (rather than the programmer) and can be 
+ * A specialized Error indicating a error originating with from client action/inaction; the
+ * message is assumed to be one directed at the user (rather than the programmer) and can be
  * displayed in the application in some way.
  */
 class ClientError extends Error {
@@ -43,7 +43,6 @@ export class StepWizardComponent implements OnInit {
     currentStepSub!: Subscription;
     onSoftware: boolean = false;
     bodyHeight: number = 550;
-    confValues: LPSConfig;
     private PDRAPI: string;
     nextBtnIcon: string = "faa faa-long-arrow-right icon-white";
     nextBtnText: string = "Next";
@@ -61,11 +60,12 @@ export class StepWizardComponent implements OnInit {
                 private msgsvc: UserMessageService,
                 private cdr: ChangeDetectorRef,
                 private wizardService: WizardService,
-                private configSvc: ConfigurationService,
-                public authService: AuthenticationService) { 
-
-            this.confValues = this.configSvc.getConfig();
-            this.PDRAPI = this.confValues['PDRAPI'];
+                private configSvc: AppConfig,
+                public authService: AuthenticationService)
+    {
+        this.PDRAPI = this.configSvc.get('dapToolBase', "/dapui/edit/od/id/");
+        if (! this.PDRAPI.endsWith("/"))
+            this.PDRAPI += "/";
     }
 
     get isAuthorized() {
@@ -109,7 +109,7 @@ export class StepWizardComponent implements OnInit {
                     this.currentStepSub = this.stepService.getCurrentStep().subscribe((step: StepModel) => {
                         this.currentStep = step;
                     });
-            
+
                     this.bodyHeight = window.innerHeight - 150;
                 }
                 else if (creds && creds.userAttributes && creds.userId) {
@@ -181,7 +181,7 @@ export class StepWizardComponent implements OnInit {
         this.nextBtnIcon = "faa faa-long-arrow-right icon-white";
 
         if(this.stepService.isLastStep()){
-            this.nextBtnText = 'Finish'; 
+            this.nextBtnText = 'Finish';
         }else{
             this.nextBtnText = 'Next';
         }
@@ -195,7 +195,7 @@ export class StepWizardComponent implements OnInit {
     onSubmit(): void {
         let id: string;
 
-        // If partOfCollection flag is set but collection value is "None", 
+        // If partOfCollection flag is set but collection value is "None",
         // set the flag off and reset the collection value.
         if(this.dataModel.partOfCollection && this.dataModel.collections[0] == this.collectionData.find(c => c.id === 4).value) {
             this.dataModel.partOfCollection = false;
@@ -226,12 +226,12 @@ export class StepWizardComponent implements OnInit {
                 this.nextBtnIcon = "faa faa-exclamation-triangle icon-orange";
 
                 // err will be a subtype of CustomizationError
-                if (err.type == 'user') 
+                if (err.type == 'user')
                 {
                     console.error("Failed to retrieve draft metadata changes: user error:" + err.message);
                     this.msgsvc.error(err.message);
                 }
-                else 
+                else
                 {
                     console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
                     this.msgsvc.syserror(err.message);

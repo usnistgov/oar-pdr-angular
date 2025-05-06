@@ -6,9 +6,16 @@ import {
     CdkDragMove,
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
 
 @Component({
   selector: 'lib-ref-author',
+  standalone: true,
+  imports: [
+      CommonModule,
+      TextEditComponent
+  ],
   templateUrl: './ref-author.component.html',
   styleUrls: ['./ref-author.component.css']
 })

@@ -20,14 +20,10 @@ import { ButtonModule } from 'primeng/button';
         FrameModule,
         ButtonModule
     ],
-    declarations: [
-        StepWizardComponent
-    ],
+    declarations: [StepWizardComponent],
     providers: [
         WizardService
     ],
-    exports: [
-        StepWizardComponent
-    ]
+    exports: [StepWizardComponent]
 })
 export class StepWizModule { }

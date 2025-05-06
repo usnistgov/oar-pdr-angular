@@ -36,6 +36,7 @@
     display: table;
     width: 100%;
     margin: 0px;
+    padding: 0px;
 }
 
 .cell {
@@ -43,11 +44,22 @@
 }
 
 .right {
-    width: 50%;
+    width: fit-content;
     text-align: right;
+    float: right;
+    margin-right: 20px;
 }
 
 .left {
-    width: 50%;
+    width: auto;
     vertical-align: top;
+}
+
+.contact {
+    padding: 0px;
+}
+
+.visithome {
+    margin: 0px;
+    padding: 0px;
 }

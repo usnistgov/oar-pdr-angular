@@ -1,11 +1,22 @@
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
-import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
+import { NerdmComp } from '../../../nerdm/nerdm';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
-  selector: 'lib-accesspage-edit',
-  templateUrl: './accesspage-edit.component.html',
-  styleUrls: ['../../landing.component.scss', './accesspage-edit.component.css']
+    selector: 'lib-accesspage-edit',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        TooltipModule,
+        ButtonModule
+    ],
+    templateUrl: './accesspage-edit.component.html',
+    styleUrls: ['../../landing.component.scss', './accesspage-edit.component.css']
 })
 export class AccesspageEditComponent implements OnInit {
     originalApage: NerdmComp = {} as NerdmComp;
@@ -64,7 +75,6 @@ export class AccesspageEditComponent implements OnInit {
     }
 
     onChange() {
-        // console.log("accessPage02", this.accessPage)
         if(this.accessPage)
             this.accessPage.dataChanged = true;
 

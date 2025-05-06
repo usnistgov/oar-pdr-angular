@@ -9,7 +9,7 @@
                 <table width="100%" align="left">
                     <tr>
                         <td>
-                            <textarea autocomplete="off" [(ngModel)]='visitHomeURL' (ngModelChange)="onURLChange($event)" style="width: 100%;margin: 10px 10px 0px 0px; padding: 5px;height: fit-content;" libTextareaAutoresize></textarea>
+                            <textarea #url autocomplete="off" [(ngModel)]='visitHomeURL' (ngModelChange)="onURLChange($event)" style="width: 100%;margin: 10px 10px 0px 0px; padding: 5px;height: fit-content;" libTextareaAutoresize></textarea>
                         </td>
                         <td width="30px" align="left" style="vertical-align:top;">
                             <!-- Clear text button-->
@@ -28,7 +28,12 @@
         <!-- Control buttons -->
         <td style="width: 30px;vertical-align: top;">
             <!-- Save button -->
-            <button class="edit_button" type="button" (click)="commandOut('saveURL')" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
+            <button class="edit_button" 
+                    type="button" 
+                    (click)="commandOut('saveURL')" 
+                    aria-label="edit button" 
+                    [disabled]="!dataChanged" 
+                    ngbTooltip="Save changes">
                 <i class="fas fa-check"></i>
             </button>
     

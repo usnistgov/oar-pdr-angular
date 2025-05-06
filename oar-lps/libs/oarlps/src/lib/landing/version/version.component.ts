@@ -1,11 +1,12 @@
 import { Component, OnChanges, Input } from '@angular/core';
-
-import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { LandingConstants } from '../constants';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
+import { SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
+import { CommonModule } from '@angular/common';
+import { CollapseModule } from '../collapseDirective/collapse.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 interface reference {
     refType?: string,
@@ -25,6 +26,12 @@ interface reference {
  */
 @Component({
     selector: 'pdr-version',
+    standalone: true,
+    imports: [
+        CommonModule,
+        CollapseModule,
+        NgbModule
+    ],
     templateUrl: './version.component.html',
     styleUrls: [ '../landing.component.scss' ]
 })
@@ -37,23 +44,22 @@ export class VersionComponent implements OnChanges {
     fieldName = SectionPrefs.getFieldName(Sections.VERSION);
 
     @Input() record: NerdmRes = null;
+    @Input() landingPageServiceStr: string;
 
     /**
      * create the component
      * @param cfg   the app configuration data
      */
-    constructor(private cfg : AppConfig,
-        public editstatsvc: EditStatusService,
-        public lpService: LandingpageService) {
-        this.lpssvc = this.cfg.get('locations.landingPageService',
-                                   'https://data.nist.gov/od/id/');
-    }
+    constructor(public editstatsvc: EditStatusService,
+                public lpService: LandingpageService) { }
 
     ngOnInit(): void {
         // Watch current edit mode set by edit controls
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
         });
+
+        this.lpssvc = this.landingPageServiceStr;
     }
 
     ngOnChanges() {

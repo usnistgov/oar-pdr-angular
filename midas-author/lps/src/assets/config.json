@@ -1,32 +1,34 @@
 {
-    "locations": {
+    "links": {
         "orgHome": "https://nist.gov/",
-        "portalBase": "https://oardev.nist.gov/",
-        "pdrHome": "https://oardev.nist.gov/pdr/",
-        "pdrSearch": "https://oardev.nist.gov/sdp/",
-        "mdService":   "https://oardev.nist.gov/rmm/",
-        "taxonomyService": "https://oardev.nist.gov/rmm/taxonomy"
+        "portalBase": "https://localhost/",
+        "pdrHome": "https://localhost/pdr/",
+        "pdrSearch": "https://localhost/sdp/",
+        "mdService":   "https://localhost/rmm/",
+        "homeURL": "https://localhost/"
+    },
+    "PDRAPIs": {
+        "mdSearch": "https://localhost/rmm/records/",
+        "mdService": "https://localhost/od/id/",
+        "metrics": "https://data.nist.gov/rmm/usagemetrics/"
     },
     "auth": {
-        "serviceEndpoint": "https://mdsdev.nist.gov/sso/" 
+        "serviceEndpoint": "https://localhost/sso/"
     },
-    "mdAPI": "https://mdsdev.nist.gov/midas/dap/mds3/",
-    "metricsAPI": "https://data.nist.gov/rmm/usagemetrics/",
-    "customizationAPI": "http://mdsdev.nist.gov:9091/midas/",
-    "fileManagerAPI": "https://nextcloud-dev.nist.gov",
+    "dapEditing": {
+      "serviceEndpoint": "https://localhost/midas/dap/mds3/",
+      "editEnabled": true
+    },
+      "staffdir": {
+          "serviceEndpoint": "http://localhost:9092/oar1"
+    },
     "mode": "dev",
-    "status": "Dev Version",
-    "appVersion": "v1.3.X",
+    "systemVersion": "v1.3.X",
     "production": false,
-    "editEnabled": true,
-    "distService": "https://testdata.nist.gov/od/ds/",
-    "gacode": "not-set",
+    "distService": "https://localhost/od/ds/",
+    "gaCode": "not-set",
     "screenSizeBreakPoint": 1200,
     "bundleSizeAlert": 500000000,
     "delayTimeForMetricsRefresh": 300,
-    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
-    "staffdir": {
-        "serviceEndpoint": "http://localhost:9092/oar1"
-    }
-
+    "standardNISTTaxonomyURI": "https://data.nist.gov/od/dm/nist-themes/"
 }

@@ -1,25 +1,55 @@
-import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { ResourceRefsComponent } from './resourcerefs.component';
-import { AppConfig } from '../../config/config';
-import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { config, testdata } from '../../../environments/environment';
+import { NerdmRes } from '../../nerdm/nerdm';
+import { testdata } from '../../../environments/environment';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { Component } from '@angular/core';
+import { RefMidasComponent } from '../references/ref-midas/ref-midas.component';
+import { RefPubComponent } from '../references/ref-pub/ref-pub.component';
 
 describe('ResourceRefsComponent', () => {
     let component: ResourceRefsComponent;
     let fixture: ComponentFixture<ResourceRefsComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
 
     let makeComp = function() {
-        TestBed.configureTestingModule({
-            imports: [ ],
-            declarations: [  ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                GoogleAnalyticsService
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestSectionTitleComponent {}
+
+        @Component({
+            selector: "ref-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestRefPubComponent {}
+
+        @Component({
+            selector: "ref-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestRefMidasComponent {}
+
+        TestBed.overrideComponent(ResourceRefsComponent, {
+            add: {
+                imports: [
+                    TestSectionTitleComponent,
+                    TestRefPubComponent,
+                    TestRefMidasComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    SectionTitleComponent,
+                    RefPubComponent,
+                    RefMidasComponent
+                ],
+            },
+        });
 
         fixture = TestBed.createComponent(ResourceRefsComponent);
         component = fixture.componentInstance;

@@ -1,0 +1,23 @@
+<div>
+    <!-- Display summary -->
+    <!-- <i (click)="toogleDetails();gotoSection(suggestion.subject);"  -->
+        <i (click)="gotoSection(suggestion.subject);" 
+        [ngClass]="linkedTextStyleClass()">&mdash; {{suggestion?.summary}}</i>
+
+    <!-- Expand button -->
+    <i *ngIf="hasDetails amplifiable"
+        class="fas expand-btn"
+        [class.amplified]="isMouseOver"
+        (mouseover)="isMouseOver = true"
+        (mouseleave)="isMouseOver = false"
+        [ngClass]="{'fa-caret-right': !showDetails, 'fa-caret-down': showDetails}"
+        aria-label="Show details"
+        (click)="toogleDetails($event)">
+    </i>
+</div>
+
+<div *ngIf="showDetails" class="details">
+    <div *ngFor="let detail of suggestion?.details" >
+        {{detail}}
+    </div>
+</div>

@@ -1,35 +1,119 @@
 import { ComponentFixture, TestBed, fakeAsync, waitForAsync  } from '@angular/core/testing';
-import { DatePipe } from '@angular/common';
-import { ToastrModule } from 'ngx-toastr';
-import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { ResourceIdentityComponent } from './resourceidentity.component';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { config, testdata, context } from '../../../environments/environment';
+import { testdata } from '../../../environments/environment';
 import * as _ from 'lodash-es';
-import * as env from '../../../environments/environment';
+import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
+import { TitleComponent } from '../title/title.component';
+import { IspartofComponent } from '../ispartof/ispartof.component';
+import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
+import { ContactPubComponent } from '../contact/contact-pub/contact-pub.component';
+import { ContactMidasComponent } from '../contact/contact-midas/contact-midas.component';
+import { AuthorPubComponent } from '../author/author-pub/author-pub.component';
+import { AuthorMidasComponent } from '../author/author-midas/author-midas.component';
+import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
+import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
 
 describe('ResourceIdentityComponent', () => {
 
     let component : ResourceIdentityComponent;
     let fixture : ComponentFixture<ResourceIdentityComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
-    let authsvc : AuthService = new MockAuthService(null, env);
 
     let makeComp = function() {
-        TestBed.configureTestingModule({
-            imports: [ ],
-            declarations: [  ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc },
-                DatePipe, GoogleAnalyticsService, UserMessageService, MetadataUpdateService
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTitleComponent {}
+
+        @Component({
+            selector: "app-ispartof",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestIspartofComponent {}
+
+        @Component({
+            selector: "author-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestAuthorPubComponent {}
+
+        @Component({
+            selector: "author-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestAuthorMidasComponent {}
+
+        @Component({
+            selector: "contact-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestContactPubComponent {}
+
+        @Component({
+            selector: "contact-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestContactMidasComponent {}
+
+        @Component({
+            selector: "Visithome-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVisithomePubComponent {}
+
+        @Component({
+            selector: "Visithome-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVisithomeMidasComponent {}
+
+        TestBed.overrideComponent(ResourceIdentityComponent, {
+            add: {
+                imports: [
+                    TestTitleComponent,
+                    TestIspartofComponent,
+                    TestAuthorPubComponent,
+                    TestAuthorMidasComponent,
+                    TestVisithomePubComponent,
+                    TestVisithomeMidasComponent,
+                    TestContactPubComponent,
+                    TestContactMidasComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    TitleComponent,
+                    IspartofComponent,
+                    ContactPubComponent,
+                    ContactMidasComponent,
+                    VisithomePubComponent,
+                    VisithomeMidasComponent,
+                    AuthorPubComponent,
+                    AuthorMidasComponent
+                ],
+            },
+        });
+
+        // let httpMock = TestBed.inject(HttpTestingController);
+        // let req = httpMock.expectOne('assets/config.json');
+
+        // req.flush({
+        //     staffdir: {
+        //         serviceEndpoint: svcep
+        //     }
+        // });
 
         fixture = TestBed.createComponent(ResourceIdentityComponent);
         component = fixture.componentInstance;

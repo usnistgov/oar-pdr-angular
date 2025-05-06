@@ -1,5 +1,6 @@
 import { Component, Optional, Input } from '@angular/core';
 import { UserMessageService, Message } from './usermessage.service';
+import { CommonModule } from '@angular/common';
 
 /**
  * A Component that can receive and display messages.
@@ -21,8 +22,8 @@ export class MessageBarComponent {
 
     @Input() defSysErrorPrefix : string = "There was an internal hiccup.";
     // bgcolor : string = "#FCF9CD";
-
-    public constructor(@Optional() private svc : UserMessageService) {
+    // public constructor(@Optional() private svc : UserMessageService) {
+    public constructor(svc : UserMessageService) {
         if (svc) {
             svc.subscribe({
                 next: (msg) => {

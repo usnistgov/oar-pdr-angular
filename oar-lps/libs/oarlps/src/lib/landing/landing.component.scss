@@ -556,3 +556,50 @@ a:visited {
 .link-icon {
     color: var(--link);
 }
+
+.for-public {
+    border: '0px solid white';
+    background-color: 'white';
+    padding-right: '1em';
+    cursor: 'default'
+}
+
+.overlay-title {
+    color: white; 
+    background-color: #1E6BA1;
+    width: 100%;
+    text-align: center;
+    height: 2.5em;
+    padding-top: .5em;
+    font-weight: bolder;
+    font-size: larger;
+    margin-bottom: .5em;
+}
+
+/* Target the container of the checkbox */
+.ptree-checkbox {
+    border: 1px solid lightblue;
+    padding-bottom: 2px;
+    border-radius: 5px;
+}
+
+.red-star {
+    color: rgb(173, 0, 0);
+    margin-left: -10px;
+    margin-right: 6px;
+}
+
+.amplifiable {
+    transition: transform 0.2s ease-in-out;
+}
+
+.amplified {
+    transform: scale(3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.expand-btn {
+    margin-left: 0.5rem;
+    cursor: pointer;
+    color: var(--nist-blue-dark3);
+}

@@ -155,6 +155,29 @@
             "fn": "R. Plant"
         }
     ],
+    "references": [
+        {
+            "refType":"IsDocumentedBy",
+            "title":"In-situ Raman spectroscopic measurements of the deformation region in indented glasses",
+            "issued":"2020-02",
+            "citation":"Gerbig, Y. B., & Michaels, C. A. (2020). In-situ Raman spectroscopic measurements of the deformation region in indented glasses. Journal of Non-Crystalline Solids, 530, 119828. doi:10.1016/j.jnoncrysol.2019.119828\n",
+            "label":"Journal of Non-Crystalline Solids: In-situ Raman spectroscopic measurements of the deformation region in indented glasses",
+            "location":"https://doi.org/10.1016/j.jnoncrysol.2019.119828",
+            "@id":"#ref:10.1016/j.jnoncrysol.2019.119828",
+            "@type":["schema:Article"],
+            "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"]
+        },
+        {
+            "refType":"IsCitedBy",
+            "title":"Indentation device forin situRaman spectroscopic and optical studies",
+            "issued":"2012-12",
+            "citation":"Gerbig, Y. B., Michaels, C. A., Forster, A. M., Hettenhouser, J. W., Byrd, W. E., Morris, D. J., & Cook, R. F. (2012). Indentation device forin situRaman spectroscopic and optical studies. Review of Scientific Instruments, 83(12), 125106. doi:10.1063/1.4769995\n",
+            "location":"https://doi.org/10.1063/1.4769995",
+            "@id":"#ref:10.1063/1.4769995",
+            "@type":["schema:Article"],
+            "_extensionSchemas":["https://data.nist.gov/od/dm/nerdm-schema/v0.2#/definitions/DCiteReference"]
+        }
+    ],
     "license": "https://www.nist.gov/open/license",
     "modified": "2017-10-17",
     "ediid": "5BC2E596EDC621A9E0531A57068194921868",

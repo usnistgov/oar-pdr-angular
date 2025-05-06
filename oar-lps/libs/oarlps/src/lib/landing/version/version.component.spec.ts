@@ -1,24 +1,22 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
-
 import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { VersionComponent, compare_versions, normalize_date, compare_dates, compare_histories }
     from './version.component';
-import { VersionModule } from './version.module';
-
 import { config, testdata } from '../../../environments/environment';
 import { LandingConstants } from '../constants';
 
 describe('VersionComponent', () => {
     let component : VersionComponent;
     let fixture : ComponentFixture<VersionComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
     let EDIT_MODES = LandingConstants.editModes;
+    let cfg : AppConfig = new AppConfig(null);
+    cfg.loadConfig(config);
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ VersionModule ],
+            imports: [ VersionComponent ],
             declarations: [  ],
             providers: [
                 { provide: AppConfig, useValue: cfg }
@@ -28,6 +26,7 @@ describe('VersionComponent', () => {
         fixture = TestBed.createComponent(VersionComponent);
         component = fixture.componentInstance;
         component.record = JSON.parse(JSON.stringify(rec));
+        component.landingPageServiceStr = "od/id/";
         // fixture.detectChanges();
     }
 

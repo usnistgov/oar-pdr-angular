@@ -8,7 +8,6 @@ import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ToastrModule } from 'ngx-toastr';
 
 import { TopicComponent } from './topic.component';
-import { SearchTopicsComponent } from './topic-popup/search-topics.component';
 import { ButtonModule } from 'primeng/button';
 import { TopicEditComponent } from './topic-edit/topic-edit.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -29,18 +28,17 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         ToastrModule.forRoot()
     ],
     declarations: [
-        TopicComponent, SearchTopicsComponent, TopicEditComponent
     ],
     providers: [
     ],
     exports: [
-        TopicComponent, SearchTopicsComponent
+
     ]
 })
 export class TopicModule { }
 
 export {
-    TopicComponent, SearchTopicsComponent
+
 };
 
     

@@ -4,12 +4,12 @@ import { SidebarComponent } from './sidebar.component';
 import { SidebarService } from './sidebar.service';
 
 @NgModule({
-    declarations: [SidebarComponent],
+    declarations: [],
     imports: [
         CommonModule
     ],
     exports: [
-            SidebarComponent
+            
     ],
     providers: [
         SidebarService
@@ -18,5 +18,5 @@ import { SidebarService } from './sidebar.service';
 export class SidebarModule { }
 
 export {
-    SidebarComponent
+    
 };

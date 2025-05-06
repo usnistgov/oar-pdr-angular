@@ -9,59 +9,106 @@ export class SidebarService {
 
     constructor() { }
 
+    //This is for testing purpose. The real suggestions will be provided by DBIO backend.
+    //This function is called by the fake backend provider.
     getSuggestions(record: NerdmRes, resourceType: string) {
-        let required: string[] = [];
-        let recommended: string[] = [];
-        let niceToHave: string[] = [];
+        let required: any[] = [];
+        let warn: any[] = [];
+        let recommend: any[] = [];
         
         // Required fields
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.TITLE)]) 
-            required.push(globals.Sections.TITLE);
+            required.push({
+                "id": "testId",
+                "subject": globals.Sections.TITLE,
+                "summary": "Add " + globals.Sections.TITLE,
+                "details": [globals.Sections.TITLE + " is required."]
+            });
 
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.DESCRIPTION)] || record[globals.SectionPrefs.getFieldName(globals.Sections.DESCRIPTION)].length == 0) 
-            required.push(globals.Sections.DESCRIPTION);
+            required.push({
+                "id": "testId",
+                "subject": globals.Sections.DESCRIPTION,
+                "summary": "Add " + globals.Sections.DESCRIPTION,
+                "details": [globals.Sections.DESCRIPTION + " is required."]
+            });
 
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.TOPICS)] || record[globals.SectionPrefs.getFieldName(globals.Sections.TOPICS)].length == 0) 
-            required.push(globals.Sections.TOPICS);
+            required.push({
+                "id": "testId",
+                "subject": globals.Sections.TOPICS,
+                "summary": "Add " + globals.Sections.TOPICS,
+                "details": [globals.Sections.TOPICS + " is required."]
+            });
 
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.KEYWORDS)] || record[globals.SectionPrefs.getFieldName(globals.Sections.KEYWORDS)].length == 0) 
-            required.push(globals.Sections.KEYWORDS);
+            required.push({
+                "id": "testId",
+                "subject": globals.Sections.KEYWORDS,
+                "summary": "Add " + globals.Sections.KEYWORDS,
+                "details": [globals.Sections.KEYWORDS + " is required."]
+            });
 
-        // Recommended fields
+        // warn fields
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.AUTHORS)] || record[globals.SectionPrefs.getFieldName(globals.Sections.AUTHORS)].length == 0) 
-            recommended.push(globals.Sections.AUTHORS);
+            warn.push({
+                "id": "testId",
+                "subject": globals.Sections.AUTHORS,
+                "summary": "Add " + globals.Sections.AUTHORS,
+                "details": [globals.Sections.AUTHORS + " is highly recommended."]
+            });
 
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.CONTACT)]) 
-            recommended.push(globals.Sections.CONTACT);
+            warn.push({
+                "id": "testId",
+                "subject": globals.Sections.CONTACT,
+                "summary": "Add " + globals.Sections.CONTACT,
+                "details": [globals.Sections.CONTACT + " is highly recommended."]
+            });
 
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.VISIT_HOME_PAGE)]) 
-            recommended.push(globals.Sections.VISIT_HOME_PAGE);
+            warn.push({
+                "id": "testId",
+                "subject": globals.Sections.VISIT_HOME_PAGE,
+                "summary": "Add " + globals.Sections.VISIT_HOME_PAGE,
+                "details": [globals.Sections.VISIT_HOME_PAGE + " is highly recommended."]
+            });
 
         let accessPages: NerdmComp[] = (new NERDResource(record)).selectAccessPages();
 
-        // If resource type is "software", access page links are recommended. Otherwise they are nice to have.
+        // If resource type is "software", access page links are highly recommended. Otherwise they are recommended.
         if(!accessPages || accessPages.length == 0) {
             if(resourceType == globals.ResourceType.SOFTWARE) {
-                recommended.push(globals.Sections.ACCESS_PAGES);
+                warn.push({
+                    "id": "testId",
+                    "subject": globals.Sections.ACCESS_PAGES,
+                    "summary": "Add " + globals.Sections.ACCESS_PAGES,
+                    "details": [globals.Sections.ACCESS_PAGES + " is highly recommended for resource type software."]
+                });
             }else{
-                niceToHave.push(globals.Sections.ACCESS_PAGES);
+                recommend.push({
+                    "id": "testId",
+                    "subject": globals.Sections.ACCESS_PAGES,
+                    "summary": "Add " + globals.Sections.ACCESS_PAGES,
+                    "details": [globals.Sections.ACCESS_PAGES + " is recommended."]
+                });
             }
         }
 
-        // Nice to have fields
+        // Recommend fields
         if(!record[globals.SectionPrefs.getFieldName(globals.Sections.REFERENCES)] || record[globals.SectionPrefs.getFieldName(globals.Sections.REFERENCES)].length == 0) 
-            niceToHave.push(globals.Sections.REFERENCES);
+            recommend.push({
+                "id": "testId",
+                "subject": globals.Sections.REFERENCES,
+                "summary": "Add " + globals.Sections.REFERENCES,
+                "details": [globals.Sections.REFERENCES + " is recommended."]
+            });
 
         let suggestions: any = {};
-        if(required && required.length >0) suggestions["required"] = required;
-        if(recommended && recommended.length >0) suggestions["recommended"] = recommended;
-        if(niceToHave && niceToHave.length >0) suggestions["niceToHave"] = niceToHave;
+        if(required && required.length >0) suggestions["req"] = required;
+        if(warn && warn.length >0) suggestions["warn"] = warn;
+        if(recommend && recommend.length >0) suggestions["rec"] = recommend;
 
         return suggestions;
-        // return {
-        //     "required": required,
-        //     "recommended": [globals.Sections.AUTHORS, globals.Sections.ACCESS_PAGES],
-        //     "niceToHave": [globals.Sections.REFERENCES]
-        // } 
     }
 }
