@@ -14,6 +14,8 @@ export class SoftwareinfoComponent implements OnInit {
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
+    @Input() helpText: any = {};
+    @Input() marginLeft: number = 40;
 
     constructor(
         private chref: ChangeDetectorRef,
@@ -42,7 +44,10 @@ export class SoftwareinfoComponent implements OnInit {
         this.lastStep.canGoNext = this.stepService.allDone();
     }
 
-    updateSoftwareLink(evt:any): void {
+    /**
+     * Update the step status when software link changed.
+     */
+    onSoftwareLinkChanged(): void {
         this.thisStep.isComplete = (this.dataModel.softwareLink?.trim() != "");
         this.lastStep.canGoNext = this.stepService.allDone();
     }

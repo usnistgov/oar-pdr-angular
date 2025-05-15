@@ -7,7 +7,7 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
-import { NerdmRes, NERDResource } from 'oarlps';
+import { NerdmRes, NERDResource, ReviewResponse } from 'oarlps';
 import { NERDmResourceService, EditStatusService, MetadataUpdateService, GlobalService,
          MetricsService, LandingConstants, IDNotFound } from 'oarlps';
 import { AppConfig, DataCartStatus, RecordLevelMetrics, formatBytes, CartActions,
@@ -194,7 +194,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     landingPageURL: string;
     landingPageServiceStr: string;
     pubLandingPageURL: string = "http://localhost:4201/od/id/"
-
+    suggestions: ReviewResponse = {} as ReviewResponse;
+    
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
         event.stopPropagation();
@@ -621,6 +622,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 //Only update help content once
                 this.helpContentUpdated = true;
             }
+        })
+
+        //Load suggestions:
+        this.mdupdsvc.validate().subscribe((suggestions) => {
+            this.suggestions = suggestions as ReviewResponse;
         })
     }
 

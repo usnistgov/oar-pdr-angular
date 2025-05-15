@@ -14,6 +14,8 @@ export class AssociatedPapersComponent implements OnInit {
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
+    @Input() helpText: any = {};
+    @Input() marginLeft: number = 40;
 
     constructor(
         private chref: ChangeDetectorRef,
@@ -28,7 +30,10 @@ export class AssociatedPapersComponent implements OnInit {
         this.chref.detectChanges();
     }
 
-    onSelectChange(evt: any) {
+    /**
+     * Update the step status when associated paper type changed.
+     */    
+    onAssocPaperTypeChange() {
         if(this.dataModel.assocPageType != undefined){
             this.thisStep.canGoNext = true;
             this.thisStep.isComplete = true;
