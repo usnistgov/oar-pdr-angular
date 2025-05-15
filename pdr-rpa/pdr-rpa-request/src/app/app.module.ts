@@ -24,6 +24,8 @@ import { RECAPTCHA_BASE_URL, RecaptchaFormsModule, RecaptchaModule } from 'ng-re
 import { ServiceModule } from './service/service.module';
 import { RequestFormTermsComponent } from './components/request-form-terms/request-form-terms.component';
 import { ToastModule } from 'primeng/toast';
+import { HeaderComponent } from 'oarng';
+import { FooterComponent } from 'oarng';
 
 @NgModule({
     declarations: [
@@ -53,7 +55,9 @@ import { ToastModule } from 'primeng/toast';
         RecaptchaModule,
         RecaptchaFormsModule,
         ServiceModule,
-        RouterModule.forRoot([])
+        RouterModule.forRoot([]),
+        HeaderComponent,
+        FooterComponent
     ],
     providers: [
         {

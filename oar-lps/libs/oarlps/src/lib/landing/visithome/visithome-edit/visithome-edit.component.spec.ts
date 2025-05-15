@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { VisithomeEditComponent } from './visithome-edit.component';
 
@@ -6,12 +6,12 @@ describe('VisithomeEditComponent', () => {
   let component: VisithomeEditComponent;
   let fixture: ComponentFixture<VisithomeEditComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ VisithomeEditComponent ]
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [ VisithomeEditComponent ]
     })
     .compileComponents();
-  });
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(VisithomeEditComponent);

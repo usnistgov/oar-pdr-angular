@@ -1,22 +1,47 @@
-import { Component, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/core';
-
-import { AppConfig } from '../../config/config';
+import { Component, OnChanges, SimpleChanges, Input, ViewChild, effect, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { VersionComponent } from '../version/version.component';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
 import { LandingConstants } from '../../landing/constants';
-import { Themes, ThemesPrefs, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
+import { Themes, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
-import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { Collections, GlobalService } from '../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TitleComponent } from '../title/title.component';
+import { IspartofComponent } from '../ispartof/ispartof.component';
+import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
+import { FacilitatorsPubComponent } from '../facilitators-to be removed/facilitators-pub/facilitators-pub.component';
+import { FacilitatorsMidasComponent } from '../facilitators-to be removed/facilitators-midas/facilitators-midas.component';
+import { AuthorPubComponent } from '../author/author-pub/author-pub.component';
+import { AuthorMidasComponent } from '../author/author-midas/author-midas.component';
+import { ContactPubComponent } from '../contact/contact-pub/contact-pub.component';
+import { ContactMidasComponent } from '../contact/contact-midas/contact-midas.component';
+import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
+import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
 
 /**
  * a component that lays out the "identity" section of a landing page
  */
 @Component({
     selector:      'pdr-resource-id',
+    standalone: true,
+    imports: [
+        CommonModule,
+        TitleComponent,
+        IspartofComponent,
+        FacilitatorsComponent,
+        ContactPubComponent,
+        ContactMidasComponent,
+        VersionComponent,
+        VisithomePubComponent,
+        VisithomeMidasComponent,
+        FacilitatorsPubComponent,
+        FacilitatorsMidasComponent,
+        AuthorPubComponent,
+        AuthorMidasComponent,
+        NgbModule
+    ],
     templateUrl:   './resourceidentity.component.html',
     styleUrls:   [
         './resourceidentity.component.css', '../landing.component.scss'
@@ -26,30 +51,35 @@ export class ResourceIdentityComponent implements OnChanges {
 
     recordType: string = "";
     doiUrl: string = null;
+    doiLabel: string = "";
     showHomePageLink: boolean = true;
     primaryRefs: any[] = [];
     editMode: string;
     EDIT_MODES: any;
-    isPartOf: string[] = null;
+    // isPartOf: string[] = null;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
     fileManagerUrl = AppSettings.HOMEPAGE_DEFAULT_URL;
     fieldName = SectionPrefs.getFieldName(Sections.DOI);
     collection: string = Collections.DEFAULT;
     maxWidth: number = 1000;
+    isEditMode: boolean = true;
+
+    authorFieldName = SectionPrefs.getFieldName(Sections.AUTHORS);
+    facilitatorsFieldName = SectionPrefs.getFieldName(Sections.FACILITATORS);
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() theme: string;
+    @Input() isPublicSite: boolean = true;
+    @Input() landingPageURL: string;
+    @Input() landingPageServiceStr: string;
 
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig,
-                public editstatsvc: EditStatusService,
-                public mdupdsvc : MetadataUpdateService, 
-                private gaService: GoogleAnalyticsService,
+    constructor(public editstatsvc: EditStatusService,
                 public globalService: GlobalService,
                 public lpService: LandingpageService)
     { 
@@ -60,21 +90,35 @@ export class ResourceIdentityComponent implements OnChanges {
         this.globalService.watchLpsLeftWidth(width => {
             this.onResize(width + 20);
         })
+
+        effect(() => {
+            this.isEditMode = this.editstatsvc.isEditMode();
+            // this.chref.detectChanges();
+        })
     }
 
     ngOnInit(): void {
+        console.log("facilitatorsFieldName", this.facilitatorsFieldName);
+        console.log("this.record", this.record);
+        let i = this.isDefaultCollection;
+
         this.EDIT_MODES = LandingConstants.editModes;
 
         // Watch current edit mode set by edit controls
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
         });
+
+        // this.landingPageURL = this.cfg.get('landingPageService','/od/id/') + this.record['@id'];
     }
 
     onResize(width: number) {
         this.maxWidth = width;
     }
 
+    get isScienceTheme() {
+        return this.theme == this.scienceTheme;
+    }
     /**
      * Decide if currently in view only mode
      */
@@ -121,16 +165,25 @@ export class ResourceIdentityComponent implements OnChanges {
                     suffix = "Science Theme";
             }
            
-            this.isPartOf = [
-                article,
-                this.cfg.get("locations.landingPageService") + coll['@id'],
-                title,
-                suffix
-            ];
+            // this.isPartOf = [
+            //     article,
+            //     this.cfg.get("links.pdrIDResolver") + coll['@id'],
+            //     title,
+            //     suffix
+            // ];
         }
 
-        if (this.record['doi'] !== undefined && this.record['doi'] !== "")
+        if (this.record['doi'] !== undefined && this.record['doi'] !== ""){
             this.doiUrl = "https://doi.org/" + this.record['doi'].substring(4);
+            this.doiLabel = this.doiUrl;
+        }else if(this.record['landingPage']){
+            this.doiUrl = this.record['landingPage'];
+            this.doiLabel = this.record['@id'];
+        }
+        else{
+            this.doiUrl = this.landingPageURL + this.record["@id"];
+            this.doiLabel = this.record["@id"];
+        }
 
         this.primaryRefs = (new NERDResource(this.record)).getPrimaryReferences();
         for (let ref of this.primaryRefs) {
@@ -156,9 +209,9 @@ export class ResourceIdentityComponent implements OnChanges {
      * @param event - action event
      * @param title - action title
      */
-    googleAnalytics(url: string, event, title) {
-        this.gaService.gaTrackEvent('homepage', event, title, url);
-    }
+    // googleAnalytics(url: string, event, title) {
+    //     this.gaService.gaTrackEvent('homepage', event, title, url);
+    // }
 
     visitHomePageBtnStyle() {
         if(this.theme == this.scienceTheme) {

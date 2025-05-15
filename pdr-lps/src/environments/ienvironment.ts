@@ -2,8 +2,8 @@ import { LPSConfig } from 'oarlps';
 
 export interface Context {
     production: boolean;
-    useMetadataService: boolean;
-    useCustomizationService: boolean;
+    useResourceService: boolean;
+    useMIDASDAPService: boolean;
 }
 
 export interface IEnvironment {

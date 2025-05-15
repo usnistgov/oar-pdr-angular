@@ -5,11 +5,11 @@
       style="height: 2em; max-width:calc(100% - 1.8em); " />
 
     <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-        <i class="pi pi-caret-down" (click)="toogleDropDown()"
+        <i class="pi pi-caret-down" (click)="toggleDropDown()"
         style="cursor: pointer;" data-toggle="tooltip"
         title="Orgnization list"></i>
     </span>
-    <!-- <button style="float:right;width:1.8em;margin-top: 2px;" class="drop-down-button" (click)="toogleDropDown()"><i
+    <!-- <button style="float:right;width:1.8em;margin-top: 2px;" class="drop-down-button" (click)="toggleDropDown()"><i
         [ngClass]="arrowClass()"></i></button> -->
   </div>
   <div class="data-container" *ngIf="showDropDown">

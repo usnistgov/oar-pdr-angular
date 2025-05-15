@@ -1,24 +1,37 @@
-import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges } from '@angular/core';
-import { NerdmRes, NERDResource } from '../../../nerdm/nerdm';
-import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
+import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { NerdmRes } from '../../../nerdm/nerdm';
+import { MODE } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { TreeTableModule } from 'primeng/treetable';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 export const ROW_COLOR = '#1E6BA1';
 
 @Component({
-  selector: 'lib-topic-edit',
-  templateUrl: './topic-edit.component.html',
-  styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
+    selector: 'lib-topic-edit',
+    standalone: true,
+    imports: [        
+        CommonModule,
+        FormsModule,
+        ButtonModule,
+        NgbModule,
+        OverlayPanelModule,
+        TreeTableModule],
+    templateUrl: './topic-edit.component.html',
+    styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
 })
 export class TopicEditComponent implements OnInit {
     fieldName = 'theme';
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
     dataChanged: boolean = false;
 
     isVisible: boolean = true;
@@ -43,19 +56,13 @@ export class TopicEditComponent implements OnInit {
     @ViewChild('panel0', { read: ElementRef, static: true }) public panel0: ElementRef<any>;
 
 
-    constructor(
-        public mdupdsvc: MetadataUpdateService,
-        private taxonomyListService: TaxonomyListService,
-        private notificationService: NotificationService,
-        private msgsvc: UserMessageService) { }
+    constructor(public mdupdsvc: MetadataUpdateService,
+                private taxonomyListService: TaxonomyListService,
+                private msgsvc: UserMessageService) { }
 
     ngOnInit(): void {
         //Clone this.nistTaxonomyTopics
         // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
-
-        // for(let obj of this.selectedTopicObjs) {
-        //     this.selectedTopics.push(obj.tag);
-        // }
 
         this.taxonomyListService.get(0).subscribe((result) => {
             if (result != null && result != undefined)
@@ -94,11 +101,11 @@ export class TopicEditComponent implements OnInit {
 
     get isEditing() { return this.editMode==MODE.EDIT }
 
-    get isNormal() { return this.editMode==MODE.NORNAL }
+    get isNormal() { return this.editMode==MODE.NORMAL }
 
     reset() {
         this.dataChanged = false;
-        this.editMode = MODE.NORNAL;
+        this.editMode = MODE.NORMAL;
         this.isVisible = true;
     }
 
@@ -131,6 +138,8 @@ export class TopicEditComponent implements OnInit {
         if(paths) {
             paths.forEach((path) => {
                 var fullpath: string;
+                if (! path.label)
+                    path.label = path.term;
                 if (path.parent != null && path.parent != undefined && path.parent != "")
                     fullpath = path.parent + ":" + path.label;
                 else
@@ -192,21 +201,6 @@ export class TopicEditComponent implements OnInit {
     onSave(refreshHelp: boolean = true) {
         this.dataChanged = false;
         this.cmdOutput.emit({'command':'saveTopics','selectedTopics':this.selectedTopics});
-
-        // let postMessage: any = {};
-
-        // postMessage[this.fieldName] = this.selectedTopics;
-        // this.record[this.fieldName] = this.selectedTopics;
-        // console.log("postMessage", postMessage);
-        // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-        //     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-        //     if (updateSuccess) {
-        //         this.dataChanged = false;
-        //         this.commandOut('saveTopics');
-        //         this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
-        //     } else
-        //         console.error("acknowledge topic update failure");
-        // });
     }
 
     /**

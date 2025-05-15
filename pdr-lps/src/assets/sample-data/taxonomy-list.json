@@ -1,0 +1,3754 @@
+[
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529744,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "term": "Advanced Communications",
+      "level": 1,
+      "parent": "",
+      "label": "Advanced Communications"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529745,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Advanced Communications",
+      "term": "Optical communications",
+      "level": 2,
+      "label": "Optical communications"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529746,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Advanced Communications",
+      "term": "Quantum communications",
+      "level": 2,
+      "label": "Quantum communications"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529747,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Advanced Communications",
+      "term": "Wireless (RF)",
+      "level": 2,
+      "label": "Wireless (RF)"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529748,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "term": "Bioscience",
+      "level": 1,
+      "parent": "",
+      "label": "Bioscience"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529749,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Bioscience",
+      "term": "Biomaterials",
+      "level": 2,
+      "label": "Biomaterials"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529750,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Bioscience",
+      "term": "Biomolecular Characterization",
+      "level": 2,
+      "since": "1.1",
+      "label": "Biomolecular Characterization"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529751,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Bioscience",
+      "term": "Bioprocessing",
+      "level": 2,
+      "label": "Bioprocessing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529752,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Bioscience",
+      "term": "Cell biology",
+      "level": 2,
+      "label": "Cell biology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529753,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Bioscience",
+      "term": "Engineering/synthetic biology",
+      "level": 2,
+      "label": "Engineering/synthetic biology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529754,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Bioscience",
+      "term": "Genomics",
+      "level": 2,
+      "since": "1.1",
+      "label": "Genomics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379190,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529755,
+        "time": 1661379190000,
+        "date": "2022-08-24T22:13:10.000+0000",
+        "timeSecond": 1661379190
+      },
+      "parent": "Bioscience",
+      "term": "Glycomics",
+      "level": 2,
+      "label": "Glycomics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529756,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Bioscience",
+      "term": "Microbial measurements",
+      "level": 2,
+      "label": "Microbial measurements"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529757,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Bioscience",
+      "term": "Proteomics",
+      "level": 2,
+      "label": "Proteomics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529758,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Buildings and Construction",
+      "level": 1,
+      "parent": "",
+      "label": "Buildings and Construction"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529759,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Heating, ventilation, and air conditioning equipment",
+      "level": 2,
+      "since": "1.1",
+      "label": "Heating, ventilation, and air conditioning equipment"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529760,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Building codes and standards",
+      "level": 2,
+      "label": "Building codes and standards"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529761,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Building control systems",
+      "level": 2,
+      "label": "Building control systems"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529762,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Building damage and repair",
+      "level": 2,
+      "label": "Building damage and repair"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529763,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Building economics",
+      "level": 2,
+      "label": "Building economics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529764,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Building materials",
+      "level": 2,
+      "label": "Building materials"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529765,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Indoor air quality",
+      "level": 2,
+      "label": "Indoor air quality"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529766,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Resilient buildings",
+      "level": 2,
+      "since": "1.1",
+      "label": "Resilient buildings"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529767,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Structural engineering",
+      "level": 2,
+      "label": "Structural engineering"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529768,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Buildings and Construction",
+      "term": "Sustainable buildings",
+      "level": 2,
+      "label": "Sustainable buildings"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529769,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Chemistry",
+      "level": 1,
+      "parent": "",
+      "label": "Chemistry"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529770,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Chemistry",
+      "term": "Analytical chemistry",
+      "level": 2,
+      "label": "Analytical chemistry"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529771,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Chemistry",
+      "term": "Chemical engineering and processing",
+      "level": 2,
+      "label": "Chemical engineering and processing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529772,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Chemistry",
+      "term": "Chemical thermodynamics and chemical properties",
+      "level": 2,
+      "label": "Chemical thermodynamics and chemical properties"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529773,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Chemistry",
+      "term": "Molecular characterization",
+      "level": 2,
+      "label": "Molecular characterization"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529774,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Chemistry",
+      "term": "Theoretical chemistry and modeling",
+      "level": 2,
+      "label": "Theoretical chemistry and modeling"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529775,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Chemistry",
+      "term": "Thermochemical properties",
+      "level": 2,
+      "label": "Thermochemical properties"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529776,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Electronics",
+      "level": 1,
+      "parent": "",
+      "label": "Electronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529777,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Electromagnetics",
+      "level": 2,
+      "label": "Electromagnetics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529778,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Flexible electronics",
+      "level": 2,
+      "since": "1.1",
+      "label": "Flexible electronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529779,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Magnetoelectronics",
+      "level": 2,
+      "label": "Magnetoelectronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529780,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Optoelectronics",
+      "level": 2,
+      "label": "Optoelectronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529781,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Organic electronics",
+      "level": 2,
+      "label": "Organic electronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529782,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Semiconductors",
+      "level": 2,
+      "label": "Semiconductors"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529783,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Sensors",
+      "level": 2,
+      "label": "Sensors"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529784,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Superconducting electronics",
+      "level": 2,
+      "label": "Superconducting electronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529785,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Electronics",
+      "term": "Thin-film electronics",
+      "level": 2,
+      "label": "Thin-film electronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529786,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Energy",
+      "level": 1,
+      "parent": "",
+      "label": "Energy"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529787,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Energy",
+      "term": "Alternative energy",
+      "level": 2,
+      "label": "Alternative energy"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529788,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Energy",
+      "term": "Conventional energy",
+      "level": 2,
+      "label": "Conventional energy"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529789,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Energy",
+      "term": "Electric power / smart grid",
+      "level": 2,
+      "label": "Electric power / smart grid"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529790,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Energy",
+      "term": "Energy efficiency",
+      "level": 2,
+      "label": "Energy efficiency"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529791,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Energy",
+      "term": "Fuels",
+      "level": 2,
+      "label": "Fuels"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529792,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Energy",
+      "term": "Sustainability",
+      "level": 2,
+      "label": "Sustainability"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529793,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Environment",
+      "level": 1,
+      "parent": "",
+      "label": "Environment"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529794,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Environment",
+      "term": "Air / water / soil quality",
+      "level": 2,
+      "label": "Air / water / soil quality"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529795,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Environment",
+      "term": "Environmental health",
+      "level": 2,
+      "label": "Environmental health"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529796,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Environment",
+      "term": "Greenhouse gas measurements",
+      "level": 2,
+      "label": "Greenhouse gas measurements"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529797,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Environment",
+      "term": "Marine science",
+      "level": 2,
+      "label": "Marine science"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529798,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Fire",
+      "level": 1,
+      "parent": "",
+      "label": "Fire"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529799,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Emergency building evacuation",
+      "level": 2,
+      "label": "Emergency building evacuation"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529800,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Fire detection",
+      "level": 2,
+      "label": "Fire detection"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529801,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Fire dynamics and science",
+      "level": 2,
+      "label": "Fire dynamics and science"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529802,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Fire fighting",
+      "level": 2,
+      "label": "Fire fighting"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529803,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Fire modeling",
+      "level": 2,
+      "label": "Fire modeling"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529804,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Fire risk reduction",
+      "level": 2,
+      "label": "Fire risk reduction"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529805,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Materials flammability",
+      "level": 2,
+      "label": "Materials flammability"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529806,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Structural fire resistence",
+      "level": 2,
+      "label": "Structural fire resistence"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529807,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Fire",
+      "term": "Wildland urban interface fire",
+      "level": 2,
+      "label": "Wildland urban interface fire"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529808,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Forensics",
+      "level": 1,
+      "parent": "",
+      "label": "Forensics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529809,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Forensics",
+      "term": "Ballistics",
+      "level": 2,
+      "label": "Ballistics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529810,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Forensics",
+      "term": "Digital evidence",
+      "level": 2,
+      "since": "1.1",
+      "label": "Digital evidence"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529811,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Forensics",
+      "term": "DNA and biological evidence",
+      "level": 2,
+      "label": "DNA and biological evidence"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529812,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Forensics",
+      "term": "Drugs and toxicology",
+      "level": 2,
+      "label": "Drugs and toxicology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529813,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Forensics",
+      "term": "Fingerprints and pattern evidence",
+      "level": 2,
+      "since": "1.1",
+      "label": "Fingerprints and pattern evidence"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529814,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Forensics",
+      "term": "Trace evidence",
+      "level": 2,
+      "label": "Trace evidence"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529815,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Health",
+      "level": 1,
+      "parent": "",
+      "label": "Health"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529816,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Health",
+      "term": "Clinical diagnostics",
+      "level": 2,
+      "label": "Clinical diagnostics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529817,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Health",
+      "term": "Dentistry",
+      "level": 2,
+      "label": "Dentistry"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529818,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Health",
+      "term": "Food and nutrition",
+      "level": 2,
+      "label": "Food and nutrition"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529819,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Health",
+      "term": "Medical imaging",
+      "level": 2,
+      "label": "Medical imaging"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529820,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Health",
+      "term": "Pharmaceuticals",
+      "level": 2,
+      "label": "Pharmaceuticals"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529821,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Health",
+      "term": "Precision medicine",
+      "level": 2,
+      "label": "Precision medicine"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529822,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Health",
+      "term": "Regenerative medicine",
+      "level": 2,
+      "since": "1.1",
+      "label": "Regenerative medicine"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529823,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Information Technology",
+      "level": 1,
+      "parent": "",
+      "label": "Information Technology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529824,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Artificial Intelligence",
+      "level": 2,
+      "label": "Artificial Intelligence"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529825,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Biometrics",
+      "level": 2,
+      "label": "Biometrics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529826,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Cloud computing and virtualization",
+      "level": 2,
+      "label": "Cloud computing and virtualization"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529827,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Complex systems",
+      "level": 2,
+      "label": "Complex systems"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529828,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Computational science",
+      "level": 2,
+      "label": "Computational science"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529829,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Conformance testing",
+      "level": 2,
+      "label": "Conformance testing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529830,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Cyber-physical systems",
+      "level": 2,
+      "label": "Cyber-physical systems"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529831,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Cyber-physical systems",
+      "term": "Smart cities",
+      "level": 3,
+      "label": "Smart cities"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529832,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Cybersecurity",
+      "level": 2,
+      "label": "Cybersecurity"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529833,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Cybersecurity",
+      "term": "Configuration and vulnerability management",
+      "level": 3,
+      "label": "Configuration and vulnerability management"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529834,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Cybersecurity",
+      "term": "Cryptography",
+      "level": 3,
+      "label": "Cryptography"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529835,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Cybersecurity",
+      "term": "Risk management",
+      "level": 3,
+      "label": "Risk management"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529836,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Data and informatics",
+      "level": 2,
+      "label": "Data and informatics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529837,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Data and informatics",
+      "term": "Human language technology",
+      "level": 3,
+      "label": "Human language technology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529838,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Data and informatics",
+      "term": "Information retrieval",
+      "level": 3,
+      "label": "Information retrieval"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529839,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Data and informatics",
+      "term": "Natural language processing",
+      "level": 3,
+      "label": "Natural language processing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529840,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Federal information standards (FIPS)",
+      "level": 2,
+      "label": "Federal information standards (FIPS)"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529841,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Health IT",
+      "level": 2,
+      "since": "1.1",
+      "label": "Health IT"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529842,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Identity and access management",
+      "level": 2,
+      "since": "1.1",
+      "label": "Identity and access management"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529843,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Internet of Things (IoT)",
+      "level": 2,
+      "since": "1.1",
+      "label": "Internet of Things (IoT)"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529844,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Interoperability testing",
+      "level": 2,
+      "label": "Interoperability testing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529845,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Mobile",
+      "level": 2,
+      "label": "Mobile"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529846,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Networking",
+      "level": 2,
+      "label": "Networking"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529847,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Networking",
+      "term": "Mobile and Wireless Networking",
+      "level": 3,
+      "since": "1.0",
+      "label": "Mobile and Wireless Networking"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529848,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Networking",
+      "term": "Network Management and Monitoring",
+      "level": 3,
+      "label": "Network Management and Monitoring"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529849,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Networking",
+      "term": "Network Modeling and Analysis",
+      "level": 3,
+      "since": "1.0",
+      "label": "Network Modeling and Analysis"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529850,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Networking",
+      "term": "Network Security and Robustness",
+      "level": 3,
+      "since": "1.0",
+      "label": "Network Security and Robustness"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529851,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Networking",
+      "term": "Network Test and Measurement",
+      "level": 3,
+      "since": "1.0",
+      "label": "Network Test and Measurement"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529852,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Privacy",
+      "level": 2,
+      "label": "Privacy"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529853,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Software research",
+      "level": 2,
+      "label": "Software research"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529854,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Software research",
+      "term": "Software assurance",
+      "level": 3,
+      "label": "Software assurance"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529855,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Software research",
+      "term": "Software performance",
+      "level": 3,
+      "label": "Software performance"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529856,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Software research",
+      "term": "Software testing",
+      "level": 3,
+      "label": "Software testing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529857,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Usability and human factors",
+      "level": 2,
+      "label": "Usability and human factors"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529858,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology: Usability and human factors",
+      "term": "Accessibility",
+      "level": 3,
+      "label": "Accessibility"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529859,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Video analytics",
+      "level": 2,
+      "label": "Video analytics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529860,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Visualization research",
+      "level": 2,
+      "label": "Visualization research"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529861,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Information Technology",
+      "term": "Voting systems",
+      "level": 2,
+      "label": "Voting systems"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529862,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Infrastructure",
+      "level": 1,
+      "parent": "",
+      "label": "Infrastructure"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529863,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Manufacturing",
+      "level": 1,
+      "parent": "",
+      "label": "Manufacturing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529864,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Additive manufacturing",
+      "level": 2,
+      "label": "Additive manufacturing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529865,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Biomanufacturing",
+      "level": 2,
+      "label": "Biomanufacturing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529866,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Factory communications",
+      "level": 2,
+      "label": "Factory communications"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529867,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Factory operations planning and control",
+      "level": 2,
+      "label": "Factory operations planning and control"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529868,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Interoperability in manufacturing",
+      "level": 2,
+      "label": "Interoperability in manufacturing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529869,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Machining",
+      "level": 2,
+      "label": "Machining"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529870,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Manufacturing systems design and analysis",
+      "level": 2,
+      "label": "Manufacturing systems design and analysis"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529871,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Monitoring, diagnostics and prognostics",
+      "level": 2,
+      "label": "Monitoring, diagnostics and prognostics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529872,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Process improvement",
+      "level": 2,
+      "label": "Process improvement"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529873,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Process measurement and control",
+      "level": 2,
+      "label": "Process measurement and control"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529874,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Product data",
+      "level": 2,
+      "label": "Product data"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529875,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Quality assurance",
+      "level": 2,
+      "label": "Quality assurance"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529876,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Robotics in manufacturing",
+      "level": 2,
+      "label": "Robotics in manufacturing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529877,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing: Robotics in manufacturing",
+      "term": "Agility and adaptability",
+      "level": 3,
+      "label": "Agility and adaptability"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529878,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing: Robotics in manufacturing",
+      "term": "Collaborative robots",
+      "level": 3,
+      "label": "Collaborative robots"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529879,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing: Robotics in manufacturing",
+      "term": "Dexterous grasping",
+      "level": 3,
+      "since": "1.1",
+      "label": "Dexterous grasping"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529880,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing: Robotics in manufacturing",
+      "term": "Industrial autonomous vehicles",
+      "level": 3,
+      "label": "Industrial autonomous vehicles"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529881,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing: Robotics in manufacturing",
+      "term": "Mobile manipulators",
+      "level": 3,
+      "label": "Mobile manipulators"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529882,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing: Robotics in manufacturing",
+      "term": "Navigation / actuation / control",
+      "level": 3,
+      "label": "Navigation / actuation / control"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529883,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing: Robotics in manufacturing",
+      "term": "Sensing and perception",
+      "level": 3,
+      "label": "Sensing and perception"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529884,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Supply chain",
+      "level": 2,
+      "label": "Supply chain"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529885,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Sustainable manufacturing",
+      "level": 2,
+      "label": "Sustainable manufacturing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529886,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Systems engineering",
+      "level": 2,
+      "label": "Systems engineering"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529887,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Systems integration",
+      "level": 2,
+      "label": "Systems integration"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529888,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Manufacturing",
+      "term": "Technology commercialization",
+      "level": 2,
+      "label": "Technology commercialization"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529889,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Materials",
+      "level": 1,
+      "parent": "",
+      "label": "Materials"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529890,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Ceramics",
+      "level": 2,
+      "label": "Ceramics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529891,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Composites",
+      "level": 2,
+      "label": "Composites"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529892,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Concrete/cement",
+      "level": 2,
+      "label": "Concrete/cement"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529893,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Materials characterization",
+      "level": 2,
+      "label": "Materials characterization"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529894,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials: Materials characterization",
+      "term": "Composition and structure",
+      "level": 3,
+      "label": "Composition and structure"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529895,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials: Materials characterization",
+      "term": "Magnetic properties",
+      "level": 3,
+      "label": "Magnetic properties"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529896,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials: Materials characterization",
+      "term": "Mechanical properties",
+      "level": 3,
+      "label": "Mechanical properties"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529897,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials: Materials characterization",
+      "term": "Thermal properties",
+      "level": 3,
+      "label": "Thermal properties"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529898,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Metals",
+      "level": 2,
+      "label": "Metals"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529899,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Modeling and computational material science",
+      "level": 2,
+      "label": "Modeling and computational material science"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529900,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Polymers",
+      "level": 2,
+      "label": "Polymers"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529901,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Materials",
+      "term": "Superconductors",
+      "level": 2,
+      "label": "Superconductors"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529902,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Mathematics and Statistics",
+      "level": 1,
+      "parent": "",
+      "label": "Mathematics and Statistics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529903,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Mathematics and Statistics",
+      "term": "Experiment design",
+      "level": 2,
+      "label": "Experiment design"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529904,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Mathematics and Statistics",
+      "term": "Image and signal processing",
+      "level": 2,
+      "label": "Image and signal processing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529905,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Mathematics and Statistics",
+      "term": "Mathematical knowledge management",
+      "level": 2,
+      "label": "Mathematical knowledge management"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529906,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Mathematics and Statistics",
+      "term": "Modeling and simulation research",
+      "level": 2,
+      "label": "Modeling and simulation research"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529907,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Mathematics and Statistics",
+      "term": "Numerical methods and software",
+      "level": 2,
+      "label": "Numerical methods and software"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529908,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Mathematics and Statistics",
+      "term": "Statistical analysis",
+      "level": 2,
+      "label": "Statistical analysis"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529909,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Mathematics and Statistics",
+      "term": "Uncertainty quantification",
+      "level": 2,
+      "label": "Uncertainty quantification"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529910,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Metrology",
+      "level": 1,
+      "parent": "",
+      "label": "Metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529911,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Acoustic/vibration metrology",
+      "level": 2,
+      "label": "Acoustic/vibration metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529912,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Amount of substance",
+      "level": 2,
+      "label": "Amount of substance"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529913,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Dimensional metrology",
+      "level": 2,
+      "label": "Dimensional metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529914,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Electrical/electromagnetic metrology",
+      "level": 2,
+      "label": "Electrical/electromagnetic metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529915,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Flow metrology and rheology",
+      "level": 2,
+      "label": "Flow metrology and rheology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529916,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Force metrology",
+      "level": 2,
+      "label": "Force metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529917,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Humidity metrology",
+      "level": 2,
+      "label": "Humidity metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529918,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Ionizing radiation metrology",
+      "level": 2,
+      "label": "Ionizing radiation metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529919,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Mass metrology",
+      "level": 2,
+      "label": "Mass metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529920,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Metric",
+      "level": 2,
+      "label": "Metric"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529921,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Optical, photometry, and laser metrology",
+      "level": 2,
+      "label": "Optical, photometry, and laser metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529922,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Pressure and vacuum metrology",
+      "level": 2,
+      "label": "Pressure and vacuum metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529923,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Thermometry metrology",
+      "level": 2,
+      "label": "Thermometry metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529924,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Time and frequency metrology",
+      "level": 2,
+      "label": "Time and frequency metrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529925,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Metrology",
+      "term": "Weights and measures",
+      "level": 2,
+      "label": "Weights and measures"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529926,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Nanotechnology",
+      "level": 1,
+      "parent": "",
+      "label": "Nanotechnology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529927,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanobiotechnology",
+      "level": 2,
+      "label": "Nanobiotechnology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529928,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanochemistry",
+      "level": 2,
+      "label": "Nanochemistry"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529929,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanoelectronics",
+      "level": 2,
+      "label": "Nanoelectronics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529930,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanofabrication/manufacturing",
+      "level": 2,
+      "label": "Nanofabrication/manufacturing"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529931,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology: Nanofabrication/manufacturing",
+      "term": "Lithography",
+      "level": 3,
+      "label": "Lithography"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529932,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology: Nanofabrication/manufacturing",
+      "term": "Self-assembly",
+      "level": 3,
+      "label": "Self-assembly"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529933,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanofluidics",
+      "level": 2,
+      "label": "Nanofluidics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529934,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanomagnetics",
+      "level": 2,
+      "label": "Nanomagnetics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529935,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanomaterials",
+      "level": 2,
+      "label": "Nanomaterials"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529936,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanomechanics",
+      "level": 2,
+      "label": "Nanomechanics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529937,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanometrology",
+      "level": 2,
+      "label": "Nanometrology"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529938,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanophotonics",
+      "level": 2,
+      "label": "Nanophotonics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529939,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanophysics",
+      "level": 2,
+      "label": "Nanophysics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529940,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Nanotechnology",
+      "term": "Nanoplasmonics",
+      "level": 2,
+      "label": "Nanoplasmonics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529941,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Neutron Research",
+      "level": 1,
+      "parent": "",
+      "label": "Neutron Research"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529942,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Performance Excellence",
+      "level": 1,
+      "parent": "",
+      "label": "Performance Excellence"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529943,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Performance Excellence",
+      "term": "Assessment tools and services",
+      "level": 2,
+      "label": "Assessment tools and services"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529944,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Performance Excellence",
+      "term": "Baldrige Award",
+      "level": 2,
+      "label": "Baldrige Award"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529945,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Performance Excellence",
+      "term": "Baldrige Examiners",
+      "level": 2,
+      "label": "Baldrige Examiners"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529946,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Performance Excellence",
+      "term": "Baldrige Framework and Criteria",
+      "level": 2,
+      "label": "Baldrige Framework and Criteria"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529947,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Performance Excellence",
+      "term": "Best practices",
+      "level": 2,
+      "label": "Best practices"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529948,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Performance Excellence",
+      "term": "Leadership development",
+      "level": 2,
+      "label": "Leadership development"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529949,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Physics",
+      "level": 1,
+      "parent": "",
+      "label": "Physics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529950,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Atomic, molecular, and quantum",
+      "level": 2,
+      "label": "Atomic, molecular, and quantum"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529951,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Biological physics",
+      "level": 2,
+      "label": "Biological physics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529952,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Condensed matter",
+      "level": 2,
+      "label": "Condensed matter"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529953,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Electron physics",
+      "level": 2,
+      "label": "Electron physics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529954,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Magnetics",
+      "level": 2,
+      "label": "Magnetics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529955,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Nuclear physics",
+      "level": 2,
+      "label": "Nuclear physics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529956,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Optical physics",
+      "level": 2,
+      "label": "Optical physics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529957,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Quantum information science",
+      "level": 2,
+      "label": "Quantum information science"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529958,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Radiation",
+      "level": 2,
+      "label": "Radiation"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529959,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Spectroscopy",
+      "level": 2,
+      "label": "Spectroscopy"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529960,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Thermodynamics",
+      "level": 2,
+      "label": "Thermodynamics"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529961,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Physics",
+      "term": "Time and frequency",
+      "level": 2,
+      "label": "Time and frequency"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529962,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Public Safety",
+      "level": 1,
+      "parent": "",
+      "label": "Public Safety"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529963,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety",
+      "term": "Chemical/Biological/Radiological/Nuclear/Explosives (CBRNE)",
+      "level": 2,
+      "label": "Chemical/Biological/Radiological/Nuclear/Explosives (CBRNE)"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529964,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety",
+      "term": "First responder preparedness",
+      "level": 2,
+      "label": "First responder preparedness"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529965,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety",
+      "term": "Law enforcement",
+      "level": 2,
+      "label": "Law enforcement"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529966,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety",
+      "term": "Physical security",
+      "level": 2,
+      "label": "Physical security"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529967,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety",
+      "term": "Public safety communications research",
+      "level": 2,
+      "label": "Public safety communications research"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529968,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety",
+      "term": "Response robots",
+      "level": 2,
+      "label": "Response robots"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529969,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety: Response robots",
+      "term": "Aerial",
+      "level": 3,
+      "label": "Aerial"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529970,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety: Response robots",
+      "term": "Aquatic and underwater",
+      "level": 3,
+      "label": "Aquatic and underwater"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529971,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Public Safety: Response robots",
+      "term": "Ground",
+      "level": 3,
+      "label": "Ground"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529972,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Resilience",
+      "level": 1,
+      "parent": "",
+      "label": "Resilience"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529973,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Resilience",
+      "term": "Community resilience",
+      "level": 2,
+      "label": "Community resilience"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529974,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Resilience",
+      "term": "Disaster and failure studies",
+      "level": 2,
+      "since": "1.0",
+      "label": "Disaster and failure studies"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529975,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Resilience",
+      "term": "Earthquake risk reduction",
+      "level": 2,
+      "label": "Earthquake risk reduction"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529976,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Resilience",
+      "term": "Resilient materials",
+      "level": 2,
+      "label": "Resilient materials"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529977,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Resilience",
+      "term": "Windstorm impact reduction",
+      "level": 2,
+      "label": "Windstorm impact reduction"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529978,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Standards",
+      "level": 1,
+      "parent": "",
+      "label": "Standards"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529979,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Accreditation",
+      "level": 2,
+      "label": "Accreditation"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529980,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Calibration Services",
+      "level": 2,
+      "label": "Calibration Services"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529981,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Certification",
+      "level": 2,
+      "label": "Certification"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529982,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Conformity assessment",
+      "level": 2,
+      "label": "Conformity assessment"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529983,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Documentary standards",
+      "level": 2,
+      "label": "Documentary standards"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529984,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Frameworks",
+      "level": 2,
+      "label": "Frameworks"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529985,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Reference data",
+      "level": 2,
+      "label": "Reference data"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529986,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Reference instruments",
+      "level": 2,
+      "label": "Reference instruments"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529987,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Reference materials",
+      "level": 2,
+      "label": "Reference materials"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529988,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Standards",
+      "term": "Standards education",
+      "level": 2,
+      "label": "Standards education"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529989,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "term": "Transportation",
+      "level": 1,
+      "parent": "",
+      "label": "Transportation"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529990,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Transportation",
+      "term": "Aerospace",
+      "level": 2,
+      "label": "Aerospace"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529991,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Transportation",
+      "term": "Automotive",
+      "level": 2,
+      "label": "Automotive"
+    },
+    {
+      "_id": {
+        "timestamp": 1661379191,
+        "machineIdentifier": 5303463,
+        "processIdentifier": -25965,
+        "counter": 4529992,
+        "time": 1661379191000,
+        "date": "2022-08-24T22:13:11.000+0000",
+        "timeSecond": 1661379191
+      },
+      "parent": "Transportation",
+      "term": "Rail",
+      "level": 2,
+      "label": "Rail"
+    }
+  ]

@@ -1,0 +1,31 @@
+{
+    "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='fas fa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='fas fa-pencil'></i> to the right of each field to edit.<p><p>* required field.",
+    "publicationType": {
+        "label": "Publication Type",
+        "general": "With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later.<p><i>[Helpful examples, links to policy and guideance]</i>" 
+    },
+    "contactInfo": {
+        "label": "Contact Info",
+        "general": "The primary public contact is a person familiar the content of this publication and, thus, can answer questions from the public that wish to reference this publication or make use of its contents."
+    },
+    "files": {
+        "label": "Files",
+        "general": "The primary public contact is a person familiar the content of this publication and, thus, can answer questions from the public that wish to reference this publication or make use of its contents."
+    },
+    "software": {
+        "label": "Software",
+        "general": "With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later.<p><i>[Helpful examples, links to policy and guideance]</i>"
+    },
+    "associatedPapers": {
+        "label": "Associated Papers",
+        "general": "With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products--for example, data plus software to analyze it--but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later.<p><i>[Helpful examples, links to policy and guideance]</i>"
+    },
+    "name": {
+        "label": "Name",
+        "general": "When your draft publication is created, it is assigned both an identifier and a name.  The system chooses the identifier, but you get to choose the name.  This name will not appear in the final publication; it is just a name that MIDAS will display in its portal to remind you what this publication is about.<p></p>This name should be brief--say, 16 characters or less (so it should not be the same as the publication title).  If it is much longer than that, it may get truncated in displays. A name must unique among all the records you create; we'll let you know if you are about to enter a name you've assigned before.  If you wish, you can change this name later."
+    },
+    "collection": {
+        "label": "Collection",
+        "general": "When your draft publication is created, it is assigned both an identifier and a name.  The system chooses the identifier, but you get to choose the name.  This name will not appear in the final publication; it is just a name that MIDAS will display in its portal to remind you what this publication is about.<p></p>This name should be brief--say, 16 characters or less (so it should not be the same as the publication title).  If it is much longer than that, it may get truncated in displays. A name must unique among all the records you create; we'll let you know if you are about to enter a name you've assigned before.  If you wish, you can change this name later."
+    }
+}

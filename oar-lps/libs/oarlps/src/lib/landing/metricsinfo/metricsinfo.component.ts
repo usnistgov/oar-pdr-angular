@@ -10,18 +10,20 @@ import { CartActions } from '../../datacart/cartconstants';
 import { MetricsData } from "../metrics-data";
 import * as _ from 'lodash-es';
 import { formatBytes } from '../../utils';
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-metricsinfo',
+    standalone: true,
+    imports: [
+        CommonModule
+    ],
     templateUrl: './metricsinfo.component.html',
     styleUrls: ['./metricsinfo.component.css']
 })
 export class MetricsinfoComponent implements OnInit {
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;
-
-    // Record level metrics data
-    // @Input() recordLevelMetrics : RecordLevelMetrics|null = new RecordLevelMetrics();
 
     @Input() inBrowser: boolean = false;
 
@@ -45,17 +47,17 @@ export class MetricsinfoComponent implements OnInit {
     delayTimeForMetricsRefresh: number = 300; 
     time: any;
 
-    constructor(
-        public commonFunctionService: CommonFunctionService,
-        public metricsService: MetricsService,
-        private cfg: AppConfig
-    ) { 
+    constructor(public commonFunctionService: CommonFunctionService,
+                public metricsService: MetricsService,
+                private cfg: AppConfig) 
+    { 
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
     }
 
     ngOnInit(): void {
         //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
         //Add 'implements OnInit' to the class.
+        console.log("metricsData", this.metricsData);
     }
 
     get totalUsers() {
@@ -78,5 +80,9 @@ export class MetricsinfoComponent implements OnInit {
             return formatBytes(this.metricsData.totalDownloadSize, 2);
         else
             return "";
+    }
+
+    get hasCurrentMetrics() {
+        return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
     }
 }

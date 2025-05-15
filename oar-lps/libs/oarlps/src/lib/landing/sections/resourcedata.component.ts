@@ -1,10 +1,18 @@
-import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
-import { AppConfig } from '../../config/config';
+import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, effect } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Themes, ThemesPrefs, ColorScheme } from '../../shared/globals/globals';
-import * as Globals from '../../shared/globals/globals'
+import { trigger, style, animate, transition } from '@angular/animations';
+import { Themes, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
+import { SearchresultModule } from '../searchresult/searchresult.module';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditStatusService } from '../editcontrol/editstatus.service';
+import { UserMessageService } from '../../frame/usermessage.service';
+import { SectionTitleComponent } from '../section-title/section-title.component';
+import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
+import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
+import { DatafilesPubComponent } from '../data-files/datafiles-pub/datafiles-pub.component';
+import { DatafilesMidasComponent } from '../data-files/datafiles-midas/datafiles-midas.component';
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -12,6 +20,17 @@ import * as Globals from '../../shared/globals/globals'
  */
 @Component({
     selector:      'pdr-resource-data',
+    standalone: true,
+    imports: [
+        SectionTitleComponent,
+        CommonModule,
+        AccesspageMidasComponent,
+        DatafilesPubComponent,
+        DatafilesMidasComponent,
+        SearchresultModule,
+        AccesspagePubComponent,
+        NgbModule
+    ],
     templateUrl:   './resourcedata.component.html',
     styleUrls:   [
         './resourcedata.component.css',
@@ -47,12 +66,14 @@ export class ResourceDataComponent implements OnChanges {
     sectionTitle: string = "Data Access";
     collection: string;
     maxWidth: number = 1000;
+    isEditMode: boolean = true;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() editEnabled: boolean; 
     @Input() theme: string = "default";
+    @Input() isPublicSite: boolean = true;
 
     // pass out download status for metrics refresh
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();
@@ -62,8 +83,8 @@ export class ResourceDataComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(private cfg: AppConfig,
-                public globalService: Globals.GlobalService,
+    constructor(public globalService: GlobalService,
+                public edstatsvc: EditStatusService,
                 private gaService: GoogleAnalyticsService)
     { 
         this.globalService.watchCollection((collection) => {
@@ -72,10 +93,15 @@ export class ResourceDataComponent implements OnChanges {
 
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width + 20;
+        });
+
+        effect(() => {
+            this.isEditMode = this.edstatsvc.isEditMode();
         })
     }
 
     ngOnInit(): void {
+        this.isEditMode = this.edstatsvc.isEditMode();
         this.recordType = (new NERDResource(this.record)).resourceLabel();
 
         this.colorScheme = {
@@ -84,7 +110,7 @@ export class ResourceDataComponent implements OnChanges {
             "lighter": "#f0f7f1",
             "dark": "#1c6022",
             "hover": "#ffffff" 
-        }
+        };
     }
 
     ngOnChanges(ch : SimpleChanges) {

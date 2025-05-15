@@ -106,7 +106,7 @@
             style="float: right;font-weight: lighter; margin-right: .5em;">
             For tech support, please email <a style="color: rgb(255, 248, 182);"
                 href="mailto:datasupport@nist.gov?subject={{emailSubject}}&body={{getEmailBody()}}"
-                (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport@nist.gov
+                (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport&#64;nist.gov
             </a>
         </span>
     </div>
@@ -114,7 +114,7 @@
         <span *ngIf="bundlePlanStatus == 'internal error';else no_internal_error" [ngStyle]="{'color':messageColor}">
             Ooops! There was a problem getting the data you need. Please contact us at <a
                 href="mailto:datasupport@nist.gov?subject={{emailSubject}}&body={{getEmailBody()}}"
-                (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport@nist.gov</a>
+                (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport&#64;nist.gov</a>
             to report the problem. If possible, include the string "PDR: Error getting download plan" in your email
             report.</span>
         <ng-template #no_internal_error>
@@ -154,7 +154,7 @@
             <tr>
                 <th scope="row">Tech support</th>
                 <td><a href="mailto:datasupport@nist.gov?subject={{emailSubject}}&body={{getEmailBody()}}"
-                    (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport@nist.gov
+                    (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport&#64;nist.gov
                 </a></td>
             </tr>
         </tbody>

@@ -1,0 +1,78 @@
+<!-- When editEnabled is true, there are two modes: edit mode and preview mode. 
+     This is defined by mdupdsvc.isEditMode (boolean).
+     In edit mode, there are also two modes: editing and non-editing.
+     This is defined by isEditing variable (boolean).
+
+     The textarea box only shows up when isEditng = true. Otherwise display text.
+
+     The pencil button only show up when mdupdsvc.isEditMode is true and isEditing = false.
+     Other edit buttons show up when isEditing is true.
+  -->
+<div style="width: 100%;">
+    <div style="display: table; margin-bottom: 0em;width:100%;">
+        <div class="editable_container" style="width:100%;">
+            <div class="editable_field red-star" *ngIf="edstatsvc.isEditMode()">
+                *
+            </div>
+
+            @if(isEditing) {
+                <div class="editable_field" [ngStyle]="titleWidth">
+                    <h2 style="width: 100%;">
+                        <textarea #title autocomplete="off" [(ngModel)]='record.title' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" style="width: 100%;cursor: text;" libTextareaAutoresize></textarea>
+                    </h2>
+                </div>
+            }
+            @else {
+                <div class="editable_field" (click)="startEditing()" style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+                    @if(record['title']) {
+                        <span ><h2>{{record.title}}</h2></span>
+                    }
+                    @else {
+                        <span style="color: var(--disabled-grey-text);">{{placeholder}}</span>
+                    }
+                </div>
+            }
+  
+            <!-- Control buttons -->
+            @if(edstatsvc.isEditMode()) {
+                <div *ngIf="edstatsvc.isEditMode()" class="editable_field" style="white-space: nowrap;">
+                    @if(!isEditing) {
+                        <button 
+                            class="edit_button" 
+                            type="button"
+                            (click)="startEditing()" 
+                            pTooltip="Edit title" 
+                            tooltipPosition="top" 
+                            aria-label="Edit title" 
+                            style="cursor: pointer">
+                            <i class="fas fa-pencil fa-sm"></i>
+                        </button> 
+
+                        @if( updated ) {
+                            <!-- Restore button, restore original value -->
+                            <button class="edit_button" type="button" [disabled]="!updated" 
+                                (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
+                                <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
+                            </button> 
+                        }
+                    }
+                    @else {
+                        <!-- Save button -->
+                        <button class="edit_button" type="button" (click)="onSave()"
+                        aria-label="save button" ngbTooltip="Save changes">
+                            <i class="fas fa-check icon_enabled"></i>
+                        </button>
+
+                        <!-- Cancel editing button: cancel current changes -->
+                        <button class="edit_button" type="button"
+                        (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
+                            <i class="fas fa-times fa-sm" data-toggle="tooltip" title="Undo current changes"></i>
+                        </button>   
+                    }
+                </div>
+            }
+        </div>
+    </div>  
+</div>
+
+

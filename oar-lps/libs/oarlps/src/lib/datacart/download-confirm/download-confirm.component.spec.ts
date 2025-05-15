@@ -7,7 +7,8 @@ import { AppConfig } from '../../config/config';
 describe('DownloadConfirmComponent', () => {
   let component: DownloadConfirmComponent;
   let fixture: ComponentFixture<DownloadConfirmComponent>;
-  let cfg : AppConfig = new AppConfig(config);
+  let cfg : AppConfig = new AppConfig(null);
+  cfg.loadConfig(config);
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({

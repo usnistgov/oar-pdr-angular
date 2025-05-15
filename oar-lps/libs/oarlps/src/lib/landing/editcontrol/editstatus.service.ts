@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-import { AppConfig } from '../../config/config';
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
 
@@ -18,11 +16,18 @@ import { LandingConstants } from '../constants';
 })
 export class EditStatusService {
     public EDIT_MODES: any = LandingConstants.editModes;
+    public editMode = signal("");
+
+    isEditMode: Signal<boolean> = computed(() => {
+        return (this.editMode() == this.EDIT_MODES.EDIT_MODE)
+    });
 
     /**
      * construct the service
      */
-    constructor(private cfg : AppConfig) { }
+    constructor(
+        // private cfg : AppConfig
+    ) { }
 
     /**
      * the date of the last update to the draft landing page.  
@@ -40,9 +45,15 @@ export class EditStatusService {
         new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
     _setEditMode(val : string) { 
         this._editMode.next(val); 
+        this._isEditMode.next(val == this.EDIT_MODES.EDIT_MODE);
     }
     public watchEditMode(subscriber) {
         this._editMode.subscribe(subscriber);
+    }
+
+    _isEditMode : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public watchIsEditMode(subscriber) {
+        this._isEditMode.subscribe(subscriber);
     }
 
     /**
@@ -126,9 +137,9 @@ export class EditStatusService {
      * return true if it is possible to edit the landing page.  This will return false 
      * when running as part of the public side of the PDR.
      */
-    public editingEnabled() : boolean {
-        return this.cfg.get("editEnabled", false);
-    }
+    // public editingEnabled() : boolean {
+    //     return this.cfg.get("editEnabled", false);
+    // }
 
     /**
      * turn on editing controls allowing the user to edit the metadata

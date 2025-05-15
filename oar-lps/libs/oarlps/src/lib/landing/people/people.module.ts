@@ -5,12 +5,12 @@ import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
-    declarations: [PeopleComponent],
+    declarations: [],
     imports: [
         CommonModule, AutoCompleteModule, FormsModule
     ],
     exports: [
-        PeopleComponent
+
     ]
 })
 export class PeopleModule { }

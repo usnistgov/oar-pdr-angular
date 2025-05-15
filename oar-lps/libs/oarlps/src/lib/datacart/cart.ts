@@ -6,6 +6,7 @@ import { Observable, Subject } from 'rxjs';
 
 import { NerdmComp } from '../nerdm/nerdm';
 import { CartConstants, DownloadStatus } from './cartconstants';
+import { UserMessageService } from '../frame/usermessage.service';
 
 /**
  * convert a data cart contents to a string appropriate for saving to local storage
@@ -116,7 +117,11 @@ export class DataCart {
      * initialize this cart.  This is not intended to be called directly by users; the static functions
      * should be used instead.
      */
-    constructor(name: string, data?: DataCartLookup, store: Storage|null = localStorage, update: number = 0) {
+    constructor(name: string, 
+                data?: DataCartLookup, 
+                store: Storage|null = localStorage, 
+                update: number = 0,
+                public msgsvc: UserMessageService = null) {
         this.cartName = name;
         if (data) this.contents = data;
         this._storage = store;  // if null; cart is in-memory only
@@ -200,8 +205,15 @@ export class DataCart {
     public save() : void {
         this.lastUpdated = Date.now();
         if (this._storage) {
-            this._storage.setItem(this.getStoreKey()+".md", stringifyMD(this._updatedMD(this.lastUpdated))); 
-            this._storage.setItem(this.getStoreKey(), stringifyCart(this.contents));
+            try {
+                this._storage.setItem(this.getStoreKey()+".md", stringifyMD(this._updatedMD(this.lastUpdated))); 
+                this._storage.setItem(this.getStoreKey(), stringifyCart(this.contents));
+            }
+            catch (e) {
+                console.log("Local Storage is full, Please empty data");
+                // fires When localstorage gets full
+                // you can handle error here or empty the local storage
+            }
         }
 
         // alert watchers.  (Note that a window-originating event will only occur if the cart
@@ -381,7 +393,7 @@ export class DataCart {
     /**
      * add a DataCartItem to the cart
      */
-    addItem(item: DataCartItem, dosave: boolean = true) : void {
+    addItem(item: DataCartItem, dosave: boolean = true, msgsvc: UserMessageService = null) : void {
         this.contents[this._idForItem(item)] = item;
 
         if (dosave) this.save();
@@ -398,8 +410,11 @@ export class DataCart {
      * @param dosave         if true, the updated cart contents will be added after adding the file
      * @return DataCartItem -- the item representing the file that was added to the cart
      */
-    addFile(resid: string, file: DataCartItem|NerdmComp,
-            markSelected: boolean = false, dosave: boolean = true) : DataCartItem
+    addFile(resid: string, 
+            file: DataCartItem|NerdmComp,
+            markSelected: boolean = false, 
+            dosave: boolean = true,
+            msgsvc: UserMessageService = null) : DataCartItem
     {
         let fail = function(msg: string) : DataCartItem {
             console.error("Unable to load file NERDm component: "+msg+": "+JSON.stringify(file));
@@ -419,7 +434,7 @@ export class DataCart {
         if (item['downloadStatus'] === undefined)
             item['downloadStatus'] = "";
         item['isSelected'] = markSelected;
-        this.addItem(item, dosave);
+        this.addItem(item, dosave, msgsvc);
         return item;
     }
 

@@ -16,7 +16,7 @@
 }
 
 .steps {
-    padding-left: 20px;
+    margin-left: 1em;
     overflow: hidden;
 }
 
@@ -34,7 +34,3 @@
     text-align: center;
 }
 
-.expand-btn {
-    margin-left: 0.5rem;
-    cursor: pointer;
-}

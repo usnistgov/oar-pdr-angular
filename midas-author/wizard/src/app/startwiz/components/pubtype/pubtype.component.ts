@@ -15,6 +15,8 @@ export class PubtypeComponent implements OnInit {
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
+    @Input() helpText: any = {};
+    @Input() marginLeft: number = 40;
 
     constructor(
         private chref: ChangeDetectorRef,

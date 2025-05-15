@@ -1,10 +1,12 @@
-import { LPSConfig } from '../lib/config/config';
+import { LPSConfig } from '../lib/config/config.model';
 
 export interface Context {
     production: boolean;
     configEndpoint?: string|null;
     useMetadataService: boolean;
-    useCustomizationService: boolean;
+    // useCustomizationService: boolean;
+    useMIDASDAPService: boolean;
+    useResourceService: boolean;
 }
 
 export interface IEnvironment {

@@ -1,0 +1,78 @@
+<div style="display: table;">
+    <div class="editable_container">
+        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || edstatsvc.isEditMode()">
+            <div class="editable_field" *ngIf="edstatsvc.isEditMode()" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+                @if(isScienceTheme){
+                    Facilitators:
+                }
+                @else {
+                    Authors:
+                }
+            </div>
+        </div>
+
+        <div class="editable_field">
+            <author-pub [record]="record" [fieldName]="fieldName"></author-pub>
+        </div>
+
+        @if(isEditMode) {
+            <!-- Control buttons -->
+            <div class="editable_field" style="white-space: nowrap;">
+                <!-- Edit button -->
+                <button 
+                    class="edit_button" 
+                    *ngIf="!isEditing" 
+                    type="button" 
+                    (click)="startEditing()" 
+                    aria-label="Edit author" 
+                    pTooltip="Edit author" 
+                    tooltipPosition="top" 
+                    style="cursor: pointer">
+                    <i class="fas fa-pencil fa-sm"></i>
+                </button> 
+
+                <!-- Hide button - hide edit block -->
+                <button 
+                    class="edit_button" 
+                    *ngIf="isEditing" 
+                    [disabled]="childIsEditing || childIsAdding" 
+                    type="button" 
+                    (click)="hideEditBlock()" 
+                    aria-label="Hide edit block" 
+                    pTooltip="Hide edit block"
+                    tooltipPosition="top" >
+                    <i class="fas fa-times"></i>
+                </button> 
+
+                <!-- Undo all changes button -->
+                <button
+                    class="edit_button" 
+                    *ngIf="authorsChanged || authorsUpdated" 
+                    type="button"
+                    (click)="undoAllChanges()" 
+                    aria-label="undo button" 
+                    pTooltip="Undo"
+                    tooltipPosition="top">
+                    <i class="fas fa-undo fa-sm"></i>
+                </button>             
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Lazy loading in edit mode. Never get loaded in public mode -->
+
+@if(isEditing) {
+    <!-- Author editor -->
+    <div [@editExpand]="editBlockStatus" 
+        style = "width: 100%;" 
+        [style.overflow] = "overflowStyle">
+        <lib-author-list #authorlist 
+            [record]="record" 
+            [fieldName]="fieldName"
+            [startEditing]="editingStarted"
+            (dataChanged)="onAuthorChange($event)" 
+            (editmodeOutput)="setChildEditMode($event)">
+        </lib-author-list>
+    </div>
+}

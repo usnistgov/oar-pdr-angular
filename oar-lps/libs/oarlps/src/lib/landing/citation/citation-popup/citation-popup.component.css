@@ -1,0 +1,15 @@
+:host ::ng-deep .p-dialog.customDialog{
+    /* background-color:rgb(0, 255, 76); */
+    color: red;
+}
+
+:host ::ng-deep .ui-dialog .ui-dialog-titlebar{
+    background-color: #05ff43 !important;
+    color: #212121;
+    font-family: sans-serif;
+    font-size: 16px;
+}
+
+.citation {
+    z-index: 99;
+}

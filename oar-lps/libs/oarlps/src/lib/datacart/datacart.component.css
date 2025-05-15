@@ -322,7 +322,7 @@ button:disabled{
     overflow-wrap: break-word;
 }
 
-.overlay-title {
+/* .overlay-title {
     color: white; 
     background-color: #1E6BA1;
     width: 100%;
@@ -332,7 +332,7 @@ button:disabled{
     font-weight: bolder;
     font-size: larger;
     margin-bottom: .5em;
-}
+} */
 
 .warning-overlay-title {
     color: white; 

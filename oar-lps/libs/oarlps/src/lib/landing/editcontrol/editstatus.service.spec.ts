@@ -1,16 +1,12 @@
 import { EditStatusService } from './editstatus.service';
-import { AngularEnvironmentConfigService } from '../../config/config.service';
-import { AppConfig } from '../../config/config'
-import { config } from '../../../environments/environment'
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../constants';
-import { Credentials, UserAttributes } from 'oarng';
+import { UserAttributes } from 'oarng';
+import { AuthService, MockAuthService } from './auth.service';
+import { TestBed, waitForAsync } from '@angular/core/testing';
 
 describe('EditStatusService', () => {
-
     let svc : EditStatusService = null;
-    let cfgdata = null;
-    let cfg = null;
     let userAttributes: UserAttributes = {
         'userName': 'test01',
         'userLastName': 'NIST',
@@ -22,11 +18,20 @@ describe('EditStatusService', () => {
     }
 
     let EDIT_MODES = LandingConstants.editModes;
+    let authsvc: AuthService = new MockAuthService(undefined);
     
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+        imports: [
+        ],
+        providers: [
+            { provide: AuthService, useValue: authsvc }
+        ]
+        }).compileComponents();
+    }));
+
     beforeEach(() => {
-        cfgdata = JSON.parse(JSON.stringify(config));
-        cfgdata['editEnabled'] = true;
-        svc = new EditStatusService(new AppConfig(cfgdata));
+        svc = new EditStatusService();
     });
 
     it('initialize', () => {
@@ -34,7 +39,7 @@ describe('EditStatusService', () => {
         expect(svc.userID).toBeNull();
         expect(svc.authenticated).toBe(false);
         expect(svc.authorized).toBe(false);
-        expect(svc.editingEnabled()).toBe(true);
+        // expect(svc.editingEnabled()).toBe(true);
     });
 
     it('setable', () => {

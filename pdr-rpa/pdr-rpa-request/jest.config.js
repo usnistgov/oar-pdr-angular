@@ -3,5 +3,8 @@ module.exports = {
     setupFilesAfterEnv: ['./setup-jest.ts'],
     moduleNameMapper: {
         "^lodash-es$": "lodash"
-    }
+    },
+    transformIgnorePatterns: [
+        "node-modules/(?!yaml)",
+    ]
 };

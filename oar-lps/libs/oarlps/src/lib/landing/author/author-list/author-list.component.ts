@@ -1,10 +1,8 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { Author } from '../author';
-import { AuthorService } from '../author.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import {
     CdkDragDrop,
@@ -12,10 +10,24 @@ import {
     CdkDragMove,
     moveItemInArray,
 } from '@angular/cdk/drag-drop';
-import * as globals from '../../../shared/globals/globals';
+import { AuthorEditComponent } from '../author-edit/author-edit.component';
+import { CommonModule } from '@angular/common';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
+import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { ButtonModule } from 'primeng/button';				
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'lib-author-list',
+    standalone: true,
+    imports: [
+        CommonModule,
+        AuthorEditComponent,
+        TextEditComponent,
+        ButtonModule,
+        NgbModule 
+    ],
     templateUrl: './author-list.component.html',
     styleUrls: ['../../landing.component.scss', './author-list.component.css'],
     animations: [
@@ -39,14 +51,17 @@ export class AuthorListComponent implements OnInit {
     placeholder: string = "Enter author data below";
     editBlockStatus: string = 'collapsed';
     orderChanged: boolean = false;
+    originalRecordLoaded: boolean = false;
 
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter author data?" will not display.
     // Default is "normal" mode.
-    editMode: string = MODE.NORNAL; 
+    editMode: string = MODE.NORMAL; 
+    globalsvc = inject(GlobalService);
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
     @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
+    @Input() startEditing: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
     
@@ -61,51 +76,62 @@ export class AuthorListComponent implements OnInit {
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
-                private authorService: AuthorService,
+                public edstatsvc: EditStatusService,
+                private chref: ChangeDetectorRef,
                 public lpService: LandingpageService) { 
 
-                this.lpService.watchEditing((sectionMode: SectionMode) => {
-                    if( sectionMode ) {
-                        if(sectionMode.sender != globals.SectionPrefs.getFieldName(globals.Sections.SIDEBAR)) {
-                            if( sectionMode.sender != globals.Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORNAL) {
-                                //If is adding but nothing changed, undo adding
-                                if(this.isAdding && !this.currentAuthor.dataChanged){
-                                    this.undoCurAuthorChanges();
-                                //If is adding or editing and something changed, save it
-                                }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
-                                    this.saveCurrentAuthor(false, true); // Do not refresh help text 
-                                }
-                                this.hideEditBlock();
-                            }
-                        }else{
-                            if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
-                                this.onAdd();
-                            }
-                        }
-                    }
-
-                })
-    }
+     }
 
     ngOnInit(): void {
-        this.updateSavedRecord();
-        this.originalRecord = JSON.parse(JSON.stringify(this.record));
-        this.onRecordChanged();
+        // this.onRecordChanged();
+    }
+
+    onSectionModeChanged(sectionMode: SectionMode) {
+        if( sectionMode ) {
+            if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                if( sectionMode.sender != Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
+                    //If is adding but nothing changed, undo adding
+                    if(this.isAdding && !this.currentAuthor.dataChanged){
+                        this.undoCurAuthorChanges();
+                    //If is adding or editing and something changed, save it
+                    }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
+                        this.saveCurrentAuthor(false, true); // Do not refresh help text 
+                    }
+                    this.hideEditBlock();
+                }
+            }else{
+                if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                    this.onAdd();
+                }
+            }
+        }
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.record){
             this.updateSavedRecord();
             this.onRecordChanged();
+
+            if(!this.originalRecordLoaded) {
+                this.originalRecord = JSON.parse(JSON.stringify(this.record));
+            }
+            this.originalRecordLoaded = true;
         }
 
         if(changes.forceReset){
             this.orderChanged = false;
             this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
         }
+
+        if(changes.startEditing){
+            if(!this.record[this.fieldName] || this.record[this.fieldName].length == 0)
+                this.onAdd();
+        }
+
+        this.chref.detectChanges();
     }
 
-    get isNormal() { return this.editMode==MODE.NORNAL || this.editMode==MODE.LIST }
+    get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
 
@@ -144,9 +170,12 @@ export class AuthorListComponent implements OnInit {
     }
 
     onRecordChanged() {
-        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0)
+        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0){
             this.currentAuthors = JSON.parse(JSON.stringify(this.record[this.fieldName]));
 
+            this.currentAuthor = this.record[this.fieldName].at(-1); // last author
+            this.currentAuthorIndex = this.record[this.fieldName].length - 1;
+        }
     }
 
     authorUpdated(index: number) {
@@ -219,6 +248,12 @@ export class AuthorListComponent implements OnInit {
         this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
         this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+        this.editmodeOutput.next(this.editMode);
+        this.chref.detectChanges();
+    }
+
+    onAuthorListChanged(fieldName: string, author: any) {
+        return this.mdupdsvc.fieldUpdated(fieldName, author);
     }
 
     onAdd() {
@@ -239,20 +274,21 @@ export class AuthorListComponent implements OnInit {
         let postMessage: any = {}; 
 
         if(this.isAdding) {  // Temp disable this function
-            postMessage[this.fieldName] = [];
-            this.record[this.fieldName].forEach(author => {
-                postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
-            });
+            // postMessage[this.fieldName] = [];
+            // this.record[this.fieldName].forEach(author => {
+            //     postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
+            // });
+            postMessage = JSON.parse(JSON.stringify(this.currentAuthor));
 
             this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                 if (rec){
-                    this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
-                    this.currentAuthor = this.record[this.fieldName].at(-1); // last author
-                    this.currentAuthorIndex = this.record[this.fieldName].length - 1;
+                    // this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
+                    // this.currentAuthor = this.record[this.fieldName].at(-1); // last author
+                    // this.currentAuthorIndex = this.record[this.fieldName].length - 1;
                     this.currentAuthor.dataChanged = false;
 
                     if(closeAll)
-                        this.setMode(MODE.NORNAL, refreshHelp);
+                        this.setMode(MODE.NORMAL, refreshHelp);
                     else
                         this.setMode(MODE.LIST, refreshHelp);
                 }else{
@@ -266,16 +302,18 @@ export class AuthorListComponent implements OnInit {
                 this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
                     if(success){
                         if(closeAll)
-                            this.setMode(MODE.NORNAL, refreshHelp);
+                            this.setMode(MODE.NORMAL, refreshHelp);
                         else
                             this.setMode(MODE.LIST, refreshHelp);
+                        // this.chref.detectChanges();
                     }else{
                         let msg = "Update failed";
                         console.error(msg);
+                        this.chref.detectChanges();
                     }
                 })
             }else{
-                this.setMode(MODE.NORNAL, refreshHelp);
+                this.setMode(MODE.NORMAL, refreshHelp);
             }
         }
 
@@ -339,11 +377,12 @@ export class AuthorListComponent implements OnInit {
     undoAllChanges() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
-                this.setMode(MODE.NORNAL, true);
+                this.setMode(MODE.NORMAL, true);
                 this.orderChanged = false;
                 this.forceReset = true;
                 this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
+                // this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
+                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
             }else{
                 let msg = "Failed to undo keywords metadata";
                 console.error(msg);   
@@ -367,7 +406,7 @@ export class AuthorListComponent implements OnInit {
         // this.editBlockStatus = 'collapsed';
 
         // Back to add mode
-        // this.editMode = MODE.NORNAL;
+        // this.editMode = MODE.NORMAL;
         // this.refreshHelpText(MODE.ADD);
         this.setMode(MODE.LIST, true)
     }
@@ -502,7 +541,7 @@ export class AuthorListComponent implements OnInit {
                         if(this.editMode==MODE.ADD || this.editMode==MODE.EDIT)
                             this.editMode = MODE.EDIT;
                         else    
-                            this.editMode = MODE.NORNAL;
+                            this.editMode = MODE.NORMAL;
 
                         this.editmodeOutput.next(this.editMode);
                     }else{
@@ -546,17 +585,16 @@ export class AuthorListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.NORNAL, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-            
+
         switch ( this.editMode ) {
             case MODE.LIST:
                 this.editBlockStatus = 'collapsed';
 
-                // Back to add mode
                 if(refreshHelp){
                     this.refreshHelpText(MODE.LIST);
                 }
@@ -603,16 +641,19 @@ export class AuthorListComponent implements OnInit {
 
                 // Update help text
                 if(refreshHelp){
-                    this.refreshHelpText(MODE.NORNAL);
+                    this.refreshHelpText(MODE.NORMAL);
                 }                
                 break;
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORNAL)
+        if(editmode != MODE.NORMAL)
+            // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
 
         this.editmodeOutput.next(this.editMode);
+
+        this.chref.detectChanges();
     }
 
     /**
@@ -670,12 +711,6 @@ export class AuthorListComponent implements OnInit {
         }
     }
 
-    onAutherChange(event) {
-        this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
-        this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
-        this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-    }
-
     // Drag and drop
     dragEntered(event: CdkDragEnter<number>) {
         const drag = event.item;
@@ -726,7 +761,6 @@ export class AuthorListComponent implements OnInit {
 
         this.currentAuthorIndex = event.item.data;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-        // this.dataChanged.next({"authors": this.record[this.fieldName], "action": "dataChanged"});
 
         this.dropListReceiverElement.style.removeProperty('display');
         this.dropListReceiverElement = undefined;

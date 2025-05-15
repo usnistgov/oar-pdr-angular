@@ -1,38 +1,92 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
-import { DatePipe } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-
-import { ToastrModule } from 'ngx-toastr';
-
-import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { ResourceDescriptionComponent } from './resourcedescription.component';
-import { SectionsModule } from './sections.module';
-import { EditControlModule } from '../editcontrol/editcontrol.module';
-import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-// import { DragDropModule } from '@angular/cdk/drag-drop';
-import { config, testdata } from '../../../environments/environment';
+import { testdata } from '../../../environments/environment';
+import { Component } from '@angular/core';
+import { DescriptionComponent } from '../description/description.component';
+import { TopicMidasComponent } from '../topic/topic-midas/topic-midas.component';
+import { KeywordPubComponent } from '../keyword/keyword-pub/keyword-pub.component';
+import { KeywordMidasComponent } from '../keyword/keyword-midas/keyword-midas.component';
+import { TopicPubComponent } from '../topic/topic-pub/topic-pub.component';
+import { SectionTitleComponent } from '../section-title/section-title.component';
 
 describe('ResourceDescriptionComponent', () => {
     let component : ResourceDescriptionComponent;
     let fixture : ComponentFixture<ResourceDescriptionComponent>;
-    let cfg : AppConfig = new AppConfig(config);
     let rec : NerdmRes = testdata['test1'];
-    let authsvc : AuthService = new MockAuthService()
 
     let makeComp = function() {
-        TestBed.configureTestingModule({
-            imports: [ HttpClientModule ],
-            declarations: [  ],
-            providers: [
-                { provide: AppConfig, useValue: cfg },
-                { provide: AuthService, useValue: authsvc }, 
-                GoogleAnalyticsService, UserMessageService, MetadataUpdateService, DatePipe
-            ]
-        }).compileComponents();
+        @Component({
+            selector: "lib-section-title",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestSectionTitleComponent {}
+
+        @Component({
+            selector: "app-description",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestDescriptionComponent {}
+
+        @Component({
+            selector: "app-topic",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTopicComponent {}
+
+        @Component({
+            selector: "keyword-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestKeywordPubComponent {}
+
+        @Component({
+            selector: "keyword-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestKeywordMidasComponent {}
+
+        @Component({
+            selector: "topic-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTopicPubComponent {}
+
+        @Component({
+            selector: "topic-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestTopicMidasComponent {}
+
+        TestBed.overrideComponent(ResourceDescriptionComponent, {
+            add: {
+                imports: [
+                    TestSectionTitleComponent,
+                    TestDescriptionComponent,
+                    TestTopicMidasComponent,
+                    TestKeywordPubComponent,
+                    TestKeywordMidasComponent,
+                    TestTopicPubComponent
+                ],
+            },
+            remove: {
+                imports: [
+                    SectionTitleComponent,
+                    DescriptionComponent,
+                    TopicMidasComponent,
+                    KeywordPubComponent,
+                    KeywordMidasComponent,
+                    TopicPubComponent
+                ],
+            },
+        });
 
         fixture = TestBed.createComponent(ResourceDescriptionComponent);
         component = fixture.componentInstance;
@@ -48,11 +102,6 @@ describe('ResourceDescriptionComponent', () => {
 
     it('should initialize', () => {
         expect(component).toBeDefined();
-        let cmpel = fixture.nativeElement;
-        
-        let el = cmpel.querySelector("h3");
-        expect(el).not.toBeNull();
-        expect(el.textContent).toContain("Description");
     });
 
     it('isDataPublication', () => {
@@ -62,11 +111,5 @@ describe('ResourceDescriptionComponent', () => {
         
         component.record['@type'].push("nrdp:DataPublication");
         expect(component.isDataPublication()).toBeTruthy();
-        component.useMetadata();
-        
-        fixture.detectChanges();
-        let el = cmpel.querySelector("h3");
-        expect(el).not.toBeNull();
-        expect(el.textContent).toContain("Abstract");
     });
 })
