@@ -21,7 +21,7 @@ datasets:
     requiresApproval: true
     formTemplate: srm-data
   - name: SRM 2970 Vitamin D Metabolites in Frozen Human Serum (25-Hydroxyvitamin D2 High Level) Data
-    ediid: rk:/88434/mds2-2420
+    ediid: ark:/88434/mds2-2420
     description: "Electronic files containing certified values and their uncertainties, and the data used to assign those values."
     url: https://data.nist.gov/od/id/mds2-2420
     terms: []
