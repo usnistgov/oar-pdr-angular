@@ -319,7 +319,7 @@ export class AppComponent {
      *
      */
     private resetRequestForm(): void {
-        this.requestForm.reset({
+        const resetControls: any = {
             fullName: "",
             email: "",
             phone: "",
@@ -328,14 +328,20 @@ export class AppComponent {
             address2: "",
             address3: "",
             country: "",
-            receiveEmails: false, // Resetting checkboxes
-            termsAndConditionsAgreenement: false,
-            disclaimerAgreenement: false,
-            vettingAgreenement: false,
-            accessAgreement: false,
+            receiveEmails: false,
+            agreements: false,
             recaptcha: false,
-        });
+        };
+    
+        if (this.selectedFormTemplate?.agreements) {
+            this.selectedFormTemplate.agreements.forEach((_, i) => {
+                resetControls[`agreement_${i}`] = false;
+            });
+        }
+    
+        this.requestForm.reset(resetControls);
     }
+    
 
     /**
      * Helper method to create the userInfo that will be used as payload for creating a new record case in SF.
@@ -381,9 +387,6 @@ export class AppComponent {
      * Initializes the request form with the necessary form controls and validators.
      */
     private initRequestForm(blacklistedEmails: string[]): void {
-
-        // let emailBlacklist = this.getEmailBlacklist();
-        console.log("blacklistedEmails", blacklistedEmails )
         this.requestForm = new FormGroup({
             fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
             email: new FormControl("", [CustomValidators.blacklisted(blacklistedEmails), Validators.required, Validators.email]),
@@ -394,15 +397,18 @@ export class AppComponent {
             address3: new FormControl("", [Validators.required]),
             country: new FormControl("", [Validators.required]),
             receiveEmails: new FormControl(false),
-            termsAndConditionsAgreenement: new FormControl(false, [
-                Validators.requiredTrue,
-            ]),
-            disclaimerAgreenement: new FormControl(false),
-            vettingAgreenement: new FormControl(false, [Validators.requiredTrue]),
-            accessAgreement: new FormControl(false, [Validators.requiredTrue]),
+            termsAndConditionsAgreenement: new FormControl(false),
             recaptcha: new FormControl(false, [Validators.required]),
         });
+    
+        // Dynamically add controls for each agreement
+        if (this.selectedFormTemplate?.agreements) {
+            this.selectedFormTemplate.agreements.forEach((_, i) => {
+                this.requestForm.addControl(`agreement_${i}`, new FormControl(false, Validators.requiredTrue));
+            });
+        }
     }
+    
 
 
     /**
