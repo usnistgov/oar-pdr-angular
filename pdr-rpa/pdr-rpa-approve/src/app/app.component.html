@@ -8,18 +8,15 @@
     </div>
     <div class="row">
         <div class="col">
-            <div *ngIf="loaded" class="rpdform-form-title d-flex align-items-center justify-content-center flex-column rounded-top"
+            <div *ngIf="loaded"
+                class="rpdform-form-title d-flex align-items-center justify-content-center flex-column rounded-top"
                 [ngClass]="{
-                'bg-approved': status.toLowerCase().includes('approved'),
-                'bg-declined': status.toLowerCase().includes('declined')
-            }">
-                <h2 class="text-uppercase">
-                    {{status.toLowerCase().includes('pending') ? 'Pending Approval' :
-                    status.toLowerCase().includes('approved') ? 'Request Approved' :
-                    status.toLowerCase().includes('declined') ? 'Request Declined' : 'Unknown Status'}}
-                </h2>
-                <div class="case-number-text">Case Number: {{record?.caseNum}}</div>
-
+                  'bg-approved': status.toLowerCase().startsWith('approved') && !status.toLowerCase().startsWith('approved_pending_caching'),
+                  'bg-declined': status.toLowerCase().includes('declined'),
+                  'bg-pending-caching': status.toLowerCase().startsWith('approved_pending_caching')
+                }">
+                <h2 class="text-uppercase">{{ getStatusLabel() }}</h2>
+                <div class="case-number-text">Case Number: {{ record?.caseNum }}</div>
             </div>
         </div>
     </div>

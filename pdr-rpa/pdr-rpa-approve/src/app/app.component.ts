@@ -253,4 +253,18 @@ export class AppComponent {
         }
       );
   }
+
+  isPendingCaching(): boolean {
+    return this.record?.userInfo?.approvalStatus?.startsWith("Approved_PENDING_CACHING");
+  }
+
+  getStatusLabel(): string {
+    const s = this.status.toLowerCase();
+    if (s.startsWith('approved_pending_caching')) return 'Request Under Processing';
+    if (s.includes('pending')) return 'Pending Approval';
+    if (s.includes('approved')) return 'Request Approved';
+    if (s.includes('declined')) return 'Request Declined';
+    return 'Unknown Status';
+  }
+  
 }

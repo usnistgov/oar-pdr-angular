@@ -4,6 +4,7 @@
     font-family: 'Poppins', sans-serif;
     --success-green: #03C988;
     --success-green-alt: #009E60;
+    --pending-orange: #FFA62B;
 }
 .rpdform-mb-3 {
     margin-bottom: 10px;
@@ -34,6 +35,10 @@
     background-color: var(--default-red);
 }
 
+.bg-pending-caching {
+    background-color: var(--pending-orange);
+}
+  
 .rpdform-relative {
     position: relative;
 }
