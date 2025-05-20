@@ -67,6 +67,17 @@ const mockCountries: Country[] = [
 
 const mockFormTemplate = { id: 'template1', disclaimers: [], agreements: [], blockedEmails: ["@hotmail\\.", "@123\\."], blockedCountries: [] };
 
+const mockFormTemplateWithAgreements = {
+  id: 'template-with-agreements',
+  disclaimers: [],
+  agreements: [
+    'I agree to the terms',
+    'I understand the rules'
+  ],
+  blockedEmails: [],
+  blockedCountries: []
+};
+
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
@@ -271,18 +282,21 @@ describe('AppComponent', () => {
     expect(disclaimerCheckbox).toBeNull();
   });
 
-  it('should validate checkbox as required', () => {
-    const checkboxControl = component.requestForm.get('termsAndConditionsAgreenement');
+  it('should validate dynamic agreement checkboxes as required', () => {
+    component.selectedDataset = mockDatasets[0];
+    component.selectedFormTemplate = mockFormTemplateWithAgreements;
   
-    if (checkboxControl) {
-      checkboxControl.setValue(false);
-      expect(checkboxControl.errors).toEqual({ required: true });
+    (component as any).initRequestForm(mockFormTemplateWithAgreements.blockedEmails);
   
-      checkboxControl.setValue(true);
-      expect(checkboxControl.errors).toBeNull();
-    } else {
-      fail('Checkbox control is not defined');
-    }
-  });
+    mockFormTemplateWithAgreements.agreements.forEach((_, i) => {
+      const control = component.requestForm.get(`agreement_${i}`);
+      expect(control).toBeTruthy();
   
+      control?.setValue(false);
+      expect(control?.errors).toEqual({ required: true });
+  
+      control?.setValue(true);
+      expect(control?.errors).toBeNull();
+    });
+  });  
 });
