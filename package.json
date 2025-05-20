@@ -45,6 +45,7 @@
     },
     "dependencies": {
         "@ng-select/ng-select": "^11.0.0",
+        "js-yaml": "^4.1.0",
         "rxjs": "~7.8.1"
     }
 }
