@@ -167,14 +167,23 @@ export class AppComponent {
     if (environment.debug) console.log(this.recordDescription);
   }
 
-  /**
-   * Parse the approval status of the record and update the component state with the
-   * status, status date, email, and random ID. 
-   * If the status is "Pending", the date and email will be undefined.
-   * 
-   * @param record - The record to parse the approval status of.
-   */
-  parseApprovalStatus(record: Record): void {
+  
+ /**
+ * Parses the approval status string and sets the component's status, statusDate, smeEmail, and randomId.
+ * The approval status string is expected to follow one of the following formats:
+ * 
+ * - "Pending" — for records that haven't been acted upon yet
+ * - "Approved_<date>_<email>_<randomId>" — for approved records with final random ID
+ * - "Declined_<date>_<email>" — for declined records
+ * - "Approved_<date>_<email>" — for legacy approved records without a random ID
+ * - "Approved_PENDING_CACHING_<date>_<email>" — for records in intermediate state (approved, but caching not complete yet)
+ * 
+ * The method extracts the status type, timestamp, SME email, and optional random ID based on the format,
+ * and stores them in corresponding component variables.
+ * 
+ * @param record The record object containing the approval status to be parsed.
+ */
+ parseApprovalStatus(record: Record): void {
     const statusParts = record.userInfo.approvalStatus.split("_");
     this.status = statusParts[0];
   
@@ -182,23 +191,27 @@ export class AppComponent {
       this.statusDate = "";
       this.smeEmail = "";
       this.randomId = "";
-    } else if (this.status === "Approved" && statusParts[1] === "PENDING" && statusParts[2] === "CACHING") {
-      // Handle Approved_PENDING_CACHING format
+    } 
+    else if (
+      this.status === "Approved" &&
+      statusParts[1] === "PENDING" &&
+      statusParts[2] === "CACHING" &&
+      statusParts.length === 5
+    ) {
       this.statusDate = statusParts[3];
       this.smeEmail = statusParts[4];
-      this.randomId = ""; // not available yet
-    } else if (statusParts.length === 3 || statusParts.length === 4) {
+      this.randomId = ""; // Not available yet
+    } 
+    else if (statusParts.length === 3 || statusParts.length === 4) {
       this.statusDate = statusParts[1];
       this.smeEmail = statusParts[2];
-      if (statusParts.length === 4) {
-        this.randomId = statusParts[3];
-      } else {
-        this.randomId = "";
-      }
-    } else {
-      throw new ClientError("Unexpected approval status format");
+      this.randomId = statusParts.length === 4 ? statusParts[3] : "";
+    } 
+    else {
+      throw new ClientError("Unexpected approval status format: " + record.userInfo.approvalStatus);
     }
   }
+  
   
 
 
