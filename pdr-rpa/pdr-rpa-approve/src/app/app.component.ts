@@ -175,25 +175,31 @@ export class AppComponent {
    * @param record - The record to parse the approval status of.
    */
   parseApprovalStatus(record: Record): void {
-    let statusParts = record.userInfo.approvalStatus.split("_");
-
+    const statusParts = record.userInfo.approvalStatus.split("_");
     this.status = statusParts[0];
-
+  
     if (this.status.toLowerCase() === "pending") {
-        this.statusDate = "";
-        this.smeEmail = "";
-        this.randomId = "";
+      this.statusDate = "";
+      this.smeEmail = "";
+      this.randomId = "";
+    } else if (this.status === "Approved" && statusParts[1] === "PENDING" && statusParts[2] === "CACHING") {
+      // Handle Approved_PENDING_CACHING format
+      this.statusDate = statusParts[3];
+      this.smeEmail = statusParts[4];
+      this.randomId = ""; // not available yet
     } else if (statusParts.length === 3 || statusParts.length === 4) {
-        this.statusDate = statusParts[1];
-        this.smeEmail = statusParts[2];
-        if (statusParts.length === 4) {
-            this.randomId = statusParts[3];
-        }
+      this.statusDate = statusParts[1];
+      this.smeEmail = statusParts[2];
+      if (statusParts.length === 4) {
+        this.randomId = statusParts[3];
+      } else {
+        this.randomId = "";
+      }
     } else {
-        // Handle unexpected format
-        throw new ClientError("Unexpected approval status format");
+      throw new ClientError("Unexpected approval status format");
     }
-}
+  }
+  
 
 
 
