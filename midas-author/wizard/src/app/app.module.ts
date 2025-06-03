@@ -43,7 +43,8 @@ import { FooterComponent, HeaderComponent } from 'oarng';
       { provide: RELEASE_INFO, useValue: RELEASE },
       GoogleAnalyticsService,
       MetadataUpdateService,
-      SidebarService
+        SidebarService,
+        fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })
