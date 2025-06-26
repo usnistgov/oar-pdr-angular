@@ -35,13 +35,15 @@ export class TopicMidasComponent implements OnInit {
     selectedTopics: any[] = [];
     scienceThemeTopics: any[] = [];
     recordType: string = "";
-    standardNISTTaxonomyURI: string = "https://data.nist.gov/od/dm/nist-themes/";
+
+    //NIST Taxonomy URI si defined in /assets/site-constants/collections.json
+    standardNISTTaxonomyURI: string = "https://data.nist.gov/od/dm/nist-themes/v1.1";
     allCollections: any = {};
     //  Array to define the collection order
     collectionOrder: string[] = [Collections.DEFAULT];
     collection: string;
     editCollection: string; //parameter pass to the edit component
-    editScheme: string = "https://data.nist.gov/od/dm/nist-themes/"; //current topic scheme pass to the edit component
+    editScheme: string = "https://data.nist.gov/od/dm/nist-themes/v1.1"; //current topic scheme pass to the edit component
     topics: any = {};
     originalTopics: any = {};   //For undo purpose
 
@@ -252,10 +254,10 @@ export class TopicMidasComponent implements OnInit {
      */
     restoreTopics(inputTopics: any) {
         let topics: any[] = [];
-        let col = "NIST";
+        // let col = "NIST";
 
-        if(inputTopics[col] && inputTopics[col].length > 0) {
-            for(let topic of inputTopics[col]) {
+        if(inputTopics[this.editCollection] && inputTopics[this.editCollection].length > 0) {
+            for(let topic of inputTopics[this.editCollection]) {
                 topics.push(topic);
             }
         }
@@ -433,28 +435,28 @@ export class TopicMidasComponent implements OnInit {
         if(this.record) {
             if (this.record[this.fieldName]) {
                 //For new topic structure
-                // this.record[this.fieldName].forEach(topic => {
-                //     if (topic['scheme'] && topic.tag) {
-                //         for(let col of this.collectionOrder) {
-                //             if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
-                //                 if(!this.topics[col]) {
-                //                     this.topics[col] = [topic];
-                //                 }else if(this.topics[col].indexOf(topic) < 0) {
-                //                     this.topics[col].push(topic);
-                //                 }
-                //             }
-                //         }
-                //     }
-                // });
+                this.record[this.fieldName].forEach(topic => {
+                    if (topic['scheme'] && topic.tag) {
+                        for(let col of this.collectionOrder) {
+                            if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                                if(!this.topics[col]) {
+                                    this.topics[col] = [topic];
+                                }else if(this.topics[col].indexOf(topic) < 0) {
+                                    this.topics[col].push(topic);
+                                }
+                            }
+                        }
+                    }
+                });
 
                 //For old topic (under theme field)
-                this.record[this.fieldName].forEach(topic => {
-                    if(!this.topics["NIST"]) {
-                            this.topics["NIST"] = [topic];
-                        }else if(this.topics["NIST"].indexOf(topic) < 0) {
-                            this.topics["NIST"].push(topic);
-                        }
-                });
+                // this.record[this.fieldName].forEach(topic => {
+                //     if(!this.topics["NIST"]) {
+                //             this.topics["NIST"] = [topic];
+                //         }else if(this.topics["NIST"].indexOf(topic) < 0) {
+                //             this.topics["NIST"].push(topic);
+                //         }
+                // });
             }
         }
 

@@ -2,7 +2,7 @@
     "NIST": {
         "tag": "NIST R&D",
         "bannerUrl": "",
-        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
+        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/v1.1",
         "color": {
             "default": "#257a2d",
             "light": "#6bad73",

@@ -6,7 +6,7 @@
 
 <!-- edit control panel (visible when editing is enabled) -->
 
-@if(!isPublicSite && editEnabled){
+@if(!isPublicSite && cfg_editEnabled){
     <pdr-edit-control
       [inBrowser]="inBrowser"
       [(mdrec)]="md">
@@ -67,7 +67,7 @@
                 <landing-body
                   [md]="md"
                   [inBrowser]="inBrowser"
-                  [editEnabled]="editEnabled"
+                  [editEnabled]="cfg_editEnabled"
                   [mobileMode]="mobileMode"
                   [metricsData]="metricsData"
                   [showJsonViewer]="showJsonViewer"
@@ -81,23 +81,22 @@
 
             </div>
 
-            @if(!edstatsvc.isEditMode()) {
-                <!-- <div #stickyMenu></div> -->
-                <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
-                  <app-menu
-                    [record]="md"
-                    [collection]="collection"
-                    [theme]="theme"
-                    [inBrowser]="inBrowser"
-                    [metricsData]="metricsData"
-                    [showMetrics]="showMetrics"
-                    (scroll)="goToSection($event)"
-                    (toggle_citation)="toggleCitation('large')">
-                  </app-menu>
 
-                  <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
-                </div>
-            }
+            <!-- <div #stickyMenu></div> -->
+            <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
+                <app-menu
+                [record]="md"
+                [collection]="collection"
+                [theme]="theme"
+                [inBrowser]="inBrowser"
+                [metricsData]="metricsData"
+                [showMetrics]="showMetrics"
+                (scroll)="goToSection($event)"
+                (toggle_citation)="toggleCitation('large')">
+                </app-menu>
+
+                <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
+            </div>
 
 
             @if(edstatsvc.isEditMode()) {

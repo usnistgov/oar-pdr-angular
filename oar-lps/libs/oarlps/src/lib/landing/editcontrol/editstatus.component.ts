@@ -1,7 +1,7 @@
 import { Component, effect, Input, OnInit, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { UpdateDetails } from './interfaces';
-import { LandingConstants } from '../constants';
+import { LandingConstants } from '../../shared/globals/globals';
 import { EditStatusService } from './editstatus.service';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { Sections, SectionPrefs, ResourceType, GlobalService } from '../../shared/globals/globals';

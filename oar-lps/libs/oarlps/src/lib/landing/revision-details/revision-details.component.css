@@ -1,0 +1,20 @@
+.warning {
+    font-size: large;
+    color: var(--warning);
+    vertical-align: middle;
+    display: inline-block;
+    width: 20px;
+}
+
+.title {
+    border-bottom: 1px solid lightgrey;
+    font-weight: bold;
+}
+
+.space1 {
+    margin-bottom: 1em;
+}
+
+.btn-help {
+    cursor: pointer;
+}

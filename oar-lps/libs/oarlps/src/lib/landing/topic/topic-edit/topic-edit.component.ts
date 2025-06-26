@@ -225,10 +225,10 @@ export class TopicEditComponent implements OnInit {
         const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
             //Need to create a topic object before push
-            // this.selectedTopics.push(
-            //     { "@id": "", "@type": "", "tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
+            this.selectedTopics.push(
+                {"tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
 
-            this.selectedTopics.push(rowNode.node.data.researchTopic);
+            // this.selectedTopics.push(rowNode.node.data.researchTopic);
     
                 this.dataChanged = true;
             // Reset search text box

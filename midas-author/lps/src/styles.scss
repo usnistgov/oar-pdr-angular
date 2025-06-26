@@ -1,5 +1,71 @@
-* {
-    font-family: sans-serif;
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@use "@angular/material" as mat;
+@include mat.core();
+
+// $theme: mat.define-theme(
+//     (
+//         color: (
+//             theme-type: dark,
+//             primary: mat.$violet-palette,
+//             use-system-variables: true
+//         )
+//     )
+// );
+
+// :root {
+//     @include mat.all-component-themes($theme); 
+// }
+
+html {
+    --sys-primary: rgb(59 105 57);
+    --sys-surface-tint: rgb(59 105 57);
+    --sys-on-primary: rgb(255 255 255);
+    --sys-primary-container: rgb(188 240 180);
+    --sys-on-primary-container: rgb(35 80 36);
+    --sys-secondary: rgb(82 99 79);
+    --sys-on-secondary: rgb(255 255 255);
+    --sys-secondary-container: rgb(213 232 207);
+    --sys-on-secondary-container: rgb(59 75 56);
+    --sys-tertiary: rgb(56 101 106);
+    --sys-on-tertiary: rgb(255 255 255);
+    --sys-tertiary-container: rgb(188 235 240);
+    --sys-on-tertiary-container: rgb(31 77 82);
+    --sys-error: rgb(186 26 26);
+    --sys-on-error: rgb(255 255 255);
+    --sys-error-container: rgb(255 218 214);
+    --sys-on-error-container: rgb(147 0 10);
+    --sys-background: rgb(247 251 241);
+    --sys-on-background: rgb(25 29 23);
+    --sys-surface: rgb(247 251 241);
+    --sys-on-surface: rgb(25 29 23);
+    --sys-surface-variant: rgb(222 229 216);
+    --sys-on-surface-variant: rgb(66 73 64);
+    --sys-outline: rgb(114 121 111);
+    --sys-outline-variant: rgb(194 201 189);
+    --sys-shadow: rgb(0 0 0);
+    --sys-scrim: rgb(0 0 0);
+    --sys-inverse-surface: rgb(45 50 44);
+    --sys-inverse-on-surface: rgb(239 242 233);
+    --sys-inverse-primary: rgb(161 211 154);
+    --sys-primary-fixed: rgb(188 240 180);
+    --sys-on-primary-fixed: rgb(0 34 4);
+    --sys-primary-fixed-dim: rgb(161 211 154);
+    --sys-on-primary-fixed-variant: rgb(35 80 36);
+    --sys-secondary-fixed: rgb(213 232 207);
+    --sys-on-secondary-fixed: rgb(17 31 15);
+    --sys-secondary-fixed-dim: rgb(186 204 179);
+    --sys-on-secondary-fixed-variant: rgb(59 75 56);
+    --sys-tertiary-fixed: rgb(188 235 240);
+    --sys-on-tertiary-fixed: rgb(0 32 35);
+    --sys-tertiary-fixed-dim: rgb(160 207 212);
+    --sys-on-tertiary-fixed-variant: rgb(31 77 82);
+    --sys-surface-dim: rgb(216 219 210);
+    --sys-surface-bright: rgb(247 251 241);
+    --sys-surface-container-lowest: rgb(255 255 255);
+    --sys-surface-container-low: rgb(241 245 236);
+    --sys-surface-container: rgb(236 239 230);
+    --sys-surface-container-high: rgb(230 233 224);
+    --sys-surface-container-highest: rgb(224 228 219);
 }
 
 :root {
@@ -30,6 +96,7 @@
     --tag-blue: #c0e6ff;
     --disabled-grey: #bababa;
     --disabled-grey-text: #6c6c6c;
+    --warning: rgb(255, 140, 0);
 }
 
 .myCustomModalClass .modal-dialog {
@@ -287,4 +354,11 @@ a {
 	outline-offset: -2px;
 }
 
+.mat-btn {
+    border-radius: 8px !important;
+}
+
+.btn-icon {
+    margin-right: 5px !important;
+}
 

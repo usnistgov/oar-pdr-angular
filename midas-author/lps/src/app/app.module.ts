@@ -13,7 +13,7 @@ import { environment } from '../environments/environment-impl';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
-import { OARLPSModule, ConfigModule, EditControlModule, UserMessageService,
+import { OARLPSModule, ConfigModule, EditControlModule, UserMessageService, ConfirmationDialogService,
          GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
  } from 'oarlps';
 
@@ -61,6 +61,7 @@ enableProdMode();
         GoogleAnalyticsService,
         DatePipe,
         UserMessageService,
+        ConfirmationDialogService,
         // fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]

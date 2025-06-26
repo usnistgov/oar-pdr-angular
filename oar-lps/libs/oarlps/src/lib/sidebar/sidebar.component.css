@@ -13,11 +13,18 @@
 
 .subtitle {
     padding-left: 0px;
+    cursor: pointer;
+    /* width: fit-content; */
+}
+
+.subtitle:hover {
+    background-color: rgb(230, 230, 230);
 }
 
 .steps {
     margin-left: 1em;
     overflow: hidden;
+    /* width: fit-content; */
 }
 
 .stepitem {
@@ -26,7 +33,7 @@
 }
 
 .stepitem:hover {
-    background-color: rgb(227, 253, 253);
+    background-color: rgb(230, 230, 230);
 }
 
 .help-title {
@@ -34,3 +41,13 @@
     text-align: center;
 }
 
+.section-title {
+    background-color: rgb(231, 231, 231);
+    text-align: center;
+    padding: 2px;
+}
+
+.section-content {
+    margin: 10px;
+    padding-top: 0.5em;
+}

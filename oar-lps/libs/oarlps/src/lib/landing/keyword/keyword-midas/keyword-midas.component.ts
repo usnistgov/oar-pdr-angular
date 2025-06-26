@@ -15,7 +15,7 @@ import { Chips, ChipsModule } from 'primeng/chips';
 import { ChipModule } from "primeng/chip";
 import { TagModule } from 'primeng/tag';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { LandingConstants } from '../../constants';
+import { LandingConstants } from '../../../shared/globals/globals';
 import { KeywordPubComponent } from '../keyword-pub/keyword-pub.component';
 
 @Component({

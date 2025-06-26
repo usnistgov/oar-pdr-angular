@@ -32,6 +32,7 @@
                         icon="fas fa-external-link-alt fa-1x icon-white" 
                         iconPos="left" 
                         style="margin-right: 10px; float: right;" 
+                        [disabled]="!authorized"
                         (click)="openFileManager()">
                     </button>
     

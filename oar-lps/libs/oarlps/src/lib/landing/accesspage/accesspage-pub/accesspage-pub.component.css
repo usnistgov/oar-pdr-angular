@@ -1,3 +1,15 @@
 .description {
     margin-left: 1em;
 }
+
+/* Will be replaced by Angular material button later */
+.btn-primary {
+    background-color: var(--nist-green-default);
+    color: white;
+    border-radius: 5px;
+    border-color: var(--nist-green-default);
+}
+
+.btn-primary:hover {
+    background-color: var(--nist-green-light);
+}

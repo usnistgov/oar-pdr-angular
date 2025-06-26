@@ -101,6 +101,13 @@ export abstract class DAPUpdateService {
      */
     getMeta() : AnyObj { return this.getRecord().meta; }
 
+    getStatus(): AnyObj {
+        if (this._rec["status"])
+            return JSON.parse(JSON.stringify(this._rec["status"]));
+        else
+            return null;
+    }
+
     /** 
      * return the complete NERDm data 
      */
@@ -174,6 +181,10 @@ export abstract class DAPUpdateService {
      */
     abstract finalize(): Observable<Object>;
 
+    /**
+     *  Submit the request
+     */
+        abstract submit(): Observable<Object>;
 }
 
 /**
@@ -724,6 +735,17 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
 
         return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
     }
+
+    submit(action: string = "submit", option: any = {}): Observable<Object> {
+        const url = this.endpoint + this.recid + "/status";
+        const hdrs = _headersFor(this, "patch");
+        let body = {
+            "action": action
+        };
+        if (option) body["action_options"] = option; 
+
+        return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
+    }
 }
 
 /**
@@ -1177,6 +1199,12 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
     }    
 
     finalize(action: string='finalize', message: string = ''): Observable<Object> {
+        return of({
+            'REQ': [], 'WARN': [], 'REC': []
+        });
+    }
+
+    submit(action: string = 'submit', option: any = {}): Observable<Object> {
         return of({
             'REQ': [], 'WARN': [], 'REC': []
         });

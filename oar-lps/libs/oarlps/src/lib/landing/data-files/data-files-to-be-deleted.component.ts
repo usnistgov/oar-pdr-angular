@@ -9,7 +9,7 @@ import { DownloadStatus } from '../../datacart/cartconstants';
 import { DataCartStatus } from '../../datacart/cartstatus';
 import { formatBytes } from '../../utils';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { LandingConstants } from '../constants';
+import { LandingConstants } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';

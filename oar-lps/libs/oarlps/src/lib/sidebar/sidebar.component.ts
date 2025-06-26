@@ -7,13 +7,17 @@ import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse }
 import { HelpTopic } from '../landing/landingpage.service';
 import { CommonModule } from '@angular/common';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
+import { LandingConstants, SubmissionData, GlobalService } from '../shared/globals/globals';
+import { EditStatusService } from '../landing/editcontrol/editstatus.service';
+import { RevisionDetailsComponent } from '../landing/revision-details/revision-details.component';
 
 @Component({
     selector: 'app-sidebar',
     standalone: true,
     imports: [
         CommonModule,
-        SuggestionsComponent
+        SuggestionsComponent,
+        RevisionDetailsComponent
     ],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
@@ -67,6 +71,9 @@ export class SidebarComponent implements OnInit {
     showWarnings: boolean = false;
     showRecommended: boolean = false;
     ediid: string = "";
+    _editType: string;
+    EDIT_TYPES: any = LandingConstants.editTypes;
+    submissionData = new SubmissionData();
 
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: any = {};
@@ -77,9 +84,22 @@ export class SidebarComponent implements OnInit {
     // signal for scrolling to a section within the page
     @Output() scroll = new EventEmitter<string>();
 
-    constructor(private chref: ChangeDetectorRef,
-                public lpService: LandingpageService,
-                public sidebarService: SidebarService) { }
+    constructor(
+        private chref: ChangeDetectorRef,
+        public lpService: LandingpageService,
+        public edstatsvc: EditStatusService,
+        public globalService: GlobalService,
+        public sidebarService: SidebarService) { 
+        
+            this.edstatsvc.watchEditType((editType) => {
+                this._editType = editType;
+            })
+        
+            this.globalService.watchSubmissionData(
+                (data) => {
+                    this.submissionData = new SubmissionData(data);
+            })
+        }
 
     ngOnInit(): void {
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
@@ -94,7 +114,12 @@ export class SidebarComponent implements OnInit {
             this.updateHelpContent(sectionHelp);
         });
 
-        if(this.record && this.record["@id"]) this.ediid = this.record["@id"];
+        if (this.record && this.record["@id"]) this.ediid = this.record["@id"];
+        
+        this.lpService.watchSubmitResponse((suggestions) => {
+            this.suggestions = suggestions as ReviewResponse;
+            this.chref.detectChanges();
+        })
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -105,7 +130,7 @@ export class SidebarComponent implements OnInit {
         //         this.suggestions = suggestions as ReviewResponse;
         //     })
     
-        //     this.chref.detectChanges();
+            this.chref.detectChanges();
         // }
     }
 
@@ -133,6 +158,10 @@ export class SidebarComponent implements OnInit {
         return !this.hasRequiredItems && !this.hasWarnItems && this.hasRecommendedItems;
     }
 
+    get isRevision() {
+        return this._editType == this.EDIT_TYPES.REVISE;
+    }
+
     /**
      * Update the help box text based on the input section data.
      * If topic is normal, display general help. Otherwise fetch the content from question-help.json based on section and topic.
@@ -142,11 +171,16 @@ export class SidebarComponent implements OnInit {
         // Update help content
         let generalHelp = this.helpContentAll[GENERAL]? this.helpContentAll[GENERAL] : "Default help text.<p>";
 
-        if(sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
-            sectionHelp.section = GENERAL;
+        if (sectionHelp.showGeneral != false) {
+            if(sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
+                sectionHelp.section = GENERAL;
+            }
+    
+            this.helpContent = generalHelp;
+        } else {
+            this.helpContent = "";
         }
 
-        this.helpContent = generalHelp;
         if(sectionHelp.section && sectionHelp.section != GENERAL) {
             // Add general help of the section first
             if(this.helpContentAll[sectionHelp.section]){
@@ -176,15 +210,16 @@ export class SidebarComponent implements OnInit {
 
         // Update help title
         if(this.helpContentAll[sectionHelp.section] && this.helpContentAll[sectionHelp.section]["label"])
-            this.title = this.helpContentAll[sectionHelp.section]["label"].trim() + " Help";
+            this.title = this.helpContentAll[sectionHelp.section]["label"].trim();
         else
-            this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
+            this.title = SectionPrefs.getDispName(sectionHelp.section);
 
         this.chref.detectChanges();
     }
 
     gotoSection(section: string) {
-        if(section=="topic") section = "theme";
+        //For old topic structure
+        // if(section=="topic") section = "theme";
         // let sectionID = SectionPrefs.getFieldName(section);
         let sectionID = section;
         let sectionHelp: SectionHelp = {} as SectionHelp;
@@ -216,5 +251,12 @@ export class SidebarComponent implements OnInit {
         this.sidebarState = this.sbarvisible? 'sbvisible' : 'sbhidden';
         this.sbarvisible_out.next(this.sbarvisible);
         this.chref.detectChanges();
+    }
+
+    updateSubmissionData(event) {
+        this.submissionData = event;
+
+        //Broadcast the change
+        this.globalService.setSubmissionData(this.submissionData);
     }
 }

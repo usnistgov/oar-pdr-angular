@@ -209,28 +209,28 @@ export class TopicPubComponent implements AfterContentInit {
         if(this.record) {
             if (this.record[this.fieldName]) {
                 //For new topic structure
-                // this.record[this.fieldName].forEach(topic => {
-                //     if (topic['scheme'] && topic.tag) {
-                //         for(let col of this.collectionOrder) {
-                //             if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
-                //                 if(!this.topics[col]) {
-                //                     this.topics[col] = [topic];
-                //                 }else if(this.topics[col].indexOf(topic) < 0) {
-                //                     this.topics[col].push(topic);
-                //                 }
-                //             }
-                //         }
-                //     }
-                // });
+                this.record[this.fieldName].forEach(topic => {
+                    if (topic['scheme'] && topic.tag) {
+                        for(let col of this.collectionOrder) {
+                            if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                                if(!this.topics[col]) {
+                                    this.topics[col] = [topic];
+                                }else if(this.topics[col].indexOf(topic) < 0) {
+                                    this.topics[col].push(topic);
+                                }
+                            }
+                        }
+                    }
+                });
 
                 //For old topic (under theme field)
-                this.record[this.fieldName].forEach(topic => {
-                    if(!this.topics["NIST"]) {
-                            this.topics["NIST"] = [topic];
-                        }else if(this.topics["NIST"].indexOf(topic) < 0) {
-                            this.topics["NIST"].push(topic);
-                        }
-                });
+                // this.record[this.fieldName].forEach(topic => {
+                //     if(!this.topics["NIST"]) {
+                //             this.topics["NIST"] = [topic];
+                //         }else if(this.topics["NIST"].indexOf(topic) < 0) {
+                //             this.topics["NIST"].push(topic);
+                //         }
+                // });
             }
         }
 
@@ -239,19 +239,23 @@ export class TopicPubComponent implements AfterContentInit {
             if(this.topics[col]) {
                 if(this.topics[col].length > 5) {
                     this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col].slice(0, this.topicBreakPoint)));
-
-                    //Old structure: theme field
-                    this.topicShort[col].push("Show more...");
-
-                    //New structure: topics field
-                    // this.topicShort[col].push({tag:"Show more...", "@type":"", scheme:""});
-
                     this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));
-                    //New structure: topics field
-                    // this.topicLong[col].push({tag:"Show less...", "@type":"", scheme:""});                
+                    
+                    //Old structure: theme field
+                    // this.topicShort[col].push("Show more...");
 
                     //Old structure: theme field
-                    this.topicLong[col].push("Show less...");
+                    // this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));
+
+                    //Old structure: theme field
+                    // this.topicLong[col].push("Show less...");
+                    
+                    //New structure: topics field
+                    this.topicShort[col].push({tag:"Show more...", "@type":"", scheme:""});
+
+                    //New structure: topics field
+                    this.topicLong[col].push({tag:"Show less...", "@type":"", scheme:""});                
+
                 }else {
                     this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col]));
                     this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));

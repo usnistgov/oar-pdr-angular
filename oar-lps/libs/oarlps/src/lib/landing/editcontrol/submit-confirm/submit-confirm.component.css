@@ -1,25 +1,34 @@
-#btn-submit {
+.wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.btn-submit {
     width:300px; 
+    height: 35px;
     background-color:var(--nist-green-default);
     color:white;
     margin-right: 1em;
 }
 
-#btn-cancel {
-    width:300px;
-    background-color:var(--nist-green-default);
-    color:white;
-    /* border-color: grey; */
-    margin-right: 1%;
+.btn-cancel {
+    width: 300px;
+    height: 35px;
+    background-color:var(--warning);
+    color:black;
+}
+
+.btn-label {
+    margin-left: 5px;
 }
 
 .control-buttons {
-    width: 98%;
+    width: 100%;
     height: 3em; 
     color:white;
     margin: 1em 0em;
     border-top-style: 1px solid grey;
-    text-align: right; 
+    text-align: center; 
 }
 
 .bar {
@@ -33,6 +42,31 @@
 
 .content {
     margin: 1em;
+    display: flex;
+}
+
+.statement {
+    margin-bottom: 1em;
+}
+
+#suggestions {
+    flex: 1;
+    margin-left: 2em;
+    margin-right: 2em;
+    overflow: scroll;
+}
+
+.suggestion-req {
+    font-weight: bold;
+}
+
+.suggestion-item {
+    margin-bottom: .5em;
+}
+
+.suggestion-details {
+    margin-left: 2em;
+    margin-bottom: .5em;
 }
 
 .subtitle {
@@ -47,3 +81,23 @@
 .details {
     margin-left: 4em;
 }
+
+.revision {
+    flex: 1;
+    padding-left: 2em;
+    padding-right: 2em;
+    border-left: 1px solid lightgrey;
+}
+
+.sliding-div {
+    width: 100%;
+    /* max-height: 600px; */
+    z-index: 10;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+table {
+    width: 100%; 
+}
+

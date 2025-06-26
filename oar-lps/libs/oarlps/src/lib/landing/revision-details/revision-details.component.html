@@ -1,0 +1,48 @@
+<div class="title space1">
+    Select type of change: 
+    <mat-icon 
+        class="btn-help"
+        (click)="getHelp()">help_outline</mat-icon>
+</div>
+
+<!-- Checkboxes -->
+<div class="space1">
+    <div *ngFor="let type of allRevisionTypes">
+        <div class="warning">
+            <span *ngIf="type.triggerReview">*</span>
+        </div>
+        <mat-checkbox (change)="toggle($event, type.id)" [checked]="submissionData.revisionIDs?.includes(type.id)"
+            [matTooltip]=type.tooltip matTooltipPosition="above">
+            {{type.label}}
+        </mat-checkbox>
+        </div>
+</div>
+
+<div class="space1">
+    <div class="warning">
+        *
+    </div>
+
+    <span style="font-style: italic;">These changes trigger a review through NPS</span>
+</div>
+
+<!-- Purpose of the revision -->
+<div class="title space1">
+    Purpose for this change:
+</div>
+
+<mat-form-field style="width: 100%;">
+    <mat-label>
+        <mat-icon class="btn-icon">edit</mat-icon>
+        Enter purpose for this change here.
+    </mat-label>
+    
+    <textarea 
+        [(ngModel)]="submissionData.revisionPurpose" 
+        matInput 
+        cdkTextareaAutosize 
+        #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1" 
+        cdkAutosizeMaxRows="5"
+        (change)="onTextChange($event)"></textarea>
+</mat-form-field>

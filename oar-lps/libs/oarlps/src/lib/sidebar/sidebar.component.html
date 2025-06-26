@@ -12,7 +12,7 @@
     <div class="help-frame" [innerHTML]="helpContent">
     </div>
 
-    <div style="background-color: rgb(231, 231, 231); text-align: center;padding: 2px;">
+    <div class="section-title">
         <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
             {{msgCompleted}}
         </div>
@@ -21,46 +21,63 @@
         </ng-template>
     </div>
 
-    <!-- keep this old suggestion for demo purpose -->
-    <div *ngIf="!isTestData" style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
+    <!-- Suggestions -->
+    @if(!isTestData){
+        <div class="section-content">
 
-        <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
-            && (!suggestions['warn'] || suggestions['warn'].length == 0) 
-            && (!suggestions['rec'] || suggestions['rec'].length == 0)">
-            {{msgCompleted}}
-        </div>
-        <!-- <ng-template #nextSteps>
-            Next Steps:
-        </ng-template> -->
-        
+            <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
+                && (!suggestions['warn'] || suggestions['warn'].length == 0) 
+                && (!suggestions['rec'] || suggestions['rec'].length == 0)">
+                {{msgCompleted}}
+            </div>
+            <!-- <ng-template #nextSteps>
+                Next Steps:
+            </ng-template> -->
+            
 
-        <div *ngIf="hasRequiredItems"> 
-            <suggestions 
-                suggestionLabel="Required"
-                [suggestions]="suggestions['req']"
-                showSug="true"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
+            <div *ngIf="hasRequiredItems"> 
+                <suggestions 
+                    suggestionLabel="Required"
+                    [suggestions]="suggestions['req']"
+                    showSug="true"
+                    (gotoSectionName)="gotoSection($event)">
+                </suggestions>
+            </div>
+
+            <div *ngIf="hasWarnItems"> 
+                <suggestions 
+                    suggestionLabel="Warning"
+                    [suggestions]="suggestions['warn']"
+                    [showSug]="expandWarning"
+                    (gotoSectionName)="gotoSection($event)">
+                </suggestions>
+            </div>
+
+            <div *ngIf="hasRecommendedItems"> 
+                <suggestions 
+                    suggestionLabel="Recommended"
+                    [suggestions]="suggestions['rec']"
+                    [showSug]="expandRec"
+                    (gotoSectionName)="gotoSection($event)">
+                </suggestions>
+            </div>
+        </div>
+    }
+
+    @if(isRevision) {
+        <div class="section-title">
+            Revision Data (Placeholder)
         </div>
 
-        <div *ngIf="hasWarnItems"> 
-            <suggestions 
-                suggestionLabel="Warning"
-                [suggestions]="suggestions['warn']"
-                [showSug]="expandWarning"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
+        <div class="section-content">
+            <revision-details 
+                [submissionData]="submissionData" 
+                (changedData)="updateSubmissionData($event)">
+            </revision-details>
         </div>
+    }
 
-        <div *ngIf="hasRecommendedItems"> 
-            <suggestions 
-                suggestionLabel="Recommended"
-                [suggestions]="suggestions['rec']"
-                [showSug]="expandRec"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
-        </div>
-    </div>
+
 
 </div>
 <!-- Side bar invisible -->

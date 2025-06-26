@@ -100,6 +100,18 @@ export class GlobalService {
         this._showLPContent.subscribe(subscriber);
     }
 
+    /**
+     * Set/get SubmissionData 
+     */
+    _submissionData: BehaviorSubject<SubmissionData> = new BehaviorSubject<SubmissionData>({} as SubmissionData);
+    public setSubmissionData(val: SubmissionData){
+        this._submissionData.next(val);
+    }
+    public watchSubmissionData(subscriber) {
+        this._submissionData.subscribe(subscriber);
+    }
+    
+
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
         let text = document.createElement("span"); 
         document.body.appendChild(text); 
@@ -185,7 +197,8 @@ export interface SectionMode {
 
 export interface SectionHelp {
     "section": string,
-    "topic": string
+    "topic": string,
+    "showGeneral": boolean
 }
 
 export const MODE = {
@@ -224,8 +237,8 @@ _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
 _fieldName[Sections.ACCESS_PAGES] = "components";
 _fieldName[Sections.DESCRIPTION] = "description";
-_fieldName[Sections.TOPICS] = "theme";
-// _fieldName[Sections.TOPICS] = "topic";
+// _fieldName[Sections.TOPICS] = "theme";
+_fieldName[Sections.TOPICS] = "topic";
 _fieldName[Sections.KEYWORDS] = "keyword";
 _fieldName[Sections.IDENTITY] = "identity";
 _fieldName[Sections.AUTHORS] = "identity";
@@ -317,6 +330,123 @@ export interface SubmitResponse {
     }
 }
 
+export interface RevisionDetails {
+    id: number,
+    label: string,
+    tooltip: string,
+    typeName: string,
+    triggerReview: boolean
+}
+
+export class SubmissionData {
+    goSubmit: boolean;
+    isRevision: boolean;
+    revisionIDs: number[];
+    submissionNotes: string;
+    revisionPurpose: string;
+
+    constructor(data: SubmissionData = null) {
+        if (!data) {
+            this.goSubmit = false;
+            this.isRevision = false;
+            this.revisionIDs = [];
+            this.submissionNotes = "";
+            this.revisionPurpose = "";
+        } else {
+            this.goSubmit = data.goSubmit;
+            this.isRevision = data.isRevision;
+            this.revisionIDs = data.revisionIDs;
+            this.submissionNotes = data.submissionNotes;
+            this.revisionPurpose = data.revisionPurpose;
+        }
+    }
+
+    addRevisionID(id: number) {
+        if (!this.revisionIDs) this.revisionIDs = [];
+
+        if ( !this.revisionIDs.includes(id) ) {
+            this.revisionIDs.push(id);
+        }
+    }
+
+    removeRevisionID(id: number) {
+        this.revisionIDs = this.revisionIDs.filter(revID => revID !== id); 
+    }
+}
+
+export class RevisionTypes {
+    data: RevisionDetails[];
+
+    constructor() {
+        this.data = [
+            {
+                "id": 1,
+                "label": "Addition of one or more README files",
+                "tooltip": "",
+                "typeName": "add_readmes",
+                "triggerReview": false
+            },
+            {
+                "id": 2,
+                "label": "Addition of other data files",
+                "tooltip": "",
+                "typeName": "add_files",
+                "triggerReview": true
+            },
+            {
+                "id": 3,
+                "label": "Removal previously published files",
+                "tooltip": "",
+                "typeName": "remove_files",
+                "triggerReview": true
+            },
+            {
+                "id": 4,
+                "label": "Major changes to files (excluding README files)",
+                "tooltip": "",
+                "typeName": "change_major",
+                "triggerReview": true
+            },
+            {
+                "id": 5,
+                "label": "Minor corrections to files",
+                "tooltip": "",
+                "typeName": "change_minor",
+                "triggerReview": false
+            },
+            {
+                "id": 6,
+                "label": "Home page information changes (i.e. metadata)",
+                "tooltip": "",
+                "typeName": "metadata",
+                "triggerReview": false
+            }
+        ]
+    }
+
+    getAllTypes() {
+        return this.data;
+    }
+
+    getNamebyID(id: number) {
+        let type = this.data.find((type) => type.id == id);
+        if (type) {
+            return type.typeName;
+        } else {
+            return null;
+        }
+    }
+
+    getIDbyName(typeName: string) {
+        let type = this.data.find((type) => type.typeName == typeName);
+        if (type) {
+            return type.id;
+        } else {
+            return null;
+        }
+    }
+}
+
 export class LandingConstants {
     public static get editModes(): any { 
         return {
@@ -334,14 +464,6 @@ export class LandingConstants {
             REVISE: 'revise' 
         }
     }; 
-
-    public static get reviseTypes(): any { 
-        return {
-            METADATA: 'metadata', 
-            TYPE02: 'reviseType02', 
-            TYPE03: 'reviseType03'
-        }
-    };  
 }
 
 export interface ColorScheme {
