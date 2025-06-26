@@ -485,6 +485,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 if(showError) {
 
                 }
+                    
+                //Load DBIO record to get config data
+                this.mdupdsvc.loadDBIOrecord().subscribe({
+                    next: (dbio) => {
+                        // console.log("dbio", dbio)
+                    },
+                    error: (err) => {
+                        console.error(err);
+                    }
+                });
               },
               error: (err) => {
                 this.globalService.setAuthorized(false);
