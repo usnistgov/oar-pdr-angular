@@ -1,14 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { state, style, trigger, transition, animate } from '@angular/animations';
-import { NerdmRes, NERDResource } from '../nerdm/nerdm';
+import { NerdmRes } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse } from '../shared/globals/globals';
 import { HelpTopic } from '../landing/landingpage.service';
 import { CommonModule } from '@angular/common';
-import { DAPService } from '../nerdm/dap.service';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
-import { MetadataUpdateService } from '../landing/editcontrol/metadataupdate.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -16,9 +14,6 @@ import { MetadataUpdateService } from '../landing/editcontrol/metadataupdate.ser
     imports: [
         CommonModule,
         SuggestionsComponent
-    ],
-    providers: [
-        SidebarService
     ],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
@@ -63,7 +58,6 @@ export class SidebarComponent implements OnInit {
     sbarvisible : boolean = true;
     sidebarState: string = 'sbvisible';
     helpContent: string = "";
-    suggestions: ReviewResponse = {} as ReviewResponse;
     fieldName: string = "sidebar";
     DEFAULT_TITLE: string = "General Help";
     title: string = "General Help";
@@ -75,8 +69,9 @@ export class SidebarComponent implements OnInit {
     ediid: string = "";
 
     @Input() record: NerdmRes = null;
-    @Input() helpContentAll: string = "";
+    @Input() helpContentAll: any = {};
     @Input() resourceType: string = "resource";
+    @Input() suggestions: ReviewResponse = {} as ReviewResponse;
     @Output() sbarvisible_out = new EventEmitter<boolean>();
 
     // signal for scrolling to a section within the page
@@ -84,28 +79,34 @@ export class SidebarComponent implements OnInit {
 
     constructor(private chref: ChangeDetectorRef,
                 public lpService: LandingpageService,
-                private mdupdsvc: MetadataUpdateService,
                 public sidebarService: SidebarService) { }
 
     ngOnInit(): void {
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
+
+        //Will be removed later
         this.lpService.watchSectionHelp((sectionHelp) => {
             this.updateHelpContent(sectionHelp);
         });
         
-        this.ediid = this.record["@id"];
+        //Use sidebar service so both step wizard and landing page can use
+        this.sidebarService.watchSectionHelp((sectionHelp) => {
+            this.updateHelpContent(sectionHelp);
+        });
+
+        if(this.record && this.record["@id"]) this.ediid = this.record["@id"];
     }
 
     ngOnChanges(changes: SimpleChanges): void {
         //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
         //Add '${implements OnChanges}' to the class.
-        if(changes.record){
-            this.mdupdsvc.validate().subscribe((suggestions) => {
-                this.suggestions = suggestions as ReviewResponse;
-            })
+        // if(changes.record){
+        //     this.mdupdsvc.validate().subscribe((suggestions) => {
+        //         this.suggestions = suggestions as ReviewResponse;
+        //     })
     
-            this.chref.detectChanges();
-        }
+        //     this.chref.detectChanges();
+        // }
     }
 
     get isTestData() {
@@ -113,15 +114,15 @@ export class SidebarComponent implements OnInit {
     }
 
     get hasRequiredItems() {
-        return this.mdupdsvc.hasRequiredItems();
+        return this.suggestions && this.suggestions['req'] && this.suggestions['req'].length > 0;
     }
 
     get hasWarnItems() {
-        return this.mdupdsvc.hasWarnItems();
+        return this.suggestions && this.suggestions['warn'] && this.suggestions['warn'].length > 0;
     }
 
     get hasRecommendedItems() {
-        return this.mdupdsvc.hasRecommendedItems();
+        return this.suggestions && this.suggestions['warn'] && this.suggestions['warn'].length > 0;
     }
 
     get expandWarning() {
