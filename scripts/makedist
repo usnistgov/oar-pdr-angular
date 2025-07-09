@@ -76,6 +76,7 @@ declare -A APPSRCDIR=(                        \
     [midas-author-lps]=midas-author/lps       \
     [pdr-rpa-request]=pdr-rpa/pdr-rpa-request \
     [pdr-rpa-approve]=pdr-rpa/pdr-rpa-approve \
+    [pdr-lps]=pdr-lps                         \
 )
 
 # handle command line options
@@ -122,7 +123,7 @@ while [ "$1" != "" ]; do
         echo "$prog: unsupported option:" $1
         false
         ;;
-    midas-author-lps|midas-author-wizard|pdr-rpa-request|pdr-rpa-approve)
+    midas-author-lps|midas-author-wizard|pdr-rpa-request|pdr-rpa-approve|pdr-lps)
         build_dist="$build_dist $1"
         true
         ;;
