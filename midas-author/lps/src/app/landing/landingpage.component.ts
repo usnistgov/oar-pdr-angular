@@ -64,8 +64,10 @@ import { AuthenticationService } from 'oarng';
     encapsulation: ViewEncapsulation.None,
     animations: [
         trigger("togglemain", [
-            state('mainsquished', style({
-                "width": "{{lps_width}}"}), {params: {lps_width: '450px'}}
+            state('mainsquished',
+                style({
+                    "width": "{{lps_width}}"
+                }), { params: { lps_width: '450px' } }
             ),
             state('mainexpanded', style({
                 "width": "95%"
@@ -78,11 +80,15 @@ import { AuthenticationService } from 'oarng';
             ])
         ]),
         trigger("togglesbar", [
-            state('mainsquished', style({
-                "width": "{{help_width}}"}), {params: {help_width: '450px'}}
+            state('mainsquished',
+                style({
+                    "width": "{{help_width}}"
+                }),
+                { params: { help_width: '450px' } }
             ),
-            state('mainexpanded', style({
-                "width": "15px"
+            state('mainexpanded',
+                style({
+                    "width": "15px"
             })),
             state('mainfullyexpanded', style({
                 "width": "0%"
@@ -503,12 +509,21 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         if(showError) {
 
                         }
-                    },
-                    error: (err) => {
-                        this.globalService.setAuthorized(false);
-                        console.log("Load error", err);
-                    }
-                })
+
+                        this.mdupdsvc.loadDBIOrecord().subscribe({
+                            next: (dbio) => {
+                                // console.log("dbio", dbio)
+                            },
+                            error: (err) => {
+                                console.error(err);
+                            }
+                        });
+
+                },
+                error: (err) => {
+                    this.globalService.setAuthorized(false);
+                    console.log("Load error", err);
+                }})
             }else{
                 //Not authenticated:
                 this.globalService.setAuthenticated(false);
@@ -1084,19 +1099,19 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let helpWidth = null;
         if(this.mobileMode){
             this.helpWidth = 0;
-            // this.lpsWidth = window.innerWidth;
-            // this.mainBodyStatus = "mainfullyexpanded";
+            this.lpsWidth = window.innerWidth;
+            this.mainBodyStatus = "mainfullyexpanded";
         }else {
             if(this.sidebarVisible){
               this.helpWidth = window.innerWidth * 0.35;
-            //   this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
+              this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
 
-            //   this.mainBodyStatus = "mainsquished";
+              this.mainBodyStatus = "mainsquished";
 
             }else{
                 this.helpWidth = window.innerWidth * 0.05;
-                // this.lpsWidth = window.innerWidth * 0.95 - 0;
-                // this.mainBodyStatus = "mainexpanded";
+                this.lpsWidth = window.innerWidth * 0.95 - 0;
+                this.mainBodyStatus = "mainexpanded";
             }
         }
 

@@ -4,61 +4,34 @@
     </div>
     
     <div class="content">
-        <div id="suggestions" [ngStyle]="{'max-height':maxHeight + 'px'}">
+        <div id="suggestions" >
+            @if(showHelp){
+                <i class="faa faa-times-circle btn-hide-help" (click)="processCommand('getHelp')" aria-hidden="true"></i>
+            }
             <div [@slideToggle]="showHelp ? 'visible' : 'hidden'" class="sliding-div"
                 [ngStyle]="{'max-height':maxHeight + 'px'}">
-                This is a placeholder for revision description.
+                <p [innerHTML]="revisionHelp['htmlcontent']"></p>
+                <!-- This is a placeholder for revision description.
     
-                <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    
-                    <!--- Note that these columns can be defined in any order.
-                                          The actual rendered columns are set as a property on the row definition" -->
-    
-                    <!-- Position Column -->
-                    <ng-container matColumnDef="position">
-                        <th mat-header-cell *matHeaderCellDef>
-                            No.
-                            <span class="resize-handle" (mousedown)="onResizeColumn($event, i)"></span>
-                        </th>
-                        <td mat-cell *matCellDef="let element"> {{element.position}} </td>
-                    </ng-container>
-    
-                    <!-- Situation Column -->
-                    <ng-container matColumnDef="situation">
-                        <th mat-header-cell *matHeaderCellDef> Situation </th>
-                        <td mat-cell *matCellDef="let element"> {{element.situation}} </td>
-                    </ng-container>
-    
-                    <!-- Examples Column -->
-                    <ng-container matColumnDef="examples">
-                        <th mat-header-cell *matHeaderCellDef> Examples </th>
-                        <td mat-cell *matCellDef="let element"> {{element.examples}} </td>
-                    </ng-container>
-    
-                    <!-- New EDI Entry/DOI? Column -->
-                    <ng-container matColumnDef="edi">
-                        <th mat-header-cell *matHeaderCellDef> New EDI Entry/DOI? </th>
-                        <td mat-cell *matCellDef="let element"> {{element.edi}} </td>
-                    </ng-container>
-    
-                    <!-- Review Required? Column -->
-                    <ng-container matColumnDef="review">
-                        <th mat-header-cell *matHeaderCellDef> Review Required? </th>
-                        <td mat-cell *matCellDef="let element"> {{element.review}} </td>
-                    </ng-container>
-    
-                    <!-- Archival of Data Files Stored by MIDAS? Column -->
-                    <ng-container matColumnDef="archival">
-                        <th mat-header-cell *matHeaderCellDef> Archival of Data Files Stored by MIDAS? </th>
-                        <td mat-cell *matCellDef="let element"> {{element.archival}} </td>
-                    </ng-container>
-    
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-                </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Situation</th>
+                            <th>Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource; let i = index">
+                            <td>{{ i }}</td>
+                            <td>{{ data.position }}</td>
+                            <td>{{ data.situation }}</td>
+                        </tr>
+                    </tbody>          
+                </table> -->
             </div>
     
-            <div *ngIf="!showHelp" style="z-index: 1;"  [ngStyle]="{'max-height':maxHeight + 'px'}">
+            <div *ngIf="showSuggestion">
                 <div class="statement">
                     <div *ngIf="hasRequiredItems; else recommend">
                         We have reviewed your draft. There are required items to be finished. Please go back and re-edit:
@@ -91,51 +64,27 @@
                     </div>
                 </div>
     
-                <mat-form-field style="width: 100%; margin-top: 1em;">
-                    <mat-label>
-                        <mat-icon class="btn-icon">edit</mat-icon>
-                        Enter Submission Notes Here:
-                    </mat-label>
-    
-                    <textarea [(ngModel)]="submissionData.submissionNotes" matInput matTextareaAutosize
-                        matAutosizeMinRows="2" matAutosizeMaxRows="5" (change)="onTextChange($event)">
-                        </textarea>
-                </mat-form-field>
+                <div style="font-weight: bold; margin: .5em 0em;">Notes to reviewers:</div>
+                <textarea 
+                    cdkTextareaAutosize 
+                    cdkAutosizeMinRows="2" 
+                    cdkAutosizeMaxRows="5" 
+                    [(ngModel)]="submissionData.submissionNotes"
+                    (change)="onTextChange($event)"
+                    placeholder="Enter Submission Notes Here:"
+                    class="textbox">
+                </textarea>
             </div>
         </div>
     
         @if(submissionData.isRevision) {
-        <div class="revision">
-            <revision-details [submissionData]="submissionData" (changedData)="updateSubmissionData($event)"
-                (command)="processCommand($event)">
-            </revision-details>
-    
-            <!-- <div style="margin-bottom: 2em;">
-                        Select type of change:<mat-icon class="btn-icon">help_outline</mat-icon>
-                    </div> -->
-    
-            <!-- Checkboxes -->
-            <!-- <div *ngFor="let type of allRevisionTypes">
-                        <mat-checkbox
-                            (change)="toggle($event)"
-                            [matTooltip]=type.tooltip 
-                            matTooltipPosition="above">
-                            {{type.label}}
-                        </mat-checkbox>
-                    </div> -->
-    
-            <!-- Purpose of the revision -->
-            <!-- <mat-form-field style="margin-top: .5em;width: 100%;">
-                        <mat-label>Purpose of this change</mat-label>
-                        <textarea 
-                            [(ngModel)]="submissionData.revisionPurpose"
-                            matInput 
-                            cdkTextareaAutosize 
-                            #autosize="cdkTextareaAutosize" 
-                            cdkAutosizeMinRows="1"
-                            cdkAutosizeMaxRows="5"></textarea>
-                    </mat-form-field> -->
-        </div>
+            <div class="revision">
+                <revision-details 
+                    [submissionData]="submissionData" 
+                    (changedData)="updateSubmissionData($event)"
+                    (command)="processCommand($event)">
+                </revision-details>
+            </div>
         }
     </div>
     
@@ -144,18 +93,42 @@
     <div class="control-buttons">
         <!-- Buttons are arranged from right to left -->
         <!-- Continue Submit button -->
-        <button mat-fab extended aria-label="Proceed with Submission" stylaria-label="Add" class="mat-btn btn-submit"
+        <button 
+            pButton
+            type="button"
+            pTooltip="Proceed with Submission" 
+            tooltipPosition="bottom" 
+            class="btn btn-submit" 
+            (click)="continueSubmit()" 
+            [disabled]="hasRequiredItems" 
+            label="Proceed with Submission" 
+            icon="fas fa-arrow-circle-up faa-1x icon-white"  
+            iconPos="left">
+        </button>
+      
+        <button 
+            pButton 
+            type="button" 
+            pTooltip="Back to Edit" 
+            tooltipPosition="bottom" 
+            class="btn btn-cancel"
+            (click)="cancelSubmit()" 
+            label="Back to Edit"
+            icon="fas fa-pencil faa-1x icon-white" iconPos="left">
+        </button>
+
+        <!-- <button mat-fab extended aria-label="Proceed with Submission" stylaria-label="Add" class="mat-btn btn-submit"
             (click)="continueSubmit()" disabled="true">
             <mat-icon class="btn-icon">upload</mat-icon>
             <span class="btn-label">Proceed with Submission</span>
-        </button>
+        </button> -->
     
         <!-- Cancel button -->
-        <button mat-fab extended aria-label="Back to Edit" stylaria-label="Add" class="mat-btn btn-cancel"
+        <!-- <button mat-fab extended aria-label="Back to Edit" stylaria-label="Add" class="mat-btn btn-cancel"
             (click)="cancelSubmit()">
             <mat-icon class="btn-icon">edit</mat-icon>
             <span class="btn-label">Back to Edit</span>
-        </button>
+        </button> -->
         <!-- 
                 <button 
                     matButton="filled"

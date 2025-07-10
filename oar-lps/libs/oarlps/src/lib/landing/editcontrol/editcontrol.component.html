@@ -6,8 +6,8 @@
             <span *ngIf="message" style="margin-left: 1em;margin-right: 1em;font-size:12px">{{message}}</span>
             <span *ngIf="message" style="border: 1px solid white; color: white;cursor: pointer;" (click)="message=''"><i class="fas fa-times"></i></span>
             {{currentMode}}
-            <span *ngIf="mdupdsvc.submitted" class="splitter1"> | </span>
-            <span *ngIf="mdupdsvc.submitted" id="submitted">Submitted</span>
+            <span *ngIf="mdupdsvc.recStatus.state != 'edit'" class="splitter1"> | </span>
+            <span *ngIf="mdupdsvc.recStatus.state != 'edit'" id="submitted">{{mdupdsvc.recStatus.state}}</span>
         </div>
 
         <div *ngIf="screenWidth <= screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE" style="color: white; float: left; margin: 0.5em .5em 0em 1em; font-size: 15px;" [ngbTooltip]="editModeTooltip">
@@ -95,17 +95,20 @@
         </button>
 
         <!-- 
-                -  Edit button:  when editing is off, the Edit button will show; if it is on, the
-                -  "Preview" button will show in its place
-                -->
+            -  Edit button:  
+            -  When editing is off, the Edit button will show; 
+                - If this is revision mode, the label is "Start Revision". 
+                - Otherwise, the label is "Edit".
+            -  If editing is on, the "Preview" button will show in its place
+        -->
         <button pButton type="button" pTooltip="Edit" tooltipPosition="bottom" *ngIf="!mobileMode && isPreviewMode"
-            type="button" class="btn btn-labeled ec-edit-btn" (click)="startEditing()" id="ec-edit-btn" [label]="editBtnLabel"
-            icon="fas fa-pencil faa-1x icon-white" iconPos="left" [disabled]="!isAuthorized">
+            type="button" class="btn btn-labeled ec-edit-btn" (click)="onEdit()" id="ec-edit-btn" [label]="editBtnLabel"
+            icon="fas fa-pencil faa-1x icon-white" iconPos="left" [disabled]="!editEnable">
         </button>
         
         <button pButton type="button" pTooltip="Edit" tooltipPosition="bottom" *ngIf="mobileMode && isPreviewMode" type="button"
-            class="btn btn-labeled ec-edit-btn" (click)="startEditing()" id="ec-edit-btn-sm"
-            icon="fas fa-pencil faa-1x icon-white" [disabled]="!isAuthorized">
+            class="btn btn-labeled ec-edit-btn" (click)="onEdit()" id="ec-edit-btn-sm"
+            icon="fas fa-pencil faa-1x icon-white" [disabled]="!editEnable">
         </button>
 
         <!-- Preview button -->

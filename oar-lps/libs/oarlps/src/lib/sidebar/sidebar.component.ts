@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, Self, ElementRef } from '@angular/core';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { NerdmRes } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
@@ -10,6 +10,7 @@ import { SuggestionsComponent } from './suggestions/suggestions.component';
 import { LandingConstants, SubmissionData, GlobalService } from '../shared/globals/globals';
 import { EditStatusService } from '../landing/editcontrol/editstatus.service';
 import { RevisionDetailsComponent } from '../landing/revision-details/revision-details.component';
+import revisionhelp from '../../assets/site-constants/revision-help.json';
 
 @Component({
     selector: 'app-sidebar',
@@ -22,6 +23,26 @@ import { RevisionDetailsComponent } from '../landing/revision-details/revision-d
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css'],
     animations: [
+        trigger('slideToggle', [
+            state(
+                'visible',
+                style({
+                    transform: 'translateX(0)',
+                    opacity: 1,
+                    display: 'block',
+                })
+            ),
+            state(
+                'hidden',
+                style({
+                    transform: 'translateX(100%)',
+                    opacity: 0,
+                    display: 'none',
+                })
+            ),
+            transition('visible => hidden', [animate('300ms ease-in')]),
+            transition('hidden => visible', [animate('300ms ease-out')]),
+        ]),
         trigger("togglesbar", [
             state('sbvisible', style({
                 position: 'absolute',
@@ -59,7 +80,8 @@ import { RevisionDetailsComponent } from '../landing/revision-details/revision-d
     ]
 })
 export class SidebarComponent implements OnInit {
-    sbarvisible : boolean = true;
+    sbarvisible: boolean = true;
+    hideSidebarBody: boolean = false;
     sidebarState: string = 'sbvisible';
     helpContent: string = "";
     fieldName: string = "sidebar";
@@ -74,6 +96,9 @@ export class SidebarComponent implements OnInit {
     _editType: string;
     EDIT_TYPES: any = LandingConstants.editTypes;
     submissionData = new SubmissionData();
+    public revisionHelp:{} = revisionhelp;
+    showRevisionHelp: boolean = false;
+    showGeneralHelp: boolean = true;
 
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: any = {};
@@ -89,6 +114,7 @@ export class SidebarComponent implements OnInit {
         public lpService: LandingpageService,
         public edstatsvc: EditStatusService,
         public globalService: GlobalService,
+        @Self() private element: ElementRef,
         public sidebarService: SidebarService) { 
         
             this.edstatsvc.watchEditType((editType) => {
@@ -99,8 +125,12 @@ export class SidebarComponent implements OnInit {
                 (data) => {
                     this.submissionData = new SubmissionData(data);
             })
-        }
+    }
 
+    get maxHeight(): number {
+        return this.element.nativeElement.firstChild.offsetHeight;
+    }
+    
     ngOnInit(): void {
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
 
@@ -248,7 +278,18 @@ export class SidebarComponent implements OnInit {
     toggleSbarView() {
         this.sbarvisible = ! this.sbarvisible;
 
-        this.sidebarState = this.sbarvisible? 'sbvisible' : 'sbhidden';
+        this.sidebarState = this.sbarvisible ? 'sbvisible' : 'sbhidden';
+        
+        if (!this.sbarvisible) {
+            setTimeout(() => {
+                this.hideSidebarBody = true;
+                //Refresh screen
+                this.chref.detectChanges();
+            }, 350);
+        } else {
+            this.hideSidebarBody = false;
+        }
+        
         this.sbarvisible_out.next(this.sbarvisible);
         this.chref.detectChanges();
     }
@@ -258,5 +299,21 @@ export class SidebarComponent implements OnInit {
 
         //Broadcast the change
         this.globalService.setSubmissionData(this.submissionData);
+    }
+
+    processCommand(event) {
+        if (event == "getHelp") {
+            this.showRevisionHelp = !this.showRevisionHelp;
+
+            if (this.showGeneralHelp) this.showGeneralHelp = false;
+            else {
+                //Before display suggestion, Delay 350ms to allow the help window to go away.
+                setTimeout(() => {
+                    this.showGeneralHelp = true;
+                    //Refresh screen
+                    this.chref.detectChanges();
+                }, 350);
+            }
+        }
     }
 }

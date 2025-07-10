@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, inject, Input, OnInit, ElementRef, ViewChild, Self } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, inject, Input, OnInit, ElementRef, ViewChild, Self, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MetadataUpdateService } from '../../../landing/editcontrol/metadataupdate.service';
 import {
@@ -8,26 +8,29 @@ import {
     SubmissionData,
     GlobalService
 } from '../../../shared/globals/globals';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ButtonModule } from 'primeng/button';
+// import { MatButtonModule } from '@angular/material/button';
+// import { MatIconModule } from '@angular/material/icon';
+// import { MatCheckboxModule } from '@angular/material/checkbox';
+// import { MatFormFieldModule } from '@angular/material/form-field';
+import revisionhelp from '../../../../assets/site-constants/revision-help.json';
 import { TooltipPosition, MatTooltipModule } from '@angular/material/tooltip';
 import { SuggestionsComponent } from '../../../sidebar/suggestions/suggestions.component';
-import {
-    MatDialog,
-    MAT_DIALOG_DATA,
-    MatDialogActions,
-    MatDialogClose,
-    MatDialogContent,
-    MatDialogRef,
-    MatDialogTitle,
-} from '@angular/material/dialog';
+// import {
+//     MatDialog,
+//     MAT_DIALOG_DATA,
+//     MatDialogActions,
+//     MatDialogClose,
+//     MatDialogContent,
+//     MatDialogRef,
+//     MatDialogTitle,
+// } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { CdkTextareaAutosize, TextFieldModule} from '@angular/cdk/text-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
-import { MatTableModule } from '@angular/material/table';
+// import { MatInputModule } from '@angular/material/input';
+// import { MatSelectModule } from '@angular/material/select';
+// import { MatTableModule } from '@angular/material/table';
 import { RevisionDetailsComponent } from '../../revision-details/revision-details.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 
@@ -55,16 +58,10 @@ const ELEMENT_DATA: PeriodicElement[] = [
     standalone: true,
     imports: [
         CommonModule,
-        MatButtonModule,
-        MatIconModule,
-        MatCheckboxModule,
         SuggestionsComponent,
         FormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
+        ButtonModule,
         TextFieldModule,
-        MatTableModule,
         RevisionDetailsComponent
 ],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -95,14 +92,16 @@ const ELEMENT_DATA: PeriodicElement[] = [
 })
     
 export class SubmitConfirmComponent implements OnInit {
-    readonly dialogRef = inject(MatDialogRef<SubmitConfirmComponent>);
+    // readonly dialogRef = inject(MatDialogRef<SubmitConfirmComponent>);
     suggestions: ReviewResponse;
     allRevisionTypes: RevisionDetails[] = [];
     revisionTypes = new RevisionTypes();
     revisionType: string;
     submissionData = new SubmissionData();
     showHelp: boolean = false;
+    showSuggestion: boolean = true;
     componentHeight: number;
+    public revisionHelp:{} = revisionhelp;
 
     displayedColumns: string[] = ['position', 'situation', 'examples'];
     dataSource = ELEMENT_DATA;
@@ -110,9 +109,11 @@ export class SubmitConfirmComponent implements OnInit {
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
     // @Input() revisionType: string;
     // @Output() changedData: EventEmitter<SubmissionData> = new EventEmitter();
-
+    @Output() returnValue: EventEmitter<SubmissionData> = new EventEmitter();
+    
     constructor(
         private mdupdsvc: MetadataUpdateService,
+        public activeModal: NgbActiveModal,
         public globalService: GlobalService,
         @Self() private element: ElementRef,
         private chref: ChangeDetectorRef){
@@ -136,7 +137,7 @@ export class SubmitConfirmComponent implements OnInit {
     }
     
     get maxHeight(): number {
-        return this.element.nativeElement.firstChild.offsetHeight-200;
+        return this.element.nativeElement.firstChild.offsetHeight-150;
     }
 
     get isMetadataRevisionType() {
@@ -161,7 +162,9 @@ export class SubmitConfirmComponent implements OnInit {
     continueSubmit() 
     {
         this.submissionData.goSubmit = true;
-        this.dialogRef.close(this.submissionData);
+        // this.dialogRef.close(this.submissionData);
+        this.returnValue.emit(this.submissionData);
+        this.activeModal.close('Close click');
     }
 
     /** 
@@ -170,7 +173,9 @@ export class SubmitConfirmComponent implements OnInit {
     cancelSubmit() 
     {
         this.submissionData.goSubmit = false;
-        this.dialogRef.close(this.submissionData);
+        // this.dialogRef.close(this.submissionData);
+        this.returnValue.emit(this.submissionData);
+        this.activeModal.close('Close click');
     }    
 
     // toggle(event) {
@@ -191,6 +196,16 @@ export class SubmitConfirmComponent implements OnInit {
     processCommand(event) {
         if (event == "getHelp") {
             this.showHelp = !this.showHelp;
+
+            if (this.showSuggestion) this.showSuggestion = false;
+            else {
+                //Before display suggestion, Delay 350ms to allow the help window to go away.
+                setTimeout(() => {
+                    this.showSuggestion = true;
+                    //Refresh screen
+                    this.chref.detectChanges();
+                }, 350);
+            }
         }
     }
     

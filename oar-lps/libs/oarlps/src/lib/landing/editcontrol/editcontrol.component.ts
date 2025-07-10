@@ -31,6 +31,7 @@ import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confi
 import { CommonModule } from '@angular/common';
 import { AuthenticationService, Credentials } from 'oarng';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
   
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -195,6 +196,9 @@ export class EditControlComponent implements OnInit, OnChanges {
         return this.suggestions && this.suggestions['req'] && this.suggestions['req'].length > 0;
     }
 
+    get isSubmitted() {
+        return this.mdupdsvc.recStatus.state == 'submitted';
+    }
 
     get isRevision() {
         return this._editType == this.EDIT_TYPES.REVISE;
@@ -217,12 +221,14 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     get editBtnLabel() {
-        if (this.isRevision && !this.revisionStarted) return "Start Revision";
+        if (this.isRevision && !this.revisionStarted) return "Revise Record";
         else return "Edit";
     }
 
     get readyEdit() {
-        if (this.isAuthorized) {
+        if (this.isSubmitted) {
+            return false;
+        }else if (this.isAuthorized) {
             if (this.isRevision)
                 return this.revisionStarted;
             else
@@ -231,6 +237,10 @@ export class EditControlComponent implements OnInit, OnChanges {
         } else {
             return false;
         }
+    }
+
+    get editEnable() {
+        return this.isAuthorized && !this.isSubmitted;
     }
 
     get revisionWidth() {
@@ -242,6 +252,101 @@ export class EditControlComponent implements OnInit, OnChanges {
             return {'width': '50px'};
     }
 
+
+    /**
+     * 
+     * @param nologin Return current mode string for display
+     */
+    get currentMode(){
+        let returnString: string = "";
+        switch(this._editMode) { 
+            case this.EDIT_MODES.EDIT_MODE: { 
+                if(this._editType == this.EDIT_TYPES.NORMAL)
+                    returnString = "EDIT MODE";
+                else if(this._editType == this.EDIT_TYPES.REVISE)
+                    returnString = "REVISION MODE";
+
+                break; 
+            } 
+            case this.EDIT_MODES.PREVIEW_MODE: { 
+                returnString = "PREVIEW MODE";
+                if(this._editType == this.EDIT_TYPES.REVISE)
+                    returnString = "REVISION MODE";
+                break; 
+            } 
+            case this.EDIT_MODES.DONE_MODE: { 
+                returnString = "DONE";
+                break; 
+            } 
+            default: { 
+                break; 
+            } 
+        } 
+
+        return returnString;
+    }
+
+    get editModeTooltip() {
+        let returnString: string = "";
+        switch(this._editMode) { 
+            case this.EDIT_MODES.EDIT_MODE: { 
+                if(this._editType == this.EDIT_TYPES.NORMAL)
+                    returnString = "EDIT MODE";
+                else if(this._editType == this.EDIT_TYPES.REVISE)
+                    returnString = "REVISION MODE";
+                break; 
+            } 
+            case this.EDIT_MODES.PREVIEW_MODE: { 
+                returnString = "PREVIEW MODE";
+                break; 
+            } 
+            case this.EDIT_MODES.DONE_MODE: { 
+                returnString = "DONE MODE";
+                break; 
+            } 
+            default: { 
+                break; 
+            } 
+        } 
+
+        return returnString;
+    }
+
+    get editModeIconClass() {
+        let returnString: string = "";
+        switch(this._editMode) { 
+            case this.EDIT_MODES.EDIT_MODE: { 
+                if(this._editType == this.EDIT_TYPES.NORMAL)
+                    returnString = "fa-pencil";
+                else if(this._editType == this.EDIT_TYPES.REVISE)
+                    returnString = "fa-undo";
+                break; 
+            } 
+            case this.EDIT_MODES.PREVIEW_MODE: { 
+                returnString = "fa-eye";
+                break; 
+            } 
+            case this.EDIT_MODES.DONE_MODE: { 
+                returnString = "fa-check";
+                break; 
+            } 
+            default: { 
+                break; 
+            } 
+        } 
+
+        return returnString;
+    }
+
+    get readySubmit() {
+        return !this.hasRequiredItems;
+    }
+
+    get fileManagerTooltip(){
+        if(this.fileManagerUrl) return this.fileManagerUrl;
+        else return "File Manager URL is not available."
+    }
+    
     ngOnInit() {
         let i = 0;
         // Object.keys(REVISION_TYPES).map((key) => {
@@ -253,7 +358,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.globalService.setSubmissionData(this.submissionData);
 
         // set edit mode to view only on init
-        // this._setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
+        // this.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
         this.ngOnChanges();
         this.edstatsvc._watchRemoteStart((remoteObj) => {
             // To remote start editing, resID need be set otherwise authorizeEditing()
@@ -360,7 +465,7 @@ export class EditControlComponent implements OnInit, OnChanges {
      * flag indicating whether the current editing mode of the landing page.  
      * @param editmode   
      */
-    _setEditMode(editmode : string){
+    setEditMode(editmode : string){
         this._editMode = editmode;
         //broadcast the editmode
         this.edstatsvc.editMode.set(editmode);
@@ -368,99 +473,6 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.chref.detectChanges();
     }
 
-    /**
-     * 
-     * @param nologin Return current mode string for display
-     */
-    get currentMode(){
-        let returnString: string = "";
-        switch(this._editMode) { 
-            case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORMAL)
-                    returnString = "EDIT MODE";
-                else if(this._editType == this.EDIT_TYPES.REVISE)
-                    returnString = "REVISION MODE";
-
-                break; 
-            } 
-            case this.EDIT_MODES.PREVIEW_MODE: { 
-                returnString = "PREVIEW MODE";
-                if(this._editType == this.EDIT_TYPES.REVISE)
-                    returnString = "REVISION MODE";
-                break; 
-            } 
-            case this.EDIT_MODES.DONE_MODE: { 
-                returnString = "DONE MODE";
-                break; 
-            } 
-            default: { 
-                break; 
-            } 
-        } 
-
-        return returnString;
-    }
-
-    get editModeTooltip() {
-        let returnString: string = "";
-        switch(this._editMode) { 
-            case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORMAL)
-                    returnString = "EDIT MODE";
-                else if(this._editType == this.EDIT_TYPES.REVISE)
-                    returnString = "REVISION MODE";
-                break; 
-            } 
-            case this.EDIT_MODES.PREVIEW_MODE: { 
-                returnString = "PREVIEW MODE";
-                break; 
-            } 
-            case this.EDIT_MODES.DONE_MODE: { 
-                returnString = "DONE MODE";
-                break; 
-            } 
-            default: { 
-                break; 
-            } 
-        } 
-
-        return returnString;
-    }
-
-    get editModeIconClass() {
-        let returnString: string = "";
-        switch(this._editMode) { 
-            case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORMAL)
-                    returnString = "fa-pencil";
-                else if(this._editType == this.EDIT_TYPES.REVISE)
-                    returnString = "fa-undo";
-                break; 
-            } 
-            case this.EDIT_MODES.PREVIEW_MODE: { 
-                returnString = "fa-eye";
-                break; 
-            } 
-            case this.EDIT_MODES.DONE_MODE: { 
-                returnString = "fa-check";
-                break; 
-            } 
-            default: { 
-                break; 
-            } 
-        } 
-
-        return returnString;
-    }
-
-    get readySubmit() {
-        return !this.hasRequiredItems;
-    }
-
-    get fileManagerTooltip(){
-        if(this.fileManagerUrl) return this.fileManagerUrl;
-        else return "File Manager URL is not available."
-    }
 
     // get hasRequiredItems() {
     //     return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.failures &&  this.submitResponse.validation.failures.length > 0;
@@ -479,14 +491,30 @@ export class EditControlComponent implements OnInit, OnChanges {
             
             if (!remoteStart) {
                 this.revisionStarted = true;
-                this._setEditMode(this.EDIT_MODES.EDIT_MODE); 
+                this.setEditMode(this.EDIT_MODES.EDIT_MODE); 
             } else {
-                this._setEditMode(this.EDIT_MODES.PREVIEW_MODE); 
+                this.setEditMode(this.EDIT_MODES.PREVIEW_MODE); 
             }
 
         } else {
-            this._setEditMode(this.EDIT_MODES.EDIT_MODE); 
+            if (this.isSubmitted) {
+                this.setEditMode(this.EDIT_MODES.PREVIEW_MODE); 
+            } else {
+                this.setEditMode(this.EDIT_MODES.EDIT_MODE); 
+            }
         }
+    }
+
+
+    /**
+     * When user clicks on the edit button
+     */
+    onEdit() {
+        // Regardless if this is revision mode or not, when user clicks on edit button, 
+        // set the flag to true and stay true. This flag is to set the edit button lable
+        // for revision mode. For other mode it will be ignored.
+        this.startEditing();
+        this.revisionStarted = true;
     }
 
     /**
@@ -498,53 +526,94 @@ export class EditControlComponent implements OnInit, OnChanges {
      *                  the app will remain with editing turned off if the user is not logged in.  
      */
     public startEditing(nologin: boolean = false, remoteStart: boolean = false): void {
-        if(! this.inBrowser)
+        if(!this.inBrowser)
             return;
 
         if (this.mdupdsvc.authorized) {
-            this.updateMode(remoteStart);
-        } else {
-            this.mdupdsvc.startEditing(this.resID).subscribe(
-                (authorized) => {
-                    if (authorized) {
-                        // User authorized
-                        console.log("Loading draft...");
-                        this.statusbar.showMessage("Loading draft...", true)
-                        // this.globalService.setMessage("Loading draft...");
+            if (this.isRevision && !this.revisionStarted) {
+                this.mdupdsvc.submit("revise").subscribe((result) => {
+                    var message;
+                    var err: boolean = false;
 
-                        //See if this is revision
-                        if (this.mdupdsvc.published) {
-                            this.edstatsvc._setEditType(this.editTypes.REVISE);
-                            // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["typeName"]);
-                            this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);  
-                            this.revisionStarted = true;
+                    console.log("Server return: ", result);
+
+                    this.modalRef = this.modalService.open(ConfirmationDialogComponent);
+
+                    //For testing, disable error handling
+                    if (result["error"] && false) {
+                        err = true;
+                        this.modalRef.componentInstance.title = 'The server returned following error message';
+                        message = result["error"];
+                    } else {
+                        this.modalRef.componentInstance.title = 'Note';
+                        message = 'Simple changes to metadata or README files can be published without review.  Adding, removing, or making major changes to files will require NPS review before publishing.';
+                    }
+
+                    this.modalRef.componentInstance.btnOkText = 'Ok';
+                    this.modalRef.componentInstance.btnCancelText = 'Cancel';
+                    this.modalRef.componentInstance.message = message;
+                    this.modalRef.componentInstance.showWarningIcon = false;
+                    this.modalRef.componentInstance.showCancelButton = false;
+            
+                    this.modalRef.result.then((result) => {
+                        if (result) {
+                            // if(!err)
+                                this.edit();
                         } else {
-                            this._setEditMode(this.EDIT_MODES.EDIT_MODE);  
+                            console.log("User changed mind.");
                         }
-
-                        // if (this.isRevision) {
-                        //     this.revisionStarted = true;
-                        // }
-                    }
-                    else {
-                        // not authorized; switch to preview mode
-                        this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                        this.statusbar.showMessage("You are not authorized to edit this record");
-                    }
-                    this.edstatsvc.setShowLPContent(true);
-                },
-                (err) => {
-                    console.error("Failed to start editing "+this.resID+": "+err.message);
-                    this.statusbar.showMessage("Failure loading for editing: "+err.message, true);
-                    this.edstatsvc.setShowLPContent(true);
-                }
-            );            
+                    }, (reason) => {
+                    });
+                })
+            } else {
+                // this.updateMode(remoteStart);
+                this.edit();
+            }
+        } else {
+            this.edit();
         }
 
         if (this._editMode == this.EDIT_MODES.EDIT_MODE) {
             this.edstatsvc.setShowLPContent(true);
             return;
         }
+    }
+
+    edit() {
+        this.mdupdsvc.startEditing(this.resID).subscribe(
+            (authorized) => {
+                if (authorized) {
+                    // User authorized
+                    console.log("Loading draft...");
+                    this.statusbar.showMessage("Loading draft...", true)
+                    // this.globalService.setMessage("Loading draft...");
+
+                    //See if this is revision
+                    if (this.mdupdsvc.published && !this.revisionStarted) {
+                        this.edstatsvc._setEditType(this.editTypes.REVISE);
+                        // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["typeName"]);
+                        this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);  
+                    } else {
+                        this.setEditMode(this.EDIT_MODES.EDIT_MODE);  
+                    }
+
+                    // if (this.isRevision) {
+                    //     this.revisionStarted = true;
+                    // }
+                }
+                else {
+                    // not authorized; switch to preview mode
+                    this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this.statusbar.showMessage("You are not authorized to edit this record");
+                }
+                this.edstatsvc.setShowLPContent(true);
+            },
+            (err) => {
+                console.error("Failed to start editing "+this.resID+": "+err.message);
+                this.statusbar.showMessage("Failure loading for editing: "+err.message, true);
+                this.edstatsvc.setShowLPContent(true);
+            }
+        );            
     }
 
     /**
@@ -557,7 +626,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     console.log("Editd discarded.");
                     // this.mdupdsvc.forgetUpdateDate();
                     // this.mdupdsvc.fieldReset();
-                    // this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    // this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     // if (md && md['@id']) {
                     //     // assume a NerdmRes object was returned
                     //     this.mdrec = md as NerdmRes;
@@ -566,7 +635,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     // }else{
                     //   // If backend didn't return a Nerdm record, just set edit mode to preview
                     //   console.log("Backend didn't return a Nerdm record after the discard request.")
-                    //   this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    //   this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     // }
                 },
                 error: (err) => {
@@ -626,7 +695,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     //         // console.log("Done edit return:", res);
     //         this.mdupdsvc.forgetUpdateDate();
     //         this.mdupdsvc.fieldReset();
-    //         this._setEditMode(this.EDIT_MODES.DONE_MODE);
+    //         this.setEditMode(this.EDIT_MODES.DONE_MODE);
     //       },
     //       (err) => {
     //         if (err.type == "user")
@@ -644,7 +713,7 @@ export class EditControlComponent implements OnInit, OnChanges {
      * the changes will appear.  This function is called when the "Preview" button is clicked.
      */
     public preview(): void {
-        this._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+        this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
     }
 
     /**
@@ -773,93 +842,94 @@ export class EditControlComponent implements OnInit, OnChanges {
       
     }
 
-    openDialog_mat(enterAnimationDuration: string='0ms', exitAnimationDuration: string='0ms'): void {
-        const dialogRef = this.dialog.open(SubmitConfirmComponent, {
-            width: '1020px',
-            maxHeight: '90vh',
-            enterAnimationDuration,
-            exitAnimationDuration,
-            // data: { submissionData: this.submissionData }
-        });
+    // openDialog_mat(enterAnimationDuration: string='0ms', exitAnimationDuration: string='0ms'): void {
+    //     const dialogRef = this.dialog.open(SubmitConfirmComponent, {
+    //         width: '1020px',
+    //         maxHeight: '90vh',
+    //         enterAnimationDuration,
+    //         exitAnimationDuration,
+    //         // data: { submissionData: this.submissionData }
+    //     });
 
-        dialogRef.afterClosed().subscribe(result => {
-            console.log('The dialog was closed with result:', result);
-            // Process the result. 
-            // If proceed submisison, submit review. Otherwise do nothing.
-            if (result.goSubmit) {
-                let option: any;
+    //     dialogRef.afterClosed().subscribe(result => {
+    //         console.log('The dialog was closed with result:', result);
+    //         // Process the result. 
+    //         // If proceed submisison, submit review. Otherwise do nothing.
+    //         if (result.goSubmit) {
+    //             let option: any;
 
-                if (this.isRevision) {
-                    option = {
-                        "review": { "notes": this.submissionData.submissionNotes },
-                        "revision": {
-                            "purpose": this.submissionData.revisionPurpose,
-                            "changes": []
-                        }
-                    }
+    //             if (this.isRevision) {
+    //                 option = {
+    //                     "review": { "notes": this.submissionData.submissionNotes },
+    //                     "revision": {
+    //                         "purpose": this.submissionData.revisionPurpose,
+    //                         "changes": []
+    //                     }
+    //                 }
 
-                    if (this.submissionData.revisionIDs.length > 0) {
-                        this.submissionData.revisionIDs.forEach(
-                            (id) => {
-                                option.revision.changes.push(this.revisionTypes.getNamebyID(id));
-                            }
-                        )
-                    }
+    //                 if (this.submissionData.revisionIDs.length > 0) {
+    //                     this.submissionData.revisionIDs.forEach(
+    //                         (id) => {
+    //                             option.revision.changes.push(this.revisionTypes.getNamebyID(id));
+    //                         }
+    //                     )
+    //                 }
 
-                } else {
-                    option = {
-                        "review": { "notes": this.submissionData.submissionNotes }
-                    }
-                }
-
-                this.mdupdsvc.submit("submit", JSON.stringify(option)).subscribe(
-                    (result => {
-                        console.log("Submit return:", result);
-                    }))
-            }
-        });
-    }
-
-    // openDialog() {
-    //     let ngbModalOptions: NgbModalOptions = {
-    //         backdrop: 'static',
-    //         keyboard: false,
-    //         windowClass: "modal-small",
-    //         size: 'lg'
-    //     };
-
-    //     this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
-    //     this.modalRef.componentInstance.submitResponse = this.submitResponse;
-    //     this.modalRef.componentInstance.returnValue.subscribe(
-    //         (submit) => {
-    //             if ( submit ) {
-    //                 console.log("Return value", submit);
-    //                 // DBIO Web Service Action:  PATCH /dap/mds3/id/status    
-    //                 // with input: { "action": "submit" }
-    //                 this.mdupdsvc.finalize("submit").subscribe((result) => {
-    //                     console.log(result)
-    //                 })
-    //             }else{
-    //                 console.log("User canceled submit.");//Do nothing
+    //             } else {
+    //                 option = {
+    //                     "review": { "notes": this.submissionData.submissionNotes }
+    //                 }
     //             }
-    //         }, 
-    //         (reason) => {
-    //             console.log("User canceled submit.");//Do nothing
+
+    //             this.mdupdsvc.submit("submit", JSON.stringify(option)).subscribe(
+    //                 (result => {
+    //                     console.log("Submit return:", result);
+    //                 }))
     //         }
-    //     );
+    //     });
     // }
+
+    openSubmitConfirmDialog() {
+        let ngbModalOptions: NgbModalOptions = {
+            backdrop: 'static',
+            keyboard: false,
+            windowClass: "modal-small",
+            size: 'lg'
+        };
+
+        this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
+        this.modalRef.componentInstance.submitResponse = this.submitResponse;
+        this.modalRef.componentInstance.returnValue.subscribe(
+            (submit) => {
+                if ( submit.goSubmit ) {
+                    console.log("Return value", submit);
+                    // DBIO Web Service Action:  PATCH /dap/mds3/id/status    
+                    // with input: { "action": "submit" }
+                    this.mdupdsvc.submit("submit").subscribe((result) => {
+                        //reload the landing page
+                        window.location.reload();
+                    })
+                }else{
+                    console.log("User canceled submit.");//Do nothing
+                }
+            }, 
+            (reason) => {
+                console.log("User canceled submit.");//Do nothing
+            }
+        );
+    }
 
     submitReview() {
         console.log("Submit for review...");
         // Finalizing
-        this.mdupdsvc.finalize("finalize", "preparing for submission").subscribe(
+        this.mdupdsvc.submit("finalize", {"message": "preparing for submission"}).subscribe(
             (result) => {
                 //Finalize with no error. Then refresh Nerdm record
                 this.mdupdsvc.loadDraft(true).subscribe((result) => {
                     //Once Nerdm record refreshed. Suggestions will automatically refreshed as well
                     //Then display the pop up window
 
-                    this.openDialog_mat();
+                    this.openSubmitConfirmDialog();
                     // let ngbModalOptions: NgbModalOptions = {
                     //     backdrop: 'static',
                     //     keyboard: false,

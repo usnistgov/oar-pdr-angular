@@ -6,28 +6,26 @@ import {
     RevisionDetails,
     SubmissionData
 } from '../../shared/globals/globals';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { CheckboxModule } from 'primeng/checkbox';
+// import { MatIconModule } from '@angular/material/icon';
+// import { MatCheckboxModule } from '@angular/material/checkbox';
+// import { MatFormFieldModule } from '@angular/material/form-field';
 import { TooltipPosition, MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
+import { MdsCheckboxComponent } from '../../shared/mds-checkbox/mds-checkbox.component';
+// import { MatInputModule } from '@angular/material/input';
+// import { MatSelectModule } from '@angular/material/select';
 
 @Component({
     selector: 'revision-details',
     standalone: true,
     imports: [
         CommonModule,
-        MatIconModule,
-        MatCheckboxModule,
         FormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
         TextFieldModule,
-        MatTooltipModule
+        CheckboxModule,
+        MdsCheckboxComponent
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './revision-details.component.html',
@@ -38,6 +36,7 @@ export class RevisionDetailsComponent {
     allRevisionTypes: RevisionDetails[] = [];
     revisionTypes = new RevisionTypes();
     revisionType: string;
+    policyPageLink: string = "";
 
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
@@ -54,14 +53,17 @@ export class RevisionDetailsComponent {
      * On checkbox change
      * @param event 
      */
-    toggle(event, id) {
-        console.log("Checkbox changed:", event);
-        if (event.checked) {
-            this.submissionData.addRevisionID(id);
-        } else {
+    toggle(id) {
+        if (this.submissionData.includes(id)) 
             this.submissionData.removeRevisionID(id)
-        }
+        else
+            this.submissionData.addRevisionID(id);
+
         this.changedData.emit(this.submissionData);
+    }
+
+    checked(id: number) {
+        return this.submissionData.includes(id);
     }
 
     /**

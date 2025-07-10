@@ -1,78 +1,90 @@
-<div class="sbar-container" [@togglesbar]="sidebarState">
-    <div style="background-color: rgb(231, 231, 231);padding: 3px;">
-        <div style="float: right; margin: 0px 5px 5px 5px;">
-            <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i
-                    class="faa faa-times-circle faa-lg" aria-hidden="true"
-                    style="color: orange; cursor: pointer;"></i></a>
-        </div>
-        <div class="help-title">
-            {{title}}
-        </div>
-    </div>
-    <div class="help-frame" [innerHTML]="helpContent">
-    </div>
-
-    <div class="section-title">
-        <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
-            {{msgCompleted}}
-        </div>
-        <ng-template #nextSteps>
-            Next Steps:
-        </ng-template>
-    </div>
-
-    <!-- Suggestions -->
-    @if(!isTestData){
-        <div class="section-content">
-
-            <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
-                && (!suggestions['warn'] || suggestions['warn'].length == 0) 
-                && (!suggestions['rec'] || suggestions['rec'].length == 0)">
-                {{msgCompleted}}
+<div *ngIf="!hideSidebarBody" class="sbar-container" [@togglesbar]="sidebarState">
+    <div>
+        @if(showRevisionHelp){
+            <div class="headerbar">
+                <i class="faa faa-times-circle btn-hide-help" 
+                    (click)="processCommand('getHelp')" aria-hidden="true"></i>
+                <div class="help-title">
+                    Revision Help
+                </div>
             </div>
-            <!-- <ng-template #nextSteps>
-                Next Steps:
-            </ng-template> -->
+
+        }
+        <div [@slideToggle]="showRevisionHelp ? 'visible' : 'hidden'" 
+            class="revision-help" 
+            [ngStyle]="{'max-height':maxHeight + 'px'}">
+            <p [innerHTML]="revisionHelp['htmlcontent']"></p>
+        </div>
+
+        <div *ngIf="showGeneralHelp">
+            <div class="headerbar">
+                <div style="float: right; margin: 0px 5px 5px 5px;">
+                    <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i class="faa faa-times-circle faa-lg"
+                            aria-hidden="true" style="color: orange; cursor: pointer;"></i></a>
+                </div>
+                <div class="help-title">
+                    {{title}}
+                </div>
+            </div>
+            <div class="help-frame" [innerHTML]="helpContent">
+            </div>
             
-
-            <div *ngIf="hasRequiredItems"> 
-                <suggestions 
-                    suggestionLabel="Required"
-                    [suggestions]="suggestions['req']"
-                    showSug="true"
-                    (gotoSectionName)="gotoSection($event)">
-                </suggestions>
+            <div class="help-title headerbar">
+                <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
+                    {{msgCompleted}}
+                </div>
+                <ng-template #nextSteps>
+                    Next Steps:
+                </ng-template>
             </div>
-
-            <div *ngIf="hasWarnItems"> 
-                <suggestions 
-                    suggestionLabel="Warning"
-                    [suggestions]="suggestions['warn']"
-                    [showSug]="expandWarning"
-                    (gotoSectionName)="gotoSection($event)">
-                </suggestions>
-            </div>
-
-            <div *ngIf="hasRecommendedItems"> 
-                <suggestions 
-                    suggestionLabel="Recommended"
-                    [suggestions]="suggestions['rec']"
-                    [showSug]="expandRec"
-                    (gotoSectionName)="gotoSection($event)">
-                </suggestions>
-            </div>
+            
+            <!-- Suggestions -->
+            @if(!isTestData){
+                <div class="section-content">
+                
+                    <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
+                                        && (!suggestions['warn'] || suggestions['warn'].length == 0) 
+                                        && (!suggestions['rec'] || suggestions['rec'].length == 0)">
+                        {{msgCompleted}}
+                    </div>
+                    <!-- <ng-template #nextSteps>
+                                        Next Steps:
+                                    </ng-template> -->
+                
+                
+                    <div *ngIf="hasRequiredItems">
+                        <suggestions suggestionLabel="Required" [suggestions]="suggestions['req']" showSug="true"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+                
+                    <div *ngIf="hasWarnItems">
+                        <suggestions suggestionLabel="Warning" [suggestions]="suggestions['warn']" [showSug]="expandWarning"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+                
+                    <div *ngIf="hasRecommendedItems">
+                        <suggestions suggestionLabel="Recommended" [suggestions]="suggestions['rec']" [showSug]="expandRec"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+                </div>       
+            }
         </div>
-    }
+    </div>
+
 
     @if(isRevision) {
-        <div class="section-title">
+        <div class="help-title headerbar">
             Revision Data (Placeholder)
         </div>
 
         <div class="section-content">
             <revision-details 
                 [submissionData]="submissionData" 
-                (changedData)="updateSubmissionData($event)">
+                (changedData)="updateSubmissionData($event)"
+                (command)="processCommand($event)">
             </revision-details>
         </div>
     }

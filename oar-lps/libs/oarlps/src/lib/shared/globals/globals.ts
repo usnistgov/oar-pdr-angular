@@ -229,13 +229,14 @@ export class Sections {
     static readonly DOI = 'DOI';
     static readonly VERSION = 'Version';
     static readonly COLLECTION = 'Collection';
+    static readonly FILES = 'Files';
 }
 
 //_fieldName is the field name in Nerdm record
 let _fieldName = {};
 _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
-_fieldName[Sections.ACCESS_PAGES] = "components";
+_fieldName[Sections.ACCESS_PAGES] = "links";  //component
 _fieldName[Sections.DESCRIPTION] = "description";
 // _fieldName[Sections.TOPICS] = "theme";
 _fieldName[Sections.TOPICS] = "topic";
@@ -253,13 +254,15 @@ _fieldName[Sections.CONTACT] = "contactPoint";
 _fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";
 _fieldName[Sections.DOI] = "doi";
 _fieldName[Sections.VERSION] = "version";
+_fieldName[Sections.FILES] = "files";
 
 let _displayName = {};
 _displayName[GENERAL] = Sections.GENERAL;
 _displayName["title"] = Sections.TITLE;
-_displayName["components"] = Sections.ACCESS_PAGES;
+_displayName["links"] = Sections.ACCESS_PAGES;
 _displayName["description"] = Sections.DESCRIPTION;
 _displayName["theme"] = Sections.TOPICS;
+_displayName["topic"] = Sections.TOPICS;
 _displayName["keyword"] = Sections.KEYWORDS;
 _displayName["identity"] = Sections.IDENTITY;
 _displayName["about"] = Sections.ABOUT;
@@ -272,6 +275,7 @@ _displayName["contactPoint"] = Sections.CONTACT;
 _displayName["landingPage"] = Sections.VISIT_HOME_PAGE;
 _displayName["doi"] = Sections.DOI;
 _displayName["version"] = Sections.VERSION;
+_displayName["files"] = Sections.FILES;
 
 export class SectionPrefs {
     private static readonly _lSectionID = _fieldName;
@@ -335,7 +339,7 @@ export interface RevisionDetails {
     label: string,
     tooltip: string,
     typeName: string,
-    triggerReview: boolean
+    majorChanges: boolean
 }
 
 export class SubmissionData {
@@ -372,6 +376,12 @@ export class SubmissionData {
     removeRevisionID(id: number) {
         this.revisionIDs = this.revisionIDs.filter(revID => revID !== id); 
     }
+
+    includes(id: number) {
+        if (!this.revisionIDs) return false;
+
+        return this.revisionIDs.includes(id);
+    }
 }
 
 export class RevisionTypes {
@@ -381,45 +391,38 @@ export class RevisionTypes {
         this.data = [
             {
                 "id": 1,
-                "label": "Addition of one or more README files",
+                "label": "Addition of new files",
                 "tooltip": "",
-                "typeName": "add_readmes",
-                "triggerReview": false
+                "typeName": "add_files",
+                "majorChanges": true
             },
             {
                 "id": 2,
-                "label": "Addition of other data files",
-                "tooltip": "",
-                "typeName": "add_files",
-                "triggerReview": true
-            },
-            {
-                "id": 3,
                 "label": "Removal previously published files",
                 "tooltip": "",
                 "typeName": "remove_files",
-                "triggerReview": true
+                "majorChanges": true
+            },
+            {
+                "id": 3,
+                "label": "Major changes to files or other data available on remote sites or in software repositories",
+                "tooltip": "",
+                "typeName": "change_major",
+                "majorChanges": true
             },
             {
                 "id": 4,
-                "label": "Major changes to files (excluding README files)",
-                "tooltip": "",
-                "typeName": "change_major",
-                "triggerReview": true
-            },
-            {
-                "id": 5,
                 "label": "Minor corrections to files",
                 "tooltip": "",
                 "typeName": "change_minor",
-                "triggerReview": false
+                "majorChanges": false
             },
             {
-                "id": 6,
-                "label": "Home page information changes (i.e. metadata)",
+                "id": 5,
+                "label": "Metadata changes",
                 "tooltip": "",
                 "typeName": "metadata",
-                "triggerReview": false
+                "majorChanges": false
             }
         ]
     }

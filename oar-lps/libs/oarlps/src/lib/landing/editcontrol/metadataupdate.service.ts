@@ -61,7 +61,7 @@ export class MetadataUpdateService {
     }
 
     get published() {
-        return this._recStatus.published_as;
+        return this._recStatus.state == 'published';
     }
 
     get submitted() {
@@ -179,7 +179,7 @@ export class MetadataUpdateService {
                 this._recStatus = rec.status;
 
                 //Testing - make this record published
-                this._recStatus["published_as"] = "test";
+                // this._recStatus["state"] = "published";
                 // console.log("Rec status", this._recStatus);
 
                 if (rec.status?.modified) 
@@ -865,24 +865,24 @@ export class MetadataUpdateService {
     /**
      * Validate the status from backend
      */
-    public finalize(action: string="finalize", message: string = ""): Observable<Object> {
-        if (!this.dapUpdtSvc) {
-            console.error("Attempted to finalize without authorization!  Ignoring finalize.");
-            return of({});
-        }
-        return this.dapUpdtSvc.finalize(action, message).pipe(
-            tap((status) => {
-                //Do nothing to the return message for now. Just proceed.
-            }),
-            catchError((err) => {
-                console.error("err", err);
-                console.error("Failed to finalize: server error:" + err.message);
-                this.msgsvc.syserror(err.message);
-                return of(null);
-            }));
-    }   
+    // public finalize(action: string="finalize", message: string = ""): Observable<Object> {
+    //     if (!this.dapUpdtSvc) {
+    //         console.error("Attempted to finalize without authorization!  Ignoring finalize.");
+    //         return of({});
+    //     }
+    //     return this.dapUpdtSvc.finalize(action, message).pipe(
+    //         tap((status) => {
+    //             //Do nothing to the return message for now. Just proceed.
+    //         }),
+    //         catchError((err) => {
+    //             console.error("err", err);
+    //             console.error("Failed to finalize: server error:" + err.message);
+    //             this.msgsvc.syserror(err.message);
+    //             return of(null);
+    //         }));
+    // }   
 
-    public submit(action: string = "submit", option: any): Observable<Object> {
+    public submit(action: string = "submit", option: any = null): Observable<Object> {
         if (!this.dapUpdtSvc) {
             console.error("Attempted to finalize without authorization!  Ignoring finalize.");
             return of({});
@@ -895,7 +895,7 @@ export class MetadataUpdateService {
                 console.error("err", err);
                 console.error("Failed to submit: server error:" + err.message);
                 this.msgsvc.syserror(err.message);
-                return of(null);
+                return of({"error": err.message});
             })); 
     }
 

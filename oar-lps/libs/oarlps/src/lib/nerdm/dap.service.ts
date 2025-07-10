@@ -179,7 +179,7 @@ export abstract class DAPUpdateService {
     /**
      *  Requests the record to be “finalized”
      */
-    abstract finalize(): Observable<Object>;
+    // abstract finalize(): Observable<Object>;
 
     /**
      *  Submit the request
@@ -223,7 +223,7 @@ export abstract class DAPService extends NERDmResourceService {
      * if the user does not have delete permission.  
      */
     abstract deleteRec(id : string) : Observable<boolean>;
-
+    
     /**
      * return the DBIO record with the given ID.  Note for DAP records, the data property will 
      * not be complete but rather will be a summary.
@@ -725,24 +725,29 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
         return this.webclient.get(url, {headers: hdrs, responseType: "json"});
     }
 
-    finalize(action: string = "finalize", message: string = ""): Observable<Object> {
+    // finalize(action: string = "finalize", message: string = ""): Observable<Object> {
+    //     const url = this.endpoint + this.recid + "/status";
+    //     const hdrs = _headersFor(this, "patch");
+    //     let body = {
+    //         "action": action
+    //     };
+    //     if (message) body["message"] = message; 
+
+    //     return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
+    // }
+
+    submit(action: string = "submit", option: any = null): Observable<Object> {
         const url = this.endpoint + this.recid + "/status";
         const hdrs = _headersFor(this, "patch");
         let body = {
             "action": action
         };
-        if (message) body["message"] = message; 
 
-        return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
-    }
-
-    submit(action: string = "submit", option: any = {}): Observable<Object> {
-        const url = this.endpoint + this.recid + "/status";
-        const hdrs = _headersFor(this, "patch");
-        let body = {
-            "action": action
-        };
-        if (option) body["action_options"] = option; 
+        if (action == "finalize") {
+            if(option && option.message) body["message"] = option.message; 
+        } else if (action == "submit") {
+            if (option) body["action_options"] = option;
+        }
 
         return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
     }
@@ -1198,11 +1203,11 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
         });
     }    
 
-    finalize(action: string='finalize', message: string = ''): Observable<Object> {
-        return of({
-            'REQ': [], 'WARN': [], 'REC': []
-        });
-    }
+    // finalize(action: string='finalize', message: string = ''): Observable<Object> {
+    //     return of({
+    //         'REQ': [], 'WARN': [], 'REC': []
+    //     });
+    // }
 
     submit(action: string = 'submit', option: any = {}): Observable<Object> {
         return of({
