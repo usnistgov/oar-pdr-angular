@@ -10,7 +10,7 @@
     },
     "files": {
         "label": "Files",
-        "general": "[We need to know what 'yes' and 'no' mean here.]"
+        "general": "Select 'Yes' if you have files to upload. You will prompted to do so later. <p>Select 'No' if you are hosting the files on an external site, e.g., GitHub."
     },
     "software": {
         "label": "Software",
@@ -18,7 +18,7 @@
     },
     "associatedPapers": {
         "label": "Associated Papers",
-        "general": "[We need to know what 'yes' and 'no' mean here.]"
+        "general": "Select the first option if there are no associated papers being published with this dataset. <p> Select the second option if you are publishing a paper that directly corresponds with this dataset. <p> Select the third option if you are publishing a paper that is not directly related with this dataset, but you want to reference it anyway."
     },
     "name": {
         "label": "Name",
