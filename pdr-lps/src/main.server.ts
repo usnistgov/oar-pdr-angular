@@ -3,7 +3,9 @@
  */
 import '@angular/localize/init';
 import { enableProdMode } from '@angular/core';
+import { renderModule } from '@angular/platform-server';
+import { AppServerModule } from '../server';
 export { AppServerModule } from './app/app.server.module';
 
 enableProdMode();
-export { renderModuleFactory } from '@angular/platform-server';
+export { renderModule } from '@angular/platform-server';
