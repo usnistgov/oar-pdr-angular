@@ -176,7 +176,7 @@ npm $npmpfx run build-oarlps
 # build target distributions
 declare -A buildscript
 buildscript=(                            \
-    ["pdr-lps"]=build-pdrlps             \
+    ["pdr-lps"]=build-pdrlps:ssr             \
     ["midas-author-wizard"]=build-sw     \
     ["midas-author-lps"]=build-midaslps  \
     ["pdr-rpa-request"]=build-rpa-request\
