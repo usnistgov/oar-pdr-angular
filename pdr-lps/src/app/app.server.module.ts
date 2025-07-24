@@ -5,6 +5,7 @@ import { ServerModule } from '@angular/platform-server';
 import { AppModule } from './app.module';
 import { AppComponent } from './app.component';
 import { ServerMetadataTransferModule } from './nerdm/metadatatransfer-server.module';
+import { CONFIG_URL } from 'oarng';
 
 /**
  * The root module for the server-side application.  
@@ -23,5 +24,8 @@ import { ServerMetadataTransferModule } from './nerdm/metadatatransfer-server.mo
     // Since the bootstrapped component is not inherited from your
     // imported AppModule, it needs to be repeated here.
     bootstrap: [ AppComponent ],
+    providers: [
+        { provide: CONFIG_URL, useValue: "http://localhost:4000/assets/config.json" }
+    ]
 })
 export class AppServerModule {}

@@ -33,7 +33,7 @@ export class AppComponent {
     }
 
     ngOnInit() {
-        this.appVersion = this.cfg.get("appVersion", "1.0") as string;
+        this.appVersion = this.cfg.get("systemVersion", "X.X") as string;
         this.homeButtonLink = this.cfg.get("links.portalBase", "") as string;
 
         if(this.inBrowser){
