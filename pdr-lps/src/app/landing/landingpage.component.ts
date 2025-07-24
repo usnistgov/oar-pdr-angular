@@ -233,7 +233,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         // Init the size of landing page body and the help box
         this.updateScreenSize();
 
-        this.reqId = this.route.snapshot.paramMap.get('id');
+        this.reqId = this.requestedIDfromRoute(this.route).replace('ark:/88434/', '');
         this.inBrowser = isPlatformBrowser(platformId);
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
@@ -283,6 +283,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
             // this.displayBanner = true;
         }, 0);
+    }
+
+    protected requestedIDfromRoute(route : ActivatedRoute) : string {
+        return route.snapshot.url.map(u => u.toString()).join('/');
     }
 
     /**
