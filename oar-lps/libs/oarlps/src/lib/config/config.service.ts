@@ -43,7 +43,6 @@ export class AppConfig extends ConfigurationService {
         super.loadConfig(data);
         if (this.isOnServer) {
             this.config = this._useServerSide(this.config as LPSConfig);
-            console.log("Server side config:", this.config);
         } else {
             this.config = this._hideServerSide(this.config as LPSConfig);
         }
