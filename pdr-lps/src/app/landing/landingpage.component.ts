@@ -12,7 +12,6 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
-import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -265,7 +264,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
+        const CollectionData1: any  = require('../../assets/site-constants/collections.json');
+        this.collectionObj = CollectionData1[this.collection] as any;
 
         switch(this.collection) {
             case Collections.FORENSICS: {
