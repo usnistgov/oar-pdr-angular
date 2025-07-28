@@ -42,7 +42,6 @@ export function serializeMetadataTransferFactory(doc : Document, mdtrx : Metadat
 {
     return () => {
         let mdclass = 'structured-data ';
-
         mdtrx.labels().forEach((id) => {
             let data = mdtrx.get(id) as NerdmRes;
             if (data == null)

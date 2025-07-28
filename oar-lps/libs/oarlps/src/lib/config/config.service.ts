@@ -11,6 +11,7 @@ import { LPSConfig } from './config.model';
     providedIn: 'root',
 })
 export class AppConfig extends ConfigurationService {
+    isOnServer: boolean;
 
     constructor(http: HttpClient,
                 @Optional() @Inject(PLATFORM_ID) platid?: Object,
@@ -24,26 +25,28 @@ export class AppConfig extends ConfigurationService {
 
     protected _useServerSide(cfgdata : LPSConfig) {
         cfgdata = deepCopy(cfgdata);
-        if (cfgdata['APIs'] && cfgdata['APIs']['serverSide']) {
-            cfgdata['APIs'] = { ...cfgdata['APIs'], ...cfgdata['APIs']['serverSide'] };
-            delete cfgdata['APIs']['serverSide'];
+        if (cfgdata['PDRAPIs'] && cfgdata['PDRAPIs']['serverSide']) {
+            cfgdata['PDRAPIs'] = { ...cfgdata['PDRAPIs'], ...cfgdata['PDRAPIs']['serverSide'] };
+            delete cfgdata['PDRAPIs']['serverSide'];
         }
         return cfgdata;
     }
 
     protected _hideServerSide(cfgdata : LPSConfig) {
         cfgdata = deepCopy(cfgdata);
-        if (cfgdata['APIs'] && cfgdata['APIs']['serverSide'])
-            delete cfgdata['APIs']['serverSide'];
+        if (cfgdata['PDRAPIs'] && cfgdata['PDRAPIs']['serverSide'])
+            delete cfgdata['PDRAPIs']['serverSide'];
         return cfgdata;
     }
 
     loadConfig(data: any): void {
         super.loadConfig(data);
-        if (this.isOnServer)
+        if (this.isOnServer) {
             this.config = this._useServerSide(this.config as LPSConfig);
-        else
+            console.log("Server side config:", this.config);
+        } else {
             this.config = this._hideServerSide(this.config as LPSConfig);
+        }
         this.inferMissingValues();
     }
 
@@ -77,14 +80,16 @@ export class AppConfig extends ConfigurationService {
 
         if (! cfg.PDRAPIs)
             cfg.PDRAPIs = {}
-        if (! cfg.PDRAPIs.mdSearch)
-            cfg.PDRAPIs.mdSearch = cfg.links.portalBase + "rmm/"
+        if (!cfg.PDRAPIs.mdSearch)
+            cfg.PDRAPIs.mdSearch = cfg.links.portalBase + "rmm/";
         if (! cfg.PDRAPIs.mdService)
             cfg.PDRAPIs.mdService = cfg.links.pdrIDResolver;
         if (! cfg.PDRAPIs.distService)
             cfg.PDRAPIs.distService = cfg.links.distService;
         if (! cfg.PDRAPIs.metrics)
             cfg.PDRAPIs.metrics = cfg.PDRAPIs.mdSearch + "usagemetrics/";
+        if (! cfg.PDRAPIs.rpaBackend)
+            cfg.PDRAPIs.rpaBackend = cfg.links.portalBase + "rpa/"
     }
 }
 

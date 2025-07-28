@@ -362,7 +362,6 @@ export function createResourceService(ngenv: IEnvironment, platid : Object, endp
     // Note: this implementation is based on the assumption that the app only needs one
     // NERDm record--the one for the resource being displayed.  If that assumption is no
     // longer true, this implementation should be changed (which would not be hard).
-
     let svc : NERDmResourceService|null = null
     if (isPlatformServer(platid)) {
         if (proc.env["PDR_METADATA_DIR"]) {

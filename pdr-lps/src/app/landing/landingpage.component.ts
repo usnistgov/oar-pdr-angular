@@ -24,6 +24,7 @@ import { GlobalService, LandingConstants, CartService, DataCartStatus, CartActio
 import { RecordLevelMetrics, MetricsService, MetricsData, formatBytes } from 'oarlps';
 import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps';
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -228,7 +229,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
-                public lpService: LandingpageService)
+                public lpService: LandingpageService,
+                private http: HttpClient)
     {
         // Init the size of landing page body and the help box
         this.updateScreenSize();
@@ -263,26 +265,28 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
+        this.http.get('/assets/site-constants/collections.json').subscribe(data => {
+            this.collectionObj = data[this.collection] as any;
 
-        switch(this.collection) {
-            case Collections.FORENSICS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
+            switch(this.collection) {
+                case Collections.FORENSICS: {
+                    this.imageURL = this.collectionObj.bannerUrl;
+                    break;
+                }
+                case Collections.SEMICONDUCTORS: {
+                    this.imageURL = this.collectionObj.bannerUrl;
+                    break;
+                }
+                default: {
+                    this.imageURL = "";
+                    break;
+                }
             }
-            case Collections.SEMICONDUCTORS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            default: {
-                this.imageURL = "";
-                break;
-            }
-        }
 
-        setTimeout(() => {
-            // this.displayBanner = true;
-        }, 0);
+            setTimeout(() => {
+                // this.displayBanner = true;
+            }, 0);
+        });
     }
 
     protected requestedIDfromRoute(route : ActivatedRoute) : string {
@@ -585,10 +589,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * apply housekeeping after view has been initialized
      */
     ngAfterViewInit() {
-        this.sidebarHeight = window.innerHeight - 250;
-
         if(this.inBrowser) {
-            if(this.splitter){
+            this.sidebarHeight = window.innerHeight - 250;
+
+            if (this.splitter) {
               this.splitterX = this.splitter.nativeElement.offsetLeft + 6;
             }
 

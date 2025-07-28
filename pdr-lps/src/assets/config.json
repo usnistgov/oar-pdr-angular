@@ -12,7 +12,8 @@
         "metrics": "https://data.nist.gov/rmm/usagemetrics/",
         "serverSide": { 
             "mdService": "https://data.nist.gov/od/id/"
-        }
+        },
+        "rpaBackend": "https://data.nist.gov/rpa/"
     },
     "mode": "dev",
     "systemVersion": "v1.3.X",
