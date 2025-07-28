@@ -265,28 +265,26 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     loadBannerUrl() {
-        this.http.get('/assets/site-constants/collections.json').subscribe(data => {
-            this.collectionObj = data[this.collection] as any;
+        this.collectionObj = CollectionData[this.collection] as any;
 
-            switch(this.collection) {
-                case Collections.FORENSICS: {
-                    this.imageURL = this.collectionObj.bannerUrl;
-                    break;
-                }
-                case Collections.SEMICONDUCTORS: {
-                    this.imageURL = this.collectionObj.bannerUrl;
-                    break;
-                }
-                default: {
-                    this.imageURL = "";
-                    break;
-                }
+        switch(this.collection) {
+            case Collections.FORENSICS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
             }
+            case Collections.SEMICONDUCTORS: {
+                this.imageURL = this.collectionObj.bannerUrl;
+                break;
+            }
+            default: {
+                this.imageURL = "";
+                break;
+            }
+        }
 
-            setTimeout(() => {
-                // this.displayBanner = true;
-            }, 0);
-        });
+        setTimeout(() => {
+            // this.displayBanner = true;
+        }, 0);
     }
 
     protected requestedIDfromRoute(route : ActivatedRoute) : string {
