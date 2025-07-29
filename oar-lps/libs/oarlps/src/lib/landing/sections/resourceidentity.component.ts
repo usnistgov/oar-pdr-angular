@@ -98,8 +98,6 @@ export class ResourceIdentityComponent implements OnChanges {
     }
 
     ngOnInit(): void {
-        console.log("facilitatorsFieldName", this.facilitatorsFieldName);
-        console.log("this.record", this.record);
         let i = this.isDefaultCollection;
 
         this.EDIT_MODES = LandingConstants.editModes;

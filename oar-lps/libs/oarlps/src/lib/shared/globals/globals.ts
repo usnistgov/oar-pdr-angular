@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SelectItem, TreeNode } from 'primeng/api';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class GlobalService {
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
     public fakeBackendAlerted = signal<boolean>(false);
 
-    constructor() { }
+    constructor(@Inject(DOCUMENT) private document: Document,) { }
 
     /**
      * Current collection.  
@@ -101,8 +102,8 @@ export class GlobalService {
     }
 
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
-        let text = document.createElement("span"); 
-        document.body.appendChild(text); 
+        let text = this.document.createElement("span"); 
+        this.document.body.appendChild(text); 
      
         text.style.fontFamily = font; 
         text.style.fontSize = size + "px"; 
@@ -114,7 +115,7 @@ export class GlobalService {
         text.innerHTML = textString; 
      
         let width = Math.ceil(text.clientWidth); 
-        document.body.removeChild(text); 
+        this.document.body.removeChild(text); 
 
         return width * 0.9 + 50;
     }

@@ -8,6 +8,8 @@ import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { TreeTableModule } from 'primeng/treetable';
+import { AppConfig } from '../../config/config';
+import * as env from '../../../environments/environment';
 
 describe('CartTreeNode', () => {
     it('constructor', () => {
@@ -174,51 +176,54 @@ describe('CartTreeNode', () => {
 });
 
 describe('TreetableComponent', () => {
-  let component: TreetableComponent;
-  let fixture: ComponentFixture<TreetableComponent>;
+    let component: TreetableComponent;
+    let fixture: ComponentFixture<TreetableComponent>;
+    let cfg: AppConfig = new AppConfig(null);
+    cfg.loadConfig(env.config);
 
-  beforeEach(waitForAsync(() => {
-    let dc: DataCart = DataCart.openCart("goob");
-    dc._forget();
-    dc.addFile("foo", { filePath: "bar/goo",  count: 3, downloadURL: "http://here", resTitle: "fooishness" },
-               false, false);
-    dc.addFile("foo", { filePath: "bar/good", count: 3, downloadURL: "http://here", resTitle: "fooishness" },
-               false, false);
-    dc.addFile("foo", { filePath: "readme", count: 3, downloadURL: "http://here", resTitle: "fooishness" },
-               false, false);
-    dc.save();
-    
-    TestBed.configureTestingModule({
-      declarations: [ TreetableComponent ],
-      schemas: [NO_ERRORS_SCHEMA],
-      imports: [
-        TreeTableModule,
-        HttpClientTestingModule],
-      providers: [
-        CartService,
-        DownloadService,
-        TestDataService,
-        GoogleAnalyticsService]
-    })
-    .compileComponents();
-  }));
+    beforeEach(waitForAsync(() => {
+        let dc: DataCart = DataCart.openCart("goob");
+        dc._forget();
+        dc.addFile("foo", { filePath: "bar/goo",  count: 3, downloadURL: "http://here", resTitle: "fooishness" },
+                false, false);
+        dc.addFile("foo", { filePath: "bar/good", count: 3, downloadURL: "http://here", resTitle: "fooishness" },
+                false, false);
+        dc.addFile("foo", { filePath: "readme", count: 3, downloadURL: "http://here", resTitle: "fooishness" },
+                false, false);
+        dc.save();
+        
+        TestBed.configureTestingModule({
+        declarations: [ TreetableComponent ],
+        schemas: [NO_ERRORS_SCHEMA],
+        imports: [
+            TreeTableModule,
+            HttpClientTestingModule],
+        providers: [
+            CartService,
+            DownloadService,
+            TestDataService,
+            GoogleAnalyticsService,
+            { provide: AppConfig, useValue: cfg }]
+        })
+        .compileComponents();
+    }));
 
-  beforeEach(waitForAsync(() => {
-    fixture = TestBed.createComponent(TreetableComponent);
-    component = fixture.componentInstance;
-    component.cartName = "goob";
-    fixture.detectChanges();
-  }));
+    beforeEach(waitForAsync(() => {
+        fixture = TestBed.createComponent(TreetableComponent);
+        component = fixture.componentInstance;
+        component.cartName = "goob";
+        fixture.detectChanges();
+    }));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-    expect(component.dataTree.children.length).toBe(1);
-    expect(component.dataTree.children[0].data.name).toBe("fooishness");
-    expect(component.dataTree.children[0].children.length).toEqual(2);
-    expect(component.dataTree.children[0].children[0].data.name).toEqual("bar");
-    expect(component.dataTree.children[0].children[0].children.length).toBe(2);
-    expect(component.dataTree.children[0].children[0].children[0].data.name).toEqual("goo");
-    expect(component.dataTree.children[0].children[0].children[1].data.name).toEqual("good");
-    expect(component.dataTree.children[0].children[1].data.name).toEqual("readme");
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+        expect(component.dataTree.children.length).toBe(1);
+        expect(component.dataTree.children[0].data.name).toBe("fooishness");
+        expect(component.dataTree.children[0].children.length).toEqual(2);
+        expect(component.dataTree.children[0].children[0].data.name).toEqual("bar");
+        expect(component.dataTree.children[0].children[0].children.length).toBe(2);
+        expect(component.dataTree.children[0].children[0].children[0].data.name).toEqual("goo");
+        expect(component.dataTree.children[0].children[0].children[1].data.name).toEqual("good");
+        expect(component.dataTree.children[0].children[1].data.name).toEqual("readme");
+    });
 });

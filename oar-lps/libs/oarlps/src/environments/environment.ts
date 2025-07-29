@@ -31,7 +31,8 @@ export const config: LPSConfig = {
     PDRAPIs: {
         mdSearch: "https://oardev.nist.gov/rmm/records/",
         mdService: "https://oardev.nist.gov/od/id/",
-        metrics: "https://data.nist.gov/rmm/usagemetrics/"
+        metrics: "https://data.nist.gov/rmm/usagemetrics/",
+        rpaBackend: "https://data.nist.gov/rpa/"
     },
     dapEditing: {
         serviceEndpoint: "https://mdsdev.nist.gov/midas/dap/mds3/",
