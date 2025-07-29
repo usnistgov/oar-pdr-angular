@@ -29,7 +29,6 @@ export class VisithomePubComponent {
     }
 
     ngOnInit(): void {
-        console.log("inBrowser", this.inBrowser);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
