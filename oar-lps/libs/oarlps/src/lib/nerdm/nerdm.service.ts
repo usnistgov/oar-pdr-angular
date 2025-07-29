@@ -1,5 +1,5 @@
 import { isPlatformServer } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import * as rxjs from 'rxjs';
 import * as rxjsop from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -65,20 +65,20 @@ export class CachingNERDmResourceService extends NERDmResourceService {
         return this.cache.get(id) as NerdmRes;
     }
 
-    getResource(id : string) : Observable<NerdmRes> {
-        let rec : NerdmRes = this.queryCache(id);
-        if (rec !== undefined) 
+    getResource(id: string): Observable<NerdmRes> {
+        let rec: NerdmRes = this.queryCache(id);
+        if (rec !== undefined)
             return rxjs.of(rec);
 
         let out$ = this.del.getResource(id);
-        out$.subscribe(
-            (rcrd) => { this.cacheRecord(id, rcrd.data); },
-            (err) => {
+        out$.subscribe({
+            next: (rcrd) => { this.cacheRecord(id, rcrd); },
+            error: (err) => {
                 if (err instanceof errors.IDNotFound)
                     this.cacheRecord(id, null);
-                return rxjs.throwError(err);
+                return throwError(() => new Error(err));
             }
-        )
+        })
         return out$;
     }
 }
