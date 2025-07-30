@@ -1,6 +1,6 @@
 import { EditStatusService } from './editstatus.service';
 import { UpdateDetails } from './interfaces';
-import { LandingConstants } from '../constants';
+import { LandingConstants } from '../../shared/globals/globals';
 import { UserAttributes } from 'oarng';
 import { AuthService, MockAuthService } from './auth.service';
 import { TestBed, waitForAsync } from '@angular/core/testing';

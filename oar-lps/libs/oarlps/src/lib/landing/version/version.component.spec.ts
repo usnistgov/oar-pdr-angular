@@ -4,7 +4,7 @@ import { NerdmRes } from '../../nerdm/nerdm';
 import { VersionComponent, compare_versions, normalize_date, compare_dates, compare_histories }
     from './version.component';
 import { config, testdata } from '../../../environments/environment';
-import { LandingConstants } from '../constants';
+import { LandingConstants } from '../../shared/globals/globals';
 
 describe('VersionComponent', () => {
     let component : VersionComponent;

@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RevisionDetailsComponent } from './revision-details.component';
+import { SubmissionData } from '../../shared/globals/globals';
 
 describe('RevisionDetailsComponent', () => {
   let component: RevisionDetailsComponent;
@@ -13,7 +14,8 @@ describe('RevisionDetailsComponent', () => {
     .compileComponents();
 
     fixture = TestBed.createComponent(RevisionDetailsComponent);
-    component = fixture.componentInstance;
+      component = fixture.componentInstance;
+      component.submissionData = new SubmissionData();
     fixture.detectChanges();
   });
 

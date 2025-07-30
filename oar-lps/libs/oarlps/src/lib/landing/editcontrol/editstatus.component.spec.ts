@@ -7,7 +7,7 @@ import { MetadataUpdateService } from './metadataupdate.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import { UpdateDetails } from './interfaces';
-import { LandingConstants } from '../constants';
+import { LandingConstants } from '../../shared/globals/globals';
 import { AppConfig } from '../../config/config';
 import { config, testdata } from '../../../environments/environment';
 import { Credentials, UserAttributes } from 'oarng';
