@@ -2,7 +2,7 @@
     "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='fas fa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='fas fa-pencil'></i> to the right of each field to edit.<p><p>* required field.",
     "publicationType": {
         "label": "Publication Type",
-        "general": "With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products, for example, data in addition to software that analyzes it. Please choose what you would consider to be the primary product. You can change this later.<p><i>[Helpful examples, links to policy and guidance]</i>"
+        "general": "With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products, for example, data in addition to software that analyzes it. Please choose what you would consider to be the primary product. You can change this later.<p><i>[Helpful examples, links to policy and guidance, e.g., <a href='https://inet.nist.gov/system/files/documents/2019/11/07/final_o_5701_appndx_a_ver_3.pdf'>NIST DATA TAXONOMY AND ACTIONS/CONSEQUENCES FOR DATA CATEGORIES</a></i>"
     },
     "contactInfo": {
         "label": "Contact Info",
@@ -26,6 +26,6 @@
     },
     "collection": {
         "label": "Collection",
-        "general": "[Remove Do not add to a collection?]. Datasets may be part of a curated collection based on topic. This will aid in discoverability upon publication. [ask OAR about how many collections there are]"
+        "general": "If this publication does not fall within the collections listed, select 'Do not add to any collection.'"
     }
 }
