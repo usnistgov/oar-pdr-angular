@@ -317,8 +317,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
 
         this.globalService.setShowLPContent(true);
-        this._showContent = true;
         this.loadPublicData();
+        this._showContent = true;
     }
 
     loadPublicData() {

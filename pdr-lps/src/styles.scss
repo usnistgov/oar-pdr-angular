@@ -32,6 +32,26 @@
     --disabled-grey-text: #6c6c6c;
 }
 
+.oar-button {
+    background-color: var(--button-color);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    margin: auto;
+    color: white;
+    padding: 4px 10px;
+}
+
+.oar-button:hover {
+    background-color: var(--hover-color);
+}
+
+.oar-button[disabled] {
+    background-color: var(--disabled-grey);
+    color: var(--disabled-grey-text);
+    cursor: default;
+}
+
 .myCustomModalClass .modal-dialog {
   max-width: 1920px !important;
 }
