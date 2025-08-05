@@ -1,3 +1,9 @@
 .description {
     margin-left: 1em;
 }
+
+.download_button {
+    width: 220px;
+    height: 2em;
+    margin-left: 0px;
+}
