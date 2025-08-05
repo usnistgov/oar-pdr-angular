@@ -21,6 +21,7 @@ import { TreeModule } from 'primeng/tree';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DialogModule } from 'primeng/dialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { NERDmResourceService } from '../nerdm/nerdm.service';
 
 const MOBIL_LABEL_LIMIT = 20;
 const DESKTOP_LABEL_LIMIT = 50;
@@ -112,6 +113,7 @@ export class MetricsComponent implements OnInit {
         private datePipe: DatePipe,
         private searchService: SearchService,
         public gaService: GoogleAnalyticsService,
+        private nerdmReserv: NERDmResourceService,
         public metricsService: MetricsService) { 
 
             this.inBrowser = isPlatformBrowser(platformId);
@@ -137,7 +139,8 @@ export class MetricsComponent implements OnInit {
                 this.ediid = queryParams.id;
                 this.pdrHomeUrl = this.lps + this.ediid;
                 // Get dataset title
-                this.searchService.searchById(this.ediid, true).subscribe(md => {
+                this.nerdmReserv.getResource(this.ediid).subscribe(md => {
+                // this.searchService.searchById(this.ediid, true).subscribe(md => {
                     if(md) {
                         this.record = md as NerdmRes;
                         this.datasetTitle = md['title'];

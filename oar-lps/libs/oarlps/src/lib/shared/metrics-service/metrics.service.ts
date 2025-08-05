@@ -30,11 +30,12 @@ export class MetricsService {
 
             this.metricsEP = ep;
         }
+        console.log("Metrics endpoint", this.metricsEP);
         return this.metricsEP;
     }
 
     getFileLevelMetrics(ediid: string): Observable<any> {
-        let url = this.endpoint + "files?exclude=_id&include=ediid,filepath,success_get,download_size&ediid=" + ediid;
+        let url = this.endpoint + "files/" + ediid;
 
         const request = new HttpRequest(
             "GET", url, 
@@ -90,17 +91,19 @@ export class MetricsService {
                 }
             }
             
-            for(let x of fileLevelData) {
-                if(x.ediid.replace('ark:/88434/', '') == _ediid && (x.filepath? x.filepath.trim()==_filepath : false) && !x.filepath.endsWith('sha256')) {
-                    if(hasMultiPdrid){
-                        if(x.pdrid.replace('ark:/88434/', '') == _pdrid.replace('ark:/88434/', '')) {
-                            ret = x;
-                            break;
-                        }
-                    }else{
+            const filteredFileLevelData = fileLevelData.filter(x => {
+                 return (x.ediid.replace('ark:/88434/', '') == _ediid && (x.filepath? x.filepath.trim()==_filepath : false) && !x.filepath.endsWith('sha256'))
+            });
+
+            for(let x of filteredFileLevelData) {
+                if(hasMultiPdrid){
+                    if(typeof x.pdrid == 'string' && x.pdrid.replace('ark:/88434/', '') == _pdrid.replace('ark:/88434/', '')) {
                         ret = x;
-                        break; 
+                        break;
                     }
+                }else{
+                    ret = x;
+                    break; 
                 }
             }
         }

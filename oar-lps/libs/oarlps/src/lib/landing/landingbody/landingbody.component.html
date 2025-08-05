@@ -28,6 +28,7 @@
             <!-- data access, include available files -->
             <a name="dataAccess" #dataAccess></a>
                 <pdr-resource-data
+                    *ngIf="showResourceData()"
                     [record]="md"
                     [inBrowser]="inBrowser"
                     [editEnabled]="editEnabled"

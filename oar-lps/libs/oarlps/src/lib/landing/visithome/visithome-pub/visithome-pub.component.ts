@@ -63,10 +63,23 @@ export class VisithomePubComponent {
      * @returns 
      */
     visitHomePageBtnStyle() {
+        // if (!this.hasVisitHomeURL) {
+        //     return {
+        //         'opacity': '0.3',
+        //         'color': 'black',
+        //         'cursor': 'default'
+        //     }
+        // }
         if(this.theme == this.scienceTheme) {
-            return "var(--science-theme-background-default)";
+            return {
+                '--button-color': 'var(--science-theme-background-default)',
+                '--hover-color': 'var(--science-theme-background-light2)'
+            };
         }else{
-            return "var(--nist-green-default)";
+            return {
+                '--button-color': 'var(--nist-green-default)',
+                '--hover-color': 'var(--nist-green-light)'
+            };
         }
     }
 
