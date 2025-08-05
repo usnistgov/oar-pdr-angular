@@ -30,6 +30,7 @@ export class MetricsService {
 
             this.metricsEP = ep;
         }
+        console.log("Metrics endpoint", this.metricsEP);
         return this.metricsEP;
     }
 
@@ -90,19 +91,6 @@ export class MetricsService {
                 }
             }
             
-            // for(let x of fileLevelData) {
-            //     if(x.ediid.replace('ark:/88434/', '') == _ediid && (x.filepath? x.filepath.trim()==_filepath : false) && !x.filepath.endsWith('sha256')) {
-            //         if(hasMultiPdrid){
-            //             if(x.pdrid.replace('ark:/88434/', '') == _pdrid.replace('ark:/88434/', '')) {
-            //                 ret = x;
-            //                 break;
-            //             }
-            //         }else{
-            //             ret = x;
-            //             break; 
-            //         }
-            //     }
-            // }
             const filteredFileLevelData = fileLevelData.filter(x => {
                  return (x.ediid.replace('ark:/88434/', '') == _ediid && (x.filepath? x.filepath.trim()==_filepath : false) && !x.filepath.endsWith('sha256'))
             });

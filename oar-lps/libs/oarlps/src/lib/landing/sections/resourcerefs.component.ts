@@ -54,6 +54,22 @@ export class ResourceRefsComponent {
             return true;
         return false;
     }
+
+    showReferenceTitle() {
+        let show: boolean = false;
+
+        if (this.isPublicSite) {
+            show = this.hasDisplayableReferences();
+        } else {
+            if (this.isEditMode) {
+                show = true;
+            } else {
+                show = this.hasDisplayableReferences();
+            }
+        }
+
+        return show;
+    }
 }
 
 
