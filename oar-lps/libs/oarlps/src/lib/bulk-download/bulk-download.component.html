@@ -14,10 +14,12 @@
             <ul>
             <li> <span class="linked-text" (click)="goToSection('downloadAll')">Downloading all files with the Data Cart (for fewer than 300 files)</span> </li>
             <li> <span class="linked-text" (click)="goToSection('addToCart')">Downloading a subset of files with the Data Cart </span></li>
-            <li> <span class="linked-text" (click)="goToSection('pyscript')">Download data using the Python script, pdrdownload.py -- <span style="color: red;">recommended for datasets with more than 300 files</span> </span></li>
+            <li> <span class="linked-text" (click)="goToSection('pyscript')">Download data using the rclone tool <sup style="color: red;">*</sup> </span></li>
+            <li> <span class="linked-text" (click)="goToSection('pyscript')">Download data using the Python script, pdrdownload.py <sup style="color: red;">*</sup> </span></li>
             <li> <span class="linked-text" (click)="goToSection('downloadAPI')">Programmatic access to NIST data products </span></li>
             </ul>
-
+            <span style="color: red;"><sup>*</sup>recommended for datasets with more than 300 files</span>
+            
             <a name="download-all" #downloadall></a>
             <p class="smlabelStyle">Download all files through the Data Cart</p>
 
@@ -60,6 +62,60 @@
                 Download" to start the actual download.
             </p>
 
+            <a name="rclone" #rclone></a>
+            <p class="smlabelStyle">Downloading large datasets using the rclone tool</p>
+            <p style="margin-left: 2em;">
+
+            <a href="https://rclone.org/downloads/"
+                target="_blank"
+                rel="noopener"
+                pButton
+                icon="faa faa-download"
+                label="Download rclone"
+                class="anchor-button p-button">
+            </a>
+
+            <p>
+                When PDR demand is high and the dataset you want to download contains a large number of files, the
+                Data Cart will struggle to provide the data.  When the number of files is larger than about 300, we
+                recommend you try using <a href="https://rclone.org/">rclone</a>; it is a free, open-source tool
+                for transfering many files to and from remote storage (such as a cloud drive) easily and reliably.
+                The NIST PDR is fully compatible with rclone, making it an ideal tool for downloading large
+                datasets in bulk.  <a href="https://rclone.org/downloads/">It is available</a> for all major
+                computers, including Linux, Macs, and Windows, and can be installed manually or via common OS
+                software package managers (e.g. apt, rpm, Brew, etc.). 
+            </p>
+            <p>
+                After installing rclone, you can download all the files in a PDR dataset to your current directory
+                by typing: 
+            </p>
+            <div style="margin: 1em 0em;" id="cite">
+                <span
+                    style="margin-left: 35px;" 
+                    [ngClass]="{'highlight': rcloneCopied}" 
+                    [@enterAnimation]>
+                    <code style="color: black;">{{rcloneCommand}}</code>
+                </span>
+                <span 
+                    id="copy-to-clipboard" 
+                    (click)="copyToClipboard(rcloneCommand, 'preview')" 
+                    data-toggle="tooltip" 
+                    title="Copy to clipboard">
+                    <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i>
+                </span>
+                <span 
+                    [@enterAnimation]
+                    *ngIf="rcloneCopied" 
+                    class="badge"
+                    style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+                    Command copied to clipboard.
+                </span>
+            </div>
+
+            <p>
+                If the download process gets interrupted for any reason, you can rerun the same command, and it
+                will resume the download where it left off.  
+            </p>
 
             <a name="pyscript" #pyscript></a>
             <p class="smlabelStyle">Downloading large datasets using the Python script, pdrdownload.py</p>
@@ -77,12 +133,10 @@
             <code style="padding-left: 1em;">This script requires Python 3.8 or higher</code>
             </p>
             <p>
-                When PDR demand is high and the dataset you want to download contains a large number of files, the
-                Data Cart will struggle to provide the data.  When the number of files is larger than about 300, we
-                recommend you try using
-                <span [ngClass]="{'highlight': downloadscriptCopied}"><a href="{{pdrbase}}od/tools/pdrdownload.py">pdrdownload.py</a></span>,
-                a Python script that will conveniently and reliably download data from the PDR.  For users that can
-                run a python script, this script has several advantages:
+                Another way to download large datasets conveniently and reliably from the PDR is with our custom
+                Python script, 
+                <span [ngClass]="{'highlight': downloadscriptCopied}"><a href="{{pdrbase}}od/tools/pdrdownload.py">pdrdownload.py</a></span>.
+                For users that can run a python script, this script has several advantages:
             </p>
             <ul>
                 <li> It displays a preview of number of files and total number of bytes. </li>
