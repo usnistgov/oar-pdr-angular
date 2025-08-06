@@ -2,7 +2,7 @@
     "links": {
         "orgHome": "https://nist.gov/",
         "portalBase": "https://data.nist.gov/",
-        "pdrHome": "https://data.nist.gov/pdr/",
+        "pdrHome": "/",
         "pdrSearch": "https://data.nist.gov/sdp/",
         "mdService":   "https://data.nist.gov/rmm/"
     },
