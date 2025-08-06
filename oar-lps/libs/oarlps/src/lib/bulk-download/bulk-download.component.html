@@ -14,7 +14,7 @@
             <ul>
             <li> <span class="linked-text" (click)="goToSection('downloadAll')">Downloading all files with the Data Cart (for fewer than 300 files)</span> </li>
             <li> <span class="linked-text" (click)="goToSection('addToCart')">Downloading a subset of files with the Data Cart </span></li>
-            <li> <span class="linked-text" (click)="goToSection('pyscript')">Download data using the rclone tool <sup style="color: red;">*</sup> </span></li>
+            <li> <span class="linked-text" (click)="goToSection('rclone')">Download data using the rclone tool <sup style="color: red;">*</sup> </span></li>
             <li> <span class="linked-text" (click)="goToSection('pyscript')">Download data using the Python script, pdrdownload.py <sup style="color: red;">*</sup> </span></li>
             <li> <span class="linked-text" (click)="goToSection('downloadAPI')">Programmatic access to NIST data products </span></li>
             </ul>
@@ -72,7 +72,9 @@
                 pButton
                 label="Download rclone"
                 class="anchor-button p-button">
-                <i class="faa faa-download" aria-hidden="true" style="scale: 1.5;margin-left: -4px;"></i>
+              <i class="faa faa-download" aria-hidden="true" style="scale: 1.5;margin-left: -4px;">
+                Download rclone tool
+              </i>
             </a>
 
             <p>
