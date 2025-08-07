@@ -45,6 +45,31 @@ export class ResourceRefsComponent {
             this.isEditMode = this.edstatsvc.isEditMode();
         })
     }
+
+    /**
+     * Function to Check whether given record has references that need to be displayed
+     */
+    hasDisplayableReferences() {
+        if (this.record['references'] && this.record['references'].length > 0) 
+            return true;
+        return false;
+    }
+
+    showReferenceTitle() {
+        let show: boolean = false;
+
+        if (this.isPublicSite) {
+            show = this.hasDisplayableReferences();
+        } else {
+            if (this.isEditMode) {
+                show = true;
+            } else {
+                show = this.hasDisplayableReferences();
+            }
+        }
+
+        return show;
+    }
 }
 
 

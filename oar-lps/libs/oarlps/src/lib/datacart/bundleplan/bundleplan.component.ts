@@ -127,7 +127,7 @@ export class BundleplanComponent implements OnInit {
 
         if (this.dataCart && this.downloadFiles) {
             let title = (this.dataCart.isGlobalCart()) ? "Global Data Cart"
-                                                       : this.downloadFiles[0].resTitle.substring(0,20)+"...";
+                                                       : this.downloadFiles[0].resTitle? this.downloadFiles[0].resTitle.substring(0,20)+"..." : "No title...";
             this.dataCartStatus.setDownloadCompleted(this.dataCart.getName(), title);
         }
 
@@ -166,7 +166,7 @@ export class BundleplanComponent implements OnInit {
     updateDownloadPercentage(percentage: number){
         if (this.dataCart && this.downloadFiles) {
             let title = (this.dataCart.isGlobalCart()) ? "Global Data Cart"
-                                                       : this.downloadFiles[0].resTitle.substring(0,20)+"...";
+                                                       : this.downloadFiles[0].resTitle? this.downloadFiles[0].resTitle.substring(0,20)+"..." : "No title...";
 
             this.dataCartStatus.updateDownloadPercentage(this.dataCart.getName(), percentage, title);
         }
@@ -273,12 +273,13 @@ export class BundleplanComponent implements OnInit {
         this.downloadService.download(zip, this.zipData, this.dataCart);
     }
 
-    private generateZipFileName(base : string = null) : string {
-        const MIN : number = 0;
-        const MAX : number = 100000;
-        let suffix = Math.floor(Math.random() * (MAX - MIN + 1)) + MIN;
-        return base + suffix;
-    }
+    private generateZipFileName(base: string = "NIST-Data"): string {
+        // current timestamp 
+        const now = new Date();
+        const timestamp = now.toISOString().slice(0, 16).replace(":", "-");
+
+        return `${base}-${timestamp}`;
+    } 
 
     /**
      * download the selected files from this cart.
@@ -294,7 +295,7 @@ export class BundleplanComponent implements OnInit {
 
         // Sending data to _bundle_plan and get back the plan
         this.downloadFiles = this.dataCart.getSelectedFiles();
-        let bundleBaseName = this.generateZipFileName(this.dataCart.getName());
+        let bundleBaseName = this.generateZipFileName("NIST-Data");
         
         this.bundlePlanRef = this.downloadService.getBundlePlan(bundleBaseName, this.downloadFiles).subscribe(
             blob => {

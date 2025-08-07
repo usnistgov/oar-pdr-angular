@@ -12,7 +12,6 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
-import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -24,6 +23,7 @@ import { GlobalService, LandingConstants, CartService, DataCartStatus, CartActio
 import { RecordLevelMetrics, MetricsService, MetricsData, formatBytes } from 'oarlps';
 import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps';
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -228,12 +228,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
-                public lpService: LandingpageService)
+                public lpService: LandingpageService,
+                private http: HttpClient)
     {
         // Init the size of landing page body and the help box
         this.updateScreenSize();
 
-        this.reqId = this.route.snapshot.paramMap.get('id');
+        this.reqId = this.requestedIDfromRoute(this.route).replace('ark:/88434/', '');
         this.inBrowser = isPlatformBrowser(platformId);
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
@@ -263,7 +264,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
+        const CollectionData1: any  = require('../../assets/site-constants/collections.json');
+        this.collectionObj = CollectionData1[this.collection] as any;
 
         switch(this.collection) {
             case Collections.FORENSICS: {
@@ -283,6 +285,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         setTimeout(() => {
             // this.displayBanner = true;
         }, 0);
+    }
+
+    protected requestedIDfromRoute(route : ActivatedRoute) : string {
+        return route.snapshot.url.map(u => u.toString()).join('/');
     }
 
     /**
@@ -311,8 +317,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
 
         this.globalService.setShowLPContent(true);
-        this._showContent = true;
         this.loadPublicData();
+        this._showContent = true;
     }
 
     loadPublicData() {
@@ -581,10 +587,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * apply housekeeping after view has been initialized
      */
     ngAfterViewInit() {
-        this.sidebarHeight = window.innerHeight - 250;
-
         if(this.inBrowser) {
-            if(this.splitter){
+            this.sidebarHeight = window.innerHeight - 250;
+
+            if (this.splitter) {
               this.splitterX = this.splitter.nativeElement.offsetLeft + 6;
             }
 

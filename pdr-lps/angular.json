@@ -17,7 +17,7 @@
             "index": "src/index.html",
             "main": "src/main.ts",
             "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": "zone.js",
             "assets": [
               {
                 "glob": "**/*",
@@ -158,7 +158,9 @@
     "pdr-lps-e2e": {
       "root": "e2e",
       "projectType": "application",
-      "cli": {},
+      "cli": {
+        "analytics": false
+      },
       "schematics": {},
       "architect": {
         "e2e": {
@@ -171,7 +173,9 @@
       }
     }
   },
-  "cli": {},
+  "cli": {
+    "analytics": false
+  },
   "schematics": {
     "@schematics/angular:class": {
       "skipTests": false

@@ -145,5 +145,26 @@ export class LandingBodyComponent {
      */
      setDownloadStatus(downloadStatus){
         this.dlStatus.emit(downloadStatus);
+     }
+    
+    /**
+     * In public side or MIDAS side preview mode, if nothing to display, hide the whole section.
+     * @returns show resource data section or not.
+     */
+    showResourceData() {
+        let show: boolean = false;
+        let hasDRS = (new NERDResource(this.md)).selectDynamicResourceComps().length > 0;
+        if (this.isPublicSite) {
+            show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
+        } else {
+            if (this.isEditMode) {
+                show = true;
+            } else {
+                show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
+            }
+        }
+
+        return show;
     }
+
 }
