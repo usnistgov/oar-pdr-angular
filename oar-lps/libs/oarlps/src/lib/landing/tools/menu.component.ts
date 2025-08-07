@@ -60,6 +60,7 @@ export class MenuComponent implements OnInit {
     recordType: string = "";
     scienceTheme = Themes.SCIENCE_THEME;
     inBrowser: boolean = false;
+    bulkDownloadBase: string = "";
     bulkDownloadURL: string = "";
 
     // the resource record metadata that the tool menu data is drawn from
@@ -83,11 +84,15 @@ export class MenuComponent implements OnInit {
                 private cfg : AppConfig) 
     { 
         this.inBrowser = isPlatformBrowser(platformId);
+        this.bulkDownloadBase = cfg.get('links.pdrHome');
+        if (! this.bulkDownloadBase.endsWith('/'))
+            this.bulkDownloadBase += '/';
+        this.bulkDownloadBase += "bulkdownload/";
     }
 
     ngOnInit(): void {
         if(this.record && this.record.ediid)
-            this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
+            this.bulkDownloadURL = this.bulkDownloadBase + this.record.ediid.replace('ark:/88434/', '');
 
         this.allCollections = this.collectionService.loadAllCollections();
 
@@ -100,7 +105,7 @@ export class MenuComponent implements OnInit {
 
     ngOnChanges(ch: SimpleChanges) {
         if (this.record && ch.record && this.record.ediid)
-            this.bulkDownloadURL = '/bulkdownload/' + this.record.ediid.replace('ark:/88434/', '');
+            this.bulkDownloadURL = this.bulkDownloadBase + this.record.ediid.replace('ark:/88434/', '');
     }
     
     buildMenu() {
@@ -115,7 +120,6 @@ export class MenuComponent implements OnInit {
         this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, "faa faa-angle-double-right"));
         this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, "faa faa-external-link"));
         this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, "faa faa-cart-plus"));
-        this.useMenu.push(new menuItem("Bulk Download", "bulk", "", this.lighterColor, false, "faa faa-download"));
 
         let searchbase = this.cfg.get("links.pdrSearch","/sdp/");
         if (searchbase.slice(-1) != '/') searchbase += "/";
