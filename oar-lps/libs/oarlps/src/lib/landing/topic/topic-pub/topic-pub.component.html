@@ -42,30 +42,19 @@
                                     style="padding: 0px 5px;margin: 3px;border-radius: 20px;text-align: center;margin-right: 5px;line-height: 25px;" 
                                     (click)="topicClick(topic, col)" 
                                     *ngFor="let topic of topicDisplay[col]; let i =index">
-                                    <span style="display: inline-block">{{ topic }}</span>
-                                    <!-- New topic structure -->
-                                    <!-- <span style="display: inline-block">{{ topic.tag }}</span> -->
+                                    <span style="display: inline-block">{{ topic.tag }}</span>
                                 </span> 
                             </span>
                         </span>
                     </div>
 
                     @if(isEditMode && showTopics(col)) {
-                        <!-- <div style=" display: table-cell; width: 70px;">
-                            <ng-content select=".controls"></ng-content>
-                        </div> -->
-
                         <div style=" display: table-cell; width: 70px;">
                             <ng-container 
                                 *ngTemplateOutlet="contentTemplate; context: { data: col }">
                             </ng-container>
                         </div>
-
                     }
-
-                    <!-- <ng-container *ngTemplateOutlet="tmplRef;
-                        context: {$implicit: col}">
-                    </ng-container> -->
                 </div>
             </div>
         </span>
