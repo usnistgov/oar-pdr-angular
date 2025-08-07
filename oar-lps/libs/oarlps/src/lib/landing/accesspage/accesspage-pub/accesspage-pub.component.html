@@ -66,16 +66,14 @@
                         <ng-template #RestrictedAccessPage>
                             <div style="padding:10px 20px;">
                                 <a href={{apage?.accessURL}} target="_blank">
-                                    <button style="margin-top: -6px;" 
-                                            type="button" 
-                                            class="btn btn-primary py-0"
-                                            data-toggle="tooltip" 
-                                            data-placement="top" 
-                                            title="{{apage['title']}}"
-                                            (click)="googleAnalytics(apage['accessURL'], $event, 'Download Data')">
-                                            <i class="fas fa-external-link-alt button_icon"></i>
-                                            Download Data
-                                    </button>
+                                    <div class="oar-button download_button" 
+                                        [ngStyle]="downloadBtnStyle()"
+                                        title="{{apage['title']}}"
+                                        (click)="googleAnalytics(apage['accessURL'], 
+                                        $event, 'Download Data')">
+                                        <i class="fas fa-external-link-alt" style="padding-right: 3px"></i>
+                                        Download Data
+                                    </div>
                                 </a>
         
                                 <div *ngIf="apage['description']">
