@@ -14,16 +14,18 @@
                 </a>
             }
             @else {
-                <button pButton  
-                        class="oar-button home_button"
-                        [ngStyle]="visitHomePageBtnStyle()"
-                        disabled="true"
-                        (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
+                @if(!isPublicSite) {
+                    <button pButton  
+                            class="oar-button home_button"
+                            [ngStyle]="visitHomePageBtnStyle()"
+                            disabled="true"
+                            (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
 
-                    <i class="fas fa-external-link-alt" pButtonIcon
-                        style="padding-right: .5em;"></i>
-                        <span pButtonLabel>Visit Home Page</span>
-                </button>
+                        <i class="fas fa-external-link-alt" pButtonIcon
+                            style="padding-right: .5em;"></i>
+                            <span pButtonLabel>Visit Home Page</span>
+                    </button>
+                }
             }
         </div>
     </div>

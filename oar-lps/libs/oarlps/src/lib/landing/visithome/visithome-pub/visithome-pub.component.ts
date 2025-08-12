@@ -24,6 +24,7 @@ export class VisithomePubComponent {
     @Input() inViewMode: boolean;
     @Input() theme: string;
     @Input() collection: string = Collections.DEFAULT;
+    @Input() isPublicSite: boolean = true;
 
     fieldName = SectionPrefs.getFieldName(Sections.VISIT_HOME_PAGE);
     scienceTheme = Themes.SCIENCE_THEME;

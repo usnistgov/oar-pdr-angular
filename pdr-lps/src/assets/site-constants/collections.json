@@ -13,7 +13,7 @@
             "dark": "#1c6022",
             "darkVar": "var(--nist-green-dark)",
             "hover": "#ffffff",
-            "hoverVar": "var(--nist-green-lighter)"
+            "hoverVar": "var(--nist-green-hover)"
         },
         "displayOrder": 3,
         "landingPage": true
