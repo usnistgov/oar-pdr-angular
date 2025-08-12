@@ -52,13 +52,13 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
 export class LandingBodyComponent {
     recordType: string = "";
     globalsvc = inject(GlobalService);
-    isEditMode: boolean;
+    isEditMode: boolean = false;
 
 
     // passed in by the parent component:
     @Input() md: NerdmRes = null;
     @Input() inBrowser: boolean = false;
-    @Input() editEnabled: boolean;
+    @Input() editEnabled: boolean = false;
 
     // Pass out download status
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();
@@ -68,7 +68,7 @@ export class LandingBodyComponent {
     @Input() metricsData: MetricsData;
     @Input() showJsonViewer: boolean = false;
     @Input() theme: string;
-    @Input() isPublicSite: boolean;
+    @Input() isPublicSite: boolean = true;
     @Input() edstatsvc: EditStatusService;
 
     @Input() landingPageURL: string;
@@ -88,6 +88,7 @@ export class LandingBodyComponent {
     constructor(public lpService: LandingpageService){ }
 
     ngOnInit(): void {
+        console.log("this.isPublicSite", this.isPublicSite);
         this.recordType = (new NERDResource(this.md)).resourceLabel();
     }
 

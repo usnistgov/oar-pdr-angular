@@ -5,10 +5,15 @@
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
         "color": {
             "default": "#257a2d",
+            "defaultVar": "var(--nist-green-default)",
             "light": "#6bad73",
+            "lightVar": "var(--nist-green-light)",
             "lighter": "#f0f7f1",
+            "lighterVar": "var(--nist-green-lighter)",
             "dark": "#1c6022",
-            "hover": "#ffffff"
+            "darkVar": "var(--nist-green-dark)",
+            "hover": "#ffffff",
+            "hoverVar": "var(--nist-green-lighter)"
         },
         "displayOrder": 3,
         "landingPage": true

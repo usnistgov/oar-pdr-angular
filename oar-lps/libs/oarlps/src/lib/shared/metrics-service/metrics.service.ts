@@ -30,7 +30,7 @@ export class MetricsService {
 
             this.metricsEP = ep;
         }
-        console.log("Metrics endpoint", this.metricsEP);
+
         return this.metricsEP;
     }
 

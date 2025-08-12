@@ -2,11 +2,11 @@
     <div class="editable_container">
         <div *ngIf="record[fieldName] && record[fieldName].length > 0" 
              class="editable_field" 
-             style="white-space: nowrap;width: fit-content;">
+             style="width: fit-content;">
 
-            <div class="authorsbrief">
+            <div class="authorsbrief" style="white-space: normal;">
                 @for(author of record[fieldName]; track $index) {
-                    <span>
+                    <span style="white-space: nowrap;">
                         {{ author.fn }}    
                         <span *ngIf="author.orcid">
                             <a href="https://orcid.org/{{ author.orcid }}" target="blank">
@@ -14,7 +14,7 @@
                             </a>
                         </span>                            
                         <span *ngIf="$index < record[fieldName].length-1 ">,</span>
-                    </span>
+                    </span>&nbsp;
                 }
 
                 <span style="cursor: pointer;">
@@ -28,7 +28,9 @@
                     </i>
                 </span>
             </div>
-            <div [collapse]="!isCollapsedContent" class="card card-block card-header customcard" style="width: fit-content; padding:.5em;">
+            <div [collapse]="!isCollapsedContent" 
+                 class="card card-block card-header customcard" 
+                 style="width: fit-content; padding:.5em;">
                 <div class="authorsdetail">
                     <span><b>
                         @if(isScienceTheme) {
