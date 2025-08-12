@@ -24,10 +24,15 @@
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-forensics/",
         "color": {
             "default": "#008097",
+            "defaultVar": "var(--science-theme-background-default)",
             "light": "#dbf7ff",
+            "lightVar": "var(--science-theme-background-light2)",
             "lighter": "#f5fbfd",
+            "lighterVar": "var(--science-theme-background-light)",
             "dark": "#007287",
-            "hover": "#ffffff"  
+            "darkVar": "var(--science-theme-background-dark)",
+            "hover": "#ffffff",  
+            "hoverVar": "var(--science-theme-background-hover)"
         },
         "displayOrder": 2,
         "landingPage": true
@@ -38,10 +43,15 @@
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/",
         "color": {
             "default": "#003c97",
+            "defaultVar": "var(--chips-background-default)",
             "light": "#e3efff",
+            "lightVar": "var(--chips-background-light)",
             "lighter": "#f7f7fa",
+            "lighterVar": "var(--chips-background-lighter)",
             "dark": "#00076c",
-            "hover": "#ffffff"
+            "darkVar": "var(--chips-background-dark)",
+            "hover": "#ffffff",
+            "hoverVar": "var(--chips-background-hover)"
         },
         "displayOrder": 1,
         "landingPage": true

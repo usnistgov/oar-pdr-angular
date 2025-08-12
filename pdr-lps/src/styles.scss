@@ -5,11 +5,12 @@
 :root {
     /* Colors */
     --science-theme-background-default: #008097;
+    --science-theme-background-hover: #02a3bf;
     --science-theme-background-dark: #007287;
     --science-theme-background-light: #f5fbfd;
     --science-theme-background-light2: #e3f7fd;
     --science-theme-background-blue: #017abb;
-    --science-theme-background-blue-hover: #2db2fa;
+    --science-theme-background-blue-hover: #0097e8;
     --nist-green-default: #257a2d;
     --nist-green-dark: #1c6022;
     --nist-green-light: #6bad73;
@@ -31,6 +32,11 @@
     --tag-blue: #c0e6ff;
     --disabled-grey: #bababa;
     --disabled-grey-text: #6c6c6c;
+    --chips-background-default: #003c97;
+    --chips-background-light: #e3efff;
+    --chips-background-lighter: #f7f7fa;
+    --chips-background-dark: #00076c;
+    --chips-background-hover: #237bff;
 }
 
 .oar-button {
@@ -44,7 +50,7 @@
 }
 
 .oar-button:hover {
-    color: var(--hover-text-color);
+    // color: var(--hover-text-color);
     background-color: var(--hover-color);
 }
 
