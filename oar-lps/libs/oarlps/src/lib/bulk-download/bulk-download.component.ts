@@ -42,6 +42,7 @@ export class BulkDownloadComponent implements OnInit {
     downloadscriptCopied: boolean = false;
 
     @ViewChild('downloadall') downloadAll: ElementRef;
+    @ViewChild('rclone') rclone: ElementRef;
     @ViewChild('pyscript') pyscript: ElementRef;
     @ViewChild('addtocart') addToCart: ElementRef;
     @ViewChild('downloadAPI') downloadAPI: ElementRef;
@@ -124,7 +125,7 @@ export class BulkDownloadComponent implements OnInit {
                 break; 
             } 
             case "rclone": { 
-                this.pyscript.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                this.rclone.nativeElement.scrollIntoView({behavior: 'smooth'}); 
                 this.downloadscriptCopied = true;
                 setTimeout(() => {
                     this.downloadscriptCopied = false;
