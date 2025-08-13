@@ -6,8 +6,11 @@
             (click)="closeHistory = !closeHistory; clickHistory = expandHistory();"></i>
     </span>
 
-    <!-- Info button -->
-    <i class="fas fa-info-circle link-icon" (click)="refreshHelpText()" title="About version" ngbTooltip="About version" style="cursor: pointer;margin-right: 10px;"></i> 
+    <!-- Info button (MIDAS only) -->
+    @if(!isPublicSite) {
+        <i class="fas fa-info-circle link-icon" (click)="refreshHelpText()" title="About version" ngbTooltip="About version"
+        style="cursor: pointer;margin-right: 10px;"></i>
+    } 
 
     <!-- Releases, Last modified and creators -->
     <span class="" *ngIf="record.issued" style="padding-right: 10pt;"> Released:

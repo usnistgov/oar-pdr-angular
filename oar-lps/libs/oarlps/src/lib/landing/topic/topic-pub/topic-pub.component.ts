@@ -42,12 +42,13 @@ export class TopicPubComponent implements AfterContentInit {
     {
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
-
-        // this.globalsvc.watchCollection((collection) => {
-        //     this.collection = collection;
-        // });    
     }
 
+    /**
+     * This logic was removed on 08/13/2025. Will be deleted later.
+     * @param collection 
+     * @returns 
+     */
     showTopics(collection) {
         //Always display NIST R&D, then only display the collection terms that the article is part of
         if(this.isDefaultCollection(collection))
@@ -95,20 +96,11 @@ export class TopicPubComponent implements AfterContentInit {
          * @param topic 
          */
     bubbleColor(topic) {
-        //New structure: topic field
-        // if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-        //     return "#e6ecff";
-        // }else{
-        //     return "#ededed";
-        // }
-
-        //Old structure: theme field
-        if(topic == "Show more..." || topic == "Show less..." ) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
             return "#e6ecff";
         }else{
             return "#ededed";
         }
-
     }
 
     /**
@@ -117,19 +109,7 @@ export class TopicPubComponent implements AfterContentInit {
      * @returns 
      */    
     borderStyle(topic) {
-        //New structure: topic field
-        // if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-        //     if(this.hovered){
-        //         return "1px solid blue";
-        //     }else{
-        //         return "1px solid #ededed";
-        //     }
-        // }else{
-        //     return "1px solid #ededed";
-        // }
-
-        //Old structure: theme field
-        if(topic == "Show more..." || topic == "Show less..." ) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
             if(this.hovered){
                 return "1px solid blue";
             }else{
@@ -138,7 +118,6 @@ export class TopicPubComponent implements AfterContentInit {
         }else{
             return "1px solid #ededed";
         }
-
     }  
     
     mouseEnter(topic) {
@@ -159,20 +138,11 @@ export class TopicPubComponent implements AfterContentInit {
      * @returns 
      */
     setCursor(topic) {
-        //New structure: topic field
-        // if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-        //     return "pointer";
-        // }else{
-        //     return "";
-        // }
-
-        //Old structure: theme field
-        if(topic == "Show more..." || topic == "Show less..." ) {
+        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
             return "pointer";
         }else{
             return "";
         }
-
     }
 
     /**
@@ -180,21 +150,11 @@ export class TopicPubComponent implements AfterContentInit {
      * @param topic 
      */
     topicClick(topic, collection) {
-        //New structure: topic field
-        // if(topic.tag == "Show more...") {
-        //     this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicLong[collection]));
-        // }
-
-        // if(topic.tag == "Show less...") {
-        //     this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicShort[collection]));
-        // }
-
-        //Old structure: theme field
-        if(topic == "Show more...") {
+        if(topic.tag == "Show more...") {
             this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicLong[collection]));
         }
 
-        if(topic == "Show less...") {
+        if(topic.tag == "Show less...") {
             this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicShort[collection]));
         }
 
@@ -208,28 +168,18 @@ export class TopicPubComponent implements AfterContentInit {
         this.topics = {};
         if(this.record) {
             if (this.record[this.fieldName]) {
-                //For new topic structure
-                // this.record[this.fieldName].forEach(topic => {
-                //     if (topic['scheme'] && topic.tag) {
-                //         for(let col of this.collectionOrder) {
-                //             if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
-                //                 if(!this.topics[col]) {
-                //                     this.topics[col] = [topic];
-                //                 }else if(this.topics[col].indexOf(topic) < 0) {
-                //                     this.topics[col].push(topic);
-                //                 }
-                //             }
-                //         }
-                //     }
-                // });
-
-                //For old topic (under theme field)
                 this.record[this.fieldName].forEach(topic => {
-                    if(!this.topics["NIST"]) {
-                            this.topics["NIST"] = [topic];
-                        }else if(this.topics["NIST"].indexOf(topic) < 0) {
-                            this.topics["NIST"].push(topic);
+                    if (topic['scheme'] && topic.tag) {
+                        for(let col of this.collectionOrder) {
+                            if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                                if(!this.topics[col]) {
+                                    this.topics[col] = [topic];
+                                }else if(this.topics[col].indexOf(topic) < 0) {
+                                    this.topics[col].push(topic);
+                                }
+                            }
                         }
+                    }
                 });
             }
         }
@@ -239,19 +189,9 @@ export class TopicPubComponent implements AfterContentInit {
             if(this.topics[col]) {
                 if(this.topics[col].length > 5) {
                     this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col].slice(0, this.topicBreakPoint)));
-
-                    //Old structure: theme field
-                    this.topicShort[col].push("Show more...");
-
-                    //New structure: topics field
-                    // this.topicShort[col].push({tag:"Show more...", "@type":"", scheme:""});
-
+                    this.topicShort[col].push({tag:"Show more...", "@type":"", scheme:""});
                     this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));
-                    //New structure: topics field
-                    // this.topicLong[col].push({tag:"Show less...", "@type":"", scheme:""});                
-
-                    //Old structure: theme field
-                    this.topicLong[col].push("Show less...");
+                    this.topicLong[col].push({tag:"Show less...", "@type":"", scheme:""});                
                 }else {
                     this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col]));
                     this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));

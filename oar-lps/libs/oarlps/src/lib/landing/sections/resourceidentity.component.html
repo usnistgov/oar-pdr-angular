@@ -86,7 +86,8 @@
                         [record]="record" 
                         [inBrowser]="inBrowser"
                         [inViewMode]="inViewMode"
-                        [theme]="theme">
+                        [theme]="theme"
+                        [collection]="collection">
                     </Visithome-pub>
                 }
                 @else {
@@ -96,7 +97,8 @@
                         [inBrowser]="inBrowser"
                         [inViewMode]="inViewMode"
                         [theme]="theme"
-                        [isEditMode]="isEditMode">
+                        [isEditMode]="isEditMode"
+                        [collection]="collection">
                     </Visithome-midas>
                 }
             </div>
@@ -109,8 +111,11 @@
             </i>
         </span>
 
-        <!-- Info button -->
-        <i class="fas fa-info-circle link-icon" (click)="refreshHelpText()" title="About doi" ngbTooltip="About doi" style="cursor: pointer;margin-left: 10px;"></i> 
+        <!-- Info button (MIDAS only) -->
+        @if(!isPublicSite){
+            <i class="fas fa-info-circle link-icon" (click)="refreshHelpText()" title="About doi" ngbTooltip="About doi"
+            style="cursor: pointer;margin-left: 10px;"></i>
+        }
 
         <div class="describedin" *ngIf="primaryRefs.length > 0">
             <div>Described in
@@ -131,6 +136,7 @@
         <pdr-version 
             [record]="record"
             [landingPageServiceStr]="landingPageServiceStr"
+            [isPublicSite]="isPublicSite"
             >
         </pdr-version>
     </div>

@@ -2,41 +2,27 @@
     <div style="display: table;">
         <div class="editable_container">
             @if(hasVisitHomeURL) {
-                <!-- <a href={{record[fieldName]}} target="_blank">
-                    <button type="button" pButton type="submit" [disabled]="!inViewMode"
-                        class="home_button p-button p-component ui-button-text-empty oar-button"
-                        [ngStyle]="{'--button-color': 'var(--nist-green-default)', '--hover-color': 'yellow'}"
-                        (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
-                        <i class="fas fa-external-link-alt"
-                            style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
-                        Visit Home Page
-                    </button>
-                </a> -->
                 <a href={{record[fieldName]}} target="_blank">
-                    <div class="oar-button home_button" 
-                        [ngStyle]="visitHomePageBtnStyle()"
-                        [disabled]="!inViewMode"
-                        (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
-                        <i class="fas fa-external-link-alt" style="padding-right: 3px"></i>
-                        Visit Home Page
-                    </div>
+                    <button pButton 
+                            class="oar-button home_button" 
+                            [ngStyle]="visitHomePageBtnStyle()"
+                            (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
+                    
+                        <i class="fas fa-external-link-alt" pButtonIcon style="padding-right: .5em;"></i>
+                        <span pButtonLabel>Visit Home Page</span>
+                    </button>
                 </a>
             }
-            @else {
-                <!-- <button type="button" pButton type="submit" 
-                class="home_button p-button p-component ui-button-text-empty"
-                [ngStyle]="{'background-color': 'var(--disabled-grey)'}">
-                    <i class="fas fa-external-link-alt"
-                        style="color: #fff;padding-left: .5em;padding-right: .5em;"></i>
-                        Visit Home Page
-                </button> -->
-                <div class="oar-button home_button" 
-                    [ngStyle]="visitHomePageBtnStyle()" 
-                    [attr.disabled]="!inViewMode"
-                    (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
-                    <i class="fas fa-external-link-alt" style="padding-right: 3px"></i>
-                    Visit Home Page
-                </div>
+            @else if(!isPublicSite){
+                    <button pButton  
+                            disabled=true
+                            class="oar-button home_button"
+                            [ngStyle]="visitHomePageBtnStyle()">
+
+                        <i class="fas fa-external-link-alt" pButtonIcon
+                            style="padding-right: .5em;"></i>
+                            <span pButtonLabel>Visit Home Page</span>
+                    </button>
             }
         </div>
     </div>

@@ -45,6 +45,7 @@ export class VersionComponent implements OnChanges {
 
     @Input() record: NerdmRes = null;
     @Input() landingPageServiceStr: string;
+    @Input() isPublicSite: boolean = true;
 
     /**
      * create the component

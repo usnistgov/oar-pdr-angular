@@ -1,23 +1,31 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
-import { Themes } from '../../../shared/globals/globals';
+import { Themes, Collections } from '../../../shared/globals/globals';
 import { Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
+import { CollectionService } from '../../../shared/collection-service/collection.service';
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'Visithome-pub',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule, ButtonModule, FormsModule
   ],
   templateUrl: './visithome-pub.component.html',
   styleUrls: ['./visithome-pub.component.scss', '../../landing.component.scss']
 })
 export class VisithomePubComponent {
+    collectionOrder: string[] = [Collections.DEFAULT];
+    allCollections: any = {};
+
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() inViewMode: boolean;
     @Input() theme: string;
+    @Input() collection: string = Collections.DEFAULT;
+    @Input() isPublicSite: boolean = true;
 
     fieldName = SectionPrefs.getFieldName(Sections.VISIT_HOME_PAGE);
     scienceTheme = Themes.SCIENCE_THEME;
@@ -25,7 +33,13 @@ export class VisithomePubComponent {
     overflowStyle: string = 'hidden';
     
     constructor(public globalsvc: GlobalService,
+                public collectionService: CollectionService,
+                private chref: ChangeDetectorRef,
                 private gaService: GoogleAnalyticsService) { 
+
+        this.collectionOrder = this.collectionService.getCollectionForDisplay();
+        this.allCollections = this.collectionService.loadAllCollections();
+
     }
 
     ngOnInit(): void {
@@ -63,24 +77,15 @@ export class VisithomePubComponent {
      * @returns 
      */
     visitHomePageBtnStyle() {
-        // if (!this.hasVisitHomeURL) {
-        //     return {
-        //         'opacity': '0.3',
-        //         'color': 'black',
-        //         'cursor': 'default'
-        //     }
-        // }
-        if(this.theme == this.scienceTheme) {
-            return {
-                '--button-color': 'var(--science-theme-background-default)',
-                '--hover-color': 'var(--science-theme-background-light2)'
-            };
-        }else{
-            return {
-                '--button-color': 'var(--nist-green-default)',
-                '--hover-color': 'var(--nist-green-light)'
-            };
-        }
+        let color = this.allCollections[this.collection].color;
+
+        return {
+            '--button-text-color': 'white',
+            '--button-color': color.defaultVar,
+            '--hover-color': color.hoverVar,
+            '--disable-color': 'var(--disabled-grey)',
+            '--disable-text-color': 'var(--disabled-grey-text)'
+        };
     }
 
     /**

@@ -48,6 +48,7 @@ export class VisithomeMidasComponent {
     overflowStyle: string = 'hidden';
     globalsvc = inject(GlobalService);
     editStarted: boolean = false;
+    isPublicSite: boolean = false;
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
     

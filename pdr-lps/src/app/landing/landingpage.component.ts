@@ -95,6 +95,7 @@ import { HttpClient } from '@angular/common/http';
     ]
 })
 export class LandingPageComponent implements OnInit, AfterViewInit {
+    isPublicSite = true;
     pdrid: string;
     layoutCompact: boolean = true;
     layoutMode: string = 'horizontal';
@@ -189,6 +190,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     showStickMenu: boolean = false;
     landingPageURL: string;
     landingPageServiceStr: string;
+
 
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
