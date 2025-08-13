@@ -13,7 +13,7 @@
             <div class="editable_container" style="display: table-row;">
                 <!-- Loop through collections and display topics -->    
                 <div *ngFor="let col of collectionOrder; let i =index" style="margin-bottom: .3em;">
-                    <div *ngIf="showTopics(col)" style=" display: table-cell;max-width: calc(100%-70px) !important;">
+                    <div style=" display: table-cell;max-width: calc(100%-70px) !important;">
                         <!-- Display collection name -->
                         @if(topics[col] && topics[col].length > 0){
                             <span style="font-weight: 500;white-space: nowrap;" >
@@ -48,7 +48,7 @@
                         </span>
                     </div>
 
-                    @if(isEditMode && showTopics(col)) {
+                    @if(isEditMode) {
                         <div style=" display: table-cell; width: 70px;">
                             <ng-container 
                                 *ngTemplateOutlet="contentTemplate; context: { data: col }">

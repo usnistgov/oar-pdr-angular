@@ -42,9 +42,13 @@ export class TopicPubComponent implements AfterContentInit {
     {
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
- 
     }
 
+    /**
+     * This logic was removed on 08/13/2025. Will be deleted later.
+     * @param collection 
+     * @returns 
+     */
     showTopics(collection) {
         //Always display NIST R&D, then only display the collection terms that the article is part of
         if(this.isDefaultCollection(collection))

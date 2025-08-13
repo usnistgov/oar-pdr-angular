@@ -1,16 +1,17 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { Themes, Collections } from '../../../shared/globals/globals';
 import { Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'Visithome-pub',
   standalone: true,
   imports: [
-    CommonModule, ButtonModule
+    CommonModule, ButtonModule, FormsModule
   ],
   templateUrl: './visithome-pub.component.html',
   styleUrls: ['./visithome-pub.component.scss', '../../landing.component.scss']
@@ -33,7 +34,8 @@ export class VisithomePubComponent {
     
     constructor(public globalsvc: GlobalService,
                 public collectionService: CollectionService,
-        private gaService: GoogleAnalyticsService) { 
+                private chref: ChangeDetectorRef,
+                private gaService: GoogleAnalyticsService) { 
 
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
