@@ -26,6 +26,7 @@ export class ContactPubComponent {
     isMouseOver: boolean = false;
     
     @Input() record: any[];
+    @Input() isPublicSite: boolean = true;
     
     constructor(
                 public globalsvc: GlobalService,
