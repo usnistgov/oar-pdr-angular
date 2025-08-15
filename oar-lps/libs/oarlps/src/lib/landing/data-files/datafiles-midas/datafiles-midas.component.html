@@ -1,8 +1,8 @@
 <lib-datafiles-pub
     [record]="record" 
     [inBrowser]="inBrowser" 
-    [editEnabled] = true
-    [editMode] = editMode
+    [editMode] = "editMode"
+    [isPublicSite] = "isPublicSite"
     (dlStatus)="setDownloadStatus($event)">
         <div class="controls">
             @if(isEditMode) {

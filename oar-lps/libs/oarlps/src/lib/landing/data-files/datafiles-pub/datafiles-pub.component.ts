@@ -77,6 +77,7 @@ export class DatafilesPubComponent {
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() editEnabled: boolean = false;  // For edit mode display control
     @Input() editMode: string;  // For edit mode display control
+    @Input() isPublicSite: boolean = true;
     // Download status to trigger metrics refresh in parent component
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();  
 
