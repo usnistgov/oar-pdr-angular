@@ -20,7 +20,7 @@
         <div *ngIf="(inBrowser && filesReady);else loading">
             <div class="flex-container" style="margin-top: 2em;">
                 <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
-                @if(editEnabled == true) {
+                @if(!isPublicSite) {
                     <div style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
                         <span><b id="filelist-heading">Files</b></span>
                         <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all" ngbTooltip="Download all disabled in edit mode">
@@ -130,19 +130,38 @@
                         </td>
                         <td [ngStyle]="statusStyle()">
                             <div style="display: flex;">
-                                <div *ngIf="rowData.comp.downloadURL;else space_holder">
-                                    <a href='{{fileManagerUrl}}' target='_blank'                aria-label="Access file in File Manager" ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(rowData)">
-                                        <i class="fas fa-download"
-                                            [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
-                                            aria-hidden="true"></i>
-                                        <span class="sr-only">Hidden text for 508 compliance</span>
-                                    </a>
-                                    <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
-                                    [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
-                                </div>
-                                <ng-template #space_holder>
-                                    <div style="padding-right: 0.4em;">&nbsp;&nbsp;</div>
-                                </ng-template>
+                                @if(isPublicSite) {
+                                    <div *ngIf="rowData.comp.downloadURL; else display_lock">
+                                        <a *ngIf="rowData.downloadStatus != 'downloading'" style="margin-left: 10px;" href='{{rowData.comp.downloadURL}}'
+                                            target='_blank' download="download" data-toggle="tooltip" title="Direct download" rel="noopener"
+                                            (click)="setFileDownloaded(rowData)">
+                                            <i class="faa faa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i>
+                                            <span class="sr-only">Hidden text for 508 compliance</span>
+                                        </a>
+                                        <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
+                                            [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}">
+                                        </p-progressSpinner>
+                                    </div>
+                                    <ng-template #display_lock>
+                                        <i class="faa faa-lock blue-cart" style="margin-left: 10px;"
+                                            (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')" aria-hidden="true"
+                                            data-toggle="tooltip" title="Request access"></i>
+                                    </ng-template>
+                                }@else{
+                                    <div *ngIf="fileManagerUrl;else space_holder">
+                                        <a href='{{fileManagerUrl}}' target='_blank' aria-label="Access file in File Manager"
+                                            ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(rowData)">
+                                            <i class="fas fa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i>
+                                            <span class="sr-only">Hidden text for 508 compliance</span>
+                                        </a>
+                                        <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
+                                            [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
+                                    </div>
+                                    <ng-template #space_holder>
+                                        <div style="padding-right: 0.4em;">&nbsp;&nbsp;</div>
+                                    </ng-template>
+                                }
+
                                 <div style="padding-left:10px;" *ngIf="rowData.isInCart;else not_in_cart" 
                                     (click)="removeFromGlobalCart(rowData)">
                                     <i class="fas fa-cart-plus green-cart" aria-hidden="true" aria-label="Remove from cart" ngbTooltip="Remove from cart" title="Remove from cart"></i>

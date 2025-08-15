@@ -75,6 +75,7 @@ export class DatafilesMidasComponent {
     allInCart: boolean = false;
     isAddingToDownloadAllCart: boolean = false;
     isTogglingAllInGlobalCart: boolean = false;
+    isPublicSite: boolean = false;
 
     cols: any[];
     fileNode: any;               // the node whose description has been opened
