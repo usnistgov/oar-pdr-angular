@@ -91,6 +91,12 @@ export class BulkDownloadComponent implements OnInit {
         document.body.removeChild(selBox);
 
         switch (command) {
+            case ("rclone"): 
+                this.rcloneCopied = true;
+                setTimeout(() => {
+                    this.rcloneCopied = false;
+                }, 2000);
+                break;            
             case ("preview"): 
                 this.previewCopied = true;
                 setTimeout(() => {
