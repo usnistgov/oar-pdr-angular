@@ -40,6 +40,7 @@ export class ContactMidasComponent {
     originalRecord: any = {};
     fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
     editMode: string = MODE.NORMAL; 
+    isPublicSite: boolean = false;
 
     tempInput: any = {};
 
