@@ -1,4 +1,4 @@
-import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { CartService } from '../../../datacart/cart.service';
 import { NerdmRes, NerdmComp } from '../../../nerdm/nerdm';
@@ -10,7 +10,7 @@ import { EditStatusService } from '../../../landing/editcontrol/editstatus.servi
 import { LandingConstants } from '../../../landing/constants';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { SectionPrefs, Sections } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
@@ -110,6 +110,7 @@ export class DatafilesPubComponent {
     EDIT_MODES: any;
     filesReady: boolean = false;
     skipReload: boolean = true;
+    globalsvc = inject(GlobalService);
 
     modalRef: any; // For bulk download confirm pop up
     bulkDownloadURL: string = "";
@@ -366,6 +367,11 @@ export class DatafilesPubComponent {
         this.files = [...root.children];
         this.fileCount = count;
         this.updateStatusFromCart();
+
+        if (this.files && this.files.length > 0) {
+            this.globalsvc.setHasDataFiles(true);
+        }
+        
         this.filesReady = true;
     }
 

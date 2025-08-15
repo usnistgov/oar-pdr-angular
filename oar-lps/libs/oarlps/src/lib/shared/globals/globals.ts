@@ -101,6 +101,14 @@ export class GlobalService {
         this._showLPContent.subscribe(subscriber);
     }
 
+    _hasDataFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public setHasDataFiles(val: boolean){
+        this._hasDataFiles.next(val);
+    }
+    public watchHasDataFiles(subscriber) {
+        this._hasDataFiles.subscribe(subscriber);
+    }
+    
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
         let text = this.document.createElement("span"); 
         this.document.body.appendChild(text); 

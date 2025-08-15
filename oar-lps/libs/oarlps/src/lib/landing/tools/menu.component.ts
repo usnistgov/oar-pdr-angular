@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges, inject } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections } from '../../shared/globals/globals';
+import { Themes, ThemesPrefs, Collections, GlobalService } from '../../shared/globals/globals';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { CartConstants } from '../../datacart/cartconstants';
 import { AppConfig } from '../../config/config';
@@ -10,6 +10,7 @@ import { MetricsData } from "../metrics-data";
 import { CommonModule } from '@angular/common';
 import { MenuModule } from 'primeng/menu';
 import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
+
 
 export class menuItem {
     title: string;
@@ -62,6 +63,8 @@ export class MenuComponent implements OnInit {
     inBrowser: boolean = false;
     bulkDownloadBase: string = "";
     bulkDownloadURL: string = "";
+    globalsvc = inject(GlobalService);
+    hasDataFiles: boolean = false;
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -88,6 +91,10 @@ export class MenuComponent implements OnInit {
         if (! this.bulkDownloadBase.endsWith('/'))
             this.bulkDownloadBase += '/';
         this.bulkDownloadBase += "bulkdownload/";
+
+        this.globalsvc.watchHasDataFiles((value) => {
+            this.hasDataFiles = value;
+        })        
     }
 
     ngOnInit(): void {
