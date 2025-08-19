@@ -43,6 +43,7 @@
 .oar-button {
     color: var(--button-text-color);
     background-color: var(--button-color);
+    border-color: var(--button-color);
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
@@ -316,4 +317,21 @@ a {
 	outline-offset: -2px;
 }
 
-
+a,
+a:active,
+a:visited,
+a:focus {
+    outline: none !important;
+    border: none !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none;
+    /* Chrome/Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+ */
+    user-select: none;
+    -moz-outline-style: none;
+}

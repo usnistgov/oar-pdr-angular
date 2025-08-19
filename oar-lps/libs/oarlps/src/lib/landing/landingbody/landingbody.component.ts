@@ -88,7 +88,6 @@ export class LandingBodyComponent {
     constructor(public lpService: LandingpageService){ }
 
     ngOnInit(): void {
-        console.log("this.isPublicSite", this.isPublicSite);
         this.recordType = (new NERDResource(this.md)).resourceLabel();
     }
 

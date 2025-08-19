@@ -35,6 +35,7 @@
                 [inBrowser]="inBrowser"
                 [metricsData]="metricsData"
                 [showMetrics]="showMetrics"
+                [citetext]="citationtext"
                 (scroll)="goToSection($event)"
                 (toggle_citation)="toggleCitation('large')">
             </app-menu>
@@ -63,7 +64,15 @@
 
                 <!-- <div #stickyMenu></div> -->
                 <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
-                    <app-menu [record]="md" [collection]="collection" [theme]="theme" [inBrowser]="inBrowser" [metricsData]="metricsData" [showMetrics]="showMetrics" (scroll)="goToSection($event)"
+                    <app-menu 
+                        [record]="md" 
+                        [collection]="collection" 
+                        [theme]="theme" 
+                        [inBrowser]="inBrowser" 
+                        [metricsData]="metricsData" 
+                        [showMetrics]="showMetrics" 
+                        [citetext]="citationtext"
+                        (scroll)="goToSection($event)"
                         (toggle_citation)="toggleCitation('large')">
                     </app-menu>
 
@@ -71,11 +80,12 @@
                 </div>
 
             <!-- citation pop-up -->
-            <div *ngIf="inBrowser">
-                <lib-citation-popup [citetext]="getCitation()" [visible]="citationVisible" [width]="citationDialogWith"
+            <!-- <div *ngIf="inBrowser">
+                <lib-citation-popup 
+                    [citetext]="citationtext" [visible]="citationVisible" [width]="citationDialogWith"
                     (visibleChange)="setCitationVisible($event)">
                 </lib-citation-popup>
-            </div>
+            </div> -->
         </div>
 
         <div *ngIf="mobileMode" style="padding: 0 1.0em;">
