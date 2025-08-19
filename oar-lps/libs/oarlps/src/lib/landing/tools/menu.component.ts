@@ -10,6 +10,8 @@ import { MetricsData } from "../metrics-data";
 import { CommonModule } from '@angular/common';
 import { MenuModule } from 'primeng/menu';
 import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
+import { CitationPopupComponent } from '../citation/citation-popup/citation-popup.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 export class menuItem {
@@ -65,6 +67,7 @@ export class MenuComponent implements OnInit {
     bulkDownloadURL: string = "";
     globalsvc = inject(GlobalService);
     hasDataFiles: boolean = false;
+    modalRef: any; //For citation pop up
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -75,7 +78,9 @@ export class MenuComponent implements OnInit {
     @Input() metricsData : MetricsData;
 
     // flag if metrics is ready to display
-    @Input() showMetrics : boolean = false;
+    @Input() showMetrics: boolean = false;
+    
+    @Input() citetext: string;
 
     @Output() scroll = new EventEmitter<string>();
     
@@ -83,7 +88,8 @@ export class MenuComponent implements OnInit {
     @Output() toggle_citation = new EventEmitter<boolean>();
 
     constructor(public collectionService: CollectionService,
-                @Inject(PLATFORM_ID) private platformId: Object,
+        @Inject(PLATFORM_ID) private platformId: Object,
+                private modalService: NgbModal,
                 private cfg : AppConfig) 
     { 
         this.inBrowser = isPlatformBrowser(platformId);
@@ -221,7 +227,12 @@ export class MenuComponent implements OnInit {
      * (currently implemented as a pop-up).  
      */
     toggleCitation() {
-        this.toggle_citation.emit(true);
+        this.modalRef = this.modalService.open(CitationPopupComponent, { size: 'lg', backdrop: 'static' });
+        this.modalRef.componentInstance.citetext = this.citetext;
+        this.modalRef.result.then(
+            (result) => { },
+            (reason) => { }
+        ); 
     }
 
     /**
@@ -237,11 +248,11 @@ export class MenuComponent implements OnInit {
      * scroll to the specified section of the landing page
      */
     goToSection(sectname : string, url: string = "") {
-        if (sectname) {
-            console.info("scrolling to #"+sectname+"...");
-        }else{
-            console.info("scrolling to top of document");
-        }
+        // if (sectname) {
+        //     console.info("scrolling to #"+sectname+"...");
+        // }else{
+        //     console.info("scrolling to top of document");
+        // }
 
         switch(sectname) { 
             case "citation": { 
