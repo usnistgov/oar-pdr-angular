@@ -1,6 +1,54 @@
-<p-dialog #citepopup header="Citation" modal="true" [(visible)]="visible" (click)="hide()" [style]="{width: '70vw'}" [baseZIndex]="10000">
+<!-- <p-dialog #citepopup header="Citation" modal="true" [(visible)]="visible" (click)="hide()" [style]="{width: '70vw'}" [baseZIndex]="10000">
     <p-header> Citation
     </p-header>
     <lib-citation-display [citetext]="citetext"></lib-citation-display>
-</p-dialog>
+</p-dialog> -->
 
+<div class="wrapper">
+    <div class="title-bar">
+        Citation
+    </div>
+
+    <div style="margin: 20px;">
+        <div style="margin-bottom: .5em;">
+            <b>Copy the recommended text to cite this resource </b>
+        </div>
+        <!-- <div style="margin-bottom: .5em;">
+            {{ citetext }}
+        </div> -->
+        <div style="margin-bottom: .5em;" id="cite">
+            <span 
+                style="margin-right: 10px;" 
+                [ngClass]="{'highlight': textCopied}" 
+                [@enterAnimation]>
+                <code class="citation">{{citetext}}</code>
+            </span>
+            <span id="copy-to-clipboard" 
+                (click)="copyToClipboard(citetext)" data-toggle="tooltip"
+                title="Copy to clipboard">
+                <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i>
+            </span>
+            <span [@enterAnimation] *ngIf="textCopied" class="badge"
+                style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+                Text copied to clipboard.
+            </span>
+        </div>
+
+        <a target="citationsRecommendation"
+            href="https://www.nist.gov/director/copyright-fair-use-and-licensing-statements-srd-data-and-software#citations">
+            See also the NIST Citation Recommendations.
+        </a>
+    </div> 
+
+    <div class="control-buttons">
+        <!-- Buttons are arranged from right to left -->
+        <!-- Continue Submit button -->
+        <button class="oar-button btnClose justify-center" 
+            type="button" 
+            [ngStyle]="btnStyle()"
+            (click)="close()">
+            <i class="faa faa-times faa-1x icon-white" pButtonIcon style="padding-right: .5em;"></i>
+            <span pButtonLabel style="text-align: center;">Close</span>
+        </button>
+    </div>
+</div>

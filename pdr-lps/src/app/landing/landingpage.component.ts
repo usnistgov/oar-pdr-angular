@@ -24,6 +24,7 @@ import { RecordLevelMetrics, MetricsService, MetricsData, formatBytes } from 'oa
 import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps';
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
 import { HttpClient } from '@angular/common/http';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -58,7 +59,7 @@ import { HttpClient } from '@angular/common/http';
         FrameModule
     ],
     providers: [
-        Title
+        Title, NgbActiveModal
     ],
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss'],
@@ -104,7 +105,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     midasRecord: any = null;    // the new Midas record metadata
     reqId: string;             // the ID that was used to request this page
     inBrowser: boolean = false;
-    citetext: string = null;
     citationVisible: boolean = false;
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
@@ -293,6 +293,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         return route.snapshot.url.map(u => u.toString()).join('/');
     }
 
+    get citationtext() {
+        return (new NERDResource(this.md)).getCitation();
+    }
     /**
      * initialize the component.  This is called early in the lifecycle of the component by
      * the Angular rendering infrastructure.
@@ -769,14 +772,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.citationDialogWith = 550;
 
         this.citationVisible = !this.citationVisible;
-    }
-
-    /**
-     * return text representing the recommended citation for this resource
-     */
-    getCitation(): string {
-        this.citetext = (new NERDResource(this.md)).getCitation();
-        return this.citetext;
     }
 
     /**
