@@ -2,6 +2,7 @@
     "NIST": {
         "tag": "NIST R&D",
         "bannerUrl": "",
+        "id":"",
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
         "color": {
             "default": "#257a2d",
@@ -15,12 +16,13 @@
             "hover": "#ffffff",
             "hoverVar": "var(--nist-green-hover)"
         },
-        "displayOrder": 3,
+        "displayOrder": 4,
         "landingPage": true
     },
     "Forensics": {
         "tag": "Forensics",
         "bannerUrl": "assets/images/fingerprint.jpg",
+        "id":"pdr0-0001",
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-forensics/",
         "color": {
             "default": "#008097",
@@ -40,6 +42,7 @@
     "Semiconductors": {
         "tag": "CHIPS Metrology",
         "bannerUrl": "assets/images/METIS-Banner-Op1.png",
+        "id":"pdr0-0002",
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/",
         "color": {
             "default": "#003c97",
@@ -55,5 +58,25 @@
         },
         "displayOrder": 1,
         "landingPage": true
-    }
+    },
+    "AM": {
+        "tag": "Additive Manufacturing",
+        "bannerUrl": "assets/images/AM_Banner3.jpg",
+        "id":"pdr0-0003",
+        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/",
+        "color": {
+            "default": "#f35b04",
+            "defaultVar": "var(--background-orange-default)",
+            "light": "#ff833b",
+            "lightVar": "var(--background-orange-light)",
+            "lighter": "#ffb285",
+            "lighterVar": "var(--background-orange-lighter)",
+            "dark": "#8f3500",
+            "darkVar": "var(--background-orange-dark)",
+            "hover": "#ff7221",
+            "hoverVar": "var(--background-orange-hover)"
+        },
+        "displayOrder": 3,
+        "landingPage": true
+    }      
 }

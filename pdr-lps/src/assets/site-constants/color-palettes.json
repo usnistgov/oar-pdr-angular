@@ -1,0 +1,30 @@
+{
+    "Green": {
+        "defaultVar": "var(--nist-green-default)",
+        "lightVar": "var(--nist-green-light)",
+        "lighterVar": "var(--nist-green-lighter)",
+        "darkVar": "var(--nist-green-dark)",
+        "hoverVar": "var(--nist-green-hover)"
+    },
+    "Cyan": {
+            "defaultVar": "var(--science-theme-background-default)",
+            "lightVar": "var(--science-theme-background-light2)",
+            "lighterVar": "var(--science-theme-background-light)",
+            "darkVar": "var(--science-theme-background-dark)",
+            "hoverVar": "var(--science-theme-background-hover)"        
+    },
+    "Blue": {
+            "defaultVar": "var(--chips-background-default)",
+            "lightVar": "var(--chips-background-light)",
+            "lighterVar": "var(--chips-background-lighter)",
+            "darkVar": "var(--chips-background-dark)",
+            "hoverVar": "var(--chips-background-hover)"        
+    },
+    "RosyFlamingo": {
+            "defaultVar": "var(--background-orange-default)",
+            "lightVar": "var(--background-orange-light)",
+            "lighterVar": "var(--background-orange-lighter)",
+            "darkVar": "var(--background-orange-dark)",
+            "hoverVar": "var(--background-orange-hover)"        
+    }
+}

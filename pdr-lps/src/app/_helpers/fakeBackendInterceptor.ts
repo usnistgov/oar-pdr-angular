@@ -45,6 +45,7 @@ export class FakeBackendInterceptor implements HttpInterceptor {
         const taxonomy: any = require('../../assets/sample-data/taxonomy-list.json');
         const forensics: any = require('../../assets/sample-data/pdr0-0001.json');
         const chips: any = require('../../assets/sample-data/pdr0-0002-new.json');
+        const am: any = require('../../assets/sample-data/pdr0-0003.json');
 
         // const testdata: any = {
         //     PageSize: 1,
@@ -247,10 +248,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
             return of(new HttpResponse({ status: 200, body: taxonomy }));
           }
  
-          if (request.url.indexOf('midas/dap/mds3/pdr0-0001') > -1 && request.method === 'GET') {
+          if (request.url.indexOf('od/id/pdr0-0003') > -1 && request.method === 'GET') {
             alert('You are using fake backend!' + 'midas/dap/mds3/pdr0-0001');
-            this.toastrService.warning('You are using fake backend!', 'Warning!');
-              return of(new HttpResponse({ status: 200, body: forensics }));
+            return of(new HttpResponse({ status: 200, body: am }));
           }
   
           if (request.url.indexOf('midas/dap/mds3/pdr0-0002') > -1 && request.method === 'GET') {

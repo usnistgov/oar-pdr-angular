@@ -6,7 +6,7 @@ import { NerdmRes } from '../../../nerdm/nerdm';
 import { AppConfig } from '../../../config/config';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, GlobalService } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
 import { TopicEditComponent } from '../topic-edit/topic-edit.component';
@@ -50,7 +50,7 @@ export class TopicMidasComponent implements OnInit {
     topicDisplay: any = {};
     topicShort: any = {};
     topicLong: any = {};
-    colorScheme: ColorScheme;
+    // colorScheme: any;
     hovered: boolean = false;
 
     @Input() record: NerdmRes = null;
@@ -70,7 +70,8 @@ export class TopicMidasComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     constructor(public mdupdsvc: MetadataUpdateService,
-                private cfg: AppConfig,
+        private cfg: AppConfig,
+                // public globalService: GlobalService,
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService, 
                 public collectionService: CollectionService,
@@ -84,6 +85,10 @@ export class TopicMidasComponent implements OnInit {
         this.globalsvc.watchCollection((collection) => {
             this.collection = collection;
         });    
+
+        // this.globalService.watchColorPalette((colorPalette) => {
+        //     this.colorScheme = colorPalette;
+        // })    
     }
 
     updated(collection: string = Collections.DEFAULT) { 
@@ -108,7 +113,7 @@ export class TopicMidasComponent implements OnInit {
 
     ngOnInit() {
         let editMode = this.isEditMode;
-        this.colorScheme = this.collectionService.getColorScheme(this.collection);
+        // this.colorScheme = this.collectionService.getColorScheme(this.collection);
 
         this.updateResearchTopics();
         this.originalTopics = JSON.parse(JSON.stringify(this.topics));

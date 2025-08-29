@@ -4,8 +4,7 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { Collections, ColorScheme } from '../../shared/globals/globals';
-import { CollectionService } from '../../shared/collection-service/collection.service';
+import { Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
 
 @Component({
   selector: 'app-resultlist',
@@ -64,7 +63,7 @@ export class ResultlistComponent implements OnInit {
     allCollections: any = {};
 
     //  Color
-    colorScheme: ColorScheme;
+    colorScheme: any;
     defaultColor: string;
     lightColor: string;  
     lighterColor: string;  
@@ -80,7 +79,7 @@ export class ResultlistComponent implements OnInit {
 
     constructor(private searchService: SearchService, 
         private cfg: AppConfig,
-        public collectionService: CollectionService,
+        public globalService: GlobalService,
         public gaService: GoogleAnalyticsService) { 
 
             this.searchService.watchClearAll((clearAll: boolean) => {
@@ -89,10 +88,13 @@ export class ResultlistComponent implements OnInit {
                     this.filterResults();
                 }
             });
+        
+            this.globalService.watchColorPalette((colorPalette) => {
+                this.colorScheme = colorPalette;
+            })
         }
 
     ngOnInit(): void {
-        this.colorScheme = this.collectionService.getColorScheme(this.collection);
         this.PDRAPIURL = this.cfg.get('links.pdrIDResolver', '/od/id/');
 
         let that = this;
@@ -109,7 +111,7 @@ export class ResultlistComponent implements OnInit {
             );
         }
 
-        this.allCollections = this.collectionService.loadAllCollections();
+        // this.allCollections = this.collectionService.loadAllCollections();
     }
 
     onPageChange(value: any){

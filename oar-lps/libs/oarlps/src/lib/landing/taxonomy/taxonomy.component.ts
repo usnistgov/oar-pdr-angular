@@ -42,7 +42,7 @@ export class TaxonomyComponent implements OnInit {
     researchTopicStyle: any;
 
     @Input() collectionThemesTree: TreeNode[] = [];
-    @Input() colorScheme: ColorScheme;
+    @Input() colorScheme: any;
     @Input() collection: string = Collections.DEFAULT;
     @Input() isCollection: boolean = false;
     @Input() collectionNodeExpanded: boolean = false;
@@ -58,7 +58,7 @@ export class TaxonomyComponent implements OnInit {
         this.totalNodes = this.tempTotal;
 
         if(this.colorScheme)
-            this.researchTopicStyle = {'width':'100%','padding-top': '0.2em', 'padding-bottom': '.0em', 'background-color': this.colorScheme.lighter, 'overflow':'hidden','border-width':'0','margin-left': '-10px'};
+            this.researchTopicStyle = {'width':'100%','padding-top': '0.2em', 'padding-bottom': '.0em', 'background-color': this.colorScheme.lighterVar, 'overflow':'hidden','border-width':'0','margin-left': '-10px'};
     }
 
     ngAfterViewInit(): void {

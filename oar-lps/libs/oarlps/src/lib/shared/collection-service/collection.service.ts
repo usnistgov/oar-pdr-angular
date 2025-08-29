@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
 import * as CollectionData from '../../../assets/site-constants/collections.json';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, of, Subscriber, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,43 +15,50 @@ export class CollectionService {
     collectionForDisplay: string[] = [];
 
     allCollections: any = null;
-    colorSchemes: any = {};
-    colorSchemeSub = new BehaviorSubject<ColorScheme[]>([] as ColorScheme[]);
+    collectionData: any = null;
+    // colorSchemes: any = {};
+    // colorSchemeSub = new BehaviorSubject<ColorScheme[]>([] as ColorScheme[]);
 
-    constructor() {
+    constructor(private httpcli : HttpClient) {
         // this.collectionOrder = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]});
 
-        this.collectionOrder = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]});
+        // this.collectionOrder = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]});
 
-        this.collectionOrder = this.collectionOrder.filter(function(v) { return v !== 'default' });
+        // this.collectionOrder = this.collectionOrder.filter(function(v) { return v !== 'default' });
 
-        this.collectionForDisplay = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]}).filter(key => CollectionData[key].landingPage); 
+        // this.collectionForDisplay = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]}).filter(key => CollectionData[key].landingPage); 
+
+        // this.collectionData = CollectionData;
     }
 
     serviceInit() {
+        let that = this;
+        this.collectionOrder = Object.keys(this.collectionData).sort(function(a,b){return that.collectionData[a]["displayOrder"]-that.collectionData[b]["displayOrder"]});
+        this.collectionOrder = this.collectionOrder.filter(function(v) { return v !== 'default' });
+        this.collectionForDisplay = Object.keys(this.collectionData).sort(function(a,b){return that.collectionData[a]["displayOrder"]-that.collectionData[b]["displayOrder"]}).filter(key => that.collectionData[key].landingPage); 
         this.loadAllCollections();
     }
 
-    getColorScheme(collection: string) {
-        return this.colorSchemes[collection];
-    }
+    // getColorScheme(collection: string) {
+    //     return this.colorSchemes[collection];
+    // }
 
     /**
      * Set color scheme
      * @param colorScheme 
      */
-    setColorScheme(colorScheme: ColorScheme[]) {
-        let sub = this.colorSchemeSub;
-        sub.next(colorScheme);
-    }
+    // setColorScheme(colorScheme: ColorScheme[]) {
+    //     let sub = this.colorSchemeSub;
+    //     sub.next(colorScheme);
+    // }
 
     /**
      * Watch color scheme
      */
-    watchColorScheme(): Observable<ColorScheme[]> {
-        let sub = this.colorSchemeSub;
-        return sub.asObservable();
-    }
+    // watchColorScheme(): Observable<ColorScheme[]> {
+    //     let sub = this.colorSchemeSub;
+    //     return sub.asObservable();
+    // }
 
     getCollectionOrder() {
         return this.collectionOrder;
@@ -66,16 +74,21 @@ export class CollectionService {
      * @returns collection object list that contains nist and collection data
      */
     loadAllCollections() {
-        if(!this.allCollections) {
-            this.allCollections = {};
+        if (!this.collectionData) {
+            console.log("No collection data loaded yet!");
+        } else {
+            if(!this.allCollections) {
+                this.allCollections = {};
 
-            for(let col of this.collectionOrder) {
-                this.allCollections[col] = this.loadCollection(col);
-                this.colorSchemes[col] = this.allCollections[col].color;
+                for(let col of this.collectionOrder) {
+                    this.allCollections[col] = this.loadCollection(col);
+                    // this.colorSchemes[col] = this.allCollections[col].color;
+                }
             }
+
+            return this.allCollections;
         }
 
-        return this.allCollections;
     }
 
     /**
@@ -85,8 +98,14 @@ export class CollectionService {
      */
     loadCollection(collection: string) {
         if(collection)
-            return Object.assign(new Collection(), CollectionData[collection]);  
+            return Object.assign(new Collection(), this.collectionData[collection]);  
         else    
-            return Object.assign(new Collection(), CollectionData[Collections.DEFAULT]);  
+            return Object.assign(new Collection(), this.collectionData[Collections.DEFAULT]);  
     }
+
+    public setCollectionData(data: any) {
+        this.collectionData = data;
+        this.serviceInit();
+    }
+
 }

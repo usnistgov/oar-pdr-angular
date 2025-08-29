@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { GlobalService, ColorScheme } from '../../shared/globals/globals'
 import { D3Service } from '../../shared/d3-service/d3.service';
-import { CollectionService } from '../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -19,7 +18,7 @@ import { CommonModule } from '@angular/common';
 export class SectionTitleComponent {
     collection: string;
     svg: any;
-    colorScheme: ColorScheme;
+    colorScheme: any;
     sectionWidth: number;
     backColor: string = '#003c97';
     maxWidth: number = 1000;
@@ -30,7 +29,6 @@ export class SectionTitleComponent {
    
     public constructor(
         public globalService: GlobalService,
-        public collectionService: CollectionService,
         public d3Service: D3Service) {
 
         this.globalService.watchCollection((collection) => {
@@ -40,11 +38,13 @@ export class SectionTitleComponent {
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width + 20;
         })
+
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        })
     }
 
     ngOnInit(): void {
-        this.collectionService.loadAllCollections();
-        this.colorScheme = this.collectionService.getColorScheme(this.collection);
     }
 
     ngAfterViewInit(): void {
@@ -52,7 +52,7 @@ export class SectionTitleComponent {
         this.sectionWidth = width;
 
         if(this.inBrowser && this.colorScheme)
-            this.d3Service.drawSectionHeaderBackground(this.svg, this.sectionTitle, this.sectionWidth, this.colorScheme.default, width, "#"+this.sectionTag);    
+            this.d3Service.drawSectionHeaderBackground(this.svg, this.sectionTitle, this.sectionWidth, this.colorScheme.defaultVar, width, "#"+this.sectionTag);    
     }
 
 }

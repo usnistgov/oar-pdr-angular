@@ -11,6 +11,8 @@ import { MetricsData } from "../metrics-data";
 import * as _ from 'lodash-es';
 import { formatBytes } from '../../utils';
 import { CommonModule } from '@angular/common';
+import { CollectionService } from '../../shared/collection-service/collection.service';
+import { Collections, GlobalService } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-metricsinfo',
@@ -22,6 +24,9 @@ import { CommonModule } from '@angular/common';
     styleUrls: ['./metricsinfo.component.css']
 })
 export class MetricsinfoComponent implements OnInit {
+    allCollections: any = {};
+    colorScheme: any;
+    
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;
 
@@ -33,6 +38,8 @@ export class MetricsinfoComponent implements OnInit {
     // flag if metrics is ready to display
     @Input() showMetrics : boolean = false;
 
+    @Input() collection: string = Collections.DEFAULT;
+    
     // flag if there is file level metrics data
     hasFileLevelMetrics: boolean = false;
 
@@ -49,12 +56,20 @@ export class MetricsinfoComponent implements OnInit {
 
     constructor(public commonFunctionService: CommonFunctionService,
                 public metricsService: MetricsService,
+        public collectionService: CollectionService,
+                public globalService: GlobalService,
                 private cfg: AppConfig) 
     { 
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        })         
     }
 
     ngOnInit(): void {
+        this.allCollections = this.collectionService.loadAllCollections();
+
     }
 
     get totalUsers() {
@@ -82,4 +97,18 @@ export class MetricsinfoComponent implements OnInit {
     get hasCurrentMetrics() {
         return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
     }
+
+    metricsStyle(header: boolean) {
+        let defaultColor = this.colorScheme.defaultVar;
+
+        if (!header) {
+            defaultColor = this.colorScheme.lighterVar;
+        }
+
+        return {
+            '--background-default': defaultColor,
+            '--background-lighter': this.colorScheme.lighterVar,
+            '--background-hover': this.colorScheme.hoverVar
+        };
+    }    
 }

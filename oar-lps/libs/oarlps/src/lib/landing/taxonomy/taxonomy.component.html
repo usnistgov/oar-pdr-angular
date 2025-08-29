@@ -1,6 +1,6 @@
 <div class="bottom-line" *ngIf="collectionThemesTree && collectionThemesTree.length > 0">
     <!-- Header -->
-    <div style="padding: 5px;background-color: rgb(202, 219, 255);" [ngStyle]="{'background-color': colorScheme.light}">
+    <div style="padding: 5px;background-color: rgb(202, 219, 255);" [ngStyle]="{'background-color': colorScheme.lightVar}">
         <b>
             <i [class]="expandIcon()" 
                 style="margin-right: 5px; cursor: pointer;" 
@@ -42,7 +42,7 @@
                             <span><b> {{node.label.split("---")[0]}}&nbsp;</b></span>
                         </ng-template>
 
-                        <span class="w3-badge badge-notify badge-style" [style.background-color]="colorScheme.default"
+                        <span class="w3-badge badge-notify badge-style" [style.background-color]="colorScheme.defaultVar"
                             *ngIf="node.count > 0">
                             {{node.count}}</span> 
                     </div>
@@ -52,13 +52,13 @@
     </div>
     <div class="show-more-less" 
         (click)="$event.preventDefault(); collectionShowMoreLink = false;chref.detectChanges()" 
-        [style.background-color]="colorScheme.lighter" 
+        [style.background-color]="colorScheme.lighterVar" 
         *ngIf="collectionNodeExpanded == true && collectionShowMoreLink == true && collectionThemesTree[0]?.children.length > 5">
         Show More...
     </div>
     <div class="show-more-less" 
         (click)="$event.preventDefault();collectionShowMoreLink = true;chref.detectChanges()" 
-        [style.background-color]="colorScheme.lighter" 
+        [style.background-color]="colorScheme.lighterVar" 
         *ngIf="collectionNodeExpanded == true && collectionShowMoreLink == false && collectionThemesTree[0]?.children.length > 5">
         Show Less
     </div>

@@ -1,0 +1,382 @@
+{
+  "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+  "@context": [
+    "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+    {
+      "@base": "ark:/88434/mds2-3761"
+    }
+  ],
+  "@type": [
+    "nrda:ScienceTheme",
+    "nrdp:DataPublication",
+    "nrdp:PublicDataResource",
+    "dcat:Dataset"
+  ],
+  "_extensionSchemas": [
+    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+  ],
+  "@id": "ark:/88434/mds2-3761",
+  "ediid": "ark:/88434/mds2-3761",
+  "version": "1.0.0",
+  "doi": "doi:10.18434/mds2-3761",
+  "title": "A Fully Registered In-Situ and Ex-Situ Dataset for Metal Powder Bed Fusion Additive Manufacturing: Data Processing, Feature Extraction, Registration, and Uncertainties",
+  "contactPoint": {
+    "fn": "Zhuo Yang",
+    "hasEmail": "mailto:zhuo.yang@nist.gov"
+  },
+  "modified": "2025-03-13",
+  "status": "available",
+  "landingPage": "https://data.nist.gov/od/id/mds2-3761",
+  "description": [
+    "This document details the data registration process for the previously published datasets from Additive Manufacturing Metrology Testbed (AMMT) parts, \"Overhang Part X4,\" generated at the National Institute of Standards and Technology (NIST). The two datasets \u2014one for process monitoring and the other for XCT inspection\u2014covering four overhang parts, along with their descriptions were published in 2020. The published data have been well-received by the community, advancing the understanding of laser powder bed fusion additive manufacturing (AM). In the last four years, the NIST team encountered numerous questions regarding the published datasets, as the raw data were not easily interpretable for mining process-structure relationships. To support a wider range of research efforts across multiple disciplines, the NIST team conducted additional data analysis, resulting in a fully registered and well-documented dataset for publication. This document provides a detailed overview of the data processing pipeline and the multi-modal data registration techniques employed, including preprocessing, feature extraction, and data alignment. The final registered dataset consists solely of numerical values, fully aligned with the machine coordinate system. Key features of the registered data include process parameters, laser power, in-situ melt pool characteristics, in-situ layerwise optical intensity, and ex-situ XCT voxel values. Additionally, this document provides uncertainty analysis for each feature to help users better select data for their applications and evaluate their results. It can also serve as a framework for processing similar datasets collected on the same testbed in future research."
+  ],
+  "keyword": [
+    "Additive manufacturing; data management; data registration; feature extraction; uncertainty quantification."
+  ],
+  "topic": [
+    {
+      "@type": "Concept",
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+      "tag": "Manufacturing: Additive manufacturing"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Materials: Metals", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Build Process: Process mapping", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Build Process: Powder bed fusion", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Build Process: Powder bed fusion: Laser", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Microstructure: In-situ characterization", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Microstructure: Ex-situ characterization", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Microstructure: Microstructure analysis", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Properties: Thermal / kinetic", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Characterization Approach: In-situ", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Characterization Approach: In-situ: Build process", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Characterization Approach: Ex-situ", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Characterization Approach: X-ray computed tomography", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Computation and Analysis: Uncertainty quantification", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Computation and Analysis: Microstructural analysis", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Computation and Analysis: Multimodal data analysis", 
+      "@type": "Concept"
+    },
+    {
+      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
+      "tag": "AdditiveManufacturing: Computation and Analysis: Multimodal data analysis: Multimodal registration", 
+      "@type": "Concept"
+    }
+  ],
+  "accessLevel": "public",
+  "license": "https://www.nist.gov/open/license",
+  "publisher": {
+    "name": "National Institute of Standards and Technology",
+    "@type": "org:Organization"
+  },
+  "language": [
+    "en"
+  ],
+  "bureauCode": [
+    "006:55"
+  ],
+  "programCode": [
+    "006:052"
+  ],
+  "_editStatus": "done",
+  "theme": [
+    "Manufacturing: Additive manufacturing"
+  ],
+  "components": [
+    {
+      "@id": "cmps/part04.zip",
+      "@type": [
+        "nrda:DynamicResourceSet",
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "searchURL": "/rmm/records?isPartOf.@id=ark:/88434/pdr0-0002",
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "part04.zip",
+      "downloadURL": "https://data.nist.gov/od/ds/mds2-3761/part04.zip",
+      "mediaType": "application/zip",
+      "title": "part04",
+      "size": 81225258,
+      "description": "Registered data for Part 4",
+      "checksum": {
+        "hash": "6c3f655a1482001119c54d1f1e404a34eb401f386fffc06147628b36c7c8d7c5",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/part1.zip",
+      "@type": [
+        "nrda:DynamicResourceSet",
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "part1.zip",
+      "downloadURL": "https://data.nist.gov/od/ds/mds2-3761/part1.zip",
+      "mediaType": "application/zip",
+      "title": "part1",
+      "size": 87041995,
+      "description": "Registered data for Part 1",
+      "checksum": {
+        "hash": "0bf229f5a04d181f4c79549fa6357a1bfe3095437b26bb660de5e86b35bb2ec3",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/part02.zip",
+      "@type": [
+        "nrda:DynamicResourceSet",
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "part02.zip",
+      "downloadURL": "https://data.nist.gov/od/ds/mds2-3761/part02.zip",
+      "mediaType": "application/zip",
+      "title": "part02",
+      "size": 85261726,
+      "description": "Registered data for Part 2",
+      "checksum": {
+        "hash": "bf72d9e160d94094f9268fcf3f76a532c8a29fb64aff1afbec20256acaee178e",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/part03.zip",
+      "@type": [
+        "nrda:DynamicResourceSet",
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "part03.zip",
+      "downloadURL": "https://data.nist.gov/od/ds/mds2-3761/part03.zip",
+      "mediaType": "application/zip",
+      "title": "part03",
+      "size": 83521608,
+      "description": "Registered data for Part 3",
+      "checksum": {
+        "hash": "89e9e1afadca22b9c34177d82972272a4e73789b19388f0c83d62a9ebd53d878",
+        "algorithm": {
+          "tag": "sha256",
+          "@type": "Thing"
+        }
+      }
+    },
+    {
+      "@id": "cmps/NIST.AMS.100-69",
+      "@type": [
+        "nrda:DynamicResourceSet",
+        "nrdp:DataFile",
+        "nrdp:DownloadableFile",
+        "dcat:Distribution"
+      ],
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+      ],
+      "filepath": "NIST.AMS.100-69",
+      "downloadURL": "https://doi.org/10.6028/NIST.AMS.100-69",
+      "mediaType": "application/octet-stream",
+      "description": "Data description",
+      "title": "A Fully Registered In-Situ and Ex-Situ Dataset for Metal Powder Bed Fusion Additive Manufacturing: Data Processing, Feature Extraction, Registration, and Uncertainties"
+    }
+  ],
+  "references": [
+    {
+      "@type": [
+        "npg:Document"
+      ],
+      "@id": "#ref:10.6028/NIST.AMS.100-69",
+      "refType": "IsSupplementTo",
+      "location": "https://doi.org/10.6028/NIST.AMS.100-69",
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+      ],
+      "title": "A Fully Registered In-Situ and Ex-Situ Dataset for Metal Powder Bed Fusion Additive Manufacturing:",
+      "issued": "2025",
+      "citation": "Yang, Z. (2025). A Fully Registered In-Situ and Ex-Situ Dataset for Metal Powder Bed Fusion Additive Manufacturing: National Institute of Standards and Technology. https://doi.org/10.6028/nist.ams.100-69\n"
+    },
+    {
+      "@type": [
+        "npg:Document"
+      ],
+      "@id": "#ref:10.6028/jres.125.031",
+      "refType": "IsSupplementTo",
+      "location": "https://doi.org/10.6028/jres.125.031",
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+      ],
+      "title": "X-ray Computed Tomography Data ofAdditive Manufacturing Metrology Testbed\n                (AMMT) Parts: \u201cOverhang Part X4\u201d",
+      "issued": "2020-10-01",
+      "citation": "Praniewicz, M., Lane, B., Kim, F., & Saldana, C. (2020). X-ray Computed Tomography Data ofAdditive Manufacturing Metrology Testbed\n                (AMMT) Parts: \u00e2\u0080\u009cOverhang Part X4.\u00e2\u0080\u009d Journal of Research of the National Institute of Standards and Technology, 125. https://doi.org/10.6028/jres.125.031\n"
+    },
+    {
+      "@type": [
+        "npg:Document"
+      ],
+      "@id": "#ref:10.6028/jres.125.027",
+      "refType": "IsSupplementTo",
+      "location": "https://doi.org/10.6028/jres.125.027",
+      "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+      ],
+      "title": "Process Monitoring Dataset from the Additive Manufacturing Metrology\n                Testbed (AMMT): Overhang Part X4",
+      "issued": "2020-09-03",
+      "citation": "Lane, B., & Yeung, H. (2020). Process Monitoring Dataset from the Additive Manufacturing Metrology\n                Testbed (AMMT): Overhang Part X4. Journal of Research of the National Institute of Standards and Technology, 125. https://doi.org/10.6028/jres.125.027\n"
+    }
+  ],
+  "authors": [
+    {
+      "familyName": "Yang",
+      "fn": "Zhuo  Yang",
+      "givenName": "Zhuo",
+      "middleName": "",
+      "affiliation": [
+        {
+          "title": "National Institute of Standards and Technology",
+          "@type": "org:Organization",
+          "@id": "ror:05xpvk416"
+        }
+      ],
+      "orcid": "",
+      "@type": "foaf:Person"
+    },
+    {
+      "familyName": "Lu",
+      "fn": "Yan  Lu",
+      "givenName": "Yan",
+      "middleName": "",
+      "affiliation": [
+        {
+          "title": "National Institute of Standards and Technology",
+          "@type": "org:Organization",
+          "@id": "ror:05xpvk416"
+        }
+      ],
+      "orcid": "",
+      "@type": "foaf:Person"
+    },
+    {
+      "familyName": "Lane",
+      "fn": "Brandon  Lane",
+      "givenName": "Brandon",
+      "middleName": "",
+      "affiliation": [
+        {
+          "title": "National Institute of Standards and Technology",
+          "@type": "org:Organization",
+          "@id": "ror:05xpvk416"
+        }
+      ],
+      "orcid": "",
+      "@type": "foaf:Person"
+    },
+    {
+      "familyName": "Yeung",
+      "fn": "Ho  Yeung",
+      "givenName": "Ho",
+      "middleName": "",
+      "affiliation": [
+        {
+          "title": "National Institute of Standards and Technology",
+          "@type": "org:Organization",
+          "@id": "ror:05xpvk416"
+        }
+      ],
+      "orcid": "",
+      "@type": "foaf:Person"
+    }
+  ],
+  "annotated": "2025-05-09T18:09:11.089714",
+  "revised": "2025-05-09T18:09:11.089714",
+  "issued": null,
+  "firstIssued": "2025-05-09T18:09:11.089714",
+  "isPartOf": [
+    {
+      "@type": [
+        "nrda:ScienceTheme",
+        "nrdp:PublicDataResource"
+      ],
+      "@id": "ark:/88434/pdr0-0003",
+      "title": "Additive Manufacturing Data"
+    }
+  ]
+}

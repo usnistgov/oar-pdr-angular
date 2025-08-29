@@ -8,8 +8,18 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { SearchService } from '../../shared/search-service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme } from '../../shared/globals/globals';
+import { Collections, Collection, CollectionThemes, FilterTreeNode, GlobalService } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
+import { CommonModule } from '@angular/common';
+import { TreeModule } from 'primeng/tree';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { FormsModule } from '@angular/forms';
+import { TaxonomyModule } from '../taxonomy/taxonomy.module';
+import { ButtonModule } from 'primeng/button';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -80,7 +90,7 @@ export class FiltersComponent implements OnInit {
     collectionOrder: string[] = [Collections.DEFAULT];
 
 //  Color
-    colorScheme: ColorScheme;
+    colorScheme: any;
     collapedFilerColor: string;  //For collaped filter
 
     componentsTree: TreeNode[] = [];
@@ -118,13 +128,13 @@ export class FiltersComponent implements OnInit {
 
     filterStyle = {'width':'100%', 'background-color': '#FFFFFF','font-weight': '400','font-style': 'italic'};
 
-    ResourceTypeStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
-    'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'};
+    // ResourceTypeStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
+    // 'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'};
 
-    researchTopicStyle = {'width':'100%','padding-top': '.5em', 'padding-bottom': '.5em', 'background-color': 'var(--science-theme-background-light)', 'overflow':'hidden','border-width':'0'};
+    // researchTopicStyle = {'width':'100%','padding-top': '.5em', 'padding-bottom': '.5em', 'background-color': 'var(--science-theme-background-light)', 'overflow':'hidden','border-width':'0'};
 
-    recordHasStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
-    'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'}
+    // recordHasStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
+    // 'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'}
 
     //Error handling
     queryStringErrorMessage: string = "";
@@ -146,6 +156,7 @@ export class FiltersComponent implements OnInit {
     @Output() filterString = new EventEmitter<string>();  
 
     constructor(
+        public globalService: GlobalService,
         public taxonomyListService: TaxonomyListService,
         public searchFieldsListService: SearchfieldsListService,
         public searchService: SearchService,
@@ -153,7 +164,11 @@ export class FiltersComponent implements OnInit {
         private chref: ChangeDetectorRef,
         private cfg: AppConfig
     ) { 
-
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+            // Set colors
+            this.setColor();
+        })
     }
 
     ngOnInit(): void {
@@ -166,14 +181,12 @@ export class FiltersComponent implements OnInit {
         this.setFilterWidth();
 
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
-        this.colorScheme = this.collectionService.getColorScheme(this.collection);
 
-        // Set colors
-        this.setColor();
+
     }
 
     setColor() {
-        this.collapedFilerColor = "linear-gradient(" +  this.colorScheme.default + ", white)";
+        this.collapedFilerColor = "linear-gradient(" +  this.colorScheme.defaultVar + ", white)";
     }
 
     /**
@@ -895,30 +908,21 @@ export class FiltersComponent implements OnInit {
      * @param searchResults - search results
      */
     collectThemes(searchResults: any[]) {
+        let keys = Object.keys(Collections);
         let allThemes: any = {};
-        allThemes[Collections.DEFAULT] = [];
-        allThemes[Collections.FORENSICS] = [];
-        allThemes[Collections.SEMICONDUCTORS] = [];
-
         let allThemesArray: any = {};
-        allThemesArray[Collections.DEFAULT] = [];
-        allThemesArray[Collections.FORENSICS] = [];
-        allThemesArray[Collections.SEMICONDUCTORS] = [];
-
+        let allUniqueThemes: any = {};
+        let allThemesAllArray: any = {};
         let topicLabel: string;
         let data: string;
-
-        let allUniqueThemes: any = {};
-        allUniqueThemes[Collections.DEFAULT] = [];
-        allUniqueThemes[Collections.FORENSICS] = [];
-        allUniqueThemes[Collections.SEMICONDUCTORS] = [];
-
-        let allThemesAllArray: any = {};
-        allThemesAllArray[Collections.DEFAULT] = [];
-        allThemesAllArray[Collections.FORENSICS] = [];
-        allThemesAllArray[Collections.SEMICONDUCTORS] = [];
-
         this.unspecifiedCount = 0;
+
+        keys.forEach(key => {
+            allThemes[Collections[key]] = [];
+            allThemesArray[Collections[key]] = [];
+            allUniqueThemes[Collections[key]] = [];
+            allThemesAllArray[Collections[key]] = [];
+        });
         
         //Collecting all themes
         for (let resultItem of searchResults) {
@@ -933,37 +937,23 @@ export class FiltersComponent implements OnInit {
                         topicLabel = topic.tag;
                     }
                     
-                    if(topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
-                        topicLabel = topics[0];
-                        data = topic.tag;
+                    for (let i = 0; i < keys.length; i++) {
+                        if(topic['scheme'].indexOf(this.taxonomyURI[Collections[keys[i]]]) >= 0) {
+                            topicLabel = topics[0];
+                            data = topic.tag;
 
-                        if(topics.length > 1){
-                            // topicLabel = topics[0] + ":" + topics[1];
-                            topicLabel = topic.tag;
-                        }
+                            if(topics.length > 1){
+                                // topicLabel = topics[0] + ":" + topics[1];
+                                topicLabel = topic.tag;
+                            }
 
-                        if(allThemesArray[Collections.SEMICONDUCTORS].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.SEMICONDUCTORS].push({ label: topicLabel, value: data });
-                            allThemesArray[Collections.SEMICONDUCTORS].push(topicLabel);
-                        }
-                    }else if(topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
-                        data = topic.tag;
+                            if(allThemesArray[Collections[keys[i]]].indexOf(topicLabel) < 0) {
+                                allThemes[Collections[keys[i]]].push({ label: topicLabel, value: data });
+                                allThemesArray[Collections[keys[i]]].push(topicLabel);
+                            }
 
-                        if(topics.length > 1){
-                            topicLabel = topic.tag;
-                        }
-
-                        if(allThemesArray[Collections.FORENSICS].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.FORENSICS].push({ label: topicLabel, value: data });
-                            allThemesArray[Collections.FORENSICS].push(topicLabel);
-                        }
-                    }else if(topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0){
-                        topicLabel = topics[0];
-
-                        if (allThemesArray[Collections.DEFAULT].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.DEFAULT].push({ label: topicLabel, value: topic.tag });
-                            allThemesArray[Collections.DEFAULT].push(topicLabel);
-                        }
+                            break;
+                        }                        
                     }
                 }
             } else {

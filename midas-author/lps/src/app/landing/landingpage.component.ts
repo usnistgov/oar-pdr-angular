@@ -13,7 +13,7 @@ import { NERDmResourceService, EditStatusService, MetadataUpdateService, GlobalS
 import { AppConfig, DataCartStatus, RecordLevelMetrics, formatBytes, CartActions,
          MetricsData } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Themes, ThemesPrefs, Collections } from 'oarlps';
+import { Themes, ThemesPrefs, Collections, CollectionService } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
@@ -185,7 +185,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     public helpContentAll:{} = questionhelp;
     helpContentUpdated: boolean = false;
     collection: string = Collections.DEFAULT;
+    collectionData: any;
     collectionObj: any;
+    allCollections: any = {};
     displayBanner: boolean = true;
     showStickMenu: boolean = false;
     isPublicSite: boolean = false;
@@ -193,7 +195,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     isEditMode: boolean = false;
     landingPageURL: string;
     landingPageServiceStr: string;
-    pubLandingPageURL: string = "http://localhost:4201/od/id/"
+    pubLandingPageURL: string = "http://localhost:4201/od/id/";
 
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
@@ -232,6 +234,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
                 public authsvc: AuthenticationService,
+                public collectionService: CollectionService,
                 public lpService: LandingpageService)
     {
         // Init the size of landing page body and the help box
@@ -242,6 +245,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.editEnabled = cfg.get('dapEditing.editEnabled', false) as boolean;
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+
+        this.collectionData = require('../../assets/site-constants/collections.json');
+        this.collectionService.setCollectionData(this.collectionData);
+        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
         this.loadBannerUrl();
 
@@ -290,8 +297,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         effect(() => {
           // Triggered by isEditMode()
           this.edstatsvc.isEditMode();
-          // Refresh page
-          // this.chref.detectChanges();
         })
     }
 
@@ -300,13 +305,21 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     getCollection() {
-        if(this.reqId.includes("pdr0-0001"))
-            this.collection = Collections.FORENSICS;
-        else if(this.reqId.includes("pdr0-0002"))
-            this.collection = Collections.SEMICONDUCTORS;
-        else
-            this.collection = Collections.DEFAULT;
+        let keys = Object.keys(Collections);
+        let collectionKey: string = "";
 
+        for (let key of keys) {
+            if (key != "DEFAULT" && this.reqId.includes(this.allCollections[Collections[key]]["id"])) {
+                collectionKey = key;
+                break;
+            }
+        };
+
+        if (collectionKey == "") {
+            collectionKey = "DEFAULT";
+        }
+
+        this.collection = Collections[collectionKey];
         this.globalService.setCollection(this.collection);
     }
 

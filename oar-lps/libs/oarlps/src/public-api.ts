@@ -118,3 +118,4 @@ export * from './lib/frame/messagebar.component';
 export * from './lib/frame/usermessage.service';
 
 export * from './lib/bulk-download/bulk-download.component';
+export * from './lib/shared/collection-service/collection.service';

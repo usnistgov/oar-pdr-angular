@@ -3,8 +3,7 @@
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of gotoMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [style.--background-default]="menuitem.isHeader? defaultColor: lighterColor" [style.--background-lighter]="lighterColor"
-            [style.--background-hover]="hoverColor" 
+            [ngStyle]="menuStyle(menuitem.isHeader)"            
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <i [class]="menuitem.icon"></i>
             {{menuitem.title}}
@@ -15,17 +14,24 @@
 <!-- Use menu-->
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of useMenu">
-        <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
+        <!-- <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
             [style.--background-default]="menuitem.isHeader? defaultColor: lighterColor"
-            [style.--background-lighter]="lighterColor" [style.--background-hover]="hoverColor"
+            [style.--background-lighter]="lighterColor" 
+            [style.--background-hover]="hoverColor"
+            (click)="goToSection(menuitem.sectionName, menuitem.url)">
+            <i [class]="menuitem.icon"></i>
+            {{menuitem.title}}
+        </td> -->
+        <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
+            [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <i [class]="menuitem.icon"></i>
             {{menuitem.title}}
         </td>
     </tr>
     <tr *ngIf="hasDataFiles">
-        <td class="menu-item menu-body" scope="row" [style.--background-default]="lighterColor"
-            [style.--background-lighter]="lighterColor" [style.--background-hover]="hoverColor">
+        <td class="menu-item menu-body" scope="row" 
+            [ngStyle]="menuStyle(false)">
             <a href="{{bulkDownloadURL}}" target="_blank">
                 <i class="faa faa-download"></i>
                 Bulk Download
@@ -38,8 +44,7 @@
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of findMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [style.--background-default]="menuitem.isHeader? defaultColor: lighterColor" [style.--background-lighter]="lighterColor"
-            [style.--background-hover]="hoverColor" 
+            [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <i [class]="menuitem.icon"></i>
             {{menuitem.title}}
@@ -48,6 +53,11 @@
 </table>
 
 <!-- Metrics info-->
-<app-metricsinfo *ngIf="theme != scienceTheme" [inBrowser]="inBrowser" [record]="record"
-[metricsData]="metricsData" [showMetrics]="showMetrics">
+<app-metricsinfo 
+    *ngIf="theme != scienceTheme" 
+    [inBrowser]="inBrowser" 
+    [record]="record"
+    [collection]="collection"
+    [metricsData]="metricsData" 
+    [showMetrics]="showMetrics">
 </app-metricsinfo>

@@ -32,7 +32,7 @@ export class menuItem {
         this.url = url;
         this.backgroundColor = backgroundColor;
         this.isHeader = isHeader;
-        this.icon = icon;
+        this.icon = icon;       
     }
 } 
 
@@ -65,6 +65,7 @@ export class MenuComponent implements OnInit {
     bulkDownloadURL: string = "";
     globalsvc = inject(GlobalService);
     hasDataFiles: boolean = false;
+    colorScheme: any;
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -84,6 +85,7 @@ export class MenuComponent implements OnInit {
 
     constructor(public collectionService: CollectionService,
                 @Inject(PLATFORM_ID) private platformId: Object,
+                public globalService: GlobalService,
                 private cfg : AppConfig) 
     { 
         this.inBrowser = isPlatformBrowser(platformId);
@@ -94,7 +96,12 @@ export class MenuComponent implements OnInit {
 
         this.globalsvc.watchHasDataFiles((value) => {
             this.hasDataFiles = value;
-        })        
+        });
+        
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+            this.setColor();
+        })         
     }
 
     ngOnInit(): void {
@@ -102,8 +109,6 @@ export class MenuComponent implements OnInit {
             this.bulkDownloadURL = this.bulkDownloadBase + this.record.ediid.replace('ark:/88434/', '');
 
         this.allCollections = this.collectionService.loadAllCollections();
-
-        this.setColor();
 
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
@@ -228,9 +233,9 @@ export class MenuComponent implements OnInit {
      * Set color variables
      */
     setColor() {
-        this.defaultColor = this.allCollections[this.collection].color.default;
-        this.lighterColor = this.allCollections[this.collection].color.lighter;
-        this.hoverColor = this.allCollections[this.collection].color.hover;
+        this.defaultColor = this.colorScheme.defaultVar;
+        this.lighterColor = this.colorScheme.lighterVar;
+        this.hoverColor = this.colorScheme.hoverVar;
     }   
     
     /**
@@ -270,5 +275,20 @@ export class MenuComponent implements OnInit {
      */
     bulkdownload() {
         window.open(this.bulkDownloadURL, "_blank");  
+    }
+
+    menuStyle(header: boolean) {
+        // let color = this.allCollections[this.collection].color;
+        let defaultColor = this.colorScheme.defaultVar;
+
+        if (!header) {
+            defaultColor = this.colorScheme.lighterVar;
+        }
+
+        return {
+            '--background-default': defaultColor,
+            '--background-lighter': this.colorScheme.lighterVar,
+            '--background-hover': this.colorScheme.hoverVar
+        };
     }
 }

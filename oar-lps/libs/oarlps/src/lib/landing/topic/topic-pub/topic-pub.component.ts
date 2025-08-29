@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, SimpleChanges, AfterContentInit, C
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NerdmRes } from '../../../nerdm/nerdm';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, GlobalService } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 
 @Component({
@@ -25,10 +25,11 @@ export class TopicPubComponent implements AfterContentInit {
     topicDisplay: any = {};
     topicShort: any = {};
     topicLong: any = {};
-    colorScheme: ColorScheme;
+    colorScheme: any;
     hovered: boolean = false;
     fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     allCollections: any = {};
+    maxBubbleLabelLength: number = 100; //Limit the number of characters inside a bubble. May define it in the config later.
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
@@ -38,10 +39,15 @@ export class TopicPubComponent implements AfterContentInit {
     componentData = { message: 'Initial data from child' };
 
     constructor(private chref: ChangeDetectorRef,
-                public collectionService: CollectionService)
+        public collectionService: CollectionService,
+        public globalService: GlobalService)
     {
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
+
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        })          
     }
 
     /**
@@ -92,14 +98,26 @@ export class TopicPubComponent implements AfterContentInit {
     }
 
     /**
-         * Set bubble color based on content
-         * @param topic 
-         */
+     * Set bubble color based on content
+     * @param topic 
+     */
     bubbleColor(topic) {
         if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
             return "#e6ecff";
         }else{
-            return "#ededed";
+            return this.colorScheme.lighterVar;
+        }
+    }
+
+    /**
+     * Return bubble label. If topic tag 
+     * @param topic 
+     */
+    bubbleLabel(topic) {
+        if (topic.tag.length > this.maxBubbleLabelLength) {
+            return topic.tag.substring(0, this.maxBubbleLabelLength) + "...";
+        } else {
+            return topic.tag.trim();
         }
     }
 
