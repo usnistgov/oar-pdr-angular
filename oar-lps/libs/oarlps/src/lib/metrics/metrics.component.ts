@@ -121,7 +121,7 @@ export class MetricsComponent implements OnInit {
         }
 
     ngOnInit() {
-        this.lps = this.cfg.get("locations.landingPageService", "/od/id/");
+        this.lps = this.cfg.get("links.landingPageService", "/od/id/");
 
         this.detectScreenSize();
         this.recordLevelData = new RecordLevelMetrics();

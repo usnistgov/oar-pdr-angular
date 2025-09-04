@@ -53,7 +53,7 @@ export class AppComponent {
         if(this.inBrowser){
             this.gaCode = this.cfg.get("gaCode", "") as string;
             this.ga4Code = this.cfg.get("ga4Code", "") as string;
-            let homeurl = this.cfg.get("locations.portalBase", "data.nist.gov") as string;
+            let homeurl = this.cfg.get("links.portalBase", "data.nist.gov") as string;
 
             const url = new URL("https://" + homeurl);
             this.hostName = url.hostname;
