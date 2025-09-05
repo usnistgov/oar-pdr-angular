@@ -323,12 +323,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         this.globalService.setShowLPContent(true);
         this.loadPublicData();
-        this._showContent = true;
     }
 
     loadPublicData() {
         let metadataError = "";
-        var showError: boolean = true;
 
         this.nerdmReserv.getResource(this.reqId).subscribe(
             (data) => {
@@ -360,10 +358,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
             }
 
-            if (showError) {
-                if (metadataError == "not-found") {
-                    this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                }
+            if(this.inBrowser)
+                this._showContent = true;
+                
+            if (metadataError == "not-found") {
+                this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
             }
         },
         (err) => {
@@ -689,7 +688,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         // set the document title
         this.setDocumentTitle();
-        this.showData();
+        if (this.inBrowser) {
+            this.showData();
+        }
     }
 
     /**
