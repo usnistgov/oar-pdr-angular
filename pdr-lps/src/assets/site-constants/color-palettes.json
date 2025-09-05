@@ -26,5 +26,26 @@
             "lighterVar": "var(--background-orange-lighter)",
             "darkVar": "var(--background-orange-dark)",
             "hoverVar": "var(--background-orange-hover)"        
+    },
+    "BeachSunset": {
+            "defaultVar": "var(--background-beach-sunset-default)",
+            "lightVar": "var(--background-beach-sunset-light)",
+            "lighterVar": "var(--background-beach-sunset-lighter)",
+            "darkVar": "var(--background-beach-sunset-dark)",
+            "hoverVar": "var(--background-beach-sunset-hover)"          
+    },
+    "Purple": {
+            "defaultVar": "var(--background-purple-default)",
+            "lightVar": "var(--background-purple-light)",
+            "lighterVar": "var(--background-purple-lighter)",
+            "darkVar": "var(--background-purple-dark)",
+            "hoverVar": "var(--background-purple-hover)"          
+    },
+    "AMGreen": {
+            "defaultVar": "var(--background-am-green-default)",
+            "lightVar": "var(--background-am-green-light)",
+            "lighterVar": "var(--background-am-green-lighter)",
+            "darkVar": "var(--background-am-green-dark)",
+            "hoverVar": "var(--background-am-green-hover)"          
     }
 }

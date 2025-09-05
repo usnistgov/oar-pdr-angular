@@ -31,7 +31,7 @@
         "bannerUrl": "assets/images/AM_Banner3.jpg",
         "id":"pdr0-0003",
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/",
-        "colorPalette": "RosyFlamingo",
+        "colorPalette": "AMGreen",
         "displayOrder": 4,
         "landingPage": true
     }      
