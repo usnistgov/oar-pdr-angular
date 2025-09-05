@@ -157,7 +157,7 @@ export class VersionComponent implements OnChanges {
         }
 
         // look at the version history to see if there is a newer version listed
-        if (this.record['version'] && this.record['versionHistory']) {
+        if (this.record['version'] && this.record['versionHistory'] && this.record['versionHistory'].length > 0) {
             let history = this.record['versionHistory'];
             history.sort(compare_histories);
 
