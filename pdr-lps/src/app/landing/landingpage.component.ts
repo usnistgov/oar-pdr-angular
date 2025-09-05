@@ -323,7 +323,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         this.globalService.setShowLPContent(true);
         this.loadPublicData();
-        this._showContent = true;
+        if(this.inBrowser)
+            this._showContent = true;
     }
 
     loadPublicData() {
@@ -689,7 +690,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         // set the document title
         this.setDocumentTitle();
-        this.showData();
+        if (this.inBrowser) {
+            this.showData();
+        }
     }
 
     /**
