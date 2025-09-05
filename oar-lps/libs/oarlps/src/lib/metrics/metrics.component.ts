@@ -134,33 +134,33 @@ export class MetricsComponent implements OnInit {
         // Expend the data tree to level one
         this.yAxisLabel = "";
 
-        if(this.inBrowser){
-            this.route.params.subscribe(queryParams => {
-                this.ediid = queryParams.id;
-                this.pdrHomeUrl = this.lps + this.ediid;
-                // Get dataset title
-                this.nerdmReserv.getResource(this.ediid).subscribe(md => {
-                // this.searchService.searchById(this.ediid, true).subscribe(md => {
-                    if(md) {
-                        this.record = md as NerdmRes;
-                        this.datasetTitle = md['title'];
-                        this.pdrid = md['@id'];
-        
-                        this.createNewDataHierarchy();
-                        if (this.files.length != 0){
-                            this.files = <TreeNode[]>this.files[0].data;
-                        }else{
-                            this.noChartData = true;
-                        }
-        
-                        this.expandToLevel(this.files, true, 0, 1);
+        this.route.params.subscribe(queryParams => {
+            this.ediid = queryParams.id;
+            this.pdrHomeUrl = this.lps + this.ediid;
+            // Get dataset title
+            this.nerdmReserv.getResource(this.ediid).subscribe(md => {
+            // this.searchService.searchById(this.ediid, true).subscribe(md => {
+                if(md) {
+                    this.record = md as NerdmRes;
+                    this.datasetTitle = md['title'];
+                    this.pdrid = md['@id'];
+    
+                    this.createNewDataHierarchy();
+                    if (this.files.length != 0){
+                        this.files = <TreeNode[]>this.files[0].data;
+                    }else{
+                        this.noChartData = true;
+                    }
+    
+                    this.expandToLevel(this.files, true, 0, 1);
 
+                    if (this.inBrowser) {
                         //Fetch metrics data regardless if there is chat data or not
                         this.getMetricsData();
                     }
-                })                              
-            });
-        }
+                }
+            })                              
+        });
     }
 
     /**
