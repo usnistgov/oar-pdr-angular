@@ -14,7 +14,7 @@
 }
 
 .menu-item {
-    background-color: var(--background-default);
+    background-color: var(--background-lighter);
     word-wrap: break-word;
     font-family: Sans-Serif;
     font-size: 14px;
@@ -24,7 +24,7 @@
 }
 
 .menu-item:hover {
-    background-color: var(--background-hover);
+    background-color: var(--background-hover);;
 }
 
 .menu-body {

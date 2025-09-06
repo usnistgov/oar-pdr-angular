@@ -1,16 +1,16 @@
 <div [@filterExpand]="mobileMode? 'expanded' : isActive? 'expanded' : 'collapsed'"
     [ngStyle]="{'width': mobileMode? '100%':filterWidthNum + 'px'}">
     <div class="normalFilter" [hidden]="!isActive && !mobileMode" id="activeFilter"
-        style="height:auto;padding-bottom: 1em;" [style.background-color]="colorScheme.lighterVar">
+        style="height:auto;padding-bottom: 1em;" [ngStyle]="filterBkColor()">
         <div>
             <!-- Filter header -->
-            <div id="filterHeader" *ngIf="isActive || mobileMode" [style.background-color]="colorScheme.defaultVar">
+            <div id="filterHeader" *ngIf="isActive || mobileMode" [ngStyle]="filterBkColor()">
                 <a id="filtersLabel" class="btn-sm collapsed in"
                     (click)="this.isActive = !this.isActive;setFilterWidth()" data-toggle="collapse"
                     data-target="#demo"><span *ngIf="filterWidthNum > 170">Filters </span><i
                         [ngClass]="getFilterImgClass()" style="zoom: 100%;color: #fff;cursor: pointer;"></i></a>
 
-                <button pButton label="Clear all" type="button" class="p-button-sm clearall" 
+                <button pButton label="Clear all" type="button" class="p-button-sm clearall" [ngStyle]="filterBkColor()"
                     icon="faa faa-remove" iconPos="left" style="padding: 3px 10px;" (click)="clearFilters()"></button>
             </div>
 
@@ -53,7 +53,7 @@
                 </div>
 
                 <!-- Authors and Contributors -->
-                <div [style.background-color]="colorScheme.lighterVar">
+                <div [ngStyle]="filterBkColor()">
                     <div class="lbl-filter">
                         <label><b>Authors and Contributors</b></label>
                     </div>

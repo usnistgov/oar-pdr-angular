@@ -59,9 +59,12 @@ export class SearchresultComponent implements OnInit {
         this.prevFilterWidth = this.filterWidth;
         this.filterWidth = this.defaultFilterWidth;
         this.allCollections = this.collectionService.loadAllCollections();
-        this.taxonomyURI[Collections.DEFAULT] = this.allCollections[Collections.DEFAULT].taxonomyURI;
-        this.taxonomyURI[Collections.FORENSICS] = this.allCollections[Collections.FORENSICS].taxonomyURI;
-        this.taxonomyURI[Collections.SEMICONDUCTORS] = this.allCollections[Collections.SEMICONDUCTORS].taxonomyURI;
+
+        let keys = Object.keys(Collections);
+        for (let key of keys) {
+            if(this.allCollections && this.allCollections[Collections[key]])
+                this.taxonomyURI[Collections[key]] = this.allCollections[Collections[key]].taxonomyURI;
+        }
     }
 
     ngAfterViewInit(): void {

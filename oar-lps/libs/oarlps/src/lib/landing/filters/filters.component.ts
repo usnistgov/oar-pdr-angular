@@ -179,10 +179,10 @@ export class FiltersComponent implements OnInit {
         this.searchResultsError = [];
         this.MoreOptionsDisplayed = (this.theme == 'ScienceTheme');
         this.setFilterWidth();
+        let allCols = this.collectionService.loadAllCollections();
 
-        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
-
-
+        if(allCols)
+            this.allCollections = JSON.parse(JSON.stringify(allCols));
     }
 
     setColor() {
@@ -1082,4 +1082,12 @@ export class FiltersComponent implements OnInit {
         else
             return "";
     }
+
+    filterBkColor() {
+        return {
+            '--background-default': this.colorScheme.defaultVar,
+            '--background-lighter': this.colorScheme.lighterVar,
+            '--background-hover': this.colorScheme.hoverVar
+        };
+    }    
 }

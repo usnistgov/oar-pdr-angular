@@ -50,7 +50,6 @@ export class SuggestionsComponent {
     constructor(private chref: ChangeDetectorRef) { }
     
     ngOnInit() {
-        console.log("Suggestion init...", this.suggestionLabel);
         this.showSuggestions = this.showSug;
     }
 
@@ -61,7 +60,7 @@ export class SuggestionsComponent {
         }
 
         if(changes.Suggestion){
-            console.log("suggestion changed:", changes.Suggestion);
+            // console.log("suggestion changed:", changes.Suggestion);
         }
     }
     

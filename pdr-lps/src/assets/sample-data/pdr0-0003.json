@@ -6,88 +6,48 @@
   "annotated": "2025-08-25",
   "topic": [
     {
-      "@type": "Concept",
       "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
-      "tag": "Manufacturing: Additive manufacturing"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Materials: Metals", 
+      "tag": "Manufacturing: Additive manufacturing",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Build Process: Process mapping", 
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+      "tag": "Materials: Ceramics",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Build Process: Powder bed fusion", 
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+      "tag": "Materials: Metals",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Build Process: Powder bed fusion: Laser", 
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+      "tag": "Materials: Polymers",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Microstructure: In-situ characterization", 
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+      "tag": "Standards: Reference data",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Microstructure: Ex-situ characterization", 
+      "tag": "Physics: Condensed matter",
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Microstructure: Microstructure analysis", 
+      "tag": "Materials: Modeling and computational material science",
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Properties: Thermal / kinetic", 
+      "tag": "Metrology: Dimensional metrology",
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
       "@type": "Concept"
     },
     {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Characterization Approach: In-situ", 
-      "@type": "Concept"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Characterization Approach: In-situ: Build process", 
-      "@type": "Concept"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Characterization Approach: Ex-situ", 
-      "@type": "Concept"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Characterization Approach: X-ray computed tomography", 
-      "@type": "Concept"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Computation and Analysis: Uncertainty quantification", 
-      "@type": "Concept"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Computation and Analysis: Microstructural analysis", 
-      "@type": "Concept"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Computation and Analysis: Multimodal data analysis", 
-      "@type": "Concept"
-    },
-    {
-      "scheme": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0", 
-      "tag": "AdditiveManufacturing: Computation and Analysis: Multimodal data analysis: Multimodal registration", 
+      "tag": "Materials: Materials characterization",
+      "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.0",
       "@type": "Concept"
     }
   ],
@@ -118,12 +78,8 @@
   ],
   "contactPoint": [
     {
-      "hasEmail": "mailto:shawn.moylan@nist.gov",
-      "fn": "Shawn P Moylan"
-    },
-    {
-      "hasEmail": "mailto:callie.higgins@nist.gov",
-      "fn": "Callie Higgins"
+      "hasEmail": "mailto:additive-collection@nist.gov",
+      "fn": "Additive Manufacturing Collection Team"
     }
   ],
   "accessLevel": "public",
@@ -161,6 +117,20 @@
       "givenName": "Shawn",
       "@type": "foaf:Person",
       "fn": "Shawn P Moylan"
+    },
+    {
+      "jobTitle": "Additive Manufacturing Benchmark Test Series Co-Chair",
+      "familyName": "Levine",
+      "givenName": "Lyle",
+      "@type": "foaf:Person",
+      "fn": "Lyle E Levine"
+    },
+    {
+      "jobTitle": "Additive Manufacturing Benchmark Test Series Co-Chair",
+      "familyName": "Weaver",
+      "givenName": "Jordan",
+      "@type": "foaf:Person",
+      "fn": "Jordan Weaver"
     }
   ],
   "ediid": "ark:/88434/pdr0-0003",

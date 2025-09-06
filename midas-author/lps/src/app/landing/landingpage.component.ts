@@ -323,23 +323,27 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.globalService.setCollection(this.collection);
     }
 
-    loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
+    loadColorPalette() {
+        let colorPalette: any;
+        let cp: any;
 
-        switch(this.collection) {
-            case Collections.FORENSICS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            case Collections.SEMICONDUCTORS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            default: {
-                this.imageURL = "";
-                break;
-            }
+        const colorPalettes: any = require('../../assets/site-constants/color-palettes.json');
+        if (this.collectionData && this.collectionData[this.collection]) {
+            cp = colorPalettes[this.collectionData[this.collection].colorPalette]
+            colorPalette = cp ? cp : colorPalettes[Collections.DEFAULT];
+        } else {
+            colorPalette = colorPalettes[Collections.DEFAULT];
         }
+    
+        this.globalService.setColorPalette(colorPalette);
+    
+    }
+    
+    loadBannerUrl() {
+        this.collectionObj = this.collectionData[this.collection] as any;
+
+        this.imageURL = this.collectionObj.bannerUrl;
+        if(this.collection == Collections.DEFAULT) this.imageURL = "";
 
         setTimeout(() => {
             // this.displayBanner = true;

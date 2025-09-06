@@ -3,7 +3,7 @@
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of gotoMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [ngStyle]="menuStyle(menuitem.isHeader)"            
+            [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <i [class]="menuitem.icon"></i>
             {{menuitem.title}}

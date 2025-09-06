@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
-import * as CollectionData from '../../../assets/site-constants/collections.json';
-import { BehaviorSubject, Observable, of, Subscriber, throwError } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -16,19 +13,8 @@ export class CollectionService {
 
     allCollections: any = null;
     collectionData: any = null;
-    // colorSchemes: any = {};
-    // colorSchemeSub = new BehaviorSubject<ColorScheme[]>([] as ColorScheme[]);
 
-    constructor(private httpcli : HttpClient) {
-        // this.collectionOrder = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]});
-
-        // this.collectionOrder = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]});
-
-        // this.collectionOrder = this.collectionOrder.filter(function(v) { return v !== 'default' });
-
-        // this.collectionForDisplay = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]}).filter(key => CollectionData[key].landingPage); 
-
-        // this.collectionData = CollectionData;
+    constructor() {
     }
 
     serviceInit() {
@@ -38,27 +24,6 @@ export class CollectionService {
         this.collectionForDisplay = Object.keys(this.collectionData).sort(function(a,b){return that.collectionData[a]["displayOrder"]-that.collectionData[b]["displayOrder"]}).filter(key => that.collectionData[key].landingPage); 
         this.loadAllCollections();
     }
-
-    // getColorScheme(collection: string) {
-    //     return this.colorSchemes[collection];
-    // }
-
-    /**
-     * Set color scheme
-     * @param colorScheme 
-     */
-    // setColorScheme(colorScheme: ColorScheme[]) {
-    //     let sub = this.colorSchemeSub;
-    //     sub.next(colorScheme);
-    // }
-
-    /**
-     * Watch color scheme
-     */
-    // watchColorScheme(): Observable<ColorScheme[]> {
-    //     let sub = this.colorSchemeSub;
-    //     return sub.asObservable();
-    // }
 
     getCollectionOrder() {
         return this.collectionOrder;
@@ -108,4 +73,7 @@ export class CollectionService {
         this.serviceInit();
     }
 
+    public getCollectionData() {
+        return this.collectionData;
+    }
 }

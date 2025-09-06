@@ -97,7 +97,6 @@ export class SearchService {
         const recordid_KEY = makeStateKey<string>('record-' + recordid);
 
         if (this.transferState.hasKey(recordid_KEY)) {
-            console.log("extracting data id=" + recordid + " embedded in web page");
             const record = this.transferState.get<any>(recordid_KEY, null);
             // this.transferState.remove(recordid_KEY);
             return of(record);

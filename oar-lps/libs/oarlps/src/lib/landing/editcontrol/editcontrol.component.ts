@@ -14,14 +14,14 @@ import { LandingpageService } from '../landingpage.service';
 import * as REVISION_TYPES from '../../../assets/site-constants/revision-types.json';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
-import * as CollectionData from '../../../assets/site-constants/collections.json';
+// import * as CollectionData from '../../../assets/site-constants/collections.json';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confirmation-dialog.module';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService, Credentials } from 'oarng';
-
+import { CollectionService } from '../../shared/collection-service/collection.service';
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
  * landing page.  Features include:
@@ -66,24 +66,21 @@ export class EditControlComponent implements OnInit, OnChanges {
     submitResponse: SubmitResponse = {} as SubmitResponse;
     mobileMode: boolean = false;
     modalRef: any; // For submit pop up
-    imageURL: string = '';
     collection: string;
     collectionObj: any;
     message: string = "test";
     cred: Credentials = null;
     authorized: boolean = false;
+    collectionData: any;
 
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
      * template via [(mdrec)].
      */
     @Input() mdrec: NerdmRes;
-    // @Output() mdrecChange = new EventEmitter<NerdmRes>();
 
-    /**
-     * the ID that was used to request the landing page
-     */
-    // @Input() requestID: string;
+    // Banner URL
+    @Input() imageURL: string;
 
     /**
      * the original resource identifier
@@ -122,11 +119,11 @@ export class EditControlComponent implements OnInit, OnChanges {
                         private chref: ChangeDetectorRef,
                         private modalService: NgbModal,
                         public globalService: GlobalService,
+                        public collectionService: CollectionService,
                         private msgsvc: UserMessageService) 
     {
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
-            this.loadBannerUrl();
         });
 
         this.globalService.watchMessage((message) => {
@@ -209,6 +206,8 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.lpService.watchMobileMode((response) => {
             this.mobileMode = response;
         })
+
+        this.collectionData = this.collectionService.getCollectionData();
     }
 
     ngOnChanges() {
@@ -223,29 +222,6 @@ export class EditControlComponent implements OnInit, OnChanges {
             }
         }
         */
-    }
-
-    loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
-
-        switch(this.collection) {
-            case Collections.FORENSICS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            case Collections.SEMICONDUCTORS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            default: {
-                this.imageURL = "";
-                break;
-            }
-        }
-
-        setTimeout(() => {
-            // this.displayBanner = true;
-        }, 0);
     }
 
     /**
