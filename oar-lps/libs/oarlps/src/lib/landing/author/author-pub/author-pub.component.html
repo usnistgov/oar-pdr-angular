@@ -7,13 +7,17 @@
             <div class="authorsbrief" style="white-space: normal;">
                 @for(author of record[fieldName]; track $index) {
                     <span style="white-space: nowrap;">
-                        {{ author.fn }}    
-                        <span *ngIf="author.orcid">
+                        <span *ngIf="author.orcid; else noOrcid">
+                            {{author.fn.trim()}}
                             <a href="https://orcid.org/{{ author.orcid }}" target="blank">
                                 <img src="assets/images/orcid-logo.png" style="width: 20px;">
                             </a>
-                        </span>                            
-                        <span *ngIf="$index < record[fieldName].length-1 ">,</span>
+                            <span *ngIf="$index < record[fieldName].length-1 ">,</span>
+                        </span>      
+                        
+                        <ng-template #noOrcid>
+                            {{author.fn.trim()}}<span *ngIf="$index < record[fieldName].length-1 ">,</span>
+                        </ng-template>
                     </span>&nbsp;
                 }
 
