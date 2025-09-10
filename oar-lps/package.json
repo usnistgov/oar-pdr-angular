@@ -29,7 +29,7 @@
   "dependencies": {
     "@angular/cdk": "^17.3.10",
     "@angular/localize": "^18.2.13",
-    "@angular/platform-server": "18.2.13",
+    "@angular/platform-server": "18.2.14",
     "@babel/core": "^7.16.7",
     "@fullcalendar/core": "^5.10.1",
     "@ng-bootstrap/ng-bootstrap": "^17.0.0",
