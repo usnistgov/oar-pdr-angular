@@ -44,7 +44,7 @@ import { FooterComponent, HeaderComponent } from 'oarng';
       GoogleAnalyticsService,
       MetadataUpdateService,
         SidebarService,
-        fakeBackendProvider
+        // fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })
