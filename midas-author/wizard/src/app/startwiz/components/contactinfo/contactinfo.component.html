@@ -1,7 +1,7 @@
 <div class="full-height">
     <oar-pushing-sidebar [marginLeft]="marginLeft" style="width: 100%; height: fit-content;">
         <div class="main-content">
-            <p>Should you be the primary public contact for this record?</p>
+            <p>Will you be the primary public contact for this record?</p>
             <div class="radio-group">
                 <div class="radio">
                     <label title="Yes, I will be the primary public contact.">
@@ -18,13 +18,13 @@
             </div>
             <div style="margin-top: 1em;" *ngIf="dataModel.creatorIsContact != undefined && !dataModel.creatorIsContact">
                 <div style="margin-bottom: .5em;">Type in contact's name and select the appropriate match: </div>
-                <input 
-                    class="input-box" 
-                    style="width: 300px;" 
-                    type="text" 
-                    pInputText 
-                    name="otherContact" 
-                    [(ngModel)]="dataModel.contactName" 
+                <input
+                    class="input-box"
+                    style="width: 300px;"
+                    type="text"
+                    pInputText
+                    name="otherContact"
+                    [(ngModel)]="dataModel.contactName"
                     (input)="onContactNameChanged()"/>
             </div>
         </div>
