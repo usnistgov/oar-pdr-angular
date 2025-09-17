@@ -143,9 +143,13 @@
                                         </p-progressSpinner>
                                     </div>
                                     <ng-template #display_lock>
-                                        <i class="faa faa-lock blue-cart" style="margin-left: 10px;"
+                                        <!-- Display lock if this is not a folder -->
+                                        <i *ngIf="isLeaf(rowData);else space_holder" class="faa faa-lock blue-cart" style="margin-left: 10px;"
                                             (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')" aria-hidden="true"
                                             data-toggle="tooltip" title="Request access"></i>
+                                        <ng-template #space_holder>
+                                            <div style="padding-right: 1em;">&nbsp;&nbsp;</div>
+                                        </ng-template>
                                     </ng-template>
                                 }@else{
                                     <div *ngIf="fileManagerUrl;else space_holder">
