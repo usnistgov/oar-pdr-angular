@@ -386,81 +386,23 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      getMetrics() {
         let ediid = this.md.ediid;
         let that = this;
-        this.metricsService.getFileLevelMetrics(ediid).subscribe(async (event) => {
-            // Some large dataset might take a while to download. Only handle the response
-            // when download is completed
-            if(event.type == HttpEventType.Response){
-                let response = await event.body.text();
-
-                that.fileLevelMetrics = JSON.parse(response);
-
-                if(that.fileLevelMetrics.FilesMetrics != undefined && that.fileLevelMetrics.FilesMetrics.length > 0 && that.md.components){
-                    // check if there is any current metrics data
-                    for(let i = 1; i < that.md.components.length; i++){
-                        let filepath = that.md.components[i].filepath;
-                        if(filepath) filepath = filepath.trim();
-
-                        that.metricsData.hasCurrentMetrics = that.fileLevelMetrics.FilesMetrics.find(x => x.filepath.substr(x.filepath.indexOf(ediid)+ediid.length+1).trim() == filepath) != undefined;
-                        if(that.metricsData.hasCurrentMetrics) break;
-                    }
-                }else{
-                    that.metricsData.hasCurrentMetrics = false;
-                }
-
-                // if(that.metricsData.hasCurrentMetrics){
-
-                // }else{
-                //     that.metricsData.dataReady = true;
-                // }
-                that.showMetrics = true;
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve file metrics: ", err);
-            this.metricsData.hasCurrentMetrics = false;
-            this.showMetrics = true;
-            this.metricsData.dataReady = true; // ready to display message
-        });
 
         //Get record level metrics
-        this.metricsService.getRecordLevelMetrics(ediid).subscribe(async (event) => {
-            if(event.type == HttpEventType.Response){
-                let response = await event.body.text();
+         this.metricsService.getRecordLevelMetrics(ediid).subscribe(
+             async (event) => {
+                 if (event.type == HttpEventType.Response) {
+                     let response = await event.body.text();
 
-                that.recordLevelMetrics = JSON.parse(await event.body.text());
-                that.handleRecordLevelData();
-
-                // let hasFile = false;
-
-                // if(that.md.components && that.md.components.length > 0){
-                //     that.md.components.forEach(element => {
-                //         if(element.filepath){
-                //             hasFile = true;
-                //             return;
-                //         }
-                //     });
-                // }
-
-                // if(hasFile){
-                //     //Now check if there is any metrics data
-                //     that.metricsData.totalDatasetDownload = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].record_download : 0;
-
-                //     that.metricsData.totalDownloadSize = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].total_size : 0;
-
-                //     that.metricsData.totalUsers = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].number_users : 0;
-
-                //     that.metricsData.totalUsers = that.metricsData.totalUsers == undefined? 0 : that.metricsData.totalUsers;
-                // }
-
-                // that.metricsData.dataReady = true;
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve dataset metrics: ", err);
-            this.metricsData.hasCurrentMetrics = false;
-            this.showMetrics = true;
-            this.metricsData.dataReady = true;
-        });
+                     that.recordLevelMetrics = JSON.parse(await event.body.text());
+                     that.handleRecordLevelData();
+                 }
+            },
+            (err) => {
+                console.error("Failed to retrieve dataset metrics: ", err);
+                this.metricsData.hasCurrentMetrics = false;
+                this.showMetrics = true;
+                this.metricsData.dataReady = true;
+            });
     }
 
     /**
