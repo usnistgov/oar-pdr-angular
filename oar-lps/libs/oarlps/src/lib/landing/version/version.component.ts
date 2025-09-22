@@ -165,7 +165,7 @@ export class VersionComponent implements OnChanges {
             var p = thisversion.indexOf('+');    // presence indicates this is an update
             if (p >= 0) thisversion = thisversion.substring(0, p)   // strip off +...
 
-            if (history[history.length - 1]['version'] != thisversion &&
+            if (history[history.length - 1] && history[history.length - 1]['version'] != thisversion &&
                 compare_histories(history[history.length - 1],
                                   {
                                       version: thisversion,

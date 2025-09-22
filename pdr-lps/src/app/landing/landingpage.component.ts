@@ -301,8 +301,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-        this.landingPageURL = this.cfg.get('PDRAPIs.mdService','/od/id/');
-        this.landingPageServiceStr = this.cfg.get('PDRAPIs.mdService','https://data.nist.gov/od/id/');
+        this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
+        this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
   
         this.arrRevisionTypes = REVISION_TYPES["default"];
         this.recordLevelMetrics = new RecordLevelMetrics();
