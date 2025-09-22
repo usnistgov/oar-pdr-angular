@@ -271,7 +271,6 @@ export class MetricsComponent implements OnInit {
             console.log("err", err);
             that.errorMsg = JSON.stringify(err);
             that.hasError = true;
-            console.log('this.hasError', that.hasError);
             that.emailSubject = 'PDR: Error getting file level metrics data';
             that.emailBody =
                 'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'

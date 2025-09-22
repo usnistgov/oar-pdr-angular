@@ -266,7 +266,6 @@ export class FiltersComponent implements OnInit {
         lFilterString = this.removeEndingComma(lFilterString);
         if(!lFilterString) lFilterString = "NoFilter";
 
-        // console.log('lFilterString', lFilterString);
         this.filterString.emit(lFilterString);
     }
 

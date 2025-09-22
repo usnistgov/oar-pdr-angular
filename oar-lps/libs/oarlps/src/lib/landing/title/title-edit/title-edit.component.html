@@ -10,20 +10,20 @@
   -->
 <div style="width: 100%;">
     <div style="display: table; margin-bottom: 0em;width:100%;">
-        <div class="editable_container" style="width:100%;">
+        <div class="editable_container no-wrap" style="width:100%;">
             <div class="editable_field red-star" *ngIf="edstatsvc.isEditMode()">
                 *
             </div>
 
             @if(isEditing) {
-                <div class="editable_field" [ngStyle]="titleWidth">
+                <div class="editable_field normal-wrap" [ngStyle]="titleWidth">
                     <h2 style="width: 100%;">
                         <textarea #title autocomplete="off" [(ngModel)]='record.title' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" style="width: 100%;cursor: text;" libTextareaAutoresize></textarea>
                     </h2>
                 </div>
             }
             @else {
-                <div class="editable_field" (click)="startEditing()" style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+                <div class="editable_field normal-wrap" (click)="startEditing()" style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
                     @if(record['title']) {
                         <span ><h2>{{record.title}}</h2></span>
                     }

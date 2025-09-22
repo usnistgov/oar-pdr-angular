@@ -261,13 +261,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         if (this.cfg_editEnabled) {
             this.edstatsvc.watchEditMode((editMode) => {
                 this.editMode = editMode;
-                if (this.editMode == this.EDIT_MODES.DONE_MODE ||
-                    this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE)
-                {
-                    this.displaySpecialMessage = true;
-                    this._showContent = true;
-                    this.setMessage();
-                }
 
                 this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE || this.editMode == this.EDIT_MODES.REVISE_MODE);
 
@@ -276,6 +269,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
 
                 this.updateSidebarStatus(true);
+
+                if (this.editMode == this.EDIT_MODES.DONE_MODE ||
+                    this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE)
+                {
+                    this.displaySpecialMessage = true;
+                    // this._showContent = true;
+                    this.setMessage();
+                }                
+
+                this.isEditMode = this.editMode == this.EDIT_MODES.EDIT_MODE;
             });
 
             this.mdupdsvc.subscribe(
@@ -297,7 +300,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     }
 
                     this.globalService.setCurrentRec(this.md);
-                    this.showData();
+                    // this.showData();
                 }
             );
 
@@ -464,9 +467,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this.globalService.setAuthenticated(true);
                 this.mdupdsvc.startEditing(this.reqId).subscribe({
                 next: (success) => {
-                    console.log("Status", success);
-                    console.log("Record loaded", this.md);
-
                     this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
                     if(this.inBrowser){
@@ -475,7 +475,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                             this.showMetrics = true;
                         }else{
                             if(this.theme == Themes.DEFAULT_THEME){
-                                console.log("Getting metrics...");
                                 this.getMetrics();
                             }
 
@@ -495,9 +494,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
                             if (this.editRequested) {
                                 showError = false;
-                                // console.log("Returning from authentication redirection (editmode="+
-                                //             this.editRequested+")");
-
                                 // Need to pass reqID (resID) because the resID in editControlComponent
                                 // has not been set yet and the startEditing function relies on it.
                                 this.edstatsvc.startEditing(this.reqId);
@@ -905,10 +901,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     showData() : void{
         if (this.md != null) {
-            this._showData = true;
+            
             setTimeout(() => {
                 this.setMenuPosition();
                 this.updateScreenSize();
+                this._showData = true;
             }, 0);
         }else
             this._showData = false;
@@ -940,20 +937,25 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         this.edstatsvc._setEditType(this.editTypes.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
                         this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    } else if (this.mdupdsvc.submitted) {
+                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else {
                         this.editRequested = true;
-                        this.isEditMode = true;
+                        // this.isEditMode = true;
                         this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
                         this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                        this.edstatsvc._setEditType(this.editTypes.NORMAL); 
+                        this.edstatsvc._setEditType(this.editTypes.NORMAL);
                     }
                 }
                 else {
                     this.editRequested = false;
                     this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    this._showContent = true;
-                    this.edstatsvc.setShowLPContent(true);
+                    // this._showContent = true;
+                    // this.edstatsvc.setShowLPContent(true);
                 }
+                this._showContent = true;
+                this.edstatsvc.setShowLPContent(true);
+                this.showData();
             });
         }else{
             this.editRequested = false;
@@ -966,7 +968,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         //For fakebackend use
         this.globalService.setCurrentRec(this.md);
 
-        this.showData();
+        // this.showData();
     }
 
     /**

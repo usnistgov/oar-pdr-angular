@@ -334,7 +334,6 @@ export class AuthorListComponent implements OnInit {
                     foundAuthor = JSON.parse(JSON.stringify(author));
 
                     this.mdupdsvc.update(this.fieldName, foundAuthor, id).then((updateSuccess) => {
-                        // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("Author updated.", "", 3000);
                             resolve(true);
@@ -357,7 +356,6 @@ export class AuthorListComponent implements OnInit {
                 }
 
                 this.mdupdsvc.update(this.fieldName, postMessage, id).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Authors updated.", "", 3000);
                         resolve(true);

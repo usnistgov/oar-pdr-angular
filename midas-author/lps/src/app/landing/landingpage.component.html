@@ -27,7 +27,7 @@
             <b>Landing page is loading...</b>
         </div>
 
-        @if(!edstatsvc.isEditMode()) {
+        @if(!isEditMode) {
           <!-- Menu button and the popup menu (mobile mode only) -->
           <div style="width: 100%; height: 0px;">
             <!-- div to keep track of the menu button position -->
@@ -98,8 +98,7 @@
                 <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
             </div>
 
-
-            @if(edstatsvc.isEditMode()) {
+            @if(isEditMode) {
               <!-- Drag bar to resize the help box -->
               <div #splitter
                 *ngIf="showSplitter"

@@ -268,8 +268,6 @@ export class MIDASDAPService extends DAPService implements SupportsAuthenticatio
 
         if (! url.endsWith('/')) url += '/';
         url += ediid + "/acls/write/:user";
-        console.log("Authentication request url: ", url);
-        console.log("Authentication request hdrs: ", JSON.stringify(hdrs));
   
         return this.webclient.get(url, {headers: hdrs}).pipe() as Observable<any>;
     }

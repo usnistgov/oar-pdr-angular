@@ -158,12 +158,6 @@ export class DatafilesMidasComponent {
             this.authorized = authorized;
         })
 
-        // this.editstatsvc.watchReviseType((revisionType) => {
-        //     this.revisionType = revisionType;
-        //     this.chref.detectChanges();
-        //     console.log(!this.authorized || this.isRevisionType && revisionType == this.arrRevisionTypes[0].type);
-        // })
-
         this.editstatsvc.watchEditType((editType) => {
             this._editType = editType;
         })
@@ -297,8 +291,6 @@ export class DatafilesMidasComponent {
     }
 
     hideOverlay(event, overlaypanel: OverlayPanel) {
-        console.log("event", event);
-        
         overlaypanel.hide();
         this.overlaypanelOn = false;
 

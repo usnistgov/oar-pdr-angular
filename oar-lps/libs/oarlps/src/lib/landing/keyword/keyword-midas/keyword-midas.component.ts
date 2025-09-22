@@ -228,7 +228,6 @@ export class KeywordMidasComponent {
             updmd[this.fieldName] = JSON.parse(JSON.stringify(this.keywords));
 
             this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
-                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                 if (updateSuccess){
                     this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
 

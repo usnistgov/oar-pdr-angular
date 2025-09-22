@@ -23,7 +23,6 @@ export class ConfirmationDialogComponent implements OnInit {
     constructor(@Inject(NgbActiveModal) public activeModal: NgbActiveModal ) { }
 
     ngOnInit() {
-        console.log("Title", this.title)
     }
 
     public decline() {

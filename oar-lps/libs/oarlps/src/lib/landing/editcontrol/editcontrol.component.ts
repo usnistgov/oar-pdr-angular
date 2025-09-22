@@ -197,7 +197,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     get isSubmitted() {
-        return this.mdupdsvc.recStatus.state == 'submitted';
+        return this.mdupdsvc.recStatus.state == "submitted";
     }
 
     get isRevision() {
@@ -535,8 +535,6 @@ export class EditControlComponent implements OnInit, OnChanges {
                     var message;
                     var err: boolean = false;
 
-                    console.log("Server return: ", result);
-
                     this.modalRef = this.modalService.open(ConfirmationDialogComponent);
 
                     //For testing, disable error handling
@@ -592,7 +590,9 @@ export class EditControlComponent implements OnInit, OnChanges {
                     if (this.mdupdsvc.published && !this.revisionStarted) {
                         this.edstatsvc._setEditType(this.editTypes.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["typeName"]);
-                        this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);  
+                        this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    } else if (this.mdupdsvc.submitted) {
+                        this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else {
                         this.setEditMode(this.EDIT_MODES.EDIT_MODE);  
                     }
@@ -623,7 +623,6 @@ export class EditControlComponent implements OnInit, OnChanges {
         if (this.mdupdsvc) {
             this.mdupdsvc.discardEdits().subscribe({
                 next: (success) => {
-                    console.log("Editd discarded.");
                     // this.mdupdsvc.forgetUpdateDate();
                     // this.mdupdsvc.fieldReset();
                     // this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
@@ -842,53 +841,6 @@ export class EditControlComponent implements OnInit, OnChanges {
       
     }
 
-    // openDialog_mat(enterAnimationDuration: string='0ms', exitAnimationDuration: string='0ms'): void {
-    //     const dialogRef = this.dialog.open(SubmitConfirmComponent, {
-    //         width: '1020px',
-    //         maxHeight: '90vh',
-    //         enterAnimationDuration,
-    //         exitAnimationDuration,
-    //         // data: { submissionData: this.submissionData }
-    //     });
-
-    //     dialogRef.afterClosed().subscribe(result => {
-    //         console.log('The dialog was closed with result:', result);
-    //         // Process the result. 
-    //         // If proceed submisison, submit review. Otherwise do nothing.
-    //         if (result.goSubmit) {
-    //             let option: any;
-
-    //             if (this.isRevision) {
-    //                 option = {
-    //                     "review": { "notes": this.submissionData.submissionNotes },
-    //                     "revision": {
-    //                         "purpose": this.submissionData.revisionPurpose,
-    //                         "changes": []
-    //                     }
-    //                 }
-
-    //                 if (this.submissionData.revisionIDs.length > 0) {
-    //                     this.submissionData.revisionIDs.forEach(
-    //                         (id) => {
-    //                             option.revision.changes.push(this.revisionTypes.getNamebyID(id));
-    //                         }
-    //                     )
-    //                 }
-
-    //             } else {
-    //                 option = {
-    //                     "review": { "notes": this.submissionData.submissionNotes }
-    //                 }
-    //             }
-
-    //             this.mdupdsvc.submit("submit", JSON.stringify(option)).subscribe(
-    //                 (result => {
-    //                     console.log("Submit return:", result);
-    //                 }))
-    //         }
-    //     });
-    // }
-
     openSubmitConfirmDialog() {
         let ngbModalOptions: NgbModalOptions = {
             backdrop: 'static',
@@ -902,7 +854,6 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.modalRef.componentInstance.returnValue.subscribe(
             (submit) => {
                 if ( submit.goSubmit ) {
-                    console.log("Return value", submit);
                     // DBIO Web Service Action:  PATCH /dap/mds3/id/status    
                     // with input: { "action": "submit" }
                     this.mdupdsvc.submit("submit").subscribe((result) => {
@@ -920,7 +871,6 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     submitReview() {
-        console.log("Submit for review...");
         // Finalizing
         this.mdupdsvc.submit("finalize", {"message": "preparing for submission"}).subscribe(
             (result) => {
@@ -930,66 +880,10 @@ export class EditControlComponent implements OnInit, OnChanges {
                     //Then display the pop up window
 
                     this.openSubmitConfirmDialog();
-                    // let ngbModalOptions: NgbModalOptions = {
-                    //     backdrop: 'static',
-                    //     keyboard: false,
-                    //     windowClass: "modal-small",
-                    //     size: 'lg'
-                    // };
-            
-                    // this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
-                    // this.modalRef.componentInstance.revisionType = this.revisionType;
-                    // this.modalRef.componentInstance.returnValue.subscribe(
-                    //     (submit) => {
-                    //         if ( submit ) {
-                    //             console.log("Return value", submit);
-                    //             // DBIO Web Service Action:  PATCH /dap/mds3/id/status    
-                    //             // with input: { "action": "submit" }
-                    //             this.mdupdsvc.finalize("submit").subscribe((result) => {
-                    //                 console.log(result)
-                    //             })
-                    //         }else{
-                    //             console.log("User canceled submit.");//Do nothing
-                    //         }
-                    //     }, 
-                    //     (reason) => {
-                    //         console.log("User canceled submit.");//Do nothing
-                    //     }
-                    // );
                 })
             }
         )
     }
-
-    /**
-     * Once revision type changed, need to check updated fields to see if there is any 
-     * conflict.
-     * @param event - the selected revision type name
-     */
-    // onRevisionTypeChange(event) {
-    //     //Broadcast
-    //     this.edstatsvc.setReviseType(event);
-
-    //     //Need to discuss with Ray on detail logic
-    //     console.log("Event", event);
-    //     switch (event) {
-    //         case "Metadata Update":
-    //             //Check if any file changes
-    //             break;
-    //         case "File removal":
-    //             //What to check?
-    //             break;
-    //         case "Data change (minor)":
-    //             //What to check?
-    //             break;
-    //         case "Data change (major)":
-    //             //What to check?
-    //             break;
-    //         case "New file addition":
-    //             //What to check?
-    //             break;
-    //     }
-    // }
 
     /**
      * Refresh the help text

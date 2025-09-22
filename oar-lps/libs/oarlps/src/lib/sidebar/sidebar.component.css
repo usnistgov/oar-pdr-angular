@@ -13,7 +13,7 @@
 
 .headerbar {
     background-color: rgb(231, 231, 231);
-    padding:3px;
+    padding:3px 3px 0px 3px;
 }
 
 .subtitle {
@@ -40,12 +40,11 @@
 .stepitem:hover {
     background-color: rgb(230, 230, 230);
 }
-/* 
+
 .help-title {
-    margin: auto;
-    text-align: center;
-    color: black;
-} */
+    cursor: pointer;
+    border-bottom: 5px solid #f7f7f7;
+}
 
 .section-title {
     background-color: rgb(231, 231, 231);
@@ -55,8 +54,9 @@
 }
 
 .section-content {
-    margin: 10px;
-    padding-top: 0.5em;
+    margin: 0px;
+    padding-top: 0;
+    overflow: hidden;
 }
 
 .btn-hide-help {
@@ -73,4 +73,8 @@
 
 .revision-help {
     padding: 10px;
+}
+
+.general-help-content {
+    overflow: hidden;
 }
