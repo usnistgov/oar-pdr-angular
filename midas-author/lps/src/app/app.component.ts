@@ -69,7 +69,6 @@ export class AppComponent {
     inBrowser: boolean = false;
     appVersion: string = "1.0"
     authToken: string|null = null;
-    homeButtonLink: string = "";
 
     constructor(private gaService: GoogleAnalyticsService,
                 // public environmentService : EnvironmentService,
@@ -83,7 +82,6 @@ export class AppComponent {
 
     ngOnInit() {
       this.appVersion = this.cfg.get("systemVersion", "X.X") as string;
-      this.homeButtonLink = this.cfg.get("links.portalBase", "") as string;
 
       this.authsvc.getCredentials().subscribe(
         creds => {

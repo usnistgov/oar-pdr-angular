@@ -6,8 +6,8 @@
             <span *ngIf="message" style="margin-left: 1em;margin-right: 1em;font-size:12px">{{message}}</span>
             <span *ngIf="message" style="border: 1px solid white; color: white;cursor: pointer;" (click)="message=''"><i class="fas fa-times"></i></span>
             {{currentMode}}
-            <span *ngIf="mdupdsvc.recStatus.state != 'edit'" class="splitter1"> | </span>
-            <span *ngIf="mdupdsvc.recStatus.state != 'edit'" id="submitted">{{mdupdsvc.recStatus.state}}</span>
+            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" class="splitter1"> | </span>
+            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" id="submitted">{{mdupdsvc.recStatus.state}}</span>
         </div>
 
         <div *ngIf="screenWidth <= screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE" style="color: white; float: left; margin: 0.5em .5em 0em 1em; font-size: 15px;" [ngbTooltip]="editModeTooltip">

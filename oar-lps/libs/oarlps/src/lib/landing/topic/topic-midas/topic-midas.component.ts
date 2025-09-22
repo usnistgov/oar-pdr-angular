@@ -200,7 +200,6 @@ export class TopicMidasComponent implements OnInit {
         postMessage[this.fieldName] = this.restoreTopics(this.topics);
 
         this.mdupdsvc.update(field, postMessage, null, this.fieldName).then((updateSuccess) => {
-            // console.log("###DBG  update sent; success: "+updateSuccess.toString());
             if (updateSuccess) {
                 this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
                 this.record[this.fieldName] = postMessage[this.fieldName];
@@ -210,25 +209,6 @@ export class TopicMidasComponent implements OnInit {
                 console.error("acknowledge topic update failure");
         });
 
-
-        // this.updateResearchTopics();
-
-        // var postMessage: any = {};
-        // postMessage[this.fieldName] = this.record[this.fieldName];
-        
-        // this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-        //     // console.log("###DBG  update sent; success: "+updateSuccess.toString());
-        //     if (updateSuccess) {
-        //         this.notificationService.showSuccessWithTimeout("Research topics updated.", "", 3000);
-
-        //         this.updateResearchTopics();
-        //     } else{
-        //         let msg = "acknowledge topic update failure";
-        //         console.error(msg);
-        //     }
-        // });
-
-        // this.setMode();
         this.dataChanged = false;
     }
 

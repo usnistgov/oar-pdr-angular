@@ -942,8 +942,6 @@ export class DataFilesComponent implements OnInit, OnChanges {
     }
 
     hideOverlay(event, overlaypanel: OverlayPanel) {
-        console.log("event", event);
-        
         overlaypanel.hide();
         this.overlaypanelOn = false;
 

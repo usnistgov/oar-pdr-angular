@@ -404,7 +404,6 @@ export class AccesspageListComponent implements OnInit {
                 delete postMessage.dataChanged;
 
                 this.mdupdsvc.update(this.fieldName, postMessage, compId, this.FieldNameAPI).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
                         // this.dataCommand.next(editmode);
@@ -424,7 +423,6 @@ export class AccesspageListComponent implements OnInit {
                 }
 
                 this.mdupdsvc.update(this.fieldName, postMessage, undefined, this.FieldNameAPI).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
                         // this.dataCommand.next(editmode);

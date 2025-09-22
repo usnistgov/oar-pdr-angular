@@ -178,10 +178,6 @@ export class MetadataUpdateService {
                 let rec = this.dapUpdtSvc.getRecord()
                 this._recStatus = rec.status;
 
-                //Testing - make this record published
-                // this._recStatus["state"] = "published";
-                // console.log("Rec status", this._recStatus);
-
                 if (rec.status?.modified) 
                     this.lastUpdate = {
                         userAttributes: { userName: rec.status?.byWho },
@@ -670,7 +666,6 @@ export class MetadataUpdateService {
                         this.originalDraftRec = JSON.parse(JSON.stringify(res));
                         this.currentRec = JSON.parse(JSON.stringify(res));
                     }else{
-                        console.log("Load data only...")
                         if(res["components"]) {
                             this.originalDraftRec["components"] =
                                 JSON.parse(JSON.stringify(res["components"]));

@@ -323,7 +323,6 @@ export class ContactMidasComponent {
     saveCurrentContact(refreshHelp: boolean = true) {
         var postMessage: any = {};
         postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.currentContact));
-        // console.log('postMessage', JSON.stringify(postMessage));
         
         this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
             if (updateSuccess){
@@ -344,11 +343,9 @@ export class ContactMidasComponent {
         return new Promise<boolean>((resolve, reject) => {
             var postMessage: any = {};
             postMessage[this.fieldName] = JSON.parse(JSON.stringify(contact));
-            // console.log("postMessage", JSON.stringify(postMessage));
             this.record[this.fieldName] = JSON.parse(JSON.stringify(contact));
             
             this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-                // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                 if (updateSuccess){
                     this.notificationService.showSuccessWithTimeout("Contact updated.", "", 3000);
                     resolve(true);

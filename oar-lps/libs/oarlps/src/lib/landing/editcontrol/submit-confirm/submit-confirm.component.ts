@@ -178,10 +178,6 @@ export class SubmitConfirmComponent implements OnInit {
         this.activeModal.close('Close click');
     }    
 
-    // toggle(event) {
-    //     console.log("Checkbox changed:", event);
-    // }
-
     updateSubmissionData(event) {
         this.submissionData = event;
 

@@ -243,7 +243,6 @@ export class TopicEditComponent implements OnInit {
     *   Set text color if the given topic already exists
     */
     getTopicColor(rowNode: any) {
-        // console.log("this.tempTopics", this.tempTopics);
         if(!this.selectedTopics) return ROW_COLOR;
 
         const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);

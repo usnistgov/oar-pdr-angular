@@ -16,31 +16,47 @@
             <p [innerHTML]="revisionHelp['htmlcontent']"></p>
         </div>
 
-        <div *ngIf="showGeneralHelp">
+        <div >
             <div class="headerbar">
                 <div style="float: right; margin: 0px 5px 5px 5px;">
                     <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i class="faa faa-times-circle faa-lg"
                             aria-hidden="true" style="color: orange; cursor: pointer;"></i></a>
                 </div>
-                <div class="help-title">
+                <div class="help-title" (click)="this.showGeneralHelp = !this.showGeneralHelp">
                     {{title}}
+                    <i class="fas expand-btn amplifiable" 
+                        [class.amplified]="isMouseOverGeneralHeader" 
+                        (mouseover)="isMouseOverGeneralHeader = true"
+                        (mouseleave)="isMouseOverGeneralHeader = false"
+                        [ngClass]="{'fa-caret-right': !showGeneralHelp, 'fa-caret-down': showGeneralHelp}" 
+                        aria-label="Show warning steps">
+                    </i>
                 </div>
             </div>
-            <div class="help-frame" [innerHTML]="helpContent">
+            <div class="general-help-content" 
+                [@generalHelpExpand]="showGeneralHelp ? 'visible' : 'hidden'"
+                [innerHTML]="helpContent">
             </div>
             
-            <div class="help-title headerbar">
+            <div class="help-title headerbar" (click)="this.showNextSteps = !this.showNextSteps">
                 <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
                     {{msgCompleted}}
                 </div>
                 <ng-template #nextSteps>
                     Next Steps:
+                    <i class="fas expand-btn amplifiable" 
+                        [class.amplified]="isMouseOverNextSteps" 
+                        (mouseover)="isMouseOverNextSteps = true"
+                        (mouseleave)="isMouseOverNextSteps = false"
+                        [ngClass]="{'fa-caret-right': !showNextSteps, 'fa-caret-down': showNextSteps}" 
+                        aria-label="Show warning steps">
+                    </i>
                 </ng-template>
             </div>
             
             <!-- Suggestions -->
-            @if(!isTestData){
-                <div class="section-content">
+            <!-- @if(!isTestData){ -->
+                <div class="section-content" [@nextStepsExpand]="showNextSteps ? 'visible' : 'hidden'">
                 
                     <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
                                         && (!suggestions['warn'] || suggestions['warn'].length == 0) 
@@ -70,7 +86,7 @@
                         </suggestions>
                     </div>
                 </div>       
-            }
+            <!-- } -->
         </div>
     </div>
 
@@ -80,7 +96,7 @@
             Revision Data (Placeholder)
         </div>
 
-        <div class="section-content">
+        <div class="section-content" style="padding: 10px;">
             <revision-details 
                 [submissionData]="submissionData" 
                 (changedData)="updateSubmissionData($event)"

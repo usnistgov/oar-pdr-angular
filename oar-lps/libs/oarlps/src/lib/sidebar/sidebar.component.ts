@@ -21,7 +21,7 @@ import revisionhelp from '../../assets/site-constants/revision-help.json';
         RevisionDetailsComponent
     ],
     templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css'],
+    styleUrls: ['./sidebar.component.css', '../landing/landing.component.scss'],
     animations: [
         trigger('slideToggle', [
             state(
@@ -62,21 +62,30 @@ import revisionhelp from '../../assets/site-constants/revision-help.json';
                 animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
             ])
         ]),
-        trigger('requiredExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        trigger('generalHelpExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
-        trigger('warnExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-        trigger('recommendedExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
+        trigger('nextStepsExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),        
     ]
 })
 export class SidebarComponent implements OnInit {
@@ -89,16 +98,17 @@ export class SidebarComponent implements OnInit {
     title: string = "General Help";
     msgCompleted: string = "All data has been completed. No more suggestion.";
     // submitResponse: SubmitResponse = {} as SubmitResponse;
-    showRequired: boolean = true;
-    showWarnings: boolean = false;
-    showRecommended: boolean = false;
+    showGeneralHelp: boolean = true;
+    showNextSteps: boolean = true;
     ediid: string = "";
     _editType: string;
     EDIT_TYPES: any = LandingConstants.editTypes;
     submissionData = new SubmissionData();
     public revisionHelp:{} = revisionhelp;
     showRevisionHelp: boolean = false;
-    showGeneralHelp: boolean = true;
+    ignoreRevisionType: boolean = false;
+    isMouseOverGeneralHeader = false;
+    isMouseOverNextSteps = false;
 
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: any = {};
@@ -119,6 +129,13 @@ export class SidebarComponent implements OnInit {
         
             this.edstatsvc.watchEditType((editType) => {
                 this._editType = editType;
+                this.showGeneralHelp = this._editType != this.EDIT_TYPES.REVISE;
+                this.showNextSteps = this.showGeneralHelp;
+
+                //When general help expanded, it will only be controlled manually
+                if (this.showGeneralHelp) {
+                    this.ignoreRevisionType = true;                
+                }
             })
         
             this.globalService.watchSubmissionData(
@@ -315,5 +332,13 @@ export class SidebarComponent implements OnInit {
                 }, 350);
             }
         }
+    }
+
+    toogleGeneralHelp() {
+        this.showGeneralHelp = !this.showGeneralHelp;
+        setTimeout(() => {
+            //Refresh screen
+            this.chref.detectChanges();
+        }, 0);
     }
 }

@@ -8,6 +8,7 @@ import { Sections, SectionPrefs, ResourceType, GlobalService } from '../../share
 import { LandingpageService } from '../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DatePipe } from '@angular/common';
 
 /**
  * A panel inside the EditControlComponent that displays information about the status of 
@@ -55,6 +56,7 @@ export class EditStatusComponent implements OnInit {
         public edstatsvc: EditStatusService,
         public globalsvc: GlobalService,
         private cdr: ChangeDetectorRef,
+        private datePipe: DatePipe,
         public lpService: LandingpageService) {
 
         effect(() => {
@@ -185,7 +187,7 @@ export class EditStatusComponent implements OnInit {
     public showLastUpdate() {
       switch(this._editmode){
         case this.EDIT_MODES.EDIT_MODE:
-            // We are editing the metadata (and are logged in)
+              // We are editing the metadata (and are logged in)
             if (this.updateDetails){
                 let user = "Unknown user";
                 if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userName)
@@ -193,11 +195,18 @@ export class EditStatusComponent implements OnInit {
                 if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userLastName)
                     user = user + " " + this.updateDetails.userAttributes.userLastName;
 
-                let date = "";
-                if(this.updateDetails._updateDate)
-                    date = " on " + this.updateDetails._updateDate;
+                // Check if this record has been edited or published
+               
+                let message = "";
+                if (this.mdupdsvc.recStatus.published) {
+                    message = "Published by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.published * 1000), "MMM d, y, h:mm:ss a"));
+                } else if (this.mdupdsvc.recStatus.submitted) {
+                    message = "Submitted by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.submitted * 1000), "MMM d, y, h:mm:ss a"));
+                } else if (this.mdupdsvc.recStatus.modified) {
+                    message = "Edited by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.modified * 1000), "MMM d, y, h:mm:ss a"));
+                }
 
-                this.showMessage("Edited by " + user + date);
+                this.showMessage(message);
             }else
                 this.showMessage('');
           break;

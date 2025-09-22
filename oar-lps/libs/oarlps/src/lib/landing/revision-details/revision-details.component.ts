@@ -45,7 +45,6 @@ export class RevisionDetailsComponent {
     @Output() command: EventEmitter<any> = new EventEmitter();
         
     ngOnInit(): void {
-        console.log("submissionData", this.submissionData);
         this.allRevisionTypes = this.revisionTypes.getAllTypes();
     }
 
