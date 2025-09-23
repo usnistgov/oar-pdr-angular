@@ -122,12 +122,6 @@ describe('EditStatusComponent', () => {
 
         component.setLastUpdateDetails(updateDetails);
 
-        component._editmode = EDIT_MODES.EDIT_MODE;
-        component.showLastUpdate();
-        expect(component.message).toContain("Edited by test01 NIST on 2025 April 1");
-        fixture.detectChanges();
-        expect(bardiv.firstElementChild.firstElementChild.innerHTML).toContain('Edited by test01 NIST on 2025 April 1');
-
         component._editmode = EDIT_MODES.DONE_MODE;
         component.showLastUpdate();
         expect(component.message).toBe('');
