@@ -52,7 +52,6 @@ export class AccesspageListComponent implements OnInit {
     currentOrderChanged: boolean = false;
     editBlockStatus: string = 'collapsed';
     placeholder: string = "Enter access page data below";
-    fieldName: string = 'components';
     FieldNameAPI: string = 'pdr:see';
     orig_aPages: NerdmComp[] = null; // Keep a copy of original access pages for undo purpose
     orig_record: NerdmRes = null; // Keep a copy of original record for update purpose
@@ -74,6 +73,7 @@ export class AccesspageListComponent implements OnInit {
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
+    @Input() fieldName: string;
     @Input() mdupdsvc : MetadataUpdateService;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
 

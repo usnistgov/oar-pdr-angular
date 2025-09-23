@@ -21,11 +21,11 @@ import { ButtonModule } from 'primeng/button';
 export class AccesspageEditComponent implements OnInit {
     originalApage: NerdmComp = {} as NerdmComp;
     editBlockStatus: string = 'collapsed';
-    fieldName: string = 'components';
     accessPage: NerdmComp = {} as NerdmComp;
 
     @Input() currentApage: NerdmComp = {} as NerdmComp;
     @Input() editMode: string = "edit";
+    @Input() fieldName: string;
     @Input() forceReset: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
