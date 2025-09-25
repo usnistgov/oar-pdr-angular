@@ -801,6 +801,18 @@ export class MetadataUpdateService {
     }
 
     /**
+     * sync the file metadata with the contents of the file space and return the 
+     * file space summary information.
+     */
+    public syncDataFiles() : Observable<Object> {
+        if (!this.dapUpdtSvc) {
+            console.error("Attempted to update without authorization!  Ignoring update.");
+            return of({});
+        }
+        return this.dapUpdtSvc.syncFiles();
+    }
+
+    /**
      * load files from the file manager.
      */
     public loadDataFiles(onSuccess?: () => void): Observable<Object> {
@@ -808,7 +820,7 @@ export class MetadataUpdateService {
             console.error("Attempted to update without authorization!  Ignoring update.");
             return of({});
         }
-        return this.dapUpdtSvc.getDataSubset("pdr:files").pipe(
+        return this.dapUpdtSvc.getDataSubset("pdr:f").pipe(
             tap((res) => {
                 if (onSuccess) onSuccess();
             }),

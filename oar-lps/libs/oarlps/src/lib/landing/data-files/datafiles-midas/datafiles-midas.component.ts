@@ -227,39 +227,35 @@ export class DatafilesMidasComponent {
      */
     reloadFiles() {
         this.refreshFilesIcon = "faa faa-spinner faa-spin icon-white";
-        this.mdupdsvc.loadDataFiles().subscribe( data => {
-            this.mdupdsvc.loadDraft(true).subscribe({
-                next: (md) => 
-                {
-                    if(md)
-                    {
-                        this.mdupdsvc.cacheMetadata(md as NerdmRes);
-                        this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
+        this.mdupdsvc.syncDataFiles().subscribe({
+            next: (fsdata) => {
+                this.mdupdsvc.loadDraft(true).subscribe({
+                    next: (md) => {
+                        if(md) {
+                            this.mdupdsvc.cacheMetadata(md as NerdmRes);
+                            this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
 
-                        if (md['components']) 
-                            this.record['components'] = JSON.parse(JSON.stringify(md['components']));
-                        else
-                            this.record['components'] = []
+                            if (md['components']) 
+                                this.record['components'] = JSON.parse(JSON.stringify(md['components']));
+                            else
+                                this.record['components'] = []
                         
-                        // this.buildTree(this.record['components']); // Will rebuild in pub component
-                    }else{
-                        this.msgsvc.error("Fail to retrive updated dataset.");
+                            // this.buildTree(this.record['components']); // Will rebuild in pub component
+                        }else{
+                            this.msgsvc.error("Fail to retrive updated dataset.");
+                        }
+                        this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+                    },
+                    error: (err) => {
+                        console.error("Failed to pull updated record: ", err);
+                        this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
                     }
-
-                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                }
-                // error: (err) => 
-                // {
-                //     if(err.statusCode == 404)
-                //     {
-                //         console.error("404 error.");
-                //         this.mdupdsvc.resetOriginal();
-                //         this.msgsvc.error(err.message);
-                //     }
-
-                //     this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                // }
-            });
+                });
+            },
+            error: (err) => {
+                console.error("Failed to trigger file sync: ", err);
+                this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+            }
         });
     }
 
