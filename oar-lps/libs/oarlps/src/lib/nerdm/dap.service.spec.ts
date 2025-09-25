@@ -192,6 +192,14 @@ describe('LocalDAPService/LocalDAPUpdateService', function() {
         expect(dap.getRecord().name).toEqual("gurn");
     });
 
+    it("syncFiles", async () => {
+        let dap: dapsvc.DAPUpdateService = await svc.create("goober").toPromise();
+        expect(dap.name).toEqual("goober");
+        let filespace: Object = await dap.syncFiles().toPromise();
+        expect(filespace).toEqual({"action": "sync"});
+        expect(filespace['action']).toEqual("sync");
+    });
+
 });
 
 describe("MIDASDAPService/MIDASDAPUpdateService", function() {
@@ -472,5 +480,23 @@ describe("MIDASDAPService/MIDASDAPUpdateService", function() {
         expect(dap.getRecord().name).toEqual("gurn");
     });
     
+    it("syncFiles", async () => {
+        let pc = svc.create("goober").toPromise();
+        let req = httpmock.expectOne(ep);
+        expect(req.request.method).toBe('POST');
+        req.flush(newrec("goober"));
+        let dap: dapsvc.DAPUpdateService = await pc;
+
+        expect(dap.getRecord().name).toEqual("goober");
+        expect(dap.name).toEqual("goober");
+
+        let p = dap.syncFiles().toPromise();
+        req = httpmock.expectOne(ep+"/mds3:0001/file_space");
+        expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual({"action": "sync", "full": true});
+        req.flush({"action": "sync", "full": true});
+        expect(await p).toEqual({"action": "sync", "full": true});
+    });
+
 
 });

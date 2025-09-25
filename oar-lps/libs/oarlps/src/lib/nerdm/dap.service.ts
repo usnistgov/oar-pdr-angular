@@ -167,6 +167,15 @@ export abstract class DAPUpdateService {
     abstract setName(newname: string) : Observable<string>;
 
     /**
+     * update the file metadata to sync it to the files in the file manager
+     * @param fastscan  If true, ask the server to do only a quick rescan of 
+     *                  the files, prioritizing getting a complete list of 
+     *                  files over getting full extracted metadata.  This is 
+     *                  parameter is advisory only.
+     */
+    abstract syncFiles(fastscan?: boolean): Observable<Object>;
+
+    /**
      * review and validate the status of the record and return recommendations
      */
     abstract validate() : Observable<Object>;
@@ -184,7 +193,7 @@ export abstract class DAPUpdateService {
     /**
      *  Submit the request
      */
-        abstract submit(): Observable<Object>;
+    abstract submit(): Observable<Object>;
 }
 
 /**
@@ -455,7 +464,7 @@ function _headersFor(svc: SupportsAuthentication, meth: string) {
     meth = meth.toLowerCase();
     if (meth != "head")
         out['Accept'] = "application/json";
-    if (meth == "post" || meth == "put")
+    if (meth == "post" || meth == "put" || meth == "patch")
         out['Content-type'] = "application/json";
     if (svc.authToken)
         out['Authorization'] = "Bearer " + svc.authToken;
@@ -751,6 +760,24 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
 
         return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
     }
+
+    /**
+     * update the file metadata to sync it to the files in the file manager
+     * @param fastscan  If true, ask the server to do only a quick rescan of 
+     *                  the files, prioritizing getting a complete list of 
+     *                  files over getting full extracted metadata.  This is 
+     *                  parameter is advisory only.
+     */
+    syncFiles(fastscan: boolean = false): Observable<Object> {
+        const url = this.endpoint + this.recid + "/file_space";
+        const hdrs = _headersFor(this, "put");
+        let body = {
+            "action": "sync",
+            "full": ! fastscan
+        };
+
+        return this.webclient.put(url, body, {headers: hdrs, responseType: "json"});
+    }
 }
 
 /**
@@ -816,7 +843,16 @@ export class LocalDAPService extends DAPService {
             id: this._newid(),
             name: name,
             meta: meta,
-            data: data
+            data: data,
+            status: {
+                status: "edit",
+                action: "create",
+                message: "created",
+                todo: { 'REQ': [], 'WARN': [], 'REC': [] }
+            },
+            file_space: {
+                action: "create",
+            }
         };
         try {
             req = this._initialize(req);
@@ -1210,9 +1246,20 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
     // }
 
     submit(action: string = 'submit', option: any = {}): Observable<Object> {
-        return of({
-            'REQ': [], 'WARN': [], 'REC': []
-        });
+        if (this._rec['status'] === undefined)
+            this._rec['status'] = {};
+        this._rec['status']['action'] = "submit";
+        this._rec['status']['message'] = "submitted";
+        this._saveRec(this._rec);
+        return of(this._rec['status']);
+    }
+
+    syncFiles(fastscan: boolean = false): Observable<Object> {
+        if (this._rec['file_space'] === undefined)
+            this._rec['file_space'] = {};
+        this._rec['file_space']['action'] = "sync";
+        this._saveRec(this._rec);
+        return of(this._rec['file_space']);
     }
 }
 

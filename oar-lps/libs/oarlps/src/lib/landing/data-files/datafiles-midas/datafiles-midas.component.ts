@@ -228,11 +228,24 @@ export class DatafilesMidasComponent {
         // }     
     }
 
+    refreshFiles() {
+        this.refreshFilesIcon = "faa faa-spinner faa-spin icon-white";
+        this.mdupdsvc.syncDataFiles().subscribe(
+            fsdata => {
+                this.reloadFiles();
+                this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+            },
+            err => {
+                console.error("Failed to trigger file sync: ", err);
+                this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+            }
+        );
+    }
+
     /**
      * Reload data files
      */
     reloadFiles() {
-        this.refreshFilesIcon = "faa faa-spinner faa-spin icon-white";
         this.mdupdsvc.loadDataFiles().subscribe( data => {
             this.mdupdsvc.loadDraft(true).subscribe({
                 next: (md) => 
@@ -251,8 +264,6 @@ export class DatafilesMidasComponent {
                     }else{
                         this.msgsvc.error("Fail to retrive updated dataset.");
                     }
-
-                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
                 }
                 // error: (err) => 
                 // {
