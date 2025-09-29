@@ -8,6 +8,9 @@ import { AppServerModule } from './src/main.server';
 import { APP_BASE_HREF } from '@angular/common';
 import { existsSync } from 'fs';
 
+import * as cluster from 'cluster';
+import * as os from 'os';
+
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
   const server = express();
@@ -45,6 +48,29 @@ function run(): void {
   server.listen(port, () => {
     console.log(`Node Express server listening on http://localhost:${port}`);
   });
+}
+
+
+// Replace the single-process startup with a cluster-based startup
+if (cluster.isMaster) {
+  const cpus = parseInt(
+    process.env['WEB_CONCURRENCY'] || String(os.cpus().length),
+    10
+  );
+  console.log(`Master ${process.pid} is starting ${cpus} workers`);
+  for (let i = 0; i < cpus; i++) {
+    cluster.fork();
+  }
+
+  cluster.on('exit', (worker, code, signal) => {
+    console.warn(
+      `Worker ${worker.process.pid} died (code=${code}, signal=${signal}), forking a new one`
+    );
+    cluster.fork();
+  });
+} else {
+  // Worker processes run the server
+  run();
 }
 
 // Webpack will replace 'require' with '__webpack_require__'
