@@ -11,7 +11,7 @@ import { existsSync } from "fs";
 import * as cluster from "cluster";
 import * as os from "os";
 
-// --- added: simple timestamped logging helpers ---
+// --- logging helpers ---
 function ts(): string {
   return new Date().toISOString();
 }
@@ -24,7 +24,7 @@ function logWarn(...args: any[]) {
 function logError(...args: any[]) {
   console.error(ts(), "ERROR", ...args);
 }
-// --- end added logging helpers ---
+// --- end helpers ---
 
 // The Express app is exported so that it can be used by serverless Functions.
 export function app(): express.Express {
@@ -47,6 +47,7 @@ export function app(): express.Express {
 
   // Example Express Rest API endpoints
   // server.get('/api/**', (req, res) => { });
+
   // Serve static files from /browser
   server.get(
     "*.*",
@@ -67,60 +68,106 @@ export function app(): express.Express {
 }
 
 function run(): void {
-  const port = process.env["PORT"] || 4000;
+  const port = parseInt(process.env["PORT"] || "4000", 10);
 
   // Start up the Node server
   const server = app();
-  server.listen(port, () => {
-    logInfo(`Node Express server listening on http://localhost:${port} (pid=${process.pid})`);
-  });
-}
 
-// Replace the single-process startup with a cluster-based startup
-if (cluster.isMaster) {
-  const cpus = parseInt(
-    process.env["WEB_CONCURRENCY"] || String(os.cpus().length),
-    10
-  );
-  logInfo(`Master ${process.pid} is starting ${cpus} workers`);
-  for (let i = 0; i < cpus; i++) {
-    cluster.fork();
+  // attach error handler to the server to avoid unhandled 'error' events
+  server.on("error", (err: any) => {
+    logError("Server 'error' event:", err && err.stack ? err.stack : err);
+  });
+
+  // listen and log; catch errors synchronously to avoid unhandled 'error' throws
+  let httpServer;
+  try {
+    httpServer = server.listen(port, () => {
+      logInfo(`Node Express server listening on http://0.0.0.0:${port} (pid=${process.pid})`);
+    });
+  } catch (err: any) {
+    // listen can throw synchronously in some cluster setups
+    logError("listen() threw:", err && err.stack ? err.stack : err);
+    if (err && (err.code === "EADDRINUSE" || err.code === "EACCES")) {
+      // Exit so the supervisor / master can handle restarting/forking logic
+      process.exit(1);
+    }
+    throw err;
   }
 
-  cluster.on("exit", (worker, code, signal) => {
-    logWarn(
-      `Worker ${worker.process.pid} died (code=${code}, signal=${signal}), forking a new one`
-    );
-    cluster.fork();
-  });
-} else {
-  // Worker processes run the server
-  run();
+  // also handle async errors on the http server object
+  if (httpServer) {
+    httpServer.on("error", (err: any) => {
+      logError("HTTP server error:", err && err.stack ? err.stack : err);
+      if (err && (err.code === "EADDRINUSE" || err.code === "EACCES")) {
+        // Exit on bind errors to avoid silent failure and respawn cleanly
+        process.exit(1);
+      }
+    });
+  }
 }
 
-// Webpack will replace 'require' with '__webpack_require__'
-// '__non_webpack_require__' is a proxy to Node 'require'
-// The below code is to ensure that the server is run only when not requiring the bundle.
+// ---- Startup/cluster logic ----
+// Gate startup on being the main module (prevents double-start when required)
 declare const __non_webpack_require__: NodeRequire;
 const mainModule = __non_webpack_require__.main;
 const moduleFilename = (mainModule && mainModule.filename) || "";
+const isMainModule = moduleFilename === __filename || moduleFilename.includes("iisnode");
 
-const isMainModule =
-  moduleFilename === __filename || moduleFilename.includes("iisnode");
-// cluster.isPrimary is available in newer Node versions; fall back to isMaster if needed
-const isClusterMaster =
-  (cluster as any).isPrimary !== undefined
+// Immediate startup log to clarify role
+logInfo("process started", {
+  pid: process.pid,
+  isMainModule,
+  isPrimary: (cluster as any).isPrimary ?? (cluster as any).isMaster,
+  isWorker: (cluster as any).isWorker ?? false,
+});
+
+// If this is not the main module, don't start the server/cluster here
+if (!isMainModule) {
+  // Export only; caller will manage server lifecycle
+  export * from "./src/main.server";
+  // stop further startup actions
+  // (Note: the above export is for bundlers; nothing else to do here)
+} else {
+  // This is the main module: set up cluster or run directly
+  const isPrimary = (cluster as any).isPrimary !== undefined
     ? (cluster as any).isPrimary
     : (cluster as any).isMaster;
 
-// --- added: immediate startup role log to aid debugging ---
-logInfo("process started", { pid: process.pid, isMainModule, isClusterMaster });
-// --- end added startup log ---
+  const cpus = Math.max(1, parseInt(process.env["WEB_CONCURRENCY"] || String(os.cpus().length), 10));
 
-// Only start the server here if this invocation is the main module AND this process
-// is not the cluster master (workers already call run() in the cluster branch above).
-if (isMainModule && !isClusterMaster) {
-  run();
+  if (isPrimary) {
+    // Primary / master process: fork workers
+    logInfo(`Primary ${process.pid} is starting ${cpus} worker(s)`);
+    for (let i = 0; i < cpus; i++) {
+      cluster.fork();
+    }
+
+    cluster.on("exit", (worker, code, signal) => {
+      logWarn(`Worker ${worker.process.pid} died (code=${code}, signal=${signal}), forking a new one`);
+      // small backoff to avoid tight fork loop
+      setTimeout(() => cluster.fork(), 100);
+    });
+
+    // optional: listen for worker messages for health reporting
+    cluster.on("online", (worker) => {
+      logInfo(`Worker ${worker.process.pid} is online`);
+    });
+  } else {
+    // This is a worker process: start the HTTP server
+    run();
+  }
+
+  // graceful logging for uncaught errors in both primary/workers
+  process.on("uncaughtException", (err) => {
+    logError("uncaughtException:", err && err.stack ? err.stack : err);
+    // exit to let master/supervisor restart this process
+    setTimeout(() => process.exit(1), 100);
+  });
+  process.on("unhandledRejection", (reason) => {
+    logError("unhandledRejection:", reason);
+    setTimeout(() => process.exit(1), 100);
+  });
+
+  // export for bundlers/other importers
+  export * from "./src/main.server";
 }
-
-export * from "./src/main.server";
