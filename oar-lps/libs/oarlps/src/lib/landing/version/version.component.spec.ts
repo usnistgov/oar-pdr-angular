@@ -27,7 +27,6 @@ describe('VersionComponent', () => {
         component = fixture.componentInstance;
         component.record = JSON.parse(JSON.stringify(rec));
         component.landingPageServiceStr = "od/id/";
-        // fixture.detectChanges();
     }
 
     beforeEach(waitForAsync(() => {
@@ -40,11 +39,11 @@ describe('VersionComponent', () => {
         let cmpel = fixture.nativeElement;
         let spans = cmpel.querySelectorAll("span"); 
         expect(spans[0].textContent).toContain("Version:");
-        expect(spans[0].textContent).toContain("1.0.1");
-        expect(spans[2].textContent).toContain("Released:");
-        expect(spans[2].textContent).toContain("2019-04-05");
-        expect(spans[3].textContent).toContain("Last modified:");
-        expect(spans[3].textContent).toContain("2019-03-27");
+        expect(spans[0].textContent).toContain("1.0");
+        expect(spans[2].textContent).toContain("First Released:");
+        expect(spans[2].textContent).toContain("2019-03-27");
+        expect(spans[3].textContent).toContain("Revised:");
+        expect(spans[3].textContent).toContain("2019-03-28");
     });
 
     it('test renderRelAsLink()', () => {
@@ -120,20 +119,11 @@ describe('VersionComponent', () => {
         expect(component.visibleHistory).toBeFalsy();
         let cmpel = fixture.nativeElement;
         let divs = cmpel.querySelectorAll("div"); 
-        expect(divs.length).toBe(2);
+        expect(divs.length).toBe(3);
         expect(divs[1].style.display).toBe("none");
 
         component.expandHistory();
         expect(component.visibleHistory).toBeTruthy();
-
-        /*
-         * can't figure out how to trigger rerendering within unit test
-         *
-        fixture.detectChanges();
-        divs = cmpel.querySelectorAll("div"); 
-        expect(divs.length).toBe(2);
-        expect(divs[1].style.display).not.toBe("none");
-         */
     });
 
 });

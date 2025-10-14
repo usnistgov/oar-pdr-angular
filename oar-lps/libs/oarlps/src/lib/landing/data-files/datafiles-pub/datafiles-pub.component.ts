@@ -1,4 +1,4 @@
-import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef, inject, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { CartService } from '../../../datacart/cart.service';
 import { NerdmRes, NerdmComp } from '../../../nerdm/nerdm';
@@ -21,10 +21,71 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BadgeModule } from 'primeng/badge';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
-import { DataFileItem } from '../data-files-to-be-deleted.component';
+// import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BulkConfirmComponent } from '../bulk-confirm/bulk-confirm.component';
 import { AppConfig } from '../../../config/config';
+import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
+import * as MediaTypeMapping from '../../../../assets/fext2format.json';
+
+// Define the maximum and minimum height for the virtual scroll window of the tree table.
+// We set maximum window size because the bigger the size the slower the performance.
+const MaxTreeTableHeight = 200;
+const MinTreeTableHeight = 25;
+
+// Define the threshold on when to use virtual scrolling. That is, if the total file count of the 
+// dataset is greater than FileCountForVirtualScroll, the virtual scrolling display will be turned on.
+const FileCountForVirtualScroll = 25;
+
+declare var _initAutoTracker: Function;
+// const MediaTypeMapping: any  = require('../../../assets/fext2format.json');
+
+/**
+ * the structure used as the data item in a TreeNode displaying a file or collection component
+ */
+interface DataFileItem {
+
+    /**
+     * a unique key for identifying this item
+     */
+    key : string;
+
+    /**
+     * the name of the file or collection
+     */
+    name : string;
+
+    /**
+     * the NERDm component metadata
+     */
+    comp : NerdmComp;
+
+    /**
+     * a display rendering of the size of the file
+     */
+    size : string;
+
+    /**
+     * a display rendering of the file's media type
+     */
+    mediaType : string;
+
+    /**
+     * true if the component is currently in the global data cart
+     */
+    isInCart? : boolean;
+
+    /**
+     * a label indicating the download status of this file
+     */
+    downloadStatus? : string;
+
+    /**
+     * a number representing the progress toward completing the download of this file. 
+     * (Note: use of this feature is currently disabled.)
+     */
+    downloadProgress? : number;
+}
 
 @Component({
     selector: 'lib-datafiles-pub',
@@ -117,10 +178,20 @@ export class DatafilesPubComponent {
     bulkDownloadURL: string = "";
     downloadableFileLimit: number = 300; // Max number of files downloadable through lps 
     showBulkDesc: boolean = false;
+    searchText: string = "";
+
+    virtualScroll: boolean = false;
+    mouse: any = {x:0, y:0};
+    mouseDragging: boolean = false;
+    prevMouseY: number = 0;
+    prevTreeTableHeight: number = 0;
+    treeTableHeight: number = 25; //Default height of the tree table
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
         
+    @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
+    
     constructor(private cartService: CartService,
                 public breakpointObserver: BreakpointObserver,
                 public lpService: LandingpageService, 
@@ -128,14 +199,15 @@ export class DatafilesPubComponent {
                 private chref: ChangeDetectorRef,
                 private modalService: NgbModal,
                 public edstatsvc: EditStatusService,
+                private gaService: GoogleAnalyticsService,
                 private cfg: AppConfig,
                 private ngZone: NgZone)
     {
         this.cols = [
             { field: 'name', header: 'Name', width: '60%' },
-            { field: 'mediaType', header: 'Media Type', width: 'auto' },
+            { field: 'mediaType', header: 'File Type', width: 'auto' },
             { field: 'size', header: 'Size', width: 'auto' },
-            { field: 'download', header: 'Status', width: 'auto' }];
+            { field: 'download', header: 'Access', width: 'auto' }];
 
         if (typeof (window) !== 'undefined') {
             window.onresize = (e) => {
@@ -231,6 +303,36 @@ export class DatafilesPubComponent {
         this.chref.detectChanges();
     }
 
+
+    // The following mouse functions handle drag action (for virtual scrolling window of the tree table)
+    @HostListener('window:mousemove', ['$event'])
+    onMouseMove(event: MouseEvent){
+        this.mouse = {
+            x: event.clientX,
+            y: event.clientY
+        }
+
+        if(this.mouseDragging) {
+            let diff = this.mouse.y - this.prevMouseY;
+            this.treeTableHeight = this.prevTreeTableHeight + diff;
+            this.treeTableHeight = this.treeTableHeight < 26? 25 : this.treeTableHeight;
+        }
+    }
+
+    onMousedown(event) {
+        this.prevMouseY = this.mouse.y;
+        this.prevTreeTableHeight = this.treeTableHeight;
+        this.mouseDragging = true;
+    }
+
+    @HostListener('window:mouseup', ['$event'])
+    onMouseUp(event) {
+        this.mouseDragging = false;
+    }
+
+    // --- end of mouse drag functions
+
+
     useMetadata() {
         this.ediid = this.record['ediid'];
 
@@ -239,6 +341,13 @@ export class DatafilesPubComponent {
 
         this.buildTree(this.record['components']);
         this.edstatsvc.setShowLPContent(true);
+
+        // If total file count > virtual scrolling threshold, set virtual scrolling to true. 
+        this.virtualScroll = this.fileCount > FileCountForVirtualScroll? true : false;
+
+        // If number of top level elements > 5, set table height to MaxTreeTableHeight, otherwise set it to actual rows * 25 pixels
+        this.treeTableHeight = this.files.length > 5 ? MaxTreeTableHeight : this.files.length * 25;
+
     }
 
     /**
@@ -377,6 +486,38 @@ export class DatafilesPubComponent {
     }
 
     /**
+     * Set tree table height when user expands/collapses the top level
+     * @param event 
+     * @returns 
+     */
+    treeTableToggled(event: any = null) {
+        //Set tree table's height based on the tree status
+        // If only one top level folder and user collapses it, set window to MinTreeTableHeight.
+        // Else if only one file (not folder) in the table,  set window to MinTreeTableHeight.
+        // Else if only one top level folder and table height is MinTreeTableHeight and user expands the top folder, set window to MaxTreeTableHeight.
+        // Else leave the height as it is.
+
+        let expanded: boolean = false;
+        this.files.forEach((file) => {
+            if(file.expanded) expanded = true;
+        })
+        this.isExpanded = expanded;
+        
+        if(this.files.length == 1 && !this.files[0].expanded){
+            this.treeTableHeight = MinTreeTableHeight;
+        }else{
+            if(this.fileCount <= 1  || this.treeTableHeight < MinTreeTableHeight) {
+                this.treeTableHeight = MinTreeTableHeight;
+            }else{
+                if(this.treeTableHeight == MinTreeTableHeight){
+                    this.treeTableHeight = MaxTreeTableHeight;
+                }
+            }
+        }
+    }
+
+
+    /**
      * Function to expand tree display to certain level
      * @param dataFiles - file tree
      * @param expanded - expand flag 
@@ -415,6 +556,59 @@ export class DatafilesPubComponent {
             this.visible = true;
         }, 0);
     }
+
+
+    /**
+     * Set visible and expand status of a given tree
+     * @param tree The tree to be set
+     * @param nodesProp node property, in this case 'children'.
+     * @param prop property of the nodesprop, in this case 'data'.
+     * @param visible visibility of this tree
+     * @param expand expand state of this tree
+     */
+    setTree(tree, nodesProp, prop, visible, expand) {
+        tree.forEach(treenode => {
+            if (typeof tree === 'object') { // standard tree node (one root)
+                treenode["data"]["visible"] = visible;
+            }
+
+            // if this is not maching node, search nodes, children (if prop exist and it is not empty)
+            if (treenode[nodesProp] !== undefined && treenode[nodesProp].length > 0) { 
+                treenode["expanded"] = expand;
+                return this.setTree(treenode[nodesProp], nodesProp, prop, visible, expand);
+            }
+        })
+    }
+
+    /**
+     * Reset the tree to it's original state: collapsed and visible.
+     */
+    resetTree(){
+        this.searchText = "";
+        this.setTree(this.files, 'children', 'name', true, false);
+    }
+
+    /**
+     * Expand or collapse the tree
+     * @param expand Indicating if the action is expand
+     */
+    toogleTree(expand = false, refresh = false) {
+        this.setTree(this.files, 'children', 'name', true, expand);
+        this.treeTableToggled();
+        if(refresh)
+            this.refreshTreeTable()
+    }
+
+    /**
+     * Refresh the tree table display by turning the visibility off and on. 
+     */
+    refreshTreeTable(){
+        this.visible = false;
+        setTimeout(() => {
+            this.visible = true;
+        }, 0);
+    }
+
 
     /**
      * Function to reset the download status and incart status.
@@ -887,4 +1081,26 @@ export class DatafilesPubComponent {
             }
         );
     }    
+
+    /**
+     * Map file extension to standard media type using a lookup json file. Default value is blank.
+     * @param rowData tree node 
+     * @returns mapped media type
+     */
+    mediaTypeLookup(rowData: any): string {
+        let ext = rowData.comp.filepath.substr(rowData.comp.filepath.lastIndexOf('.') + 1)
+        let mType: string = MediaTypeMapping[ext];
+        return mType == undefined ? "" : mType;
+    }
+
+    /**
+     * Google Analytics track event
+     * @param url - URL that user visit
+     * @param event - action event
+     * @param title - action title
+     */
+    googleAnalytics(url: string, event, title) {
+        this.gaService.gaTrackEvent('homepage', event, title, url);
+    }      
+
 }
