@@ -366,13 +366,14 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             }
         },
         (err) => {
-            console.error("Failed to retrieve metadata: ", err);
             this.globalService.setShowLPContent(true);
             if (err instanceof IDNotFound) {
+                console.error("ID not found - navigating to not-found page: ", err);
                 metadataError = "not-found";
                 this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
             }
             else {
+                console.error("Failed to retrieve metadata: ", err);
                 metadataError = "int-error";
                 // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
                 this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
