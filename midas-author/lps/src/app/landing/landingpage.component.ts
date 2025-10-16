@@ -504,12 +504,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
           }else{
             //Not authenticated:
               this.globalService.setAuthenticated(false);
-            if(this.inBrowser)
-                this.displayOnly();
+              this.displayOnly();
           }
       }else{
-        if(this.inBrowser)
-            this.displayOnly();
+        this.displayOnly();
       }
     }
 

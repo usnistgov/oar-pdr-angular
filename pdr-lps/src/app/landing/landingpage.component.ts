@@ -322,9 +322,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
 
         this.globalService.setShowLPContent(true);
-        // if (this.inBrowser) {
-            this.loadPublicData();
-        // }
+        this.loadPublicData();
     }
 
     loadPublicData() {
