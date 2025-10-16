@@ -330,7 +330,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     loadPublicData() {
         let metadataError = "";
 
-        this.nerdmReserv.getResource(this.reqId, true).subscribe(
+        this.nerdmReserv.getResource(this.reqId, this.inBrowser).subscribe(
             (data) => {
             // successful metadata request
             this.md = data;
