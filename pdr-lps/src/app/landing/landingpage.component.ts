@@ -322,13 +322,15 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
 
         this.globalService.setShowLPContent(true);
-        this.loadPublicData();
+        if (this.inBrowser) {
+            this.loadPublicData();
+        }
     }
 
     loadPublicData() {
         let metadataError = "";
 
-        this.nerdmReserv.getResource(this.reqId).subscribe(
+        this.nerdmReserv.getResource(this.reqId, true).subscribe(
             (data) => {
             // successful metadata request
             this.md = data;

@@ -503,11 +503,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             })
           }else{
             //Not authenticated:
-            this.globalService.setAuthenticated(false);
-            this.displayOnly();
+              this.globalService.setAuthenticated(false);
+            if(this.inBrowser)
+                this.displayOnly();
           }
       }else{
-        this.displayOnly();
+        if(this.inBrowser)
+            this.displayOnly();
       }
     }
 
@@ -528,7 +530,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
       let metadataError = "";
       var showError: boolean = true;
 
-      this.nerdmReserv.getResource(this.reqId).subscribe(
+      this.nerdmReserv.getResource(this.reqId, this.inBrowser).subscribe(
         (data) => {
           // successful metadata request
           this.md = data;

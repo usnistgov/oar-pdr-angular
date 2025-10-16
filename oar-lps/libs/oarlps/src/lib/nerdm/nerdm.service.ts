@@ -24,7 +24,7 @@ export abstract class NERDmResourceService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    abstract getResource(id : string) : Observable<NerdmRes>;
+    abstract getResource(id : string, inBrowser: boolean) : Observable<NerdmRes>;
 }
 
 /**
@@ -65,21 +65,25 @@ export class CachingNERDmResourceService extends NERDmResourceService {
         return this.cache.get(id) as NerdmRes;
     }
 
-    getResource(id: string): Observable<NerdmRes> {
+    getResource(id: string, inBrowser: boolean=false): Observable<NerdmRes> {
         let rec: NerdmRes = this.queryCache(id);
         if (rec !== undefined)
             return rxjs.of(rec);
 
-        let out$ = this.del.getResource(id);
-        out$.subscribe({
-            next: (rcrd) => { this.cacheRecord(id, rcrd); },
-            error: (err) => {
-                if (err instanceof errors.IDNotFound)
-                    this.cacheRecord(id, null);
-                return throwError(() => new Error(err));
-            }
-        })
-        return out$;
+        if (inBrowser) {
+            return rxjs.of(null);
+        } else {
+            let out$ = this.del.getResource(id, false);
+            out$.subscribe({
+                next: (rcrd) => { this.cacheRecord(id, rcrd); },
+                error: (err) => {
+                    if (err instanceof errors.IDNotFound)
+                        this.cacheRecord(id, null);
+                    return throwError(() => new Error(err));
+                }
+            })
+            return out$;            
+        }
     }
 }
 
@@ -106,7 +110,7 @@ export class ServerDiskCacheResourceService extends NERDmResourceService {
      * 
      * @param id   the identifier of the resource to load
      */
-    getResource(id : string) : Observable<NerdmRes> {
+    getResource(id : string, inBrowser: boolean=false) : Observable<NerdmRes> {
         let file : string = this.cachedir + "/" + id + ".json";
         console.log("Reading NERDm record from local file: "+file);
 
@@ -161,7 +165,7 @@ export class TransferResourceService extends NERDmResourceService {
      * 
      * @param id   the identifier of the resource to load
      */
-    getResource(id : string) : Observable<NerdmRes> {
+    getResource(id : string, inBrowser: boolean=false) : Observable<NerdmRes> {
         return rxjs.of(this.mdtrx.get(id) as NerdmRes);
     }
 }
@@ -196,7 +200,7 @@ export class RemoteWebResourceService extends NERDmResourceService implements Su
      *
      * @param id   the identifier of the resource to load
      */
-    getResource(id : string) : Observable<NerdmRes> {
+    getResource(id : string, inBrowser: boolean=false) : Observable<NerdmRes> {
         let url = this.endpoint;
         if (! url.includes('?') && ! url.endsWith('/'))
             url += '/';
@@ -254,7 +258,7 @@ export class RMMResourceService extends NERDmResourceService {
      *
      * @param id   the identifier of the resource to load
      */
-    getResource(id : string) : Observable<NerdmRes> {
+    getResource(id : string, inBrowser: boolean=false) : Observable<NerdmRes> {
         let url = this.endpoint;
         if (id.startsWith("ark:/"))
             url += "?@id=";
@@ -340,7 +344,7 @@ export class AngularEnvironmentResourceService extends NERDmResourceService {
      * @param id        the NERDm record's identifier
      * @return Observable<NerdmRes>    an Observable that will resolve to a NERDm record
      */
-    getResource(id : string) : Observable<NerdmRes> {
+    getResource(id : string, inBrowser: boolean=false) : Observable<NerdmRes> {
         return rxjs.of(this.ngenv.testdata[id]);
     }
 }

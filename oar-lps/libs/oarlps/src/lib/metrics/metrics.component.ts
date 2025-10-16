@@ -138,7 +138,7 @@ export class MetricsComponent implements OnInit {
             this.ediid = queryParams.id;
             this.pdrHomeUrl = this.lps + this.ediid;
             // Get dataset title
-            this.nerdmReserv.getResource(this.ediid).subscribe(md => {
+            this.nerdmReserv.getResource(this.ediid, this.inBrowser).subscribe(md => {
             // this.searchService.searchById(this.ediid, true).subscribe(md => {
                 if(md) {
                     this.record = md as NerdmRes;
