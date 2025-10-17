@@ -10,6 +10,7 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
 import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
+import { CheckboxRequiredValidator } from '@angular/forms';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -1062,10 +1063,35 @@ export class FiltersComponent implements OnInit {
             this.collectionThemesWithCount[collection].upsertNodeFor(sortable[key], 1, searchResults, collection, this.taxonomyURI);
         }
 
+        this.deDup(this.collectionThemesWithCount[collection]);
+
         if (sortable.length > 5) {
             this.showMoreLink = true;
         } else {
             this.showMoreLink = false;
+        }
+    }
+
+    deDup(collectionThemesWithCountCol: any) {
+        if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 1) {
+            collectionThemesWithCountCol.children.forEach(child => {
+                if (child.children && child.children.length > 1) {
+                    this.deDup(child);
+                } else {
+                    for (var i = 0; i < collectionThemesWithCountCol.children.length; i++) {
+                        let c = collectionThemesWithCountCol.children[i];
+                        if (child.key != c['key'] && c["data"][0].includes(child["data"][0])) {
+                            child["data"][0] = child["data"][0] + ":undefined";
+                            child["label"] = "undefined---1";
+                            child["styleClass"] = "display-none";
+
+                            collectionThemesWithCountCol.children = collectionThemesWithCountCol.children.filter(cc => cc["key"] != child.key);
+                            c.children.push(child);
+                            c.count++;
+                        }
+                    }
+                }
+            })
         }
     }
 

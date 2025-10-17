@@ -36,7 +36,7 @@
                 (onNodeExpand)="chref.detectChanges()"
                 (onNodeCollapse)="chref.detectChanges()">
                 <ng-template let-node pTemplate="default">
-                    <div class="text-nowrap" data-toggle="tooltip" [title]="filterTooltip(node)" >
+                    <div *ngIf="node.label != 'undefined---1'" class="text-nowrap" data-toggle="tooltip" [title]="filterTooltip(node)" >
                         <span *ngIf="node.count > 0; else header1" class="invisible-scrollbar" > {{node.label.split("---")[0]}}&nbsp;</span>
                         <ng-template #header1>
                             <span><b> {{node.label.split("---")[0]}}&nbsp;</b></span>
