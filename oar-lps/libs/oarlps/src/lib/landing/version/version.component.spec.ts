@@ -104,14 +104,14 @@ describe('VersionComponent', () => {
         component.record['version'] = "1.0.0";
         component.assessNewer();
         expect(component.newer).not.toBeNull();
-        expect(component.newer['version']).toBe("1.0.2");
+        expect(component.newer['version']).toBe("1.1.2");
 
         fixture.detectChanges();
         cmpel = fixture.nativeElement;
         ps = cmpel.querySelectorAll("p"); 
         expect(ps.length).toBe(1);
         expect(ps[0].textContent).toContain("more recent release");
-        expect(ps[0].textContent).toContain("1.0.2");
+        expect(ps[0].textContent).toContain("1.1.2");
     });
 
     it('test expandHistory()', () => {
