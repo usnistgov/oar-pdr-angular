@@ -126,7 +126,7 @@
               <span *ngIf="ref.location; else nopreflink">
                   <span class="fas fa-external-link-alt">&nbsp;&nbsp;</span>
                   <i><a href={{ref.location}} target="blank"
-                        (click)="gaService.gaTrackEvent('outbound', $event, 'Resource title: ' + record.title, ref.location)">{{ ref.label }}</a><span *ngIf="i < primaryRefs.length-1">,</span></i>
+                        (click)="googleAnalytics(ref.location, $event, 'Resource title: ' + record.title)">{{ ref.label }}</a><span *ngIf="i < primaryRefs.length-1">,</span></i>
               </span>
               <ng-template #nopreflink>
                 <i>{{ ref.label }}<span *ngIf="i < primaryRefs.length-1">,</span></i>
