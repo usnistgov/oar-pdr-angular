@@ -5,6 +5,7 @@ import { VersionComponent, compare_versions, normalize_date, compare_dates, comp
     from './version.component';
 import { config, testdata } from '../../../environments/environment';
 import { LandingConstants } from '../constants';
+import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 
 describe('VersionComponent', () => {
     let component : VersionComponent;
@@ -31,6 +32,12 @@ describe('VersionComponent', () => {
     }
 
     beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+        providers: [
+            GoogleAnalyticsService
+        ]})
+        .compileComponents();
+        
         makeComp();
         fixture.detectChanges();
     }));
