@@ -358,13 +358,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
             }
 
-                if (this.inBrowser) {
-                    this._showContent = true;
-                
-                    if (metadataError == "not-found") {
-                        this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                    }
+            if (this.inBrowser) {
+                this._showContent = true;
+            
+                if (metadataError == "not-found") {
+                    this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
                 }
+            }
         },
         (err) => {
             this.globalService.setShowLPContent(true);

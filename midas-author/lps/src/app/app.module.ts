@@ -62,8 +62,7 @@ enableProdMode();
         GoogleAnalyticsService,
         DatePipe,
         UserMessageService,
-        NgbActiveModal,
-        fakeBackendProvider
+        NgbActiveModal
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
