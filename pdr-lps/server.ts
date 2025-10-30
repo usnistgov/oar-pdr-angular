@@ -50,10 +50,19 @@ export function app(): express.Express {
       return res.sendStatus(404);
     }
 
-    res.render(indexHtml, {
-      req,
-      providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
-    });
+    try {
+      res.render(indexHtml, {
+        req,
+        providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
+      });
+    } catch (err: any) {
+      logError(
+        "Error rendering page:",
+        req.path,
+        err && err.stack ? err.stack : err
+      );
+      res.sendStatus(500);
+    }
   });
 
   return server;
