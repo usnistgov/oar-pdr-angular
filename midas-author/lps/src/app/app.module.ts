@@ -8,7 +8,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { DatePipe } from '@angular/common';
 import { AppComponent } from './app.component';
 import { LandingPageComponent } from './landing/landingpage.component';
-import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { environment } from '../environments/environment-impl';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
@@ -62,8 +61,7 @@ enableProdMode();
         GoogleAnalyticsService,
         DatePipe,
         UserMessageService,
-        NgbActiveModal,
-        fakeBackendProvider
+        NgbActiveModal
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
