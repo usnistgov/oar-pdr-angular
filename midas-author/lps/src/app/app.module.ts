@@ -8,14 +8,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { DatePipe } from '@angular/common';
 import { AppComponent } from './app.component';
 import { LandingPageComponent } from './landing/landingpage.component';
-import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { environment } from '../environments/environment-impl';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
 import { OARLPSModule, ConfigModule, EditControlModule, UserMessageService,
          GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
- } from 'oarlps';
+} from 'oarlps';
+ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -61,7 +61,7 @@ enableProdMode();
         GoogleAnalyticsService,
         DatePipe,
         UserMessageService,
-        // fakeBackendProvider
+        NgbActiveModal
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

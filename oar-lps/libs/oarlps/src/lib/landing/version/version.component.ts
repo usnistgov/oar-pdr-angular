@@ -42,6 +42,8 @@ export class VersionComponent implements OnChanges {
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string;
     fieldName = SectionPrefs.getFieldName(Sections.VERSION);
+    expandButtonAlterText: string = "Open version history";
+    expandIconClass: string = "faa-caret-right";
 
     @Input() record: NerdmRes = null;
     @Input() landingPageServiceStr: string;
@@ -73,7 +75,34 @@ export class VersionComponent implements OnChanges {
      */
     expandHistory() {
         this.visibleHistory = !this.visibleHistory;
-        return this.visibleHistory;
+        this.expandIconClass = this.visibleHistory? "faa-caret-down" : "faa-caret-right";
+        this.expandButtonAlterText = this.visibleHistory? "Close version history" : "Open version history";
+    }
+
+    /**
+     * convert a full (3-field) version into an abbreviated version string 
+     * having just the first two fields
+     */
+    majorVersion(version: string) : string {
+        let ver = version.split('.');
+        if (ver.length < 2) return version;
+        return ver.slice(0, 2).join('.');
+    }
+
+    /**
+     * return a list of releases.  I
+     */
+    getReleases() {
+        if (! this.record)
+            return [];
+        let out = null;
+        if (this.record.releaseHistory) 
+            out = this.record.releaseHistory.hasRelease;
+        if (! out && this.record.versionHistory)
+            out = this.record.versionHistory;
+        if (! out)
+            out = [];
+        return out;
     }
 
     /**
@@ -157,15 +186,15 @@ export class VersionComponent implements OnChanges {
         }
 
         // look at the version history to see if there is a newer version listed
-        if (this.record['version'] && this.record['versionHistory'] && this.record['versionHistory'].length > 0) {
-            let history = this.record['versionHistory'];
+        if (this.record['version'] && (this.record['releaseHistory'] || this.record['versionHistory'])) {
+            let history = this.getReleases();
             history.sort(compare_histories);
 
             var thisversion = this.record['version'];
             var p = thisversion.indexOf('+');    // presence indicates this is an update
             if (p >= 0) thisversion = thisversion.substring(0, p)   // strip off +...
 
-            if (history[history.length - 1] && history[history.length - 1]['version'] != thisversion &&
+            if (history[history.length - 1]['version'] != thisversion &&
                 compare_histories(history[history.length - 1],
                                   {
                                       version: thisversion,
@@ -196,6 +225,18 @@ export class VersionComponent implements OnChanges {
 
         this.lpService.setSectionHelp(sectionHelp);
     }    
+
+    resolverForId(id) {
+        let out: string = null;
+        if (id.startsWith("doi:"))
+            out = "https://doi.org/" + id.substring(4);
+        else if (id.startsWith("ark:"))
+            out = this.lpssvc + id
+        else if (id.match(/^https?:\//))
+            out = id
+        return out
+    }
+
 }
 
 /**
