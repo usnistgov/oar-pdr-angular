@@ -216,12 +216,12 @@ npm scripts defined in the `package.json` file.  For example, to run the tests f
     npm run test:oarlps
 ```
 
-The following script names run tests for individual components:
-&nbsp; `test:oarlps` -- run tests in the `oarlps` library
-&nbsp; `test:pdrlps` -- run tests in the pdr-lps application
-&nbsp; `test:wizard` -- run tests in the midas-author wizard application
-&nbsp; `test:midasauthor` -- run tests in the midas-author lps application
-&nbsp; `test:pdr-rpa-request` -- run tests in the pdr-rpa request application
+The following script names run tests for individual components:\
+&nbsp; `test:oarlps` -- run tests in the `oarlps` library\
+&nbsp; `test:pdrlps` -- run tests in the pdr-lps application\
+&nbsp; `test:wizard` -- run tests in the midas-author wizard application\
+&nbsp; `test:midasauthor` -- run tests in the midas-author lps application\
+&nbsp; `test:pdr-rpa-request` -- run tests in the pdr-rpa request application\
 &nbsp; `test:pdr-rpa-approve` -- run tests in the pdr-rpa approve application
 
 To restrict the test execution to just one `.spec.ts` file, add the file name (without a path
@@ -241,7 +241,7 @@ this form:
 
 For example,
 ```
-    node --inspect-brk node_modules/.bin/jest --runInBand --config oar-lps/libs/oarlps/jest.config.js nerdm.service.spec
+node --inspect-brk node_modules/.bin/jest --runInBand --config oar-lps/libs/oarlps/jest.config.js nerdm.service.spec
 ```
 
 (The `.ts` extension on the _spec-file_ is optional.)
