@@ -89,7 +89,6 @@ describe('CachingNERDmResourceService', function() {
     });
 
     it('getResource() via delegate', function(done) {
-        debugger;
         let t1 = svc.getResource("gomer");
         t1.subscribe((data) => { fail("Failed to fail"); done(); },
                      (err)  => {
