@@ -10,6 +10,7 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
 import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
+import { CheckboxRequiredValidator } from '@angular/forms';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -266,6 +267,10 @@ export class FiltersComponent implements OnInit {
         lFilterString = this.removeEndingComma(lFilterString);
         if(!lFilterString) lFilterString = "NoFilter";
 
+        //Remove ":Other"
+        lFilterString = lFilterString.replaceAll(":", ": ");
+        lFilterString = lFilterString.replaceAll(": Other", "");
+
         // console.log('lFilterString', lFilterString);
         this.filterString.emit(lFilterString);
     }
@@ -431,6 +436,22 @@ export class FiltersComponent implements OnInit {
     }
 
     /**
+     * Loop through the search result and remove space after colon in topic tags.
+     * Will put the space back when constrcting search string.
+     */
+    unifyTopic() {
+        if (this.searchResults && this.searchResults.length > 1) {
+            this.searchResults.forEach(item => {
+                if (item.topic && item.topic.length > 0) {
+                    item.topic.forEach(t => {
+                        t["tag"] = t["tag"].replace(/: /g, ":");
+                    })
+                }
+            })
+        }
+    }
+
+    /**
      * If Search is successful, populate list of keywords themes and authors
      * @param searchResults 
      */
@@ -439,6 +460,8 @@ export class FiltersComponent implements OnInit {
         // this.themesWithCount = [];
         this.componentsWithCount = [];
         this.searchResults = searchResults;
+        
+        this.unifyTopic();
 
         this.keywords = this.collectKeywords(searchResults);
         this.collectThemes(searchResults);
@@ -470,9 +493,9 @@ export class FiltersComponent implements OnInit {
                 children: this.componentsWithCount,
             }];
 
-            this.componentsWithCount.push(new FilterTreeNode("DataFile - 0", false, "DataFile", "DataFile", 0));
-            this.componentsWithCount.push(new FilterTreeNode("AccessPage - 0", false, "AccessPage", "AccessPage", 0));
-            this.componentsWithCount.push(new FilterTreeNode("SubCollection - 0", false, "SubCollection", "SubCollection", 0));
+            this.componentsWithCount.push(new FilterTreeNode("DataFile - 0", false, "DataFile", "DataFile", "DataFile", 0));
+            this.componentsWithCount.push(new FilterTreeNode("AccessPage - 0", false, "AccessPage", "AccessPage", "AccessPage", 0));
+            this.componentsWithCount.push(new FilterTreeNode("SubCollection - 0", false, "SubCollection",  "SubCollection", "SubCollection", 0));
 
             this.componentsTree[0].selectable = false;
 
@@ -925,8 +948,10 @@ export class FiltersComponent implements OnInit {
             if (typeof resultItem.topic !== 'undefined' && resultItem.topic.length > 0) {
                 for (let topic of resultItem.topic) {
                     let topics = topic.tag.split(":");
+                    topics = topics.map(t => t.trim());
+
                     topicLabel = topics[0];
-                    data = topic.tag;
+                    data = topic.tag.trim();
 
                     if(topics.length > 1){
                         // topicLabel = topics[0] + ":" + topics[1];
@@ -935,11 +960,11 @@ export class FiltersComponent implements OnInit {
                     
                     if(topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
                         topicLabel = topics[0];
-                        data = topic.tag;
+                        data = topic.tag.trim();
 
                         if(topics.length > 1){
                             // topicLabel = topics[0] + ":" + topics[1];
-                            topicLabel = topic.tag;
+                            topicLabel = topic.tag.trim();
                         }
 
                         if(allThemesArray[Collections.SEMICONDUCTORS].indexOf(topicLabel) < 0) {
@@ -947,10 +972,10 @@ export class FiltersComponent implements OnInit {
                             allThemesArray[Collections.SEMICONDUCTORS].push(topicLabel);
                         }
                     }else if(topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
-                        data = topic.tag;
+                        data = topic.tag.trim();
 
                         if(topics.length > 1){
-                            topicLabel = topic.tag;
+                            topicLabel = topic.tag.trim();
                         }
 
                         if(allThemesArray[Collections.FORENSICS].indexOf(topicLabel) < 0) {
@@ -961,7 +986,7 @@ export class FiltersComponent implements OnInit {
                         topicLabel = topics[0];
 
                         if (allThemesArray[Collections.DEFAULT].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.DEFAULT].push({ label: topicLabel, value: topic.tag });
+                            allThemes[Collections.DEFAULT].push({ label: topicLabel, value: topic.tag.trim() });
                             allThemesArray[Collections.DEFAULT].push(topicLabel);
                         }
                     }
@@ -979,12 +1004,12 @@ export class FiltersComponent implements OnInit {
 
             if (typeof resultItem.topic !== 'undefined' && resultItem.topic.length > 0) {
                 for (let topic of resultItem.topic) {
-                    let topicTag = topic.tag;
+                    let topicTag = topic.tag.trim();
 
                     for(let col of this.collectionOrder) {
                         for(let theme of allThemes[col]){
                             if(topicTag.toLowerCase().indexOf(theme.label.toLowerCase()) > -1){
-                                allUniqueThemes[col].push(theme.label);
+                                allUniqueThemes[col].push(theme.label.replace(/: /g, ":"));
                             }
                         }
                     }
@@ -1062,12 +1087,100 @@ export class FiltersComponent implements OnInit {
             this.collectionThemesWithCount[collection].upsertNodeFor(sortable[key], 1, searchResults, collection, this.taxonomyURI);
         }
 
+        this.deDup(this.collectionThemesWithCount[collection], collection);
+
         if (sortable.length > 5) {
             this.showMoreLink = true;
         } else {
             this.showMoreLink = false;
         }
     }
+
+    /**
+     * Loop through a given tree. If a node and it's sibling leaf have the same taxonomy (data field),
+     * append ":Other"
+     * @param collectionThemesWithCountCol - input array of tree nodes
+     */
+    deDup(collectionThemesWithCountCol: any, collection: string) {
+        if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 1) {
+            collectionThemesWithCountCol.children.forEach(child => {
+                if (child.children && child.children.length > 1) {
+                    this.deDup(child, collection);
+                } else {
+                    //For a leaf, loop through siblings to see if any node has the same taxonomy (data field)
+                    for (var i = 0; i < collectionThemesWithCountCol.children.length; i++) {
+                        let sibling = collectionThemesWithCountCol.children[i];
+                        if (sibling["data"][0] != child["data"][0] && sibling.children.length > child.children.length && sibling["data"][0].includes(child["data"][0])) {
+                            child["data"][0] = child["data"][0] + ":Other";
+                            child["key"] = sibling.key+"Other";
+                            child["keyname"] = sibling.keyname + "Other";
+                            child["label"] = "Other---1";
+                            child["level"]++; 
+                            child.parent = sibling;
+
+                            //Remove child from current parent and make it a child of the sibling
+                            collectionThemesWithCountCol.children = collectionThemesWithCountCol.children.filter(cc => cc["data"][0] != child.data[0]);
+                            collectionThemesWithCountCol["ediids"] = collectionThemesWithCountCol["ediids"].filter(ediid => ediid != child.ediid);
+                            sibling.children.push(child);
+                            if (!sibling["ediids"].includes(child.ediid)) {
+                                sibling["ediids"].push(child.ediid);
+                            }
+                            sibling.count++;
+
+                            //Recount sibling.parent. Cannot simply add one because adding new node not necessary means more search result.
+                            this.count(sibling, collection);
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * Count the search result from the given treenode
+     * @param treenode 
+     * @param collection - the collection the treenode belong to.
+     */
+    count(treenode: any, collection: string) {
+        if (treenode["data"]) {
+            let parentData = treenode["key"];
+            treenode["ediids"] = [];
+            treenode.count = 0;
+
+            for (let resultItem of this.searchResults) {
+                let found: boolean = false;
+                if (resultItem.topic && resultItem.topic.length > 0) {
+                    for (let topic of resultItem.topic) {
+                        if (topic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
+                            if (collection == Collections.DEFAULT) {
+                                if (topic.tag.includes(parentData)) {
+                                    found = true;
+                                    break;
+                                }
+                            } else {
+                                let topics = topic.tag.split(":");
+                                if (topics.includes(parentData)) {
+                                    found = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(found){
+                    if(!treenode["ediids"].includes(resultItem.ediid)){
+                        treenode["ediids"].push(resultItem.ediid);
+                        treenode.count++;
+                    }
+                }   
+            }
+        }
+
+        if (treenode.parent) {
+            this.count(treenode.parent, collection);
+        }
+    }        
 
     /**
      * Set the width of the filter column. If the filter is active, set the width to 25%. 

@@ -410,14 +410,15 @@ export class FilterTreeNode implements TreeNode {
     selectable: boolean = true;
     unspecified: boolean[] = [];
     
-    constructor(label: string='', expanded: boolean = false, key: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1) {
+    constructor(label: string='', expanded: boolean = false, key: string=null, keyname: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1) {
         this.label = label;
         if(data && !this.data.includes(data))
             this.data.push(data);
         this.count = count;
         this.selectable = selectable;
         this.level = level;
-        this.keyname = key;
+        this.keyname = keyname;
+        if (!keyname) this.keyname = key;
         this.key = key;
         if(!key) {
             this.keyname = label;
@@ -439,10 +440,9 @@ export class FilterTreeNode implements TreeNode {
     }
 
     _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}, parentKey:string = "") : TreeNode {
-        let nodeLabel: string = ''; 
-        // find the node corresponding to the given item in the data cart 
+        // find the node corresponding to the given item in the tree 
         for (let child of this.children) {
-            if (child.keyname == levels[0]) {
+            if (child.keyname == levels[0] && child.children.length > 0) {
                 if(searchResults) {
                     for (let resultItem of searchResults) {
                         let found: boolean = false;
@@ -487,6 +487,7 @@ export class FilterTreeNode implements TreeNode {
 
         // ancestor does not exist yet; create it
         let key = parentKey + levels[0];
+        let keyname = levels[0];
         let label = levels[0];
         let data = item[0];
 
@@ -499,7 +500,7 @@ export class FilterTreeNode implements TreeNode {
             count = item[1];
         }
 
-        let child = new FilterTreeNode(label, false, key, data, count, true, level+1);
+        let child = new FilterTreeNode(label, false, key, keyname, data, count, true, level+1);
         child.parent = this;
         this.children = [...this.children, child];
 

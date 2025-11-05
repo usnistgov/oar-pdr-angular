@@ -152,7 +152,7 @@ export class TaxonomyComponent implements OnInit {
         
             if (this.collectionSelectedThemesNode.length > 0) {
                 for (let theme of this.collectionSelectedThemesNode) {
-                    if (theme != 'undefined' && typeof theme.data !== 'undefined' && theme.data[0] !== 'undefined') {
+                    if (theme != 'undefined' && typeof theme.data !== 'undefined' && theme.data[0] !== 'undefined' && theme.children.length == 0) {
                         themeSelected = true;
                         for(let i = 0; i < theme.data.length; i++ ){
                             if(this.isCollection) {
