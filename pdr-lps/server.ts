@@ -57,7 +57,7 @@ export function app(): express.Express {
       });
     } catch (err: any) {
       logError(
-        "Unhandled error while rendering page:",
+        "Error rendering page:",
         req.path,
         err && err.stack ? err.stack : err
       );
