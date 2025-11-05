@@ -30,26 +30,32 @@ export function app(): express.Express {
   const indexHtml = existsSync(join(distFolder, "index.original.html"))
     ? "index.original.html"
     : "index";
-  server.engine(
-    "html",
-    ngExpressEngine({
-      bootstrap: AppServerModule,
-    })
-  );
+
+  server.engine("html", ngExpressEngine({ bootstrap: AppServerModule }));
   server.set("view engine", "html");
   server.set("views", distFolder);
+
+  // Handle static asset requests first
+  server.get(/\.[\w\d]+$/, express.static(distFolder, { maxAge: "1y" })); // Match anything with file extension
   server.get(
-    "*.*",
-    express.static(distFolder, {
-      maxAge: "1y",
-    })
-  );
+    /\/(assets|js|css|media)\//,
+    express.static(distFolder, { maxAge: "1y" })
+  ); // Match common asset paths
+  server.use(express.static(distFolder, { maxAge: "1y" })); // Fallback
+
+  // Then handle Angular routes
   server.get("*", (req, res) => {
+    // prevent data routes from handling static assets
+    if (req.path.match(/\.(js|css|map|jpg|png|svg|ico|json)$/)) {
+      return res.sendStatus(404);
+    }
+
     res.render(indexHtml, {
       req,
       providers: [{ provide: APP_BASE_HREF, useValue: req.baseUrl }],
     });
   });
+
   return server;
 }
 
