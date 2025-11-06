@@ -7,6 +7,7 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 
 interface reference {
     refType?: string,
@@ -54,6 +55,7 @@ export class VersionComponent implements OnChanges {
      * @param cfg   the app configuration data
      */
     constructor(public editstatsvc: EditStatusService,
+                public gaService: GoogleAnalyticsService,
                 public lpService: LandingpageService) { }
 
     ngOnInit(): void {
