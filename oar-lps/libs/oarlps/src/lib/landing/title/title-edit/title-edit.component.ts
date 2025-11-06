@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorR
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
@@ -42,6 +42,13 @@ export class TitleEditComponent {
     // globalsvc = inject(GlobalService);
 
     fileManagerTooltip: string = "testing";
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;    
 
     constructor(public mdupdsvc: MetadataUpdateService,
                 public edstatsvc: EditStatusService,

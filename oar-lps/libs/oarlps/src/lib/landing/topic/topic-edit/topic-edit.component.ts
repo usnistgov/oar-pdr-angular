@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
-import { MODE } from '../../../shared/globals/globals';
+import { MODE, iconClass } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
@@ -43,6 +43,12 @@ export class TopicEditComponent implements OnInit {
     toggle: Boolean = true;  
     originalSelectedTopicsTopics: any[] = [];
     // selectedTopics: any[] = [];
+
+    //icon class names
+    saveIcon = iconClass.SAVE;
+    undoIcon = iconClass.UNDO;
+    resetIcon = iconClass.RESET;
+    deleteIcon = iconClass.DELETE;
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;

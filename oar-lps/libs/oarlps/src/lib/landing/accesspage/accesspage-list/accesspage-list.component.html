@@ -56,18 +56,8 @@
                     *ngIf="!isEditing && !isAdding" 
                     pTooltip="Add access page"
                     tooltipPosition="top">
-                    <i class="fas fa-plus fa-sm"></i>
+                    <i [class]="addIcon"></i>
                 </button>
-
-                <!-- Save button -->
-                <!-- <button class="edit_button" type="button" (click)="saveListChanges()" aria-label="add button" *ngIf="currentOrderChanged" ngbTooltip="Save access pages">
-                    <i class="fas fa-check fa-sm"></i>
-                </button> -->
-
-                <!-- Cancel current changes (order change) -->
-                <!-- <button class="edit_button" type="button" *ngIf="currentOrderChanged" (click)="cancelEditing()" aria-label="Cancel button" ngbTooltip="Cancel changes">
-                    <i class="fas fa-undo fa-sm"></i>
-                </button> -->
             </div>
         </div>
         <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus"> 

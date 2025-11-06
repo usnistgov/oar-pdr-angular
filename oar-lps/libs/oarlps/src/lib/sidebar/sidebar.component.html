@@ -35,7 +35,7 @@
             </div>
             <div class="general-help-content" 
                 [@generalHelpExpand]="showGeneralHelp ? 'visible' : 'hidden'"
-                [innerHTML]="helpContent">
+                [innerHTML]="sanitizedHtml">
             </div>
             
             <div class="help-title headerbar" (click)="this.showNextSteps = !this.showNextSteps">

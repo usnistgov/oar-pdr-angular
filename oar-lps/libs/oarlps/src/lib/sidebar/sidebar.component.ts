@@ -3,7 +3,7 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 import { NerdmRes } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse } from '../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse, iconClass } from '../shared/globals/globals';
 import { HelpTopic } from '../landing/landingpage.service';
 import { CommonModule } from '@angular/common';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
@@ -11,6 +11,7 @@ import { LandingConstants, SubmissionData, GlobalService } from '../shared/globa
 import { EditStatusService } from '../landing/editcontrol/editstatus.service';
 import { RevisionDetailsComponent } from '../landing/revision-details/revision-details.component';
 import revisionhelp from '../../assets/site-constants/revision-help.json';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-sidebar',
@@ -110,6 +111,18 @@ export class SidebarComponent implements OnInit {
     isMouseOverGeneralHeader = false;
     isMouseOverNextSteps = false;
 
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
+    addIcon = iconClass.ADD;
+    delIcon = iconClass.DELETE;
+    resetIcon = iconClass.RESET;
+
+    sanitizedHtml: SafeHtml;
+
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: any = {};
     @Input() resourceType: string = "resource";
@@ -125,6 +138,7 @@ export class SidebarComponent implements OnInit {
         public edstatsvc: EditStatusService,
         public globalService: GlobalService,
         @Self() private element: ElementRef,
+        private sanitizer: DomSanitizer,
         public sidebarService: SidebarService) { 
         
             this.edstatsvc.watchEditType((editType) => {
@@ -261,6 +275,17 @@ export class SidebarComponent implements OnInit {
         else
             this.title = SectionPrefs.getDispName(sectionHelp.section);
 
+        // Replace all icon names with real icon ones so innerHtml will display
+        this.helpContent = this.helpContent.replaceAll("editIcon", this.editIcon);
+        this.helpContent = this.helpContent.replaceAll("closeIcon", this.closeIcon);
+        this.helpContent = this.helpContent.replaceAll("saveIcon", this.saveIcon);
+        this.helpContent = this.helpContent.replaceAll("cancelIcon", this.cancelIcon);
+        this.helpContent = this.helpContent.replaceAll("undoIcon", this.undoIcon);
+        this.helpContent = this.helpContent.replaceAll("addIcon", this.addIcon);
+        this.helpContent = this.helpContent.replaceAll("delIcon", this.delIcon);
+        this.helpContent = this.helpContent.replaceAll("resetIcon", this.resetIcon);
+
+        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.helpContent);
         this.chref.detectChanges();
     }
 

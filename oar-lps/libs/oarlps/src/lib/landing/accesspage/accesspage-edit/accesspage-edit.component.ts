@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
+import { iconClass } from '../../../shared/globals/globals';
 
 @Component({
     selector: 'lib-accesspage-edit',
@@ -22,6 +23,10 @@ export class AccesspageEditComponent implements OnInit {
     originalApage: NerdmComp = {} as NerdmComp;
     editBlockStatus: string = 'collapsed';
     accessPage: NerdmComp = {} as NerdmComp;
+
+    //icon class names
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
 
     @Input() currentApage: NerdmComp = {} as NerdmComp;
     @Input() editMode: string = "edit";

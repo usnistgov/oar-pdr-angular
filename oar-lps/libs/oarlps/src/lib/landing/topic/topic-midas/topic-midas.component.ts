@@ -6,7 +6,7 @@ import { NerdmRes } from '../../../nerdm/nerdm';
 import { AppConfig } from '../../../config/config';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
 import { TopicEditComponent } from '../topic-edit/topic-edit.component';
@@ -54,6 +54,13 @@ export class TopicMidasComponent implements OnInit {
     topicLong: any = {};
     colorScheme: ColorScheme;
     hovered: boolean = false;
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
@@ -250,8 +257,8 @@ export class TopicMidasComponent implements OnInit {
      */
     cancelEditing() {
         this.updateResearchTopics();
-        // this.setMode(MODE.NORMAL);
-        // this.dataChanged = false;
+        this.setMode(MODE.NORMAL);
+        this.dataChanged = false;
     }
 
     /**

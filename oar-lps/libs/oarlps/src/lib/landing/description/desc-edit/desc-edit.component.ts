@@ -2,7 +2,7 @@ import { Component, Input, SimpleChanges, ChangeDetectorRef, effect, inject, Vie
 import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -39,6 +39,13 @@ export class DescEditComponent {
     maxWidth: number = 1000;
     globalsvc = inject(GlobalService);
     
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
+
     @ViewChild('desc') descElement: ElementRef;
     
     constructor(public mdupdsvc : MetadataUpdateService,  

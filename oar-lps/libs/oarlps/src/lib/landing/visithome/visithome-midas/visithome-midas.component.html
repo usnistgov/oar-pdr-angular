@@ -14,14 +14,14 @@
                 <div class="editable_field" style="margin-left: 5px; margin-top: 2px;">
                     @if(!isEditing) {
                         <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
-                            <i class="fas fa-pencil fa-sm" title="Edit URL" aria-label="edit URL"></i>  
+                            <i [class]="editIcon" title="Edit URL" aria-label="edit URL"></i>  
                         </button>  
                         
                         @if(updated) {
                             <!-- Restore button -->
                             <button class="edit_button" type="button"
                             (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
-                                <i class="fas fa-undo fa-sm"></i>
+                                <i [class]="undoIcon"></i>
                             </button>   
                         }
                     }
@@ -29,7 +29,7 @@
                         <!-- Hide edit window button -->
                         <button class="edit_button" type="button"
                             (click)="hideEditBlock()" aria-label="Close button" ngbTooltip="Hide edit block">
-                            <i class="fas fa-times"></i>
+                            <i [class]="closeIcon"></i>
                         </button>    
                     }
                 </div>
