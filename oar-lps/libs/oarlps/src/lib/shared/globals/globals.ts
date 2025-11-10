@@ -448,7 +448,7 @@ export class FilterTreeNode implements TreeNode {
                         let found: boolean = false;
                         if(resultItem.topic && resultItem.topic.length > 0){
                             for(let topic of resultItem.topic) {
-                                if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                                if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
                                     if(collection == Collections.DEFAULT) {
                                         if(topic.tag.includes(item[0])) {
                                             found = true;
@@ -510,7 +510,7 @@ export class FilterTreeNode implements TreeNode {
                 let found: boolean = false;
                 if(resultItem.topic && resultItem.topic.length > 0){
                     for(let topic of resultItem.topic) {
-                        if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                        if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
                             if(collection == Collections.DEFAULT) {
                                 if(topic.tag.includes(data)) {
                                     found = true;
