@@ -362,14 +362,15 @@ export class ResultlistComponent implements OnInit {
     }
 
     /**
-     * Restore reserved chars. For example, change "aaamp" back to "&".
+     * Restore reserved chars. 
+     * For example, change "aaamp" back to "&", "commma" with ",".
      * @param inputString 
      */
     restoreReservedChars(inputString: string) {
         if(!inputString || inputString.trim() == "")
             return "";
         else
-            return inputString.replace(new RegExp("aaamp", "g"), "&"); 
+            return inputString.replace(new RegExp("aaamp", "g"), "&").replace(new RegExp("commma", "g"), ","); 
     }
 
     /**

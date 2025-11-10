@@ -193,16 +193,16 @@ export class FiltersComponent implements OnInit {
     /**
      * Replace reserved chars with char name to avoid problems
      * when parsing filter string in the result list component.
-     * For example, replace "&" with "aaamp". result list component
-     * restore "aaamp" back to "&".
+     * For example, replace "&" with "aaamp", "," with "commma". result list component
+     * restore "aaamp" back to "&", "commma" to ",".
      * @param strng input string
      */
     escapeReservedChars(inputStrng: string) {
         let outputString: string;
-        if(!inputStrng || inputStrng.trim() == "")
+        if (!inputStrng || inputStrng.trim() == "")
             return "";
-        else    
-            return inputStrng.replace(new RegExp("&", "g"), "aaamp")
+        else
+            return inputStrng.replace(new RegExp("&", "g"), "aaamp").replace(new RegExp(",", "g"), "commma");
     }
 
     /**
