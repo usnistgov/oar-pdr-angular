@@ -1,8 +1,8 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, inject, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService, SearchfieldsListService } from '../../shared/index';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { Collections, ColorScheme } from '../../shared/globals/globals';
+import { Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
 
 @Component({
   selector: 'app-taxonomy',
@@ -38,6 +38,7 @@ export class TaxonomyComponent implements OnInit {
     totalNodes: number = 0;
     totalSelectedNodes: number = 0;
     allChecked: boolean = false;
+    globalsvc = inject(GlobalService);
 
     researchTopicStyle: any;
 
@@ -157,9 +158,9 @@ export class TaxonomyComponent implements OnInit {
                         for(let i = 0; i < theme.data.length; i++ ){
                             if(this.isCollection) {
                                 // themeType += theme.data[i] + ',';
-                                lFilterString += this.collection + "----" + theme.data[i].trim() + ",";
+                                lFilterString += this.collection + "----" + this.globalsvc.escapeReservedChars(theme.data[i].trim()) + ",";
                             }else{
-                                lFilterString += theme.data[i].trim().replace(/\s/g, "") + ",";
+                                lFilterString += this.globalsvc.escapeReservedChars(theme.data[i].trim().replace(/\s/g, "")) + ",";
                             }
                         }
                     }

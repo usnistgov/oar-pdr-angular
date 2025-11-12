@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TreeNode } from 'primeng/api';
 import { Message } from 'primeng/api';
@@ -8,7 +8,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { SearchService } from '../../shared/search-service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme } from '../../shared/globals/globals';
+import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { CheckboxRequiredValidator } from '@angular/forms';
 
@@ -134,6 +134,8 @@ export class FiltersComponent implements OnInit {
     exception: string;
     errorMsg: string;
 
+    globalsvc = inject(GlobalService);
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
@@ -191,21 +193,6 @@ export class FiltersComponent implements OnInit {
     }
 
     /**
-     * Replace reserved chars with char name to avoid problems
-     * when parsing filter string in the result list component.
-     * For example, replace "&" with "aaamp", "," with "commma". result list component
-     * restore "aaamp" back to "&", "commma" to ",".
-     * @param strng input string
-     */
-    escapeReservedChars(inputStrng: string) {
-        let outputString: string;
-        if (!inputStrng || inputStrng.trim() == "")
-            return "";
-        else
-            return inputStrng.replace(new RegExp("&", "g"), "aaamp").replace(new RegExp(",", "g"), "commma");
-    }
-
-    /**
      * Form the filter string and refresh the result page
      */
     filterResults() {
@@ -220,24 +207,30 @@ export class FiltersComponent implements OnInit {
 
         // Resource type        
         if(this.filterStrings["@type"]) {
-            if(lFilterString != '') lFilterString += "&";
-            lFilterString += this.escapeReservedChars(this.filterStrings["@type"]);
+            if (lFilterString != '') lFilterString += "&";
+            
+            //Escape reserved chars already done in taxonomy component
+            lFilterString += this.filterStrings["@type"];
             lFilterString = this.removeEndingComma(lFilterString);
         }
 
         // Collections
         for(let col of this.collectionOrder) {
             if(this.filterStrings[col]) {
-                if(lFilterString != '') lFilterString += "&";
-                lFilterString += this.escapeReservedChars(this.filterStrings[col]);
+                if (lFilterString != '') lFilterString += "&";
+
+                //Escape reserved chars already done in taxonomy component
+                lFilterString += this.filterStrings[col];
                 lFilterString = this.removeEndingComma(lFilterString);
             }   
         }
 
         // Record has
         if(this.filterStrings["components.@type"]) {
-            if(lFilterString != '') lFilterString += "&";
-            lFilterString += this.escapeReservedChars(this.filterStrings["components.@type"]);
+            if (lFilterString != '') lFilterString += "&";
+            
+            //Escape reserved chars already done in taxonomy component
+            lFilterString += this.filterStrings["components.@type"];
             lFilterString = this.removeEndingComma(lFilterString);
         }
 
@@ -260,7 +253,7 @@ export class FiltersComponent implements OnInit {
 
             lFilterString += "keyword=";
             for (let keyword of this.selectedKeywords) {
-                lFilterString += this.escapeReservedChars(this.suggestedKeywordsLkup[keyword]) + ",";
+                lFilterString += this.globalsvc.escapeReservedChars(this.suggestedKeywordsLkup[keyword]) + ",";
             }
         }
 
