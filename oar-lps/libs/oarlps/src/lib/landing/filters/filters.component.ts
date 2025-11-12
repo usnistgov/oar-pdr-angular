@@ -794,7 +794,7 @@ export class FiltersComponent implements OnInit {
             let count: any;
             count = _.countBy(this.resourceTypesAllArray, _.partial(_.isEqual, res.value))['true'];
 
-            this.resourceTypesWithCount.push(new FilterTreeNode(res.label + "---" + count, true, res.label, res.label, count));
+            this.resourceTypesWithCount.push(new FilterTreeNode(res.label + "---" + count, true, res.label, res.label, res.label, count));
         }
     }
 
@@ -901,7 +901,7 @@ export class FiltersComponent implements OnInit {
             if (this.showComponents.includes(comp.label)) {
                 count = _.countBy(this.componentsAllArray, _.partial(_.isEqual, comp.value))['true'];
 
-                this.componentsWithCount.push(new FilterTreeNode(comp.label + "---" + count, true, comp.label, comp.label, count));
+                this.componentsWithCount.push(new FilterTreeNode(comp.label + "---" + count, true, comp.label, comp.label, comp.label, count));
             }
         }
     }

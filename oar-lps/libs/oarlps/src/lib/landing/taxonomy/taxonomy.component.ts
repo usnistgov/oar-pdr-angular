@@ -158,9 +158,9 @@ export class TaxonomyComponent implements OnInit {
                         for(let i = 0; i < theme.data.length; i++ ){
                             if(this.isCollection) {
                                 // themeType += theme.data[i] + ',';
-                                lFilterString += this.collection + "----" + this.globalsvc.escapeReservedChars(theme.data[i].trim()) + ",";
+                                lFilterString += this.collection + "----" + this.globalsvc.escapeReservedChars(theme.data[i]) + ",";
                             }else{
-                                lFilterString += this.globalsvc.escapeReservedChars(theme.data[i].trim().replace(/\s/g, "")) + ",";
+                                lFilterString += this.globalsvc.escapeReservedChars(theme.data[i].replace(/\s/g, "")) + ",";
                             }
                         }
                     }
