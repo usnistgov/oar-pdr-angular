@@ -1154,7 +1154,7 @@ export class FiltersComponent implements OnInit {
                 let found: boolean = false;
                 if (resultItem.topic && resultItem.topic.length > 0) {
                     for (let topic of resultItem.topic) {
-                        if (topic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
+                        if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
                             if (collection == Collections.DEFAULT) {
                                 if (topic.tag.includes(parentData)) {
                                     found = true;
