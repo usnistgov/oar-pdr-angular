@@ -99,9 +99,9 @@ export class FakeBackendInterceptor implements HttpInterceptor {
     }
 
     if (request.url.indexOf('auth/_tokeninfo') > -1 && request.method === 'GET') {
-        this.toastrService.warning('You are using fake backend!', 'Warning!');
-        this.msgsvc.inform('You are using fake backend!');
-        alert("You are using fake backend!");
+        // this.toastrService.warning('You are using fake backend!', 'Warning!');
+        // this.msgsvc.inform('You are using fake backend!');
+        // alert("You are using fake backend!");
         let body: any = {
             userDetails: {
                 userId: 'xyz@nist.gov',
