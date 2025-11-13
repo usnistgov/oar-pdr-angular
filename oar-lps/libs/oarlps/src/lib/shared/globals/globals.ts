@@ -127,6 +127,33 @@ export class GlobalService {
 
         return width * 0.9 + 50;
     }
+
+    /**
+     * Replace reserved chars with char name to avoid problems
+     * when parsing filter string in the result list component.
+     * For example, replace "&" with "aaamp". Replace "," with "commma". 
+     * result list component restores "aaamp" back to "&", "commma" back to ",".
+     * @param strng input string
+     */
+    escapeReservedChars(inputStrng: string) {
+        if (!inputStrng || inputStrng.trim() == "")
+            return "";
+        else
+            return inputStrng.replace(new RegExp("&", "g"), "aaamp").replace(new RegExp(",", "g"), "commma");
+    }    
+
+    /**
+     * Restore reserved chars. 
+     * For example, change "aaamp" back to "&", "commma" with ",".
+     * @param inputString 
+     */
+    restoreReservedChars(inputString: string) {
+        if(!inputString || inputString.trim() == "")
+            return "";
+        else
+            return inputString.replace(new RegExp("aaamp", "g"), "&").replace(new RegExp("commma", "g"), ","); 
+    }
+
 }
 
 export const NIST = "National Institute of Standards and Technology";
