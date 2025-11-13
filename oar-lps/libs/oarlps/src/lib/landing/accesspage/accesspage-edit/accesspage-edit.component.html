@@ -57,10 +57,10 @@
             [disabled]="noURL || !accessPage || !accessPage?.dataChanged" 
             pTooltip="Save current changes"
             tooltipPosition="top" >
-            <i class="fas fa-check fa-sm"></i>
+            <i [class]="saveIcon"></i>
         </button>
 
-        <!-- Camcel button -->
+        <!-- Cancel button -->
         <button
             class="edit_button" 
             type="button"
@@ -68,7 +68,7 @@
             aria-label="undo button" 
             pTooltip="Undo current changes"
             tooltipPosition="top">
-            <i class="fas fa-times"></i>
+            <i [class]="cancelIcon"></i>
         </button>
     </div>
 </div>

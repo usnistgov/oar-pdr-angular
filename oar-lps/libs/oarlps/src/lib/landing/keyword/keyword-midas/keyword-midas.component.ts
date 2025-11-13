@@ -15,7 +15,7 @@ import { Chips, ChipsModule } from 'primeng/chips';
 import { ChipModule } from "primeng/chip";
 import { TagModule } from 'primeng/tag';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { LandingConstants } from '../../../shared/globals/globals';
+import { LandingConstants, iconClass } from '../../../shared/globals/globals';
 import { KeywordPubComponent } from '../keyword-pub/keyword-pub.component';
 
 @Component({
@@ -59,6 +59,13 @@ export class KeywordMidasComponent {
     hovered: boolean = false;
     public EDIT_MODES: any = LandingConstants.editModes;
     globalsvc = inject(GlobalService);
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
 
     @ViewChild('keyword') public chipsElement: Chips;
 

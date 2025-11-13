@@ -8,7 +8,7 @@ import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { ContactEditComponent } from '../contact-edit/contact-edit.component';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { PeopleComponent } from '../../people/people.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
@@ -50,6 +50,13 @@ export class ContactMidasComponent {
 
     LoadEditComp: boolean = false;
     globalsvc = inject(GlobalService);
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side

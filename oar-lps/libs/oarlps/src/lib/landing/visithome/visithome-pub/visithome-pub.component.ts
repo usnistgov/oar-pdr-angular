@@ -3,12 +3,15 @@ import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analyt
 import { Themes } from '../../../shared/globals/globals';
 import { Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'Visithome-pub',
   standalone: true,
   imports: [
-    CommonModule
+      CommonModule
   ],
   templateUrl: './visithome-pub.component.html',
   styleUrls: ['./visithome-pub.component.scss', '../../landing.component.scss']
@@ -23,6 +26,7 @@ export class VisithomePubComponent {
     scienceTheme = Themes.SCIENCE_THEME;
     visitHomeURL: string = "";
     overflowStyle: string = 'hidden';
+    hover: boolean = false;
     
     constructor(public globalsvc: GlobalService,
                 private gaService: GoogleAnalyticsService) { 
@@ -64,9 +68,17 @@ export class VisithomePubComponent {
      */
     visitHomePageBtnStyle() {
         if(this.theme == this.scienceTheme) {
-            return "var(--science-theme-background-default)";
-        }else{
-            return "var(--nist-green-default)";
+            if (this.hover) {
+                return "var(--science-theme-background-light)";
+            } else {
+                return "var(--science-theme-background-default)";
+            }
+        } else {
+            if (this.hover) {
+                return "var(--nist-green-light)";
+            } else {
+                return "var(--nist-green-default)";
+            }
         }
     }
 

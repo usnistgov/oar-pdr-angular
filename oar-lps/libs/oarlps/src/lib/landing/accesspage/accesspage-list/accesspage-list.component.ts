@@ -5,7 +5,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -62,6 +62,9 @@ export class AccesspageListComponent implements OnInit {
     editMode: string = MODE.NORMAL; 
     forceReset: boolean = false;
     globalsvc = inject(GlobalService);
+
+    //icon class names
+    addIcon = iconClass.ADD;
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 

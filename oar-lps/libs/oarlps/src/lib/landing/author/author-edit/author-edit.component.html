@@ -121,7 +121,7 @@
             <td align="left" *ngIf="author">
                 <!-- Add button -->
                 <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add affiliation" style="float: right;margin: 5px;">
-                    <i class="faa faa-plus faa-lg"></i>
+                    <i [class]="addIcon"></i>
                 </button>
 
                 <div class="text-input-right-button" style="margin-left: 10px;border: 1px solid lightgrey;height:fit-content;min-height: 30px;">
@@ -139,7 +139,7 @@
                                 placeholder="Please enter organization name" />
 
                                 <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                    <i class="fas fa-trash-alt" (click)="deleteAffiliation(aff)"
+                                    <i [class]="deleteIcon" (click)="deleteAffiliation(aff)"
                                     style="cursor: pointer;" data-toggle="tooltip"
                                     title="Delete affiliation"></i>
                                 </span>
@@ -162,13 +162,13 @@
                                             placeholder="Please enter department/Division name" />
 
                                         <span *ngIf="i==aff.subunits.length-1" class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                            <i class="fas fa-plus fa-sm" (click)="addSubunit(j, aff.subunits[i])"
+                                            <i [class]="addIcon" (click)="addSubunit(j, aff.subunits[i])"
                                             style="cursor: pointer;" data-toggle="tooltip"
                                             title="Add subunit"></i>
                                         </span>                                            
                                             
                                         <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                            <i class="fas fa-trash-alt" (click)="deleteUnit(j, aff.subunits[i])"
+                                            <i [class]="deleteIcon" (click)="deleteUnit(j, aff.subunits[i])"
                                             style="cursor: pointer;" data-toggle="tooltip"
                                             title="Delete subunit"></i>
                                         </span>

@@ -45,14 +45,14 @@
                             tooltipPosition="top" 
                             aria-label="Edit title" 
                             style="cursor: pointer">
-                            <i class="fas fa-pencil fa-sm"></i>
+                            <i [class]="editIcon"></i>
                         </button> 
 
                         @if( updated ) {
                             <!-- Restore button, restore original value -->
                             <button class="edit_button" type="button" [disabled]="!updated" 
                                 (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
-                                <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
+                                <i [class]="undoIcon" data-toggle="tooltip" title="Undo title"></i>
                             </button> 
                         }
                     }
@@ -60,13 +60,13 @@
                         <!-- Save button -->
                         <button class="edit_button" type="button" (click)="onSave()"
                         aria-label="save button" ngbTooltip="Save changes">
-                            <i class="fas fa-check icon_enabled"></i>
+                            <i class="icon_enabled" [class]="saveIcon"></i>
                         </button>
 
                         <!-- Cancel editing button: cancel current changes -->
                         <button class="edit_button" type="button"
                         (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                            <i class="fas fa-times fa-sm" data-toggle="tooltip" title="Undo current changes"></i>
+                            <i [class]="cancelIcon" data-toggle="tooltip" title="Undo current changes"></i>
                         </button>   
                     }
                 </div>
