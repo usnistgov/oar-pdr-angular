@@ -407,7 +407,7 @@ export class ResultlistComponent implements OnInit {
                                         let collection = topic.split("----")[0];
                                         let topicValue = this.globalsvc.restoreReservedChars(topic.split("----")[1]);
 
-                                        if(oTopic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
+                                        if(oTopic['scheme'] && oTopic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
                                             if(collection == Collections.DEFAULT) {
                                                 if(oTopic["tag"].toLowerCase().includes(topicValue.toLowerCase()))
                                                     resultItem.active = true;

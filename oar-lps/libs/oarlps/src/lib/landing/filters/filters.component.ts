@@ -940,6 +940,9 @@ export class FiltersComponent implements OnInit {
         for (let resultItem of searchResults) {
             if (typeof resultItem.topic !== 'undefined' && resultItem.topic.length > 0) {
                 for (let topic of resultItem.topic) {
+                    if (! topic['scheme'])
+                        continue;
+                    
                     let topics = topic.tag.split(":");
                     topics = topics.map(t => t.trim());
 
@@ -1144,7 +1147,7 @@ export class FiltersComponent implements OnInit {
                 let found: boolean = false;
                 if (resultItem.topic && resultItem.topic.length > 0) {
                     for (let topic of resultItem.topic) {
-                        if (topic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
+                        if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
                             if (collection == Collections.DEFAULT) {
                                 if (topic.tag.includes(parentData)) {
                                     found = true;
