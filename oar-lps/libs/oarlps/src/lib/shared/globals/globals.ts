@@ -432,12 +432,13 @@ export class FilterTreeNode implements TreeNode {
     expanded = false;
     keyname: string = '';
     key: string = '';
+    taxonomy: string = ''; // Only for this node
     parent = null;
     level: number = 1;
     selectable: boolean = true;
     unspecified: boolean[] = [];
     
-    constructor(label: string='', expanded: boolean = false, key: string=null, keyname: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1) {
+    constructor(label: string='', expanded: boolean = false, key: string=null, keyname: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1, taxonomy: string = "") {
         this.label = label;
         if(data && !this.data.includes(data))
             this.data.push(data);
@@ -451,6 +452,7 @@ export class FilterTreeNode implements TreeNode {
             this.keyname = label;
             this.key = label;
         }
+        this.taxonomy = taxonomy;
     }
 
    /**
@@ -513,12 +515,18 @@ export class FilterTreeNode implements TreeNode {
         }
 
         // ancestor does not exist yet; create it
-        let key = parentKey + levels[0];
+        let key = levels[0];
         let keyname = levels[0];
+        let taxonomy = levels[0];
         let label = levels[0];
         let data = item[0];
-
         let count = 0;
+        let parent = this.parent;
+
+        if (parent && parent.key) {
+            key = parent.key + key;
+        }
+
         if (levels.length == 1) {
             label += "---" + item[1]; 
         }
@@ -527,26 +535,66 @@ export class FilterTreeNode implements TreeNode {
             count = item[1];
         }
 
-        let child = new FilterTreeNode(label, false, key, keyname, data, count, true, level+1);
+        let child = new FilterTreeNode(label, false, key, keyname, data, count, true, level+1, taxonomy);
         child.parent = this;
         this.children = [...this.children, child];
 
-        //Add only unique dataset to the count
-        if(searchResults) {
+        if (levels.length > 1){
+            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI, key);
+        }
+        return child;
+    }    
+
+    /**
+     *  Add count to each node
+     *  Loop through search result items and count those that natch the taxonomy of treenode.
+     * @param searchResults: search result array
+     * @param collection: Collection
+     * @param taxonomyURI: taxonomy URI to identify the topic.
+     */
+    addCount(searchResults: any = null, collection: string=null, taxonomyURI: any = {}) {
+        for (let child of this.children) {
+            this._addCount(child, searchResults, collection, taxonomyURI);
+        }
+    }
+
+    _addCount(tree: FilterTreeNode, searchResults: any = null, collection: string=null, taxonomyURI: any = {}) {
+        if (tree.label.slice(0, 5) == "Other")
+            console.log("tree", tree);
+
+        tree.count = 0;
+        tree.ediids = [];
+        tree.key = tree.keyname;
+        let taxonomy = tree.taxonomy;
+        let parent: FilterTreeNode = tree.parent;
+
+        while (parent && parent.level > 1) {
+            tree.key = parent.keyname + tree.key;
+            parent = parent.parent;
+        }
+
+        if (searchResults && searchResults.length > 0) {
             for (let resultItem of searchResults) {
                 let found: boolean = false;
                 if(resultItem.topic && resultItem.topic.length > 0){
                     for(let topic of resultItem.topic) {
                         if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
                             if(collection == Collections.DEFAULT) {
-                                if(topic.tag.includes(data)) {
+                                if(topic.tag.includes(taxonomy)) {
                                     found = true;
                                     break;
                                 }
-                            }else{
-                                if(topic.tag == data) {
-                                    found = true;
-                                    break;
+                            } else {
+                                if (tree.label.slice(0, 5) == "Other") {
+                                    if(topic.tag == taxonomy) {
+                                        found = true;
+                                        break;
+                                    }   
+                                } else {
+                                    if(topic.tag.slice(0, taxonomy.length) == taxonomy) {
+                                        found = true;
+                                        break;
+                                    }                                     
                                 }
                             }
                         }
@@ -554,17 +602,39 @@ export class FilterTreeNode implements TreeNode {
                 }
 
                 if(found){
-                    if(!child.ediids.includes(resultItem.ediid)){
-                        child.ediids.push(resultItem.ediid);
-                        child.count++;
+                    if(!tree.ediids.includes(resultItem.ediid)){
+                        tree.ediids.push(resultItem.ediid);
+                        tree.count++;
                     }
                 }        
             }
         }
 
-        if (levels.length > 1){
-            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI, key);
+        for (let child of tree.children) {
+            this._addCount(child, searchResults, collection, taxonomyURI);
         }
-        return child;
     }    
+
+    /**
+     *  Refresh taxonomy for each node
+     */
+    refreshTaxonomy() {
+        for (let child of this.children) {
+            this._refreshTaxonomy(child);
+        }        
+    }
+
+    _refreshTaxonomy(tree: FilterTreeNode) {
+        let parent: FilterTreeNode = tree.parent;
+        tree.taxonomy = tree.keyname;
+        
+        if(parent && parent.level > 1) {
+            if(parent.taxonomy)
+                tree.taxonomy = parent.taxonomy + ":" + tree.taxonomy;
+        }       
+        
+        for (let child of tree.children) {
+            this._refreshTaxonomy(child);
+        }        
+    }
 }
