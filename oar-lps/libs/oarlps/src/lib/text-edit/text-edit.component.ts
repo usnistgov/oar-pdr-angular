@@ -3,6 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDe
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
+import { iconClass } from '../shared/globals/globals';
 
 @Component({
     selector: 'lib-text-edit',
@@ -22,6 +23,14 @@ export class TextEditComponent implements OnInit {
     // editboxWidth: string = "calc(100% - 60px)"; // Default only text box and two icon buttons
     controlBoxWidth: string = "60px !important"
     editing: boolean = false;
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
+    deleteIcon = iconClass.DELETE;
 
     @Input() textField: string = "";
     @Input() dragDropIcon: boolean = false;
@@ -230,9 +239,9 @@ export class TextEditComponent implements OnInit {
      */
     getDelIconClass() {
         if(this.editing){
-            return "faa faa-undo";
+            return this.undoIcon;
         }else{
-            return "fas fa-trash-alt";
+            return this.deleteIcon;
         }
     }    
 
