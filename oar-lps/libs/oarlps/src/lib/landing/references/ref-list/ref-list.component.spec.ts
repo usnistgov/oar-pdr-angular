@@ -19,6 +19,7 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideRouter } from '@angular/router';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
+import { AuthenticationService, MockAuthenticationService } from 'oarng';
 
 describe('RefListComponent', () => {
     let component: RefListComponent;
@@ -33,7 +34,6 @@ describe('RefListComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [
-                RefListComponent,
                 NoopAnimationsModule,
                 ToastrModule.forRoot()
             ],
@@ -41,6 +41,8 @@ describe('RefListComponent', () => {
                 UserMessageService, 
                 HttpHandler,
                 DatePipe,
+                {provide: AuthenticationService, useValue: new MockAuthenticationService(null)},
+                { provide: RefListComponent, useValue: {} },
                 { provide: AppConfig, useValue: cfg },
                 { provide: AuthService, useValue: authsvc },
                 { provide: DAPService, useFactory: createDAPService, 

@@ -27,7 +27,7 @@
                         <span>DOI:</span>
                     </td>
                     <td colspan="2">
-                        <lib-text-edit [textField]="ref.doi" [submitButton]="true" [submitTooltip]="" [showBorder]="false" placeHolderText="Place DOI here" (command_out)="onDoiChange($event)"></lib-text-edit>
+                        <lib-text-edit [textField]="ref.doi" [submitButton]="true" submitTooltip="Submit DOI" [showBorder]="false" placeHolderText="Place DOI here" (command_out)="onDoiChange($event)"></lib-text-edit>
                     </td>
                 </tr>
 
@@ -185,12 +185,12 @@
                             type="button" 
                             *ngIf="isEditing || !useCitationData"
                             (click)="citationLocked = !citationLocked" 
-                            aria-label="reset button"
-                            pTooltip="Reset" 
+                            aria-label="lock/unlock button"
+                            [pTooltip]="citationLockTooltip()" 
                             tooltipPosition="top">
                             <i [class]="citationLockClass()" 
                                 data-toggle="tooltip" 
-                                title="Reset citation"></i>
+                                [title]="citationLockTooltip()"></i>
                         </button>
                     </td>
                 </tr>

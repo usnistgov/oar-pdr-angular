@@ -17,6 +17,7 @@
     },
     "dapEditing": {
       "serviceEndpoint": "https://localhost/midas/dap/mds3/",
+      "doiEndpoint": "https://localhost/midas/doi/2nerdm/ref/",
       "editEnabled": true
     },
       "staffdir": {
