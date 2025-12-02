@@ -14,6 +14,8 @@ export class ContactinfoComponent implements OnInit {
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
+    @Input() helpText: any = {};
+    @Input() marginLeft: number = 40;
 
     constructor(
         private cdr: ChangeDetectorRef,
@@ -44,8 +46,10 @@ export class ContactinfoComponent implements OnInit {
         this.lastStep.canGoNext = this.stepService.allDone();
     }
 
-    updateContactName(evt:any) {
-        // this.dataModel.contactName = evt.target.value;
+    /**
+     * Update the step status when contact name changed.
+     */
+    onContactNameChanged() {
         this.thisStep.isComplete = (this.dataModel.contactName?.trim() != "");
         this.lastStep.canGoNext = this.stepService.allDone();
     }

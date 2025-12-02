@@ -14,7 +14,7 @@ import { AuthorEditComponent } from '../author-edit/author-edit.component';
 import { CommonModule } from '@angular/common';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { ButtonModule } from 'primeng/button';				
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -57,6 +57,11 @@ export class AuthorListComponent implements OnInit {
     // Default is "normal" mode.
     editMode: string = MODE.NORMAL; 
     globalsvc = inject(GlobalService);
+
+    //icon class names
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    addIcon = iconClass.ADD;
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
@@ -334,7 +339,6 @@ export class AuthorListComponent implements OnInit {
                     foundAuthor = JSON.parse(JSON.stringify(author));
 
                     this.mdupdsvc.update(this.fieldName, foundAuthor, id).then((updateSuccess) => {
-                        // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("Author updated.", "", 3000);
                             resolve(true);
@@ -357,7 +361,6 @@ export class AuthorListComponent implements OnInit {
                 }
 
                 this.mdupdsvc.update(this.fieldName, postMessage, id).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Authors updated.", "", 3000);
                         resolve(true);
@@ -430,33 +433,9 @@ export class AuthorListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return "fas fa-plus faa-lg icon_enabled";
+            return this.addIcon + " icon_enabled";
         }else{
-            return "fas fa-plus faa-lg icon_disabled";
-        }
-    }
-
-    /**
-     * Determine icon class of undo button
-     * If edit mode is normal, display disabled icon.
-     * Otherwise display enabled icon.
-     * @returns undo button icon class
-     */
-    undoIconClass() {
-        return !this.authorsChanged && !this.authorsUpdated? "fas fa-undo icon_disabled" : "fas fa-undo icon_enabled";
-    }
-
-    /**
-     * Determine icon class of edit button
-     * If edit mode is normal, display edit icon.
-     * Otherwise display check icon.
-     * @returns edit button icon class
-     */   
-    editIconClass() {
-        if(this.isNormal){
-            return "fas fa-pencil icon_enabled";
-        }else{
-            return "fas fa-pencil icon_disabled";
+            return this.addIcon + " icon_disabled";
         }
     }
 

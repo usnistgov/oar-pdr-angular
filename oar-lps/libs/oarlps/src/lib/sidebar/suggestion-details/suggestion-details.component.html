@@ -1,4 +1,4 @@
-<div>
+<div class="summary" (click)="toogleDetails($event)">
     <!-- Display summary -->
     <!-- <i (click)="toogleDetails();gotoSection(suggestion.subject);"  -->
         <i (click)="gotoSection(suggestion.subject);" 
@@ -11,13 +11,12 @@
         (mouseover)="isMouseOver = true"
         (mouseleave)="isMouseOver = false"
         [ngClass]="{'fa-caret-right': !showDetails, 'fa-caret-down': showDetails}"
-        aria-label="Show details"
-        (click)="toogleDetails($event)">
+        aria-label="Show details">
     </i>
 </div>
 
 <div *ngIf="showDetails" class="details">
-    <div *ngFor="let detail of suggestion?.details" >
+    <div *ngFor="let detail of suggestion?.details" class="detail">
         {{detail}}
     </div>
 </div>

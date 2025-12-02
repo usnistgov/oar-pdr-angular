@@ -65,9 +65,6 @@ export class CitationPopupComponent {
         this.chref.detectChanges();
     }
     ngOnChanges(changes: SimpleChanges): void {
-        // console.log("citetext", this.citetext);
-        // console.log("visible", this.visible);
-        // console.log("width", this.width);
     }
 
     _setVisible(yesno : boolean) : void {

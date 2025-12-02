@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../nerdm/nerdm';
 import * as globals from '../shared/globals/globals'
+import { BehaviorSubject } from 'rxjs';
+import { SectionHelp } from '../shared/globals/globals';
 
 @Injectable({
   providedIn: 'root'
@@ -8,6 +10,15 @@ import * as globals from '../shared/globals/globals'
 export class SidebarService {
 
     constructor() { }
+
+    // Indicate which section help content to display
+    _sectionHelp: BehaviorSubject<SectionHelp> = new BehaviorSubject<SectionHelp>({} as SectionHelp);
+    setSectionHelp(sectionHelp: SectionHelp){
+        this._sectionHelp.next(sectionHelp);
+    }
+    public watchSectionHelp(subscriber) {
+        this._sectionHelp.subscribe(subscriber);
+    }
 
     //This is for testing purpose. The real suggestions will be provided by DBIO backend.
     //This function is called by the fake backend provider.

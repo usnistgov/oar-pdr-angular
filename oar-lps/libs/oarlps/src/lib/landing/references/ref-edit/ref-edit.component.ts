@@ -10,6 +10,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { ButtonModule } from 'primeng/button';				
 import { TooltipModule } from 'primeng/tooltip';
+import { iconClass } from '../../../shared/globals/globals';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -50,6 +51,14 @@ export class RefEditComponent implements OnInit {
     showCitationData: boolean = false;
     showAllFields: boolean = false;
     ref: Reference = {} as Reference;
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
+    deleteIcon = iconClass.DELETE;
 
     @Input() currentRef: Reference = {} as Reference;
     @Input() editMode: string = "edit";

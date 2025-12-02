@@ -14,6 +14,8 @@ export class FilesComponent implements OnInit {
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
+    @Input() helpText: any = {};
+    @Input() marginLeft: number = 40;
 
     constructor(
         private stepService: StepService) { }
@@ -24,6 +26,9 @@ export class FilesComponent implements OnInit {
         this.setSteps();
     }
 
+    /**
+     * Update the step status when data changed.
+     */
     setSteps() {
         if(this.dataModel.willUpload != undefined){
             this.thisStep.canGoNext = true;

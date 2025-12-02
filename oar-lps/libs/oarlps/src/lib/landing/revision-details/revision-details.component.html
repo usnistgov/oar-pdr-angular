@@ -1,0 +1,51 @@
+<div class="title space1">
+    Check all of the types of changes you made as part of this revision:
+    <i class="faa faa-question-circle btn-help" (click)="getHelp()" aria-hidden="true"></i>
+    <!-- <mat-icon 
+        class="btn-help"
+        (click)="getHelp()">help_outline</mat-icon> -->
+</div>
+
+<!-- Checkboxes -->
+<div class="space1">
+    <i class="faa faa-circle dot"></i>
+    <b>Minor changes</b>
+    <div *ngFor="let type of allRevisionTypes; let i=index">
+        <mds-checkbox *ngIf="!type.majorChanges" class="listitem" [checked]="checked(type.id)" (click)="toggle(type.id)"
+            [label]="type.label">
+        </mds-checkbox>
+    </div>
+
+    <i class="faa faa-circle dot"></i>
+    <b>Major changes</b>
+    <div style="font-style: italic;margin-left: 20px;">These require full review</div>
+    <div *ngFor="let type of allRevisionTypes; let i=index">
+        <mds-checkbox 
+            *ngIf="type.majorChanges"
+            class="listitem" 
+            [checked]="checked(type.id)" 
+            (click)="toggle(type.id)" 
+            [label]="type.label">
+        </mds-checkbox>
+    </div>
+</div>
+
+<div class="space1">
+    <i class="pi pi-arrow-up-right" style="margin-right: .5em;"></i>
+        <a [href]="policyPageLink">For more infomation, ...</a> 
+</div>
+
+<!-- Purpose of the revision -->
+<div class="title space1">
+    Enter a brief statement summarizing the purpose of this revision:
+</div>
+
+<textarea 
+    cdkTextareaAutosize 
+    cdkAutosizeMinRows="2" 
+    cdkAutosizeMaxRows="5" 
+    [(ngModel)]="submissionData.revisionPurpose"
+    (change)="onTextChange($event)" 
+    placeholder="Enter purpose for this change here."
+    class="textbox">
+</textarea>

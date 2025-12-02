@@ -13,6 +13,7 @@ import * as env from '../../../../environments/environment';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('VisithomeMidasComponent', () => {
     let component: VisithomeMidasComponent;
@@ -26,7 +27,8 @@ describe('VisithomeMidasComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
         imports: [
-            VisithomeMidasComponent,
+                VisithomeMidasComponent,
+            BrowserAnimationsModule,
             ToastrModule.forRoot()
         ],
         providers: [

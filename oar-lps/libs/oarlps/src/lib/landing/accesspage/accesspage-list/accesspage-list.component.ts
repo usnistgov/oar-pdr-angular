@@ -5,7 +5,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     CdkDragEnter,
@@ -52,7 +52,6 @@ export class AccesspageListComponent implements OnInit {
     currentOrderChanged: boolean = false;
     editBlockStatus: string = 'collapsed';
     placeholder: string = "Enter access page data below";
-    fieldName: string = 'components';
     FieldNameAPI: string = 'pdr:see';
     orig_aPages: NerdmComp[] = null; // Keep a copy of original access pages for undo purpose
     orig_record: NerdmRes = null; // Keep a copy of original record for update purpose
@@ -64,6 +63,9 @@ export class AccesspageListComponent implements OnInit {
     forceReset: boolean = false;
     globalsvc = inject(GlobalService);
 
+    //icon class names
+    addIcon = iconClass.ADD;
+
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
     dropListReceiverElement?: HTMLElement;
@@ -74,6 +76,7 @@ export class AccesspageListComponent implements OnInit {
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
+    @Input() fieldName: string;
     @Input() mdupdsvc : MetadataUpdateService;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
 
@@ -190,6 +193,7 @@ export class AccesspageListComponent implements OnInit {
 
             cmp['showDesc'] = false;
             cmp['backcolor'] = 'white';
+            cmp['isNew'] = false;
             return cmp;
         });
     }
@@ -404,7 +408,6 @@ export class AccesspageListComponent implements OnInit {
                 delete postMessage.dataChanged;
 
                 this.mdupdsvc.update(this.fieldName, postMessage, compId, this.FieldNameAPI).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
                         // this.dataCommand.next(editmode);
@@ -424,7 +427,6 @@ export class AccesspageListComponent implements OnInit {
                 }
 
                 this.mdupdsvc.update(this.fieldName, postMessage, undefined, this.FieldNameAPI).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
                         // this.dataCommand.next(editmode);
@@ -685,5 +687,10 @@ export class AccesspageListComponent implements OnInit {
 
     emptyRecord(index: number): boolean {
         return !this.accessPages[index] && !(this.accessPages[index].title || this.accessPages[index].description || this.accessPages[index].accessURL);
+    }
+
+    dataChanged(fieldName, i) {
+        let changed = this.mdupdsvc.fieldUpdated(fieldName, this.accessPages[i]['@id']);
+        return changed;
     }
 }

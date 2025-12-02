@@ -8,6 +8,7 @@ import { AppConfig } from 'oarlps';
 import { UserMessageService } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 import { CollectionDataModel } from './models/data.model';
+import questionhelp from '../../assets/site-constants/question-help.json';
 
 export class AuthStatus {
     static readonly AUTHORIZED = 'Authorized';
@@ -54,7 +55,12 @@ export class StepWizardComponent implements OnInit {
     _creds: Credentials|null = null;
     hasError: boolean = false;
 
+    //Default left margin to 120px
+    marginLeft = 120;
+
     collectionData: CollectionDataModel[] = [];
+
+    public helpContentAll:{} = questionhelp;
 
     constructor(private stepService: StepService,
                 private msgsvc: UserMessageService,

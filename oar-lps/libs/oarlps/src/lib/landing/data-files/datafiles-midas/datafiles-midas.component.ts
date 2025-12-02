@@ -9,12 +9,12 @@ import { DownloadStatus } from '../../../datacart/cartconstants';
 import { DataCartStatus } from '../../../datacart/cartstatus';
 import { formatBytes } from '../../../utils';
 import { EditStatusService } from '../../../landing/editcontrol/editstatus.service';
-import { LandingConstants } from '../../../landing/constants';
+import { LandingConstants } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { SectionPrefs, Sections } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -30,6 +30,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { FrameModule } from '../../../frame/frame.module';
 import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
+import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 
 declare var _initAutoTracker: Function;
 
@@ -96,6 +97,11 @@ export class DatafilesMidasComponent {
     fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     overlaypanelOn: boolean = false;
     refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
+    // revisionType: string = ""
+    // arrRevisionTypes: any[] = [];
+    _editType: string;
+    EDIT_TYPES: any = LandingConstants.editTypes;
+    authorized: boolean = false;
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
@@ -107,6 +113,8 @@ export class DatafilesMidasComponent {
                 public lpService: LandingpageService, 
                 private msgsvc: UserMessageService,
                 private chref: ChangeDetectorRef,
+                public globalService: GlobalService,
+                private confirmDialogSvc: ConfirmationDialogService,
                 private ngZone: NgZone)
     {
         this.cols = [
@@ -135,12 +143,25 @@ export class DatafilesMidasComponent {
         });
     }
 
+    // get isRevisionType() {
+    //     return this._editType == this.EDIT_TYPES.REVISE;
+    // }
+
     ngOnInit() {
+        // this.arrRevisionTypes = LandingConstants.reviseTypes;
         // if(this.record && !this.record["keyword"]) this.record["keyword"] = [];
 
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
         });
+
+        this.globalService.watchAuthorized((authorized) => {
+            this.authorized = authorized;
+        })
+
+        this.editstatsvc.watchEditType((editType) => {
+            this._editType = editType;
+        })
 
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
         this.breakpointObserver
@@ -182,8 +203,24 @@ export class DatafilesMidasComponent {
      * Open url in a new tab
      */
     openFileManager() {
-        if(this.fileManagerUrl)
-            window.open(this.fileManagerUrl, 'blank');
+        window.open(this.fileManagerUrl);
+
+        // if (this.isRevisionType && this.revisionType == "Metadata Update") {
+        //     let message = "Current revision type is 'Metadata Update'. Would you like to select a type from following and proceed?";
+
+        //     this.confirmDialogSvc.confirmManageFiles(
+        //         'Please confirm',
+        //         message, 'sm')
+        //         .then((confirmed) => {
+        //             if (confirmed) {
+        //                 this.revisionType = this.arrRevisionTypes[4];
+        //                 window.open(this.fileManagerUrl);
+        //             }
+        //         })
+        //         .catch(() => {
+        //             console.log("User canceled request (indirectly)");
+        //         });
+        // }     
     }
 
     /**
@@ -191,39 +228,35 @@ export class DatafilesMidasComponent {
      */
     reloadFiles() {
         this.refreshFilesIcon = "faa faa-spinner faa-spin icon-white";
-        this.mdupdsvc.loadDataFiles().subscribe( data => {
-            this.mdupdsvc.loadDraft(true).subscribe({
-                next: (md) => 
-                {
-                    if(md)
-                    {
-                        this.mdupdsvc.cacheMetadata(md as NerdmRes);
-                        this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
+        this.mdupdsvc.syncDataFiles().subscribe({
+            next: (fsdata) => {
+                this.mdupdsvc.loadDraft(true).subscribe({
+                    next: (md) => {
+                        if(md) {
+                            this.mdupdsvc.cacheMetadata(md as NerdmRes);
+                            this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
 
-                        if (md['components']) 
-                            this.record['components'] = JSON.parse(JSON.stringify(md['components']));
-                        else
-                            this.record['components'] = []
+                            if (md['components']) 
+                                this.record['components'] = JSON.parse(JSON.stringify(md['components']));
+                            else
+                                this.record['components'] = []
                         
-                        // this.buildTree(this.record['components']); // Will rebuild in pub component
-                    }else{
-                        this.msgsvc.error("Fail to retrive updated dataset.");
+                            // this.buildTree(this.record['components']); // Will rebuild in pub component
+                        }else{
+                            this.msgsvc.error("Fail to retrive updated dataset.");
+                        }
+                        this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+                    },
+                    error: (err) => {
+                        console.error("Failed to pull updated record: ", err);
+                        this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
                     }
-
-                    this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                }
-                // error: (err) => 
-                // {
-                //     if(err.statusCode == 404)
-                //     {
-                //         console.error("404 error.");
-                //         this.mdupdsvc.resetOriginal();
-                //         this.msgsvc.error(err.message);
-                //     }
-
-                //     this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                // }
-            });
+                });
+            },
+            error: (err) => {
+                console.error("Failed to trigger file sync: ", err);
+                this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+            }
         });
     }
 
@@ -255,8 +288,6 @@ export class DatafilesMidasComponent {
     }
 
     hideOverlay(event, overlaypanel: OverlayPanel) {
-        console.log("event", event);
-        
         overlaypanel.hide();
         this.overlaypanelOn = false;
 
