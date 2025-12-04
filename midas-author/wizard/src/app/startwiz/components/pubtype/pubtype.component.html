@@ -43,7 +43,7 @@
             </div>            
 
             <div class="collection">
-                <input type="checkbox" [(ngModel)]="dataModel.partOfCollection" (change)="toggleCollection()">
+                <input type="checkbox" [(ngModel)]="dataModel.partOfCollection" (change)="toggleCollection()" aria-label="This publication will be published as part of an existing topical collection.">
                 <span style="margin-left: .5em;">This publication will be published as part of an existing topical collection.</span>
             </div>
         </div>
