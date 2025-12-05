@@ -4,7 +4,7 @@ import { NotificationService } from '../../../shared/notification-service/notifi
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, Themes } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, Themes, iconClass } from '../../../shared/globals/globals';
 import { VisithomeEditComponent } from '../visithome-edit/visithome-edit.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -48,6 +48,13 @@ export class VisithomeMidasComponent {
     globalsvc = inject(GlobalService);
     editStarted: boolean = false;
     isPublicSite: boolean = false;
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
     

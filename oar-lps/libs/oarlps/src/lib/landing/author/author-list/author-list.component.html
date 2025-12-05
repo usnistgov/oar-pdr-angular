@@ -60,7 +60,7 @@
 <!-- This is editing area. Will open up in add or edit mode -->
 <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus">  
     <table style="width: 100%;">
-        <tr  style="width: 100%;">
+        <tr style="width: 100%;">
             <!-- Text edit area -->
             <td class="edit-block" style="width: calc(100%-60px);">
                 <lib-author-edit 
@@ -83,13 +83,13 @@
                             aria-label="edit button" 
                             [disabled]="!currentAuthor || !currentAuthor.dataChanged" 
                             ngbTooltip="Save authors">
-                        <i class="faa faa-check"></i>
+                        <i [class]="saveIcon"></i>
                     </button>
 
                     <!-- Cancel button -->
                     <button class="edit_button" type="button"
                         (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                        <i class="fas fa-times"></i>
+                        <i [class]="cancelIcon"></i>
                     </button>
                 </div>
             </td>

@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { SDSuggestion, SDSIndex, StaffDirectoryService } from 'oarng';
+import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { tap } from 'rxjs';
 
 
 @Component({
@@ -37,11 +38,21 @@ export class PeopleComponent {
     // @Input() existingPeople: SDSuggestion[] = [];
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();    
     
-    constructor(private ps: StaffDirectoryService) { }
+    constructor(
+        private ps: StaffDirectoryService,
+        public authsvc: AuthenticationService) {
+        
+        this.authsvc.getCredentials().subscribe(
+            (creds) => {
+                ps.setAuthToken(creds.token);
+            }
+        )
+     }
 
     ngOnInit(): void {
         // this.selectedSuggestion = new SDSuggestion(0, this.originalValue, null);
         this.placeHolderText = "Enter at least " + this.minPromptLength + " chars to search...";
+        
     }
 
     ngOnChanges(changes: SimpleChanges): void {

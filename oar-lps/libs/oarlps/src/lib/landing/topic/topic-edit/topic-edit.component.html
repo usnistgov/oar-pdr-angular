@@ -18,11 +18,12 @@
                             style="border-bottom:1pt solid black;" height="2em" [style.background-color]="backgroundColor">
                             <td style="padding-left: 2em;">
                                 <!-- For new topic structure, change topic to topic.tag -->
-                                <span (click)="searchAndExpandTaxonomyTree(topic, true)"
-                                    style="color: #1E6BA1; cursor: pointer;">{{topic}}</span>
+                                <span (click)="searchAndExpandTaxonomyTree(topic.tag, true)"
+                                    style="color: #1E6BA1; cursor: pointer;">{{topic.tag}}</span>
                             </td>
+                            <!-- Delete button -->
                             <td width="50px">
-                                <i class="fas fa-trash-alt" (click)="deleteTopic(i)"
+                                <i [class]="deleteIcon" (click)="deleteTopic(i)"
                                     style="float: right;cursor: pointer;color:grey; margin: .5em;" data-toggle="tooltip"
                                     title="Delete affiliation"></i>
                             </td>
@@ -47,7 +48,7 @@
                     - Display only first level
                     - No filtering
                     -->
-                    <i class="faa faa-recycle reset" (click)="showAllTopics()" data-toggle="tooltip" title="Reset"></i>
+                    <i [class]="resetIcon" class = "reset" (click)="showAllTopics()" data-toggle="tooltip" title="Reset"></i>
                 </div>
                 <div style="clear: both;"></div>
                 <div #panel0
@@ -74,14 +75,14 @@
         <td style="width: 90px;vertical-align: top;">
             <!-- Save button -->
             <button class="edit_button" type="button" (click)="onSave()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
-                <i class="faa faa-check"></i>
+                <i [class]="saveIcon"></i>
             </button>
     
             <!-- Cancel button -->
             <!-- <button *ngIf="dataChanged" class="edit_button" type="button" -->
             <button class="edit_button" type="button"
                 (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
-                <i class="faa faa-undo fa-sm"></i>
+                <i [class]="undoIcon"></i>
             </button>             
         </td>          
     </tr>

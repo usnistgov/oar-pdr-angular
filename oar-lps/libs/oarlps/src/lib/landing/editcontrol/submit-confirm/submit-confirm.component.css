@@ -1,25 +1,49 @@
-#btn-submit {
+.wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.btn-submit {
     width:300px; 
+    height: 35px;
     background-color:var(--nist-green-default);
     color:white;
     margin-right: 1em;
 }
 
-#btn-cancel {
-    width:300px;
-    background-color:var(--nist-green-default);
+.btn-cancel {
+    width: 300px;
+    height: 35px;
+    background-color:var(--warning);
     color:white;
-    /* border-color: grey; */
-    margin-right: 1%;
+}
+
+.btn-label {
+    margin-left: 5px;
+}
+
+.btn-hide-help {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    cursor: pointer;
+    scale: 1.3;
+    /* float: right; */
+    /* margin-right: -20px; */
+    /* padding: 5px; */
+}
+
+.btn-hide-help:hover {
+    color: #a00000; 
 }
 
 .control-buttons {
-    width: 98%;
+    width: 100%;
     height: 3em; 
     color:white;
     margin: 1em 0em;
     border-top-style: 1px solid grey;
-    text-align: right; 
+    text-align: center; 
 }
 
 .bar {
@@ -33,6 +57,32 @@
 
 .content {
     margin: 1em;
+    display: flex;
+}
+
+.statement {
+    margin-bottom: 1em;
+}
+
+#suggestions {
+    position: relative;
+    flex: 1;
+    padding-left: 2em;
+    padding-right: 2em;
+    overflow: hidden;
+}
+
+.suggestion-req {
+    font-weight: bold;
+}
+
+.suggestion-item {
+    margin-bottom: .5em;
+}
+
+.suggestion-details {
+    margin-left: 2em;
+    margin-bottom: .5em;
 }
 
 .subtitle {
@@ -47,3 +97,39 @@
 .details {
     margin-left: 4em;
 }
+
+.revision {
+    flex: 1;
+    padding-left: 2em;
+    padding-right: 2em;
+    border-left: 1px solid lightgrey;
+}
+
+.sliding-div {
+    width: 100%;
+    /* max-height: 600px; */
+    z-index: 10;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+table,th,td {
+    border: 1px solid grey;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+table tr:nth-child(odd) {
+    background-color: #f1f1f1;
+}
+
+table tr:nth-child(even) {
+    background-color: #ffffff; }
+
+textarea {
+    width: 100%;
+}
+
+.btn-submit:disabled {
+    background-color: #c4c4c4;
+    color: rgb(0, 0, 0); }

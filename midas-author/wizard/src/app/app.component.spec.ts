@@ -4,8 +4,13 @@ import { AppComponent } from './app.component';
 import { AppModule } from './app.module';
 import { APP_BASE_HREF } from '@angular/common';
 import { AuthModule, AuthenticationService, OARAuthenticationService, MockAuthenticationService } from 'oarng';
+import {
+    ConfigModule, ConfigurationService, CONFIG_URL, RELEASE_INFO, Credentials
+} from 'oarng';
 
 describe('AppComponent', () => {
+    let configService: ConfigurationService;
+
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [
@@ -16,9 +21,14 @@ describe('AppComponent', () => {
             providers: [
                 {provide: APP_BASE_HREF, useValue: '/'},
                 MockAuthenticationService,
+                ConfigurationService,
                 AuthenticationService
             ]
         }).compileComponents();
+
+        configService = TestBed.inject(ConfigurationService);
+        jest.spyOn(configService, 'getConfig').mockReturnValue({ links: { portalBase: 'https://localhost/' } });
+
     });
 
     it('should create the app', () => {

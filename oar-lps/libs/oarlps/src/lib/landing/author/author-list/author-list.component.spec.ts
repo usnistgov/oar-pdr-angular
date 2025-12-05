@@ -6,14 +6,14 @@ import { AppConfig } from '../../../config/config';
 import * as env from '../../../../environments/environment';
 import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { DatePipe } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ToastrModule } from 'ngx-toastr';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { StaffDirectoryService, StaffDirModule, ConfigurationService } from 'oarng';
+import { StaffDirectoryService, StaffDirModule, ConfigurationService, AuthenticationService } from 'oarng';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { Configuration } from 'oarng';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('AuthorListComponent', () => {
     let component: AuthorListComponent;
@@ -26,7 +26,9 @@ describe('AuthorListComponent', () => {
     let edstatsvc = new EditStatusService();
     let httpClient: HttpClient;
     let configService: ConfigurationService = new ConfigurationService(httpClient);
-
+    let authService: AuthenticationService;
+    let httpMock: HttpTestingController;
+    
     const mockConfig: Configuration = {
         staffdir: {
             serviceEndpoint: svcep
@@ -57,7 +59,8 @@ describe('AuthorListComponent', () => {
                     },
                     { provide: StaffDirectoryService,useValue: new StaffDirectoryService(
                         httpClient, configService
-                    )} 
+                    )},
+                    AuthenticationService 
                 ]
         })
         .compileComponents();
@@ -66,6 +69,9 @@ describe('AuthorListComponent', () => {
 
     beforeEach(() => {
         let record: any = require('../../../../assets/sampleRecord.json');
+    
+        authService = TestBed.inject(AuthenticationService);
+        authService.setCredential({userId: "test",userAttributes:null, token:"fake token"});
 
         fixture = TestBed.createComponent(AuthorListComponent);
         component = fixture.componentInstance;

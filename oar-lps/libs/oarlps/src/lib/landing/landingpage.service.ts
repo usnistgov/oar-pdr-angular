@@ -1,6 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { SectionMode, SectionHelp, MODE, SubmitResponse } from '../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SubmitResponse, ReviewResponse } from '../shared/globals/globals';
 import { NerdmRes } from '../nerdm/nerdm';
 import { strict } from 'assert';
 
@@ -51,8 +51,8 @@ export class LandingpageService {
     }
 
     // Set and watch help text returned from submit function
-    _submitResponse: BehaviorSubject<SubmitResponse> = new BehaviorSubject<SubmitResponse>({} as SubmitResponse);
-    setSubmitResponse(submitResponse: SubmitResponse){
+    _submitResponse: BehaviorSubject<ReviewResponse> = new BehaviorSubject<ReviewResponse>({} as ReviewResponse);
+    setSubmitResponse(submitResponse: ReviewResponse){
         this._submitResponse.next(submitResponse);
     }
 

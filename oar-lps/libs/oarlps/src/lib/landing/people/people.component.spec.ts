@@ -1,12 +1,13 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { StaffDirectoryService, StaffDirModule } from 'oarng';
+import { StaffDirectoryService, StaffDirModule, AuthenticationService } from 'oarng';
 import { PeopleComponent } from './people.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 describe('PeopleComponent', () => {
   let component: PeopleComponent;
   let fixture: ComponentFixture<PeopleComponent>;
-  let service: StaffDirectoryService;
+  let ps: StaffDirectoryService;
+  let authsvc: AuthenticationService;
   let httpMock: HttpTestingController;
   let svcep : string = "https://mds.nist.gov/midas/nsd";
 
@@ -14,7 +15,8 @@ describe('PeopleComponent', () => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, StaffDirModule, PeopleComponent ],
       providers: [ 
-        StaffDirectoryService
+          StaffDirectoryService,
+          AuthenticationService
        ]
     }).compileComponents();
 
@@ -27,7 +29,9 @@ describe('PeopleComponent', () => {
         }
     });
 
-    service = TestBed.inject(StaffDirectoryService);
+      ps = TestBed.inject(StaffDirectoryService);
+      authsvc = TestBed.inject(AuthenticationService);
+      authsvc.setCredential({userId: "test",userAttributes:null, token:"fake token"});
 
     fixture = TestBed.createComponent(PeopleComponent);
     component = fixture.componentInstance;

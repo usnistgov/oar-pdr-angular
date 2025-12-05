@@ -1,5 +1,5 @@
 <div class="full-height">
-    <oar-pushing-sidebar style="width: 100%; height: fit-content;">
+    <oar-pushing-sidebar [marginLeft]="marginLeft" style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>
                 Is there or will there be a literature article published regarding this {{dataModel.resourceType}}?
@@ -8,38 +8,44 @@
             <div class="radio-group">
                 <div class="radio">
                     <label title="No, this will be a stand-alone publication">
-                        <input type="radio" required name="assocPageType" value="stand-alone" [(ngModel)]="dataModel.assocPageType" (change)="onSelectChange($event)">
+                        <input 
+                            type="radio" 
+                            required 
+                            name="assocPageType" 
+                            value="stand-alone" 
+                            [(ngModel)]="dataModel.assocPageType" 
+                            (change)="onAssocPaperTypeChange()">
                         No, this will be a stand-alone publication
                     </label>
                 </div>
                 <div class="radio">
                     <label title="Yes, this (Data/Software/...) publication should be considered a supplement of the article">
-                        <input type="radio" required name="assocPageType" value="supplement" 
-                        [(ngModel)]="dataModel.assocPageType" (change)="onSelectChange($event)">
+                        <input 
+                            type="radio" 
+                            required 
+                            name="assocPageType" 
+                            value="supplement" 
+                            [(ngModel)]="dataModel.assocPageType" 
+                            (change)="onAssocPaperTypeChange()">
                         Yes, this {{dataModel.resourceType}} publication should be considered a supplement of the article
                     </label>
                 </div>
                 <div class="radio">
                     <label title="Yes, but the article is only loosely related this publication.">
-                        <input type="radio" required name="assocPageType" value="loosely-related"  [(ngModel)]="dataModel.assocPageType" (change)="onSelectChange($event)">
+                        <input 
+                            type="radio" 
+                            required name="assocPageType" 
+                            value="loosely-related"  
+                            [(ngModel)]="dataModel.assocPageType" 
+                            (change)="onAssocPaperTypeChange()">
                         Yes, but the article is only loosely related this publication.
                     </label>
                 </div>
             </div>
         </div>
 
-        <span class="sidebar-title">Question Help</span>
-        <div class="sidebar-content">
-
-            <p>
-                With this question, you are telling us the <i>type</i> of product you are publishing.
-                Your publication may present multiple types of products--for example, data plus software
-                to analyze it--but, it is helpful for us to know what you consider is the most important
-                product. And don't worry: you can change this later.
-            <p>
-                <i>[Helpful examples, links to policy and guideance]</i>
-
-        </div>
+        <span class="sidebar-title">{{helpText["label"]}}</span>
+        <div class="sidebar-content" [innerHTML]="helpText['general']"></div>
     </oar-pushing-sidebar>
 
 </div>

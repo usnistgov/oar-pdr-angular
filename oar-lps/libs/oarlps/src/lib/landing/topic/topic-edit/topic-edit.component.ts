@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
-import { MODE } from '../../../shared/globals/globals';
+import { MODE, iconClass } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
@@ -43,6 +43,12 @@ export class TopicEditComponent implements OnInit {
     toggle: Boolean = true;  
     originalSelectedTopicsTopics: any[] = [];
     // selectedTopics: any[] = [];
+
+    //icon class names
+    saveIcon = iconClass.SAVE;
+    undoIcon = iconClass.UNDO;
+    resetIcon = iconClass.RESET;
+    deleteIcon = iconClass.DELETE;
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;
@@ -225,10 +231,10 @@ export class TopicEditComponent implements OnInit {
         const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
         if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
             //Need to create a topic object before push
-            // this.selectedTopics.push(
-            //     { "@id": "", "@type": "", "tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
+            this.selectedTopics.push(
+                {"tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
 
-            this.selectedTopics.push(rowNode.node.data.researchTopic);
+            // this.selectedTopics.push(rowNode.node.data.researchTopic);
     
                 this.dataChanged = true;
             // Reset search text box
@@ -243,7 +249,6 @@ export class TopicEditComponent implements OnInit {
     *   Set text color if the given topic already exists
     */
     getTopicColor(rowNode: any) {
-        // console.log("this.tempTopics", this.tempTopics);
         if(!this.selectedTopics) return ROW_COLOR;
 
         const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);

@@ -167,12 +167,6 @@ export class SearchresultComponent implements OnInit {
         if(this.mobileMode){
             this.resultWidth = "100%";
         }else{
-            // let titleDivWidth;
-            // if(this.titleDiv) {
-            //     titleDivWidth = this.titleDiv.nativeElement.offsetWidth;
-            //     console.log("title div", titleDivWidth);
-            // }
-    
             this.resultWidth = this.mobWidth - this.filterWidth + "px";
         }
     }

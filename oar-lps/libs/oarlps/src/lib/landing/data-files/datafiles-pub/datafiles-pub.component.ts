@@ -7,7 +7,7 @@ import { DownloadStatus } from '../../../datacart/cartconstants';
 import { DataCartStatus } from '../../../datacart/cartstatus';
 import { formatBytes } from '../../../utils';
 import { EditStatusService } from '../../../landing/editcontrol/editstatus.service';
-import { LandingConstants } from '../../../landing/constants';
+import { LandingConstants } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';

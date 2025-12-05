@@ -2,7 +2,7 @@ import { Component, OnChanges, SimpleChanges, Input, ViewChild, effect, ChangeDe
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { VersionComponent } from '../version/version.component';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
-import { LandingConstants } from '../../landing/constants';
+import { LandingConstants } from '../../shared/globals/globals';
 import { Themes, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { Collections, GlobalService } from '../../shared/globals/globals';

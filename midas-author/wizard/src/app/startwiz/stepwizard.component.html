@@ -5,7 +5,7 @@
     </div>
 
     <!-- error messages go here -->
-    <div style="width: 80%;margin: 20px auto;">
+    <div style="width: 80%;margin: 0px auto;">
         <pdr-message [defSysErrorPrefix]="'There was a problem while submitting your record.'"></pdr-message>
     </div>
 
@@ -16,42 +16,76 @@
                 <ng-container [ngSwitch]="currentStep?.stepIndex">
                     <ng-container *ngSwitchCase="1">
                         <div class="step-page">
-                            <app-pubtype [dataModel]="dataModel" [steps]="steps"></app-pubtype>
+                            <app-pubtype 
+                                [dataModel]="dataModel" 
+                                [steps]="steps"
+                                [marginLeft]="marginLeft"
+                                [helpText]="helpContentAll['publicationType']"></app-pubtype>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="7">
                         <div class="step-page">
-                            <app-collection [dataModel]="dataModel" [steps]="steps"></app-collection>
+                            <app-collection 
+                                [dataModel]="dataModel" 
+                                [steps]="steps"
+                                [marginLeft]="marginLeft"
+                                [helpText]="helpContentAll['collection']"></app-collection>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="2">
                         <div class="step-page">
-                            <app-contactinfo [dataModel]="dataModel" [steps]="steps"></app-contactinfo>
+                            <app-contactinfo 
+                                [dataModel]="dataModel" 
+                                [steps]="steps"
+                                [marginLeft]="marginLeft"
+                                [helpText]="helpContentAll['contactInfo']"></app-contactinfo>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="3">
                         <div class="step-page">
-                            <app-files [dataModel]="dataModel" [steps]="steps"></app-files>
+                            <app-files 
+                                [dataModel]="dataModel" 
+                                [steps]="steps"
+                                [marginLeft]="marginLeft"
+                                [helpText]="helpContentAll['files']"></app-files>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="4">
                         <div class="step-page">
-                            <app-softwareinfo [dataModel]="dataModel" [steps]="steps"></app-softwareinfo>
+                            <app-softwareinfo 
+                                [dataModel]="dataModel" 
+                                [steps]="steps"
+                                [marginLeft]="marginLeft"
+                                [helpText]="helpContentAll['software']"></app-softwareinfo>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="5">
                         <div class="step-page">
-                            <app-associated-papers [dataModel]="dataModel" [steps]="steps"></app-associated-papers>
+                            <app-associated-papers 
+                                [dataModel]="dataModel" 
+                                [steps]="steps"
+                                [marginLeft]="marginLeft"
+                                [helpText]="helpContentAll['associatedPapers']"></app-associated-papers>
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="6">
                         <div class="step-page">
-                            <app-recordname [dataModel]="dataModel" [steps]="steps"></app-recordname>
+                            <app-recordname 
+                                [dataModel]="dataModel" 
+                                [steps]="steps"
+                                [marginLeft]="marginLeft"
+                                [helpText]="helpContentAll['name']"></app-recordname>
                         </div>
                     </ng-container>
                 </ng-container>
             </div>
-            <!-- </div> -->
+
+                <!-- The help box at the right side -->
+            <!-- <app-sidebar
+                class='normal-sdbar'
+                [helpContentAll]="helpContentAll"
+                [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}">
+            </app-sidebar> -->
         </div>
     </div>
     <div class="bottom-control-container">
@@ -60,13 +94,13 @@
                 Cancel
             </button>
 
+            <button id="prevbtn" pButton type="button" class="btn-labeled form-nav-btn common-btn" (click)="onPrevStep()"
+                [disabled]="!currentStep?.canGoPrev" iconPos="left" icon="faa faa-long-arrow-left icon-white" label="Prev">
+            </button>
+
             <button id="nextbtn" pButton type="button" class="form-nav-btn common-btn btn-labeled" (click)="onNextStep()"
                 [disabled]="!currentStep?.canGoNext"
                 [icon]="nextBtnIcon" iconPos="right" [label]="nextBtnText">
-            </button>
-
-            <button id="prevbtn" pButton type="button" class="btn-labeled form-nav-btn common-btn" (click)="onPrevStep()"
-                [disabled]="!currentStep?.canGoPrev" iconPos="left" icon="faa faa-long-arrow-left icon-white" label="Prev">
             </button>
         </div>
     </div>

@@ -33,7 +33,6 @@ export function initBrowserMetadataTransfer(doc : Document) : MetadataTransfer {
         att = att.substring(NERDM_MT_PREFIX.length);
 
         // att = unescapeHTML(att);
-        console.log("Found embedded information with id='"+att+"'");
         try {
             data = JSON.parse(scripts[i].textContent);
             if (!data)

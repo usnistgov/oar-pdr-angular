@@ -3,7 +3,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { Author } from '../author';
 import { AuthorListComponent } from '../author-list/author-list.component';
@@ -47,6 +47,11 @@ export class AuthorMidasComponent {
     orderChanged: boolean = false;
     globalsvc = inject(GlobalService);
     editingStarted: boolean = false; // Signal child component editing started
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    undoIcon = iconClass.UNDO;
 
     @Input() record: any[];
     @Input() isEditMode: boolean;

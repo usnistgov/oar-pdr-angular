@@ -14,6 +14,8 @@ export class RecordNameComponent implements OnInit {
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
+    @Input() helpText: any = {};
+    @Input() marginLeft: number = 40;
     
     constructor(
         private cdr: ChangeDetectorRef,
@@ -24,7 +26,10 @@ export class RecordNameComponent implements OnInit {
         this.lastStep = this.stepService.getLastStep();
     }
 
-    updateRecordName(evt:any) {
+    /**
+     * Update the step status when record name changed.
+     */
+    onRecordNameChanged() {
         this.thisStep.isComplete = (this.dataModel.recordname?.trim() != "");
         this.lastStep.canGoNext = this.stepService.allDone();
     }

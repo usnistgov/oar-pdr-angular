@@ -1,5 +1,5 @@
 <div class="full-height">
-    <oar-pushing-sidebar width="45%" style="width: 100%; height: fit-content;">
+    <oar-pushing-sidebar [marginLeft]="marginLeft" width="45%" style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>Select the collection that this publication should be added to:</p>
 
@@ -13,18 +13,8 @@
             </div>            
         </div>
 
-        <span class="sidebar-title">Question Help</span>
-        <div class="sidebar-content">
-
-            <p>
-                These pre-defined collections allow us to group together data and software publications that address a common research topic that are important to NIST.  Some collections reflect a key research initiative or program (like CHIPS). An author that knows their research was funded by or otherwise is part of such an initiative, they should select the collection for that initiative.  
-            <p> 
-                Please notes that adding a data asset publication to a collection requires approval by the collection's curator(s) which happens during the review phase.  If you choose not to add the publication to a collection at this time, you can always add it later.  Similarly, if you do select a collection, you can always remove it or change collections later in the process.  
- 
-            <p>
-                <i>For an example of how collections are viewed, see the <a href="https://data.nist.gov/od/id/pdr0-0001" target="_blank">Forensics collection</a>. </i>
-
-        </div>
+        <span class="sidebar-title">{{helpText["label"]}}</span>
+        <div class="sidebar-content" [innerHTML]="helpText['general']"></div>
     </oar-pushing-sidebar>
 
 </div>

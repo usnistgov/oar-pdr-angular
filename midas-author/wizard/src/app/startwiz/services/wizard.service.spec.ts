@@ -20,6 +20,6 @@ describe('WizardService', () => {
 
   it('should be created', () => {
     expect(service).toBeTruthy();
-    expect(service.MIDASAPI).toBe("/midas/dap/def/");
+    expect(service.MIDASAPI).toBe("/midas/dap/mds3/");
   });
 });

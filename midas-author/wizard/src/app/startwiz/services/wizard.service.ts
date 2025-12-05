@@ -24,7 +24,7 @@ export class WizardService {
     constructor(private httpcli: HttpClient,
                 private configSvc: AppConfig)
     {
-        this.MIDASAPI = this.configSvc.get('dapEditing.serviceEndpont', "/midas/dap/def/");
+        this.MIDASAPI = this.configSvc.get('dapEditing.serviceEndpont', "/midas/dap/mds3/");
     }
 
     setToken(token: string){

@@ -1,0 +1,26 @@
+.proceed {
+    background-color: var(--nist-green-default);
+    color: white !important;
+    width: 150px;
+}
+
+.proceed:hover {
+    background-color: var(--nist-green-light);
+}
+
+.cancel {
+    background-color: var(--background-light-grey03);
+    color: white;
+    width: 150px;
+}
+
+.cancel:hover {
+    background-color: var(--background-light-grey02);
+}
+
+.revision-type {
+    display: flex;
+    justify-content: center;
+    margin-top: 1em;
+    margin-bottom: .5em;
+}

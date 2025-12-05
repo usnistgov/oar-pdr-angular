@@ -1,66 +1,111 @@
-<div class="sbar-container" [@togglesbar]="sidebarState">
-    <div style="background-color: rgb(231, 231, 231);padding: 3px;">
-        <div style="float: right; margin: 0px 5px 5px 5px;">
-            <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i
-                    class="faa faa-times-circle faa-lg" aria-hidden="true"
-                    style="color: orange; cursor: pointer;"></i></a>
+<div *ngIf="!hideSidebarBody" class="sbar-container" [@togglesbar]="sidebarState">
+    <div>
+        @if(showRevisionHelp){
+            <div class="headerbar">
+                <i class="faa faa-times-circle btn-hide-help" 
+                    (click)="processCommand('getHelp')" aria-hidden="true"></i>
+                <div class="help-title">
+                    Revision Help
+                </div>
+            </div>
+
+        }
+        <div [@slideToggle]="showRevisionHelp ? 'visible' : 'hidden'" 
+            class="revision-help" 
+            [ngStyle]="{'max-height':maxHeight + 'px'}">
+            <p [innerHTML]="revisionHelp['htmlcontent']"></p>
         </div>
-        <div class="help-title">
-            {{title}}
+
+        <div >
+            <div class="headerbar">
+                <div style="float: right; margin: 0px 5px 5px 5px;">
+                    <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i class="faa faa-times-circle faa-lg"
+                            aria-hidden="true" style="color: orange; cursor: pointer;"></i></a>
+                </div>
+                <div class="help-title" (click)="this.showGeneralHelp = !this.showGeneralHelp">
+                    {{title}}
+                    <i class="fas expand-btn amplifiable" 
+                        [class.amplified]="isMouseOverGeneralHeader" 
+                        (mouseover)="isMouseOverGeneralHeader = true"
+                        (mouseleave)="isMouseOverGeneralHeader = false"
+                        [ngClass]="{'fa-caret-right': !showGeneralHelp, 'fa-caret-down': showGeneralHelp}" 
+                        aria-label="Show warning steps">
+                    </i>
+                </div>
+            </div>
+            <div class="general-help-content" 
+                [@generalHelpExpand]="showGeneralHelp ? 'visible' : 'hidden'"
+                [innerHTML]="sanitizedHtml">
+            </div>
+            
+            <div class="help-title headerbar" (click)="this.showNextSteps = !this.showNextSteps">
+                <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
+                    {{msgCompleted}}
+                </div>
+                <ng-template #nextSteps>
+                    Next Steps:
+                    <i class="fas expand-btn amplifiable" 
+                        [class.amplified]="isMouseOverNextSteps" 
+                        (mouseover)="isMouseOverNextSteps = true"
+                        (mouseleave)="isMouseOverNextSteps = false"
+                        [ngClass]="{'fa-caret-right': !showNextSteps, 'fa-caret-down': showNextSteps}" 
+                        aria-label="Show warning steps">
+                    </i>
+                </ng-template>
+            </div>
+            
+            <!-- Suggestions -->
+            <!-- @if(!isTestData){ -->
+                <div class="section-content" [@nextStepsExpand]="showNextSteps ? 'visible' : 'hidden'">
+                
+                    <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
+                                        && (!suggestions['warn'] || suggestions['warn'].length == 0) 
+                                        && (!suggestions['rec'] || suggestions['rec'].length == 0)">
+                        {{msgCompleted}}
+                    </div>
+                    <!-- <ng-template #nextSteps>
+                                        Next Steps:
+                                    </ng-template> -->
+                
+                
+                    <div *ngIf="hasRequiredItems">
+                        <suggestions suggestionLabel="Required" [suggestions]="suggestions['req']" showSug="true"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+                
+                    <div *ngIf="hasWarnItems">
+                        <suggestions suggestionLabel="Warning" [suggestions]="suggestions['warn']" [showSug]="expandWarning"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+                
+                    <div *ngIf="hasRecommendedItems">
+                        <suggestions suggestionLabel="Recommended" [suggestions]="suggestions['rec']" [showSug]="expandRec"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+                </div>       
+            <!-- } -->
         </div>
     </div>
-    <div class="help-frame" [innerHTML]="helpContent">
-    </div>
 
-    <div style="background-color: rgb(231, 231, 231); text-align: center;padding: 2px;">
-        <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
-            {{msgCompleted}}
-        </div>
-        <ng-template #nextSteps>
-            Next Steps:
-        </ng-template>
-    </div>
 
-    <!-- keep this old suggestion for demo purpose -->
-    <div *ngIf="!isTestData" style="margin: 10px;border-top: 1px solid lightgrey;padding-top: 0.5em;">
-
-        <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
-            && (!suggestions['warn'] || suggestions['warn'].length == 0) 
-            && (!suggestions['rec'] || suggestions['rec'].length == 0)">
-            {{msgCompleted}}
-        </div>
-        <!-- <ng-template #nextSteps>
-            Next Steps:
-        </ng-template> -->
-        
-
-        <div *ngIf="hasRequiredItems"> 
-            <suggestions 
-                suggestionLabel="Required"
-                [suggestions]="suggestions['req']"
-                showSug="true"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
+    @if(isRevision) {
+        <div class="help-title headerbar">
+            Revision Data (Placeholder)
         </div>
 
-        <div *ngIf="hasWarnItems"> 
-            <suggestions 
-                suggestionLabel="Warning"
-                [suggestions]="suggestions['warn']"
-                [showSug]="expandWarning"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
+        <div class="section-content" style="padding: 10px;">
+            <revision-details 
+                [submissionData]="submissionData" 
+                (changedData)="updateSubmissionData($event)"
+                (command)="processCommand($event)">
+            </revision-details>
         </div>
+    }
 
-        <div *ngIf="hasRecommendedItems"> 
-            <suggestions 
-                suggestionLabel="Recommended"
-                [suggestions]="suggestions['rec']"
-                [showSug]="expandRec"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
-        </div>
-    </div>
+
 
 </div>
 <!-- Side bar invisible -->

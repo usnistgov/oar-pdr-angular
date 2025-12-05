@@ -31,7 +31,7 @@
                 pTooltip="Edit reference" 
                 tooltipPosition="top" 
                 style="cursor: pointer">
-                <i class="fas fa-pencil fa-sm"></i>
+                <i [class]="editIcon"></i>
             </button> 
 
             <!-- Hide button - hide edit block -->
@@ -44,7 +44,7 @@
                 aria-label="Hide edit block"
                 pTooltip="Hide edit block"
                 tooltipPosition="top" >
-                <i class="fas fa-times"></i>
+                <i [class]="closeIcon"></i>
             </button> 
 
             <!-- Undo all changes button -->
@@ -57,7 +57,7 @@
                 aria-label="Undo" 
                 pTooltip="Undo"
                 tooltipPosition="top" >
-                <i class="fas fa-undo fa-sm"></i>
+                <i [class]="undoIcon"></i>
             </button>                
         </div>
     </div>

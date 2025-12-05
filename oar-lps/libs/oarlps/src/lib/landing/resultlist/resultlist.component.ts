@@ -114,10 +114,6 @@ export class ResultlistComponent implements OnInit {
         this.allCollections = this.collectionService.loadAllCollections();
     }
 
-    onPageChange(value: any){
-        // console.log("this.currentPage", value.target.value);
-    }
-
     ngOnChanges(changes: SimpleChanges): void {
         if(changes.filterString != null && changes.filterString != undefined) {
             this.filterResults();
@@ -499,7 +495,6 @@ export class ResultlistComponent implements OnInit {
      * @param event sort item
      */
     onSortByChange(event: any) {
-        // console.log("event", event.value);
         if(event.target.value == "none") {
             this.searchResultsForDisplay = JSON.parse(JSON.stringify(this.searchResultsForDisplayOriginal));
 

@@ -175,7 +175,6 @@ export class DownloadService {
 
         // submit the request and return the Observable result; add some diagnostic information on the way out
         let url = this.distApi + "_bundle_plan";
-        // console.log("Requesting bundle plan for " + reqfiles.length + " from " + url)
         return this._getBundlePlan(url, body).pipe(
             map(plan => {
                 diagnostics['time'] = Date();
