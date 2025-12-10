@@ -175,6 +175,7 @@ export class DatafilesPubComponent {
     globalsvc = inject(GlobalService);
 
     modalRef: any; // For bulk download confirm pop up
+    bulkDownloadBase: string = "";
     bulkDownloadURL: string = "";
     downloadableFileLimit: number = 300; // Max number of files downloadable through lps 
     showBulkDesc: boolean = false;
@@ -218,6 +219,11 @@ export class DatafilesPubComponent {
                 });
             };
         }
+
+        this.bulkDownloadBase = cfg.get('links.pdrHome');
+        if (! this.bulkDownloadBase.endsWith('/'))
+            this.bulkDownloadBase += '/';
+        this.bulkDownloadBase += "bulkdownload/";        
     }
 
     ngOnInit() {
@@ -337,7 +343,7 @@ export class DatafilesPubComponent {
         this.ediid = this.record['ediid'];
 
         if(this.ediid)
-            this.bulkDownloadURL = '/bulkdownload/' + this.ediid.replace('ark:/88434/', '');
+            this.bulkDownloadURL = this.bulkDownloadBase + this.ediid.replace('ark:/88434/', '');
 
         this.buildTree(this.record['components']);
         this.edstatsvc.setShowLPContent(true);
