@@ -1,455 +1,268 @@
-import { Component } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable, of, throwError } from 'rxjs';
-import { Country } from './model/country.model';
-import { Dataset } from './model/dataset.model';
-import { RequestFormData } from './model/form-data.model';
-import { FormTemplate } from './model/form-template.model';
-import { Record, UserInfo } from './model/record.model';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, forkJoin } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { trigger, state, style, animate, transition } from '@angular/animations';
 
-import { MessageService } from 'primeng/api';
-import { SelectItem } from 'primeng/api';
-import { catchError, map, tap } from 'rxjs/operators';
-import { RPAService } from './service/rpa.service';
-import { ConfigurationService } from './service/config.service';
 import { environment } from '../environments/environment';
-import { CustomValidators } from './validators/custom-validators';
+import { RPAService } from './service/rpa.service';
+import {
+  FormConfigService,
+  DynamicFormComponent,
+  FormConfig,
+  DatasetConfig,
+  FieldOption
+} from './dynamic-form';
+
+interface Country {
+  name: string;
+  code: string;
+}
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css'],
-    providers: [MessageService]
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  animations: [
+    trigger('collapseAnimation', [
+      state('expanded', style({
+        height: '*',
+        opacity: 1,
+        paddingTop: '24px'
+      })),
+      state('collapsed', style({
+        height: '0',
+        opacity: 0,
+        paddingTop: '0'
+      })),
+      transition('expanded <=> collapsed', [
+        animate('300ms cubic-bezier(0.4, 0, 0.2, 1)')
+      ])
+    ])
+  ]
 })
-export class AppComponent {
-    queryId: string;
-    datasets: Dataset[] = [];
-    selectedDataset: Dataset | null | undefined;
-    selectedFormTemplate: FormTemplate | null | undefined;
-    isFormValid = true;
-    displayProgressSpinner = false;
-    errors = [];
-    requestForm: FormGroup;
-    countries: Country[];
-    selectedCountry: Country;
-    items: SelectItem[];
-    item: SelectItem;
-    domparser = new DOMParser();
+export class AppComponent implements OnInit {
+  @ViewChild('dynamicForm') dynamicForm!: DynamicFormComponent;
 
-    constructor(private route: ActivatedRoute,
-        private messageService: MessageService,
-        private configService: ConfigurationService,
-        private rpaService: RPAService) {
-        // this.initRequestForm();
-    }
+  formConfig: FormConfig | null = null;
+  selectedDataset: DatasetConfig | null = null;
+  countryOptions: FieldOption[] = [];
+  isLoading = false;
+  datasetNotFound = false;
+  isWelcomeCollapsed = false;
+  isDarkMode = false;
 
-    /**
-     * Initializes component on page load
-    */
-    ngOnInit(): void {
-        // Subscribe to route query parameters to extract 'ediid' value
-        this.route.queryParams.subscribe((params) => {
-            // Hide progress spinner
-            this.displayProgressSpinner = false;
-            // If 'ediid' is present, set the selected dataset using its value
-            if (params['ediid']) {
-                this.queryId = params['ediid'];
-                this.setSelectedDataset(this.queryId);
-            }
-            // Load countries list for use with dropdown menu
+  constructor(
+    private route: ActivatedRoute,
+    private http: HttpClient,
+    private formConfigService: FormConfigService,
+    private rpaService: RPAService
+  ) {}
 
+  ngOnInit(): void {
+    // Initialize dark mode from localStorage
+    this.initDarkMode();
 
-        });
-        this.loadCountries().subscribe((data) => {
-            if (environment.debug) console.log("loaded countries", this.countries);
-        });
+    // Load countries
+    this.loadCountries();
 
-    }
+    // Subscribe to route query parameters
+    this.route.queryParams.subscribe(params => {
+      if (params['ediid']) {
+        this.loadFormForDataset(params['ediid']);
+      } else {
+        this.datasetNotFound = true;
+      }
+    });
+  }
 
-    /**
-   * Choose selectedDataset, and pick the appropriate form template from the config file
-   * @param ediid the dataset ID
+  /**
+   * Load form configuration for a specific dataset
    */
-    setSelectedDataset(ediid: string): void {
-        this.getDatasets()
-            // Start RxJs opeartors chaining
-            .pipe(
-                // Log datasets obtained from getDatasets()
-                tap((datasets) => {
-                    if (environment.debug) console.log('Datasets', datasets);
-                }),
-                // Find the dataset with matching ediid
-                map((datasets) => datasets.find((dataset) => dataset.ediid === ediid)),
-                // Log selecteDataset and retrieve the corresponding form template using the getFormTemplate()
-                tap((selectedDataset) => {
-                    if (environment.debug) console.log('Selected Dataset', selectedDataset);
-                    if (selectedDataset) {
-                        this.configService
-                            .getFormTemplate(selectedDataset.formTemplate)
-                            .subscribe((template) => {
-                                this.selectedFormTemplate = template;
-                                if (environment.debug) console.log(template);
-                                this.initRequestForm(template.blockedEmails);
-                                this.filterBlacklistedCountries(template.blockedCountries);
-                            });
-                    }
-                })
-            )
-            .subscribe((selectedDataset) => (this.selectedDataset = selectedDataset));
-    }
+  private loadFormForDataset(datasetId: string): void {
+    this.isLoading = true;
+    this.datasetNotFound = false;
 
-    private filterBlacklistedCountries(blacklistedCountries: string[]): void {
-        this.countries = this.countries.filter(country => !blacklistedCountries.includes(country.name));
-    }
+    this.formConfigService.getFormForDataset('rpa-request', datasetId)
+      .pipe(
+        tap(result => {
+          if (environment.debug) {
+            console.log('[AppComponent] Loaded form config:', result);
+          }
+        }),
+        catchError(error => {
+          console.error('[AppComponent] Error loading form config:', error);
+          return of(null);
+        })
+      )
+      .subscribe(result => {
+        this.isLoading = false;
 
-    /**
-   * Get the list of datasets present in the config file
-   */
-    getDatasets(): Observable<Dataset[]> {
-        return this.configService.getDatasets();
-    }
+        if (result) {
+          this.formConfig = result.form;
+          this.selectedDataset = result.dataset;
 
-    /**
-  * Load the countries list to use with the dropdown menu
-  * 
-  * @returns Observable containing list of countries
-  */
-    loadCountries(): Observable<Country[]> {
-        return this.configService.getCountries().pipe(
-            tap((data) => {
-                this.countries = data;
-            }),
-            catchError((error) => {
-                console.error(error);
-                return of([]); // Return an empty array to prevent any further errors
-            })
-        );
-    }
-
-    /**
-     * Fetch dataset from config file using the dataset EDIID we extract from the url
-     * @param ediid the dataset ID
-     */
-    getSelectedDataset(ediid: string): Observable<Dataset | undefined> {
-        return this.getDatasets().pipe(
-            map(datasets => datasets.find(dataset => dataset.ediid == ediid))
-        );
-    }
-
-
-    /**
-     * Get the appropriate form template for a specific dataset
-     * @param dataset target dataset
-     */
-    getFormTemplate(dataset: Dataset): Observable<FormTemplate> {
-        return this.configService.getFormTemplate(dataset.formTemplate).pipe(
-            tap(template => {
-                this.selectedFormTemplate = template;
-                if (environment.debug) console.log("Form Template", this.selectedDataset!.formTemplate);
-            })
-        );
-    }
-
-    /**
-   * Submit the form to the request handler
-   */
-    submitForm(): void {
-        this.beforeSubmitForm();
-        this.displayProgressSpinner = true;
-        // If the form is invalid, display an error message
-        if (!this.requestForm.valid) {
-            // Get any validation errors in the form
-            let errors = this.getFormErrors(this.requestForm);
-            if (errors) {
-                if (environment.debug) console.log(errors);
-                this.handleInvalidForm(errors);
-            }
+          // Filter countries based on dataset blacklist
+          if (this.selectedDataset.blockedCountries?.length) {
+            this.filterBlockedCountries(this.selectedDataset.blockedCountries);
+          }
         } else {
-            // Collect data from request form
-            const requestFormData = this.getRequestFormData();
-
-            // Set reCAPTCHA response, and user info
-            const recaptcha = this.requestForm.controls.recaptcha.value;
-            const userInfo = this.getUserInfo(requestFormData);
-
-            /// Check if in development mode
-            if (environment.debug) {
-                // Log data
-                console.log("Simulated submission:", userInfo, recaptcha);
-
-                // Simulate successful submission response
-                const simulatedData = { data: "simulation data", successful: true};
-                this.handleSuccessfulSubmission(simulatedData);
-            } else {
-                // Create a new record and handle the response in production
-                this.rpaService.createRecord(userInfo, recaptcha)
-                    .pipe(
-                        catchError((error: any) => {
-                            this.handleFailedSubmission(error);
-                            return of(null);
-                        })
-                    ).subscribe((data: Record | null) => {
-                        if (data !== null) {
-                            this.handleSuccessfulSubmission(data);
-                        }
-                    });
-            }
-
-
+          this.datasetNotFound = true;
         }
-    }
+      });
+  }
 
-    private handleFailedSubmission(error: any) {
-        if (environment.debug) console.log(`[${this.constructor.name}] Error sending request`, error().message);
-        // stop spinner when error
-        this.displayProgressSpinner = false;
-        // display messageß
-        const message = {
-            severity: 'error',
-            summary: '',
-            detail: 'There was an error sending this request.<br>Please contact <a href="datasupport@nist.gov">datasupport@nist.gov</a>',
-            life: 5000
+  /**
+   * Load countries for the country dropdown
+   */
+  private loadCountries(): void {
+    const countriesUrl = environment.countriesUrl || 'assets/countries.json';
+
+    this.http.get<Country[]>(countriesUrl)
+      .pipe(
+        map(countries => countries.map(c => ({
+          label: c.name,
+          value: c.name
+        }))),
+        catchError(error => {
+          console.error('[AppComponent] Error loading countries:', error);
+          return of([]);
+        })
+      )
+      .subscribe(options => {
+        this.countryOptions = options;
+
+        if (environment.debug) {
+          console.log('[AppComponent] Loaded countries:', options.length);
         }
-        this.messageService.add(message);
-    }
-    /**
-     * Prepare form submission
-     */
-    private beforeSubmitForm() {
-        this.messageService.clear();
-        this.displayProgressSpinner = false;
-    }
+      });
+  }
 
-    /**
-     * Handle invalid form submission
-     */
-    private handleInvalidForm(validationErrors: ValidationErrors): void {
-        this.isFormValid = false;
-        this.displayProgressSpinner = false;
+  /**
+   * Filter out blocked countries from options
+   */
+  private filterBlockedCountries(blockedCountries: string[]): void {
+    const blockedSet = new Set(blockedCountries.map(c => c.toLowerCase()));
+    this.countryOptions = this.countryOptions.filter(
+      opt => !blockedSet.has(String(opt.label).toLowerCase())
+    );
+  }
 
-        let errorMessage = 'Invalid form. Check if any required fields (*) are missing.';
-        // let errorsText = this.getErrorsText(validationErrors);
-        const message = {
-            severity: 'error',
-            summary: '',
-            detail: errorMessage, //+ messages.join(','),
-            life: 5000
-        };
-        this.messageService.add(message);
+  /**
+   * Handle form submission
+   */
+  onFormSubmit(formValues: Record<string, any>): void {
+    if (environment.debug) {
+      console.log('[AppComponent] Form submitted:', formValues);
     }
 
+    this.dynamicForm.setLoading(true);
 
-    /**
-    * Take the list of validation errors and turn them a string to display in Error message
-    */
-    private getErrorsText(validationErrors: any): string {
-        let messages: string[] = [];
-        for (const validationError of validationErrors) {
-            let validationErrorString = '';
-            let errors = validationError["error"]
-            for (const errorType in errors) {
-                switch (errorType) {
-                    case 'required':
-                        validationErrorString += `${validationError['field']} is required. `;
-                        break;
-                    case 'minlength':
-                        validationErrorString += `${validationError['field']} must be at least ${errors[errorType]} characters. `;
-                        break;
-                    case 'maxlength':
-                        validationErrorString += `${validationError['field']} cannot exceed ${errors[errorType]} characters. `;
-                        break;
-                    default:
-                        validationErrorString += `Invalid value for ${validationError['field']}. `;
-                        break;
-                }
-                messages.push(validationErrorString);
-            }
-        }
-        return messages.join('<br>');
-    }
+    // Build the user info payload
+    const userInfo = this.buildUserInfo(formValues);
+    const recaptcha = formValues['recaptcha'];
 
-    /**
-     * Get the request form data
-     */
-    private getRequestFormData(): RequestFormData {
-        const requestFormData = {} as RequestFormData;
-        const formControls = this.requestForm.controls;
-
-        requestFormData.fullName = formControls.fullName.value;
-        requestFormData.email = formControls.email.value;
-        requestFormData.phone = formControls.phone.value;
-        requestFormData.organization = formControls.organization.value;
-        requestFormData.address1 = formControls.address1.value;
-        requestFormData.address2 = formControls.address2.value;
-        requestFormData.address3 = formControls.address3.value;
-        requestFormData.country = formControls.country.value.name;
-        requestFormData.receiveEmails = formControls.receiveEmails.value;
-
-        return requestFormData;
-    }
-
-    /**
-     * Handle successful form submission
-     */
-    private handleSuccessfulSubmission(data: any): void {
-        // Log data
-        if (environment.debug) console.log("Data from RequestHandler", data);
-        // Remove spinner layer
-        this.displayProgressSpinner = false;
-        // Display success message
-        const message = {
-            severity: 'success',
-            summary: '',
-            detail: 'Your request was submitted successfully.<br>You will receive a confirmation email shortly.',
-            life: 5000
-        };
-        this.messageService.add(message);
-        // Empty form
-        this.resetRequestForm();
-    }
-
-    /**
-     * Resets the request form to its initial state.
-     *
-     * This function resets all form controls to their default values, effectively
-     * clearing the form and resetting its validation state. This is particularly useful
-     * following a form submission, allowing the form to be reused for another submission
-     * without carrying over the previous state.
-     *
-     */
-    private resetRequestForm(): void {
-        const resetControls: any = {
-            fullName: "",
-            email: "",
-            phone: "",
-            organization: "",
-            address1: "",
-            address2: "",
-            address3: "",
-            country: "",
-            receiveEmails: false,
-            agreements: false,
-            recaptcha: false,
-        };
-    
-        if (this.selectedFormTemplate?.agreements) {
-            this.selectedFormTemplate.agreements.forEach((_, i) => {
-                resetControls[`agreement_${i}`] = false;
-            });
-        }
-    
-        this.requestForm.reset(resetControls);
-    }
-    
-
-    /**
-     * Helper method to create the userInfo that will be used as payload for creating a new record case in SF.
-     */
-    private getUserInfo(requestFormData: RequestFormData): UserInfo {
-        let userInfo = {} as UserInfo;
-        userInfo.fullName = requestFormData.fullName;
-        userInfo.organization = requestFormData.organization;
-        userInfo.email = requestFormData.email;
-        userInfo.country = requestFormData.country;
-        userInfo.receiveEmails = requestFormData.receiveEmails ? "True" : "False";
-        userInfo.approvalStatus = "Pending";
-        userInfo.productTitle = this.selectedDataset!.name;
-        userInfo.subject = this.selectedDataset!.ediid;
-        userInfo.description = this.buildDescriptionString(userInfo.productTitle, requestFormData);
-        return userInfo;
-    }
-
-    /**
-     * Builds a description string for a record based on the selected dataset and form data.
-     * The description includes the product title, and address information.
-     *
-     * @param productTitle The product tile to use.
-     * @returns The formatted description string.
-     */
-    buildDescriptionString(productTitle: string, requestFormData: any): string {
-        // Use filter to extract non empty address lines from the form data
-        const addressLines = [
-            requestFormData.address1,
-            requestFormData.address2,
-            requestFormData.address3,
-        ].filter(line => line !== '');
-
-        // Concatenate address lines into a single string with line breaks
-        let address = addressLines.join('\n');
-
-        return `Product Title: ${productTitle}\n\n` +
-            `Phone Number: ${requestFormData.phone}\n\n` +
-            `Address:\n${address}`;
-    }
-
-    /**
-     * Initializes the request form with the necessary form controls and validators.
-     */
-    private initRequestForm(blacklistedEmails: string[]): void {
-        this.requestForm = new FormGroup({
-            fullName: new FormControl("", [Validators.required, Validators.minLength(2), Validators.maxLength(50), CustomValidators.nonLatinCharacters()]),
-            email: new FormControl("", [CustomValidators.blacklisted(blacklistedEmails), Validators.required, Validators.email]),
-            phone: new FormControl("", [Validators.required]),
-            organization: new FormControl("", [Validators.required]),
-            address1: new FormControl("", [Validators.required]),
-            address2: new FormControl(""),
-            address3: new FormControl("", [Validators.required]),
-            country: new FormControl("", [Validators.required]),
-            receiveEmails: new FormControl(false),
-            termsAndConditionsAgreenement: new FormControl(false),
-            recaptcha: new FormControl(false, [Validators.required]),
+    if (environment.debug) {
+      // Simulate submission in debug mode
+      console.log('[AppComponent] Simulated submission:', userInfo);
+      setTimeout(() => {
+        this.handleSubmissionSuccess({ id: 'test-123', caseNum: 'TEST-001' });
+      }, 1500);
+    } else {
+      // Real submission
+      this.rpaService.createRecord(userInfo, recaptcha)
+        .pipe(
+          catchError(error => {
+            this.handleSubmissionError(error);
+            return of(null);
+          })
+        )
+        .subscribe(result => {
+          if (result) {
+            this.handleSubmissionSuccess(result);
+          }
         });
-    
-        // Dynamically add controls for each agreement
-        if (this.selectedFormTemplate?.agreements) {
-            this.selectedFormTemplate.agreements.forEach((_, i) => {
-                this.requestForm.addControl(`agreement_${i}`, new FormControl(false, Validators.requiredTrue));
-            });
-        }
     }
-    
+  }
 
+  /**
+   * Build user info payload from form values
+   */
+  private buildUserInfo(formValues: Record<string, any>): any {
+    const addressLines = [
+      formValues['address1'],
+      formValues['address2'],
+      formValues['address3']
+    ].filter(line => line && line.trim() !== '');
 
-    /**
-     * Retrieves the email blacklist configuration.
-     * @returns The email blacklist configuration object.
-     */
-    // private getEmailBlacklist(): any {
-    //     return {
-    //         patterns: ['test', '123'],
-    //         emails: ['john.doe@example.com', 'jane.doe@example.com'],
-    //         domains: ['gmail.com', 'test.com']
-    //     };
-    // }
+    const address = addressLines.join('\n');
 
-    /**
-     * Utility method that takes an AbstractControl or null and returns any validation errors that are present in the control or its child controls.
-     * @param form the form to check
-     * @returns  validation errors associated with the input control
-     */
-    private getFormErrors(form: AbstractControl | null): ValidationErrors | null | undefined {
-        if (form instanceof FormControl) {
-            // Return FormControl errors or null
-            return form.errors ?? null;
-        }
-        if (form instanceof FormGroup) {
-            const groupErrors = form.errors;
-            // Form group can contain errors itself, in that case add'em
-            const formErrors = groupErrors ? [groupErrors] : [];
-            Object.keys(form.controls).forEach(key => {
-                // Recursive call of the FormGroup fields
-                const error = this.getFormErrors(form!.get(key));
-                if (error !== null) {
-                    // Only add error if not null
-                    formErrors.push({
-                        field: key,
-                        error: error
-                    });
-                }
-            });
-            // Return FormGroup errors or null
-            return Object.keys(formErrors).length > 0 ? formErrors : null;
-        }
+    return {
+      fullName: formValues['fullName'],
+      organization: formValues['organization'],
+      email: formValues['email'],
+      country: formValues['country'],
+      receiveEmails: formValues['receiveEmails'] ? 'True' : 'False',
+      approvalStatus: 'Pending',
+      productTitle: this.selectedDataset?.name || '',
+      subject: this.selectedDataset?.id || '',
+      description: `Product Title: ${this.selectedDataset?.name}\n\nPhone Number: ${formValues['phone']}\n\nAddress:\n${address}`
+    };
+  }
+
+  /**
+   * Handle successful form submission
+   */
+  private handleSubmissionSuccess(result: any): void {
+    this.dynamicForm.setLoading(false);
+    this.dynamicForm.showSuccess(
+      this.formConfig?.successMessage ||
+      'Your request was submitted successfully. You will receive a confirmation email shortly.'
+    );
+    this.dynamicForm.resetForm();
+
+    if (environment.debug) {
+      console.log('[AppComponent] Submission successful:', result);
     }
+  }
+
+  /**
+   * Handle form submission error
+   */
+  private handleSubmissionError(error: any): void {
+    this.dynamicForm.setLoading(false);
+    this.dynamicForm.showError(
+      'There was an error sending this request. Please contact datasupport@nist.gov'
+    );
+
+    console.error('[AppComponent] Submission error:', error);
+  }
+
+  /**
+   * Toggle welcome section collapse state
+   */
+  toggleWelcome(): void {
+    this.isWelcomeCollapsed = !this.isWelcomeCollapsed;
+  }
+
+  /**
+   * Toggle dark mode
+   */
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
+    localStorage.setItem('darkMode', this.isDarkMode ? 'true' : 'false');
+  }
+
+  /**
+   * Initialize dark mode from localStorage
+   */
+  private initDarkMode(): void {
+    const savedMode = localStorage.getItem('darkMode');
+    if (savedMode === 'true') {
+      this.isDarkMode = true;
+      document.body.classList.add('dark-mode');
+    }
+  }
 }
