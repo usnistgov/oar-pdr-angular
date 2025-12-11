@@ -21,7 +21,7 @@ import { RELEASE } from '../../environments/release-info';
 })
 export class ConfigurationService extends BaseConfigurationService {
     
-    datasetsConfigUrl: string = environment.datasetsConfigUrl;
+    formConfigUrl: string = environment.formConfigUrl;
     countriesUrl: string = environment.countriesUrl;
     config: RPAConfiguration | null = null;
 
@@ -34,7 +34,7 @@ export class ConfigurationService extends BaseConfigurationService {
      * @returns An observable containing the list of datasets.
      */
     public getDatasets(): Observable<Dataset[]> {
-        return this.http.get(this.datasetsConfigUrl, { responseType: 'text' }).pipe(
+        return this.http.get(this.formConfigUrl, { responseType: 'text' }).pipe(
             map(response => {
                 const config = parse(response);
                 return config.datasets;
@@ -52,7 +52,7 @@ export class ConfigurationService extends BaseConfigurationService {
      * @returns An observable containing the form template.
      */
     public getFormTemplate(formName: string): Observable<FormTemplate> {
-        return this.http.get(this.datasetsConfigUrl, { responseType: 'text' }).pipe(
+        return this.http.get(this.formConfigUrl, { responseType: 'text' }).pipe(
             map(response => {
                 const config = parse(response);
                 const formTemplates = Array.isArray(config.formTemplates) ? config.formTemplates : [];

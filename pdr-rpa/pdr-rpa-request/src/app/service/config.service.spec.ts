@@ -142,7 +142,7 @@ describe('ConfigurationService', () => {
 
         const getDatasetsPromise = service.getDatasets().toPromise();
 
-        const req = httpMock.expectOne('assets/datasets.yaml');
+        const req = httpMock.expectOne('assets/form-config.yaml');
         expect(req.request.method).toEqual('GET');
         req.flush(mockResponse);
 
@@ -192,7 +192,7 @@ describe('ConfigurationService', () => {
 
         const getFormTemplatePromise = service.getFormTemplate(formName).toPromise();
 
-        const req = httpMock.expectOne('assets/datasets.yaml');
+        const req = httpMock.expectOne('assets/form-config.yaml');
         expect(req.request.method).toBe('GET');
         req.flush(mockResponse);
 
