@@ -1,19 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppComponent, RecordDescription } from './app.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RPAService } from './service/rpa.service';
-import { MessageService } from 'primeng/api';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigurationService, AuthenticationService, MockAuthenticationService } from 'oarng';
 import { RPAConfiguration } from './model/config.model';
 import { of } from 'rxjs';
 import { ApprovalResponse, Record, RecordWrapper } from './model/record';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let rpaService: RPAService;
+  let snackBar: MatSnackBar;
 
   const mockConfig: RPAConfiguration = {
     baseUrl: 'https://example.com',
@@ -37,6 +40,7 @@ describe('AppComponent', () => {
 
   let mockConfigService: any;
   let mockRPAService: any;
+  let mockSnackBar: any;
 
   beforeEach(async () => {
     mockConfigService = {
@@ -53,20 +57,24 @@ describe('AppComponent', () => {
         approvalStatus: 'Declined_2023-04-25T10:00:00.000Z_sme@nist.gov'
       } as ApprovalResponse))
     };
+    mockSnackBar = {
+      open: jest.fn()
+    };
 
     await TestBed.configureTestingModule({
       declarations: [AppComponent, UnescapeHTMLPipe],
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { queryParams: of({ id: 'ark:123' }) }, // <-- mock ActivatedRoute
+          useValue: { queryParams: of({ id: 'ark:123' }) },
         },
         { provide: ConfigurationService, useValue: mockConfigService },
         { provide: AuthenticationService, useClass: MockAuthenticationService },
         { provide: RPAService, useValue: mockRPAService },
-        MessageService,
+        { provide: MatSnackBar, useValue: mockSnackBar },
       ],
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule, MatSnackBarModule, NoopAnimationsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     })
       .compileComponents();
   });
@@ -74,7 +82,13 @@ describe('AppComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
+    snackBar = TestBed.inject(MatSnackBar);
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    localStorage.removeItem('darkMode');
+    document.body.classList.remove('dark-mode');
   });
 
   it('should create', () => {
@@ -94,22 +108,6 @@ describe('AppComponent', () => {
   });
 
   it('should fetch the record and set the status', async () => {
-    const record: Record = {
-      id: '',
-      caseNum: '1234567890',
-      userInfo: {
-        fullName: 'John Doe',
-        organization: 'NIST',
-        email: 'john.doe@nist.gob',
-        receiveEmails: 'Yes',
-        country: 'United States',
-        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov',
-        productTitle: 'example title',
-        subject: 'example subject',
-        description: 'example description'
-      }
-    };
-
     expect(component.record).toBeTruthy();
     expect(component.status).toEqual('Approved');
     expect(component.statusDate).toEqual('2023-04-25T10:00:00.000Z');
@@ -144,6 +142,22 @@ describe('AppComponent', () => {
     );
   });
 
+  describe('dark mode', () => {
+    it('should initialize dark mode from localStorage', () => {
+      localStorage.setItem('darkMode', 'true');
+      component.initDarkMode();
+      expect(component.isDarkMode).toBe(true);
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+    });
+
+    it('should toggle dark mode', () => {
+      expect(component.isDarkMode).toBe(false);
+      component.toggleDarkMode();
+      expect(component.isDarkMode).toBe(true);
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      expect(localStorage.getItem('darkMode')).toBe('true');
+    });
+  });
 
   describe('parseDescription', () => {
     it('should extract fields from a valid description string', () => {
