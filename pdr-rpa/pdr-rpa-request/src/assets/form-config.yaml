@@ -1,0 +1,433 @@
+# PDR RPA Request Form Configuration
+# This file defines the dynamic form structure and dataset configurations
+
+settings:
+  countriesUrl: assets/countries.json
+  apiBaseUrl: https://oardev.nist.gov/od/ds/rpa
+
+forms:
+  - id: rpa-request
+    title: Access Request Form
+    subtitle: for Restricted Public Data
+    description: >
+      If you are a qualified researcher and you would like a copy of the dataset for your work,
+      please fill out all fields below. A temporary link to the dataset will be sent to the
+      email address you provide.
+    submitButton:
+      label: Submit Request
+      icon: send
+    successMessage: Your request was submitted successfully. You will receive a confirmation email shortly.
+    errorMessage: Please correct the errors in the form before submitting.
+
+    sections:
+      # Contact Information Section
+      - id: contact
+        title: Contact Information
+        fields:
+          - id: fullName
+            type: text
+            label: Point of Contact Name
+            placeholder: Your Full Name
+            required: true
+            autocomplete: name
+            validators:
+              - type: minLength
+                value: 2
+              - type: maxLength
+                value: 50
+              - type: latinOnly
+            errorMessages:
+              required: Point of contact name is required.
+              minLength: Name must be at least 2 characters long.
+              nonLatin: Name should only contain Latin characters.
+
+          - id: email
+            type: email
+            label: Point of Contact Email
+            placeholder: Your Company (NOT Personal) Email
+            required: true
+            autocomplete: email
+            validators:
+              - type: email
+            errorMessages:
+              required: Point of contact email is required.
+              email: Please enter a valid email address.
+              blacklisted: This email domain is not allowed.
+
+          - id: phone
+            type: tel
+            label: Point of Contact Phone Number
+            placeholder: Your Work (NOT Personal) Phone Number
+            required: true
+            autocomplete: tel
+
+      # Organization Section
+      - id: organization
+        title: Organization Details
+        fields:
+          - id: organization
+            type: text
+            label: Organization Name
+            placeholder: Your Company Name
+            required: true
+            autocomplete: organization
+
+          - id: address1
+            type: text
+            label: Organization Address Line 1
+            placeholder: "123 Main St."
+            required: true
+            autocomplete: address-line1
+
+          - id: address2
+            type: text
+            label: Organization Address Line 2 (Optional)
+            placeholder: Mailstop 1234
+            required: false
+            autocomplete: address-line2
+
+          - id: address3
+            type: text
+            label: Organization Address Line 3
+            placeholder: "City, XY, 12345"
+            required: true
+            autocomplete: address-line3
+
+          - id: country
+            type: select
+            label: Country
+            placeholder: Select a Country
+            required: true
+            optionsSource: countries
+            autocomplete: country-name
+
+      # Preferences Section
+      - id: preferences
+        fields:
+          - id: receiveEmails
+            type: checkbox
+            label: I would like to subscribe to email notifications.
+            required: false
+
+      # Terms Section (dynamic based on dataset)
+      - id: terms
+        title: Terms and Conditions
+        fields:
+          - id: termsDisplay
+            type: terms-display
+            label: Dataset Terms of Use
+            optionsSource: dataset.terms
+
+          - id: disclaimers
+            type: disclaimer-display
+            optionsSource: dataset.disclaimers
+
+          - id: agreements
+            type: checkbox-group
+            optionsSource: dataset.agreements
+            allRequired: true
+
+      # Verification Section
+      - id: verification
+        title: Verification
+        fields:
+          - id: recaptcha
+            type: recaptcha
+            required: true
+
+# Dataset Configurations
+datasets:
+  # NFIQ 2 Conformance Test Set
+  - id: "ark:/88434/mds2-2909"
+    name: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set
+    description: >
+      The images and values in this dataset are used to ensure conformance with ISO/IEC 29794-4.
+      Values were computed with NIST's NFIQ 2 software.
+    url: https://data.nist.gov/od/id/mds2-2909
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and training.
+      - The database will not be further distributed, published, copied, or disseminated externally by you or your organization in any way or form whatsoever, whether for profit or not.
+      - If you are accepting the agreement on behalf of an organization, you may distribute the database only internally to other organization members that agree to these terms, including that the use of the database is limited to biometrics related research, development and training.
+      - You agree that there shall not be any attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database shall be deleted by you or your organization and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new data sets are available.
+      - You agree to acknowledge the Nail to Nail Fingerprint Capture Challenge in any publication of results generated using the data.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST. I represent that I have provided all requested information.
+      - I accept the agreement on behalf of all members of the listed organization who will be provided access to the database and warrant that I, my organization and the organization's members, if any, will abide by the terms of this agreement.
+    blockedEmails:
+      - "@123\\."
+      - "@126\\."
+      - "@163\\."
+      - "@aliyun\\."
+      - "appleid\\.com$"
+      - "@aol\\."
+      - "@foxmail\\."
+      - "@gmail\\."
+      - "@hotmail\\."
+      - "@icloud\\."
+      - "@live\\."
+      - "@outlook\\."
+      - "@qq\\."
+      - "@yahoo\\."
+    blockedCountries:
+      - Cuba
+      - "Iran, Islamic Republic of"
+      - "Korea, Democratic People's Republic of"
+      - Syrian Arab Republic
+
+  # SRM 2969 Vitamin D
+  - id: "ark:/88434/mds2-2419"
+    name: SRM 2969 Vitamin D Metabolites in Frozen Human Serum (Total 25-Hydroxyvitamin D Low Level) Data
+    description: SRM 2969 Electronic files containing certified values and their uncertainties, and the data used to assign those values.
+    url: https://data.nist.gov/od/id/mds2-2419
+    requiresApproval: true
+    terms: []
+    disclaimers:
+      - The data and readme files are specific to the SRM NIST product. NIST does not guarantee the accuracy or completeness of the information. The only official source for specific values and uncertainties is the certificate, information sheet, or report.
+    agreements:
+      - I have read and understood the disclaimer set out above.
+    blockedEmails: []
+    blockedCountries: []
+
+  # SRM 2970 Vitamin D
+  - id: "ark:/88434/mds2-2420"
+    name: SRM 2970 Vitamin D Metabolites in Frozen Human Serum (25-Hydroxyvitamin D2 High Level) Data
+    description: Electronic files containing certified values and their uncertainties, and the data used to assign those values.
+    url: https://data.nist.gov/od/id/mds2-2420
+    requiresApproval: true
+    terms: []
+    disclaimers:
+      - The data and readme files are specific to the SRM NIST product. NIST does not guarantee the accuracy or completeness of the information. The only official source for specific values and uncertainties is the certificate, information sheet, or report.
+    agreements:
+      - I have read and understood the disclaimer set out above.
+    blockedEmails: []
+    blockedCountries: []
+
+  # NIST Mugshot Identification Database (MID)
+  - id: "ark:/88434/mds00sxbvh"
+    name: NIST Mugshot Identification Database (MID) - NIST Special Database 18
+    description: >
+      NIST Special Database 18 is being distributed for use in development and testing of
+      automated mugshot identification systems. The database consists of a total of 3248
+      images of variable size using PNG formatting with metadata TXT files.
+    url: https://www.nist.gov/srd/nist-special-database-18
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and education.
+      - The database is not intended to be further distributed, published, copied, or disseminated in any way or form whatsoever, whether for profit or not.
+      - There should be no attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database should be deleted and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new datasets are available.
+      - NIST should be acknowledged in any publication of results generated using the data.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    blockedEmails:
+      - "@123\\."
+      - "@126\\."
+      - "@163\\."
+      - "@aliyun\\."
+      - "appleid\\.com$"
+      - "@aol\\."
+      - "@foxmail\\."
+      - "@gmail\\."
+      - "@hotmail\\."
+      - "@icloud\\."
+      - "@live\\."
+      - "@outlook\\."
+      - "@qq\\."
+      - "@yahoo\\."
+    blockedCountries:
+      - Cuba
+      - "Iran, Islamic Republic of"
+      - "Korea, Democratic People's Republic of"
+      - Syrian Arab Republic
+
+  # Multiple Encounter Dataset (MEDS-I)
+  - id: "ark:/88434/mds0000fbk"
+    name: Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32
+    description: >
+      NIST Special Database 32 - Multiple Encounter Dataset (MEDS) is a test corpus organized
+      from an extract of submissions of deceased persons with prior multiple encounters.
+    url: https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and education.
+      - The database is not intended to be further distributed, published, copied, or disseminated in any way or form whatsoever, whether for profit or not.
+      - There should be no attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database should be deleted and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new datasets are available.
+      - NIST should be acknowledged in any publication of results generated using the data.
+    disclaimers:
+      - Purchase is not required for data downloading. Users must complete registration form to download data.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I have read and understood the disclaimer set out above.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    blockedEmails: []
+    blockedCountries: []
+
+  # Multiple Encounter Dataset (MEDS-II)
+  - id: "ark:/88434/mds00wpckz"
+    name: Multiple Encounter Dataset (MEDS-II) - NIST Special Database 32
+    description: >
+      NIST Special Database 32 - Multiple Encounter Dataset (MEDS) is a test corpus organized
+      from an extract of submissions of deceased persons with prior multiple encounters.
+    url: https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and education.
+      - The database is not intended to be further distributed, published, copied, or disseminated in any way or form whatsoever, whether for profit or not.
+      - There should be no attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database should be deleted and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new datasets are available.
+      - NIST should be acknowledged in any publication of results generated using the data.
+    disclaimers:
+      - Purchase is not required for data downloading. Users must complete registration form to download data.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I have read and understood the disclaimer set out above.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    blockedEmails: []
+    blockedCountries: []
+
+  # NIST Special Database 300
+  - id: "ark:/88434/mds1068c0v"
+    name: NIST Special Database 300 Uncompressed Plain and Rolled Images from Fingerprint Cards
+    description: >
+      NIST, working with the FBI, has digitized 888 inked fingerprint arrest cards that were
+      in various physical conditions, from pristine to badly damaged and faded.
+    url: https://www.nist.gov/itl/iad/image-group/nist-special-database-300
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and training.
+      - The database will not be further distributed, published, copied, or disseminated externally by you or your organization in any way or form whatsoever, whether for profit or not.
+      - If you are accepting the agreement on behalf of an organization, you may distribute the database only internally to other organization members that agree to these terms.
+      - You agree that there shall not be any attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database shall be deleted by you or your organization and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new data sets are available.
+    disclaimers:
+      - Purchase is not required for data downloading. Users must complete registration form to download data.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I have read and understood the disclaimer set out above.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    blockedEmails: []
+    blockedCountries: []
+
+  # NIST Special Database 301
+  - id: "ark:/88434/mds11ckbd2"
+    name: NIST Special Database 301 Nail to Nail (N2N) Fingerprint Challenge Dry Run
+    description: >
+      In April 2017, IARPA held a dry run for the data collection portion of its Nail to Nail
+      (N2N) Fingerprint Challenge. NIST has released a dataset of the biometric images obtained
+      during the N2N Fingerprint Challenge dry run.
+    url: https://www.nist.gov/itl/iad/image-group/nist-special-database-301
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and training.
+      - The database will not be further distributed, published, copied, or disseminated externally by you or your organization in any way or form whatsoever, whether for profit or not.
+      - If you are accepting the agreement on behalf of an organization, you may distribute the database only internally to other organization members that agree to these terms.
+      - You agree that there shall not be any attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database shall be deleted by you or your organization and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new data sets are available.
+      - You agree to acknowledge the Nail to Nail Fingerprint Capture Challenge in any publication of results generated using the data.
+    disclaimers:
+      - Purchase is not required for data downloading. Users must complete registration form to download data.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I have read and understood the disclaimer set out above.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    blockedEmails: []
+    blockedCountries: []
+
+  # NIST Special Database 302
+  - id: "ark:/88434/mds10274c2"
+    name: NIST Special Database 302 Nail to Nail (N2N) Fingerprint Challenge
+    description: >
+      In September 2017, IARPA held a data collection as part of its Nail to Nail (N2N)
+      Fingerprint Challenge. Traditional operator-assisted live-scan rolled fingerprints
+      were also captured, along with assorted other friction ridge live-scan and latent captures.
+    url: https://www.nist.gov/itl/iad/image-group/nist-special-database-302
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and training.
+      - The database will not be further distributed, published, copied, or disseminated externally by you or your organization in any way or form whatsoever, whether for profit or not.
+      - If you are accepting the agreement on behalf of an organization, you may distribute the database only internally to other organization members that agree to these terms.
+      - You agree that there shall not be any attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database shall be deleted by you or your organization and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new data sets are available.
+      - You agree to acknowledge the Nail to Nail Fingerprint Capture Challenge in any publication of results generated using the data.
+    disclaimers:
+      - Purchase is not required for data downloading. Users must complete registration form to download data.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I have read and understood the disclaimer set out above.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    blockedEmails: []
+    blockedCountries: []
+
+  # IARPA Janus Benchmark
+  - id: "iarpa-janus-benchmark"
+    name: IARPA Janus Benchmark
+    description: >
+      In cooperation with IARPA, NIST is currently running three challenges related to
+      processing of unconstrained in-the-wild face images. NOTE: The complete distribution
+      is ~325GB in size and can take up to 24 hours to download.
+    url: https://www.nist.gov/programs-projects/face-challenges
+    requiresApproval: true
+    terms:
+      - "The Receiving Entity shall insert the following statement in any product, report, publication, presentation, and/or other document that references the data: This product contains or makes use of the following data made available by the Intelligence Advanced Research Projects Activity (IARPA)."
+      - No further distribution of the data without express written permission from NIST. Instead, third parties should be directed to the NIST Face Challenges website to download the dataset directly.
+      - Comply with the licensing terms of the IJB-C dataset.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    disclaimers:
+      - "NOTE: The complete distribution contains all three IJB challenges (images + protocols) published to date (IJB-A, IJB-B, and IJB-C). It is ~325GB in size and can take up to 24 hours to download from our server. Please allocate proper hardware resource and time requirements for download prior to requesting the dataset."
+    blockedEmails: []
+    blockedCountries: []
+
+  # ELFT Validation Dataset
+  - id: "elft-validation"
+    name: Evaluation of Latent Friction Ridge Technology (ELFT) Validation Dataset
+    description: >
+      Developers of Evaluation of Latent Friction Ridge Technology (ELFT) algorithms must
+      request this dataset to run the ELFT validation program. The dataset itself is a
+      subset of images from Special Database (SD) 302.
+    url: https://www.nist.gov/itl/iad/image-group/evaluation-latent-friction-ridge-technology
+    requiresApproval: true
+    terms:
+      - The database is to be used for biometrics related research, development and training.
+      - The database will not be further distributed, published, copied, or disseminated externally by you or your organization in any way or form whatsoever, whether for profit or not.
+      - If you are accepting the agreement on behalf of an organization, you may distribute the database only internally to other organization members that agree to these terms.
+      - You agree that there shall not be any attempts to defeat the de-identification of the data provided.
+      - If requested by NIST, certain images in the database or the entire database shall be deleted by you or your organization and no copies retained.
+      - The researcher, at NIST's sole option, may be notified periodically when new data sets are available.
+      - You agree to acknowledge the Nail to Nail Fingerprint Capture Challenge in any publication of results generated using the data from NIST Special Database 302.
+    agreements:
+      - I agree to the defined terms and conditions of this dataset.
+      - I acknowledge that all requests are reviewed by a NIST employee or other individual acting on behalf of NIST.
+    blockedEmails:
+      - "@123\\."
+      - "@126\\."
+      - "@163\\."
+      - "@aliyun\\."
+      - "appleid\\.com$"
+      - "@aol\\."
+      - "@foxmail\\."
+      - "@gmail\\."
+      - "@hotmail\\."
+      - "@icloud\\."
+      - "@live\\."
+      - "@outlook\\."
+      - "@qq\\."
+      - "@yahoo\\."
+    blockedCountries:
+      - Cuba
+      - "Iran, Islamic Republic of"
+      - "Korea, Democratic People's Republic of"
+      - Syrian Arab Republic
