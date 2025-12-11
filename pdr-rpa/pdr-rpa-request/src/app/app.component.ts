@@ -163,8 +163,8 @@ export class AppComponent implements OnInit {
     const userInfo = this.buildUserInfo(formValues);
     const recaptcha = formValues['recaptcha'];
 
-    if (environment.debug) {
-      // Simulate submission in debug mode
+    if (environment.simulateSubmission) {
+      // Simulate submission (for UI testing without backend)
       console.log('[AppComponent] Simulated submission:', userInfo);
       setTimeout(() => {
         this.handleSubmissionSuccess({ id: 'test-123', caseNum: 'TEST-001' });
