@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Record } from './model/record';
@@ -10,7 +11,7 @@ import { Observable, EMPTY, throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 
 /**
- * Interface used to store product title, and address 
+ * Interface used to store product title, and address
  * for parsing purposes.
  */
 export interface RecordDescription {
@@ -20,8 +21,8 @@ export interface RecordDescription {
 }
 
 /**
- * A specialized Error indicating a error originating with from client action/inaction; the 
- * message is assumed to be one directed at the user (rather than the programmer) and can be 
+ * A specialized Error indicating a error originating with from client action/inaction; the
+ * message is assumed to be one directed at the user (rather than the programmer) and can be
  * displayed in the application in some way.
  */
 class ClientError extends Error {
@@ -35,9 +36,22 @@ class ClientError extends Error {
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-  providers: [MessageService]
+  animations: [
+    trigger('fadeInUp', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('400ms ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('fadeIn', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms ease-out', style({ opacity: 1 }))
+      ])
+    ])
+  ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   recordId: string;
   status: string;
   statusDate: string = "";
@@ -49,11 +63,12 @@ export class AppComponent {
   recordNotFound = false;
   recordDescription: RecordDescription;
   _creds: Credentials;
-    
+  isDarkMode: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private rpaService: RPAService,
-    private messageService: MessageService,
+    private snackBar: MatSnackBar,
     private authService: AuthenticationService
   ) { }
 
@@ -61,6 +76,7 @@ export class AppComponent {
    * Init the component state based on the record id retrieved from the route query params.
    */
   ngOnInit(): void {
+    this.initDarkMode();
     this.displayProgressSpinner = true;
     this.status = "pending";
     this.authenticate().pipe(
@@ -84,9 +100,9 @@ export class AppComponent {
 
       // Catch and log any errors that occur
       catchError(error => {
-        console.error("App init failed: "+error.message);
+        console.error("App init failed: " + error.message);
         if (error instanceof ClientError)
-          alert("Unable to open request: "+error.message);
+          alert("Unable to open request: " + error.message);
         else
           alert("Unable to open request due to internal error; try reloading page.")
 
@@ -98,53 +114,78 @@ export class AppComponent {
     ).subscribe();
   }
 
-    /**
-     * ensure that the user is authenticated.  The returned Observable won't provide a value until 
-     * authentication process completes successfully.
-     * @return Observable<string> -- an Observable to the ID of the request to be approved
-     *                  authentication is complete.  
-     */
-    authenticate() : Observable<string> {
-      return this.authService.getCredentials().pipe(
-          // cache the credentials
-          tap(c => this._creds = c),
-  
-          // get the requested record ID
-          switchMap(c => this.route.queryParams),
-          map((params: Params) => {
-              if (!this._creds || !this._creds.token)
-                  throw new ClientError("Authentication failed. (Try reloading this URL.)");
-              if (! params.id)
-                  throw new ClientError("No request identifier provided!");
-              return params.id;
-          })
-      );
+  /**
+   * Initialize dark mode from localStorage
+   */
+  initDarkMode(): void {
+    const savedDarkMode = localStorage.getItem('darkMode');
+    this.isDarkMode = savedDarkMode === 'true';
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
+  }
+
+  /**
+   * Toggle dark mode and save preference
+   */
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark-mode', this.isDarkMode);
+    localStorage.setItem('darkMode', String(this.isDarkMode));
+  }
+
+  /**
+   * Refresh the page
+   */
+  refreshPage(): void {
+    window.location.reload();
+  }
+
+  /**
+   * ensure that the user is authenticated.  The returned Observable won't provide a value until
+   * authentication process completes successfully.
+   * @return Observable<string> -- an Observable to the ID of the request to be approved
+   *                  authentication is complete.
+   */
+  authenticate(): Observable<string> {
+    return this.authService.getCredentials().pipe(
+      // cache the credentials
+      tap(c => this._creds = c),
+
+      // get the requested record ID
+      switchMap(c => this.route.queryParams),
+      map((params: Params) => {
+        if (!this._creds || !this._creds.token)
+          throw new ClientError("Authentication failed. (Try reloading this URL.)");
+        if (!params.id)
+          throw new ClientError("No request identifier provided!");
+        return params.id;
+      })
+    );
   }
 
   /**
    * Parses the description from a Record object to extract
-   * the product title, and the address. 
+   * the product title, and the address.
    * Sets the extracted values in the recordDescription object.
-   * 
+   *
    * @param record The Record object to parse the user info description from.
    */
   parseDescription(description: string) {
     // Define regex
 
     // This matches the string 'Product Title:' at the start of a line ^,
-    // followed by any number of whitespace characters \s*, 
+    // followed by any number of whitespace characters \s*,
     // and then matches any characters (.*) until the end of the line $.
     // m flag enables multiline matching, not just the start end end of the description.
     const titleRegex = /^Product Title:\s*(.*)$/m;
 
     // This matches the string 'Phone Number:' at the start of a line ^,
-    // followed by any number of whitespace characters \s*, 
-    // and then matches one or more digits, whitespace characters, or hyphens. 
+    // followed by any number of whitespace characters \s*,
+    // and then matches one or more digits, whitespace characters, or hyphens.
     // This allows the formats '123-456-7890', '123 456 7890', or '1234567890' until the end of the line $.
     const phoneRegex = /^Phone Number:\s*([\d\s-]+)$/m;
 
     // This matches the string Address: at the start of a line ^,
-    // followed by any number of whitespace characters \s*, 
+    // followed by any number of whitespace characters \s*,
     // and then matches any characters (including newlines) ([\s\S]*) until the end of the line $.
     const addressRegex = /^Address:\s*([\s\S]*)$/m;
 
@@ -169,9 +210,9 @@ export class AppComponent {
 
   /**
    * Parse the approval status of the record and update the component state with the
-   * status, status date, email, and random ID. 
+   * status, status date, email, and random ID.
    * If the status is "Pending", the date and email will be undefined.
-   * 
+   *
    * @param record - The record to parse the approval status of.
    */
   parseApprovalStatus(record: Record): void {
@@ -180,23 +221,32 @@ export class AppComponent {
     this.status = statusParts[0];
 
     if (this.status.toLowerCase() === "pending") {
-        this.statusDate = "";
-        this.smeEmail = "";
-        this.randomId = "";
+      this.statusDate = "";
+      this.smeEmail = "";
+      this.randomId = "";
     } else if (statusParts.length === 3 || statusParts.length === 4) {
-        this.statusDate = statusParts[1];
-        this.smeEmail = statusParts[2];
-        if (statusParts.length === 4) {
-            this.randomId = statusParts[3];
-        }
+      this.statusDate = statusParts[1];
+      this.smeEmail = statusParts[2];
+      if (statusParts.length === 4) {
+        this.randomId = statusParts[3];
+      }
     } else {
-        // Handle unexpected format
-        throw new ClientError("Unexpected approval status format");
+      // Handle unexpected format
+      throw new ClientError("Unexpected approval status format");
     }
-}
+  }
 
-
-
+  /**
+   * Show a snackbar notification
+   */
+  private showSnackBar(message: string, type: 'success' | 'error' | 'info'): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: [`snackbar-${type}`]
+    });
+  }
 
   /**
    * Approve the RPA request for the current record and displays a success message.
@@ -209,14 +259,15 @@ export class AppComponent {
     this.rpaService.approveRequest(this.recordId, this._creds).pipe(
       catchError(error => {
         if (environment.debug) console.error(`[${this.constructor.name}] Error approving request:`, error());
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error approving this request.', life: 5000 });
+        this.showSnackBar('There was an error approving this request.', 'error');
+        this.displayProgressSpinner = false;
         return throwError(error); // re-throw the error to be caught by the subscribing function
       })
     )
       .subscribe(
         data => {
-          if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was approving by SME!`);
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was approved successfully!', life: 5000 }); 
+          if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was approved by SME!`);
+          this.showSnackBar('This request was approved successfully!', 'success');
           setTimeout(() => {
             location.reload();
           }, 3000); // dismiss success message after few seconds
@@ -237,15 +288,16 @@ export class AppComponent {
       .pipe(
         catchError(error => {
           if (environment.debug) console.error(`[${this.constructor.name}] Error declining request:`, error());
-          this.messageService.add({ severity: 'error', summary: 'Error', detail: 'There was an error declining this request.', life: 5000 });
+          this.showSnackBar('There was an error declining this request.', 'error');
+          this.displayProgressSpinner = false;
           return throwError(error); // re-throw the error to be caught by the subscribing function
         })
       )
       .subscribe(
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was declined by SME!`);
-          
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'This request was declined successfully!', life: 5000 });
+
+          this.showSnackBar('This request was declined successfully!', 'success');
           setTimeout(() => {
             location.reload();
           }, 3000); // dismiss success message after few seconds
