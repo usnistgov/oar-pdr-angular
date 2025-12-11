@@ -175,6 +175,43 @@ describe('AppComponent', () => {
       component.hideToast();
       expect(component.toastVisible).toBe(false);
     });
+
+    it('should show error toast', () => {
+      component.showToast('Error occurred', 'error');
+      expect(component.toastVisible).toBe(true);
+      expect(component.toastType).toBe('error');
+    });
+  });
+
+  describe('error state', () => {
+    it('should have error properties initialized', () => {
+      expect(component.errorTitle).toBe('');
+      expect(component.errorMessage).toBe('');
+      expect(component.recordNotFound).toBe(false);
+    });
+
+    it('should set error state correctly', () => {
+      component.errorTitle = 'Test Error';
+      component.errorMessage = 'Something went wrong';
+      component.recordNotFound = true;
+
+      expect(component.errorTitle).toBe('Test Error');
+      expect(component.errorMessage).toBe('Something went wrong');
+      expect(component.recordNotFound).toBe(true);
+    });
+  });
+
+  describe('refreshPage', () => {
+    it('should call window.location.reload', () => {
+      const reloadMock = jest.fn();
+      Object.defineProperty(window, 'location', {
+        value: { reload: reloadMock },
+        writable: true
+      });
+
+      component.refreshPage();
+      expect(reloadMock).toHaveBeenCalled();
+    });
   });
 
   describe('parseDescription', () => {
