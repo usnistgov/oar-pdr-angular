@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
-  datasetsConfigUrl: 'assets/datasets.yaml',
+  formConfigUrl: 'assets/form-config.yaml',
   countriesUrl: 'assets/countries.json',
   configUrl: 'assets/config.json',
+  recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // Test key - replace in production
   debug: true
 };
 
