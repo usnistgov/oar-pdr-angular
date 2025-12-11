@@ -1,6 +1,12 @@
 /* Global Styles */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Header override - reduce horizontal padding */
+app-header .header-container,
+.header-container {
+  padding: 1em !important;
+}
+
 :root {
   /* NIST Brand Colors */
   --science-theme-background-default: #019fbb;
@@ -81,24 +87,26 @@ body.dark-mode .approval-card {
   border-color: var(--border-color);
 }
 
-body.dark-mode .section-header h2 {
-  color: var(--text-primary) !important;
-}
-
-body.dark-mode .detail-card {
+/* Details Section */
+body.dark-mode .details-section {
   background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
   border-color: var(--border-color);
 }
 
-body.dark-mode .detail-card:hover {
-  border-color: var(--primary-light);
+body.dark-mode .section-title {
+  color: var(--text-primary);
+  border-color: var(--border-color);
 }
 
-body.dark-mode .detail-label {
+body.dark-mode .section-title mat-icon {
+  color: var(--primary-light);
+}
+
+body.dark-mode .detail-item .label {
   color: var(--text-muted);
 }
 
-body.dark-mode .detail-value {
+body.dark-mode .detail-item .value {
   color: var(--text-primary);
 }
 
@@ -110,6 +118,7 @@ body.dark-mode .email-link:hover {
   color: var(--primary-light);
 }
 
+/* Product Card */
 body.dark-mode .product-card {
   background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
   border-color: #3b5998;
@@ -123,32 +132,44 @@ body.dark-mode .product-title {
   color: #93c5fd;
 }
 
-body.dark-mode .action-notice {
+body.dark-mode .product-icon {
+  color: #60a5fa;
+}
+
+/* Action Notice - Pending (blue) */
+body.dark-mode .action-notice.notice-pending {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+
+body.dark-mode .action-notice.notice-pending mat-icon {
+  color: #60a5fa;
+}
+
+/* Action Notice - Approved (yellow/warning) */
+body.dark-mode .action-notice.notice-approved {
   background: linear-gradient(135deg, #422006 0%, #451a03 100%);
   border-color: #854d0e;
-}
-
-body.dark-mode .action-notice mat-icon {
-  color: #fbbf24;
-}
-
-body.dark-mode .action-notice p {
   color: #fcd34d;
 }
 
-body.dark-mode .status-message {
+body.dark-mode .action-notice.notice-approved mat-icon {
+  color: #fbbf24;
+}
+
+/* Action Notice - Declined (green) */
+body.dark-mode .action-notice.notice-declined {
   background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
   border-color: #059669;
-}
-
-body.dark-mode .status-message mat-icon {
-  color: #34d399;
-}
-
-body.dark-mode .status-message p {
   color: #a7f3d0;
 }
 
+body.dark-mode .action-notice.notice-declined mat-icon {
+  color: #34d399;
+}
+
+/* Error Container */
 body.dark-mode .error-container h2 {
   color: var(--text-primary);
 }
@@ -157,6 +178,7 @@ body.dark-mode .error-container p {
   color: var(--text-secondary);
 }
 
+/* Buttons */
 body.dark-mode .decline-btn {
   background: transparent;
   border-color: #f87171;

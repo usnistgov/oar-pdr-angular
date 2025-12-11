@@ -3,175 +3,134 @@
 <!-- Loading Overlay -->
 <div class="loading-overlay" *ngIf="displayProgressSpinner">
   <div class="spinner-container">
-    <mat-spinner diameter="60" color="primary"></mat-spinner>
-    <p class="loading-text">Processing request...</p>
+    <mat-spinner diameter="48" color="primary"></mat-spinner>
+    <p class="loading-text">Processing...</p>
   </div>
 </div>
 
 <div class="page-container">
   <mat-card class="approval-card" [@fadeInUp] *ngIf="loaded || recordNotFound">
-    <!-- Status Header -->
-    <div class="status-header" *ngIf="loaded"
+
+    <!-- Compact Status Bar -->
+    <div class="status-bar" *ngIf="loaded && !recordNotFound"
          [class.status-pending]="status.toLowerCase().includes('pending')"
          [class.status-approved]="status.toLowerCase().includes('approved')"
          [class.status-declined]="status.toLowerCase().includes('declined')">
-      <div class="status-icon">
-        <mat-icon *ngIf="status.toLowerCase().includes('pending')">hourglass_empty</mat-icon>
-        <mat-icon *ngIf="status.toLowerCase().includes('approved')">check_circle</mat-icon>
-        <mat-icon *ngIf="status.toLowerCase().includes('declined')">cancel</mat-icon>
+      <div class="status-left">
+        <mat-icon class="status-icon">
+          {{ status.toLowerCase().includes('pending') ? 'hourglass_empty' :
+             status.toLowerCase().includes('approved') ? 'check_circle' : 'cancel' }}
+        </mat-icon>
+        <div class="status-text">
+          <span class="status-label">
+            {{ status.toLowerCase().includes('pending') ? 'Pending Approval' :
+               status.toLowerCase().includes('approved') ? 'Approved' : 'Declined' }}
+          </span>
+          <span class="case-num">Case: {{ record?.caseNum }}</span>
+        </div>
       </div>
-      <h1 class="status-title">
-        {{ status.toLowerCase().includes('pending') ? 'Pending Approval' :
-           status.toLowerCase().includes('approved') ? 'Request Approved' :
-           status.toLowerCase().includes('declined') ? 'Request Declined' : 'Unknown Status' }}
-      </h1>
-      <div class="case-number">
-        <mat-icon>folder</mat-icon>
-        <span>Case: {{ record?.caseNum }}</span>
+      <div class="status-right" *ngIf="!status.toLowerCase().includes('pending')">
+        <span class="status-meta">{{ statusDate | date:'mediumDate' }} by {{ smeEmail }}</span>
       </div>
     </div>
 
     <!-- Error State -->
     <div class="error-container" *ngIf="recordNotFound" [@fadeIn]>
       <mat-icon class="error-icon">error_outline</mat-icon>
-      <h2>Something went wrong</h2>
-      <p>We couldn't load the request details. Please try refreshing the page.</p>
-      <button mat-raised-button color="primary" (click)="refreshPage()">
-        <mat-icon>refresh</mat-icon>
-        Refresh Page
+      <h2>{{ errorTitle || 'Something went wrong' }}</h2>
+      <p class="error-message">{{ errorMessage || 'We couldn\'t load the request details.' }}</p>
+      <button class="refresh-btn" (click)="refreshPage()">
+        <mat-icon>refresh</mat-icon> Try Again
       </button>
+      <p class="support-message">
+        If the problem persists, please contact support at
+        <a href="mailto:datasupport@nist.gov">datasupport&#64;nist.gov</a>
+      </p>
     </div>
 
     <!-- Main Content -->
-    <mat-card-content *ngIf="loaded && !recordNotFound">
-      <!-- Status Message for Approved/Declined -->
-      <div class="status-message" *ngIf="!status.toLowerCase().includes('pending')" [@fadeIn]>
-        <mat-icon>{{ status.toLowerCase().includes('approved') ? 'verified' : 'block' }}</mat-icon>
-        <p>
-          This request was <strong>{{ status.toLowerCase() }}</strong> on
-          <strong>{{ statusDate | date:'longDate' }}</strong> by
-          <strong>{{ smeEmail }}</strong>
-        </p>
-      </div>
+    <div class="main-content" *ngIf="loaded && !recordNotFound">
 
-      <!-- Request Details Section -->
-      <div class="section-header">
-        <mat-icon>description</mat-icon>
-        <h2>Request Details</h2>
-      </div>
-
-      <div class="details-grid" [@fadeInUp]>
-        <!-- Requester Information -->
-        <div class="detail-card">
-          <div class="detail-icon">
-            <mat-icon>person</mat-icon>
+      <!-- Requester Details - Full Width -->
+      <div class="details-section">
+        <h3 class="section-title">
+          <mat-icon>person</mat-icon>
+          Requester Information
+        </h3>
+        <div class="details-grid">
+          <div class="detail-item">
+            <span class="label">Name</span>
+            <span class="value">{{ record?.userInfo.fullName }}</span>
           </div>
-          <div class="detail-content">
-            <span class="detail-label">Requester</span>
-            <span class="detail-value">{{ record?.userInfo.fullName }}</span>
+          <div class="detail-item">
+            <span class="label">Organization</span>
+            <span class="value">{{ record?.userInfo.organization }}</span>
           </div>
-        </div>
-
-        <div class="detail-card">
-          <div class="detail-icon">
-            <mat-icon>business</mat-icon>
-          </div>
-          <div class="detail-content">
-            <span class="detail-label">Organization</span>
-            <span class="detail-value">{{ record?.userInfo.organization }}</span>
-          </div>
-        </div>
-
-        <div class="detail-card">
-          <div class="detail-icon">
-            <mat-icon>email</mat-icon>
-          </div>
-          <div class="detail-content">
-            <span class="detail-label">Email</span>
-            <a class="detail-value email-link" [href]="'mailto:' + record?.userInfo.email">
+          <div class="detail-item">
+            <span class="label">Email</span>
+            <a [href]="'mailto:' + record?.userInfo.email" class="value email-link">
               {{ record?.userInfo.email }}
             </a>
           </div>
-        </div>
-
-        <div class="detail-card">
-          <div class="detail-icon">
-            <mat-icon>public</mat-icon>
+          <div class="detail-item">
+            <span class="label">Country</span>
+            <span class="value">{{ record?.userInfo.country }}</span>
           </div>
-          <div class="detail-content">
-            <span class="detail-label">Country</span>
-            <span class="detail-value">{{ record?.userInfo.country }}</span>
+          <div class="detail-item" *ngIf="recordDescription?.phone">
+            <span class="label">Phone</span>
+            <span class="value">{{ recordDescription.phone }}</span>
           </div>
-        </div>
-
-        <div class="detail-card" *ngIf="recordDescription?.phone">
-          <div class="detail-icon">
-            <mat-icon>phone</mat-icon>
-          </div>
-          <div class="detail-content">
-            <span class="detail-label">Phone</span>
-            <span class="detail-value">{{ recordDescription.phone }}</span>
-          </div>
-        </div>
-
-        <div class="detail-card full-width" *ngIf="recordDescription?.address">
-          <div class="detail-icon">
-            <mat-icon>location_on</mat-icon>
-          </div>
-          <div class="detail-content">
-            <span class="detail-label">Address</span>
-            <span class="detail-value">{{ recordDescription.address }}</span>
+          <div class="detail-item" *ngIf="recordDescription?.address">
+            <span class="label">Address</span>
+            <span class="value">{{ recordDescription.address }}</span>
           </div>
         </div>
       </div>
 
-      <!-- Product Information -->
-      <div class="section-header" *ngIf="recordDescription?.title">
-        <mat-icon>inventory_2</mat-icon>
-        <h2>Product Information</h2>
-      </div>
-
-      <div class="product-card" *ngIf="recordDescription?.title" [@fadeIn]>
+      <!-- Product Card - Full Width -->
+      <div class="product-card" *ngIf="recordDescription?.title">
         <mat-icon class="product-icon">dataset</mat-icon>
-        <div class="product-details">
+        <div class="product-info">
           <span class="product-label">Requested Product</span>
           <span class="product-title">{{ recordDescription.title }}</span>
         </div>
       </div>
 
-      <!-- Action Notice -->
-      <div class="action-notice" [@fadeIn]>
-        <mat-icon>{{ status.toLowerCase().includes('pending') ? 'info' :
-                     status.toLowerCase().includes('approved') ? 'warning' : 'info' }}</mat-icon>
-        <p *ngIf="status.toLowerCase().includes('pending')">
-          This request is still <strong>pending</strong>. Please approve or decline as soon as possible.
-        </p>
-        <p *ngIf="status.toLowerCase().includes('approved')">
-          To revoke the requester's access to the data, click <strong>Decline</strong>.
-        </p>
-        <p *ngIf="status.toLowerCase().includes('declined')">
-          To override this decline and grant access, click <strong>Approve</strong>.
-        </p>
-      </div>
+      <!-- Action Notice & Buttons Row -->
+      <div class="action-row">
+        <div class="action-notice" [class.notice-pending]="status.toLowerCase().includes('pending')"
+             [class.notice-approved]="status.toLowerCase().includes('approved')"
+             [class.notice-declined]="status.toLowerCase().includes('declined')">
+          <mat-icon>{{ status.toLowerCase().includes('pending') ? 'info' : 'warning' }}</mat-icon>
+          <span *ngIf="status.toLowerCase().includes('pending')">
+            Review and take action on this request.
+          </span>
+          <span *ngIf="status.toLowerCase().includes('approved')">
+            Click <strong>Decline</strong> to revoke access.
+          </span>
+          <span *ngIf="status.toLowerCase().includes('declined')">
+            Click <strong>Approve</strong> to grant access.
+          </span>
+        </div>
 
-      <!-- Action Buttons -->
-      <div class="action-buttons">
-        <button mat-raised-button class="approve-btn"
-                *ngIf="status.toLowerCase().includes('pending') || status.toLowerCase().includes('declined')"
-                (click)="onApprove()"
-                [disabled]="displayProgressSpinner">
-          <mat-icon>check_circle</mat-icon>
-          Approve
-        </button>
-        <button mat-raised-button class="decline-btn"
-                *ngIf="status.toLowerCase().includes('pending') || status.toLowerCase().includes('approved')"
-                (click)="onDecline()"
-                [disabled]="displayProgressSpinner">
-          <mat-icon>cancel</mat-icon>
-          Decline
-        </button>
+        <div class="action-buttons">
+          <button mat-raised-button class="approve-btn"
+                  *ngIf="status.toLowerCase().includes('pending') || status.toLowerCase().includes('declined')"
+                  (click)="onApprove()"
+                  [disabled]="displayProgressSpinner">
+            <mat-icon>check_circle</mat-icon>
+            Approve
+          </button>
+          <button mat-raised-button class="decline-btn"
+                  *ngIf="status.toLowerCase().includes('pending') || status.toLowerCase().includes('approved')"
+                  (click)="onDecline()"
+                  [disabled]="displayProgressSpinner">
+            <mat-icon>cancel</mat-icon>
+            Decline
+          </button>
+        </div>
       </div>
-    </mat-card-content>
+    </div>
   </mat-card>
 </div>
 
@@ -182,5 +141,28 @@
         matTooltipPosition="right">
   <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
 </button>
+
+<!-- Custom Toast Notification -->
+<div class="toast-overlay" *ngIf="toastVisible" (click)="hideToast()">
+  <div class="toast-container" [class.toast-success]="toastType === 'success'"
+       [class.toast-error]="toastType === 'error'"
+       [class.toast-info]="toastType === 'info'"
+       (click)="$event.stopPropagation()">
+    <div class="toast-icon">
+      <mat-icon *ngIf="toastType === 'success'">check_circle</mat-icon>
+      <mat-icon *ngIf="toastType === 'error'">error</mat-icon>
+      <mat-icon *ngIf="toastType === 'info'">info</mat-icon>
+    </div>
+    <div class="toast-content">
+      <h4 class="toast-title">
+        {{ toastType === 'success' ? 'Success' : toastType === 'error' ? 'Error' : 'Info' }}
+      </h4>
+      <p class="toast-message">{{ toastMessage }}</p>
+    </div>
+    <button class="toast-close" (click)="hideToast()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>
 
 <app-footer></app-footer>

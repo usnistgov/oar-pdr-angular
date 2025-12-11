@@ -3,7 +3,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppComponent, RecordDescription } from './app.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RPAService } from './service/rpa.service';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigurationService, AuthenticationService, MockAuthenticationService } from 'oarng';
 import { RPAConfiguration } from './model/config.model';
@@ -12,11 +11,20 @@ import { ApprovalResponse, Record, RecordWrapper } from './model/record';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+// Mock environment to disable simulation in tests
+jest.mock('../environments/environment', () => ({
+  environment: {
+    production: false,
+    configUrl: 'assets/config.json',
+    debug: false,
+    simulateData: false  // Disable simulation in tests
+  }
+}));
+
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
   let rpaService: RPAService;
-  let snackBar: MatSnackBar;
 
   const mockConfig: RPAConfiguration = {
     baseUrl: 'https://example.com',
@@ -40,7 +48,6 @@ describe('AppComponent', () => {
 
   let mockConfigService: any;
   let mockRPAService: any;
-  let mockSnackBar: any;
 
   beforeEach(async () => {
     mockConfigService = {
@@ -57,9 +64,6 @@ describe('AppComponent', () => {
         approvalStatus: 'Declined_2023-04-25T10:00:00.000Z_sme@nist.gov'
       } as ApprovalResponse))
     };
-    mockSnackBar = {
-      open: jest.fn()
-    };
 
     await TestBed.configureTestingModule({
       declarations: [AppComponent, UnescapeHTMLPipe],
@@ -71,9 +75,8 @@ describe('AppComponent', () => {
         { provide: ConfigurationService, useValue: mockConfigService },
         { provide: AuthenticationService, useClass: MockAuthenticationService },
         { provide: RPAService, useValue: mockRPAService },
-        { provide: MatSnackBar, useValue: mockSnackBar },
       ],
-      imports: [HttpClientTestingModule, MatSnackBarModule, NoopAnimationsModule],
+      imports: [HttpClientTestingModule, NoopAnimationsModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     })
       .compileComponents();
@@ -82,7 +85,6 @@ describe('AppComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
-    snackBar = TestBed.inject(MatSnackBar);
     fixture.detectChanges();
   });
 
@@ -156,6 +158,22 @@ describe('AppComponent', () => {
       expect(component.isDarkMode).toBe(true);
       expect(document.body.classList.contains('dark-mode')).toBe(true);
       expect(localStorage.getItem('darkMode')).toBe('true');
+    });
+  });
+
+  describe('toast notifications', () => {
+    it('should show toast with correct message and type', () => {
+      component.showToast('Test message', 'success');
+      expect(component.toastVisible).toBe(true);
+      expect(component.toastMessage).toBe('Test message');
+      expect(component.toastType).toBe('success');
+    });
+
+    it('should hide toast', () => {
+      component.showToast('Test', 'info');
+      expect(component.toastVisible).toBe(true);
+      component.hideToast();
+      expect(component.toastVisible).toBe(false);
     });
   });
 

@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Record } from './model/record';
 import { RPAService } from './service/rpa.service';
 import { AuthenticationService, Credentials } from 'oarng';
-import { catchError, pluck, switchMap, map, tap } from 'rxjs/operators';
-import { Observable, EMPTY, throwError } from 'rxjs';
+import { catchError, pluck, switchMap, map, tap, delay } from 'rxjs/operators';
+import { Observable, EMPTY, throwError, of } from 'rxjs';
 import { environment } from '../environments/environment';
 
 /**
@@ -61,14 +60,37 @@ export class AppComponent implements OnInit {
   loaded: boolean = false;
   displayProgressSpinner: boolean = false;
   recordNotFound = false;
+  errorMessage: string = '';
+  errorTitle: string = '';
   recordDescription: RecordDescription;
   _creds: Credentials;
   isDarkMode: boolean = false;
 
+  // Toast notification state
+  toastVisible: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'info' = 'info';
+
+  // Mock data for simulation mode
+  private mockRecord: Record = {
+    id: 'mock-123',
+    caseNum: 'CASE-2024-001234',
+    userInfo: {
+      fullName: 'John Doe',
+      organization: 'National Institute of Standards and Technology',
+      email: 'john.doe@nist.gov',
+      receiveEmails: 'Yes',
+      country: 'United States',
+      approvalStatus: 'Pending',
+      productTitle: 'NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set',
+      subject: 'ark:/88434/mds2-2909',
+      description: 'Product Title: NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set\n\nPhone Number: 301-975-6478\n\nAddress:\n100 Bureau Drive\nGaithersburg, MD 20899'
+    }
+  };
+
   constructor(
     private route: ActivatedRoute,
     private rpaService: RPAService,
-    private snackBar: MatSnackBar,
     private authService: AuthenticationService
   ) { }
 
@@ -79,6 +101,13 @@ export class AppComponent implements OnInit {
     this.initDarkMode();
     this.displayProgressSpinner = true;
     this.status = "pending";
+
+    // Use simulation mode if enabled
+    if (environment.simulateData) {
+      this.loadSimulatedData();
+      return;
+    }
+
     this.authenticate().pipe(
       tap(recordId => this.recordId = recordId),
 
@@ -101,17 +130,98 @@ export class AppComponent implements OnInit {
       // Catch and log any errors that occur
       catchError(error => {
         console.error("App init failed: " + error.message);
-        if (error instanceof ClientError)
-          alert("Unable to open request: " + error.message);
-        else
-          alert("Unable to open request due to internal error; try reloading page.")
+
+        // Set specific error messages based on error type
+        if (error instanceof ClientError) {
+          if (error.message.includes("No request identifier")) {
+            this.errorTitle = "Missing Request ID";
+            this.errorMessage = "No request identifier was provided in the URL. Please check the link you received.";
+          } else if (error.message.includes("Authentication")) {
+            this.errorTitle = "Authentication Failed";
+            this.errorMessage = "Unable to authenticate. Please try reloading the page.";
+          } else {
+            this.errorTitle = "Request Error";
+            this.errorMessage = error.message;
+          }
+        } else {
+          this.errorTitle = "Something Went Wrong";
+          this.errorMessage = "We couldn't load the request details. Please try again later.";
+        }
+
+        // Show toast notification
+        this.showToast(this.errorMessage, 'error');
 
         // Return an empty observable to prevent the error from propagating further
         this.recordNotFound = true;
-        this.displayProgressSpinner = false
+        this.displayProgressSpinner = false;
         return EMPTY;
       })
     ).subscribe();
+  }
+
+  /**
+   * Load simulated data for UI testing without backend
+   * URL params:
+   *   ?status=pending|approved|declined - test approval states
+   *   ?error=missing-id|auth|backend - test error states
+   */
+  private loadSimulatedData(): void {
+    this.route.queryParams.subscribe(params => {
+      const status = params['status'] || 'pending';
+      const error = params['error'];
+
+      // Simulate error states
+      if (error) {
+        setTimeout(() => {
+          this.displayProgressSpinner = false;
+          this.recordNotFound = true;
+
+          switch (error) {
+            case 'missing-id':
+              this.errorTitle = 'Missing Request ID';
+              this.errorMessage = 'No request identifier was provided in the URL. Please check the link you received.';
+              break;
+            case 'auth':
+              this.errorTitle = 'Authentication Failed';
+              this.errorMessage = 'Unable to authenticate. Please try reloading the page.';
+              break;
+            case 'backend':
+              this.errorTitle = 'Something Went Wrong';
+              this.errorMessage = 'We couldn\'t load the request details. Please try again later.';
+              break;
+            default:
+              this.errorTitle = 'Error';
+              this.errorMessage = 'An unknown error occurred.';
+          }
+
+          this.showToast(this.errorMessage, 'error');
+          if (environment.debug) console.log('[Simulation] Error state:', error);
+        }, 800);
+        return;
+      }
+
+      // Normal flow - simulate approval states
+      this.recordId = 'mock-123';
+
+      // Update mock record based on status param
+      if (status === 'approved') {
+        this.mockRecord.userInfo.approvalStatus = 'Approved_2024-01-15T10:30:00.000Z_sme@nist.gov';
+      } else if (status === 'declined') {
+        this.mockRecord.userInfo.approvalStatus = 'Declined_2024-01-15T14:45:00.000Z_sme@nist.gov';
+      } else {
+        this.mockRecord.userInfo.approvalStatus = 'Pending';
+      }
+
+      // Simulate network delay
+      setTimeout(() => {
+        this.record = this.mockRecord;
+        this.parseApprovalStatus(this.record);
+        this.parseDescription(this.record.userInfo.description);
+        this.displayProgressSpinner = false;
+        this.loaded = true;
+        if (environment.debug) console.log('[Simulation] Loaded mock record:', this.record);
+      }, 800);
+    });
   }
 
   /**
@@ -237,15 +347,24 @@ export class AppComponent implements OnInit {
   }
 
   /**
-   * Show a snackbar notification
+   * Show a toast notification
    */
-  private showSnackBar(message: string, type: 'success' | 'error' | 'info'): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      horizontalPosition: 'center',
-      verticalPosition: 'top',
-      panelClass: [`snackbar-${type}`]
-    });
+  showToast(message: string, type: 'success' | 'error' | 'info'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.toastVisible = true;
+
+    // Auto-hide after 4 seconds
+    setTimeout(() => {
+      this.hideToast();
+    }, 4000);
+  }
+
+  /**
+   * Hide the toast notification
+   */
+  hideToast(): void {
+    this.toastVisible = false;
   }
 
   /**
@@ -255,11 +374,26 @@ export class AppComponent implements OnInit {
   onApprove(): void {
     // Display loading spinner
     this.displayProgressSpinner = true;
+
+    // Simulation mode
+    if (environment.simulateData) {
+      setTimeout(() => {
+        if (environment.debug) console.log('[Simulation] Request approved');
+        this.showToast('This request was approved successfully!', 'success');
+        this.displayProgressSpinner = false;
+        // Update status locally to show approved state
+        this.status = 'Approved';
+        this.statusDate = new Date().toISOString();
+        this.smeEmail = 'sme@nist.gov';
+      }, 1000);
+      return;
+    }
+
     // Send HTTP request to approve the user request
     this.rpaService.approveRequest(this.recordId, this._creds).pipe(
       catchError(error => {
         if (environment.debug) console.error(`[${this.constructor.name}] Error approving request:`, error());
-        this.showSnackBar('There was an error approving this request.', 'error');
+        this.showToast('There was an error approving this request.', 'error');
         this.displayProgressSpinner = false;
         return throwError(error); // re-throw the error to be caught by the subscribing function
       })
@@ -267,7 +401,7 @@ export class AppComponent implements OnInit {
       .subscribe(
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was approved by SME!`);
-          this.showSnackBar('This request was approved successfully!', 'success');
+          this.showToast('This request was approved successfully!', 'success');
           setTimeout(() => {
             location.reload();
           }, 3000); // dismiss success message after few seconds
@@ -283,12 +417,27 @@ export class AppComponent implements OnInit {
   onDecline(): void {
     // Display loading spinner
     this.displayProgressSpinner = true;
+
+    // Simulation mode
+    if (environment.simulateData) {
+      setTimeout(() => {
+        if (environment.debug) console.log('[Simulation] Request declined');
+        this.showToast('This request was declined successfully!', 'success');
+        this.displayProgressSpinner = false;
+        // Update status locally to show declined state
+        this.status = 'Declined';
+        this.statusDate = new Date().toISOString();
+        this.smeEmail = 'sme@nist.gov';
+      }, 1000);
+      return;
+    }
+
     // Send HTTP request to decline the user request
     this.rpaService.declineRequest(this.recordId, this._creds)
       .pipe(
         catchError(error => {
           if (environment.debug) console.error(`[${this.constructor.name}] Error declining request:`, error());
-          this.showSnackBar('There was an error declining this request.', 'error');
+          this.showToast('There was an error declining this request.', 'error');
           this.displayProgressSpinner = false;
           return throwError(error); // re-throw the error to be caught by the subscribing function
         })
@@ -297,7 +446,7 @@ export class AppComponent implements OnInit {
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was declined by SME!`);
 
-          this.showSnackBar('This request was declined successfully!', 'success');
+          this.showToast('This request was declined successfully!', 'success');
           setTimeout(() => {
             location.reload();
           }, 3000); // dismiss success message after few seconds
