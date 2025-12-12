@@ -63,14 +63,19 @@
           </div>
           <div class="dataset-details">
             <h2 class="dataset-name">{{ selectedDataset.name }}</h2>
-            <span class="dataset-id">{{ selectedDataset.id }}</span>
+            <div class="dataset-id-row">
+              <span class="dataset-id">{{ selectedDataset.id }}</span>
+              <button class="copy-btn" (click)="copyToClipboard(selectedDataset.id)" title="Copy ID">
+                <mat-icon>content_copy</mat-icon>
+              </button>
+            </div>
           </div>
         </div>
-        <a *ngIf="selectedDataset.url" [href]="selectedDataset.url" target="_blank" class="dataset-link">
-          <mat-icon>open_in_new</mat-icon>
-          View dataset details
-        </a>
       </div>
+      <a *ngIf="selectedDataset.url" [href]="selectedDataset.url" target="_blank" class="dataset-link-btn">
+        <span>Visit Dataset Page</span>
+        <mat-icon>open_in_new</mat-icon>
+      </a>
 
       <!-- Dynamic Form -->
       <app-dynamic-form
@@ -86,7 +91,7 @@
   <!-- Footer Note -->
   <footer class="page-footer" *ngIf="!isLoading && !datasetNotFound">
     <p class="footer-text">
-      Need help? Contact <a href="mailto:data@nist.gov">data&#64;nist.gov</a>
+      Need help? Contact <a href="mailto:datasupport@nist.gov">datasupport&#64;nist.gov</a>
     </p>
   </footer>
 </main>
@@ -97,3 +102,9 @@
 <button class="dark-mode-fab" (click)="toggleDarkMode()" [attr.aria-label]="isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'">
   <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
 </button>
+
+<!-- Copy Toast Notification -->
+<div class="copy-toast" [class.visible]="showCopyToast">
+  <mat-icon>check_circle</mat-icon>
+  <span>ID copied to clipboard</span>
+</div>

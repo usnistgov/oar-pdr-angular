@@ -684,6 +684,19 @@ body.dark-mode {
     border-color: var(--border-color) !important;
   }
 
+  // Visit Dataset Page button
+  .dataset-link-btn {
+    background: var(--surface-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--primary-light) !important;
+
+    &:hover {
+      background: var(--primary-color) !important;
+      color: white !important;
+      border-color: var(--primary-color) !important;
+    }
+  }
+
   // Notice boxes
   .notice-box.info {
     background: linear-gradient(135deg, rgba(30, 58, 138, 0.3) 0%, rgba(30, 64, 175, 0.2) 100%) !important;

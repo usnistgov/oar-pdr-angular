@@ -52,6 +52,7 @@ export class AppComponent implements OnInit {
   datasetNotFound = false;
   isWelcomeCollapsed = false;
   isDarkMode = false;
+  showCopyToast = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -264,5 +265,17 @@ export class AppComponent implements OnInit {
       this.isDarkMode = true;
       document.body.classList.add('dark-mode');
     }
+  }
+
+  /**
+   * Copy text to clipboard and show toast notification
+   */
+  copyToClipboard(text: string): void {
+    navigator.clipboard.writeText(text).then(() => {
+      this.showCopyToast = true;
+      setTimeout(() => {
+        this.showCopyToast = false;
+      }, 2000);
+    });
   }
 }
