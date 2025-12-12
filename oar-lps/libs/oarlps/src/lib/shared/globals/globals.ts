@@ -705,23 +705,38 @@ export class FilterTreeNode implements TreeNode {
                 let found: boolean = false;
                 if(resultItem.topic && resultItem.topic.length > 0){
                     for(let topic of resultItem.topic) {
-                        if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                        if (topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                            // For default collection (NIST), we only check if the taxonomy of the result item includes the taxonomy that we are looking for.
                             if(collection == Collections.DEFAULT) {
                                 if(topic.tag.includes(taxonomy)) {
                                     found = true;
                                     break;
                                 }
                             } else {
+                                // Handle "Other" specially because "Other" is not in any tag (we added it to resolve the case that node and leaf have the same name).
                                 if (tree.label.slice(0, 5) == "Other") {
                                     if(topic.tag == taxonomy) {
                                         found = true;
                                         break;
                                     }   
                                 } else {
-                                    if(topic.tag.slice(0, taxonomy.length) == taxonomy) {
+                                    // See if the taxonomy of the result item includes the taxonomy that we are looking for.
+                                    // We count it even if the taxonomy of the result item has move levels than the taxonomy that we are looking for.
+                                    let taxonomyToFind = taxonomy.split(":");
+                                    let taxonomyToSearch = topic.tag.split(":");
+
+                                    let foundMatch = true;
+                                    for (let i = 0; i < taxonomyToFind.length; i++) {
+                                        if (taxonomyToFind[i] != taxonomyToSearch[i]) {
+                                            foundMatch = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (foundMatch) {
                                         found = true;
                                         break;
-                                    }                                     
+                                    }                                
                                 }
                             }
                         }
