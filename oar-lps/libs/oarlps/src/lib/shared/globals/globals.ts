@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SelectItem, TreeNode } from 'primeng/api';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class GlobalService {
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
     public fakeBackendAlerted = signal<boolean>(false);
 
-    constructor() { }
+    constructor(@Inject(DOCUMENT) private document: Document,) { }
 
     /**
      * Current collection.  
@@ -100,6 +101,14 @@ export class GlobalService {
         this._showLPContent.subscribe(subscriber);
     }
 
+    _hasDataFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public setHasDataFiles(val: boolean){
+        this._hasDataFiles.next(val);
+    }
+    public watchHasDataFiles(subscriber) {
+        this._hasDataFiles.subscribe(subscriber);
+    }
+    
     /**
      * Set/get SubmissionData 
      */
@@ -113,8 +122,8 @@ export class GlobalService {
     
 
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
-        let text = document.createElement("span"); 
-        document.body.appendChild(text); 
+        let text = this.document.createElement("span"); 
+        this.document.body.appendChild(text); 
      
         text.style.fontFamily = font; 
         text.style.fontSize = size + "px"; 
@@ -126,10 +135,37 @@ export class GlobalService {
         text.innerHTML = textString; 
      
         let width = Math.ceil(text.clientWidth); 
-        document.body.removeChild(text); 
+        this.document.body.removeChild(text); 
 
         return width * 0.9 + 50;
     }
+
+    /**
+     * Replace reserved chars with char name to avoid problems
+     * when parsing filter string in the result list component.
+     * For example, replace "&" with "aaamp". Replace "," with "commma". 
+     * result list component restores "aaamp" back to "&", "commma" back to ",".
+     * @param strng input string
+     */
+    escapeReservedChars(inputStrng: string) {
+        if (!inputStrng || inputStrng.trim() == "")
+            return "";
+        else
+            return inputStrng.replace(new RegExp("&", "g"), "aaamp").replace(new RegExp(",", "g"), "commma");
+    }    
+
+    /**
+     * Restore reserved chars. 
+     * For example, change "aaamp" back to "&", "commma" with ",".
+     * @param inputString 
+     */
+    restoreReservedChars(inputString: string) {
+        if(!inputString || inputString.trim() == "")
+            return "";
+        else
+            return inputString.replace(new RegExp("aaamp", "g"), "&").replace(new RegExp("commma", "g"), ","); 
+    }
+
 }
 
 export const NIST = "National Institute of Standards and Technology";
@@ -146,7 +182,7 @@ _theme[Themes.SCIENCE_THEME] = "ScienceTheme";
 _theme[Themes.DEFAULT_THEME] = "DefaultTheme";
 
 let _sourceLabel = {};
-_sourceLabel[Themes.SCIENCE_THEME] = "Collection";
+_sourceLabel[Themes.SCIENCE_THEME] = "Domain Collection";
 _sourceLabel[Themes.DEFAULT_THEME] = "Dataset";
 
 export class ThemesPrefs {
@@ -263,7 +299,7 @@ _displayName["title"] = Sections.TITLE;
 // _displayName["links"] = Sections.ACCESS_PAGES;
 _displayName["components"] = Sections.ACCESS_PAGES;
 _displayName["description"] = Sections.DESCRIPTION;
-_displayName["theme"] = Sections.TOPICS;
+// _displayName["theme"] = Sections.TOPICS;
 _displayName["topic"] = Sections.TOPICS;
 _displayName["keyword"] = Sections.KEYWORDS;
 _displayName["identity"] = Sections.IDENTITY;
@@ -528,14 +564,15 @@ export class FilterTreeNode implements TreeNode {
     selectable: boolean = true;
     unspecified: boolean[] = [];
     
-    constructor(label: string='', expanded: boolean = false, key: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1) {
+    constructor(label: string='', expanded: boolean = false, key: string=null, keyname: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1) {
         this.label = label;
         if(data && !this.data.includes(data))
             this.data.push(data);
         this.count = count;
         this.selectable = selectable;
         this.level = level;
-        this.keyname = key;
+        this.keyname = keyname;
+        if (!keyname) this.keyname = key;
         this.key = key;
         if(!key) {
             this.keyname = label;
@@ -557,16 +594,15 @@ export class FilterTreeNode implements TreeNode {
     }
 
     _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}, parentKey:string = "") : TreeNode {
-        let nodeLabel: string = ''; 
-        // find the node corresponding to the given item in the data cart 
+        // find the node corresponding to the given item in the tree 
         for (let child of this.children) {
-            if (child.keyname == levels[0]) {
+            if (child.keyname == levels[0] && child.children.length > 0) {
                 if(searchResults) {
                     for (let resultItem of searchResults) {
                         let found: boolean = false;
                         if(resultItem.topic && resultItem.topic.length > 0){
                             for(let topic of resultItem.topic) {
-                                if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                                if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
                                     if(collection == Collections.DEFAULT) {
                                         if(topic.tag.includes(item[0])) {
                                             found = true;
@@ -605,6 +641,7 @@ export class FilterTreeNode implements TreeNode {
 
         // ancestor does not exist yet; create it
         let key = parentKey + levels[0];
+        let keyname = levels[0];
         let label = levels[0];
         let data = item[0];
 
@@ -617,7 +654,7 @@ export class FilterTreeNode implements TreeNode {
             count = item[1];
         }
 
-        let child = new FilterTreeNode(label, false, key, data, count, true, level+1);
+        let child = new FilterTreeNode(label, false, key, keyname, data, count, true, level+1);
         child.parent = this;
         this.children = [...this.children, child];
 
@@ -627,7 +664,7 @@ export class FilterTreeNode implements TreeNode {
                 let found: boolean = false;
                 if(resultItem.topic && resultItem.topic.length > 0){
                     for(let topic of resultItem.topic) {
-                        if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                        if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
                             if(collection == Collections.DEFAULT) {
                                 if(topic.tag.includes(data)) {
                                     found = true;

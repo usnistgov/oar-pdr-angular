@@ -31,3 +31,10 @@
     padding-left: 10px;
     padding-right: 10px;
 }
+
+a,
+a:active,
+a:visited,
+a:focus {
+    color: black !important ;
+}

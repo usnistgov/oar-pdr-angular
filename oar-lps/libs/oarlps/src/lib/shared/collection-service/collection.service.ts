@@ -24,7 +24,7 @@ export class CollectionService {
 
         this.collectionOrder = this.collectionOrder.filter(function(v) { return v !== 'default' });
 
-        this.collectionForDisplay = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]}).filter(key => CollectionData[key].landongPage); 
+        this.collectionForDisplay = Object.keys(CollectionData).sort(function(a,b){return CollectionData[a]["displayOrder"]-CollectionData[b]["displayOrder"]}).filter(key => CollectionData[key].landingPage); 
     }
 
     serviceInit() {

@@ -30,6 +30,8 @@ import { AppConfig } from '../config/config';
 export class BulkDownloadComponent implements OnInit {
     inBrowser: boolean = false;
     ediid: string = "dataset-id";
+    rcloneCommand: string = "rclone copy :http: ./"+this.ediid+"/ --http-url http://data.nist.gov/od/ds/"+this.ediid+"/ -P";
+    rcloneCopied: boolean = false;
     previewCommand: string = "python pdrdownload.py -I " + this.ediid;
     previewCopied: boolean = false;
     startDownloadCommand: string = "python pdrdownload.py -I " + this.ediid + " -D";
@@ -40,6 +42,7 @@ export class BulkDownloadComponent implements OnInit {
     downloadscriptCopied: boolean = false;
 
     @ViewChild('downloadall') downloadAll: ElementRef;
+    @ViewChild('rclone') rclone: ElementRef;
     @ViewChild('pyscript') pyscript: ElementRef;
     @ViewChild('addtocart') addToCart: ElementRef;
     @ViewChild('downloadAPI') downloadAPI: ElementRef;
@@ -62,6 +65,8 @@ export class BulkDownloadComponent implements OnInit {
                     this.ediid = queryParams.id;
                     this.previewCommand = "python pdrdownload.py -I " + this.ediid;
                     this.startDownloadCommand = "python pdrdownload.py -I " + this.ediid + " -D";
+                    this.rcloneCommand = "rclone copy :http: ./" + this.ediid +
+                        "/ --http-url http://data.nist.gov/od/ds/" + this.ediid + "/ -P";
                 }
             });
         }
@@ -86,6 +91,12 @@ export class BulkDownloadComponent implements OnInit {
         document.body.removeChild(selBox);
 
         switch (command) {
+            case ("rclone"): 
+                this.rcloneCopied = true;
+                setTimeout(() => {
+                    this.rcloneCopied = false;
+                }, 2000);
+                break;            
             case ("preview"): 
                 this.previewCopied = true;
                 setTimeout(() => {
@@ -117,6 +128,14 @@ export class BulkDownloadComponent implements OnInit {
         switch(sectionId) { 
             case "downloadAll": { 
                 this.downloadAll.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                break; 
+            } 
+            case "rclone": { 
+                this.rclone.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                this.downloadscriptCopied = true;
+                setTimeout(() => {
+                    this.downloadscriptCopied = false;
+                }, 2000);
                 break; 
             } 
             case "pyscript": { 

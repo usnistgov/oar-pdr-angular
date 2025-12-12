@@ -12,6 +12,10 @@
     margin-bottom: 10px;
 }
 
+.rpdform-mt-2 {
+    margin-top: 56px;
+}
+
 .divider {
     margin-bottom: 24px;
 }
@@ -202,6 +206,14 @@
     color: white;
 }
 
+
+.disclaimer-box {
+
+  .rpdform-form-label {
+    font-size: 18px;
+    font-weight: 600;
+  }
+}
 
 .disclaimer-text {
     font-style: italic;

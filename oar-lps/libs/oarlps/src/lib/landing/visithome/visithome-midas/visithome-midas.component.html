@@ -6,7 +6,8 @@
                     [record]="record" 
                     [inBrowser]="inBrowser"
                     [inViewMode]="inViewMode"
-                    [theme]="theme">
+                    [theme]="theme"
+                    [isPublicSite]="isPublicSite">
                 </Visithome-pub>
             </div>    
 
@@ -39,19 +40,17 @@
 </span>
 <ng-template #visitHomeOnServer>Visit Home Page</ng-template>
 
-@if(isEditing) {
-    <!-- Visit homepage editor -->
-    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
-        <lib-visithome-edit 
-            #visithomeedit 
-            [visitHomeURL]="visitHomeURL" 
-            [editMode]="editMode" 
-            [dataChanged]="dataChanged" 
-            [updated]='updated' 
-            [startEditing]="editStarted"
-            [backgroundColor]="backgroundColor" 
-            (dataChangedOutput)="onDataChange($event)" 
-            (cmdOutput)="onCommandChanged($event)">
-        </lib-visithome-edit>
-    </div>
-}
+<!-- Visit homepage editor -->
+<div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
+    <lib-visithome-edit 
+        #visithomeedit 
+        [visitHomeURL]="visitHomeURL" 
+        [editMode]="editMode" 
+        [dataChanged]="dataChanged" 
+        [updated]='updated' 
+        [startEditing]="editStarted"
+        [backgroundColor]="backgroundColor" 
+        (dataChangedOutput)="onDataChange($event)" 
+        (cmdOutput)="onCommandChanged($event)">
+    </lib-visithome-edit>
+</div>

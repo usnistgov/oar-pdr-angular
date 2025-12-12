@@ -12,6 +12,7 @@ import { CartConstants } from '../../../datacart/cartconstants';
 import { SimpleChange } from '@angular/core';
 import { AppConfig } from '../../../config/config';
 import { config, testdata } from '../../../../environments/environment';
+import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 
 describe('DatafilesPubComponent', () => {
     let component: DatafilesPubComponent;
@@ -32,6 +33,7 @@ describe('DatafilesPubComponent', () => {
             ],
             providers: [
                 CartService,
+                GoogleAnalyticsService,
                 { provide: AppConfig, useValue: cfg },
             ]
         })

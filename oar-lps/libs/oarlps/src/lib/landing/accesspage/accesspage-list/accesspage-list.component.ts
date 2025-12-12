@@ -193,6 +193,7 @@ export class AccesspageListComponent implements OnInit {
 
             cmp['showDesc'] = false;
             cmp['backcolor'] = 'white';
+            cmp['isNew'] = false;
             return cmp;
         });
     }
@@ -686,5 +687,10 @@ export class AccesspageListComponent implements OnInit {
 
     emptyRecord(index: number): boolean {
         return !this.accessPages[index] && !(this.accessPages[index].title || this.accessPages[index].description || this.accessPages[index].accessURL);
+    }
+
+    dataChanged(fieldName, i) {
+        let changed = this.mdupdsvc.fieldUpdated(fieldName, this.accessPages[i]['@id']);
+        return changed;
     }
 }

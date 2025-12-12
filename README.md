@@ -9,7 +9,10 @@ operated as part of the NIST Open Access to Research (OAR) program.  The specifi
 provided include:
   * pdr-lps -- the PDR Landing Page Service (LPS)
   * midas-author -- an application for creating a new non-literature digital asset (e.g. data,
-    software) publication.
+    software) publication with two parts: a creation wizard and an editor.
+  * pdr-rpa -- application for managing requests for requests for restricted public data with two
+    parts:  one used by public users to request access (pdr-rpa-approve) and one used by internal
+    users to approve requests.  
 
 As software based on the the [Angular](https://angular.io/) application framework, the code is
 written primarily in [Typescript](https://typescriptlang.org).
@@ -18,7 +21,10 @@ written primarily in [Typescript](https://typescriptlang.org).
 
 ```
 pdr-lps      --> the Angular project directory for the pdr-lps app
-midas-author --> the Angular project directory for the midas-portal app
+midas-author --> contains Angular project directories for the two parts of the DAPTool
+pdr-rpa      --> contains Angular project directories for the two parts of RPA app
+oar-lps      --> contains Angular library project, oarlps, containing common code used by the
+                 above applications
 scripts/     --> Tools for running the demonstrations and running all tests
 oar-build/   --> general oar build system support (do not customize)
 docker/      --> Docker containers for building and running tests
@@ -33,7 +39,7 @@ Software in this repository is built using the [Angular](https://angular.io/) ap
 (v13), and, thus, is built and run using `nodejs` and `npm`.  Both become available to your
 development environment when you install,
 
-  * node 14.19.0 or higher
+  * node 18.20.0 or higher
 
 All prerequisite Javascript modules needed are provided via the `npm` build tool.  See
 `package.json` for a listing of primary dependencies and `package-lock.json` for a
@@ -199,7 +205,60 @@ Public landing page:
     http://localhost:4201/od/id/test1
 ```
 
+#### Unit Testing and Debugging
 
+As described above, the `testall` script will run all unit tests for all applications and
+libraries in this repo (as well as for individual components).  This script runs the tests via
+npm scripts defined in the `package.json` file.  For example, to run the tests for the
+`oarlps` library, type:
+
+```
+    npm run test:oarlps
+```
+
+The following script names run tests for individual components:\
+&nbsp; `test:oarlps` -- run tests in the `oarlps` library\
+&nbsp; `test:pdrlps` -- run tests in the pdr-lps application\
+&nbsp; `test:wizard` -- run tests in the midas-author wizard application\
+&nbsp; `test:midasauthor` -- run tests in the midas-author lps application\
+&nbsp; `test:pdr-rpa-request` -- run tests in the pdr-rpa request application\
+&nbsp; `test:pdr-rpa-approve` -- run tests in the pdr-rpa approve application
+
+To restrict the test execution to just one `.spec.ts` file, add the file name (without a path
+or `.ts` extension) to the npm command line:
+
+```
+    npm run test:oarlps nerdm.service.spec
+```
+
+Test debugging can be accomplished via the [`node` interpreter's "inspect"
+feature](https://nodejs.org/en/learn/getting-started/debugging).  Before starting the
+debugger, one normally sets an initial breakpoint by inserting a ``debugger;`` line
+into the "spec" file.  Then, to execute the test in debug mode, one uses a command of
+this form:
+
+&nbsp;`node --inspect-brk node_modules/.bin/jest --runInBand --config` _path-to-jest-config_ _spec-file_
+
+For example,
+```
+node --inspect-brk node_modules/.bin/jest --runInBand --config oar-lps/libs/oarlps/jest.config.js nerdm.service.spec
+```
+
+(The `.ts` extension on the _spec-file_ is optional.)
+
+The node interpreter, after starting, will pause to wait for a debugger to connect.  [Different
+debugger clients are
+supported](https://nodejs.org/en/learn/getting-started/debugging#inspector-clients), including
+the Chrome browser and VisualStudio.  To debug using Chrome,
+
+  1.  Start the Chrome browser
+  2.  Navigate to "chrome://inspect"; if node is waiting, this page will show an "inspect"
+      link at the bottom.
+  3.  Click "inspect" link; this will open the Chrome's developer tool window open to the
+      debugger.
+  4.  Click the play button to execute until the first ``debugger;`` line is reached.
+
+From there, use the Chrome debugger features to set additional breakpoints as needed.  
 
 ## Repository Administration
 

@@ -19,8 +19,8 @@ export class SearchfieldsListService {
      */
     constructor(private http: HttpClient, private cfg: AppConfig) 
     {
-        // this.RMMAPIURL = cfg.get("PDRAPIs.mdService", "/rmm/");
-        this.RMMAPIURL = cfg.get("links.mdService", "/rmm/");
+        this.RMMAPIURL = cfg.get("PDRAPIs.mdSearch", "/rmm/");
+        // this.RMMAPIURL = cfg.get("links.mdSearch", "/rmm/");
     }
 
     ngOnInit(): void {
@@ -32,7 +32,7 @@ export class SearchfieldsListService {
      * @return {string[]} The Observable for the HTTP request.
      */
     get(): Observable<any> {
-        return this.http.get(this.RMMAPIURL + 'records/fields');
+        return this.http.get(this.RMMAPIURL + 'fields');
     }
     /**
         * Handle HTTP error

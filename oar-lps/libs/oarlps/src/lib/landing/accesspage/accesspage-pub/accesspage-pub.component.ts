@@ -108,5 +108,21 @@ export class AccesspagePubComponent {
      */
     googleAnalytics(url: string, event, title) {
         this.gaService.gaTrackEvent('accesspage', event, title, url);
-    }    
+    }   
+    
+    downloadBtnStyle() {
+        if(this.theme == this.scienceTheme) {
+            return {
+                '--button-text-color': 'white',
+                '--button-color': 'var(--science-theme-background-default)',
+                '--hover-color': 'var(--science-theme-background-light2)'
+            };
+        }else{
+            return {
+                '--button-text-color': 'white',
+                '--button-color': 'var(--nist-green-default)',
+                '--hover-color': 'var(--nist-green-light)'
+            };
+        }
+    }
 }

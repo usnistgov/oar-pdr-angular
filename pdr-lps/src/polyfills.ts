@@ -2,6 +2,7 @@
  * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
  */
 import '@angular/localize/init';
+// import '../node_modules/@angular/localize/init';
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.
@@ -53,3 +54,9 @@ import 'zone.js';  // Included with Angular CLI.
 // import 'intl/locale-data/jsonp/en';
 
 (window as any).global = window;
+
+if (!('animate' in document.documentElement) || (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent))) {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/web-animations-js@2.3.2';
+    document.head.appendChild(script);
+}

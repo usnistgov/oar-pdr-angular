@@ -2,19 +2,23 @@
     <div class="editable_container">
         <div *ngIf="record[fieldName] && record[fieldName].length > 0" 
              class="editable_field" 
-             style="white-space: nowrap;width: fit-content;">
+             style="width: fit-content;">
 
-            <div class="authorsbrief">
+            <div class="authorsbrief" style="white-space: normal;">
                 @for(author of record[fieldName]; track $index) {
-                    <span>
-                        {{ author.fn }}    
-                        <span *ngIf="author.orcid">
+                    <span style="white-space: nowrap;">
+                        <span *ngIf="author.orcid; else noOrcid">
+                            {{author.fn.trim()}}
                             <a href="https://orcid.org/{{ author.orcid }}" target="blank">
                                 <img src="assets/images/orcid-logo.png" style="width: 20px;">
                             </a>
-                        </span>                            
-                        <span *ngIf="$index < record[fieldName].length-1 ">,</span>
-                    </span>
+                            <span *ngIf="$index < record[fieldName].length-1 ">,</span>
+                        </span>      
+                        
+                        <ng-template #noOrcid>
+                            {{author.fn.trim()}}<span *ngIf="$index < record[fieldName].length-1 ">,</span>
+                        </ng-template>
+                    </span>&nbsp;
                 }
 
                 <span style="cursor: pointer;">
@@ -28,20 +32,24 @@
                     </i>
                 </span>
             </div>
-            <div [collapse]="!isCollapsedContent" class="card card-block card-header customcard" style="width: fit-content; padding:.5em;">
+            <div [collapse]="!isCollapsedContent" 
+                 class="card card-block card-header customcard" 
+                 style="width: fit-content; padding:.5em;">
                 <div class="authorsdetail">
                     <span><b>
-                        @if(isScienceTheme) {
-                            Facilitatiors:
-                        }
-                        @else {
+                        @if(!isScienceTheme) {
                             Authors:
                         }
                     </b></span>
                     @for(author of record[fieldName]; track author.fn) {
                         <div>
                             <div>
-                                <span>{{ author.fn}}</span>
+                                @if(isScienceTheme) {
+                                    <span>{{ author.jobTitle }} : {{author.fn}} </span>
+                                }
+                                @else {
+                                    <span>{{ author.fn}}</span>
+                                }
                                 <span *ngIf="author.orcid">&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href="https://orcid.org/{{ author.orcid }}" target="blank">
                                         <img src="assets/images/orcid-logo.png" style="width: 20px;">:

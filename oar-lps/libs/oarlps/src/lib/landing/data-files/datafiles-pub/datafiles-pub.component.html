@@ -1,212 +1,512 @@
 <!-- This bloack is for the data access session of landing page -->
 <!-- <div id="filelisting"> -->
-    <div id="filelisting" *ngIf="displayMode != 'restrict_preview'" [ngClass]="displayMode == 'restrict' ? 'restrict-public' : ''">
-        <div *ngIf="displayMode == 'restrict'">Note:  This dataset is designated as restricted public data; this file list will not be shown in the public version of this page.</div>
+<div id="filelisting" *ngIf="displayMode != 'restrict_preview' && files.length  > 0" [ngClass]="displayMode == 'restrict' ? 'restrict-public' : ''">
+    <div *ngIf="displayMode == 'restrict'">Note:  This dataset is designated as restricted public data; this file list will not be shown in the public version of this page.</div>
 
-        <div *ngIf="!inBrowser">
-            <div>
-                <b>Files </b>
+    <div *ngIf="!inBrowser">
+        <div>
+            <b>Files </b>
+        </div>
+        <p>
+            <i class="fas fa-spinner fa-spin"></i> Loading file list...
+        </p>
+    </div>
+
+    <div *ngIf="inBrowser; else filesLoading">
+        <div class="flex-container" style="margin-top: 2em;">
+            <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
+            @if(!isPublicSite) {
+                <div style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
+                    <span><b id="filelist-heading">Files</b></span>
+                    <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all"
+                        ngbTooltip="Download all disabled in edit mode">
+                        <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                        <i class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
+                    </span>
+                    <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;"
+                        aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
+                        <i class="far fa-circle fa-stack-1x fa-lg"></i>
+                        <i class="fas fa-cart-plus fa-stack-1x fa-xs"></i>
+                    </span>
+                    <span class="w3-badge badge-notify grey-background-color" style="margin-left:-3em;">{{cartLength}}</span>
+                </div>
+            }
+            @else {
+                <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
+                    <span><b id="filelist-heading">Files </b> </span>
+                    <a class="fa-stack fa-lg icon-download" style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all"
+                        [ngbTooltip]="downloadAllTooltip" [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
+                        <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                        <i *ngIf="!isAddingToDownloadAllCart; else show_spinner1" class="fas fa-download fa-stack-1x fa-xs"
+                            aria-hidden="true"></i>
+                        <ng-template #show_spinner1><i class="fas fa-spinner fa-spin fa-stack-1x spinner fa-xs"
+                                aria-hidden="true"></i></ng-template>
+                    </a>
+                    <a id="routeToDatacart" target="_blank" [routerLink]="['/datacart', 'popup']" style="display:none"></a>
+                    <span class="fa-stack fa-lg icon-cart" style="width: 30px;" (click)="toggleAllFilesInGlobalCart(files)" [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',
+                                            'margin-right': '0em'}" [aria-label]="cartProcessTooltip"
+                        [ngbTooltip]="cartProcessTooltip">
+                        <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                        <i *ngIf="!isTogglingAllInGlobalCart; else show_spinner" class="fas fa-cart-plus fa-stack-1x fa-xs"
+                            aria-hidden="true"></i>
+                        <ng-template #show_spinner><i class="fas fa-spinner fa-spin fa-stack-1x spinner"
+                                aria-hidden="true"></i></ng-template>
+                        <span class="w3-badge badge-notify" style="margin-right:0em;">{{cartLength}}</span>
+                    </span>
+                </div>
+            }
+
+            <div style="flex-grow: 8; text-align: left; padding-top: 0.5em;">
+                <span class="grey-color">Click on the file/row in the table below to view more
+                    details.</span>
             </div>
-            <p>
-                <i class="fas fa-spinner fa-spin"></i> Loading file list...
-            </p>
+
+            <!-- <div class="grey-color" style="flex-grow: 2; text-align: right;padding-top: 0.8em;">
+                Total No. files:
+                <span [ngStyle]="{color: fileCountColor}" (click)="showBulkDesc = !showBulkDesc" style="cursor:pointer">
+                    {{ fileCount }}
+                    <i *ngIf="largeDataset" class="faa faa-info-circle" title="Large dataset" style="margin-left: 10px;"></i>
+                </span>
+            </div> -->
+
+            <div class="grey-color" style="flex-grow: 2; text-align: right;padding-top: 0.8em;">
+                Total No. files:
+                <span [ngStyle]="{color: fileCountColor}" (click)="showBulkDesc = !showBulkDesc" style="cursor:pointer">
+                    {{ fileCount }}
+            
+                    <i *ngIf="largeDataset" class="faa faa-info-circle" title="Large dataset" style="margin-left: 10px;"></i>
+                </span>
+            </div>
         </div>
 
-        <!-- Display 'Download all' and 'Add all to cart' buttons and other info -->
-            <!-- <div *ngIf="(files && files.length  > 0)"> -->
-            
-            <!-- @defer(when inBrowser && filesReady) { -->
-            <!-- <div *ngIf="inBrowser; else filesLoading"> -->
-            <div *ngIf="(inBrowser && filesReady);else loading">
-                <div class="flex-container" style="margin-top: 2em;">
-                    <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
-                    @if(editEnabled == true) {
-                        <div style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
-                            <span><b id="filelist-heading">Files</b></span>
-                            <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all" ngbTooltip="Download all disabled in edit mode">
-                                <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
-                                <i class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
-                            </span>
-                            <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;" aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
-                                <i class="far fa-circle fa-stack-1x fa-lg"></i>
-                                <i class="fas fa-cart-plus fa-stack-1x fa-xs"></i>
-                            </span>
-                            <span class="w3-badge badge-notify grey-background-color" style="margin-left:-3em;">{{cartLength}}</span>
-                        </div>
-                    }
-                    @else {
-                        <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
-                            <span><b id="filelist-heading">Files </b> </span>
-                            <a class="fa-stack fa-lg icon-download" style="width: 30px;"
-                                (click)="downloadAllFiles()" aria-label="Download all" [ngbTooltip]="downloadAllTooltip"
-                                [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
-                                <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
-                                <i *ngIf="!isAddingToDownloadAllCart; else show_spinner1" 
-                                    class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
-                                <ng-template #show_spinner1><i class="fas fa-spinner fa-spin fa-stack-1x spinner fa-xs"
-                                        aria-hidden="true"></i></ng-template>
-                            </a>
-                            <a id="routeToDatacart" target="_blank" [routerLink]="['/datacart', 'popup']"
-                                style="display:none"></a>
-                            <span class="fa-stack fa-lg icon-cart" style="width: 30px;"
-                                (click)="toggleAllFilesInGlobalCart(files)"
-                                [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',
-                                'margin-right': '0em'}" [aria-label]="cartProcessTooltip" [ngbTooltip]="cartProcessTooltip">
-                                <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
-                                <i *ngIf="!isTogglingAllInGlobalCart; else show_spinner" 
-                                    class="fas fa-cart-plus fa-stack-1x fa-xs" aria-hidden="true"></i>
-                                <ng-template #show_spinner><i class="fas fa-spinner fa-spin fa-stack-1x spinner"
-                                        aria-hidden="true"></i></ng-template>
-                                <span class="w3-badge badge-notify" style="margin-right:0em;">{{cartLength}}</span>
-                            </span>
-                        </div>
-                    }
-                    <div style="flex-grow: 8; text-align: left; padding-top: .8em;">
-                        <span class="grey-color">Click on the file/row in the table below to view more
-                            details.</span>
-                    </div>
-                    <div class="grey-color" style="flex-grow: 2; text-align: right;padding-top: 0.8em;">
-                        Total No. files: 
-                        <span 
-                        [ngStyle]="{color: fileCountColor}"
-                        (click)="showBulkDesc = !showBulkDesc"
-                        style="cursor:pointer">
-                        {{ fileCount }}
-                        <!-- Info button -->
-                        <i *ngIf="largeDataset"
-                            class="faa faa-info-circle" 
-                            title="Large dataset" 
-                            style="margin-left: 10px;"></i> 
-                    </span>
-                    </div>
+        <div [@detailExpand]="showBulkDesc ? 'expanded' : 'collapsed'"
+            style="width: 100%; text-align: right;background-color: rgb(254, 250, 219);padding-right: 10px;overflow: hidden;"
+            *ngIf="largeDataset">
+            This dataset is very large. So we have built a special area for accessing it. See our
+            <a href="{{bulkDownloadURL}}" target="_blank">
+                <i class="faa faa-hand-o-right"></i>
+                <span style="text-decoration: underline; margin-left: 5px;">dedicated page</span>
+            </a>
+            for downloaing large data.
+        </div>
+
+        <!-- Display tree table -->
+        <!-- Available match modes are "startsWith", "contains", "endsWith", "equals", "notEquals", "in", "lt", "lte", "gt" and "gte" -->
+        <p-treeTable #tt class="data-table" *ngIf="visible" [value]="files" [columns]="cols" selectionMode="single"
+            (onNodeExpand)="treeTableToggled($event)" (onNodeCollapse)="treeTableToggled($event)" [resizableColumns]="true"
+            dataKey="key" sortField="name" styleClass="p-treetable-sm" [scrollable]="virtualScroll"
+            [scrollHeight]="treeTableHeight + 'px'" [virtualScroll]="virtualScroll" [virtualScrollItemSize]="57"
+            [globalFilterFields]="['name']">
+            <ng-template pTemplate="caption">
+                <div style="text-align: right; height: 20px;margin-bottom: 10px;padding-top: 0px;border-color: 1px solid red;">
+                    <i class="pi pi-search" style="margin:4px 4px 0 0" aria-label="Search on file or folder name"></i>
+                    <input type="text" pInputText size="50" placeholder="Search on file or folder name ..."
+                        [(ngModel)]="searchText" (input)="toogleTree(true);tt.filterGlobal($event.target.value, 'contains')"
+                        style="height: 20px;margin: 0 0px 20px 0;width: 60%;background-color: #f0f0f0;">
+                    <!-- <button pButton type="submit" class="p-button-sm btn-labeled" id="btn-reset"
+                        (click)="searchText='';tt.filterGlobal('', 'contains')" label="Reset"
+                        [ngStyle]="{'margin-top':'0px','width':'max-content','height': '26px', 'background-color':'var(--nist-blue-default)', 'color': 'white'}">
+                    </button> -->
                 </div>
-                <!-- Expandable description of bulk downloading -->
-                <div [@detailExpand]="showBulkDesc ? 'expanded' : 'collapsed'"
-                    style="width: 100%; text-align: right;background-color: rgb(254, 250, 219);padding-right: 10px;" 
-                    *ngIf="largeDataset">
-                    This dataset is very large. So we have built a special area for accessing it. See our  
-                    <a href="{{bulkDownloadURL}}" target="_blank">
-                        <i class="faa faa-hand-o-right"></i>
-                        <span style="text-decoration: underline; margin-left: 5px;">dedicated page</span> 
-                    </a>
-                    for downloaing large data.
-                </div>
+            </ng-template>
+            <ng-template pTemplate="header" let-columns>
+                <tr>
+                    <th *ngFor="let col of columns" [style.width]="col.width" [style.font-size]="fontSize"
+                        ttResizableColumn>
+                        <span *ngIf="col.header == 'Name'">
+                            <span (click)="toogleTree(!isExpanded);tt.filterGlobal(searchText, 'contains')"
+                                style="padding-right:0.5em;">
+                                <i *ngIf="!isExpanded" class="faa faa-arrow-circle-down faa-1x icon-white"
+                                    style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
+                                    title="Expand All"></i>
+                                <i *ngIf="isExpanded" class="faa faa-arrow-circle-up faa-1x icon-white"
+                                    style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
+                                    title="Collapse All"></i>
+                            </span>
+                        </span>
+                        {{col.header}}
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                <tr [ttSelectableRow]="rowNode" [ngStyle]="rowStyle(rowData)" style="color: black;">
+                    <td [ngStyle]="titleStyle(rowData)" (click)="openDetails(rowData)">
+                        <p-treeTableToggler [rowNode]="rowNode" data-toggle="tooltip" title="Expand/Collapse">
+                        </p-treeTableToggler>
+                        <span data-toggle="tooltip" title="Click for more details">
+                            <b>{{rowData.name}}</b> </span>
+                        <span style="margin-left: .5em;" *ngIf="isLeaf(rowData)">
+                            <i [ngClass]='fileDetailsDisplayClass(rowData)'></i></span>
+                        <span *ngIf="showZipFilesNames" class="zip-file">{{rowData.zipFile || ''}}</span>
+                    </td>
+                    <td [ngStyle]="typeStyle()">{{mediaTypeLookup(rowData)}}</td>
+                    <td [ngStyle]="sizeStyle()"><span *ngIf="rowData.size">{{rowData.size}}</span>
+                    </td>
+                    <td [ngStyle]="statusStyle()">
+                        <div style="display: flex;">
+                            @if(isPublicSite) {
+                                <div *ngIf="rowData.comp.downloadURL; else display_lock">
+                                    <a *ngIf="rowData.downloadStatus != 'downloading'" style="margin-left: 10px;"
+                                        href='{{rowData.comp.downloadURL}}' target='_blank' download="download"
+                                        data-toggle="tooltip" title="Direct download" rel="noopener"
+                                        (click)="setFileDownloaded(rowData)">
+                                        <i class="faa faa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
+                                            aria-hidden="true"></i>
+                                        <span class="sr-only">Hidden text for 508 compliance</span>
+                                    </a>
+                                    <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
+                                        [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}">
+                                    </p-progressSpinner>
+                                </div>
+
+                                <ng-template #display_lock>
+                                    <!-- Display lock if this is not a folder -->
+                                    <i *ngIf="isLeaf(rowData) && displayMode == 'restrict'; else space_holder" class="faa faa-lock blue-cart" style="margin-left: 10px;"
+                                        (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')" aria-hidden="true"
+                                        data-toggle="tooltip" title="Request access"></i>
+                                    <ng-template #space_holder>
+                                        <div style="padding-right: 1em;">&nbsp;&nbsp;</div>
+                                    </ng-template>
+                                </ng-template>
     
-                <!-- Display tree table -->
-                <p-treeTable class="data-table" *ngIf="visible" [value]="files" [columns]="cols" selectionMode="single"
-                    [resizableColumns]="true" dataKey="key" sortField="name" styleClass="p-treetable-sm">
-                    <ng-template pTemplate="header" let-columns>
-                        <tr>
-                            <th *ngFor="let col of columns" [style.width]="col.width" [style.font-size]="fontSize"
-                                ttResizableColumn>
-                                <span *ngIf="col.header == 'Name'">
-                                    <span (click)="expandToLevel(files, !isExpanded, null)"
-                                        style="padding-right:0.5em;">
-                                        <i *ngIf="!isExpanded" class="fas fa-arrow-circle-down fa-1x icon-white"
-                                            style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" aria-label="Expand All" ngbTooltip="Expand All" placement="bottom" container="body"></i>
-                                        <i *ngIf="isExpanded" class="fas fa-arrow-circle-up fa-1x icon-white"
-                                            style="cursor: pointer;color: rgb(255, 255, 255);" aria-label="Collapse All"
-                                            ngbTooltip="Collapse All" placement="bottom" container="body"></i>
-                                    </span>
+                            }@else{
+                                <div *ngIf="fileManagerUrl;else space_holder">
+                                    <a href='{{fileManagerUrl}}' target='_blank' aria-label="Access file in File Manager"
+                                        ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(rowData)">
+                                        <i class="fas fa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i>
+                                        <span class="sr-only">Hidden text for 508 compliance</span>
+                                    </a>
+                                    <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
+                                        [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
+                                </div>
+                                <ng-template #space_holder>
+                                    <div style="padding-right: 0.4em;">&nbsp;&nbsp;</div>
+                                </ng-template>
+                            }
+
+                            <!-- Display shopping cart icon for oublic data. Otherwise display lock icon -->
+                            <div class="indent-content" *ngIf="displayMode != 'restrict'; else RestrictedAccessPage">
+                                <div style="padding-left:10px;" *ngIf="rowData.isInCart;else not_in_cart"
+                                    (click)="removeFromGlobalCart(rowData)">
+                                    <i class="faa faa-cart-plus green-cart" aria-hidden="true" data-toggle="tooltip"
+                                        title="Remove from cart"></i>
+                                </div>
+                                <div *ngIf="rowData.isInCart" style="margin-left: 0.5em;font-size: 0.5em">
+                                    Added
+                                </div>
+                                <ng-template #not_in_cart>
+                                    <div style="padding-left:10px;" (click)="addToGlobalCart(rowData)">
+                                        <i class="faa faa-cart-plus blue-cart" aria-hidden="true" data-toggle="tooltip"
+                                            title="Add to cart"></i>
+                                    </div>
+                                </ng-template>
+                            </div>
+                            <ng-template #RestrictedAccessPage>
+                                <a *ngIf="!rowData.comp.downloadURL && rapWithAccessUrl" href={{accessURL}} target="_blank">
+                                    <i class="faa faa-lock blue-cart"
+                                        (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')"
+                                        aria-hidden="true" data-toggle="tooltip" title="Request access"></i>
+                                </a>
+                            </ng-template>
+                        </div>
+                    </td>
+                </tr>
+                <!-- File details. Will display/hide when mouse clicks -->
+                <tr [hidden]="!showFileDetails02(rowData)">
+                    <td colspan="4" style="padding-left: 20px;background-color: rgb(243, 243, 243);">
+                        <div [@detailExpand]="showFileDetails(rowData) ? 'expanded' : 'collapsed'">
+                            <span><b>Description: </b> </span>
+                            <div style="padding: 0 1em 0 1em; ">
+                                <span *ngIf="!rowData.comp.description"><i>No Description Provided</i></span>
+                                <span *ngIf="rowData.comp.description">{{ rowData.comp.description }} </span>
+                            </div>
+                            <div *ngIf="rowData.comp.format">
+                                <b>Format</b>: {{rowData.comp.format.description}}
+                            </div>
+                            <div *ngIf="rowData.comp.checksum">
+                                <b>{{rowData.comp.checksum.algorithm.tag}}</b>:
+                                <span [ngClass]="{'highlight': hashCopied}" [@enterAnimation]>
+                                    {{rowData.comp.checksum.hash}}
                                 </span>
-                                {{col.header}}
-                            </th>
-                        </tr>
-                    </ng-template>
-                    <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                        <tr [ttSelectableRow]="rowNode" [ngStyle]="rowStyle(rowData)" style="color: black;">
-                            <td [ngStyle]="titleStyle(rowData)" (click)="openDetails(rowData)">
-                                <p-treeTableToggler [rowNode]="rowNode" aria-label="Expand/Collapse"
-                                ngbTooltip="Expand/Collapse">
-                                </p-treeTableToggler>
-                                <span aria-label="Click for more details" ngbTooltip="Click for more details">
-                                    <b>{{rowData.name}}</b> </span>
-                                <span style="margin-left: .5em;" *ngIf="isLeaf(rowData)">
-                                    <i [ngClass]='fileDetailsDisplayClass(rowData)'></i></span>    
-                                <span *ngIf="showZipFilesNames" class="zip-file">{{rowData.zipFile || ''}}</span>
-                            </td>
-                            <td [ngStyle]="typeStyle()">{{rowData.mediaType}}</td>
-                            <td [ngStyle]="sizeStyle()"><span *ngIf="rowData.size">{{rowData.size}}</span>
-                            </td>
-                            <td [ngStyle]="statusStyle()">
-                                <div style="display: flex;">
-                                    <div *ngIf="rowData.comp.downloadURL;else space_holder">
-                                        <a href='{{fileManagerUrl}}' target='_blank'                aria-label="Access file in File Manager" ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(rowData)">
-                                            <i class="fas fa-download"
-                                                [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
-                                                aria-hidden="true"></i>
+                                <span id="hash-copy" (click)="copyToClipboard(rowData.comp.checksum.hash)"
+                                    data-toggle="tooltip" title="Copy to clipboard"><i
+                                        class="faa faa-clone"></i></span><span [@enterAnimation] *ngIf="hashCopied"
+                                    class="badge" style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Hash
+                                    copied
+                                    to clipboard</span>
+                            </div>
+                            <div *ngIf="rowData.comp.filepath">
+                                <b>File path</b>: {{rowData.comp.filepath}}
+                            </div>
+                            <span>
+                                <span *ngIf="rowData.filetype == 'nrdp:DataFile' ">Selected File</span>
+                                <span *ngIf="rowData.filetype == 'nrdp:ChecksumFile' ">Selected Checksum File</span>
+                                <span *ngIf="rowData.filetype == 'nrdp:Subcollection'">Selected SubCollection
+                                </span>
+                            </span>
+                            <div>
+                                <b>Type:</b>
+                                <span style="margin-left:0.5em;">{{ rowData.mediaType }} </span>
+                            </div>
+                            <div>
+                                <b>Size</b>:
+                                <span *ngIf="rowData.size">{{ rowData.size }} </span>
+                                <span *ngIf="!rowData.size"><i>Not Available</i></span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td [attr.colspan]="cols.length">
+                        <div style="text-align: center;border-bottom: 1px solid grey;">
+                            <img id="dog" src="./assets/images/NothingFound2_s.png">
+                            <span class="nothing-found-text">Nothing found...</span>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-treeTable>
+    
+        <div *ngIf="virtualScroll" class="splitter" (mousedown)="onMousedown($event)" (mouseup)="onMouseUp($event)">
+            <div id="separator">Scroll or drag this bar to see more...</div>
+        </div>
+    </div>
+    <ng-template #filesLoading>
+        <div>
+            <b>Files </b>
+        </div>
+        <p>
+            <i>Loading file list...</i>
+        </p>
+    </ng-template>
+
+
+    
+    <!-- Display 'Download all' and 'Add all to cart' buttons and other info -->
+        <!-- <div *ngIf="(files && files.length  > 0)"> -->
+        
+        <!-- @defer(when inBrowser && filesReady) { -->
+        <!-- <div *ngIf="inBrowser; else filesLoading"> -->
+        <!-- <div *ngIf="(inBrowser && filesReady);else filesLoading">
+            <div class="flex-container" style="margin-top: 2em;">
+                @if(!isPublicSite) {
+                    <div style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
+                        <span><b id="filelist-heading">Files</b></span>
+                        <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all" ngbTooltip="Download all disabled in edit mode">
+                            <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                            <i class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
+                        </span>
+                        <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;" aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
+                            <i class="far fa-circle fa-stack-1x fa-lg"></i>
+                            <i class="fas fa-cart-plus fa-stack-1x fa-xs"></i>
+                        </span>
+                        <span class="w3-badge badge-notify grey-background-color" style="margin-left:-3em;">{{cartLength}}</span>
+                    </div>
+                }
+                @else {
+                    <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
+                        <span><b id="filelist-heading">Files </b> </span>
+                        <a class="fa-stack fa-lg icon-download" style="width: 30px;"
+                            (click)="downloadAllFiles()" aria-label="Download all" [ngbTooltip]="downloadAllTooltip"
+                            [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
+                            <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                            <i *ngIf="!isAddingToDownloadAllCart; else show_spinner1" 
+                                class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
+                            <ng-template #show_spinner1><i class="fas fa-spinner fa-spin fa-stack-1x spinner fa-xs"
+                                    aria-hidden="true"></i></ng-template>
+                        </a>
+                        <a id="routeToDatacart" target="_blank" [routerLink]="['/datacart', 'popup']"
+                            style="display:none"></a>
+                        <span class="fa-stack fa-lg icon-cart" style="width: 30px;"
+                            (click)="toggleAllFilesInGlobalCart(files)"
+                            [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',
+                            'margin-right': '0em'}" [aria-label]="cartProcessTooltip" [ngbTooltip]="cartProcessTooltip">
+                            <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                            <i *ngIf="!isTogglingAllInGlobalCart; else show_spinner" 
+                                class="fas fa-cart-plus fa-stack-1x fa-xs" aria-hidden="true"></i>
+                            <ng-template #show_spinner><i class="fas fa-spinner fa-spin fa-stack-1x spinner"
+                                    aria-hidden="true"></i></ng-template>
+                            <span class="w3-badge badge-notify" style="margin-right:0em;">{{cartLength}}</span>
+                        </span>
+                    </div>
+                }
+                <div style="flex-grow: 8; text-align: left; padding-top: .8em;">
+                    <span class="grey-color">Click on the file/row in the table below to view more
+                        details.</span>
+                </div>
+                <div class="grey-color" style="flex-grow: 2; text-align: right;padding-top: 0.8em;">
+                    Total No. files: 
+                    <span 
+                    [ngStyle]="{color: fileCountColor}"
+                    (click)="showBulkDesc = !showBulkDesc"
+                    style="cursor:pointer">
+                    {{ fileCount }}
+
+                    <i *ngIf="largeDataset"
+                        class="faa faa-info-circle" 
+                        title="Large dataset" 
+                        style="margin-left: 10px;"></i> 
+                </span>
+                </div>
+            </div>
+
+            <div [@detailExpand]="showBulkDesc ? 'expanded' : 'collapsed'"
+                style="width: 100%; text-align: right;background-color: rgb(254, 250, 219);padding-right: 10px;" 
+                *ngIf="largeDataset">
+                This dataset is very large. So we have built a special area for accessing it. See our  
+                <a href="{{bulkDownloadURL}}" target="_blank">
+                    <i class="faa faa-hand-o-right"></i>
+                    <span style="text-decoration: underline; margin-left: 5px;">dedicated page</span> 
+                </a>
+                for downloaing large data.
+            </div>
+
+
+            <p-treeTable #tt class="data-table" *ngIf="visible" [value]="files" [columns]="cols" selectionMode="single"
+                (onNodeExpand)="treeTableToggled($event)" (onNodeCollapse)="treeTableToggled($event)"
+                [resizableColumns]="true" dataKey="key" sortField="name" styleClass="p-treetable-sm"
+                [scrollable]="virtualScroll" [scrollHeight]="treeTableHeight + 'px'" [virtualScroll]="virtualScroll"
+                [virtualScrollItemSize]="57" [globalFilterFields]="['name']">
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns" [style.width]="col.width" [style.font-size]="fontSize"
+                            ttResizableColumn>
+                            <span *ngIf="col.header == 'Name'">
+                                <span (click)="expandToLevel(files, !isExpanded, null)"
+                                    style="padding-right:0.5em;">
+                                    <i *ngIf="!isExpanded" class="fas fa-arrow-circle-down fa-1x icon-white"
+                                        style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" aria-label="Expand All" ngbTooltip="Expand All" placement="bottom" container="body"></i>
+                                    <i *ngIf="isExpanded" class="fas fa-arrow-circle-up fa-1x icon-white"
+                                        style="cursor: pointer;color: rgb(255, 255, 255);" aria-label="Collapse All"
+                                        ngbTooltip="Collapse All" placement="bottom" container="body"></i>
+                                </span>
+                            </span>
+                            {{col.header}}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                    <tr [ttSelectableRow]="rowNode" [ngStyle]="rowStyle(rowData)" style="color: black;">
+                        <td [ngStyle]="titleStyle(rowData)" (click)="openDetails(rowData)">
+                            <p-treeTableToggler [rowNode]="rowNode" aria-label="Expand/Collapse"
+                            ngbTooltip="Expand/Collapse">
+                            </p-treeTableToggler>
+                            <span aria-label="Click for more details" ngbTooltip="Click for more details">
+                                <b>{{rowData.name}}</b> </span>
+                            <span style="margin-left: .5em;" *ngIf="isLeaf(rowData)">
+                                <i [ngClass]='fileDetailsDisplayClass(rowData)'></i></span>    
+                            <span *ngIf="showZipFilesNames" class="zip-file">{{rowData.zipFile || ''}}</span>
+                        </td>
+                        <td [ngStyle]="typeStyle()">{{mediaTypeLookup(rowData)}}</td>
+                        <td [ngStyle]="sizeStyle()"><span *ngIf="rowData.size">{{rowData.size}}</span>
+                        </td>
+                        <td [ngStyle]="statusStyle()">
+                            <div style="display: flex;">
+                                @if(isPublicSite) {
+                                    <div *ngIf="rowData.comp.downloadURL; else display_lock">
+                                        <a *ngIf="rowData.downloadStatus != 'downloading'" style="margin-left: 10px;" href='{{rowData.comp.downloadURL}}'
+                                            target='_blank' download="download" data-toggle="tooltip" title="Direct download" rel="noopener"
+                                            (click)="setFileDownloaded(rowData)">
+                                            <i class="faa faa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i>
                                             <span class="sr-only">Hidden text for 508 compliance</span>
                                         </a>
                                         <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
-                                        [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
+                                            [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}">
+                                        </p-progressSpinner>
+                                    </div>
+                                    <ng-template #display_lock>
+
+                                        <i *ngIf="isLeaf(rowData);else space_holder" class="faa faa-lock blue-cart" style="margin-left: 10px;"
+                                            (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')" aria-hidden="true"
+                                            data-toggle="tooltip" title="Request access"></i>
+                                        <ng-template #space_holder>
+                                            <div style="padding-right: 1em;">&nbsp;&nbsp;</div>
+                                        </ng-template>
+                                    </ng-template>
+                                }@else{
+                                    <div *ngIf="fileManagerUrl;else space_holder">
+                                        <a href='{{fileManagerUrl}}' target='_blank' aria-label="Access file in File Manager"
+                                            ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(rowData)">
+                                            <i class="fas fa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i>
+                                            <span class="sr-only">Hidden text for 508 compliance</span>
+                                        </a>
+                                        <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
+                                            [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
                                     </div>
                                     <ng-template #space_holder>
                                         <div style="padding-right: 0.4em;">&nbsp;&nbsp;</div>
                                     </ng-template>
-                                    <div style="padding-left:10px;" *ngIf="rowData.isInCart;else not_in_cart" 
-                                        (click)="removeFromGlobalCart(rowData)">
-                                        <i class="fas fa-cart-plus green-cart" aria-hidden="true" aria-label="Remove from cart" ngbTooltip="Remove from cart" title="Remove from cart"></i>
-                                    </div>
-                                    <div *ngIf="rowData.isInCart" style="margin-left: 0.5em;font-size: 0.5em">Added
-                                    </div>
-                                    <ng-template #not_in_cart>
-                                        <div style="padding-left:10px;" (click)="addToGlobalCart(rowData)">
-                                            <i class="fas fa-cart-plus blue-cart" 
-                                                aria-hidden="true" aria-label="Add to cart" ngbTooltip="Add to cart" title="Add to cart"></i>
-                                        </div>
-                                    </ng-template>
+                                }
+
+                                <div style="padding-left:10px;" *ngIf="rowData.isInCart;else not_in_cart" 
+                                    (click)="removeFromGlobalCart(rowData)">
+                                    <i class="fas fa-cart-plus green-cart" aria-hidden="true" aria-label="Remove from cart" ngbTooltip="Remove from cart" title="Remove from cart"></i>
                                 </div>
-                            </td>
-                        </tr>
-                        <!-- File details. Will display/hide when mouse clicks -->
-                        <tr [hidden]="!showFileDetails02(rowData)">
-                            <td colspan="4" style="padding-left: 20px;background-color: rgb(243, 243, 243);">
-                                <div [@detailExpand]="showFileDetails(rowData) ? 'expanded' : 'collapsed'">
-                                    <span ><b>Description: </b> </span>
-                                    <div style="padding: 0 1em 0 1em; ">
-                                        <span *ngIf="!rowData.comp.description"><i>No Description Provided</i></span>
-                                        <span *ngIf="rowData.comp.description">{{ rowData.comp.description }} </span>
+                                <div *ngIf="rowData.isInCart" style="margin-left: 0.5em;font-size: 0.5em">Added
+                                </div>
+                                <ng-template #not_in_cart>
+                                    <div style="padding-left:10px;" (click)="addToGlobalCart(rowData)">
+                                        <i class="fas fa-cart-plus blue-cart" 
+                                            aria-hidden="true" aria-label="Add to cart" ngbTooltip="Add to cart" title="Add to cart"></i>
                                     </div>
-                                    <div *ngIf="rowData.comp.format">
-                                        <b>Format</b>: {{rowData.comp.format.description}}
-                                    </div>
-                                    <div *ngIf="rowData.comp.checksum">
-                                        <b>{{rowData.comp.checksum.algorithm.tag}}</b>: 
-                                        <span [ngClass]="{'highlight': hashCopied}" [@enterAnimation]>
-                                            {{rowData.comp.checksum.hash}}
-                                        </span>
-                                        <span id="hash-copy" (click)="copyToClipboard(rowData.comp.checksum.hash)" aria-label="Copy to clipboard" ngbTooltip="Copy to clipboard"><i class="fas fa-clone"></i></span><span [@enterAnimation] *ngIf="hashCopied" class="badge" style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Hash copied to clipboard</span>
-                                    </div>
-                                    <div *ngIf="rowData.comp.filepath">
-                                        <b>File path</b>: {{rowData.comp.filepath}}
-                                    </div>
-                                    <span >
-                                        <span *ngIf="rowData.filetype == 'nrdp:DataFile' ">Selected File</span>
-                                        <span *ngIf="rowData.filetype == 'nrdp:ChecksumFile' ">Selected Checksum File</span>
-                                        <span *ngIf="rowData.filetype == 'nrdp:Subcollection'">Selected SubCollection </span>
+                                </ng-template>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <tr [hidden]="!showFileDetails02(rowData)">
+                        <td colspan="4" style="padding-left: 20px;background-color: rgb(243, 243, 243);">
+                            <div [@detailExpand]="showFileDetails(rowData) ? 'expanded' : 'collapsed'">
+                                <span ><b>Description: </b> </span>
+                                <div style="padding: 0 1em 0 1em; ">
+                                    <span *ngIf="!rowData.comp.description"><i>No Description Provided</i></span>
+                                    <span *ngIf="rowData.comp.description">{{ rowData.comp.description }} </span>
+                                </div>
+                                <div *ngIf="rowData.comp.format">
+                                    <b>Format</b>: {{rowData.comp.format.description}}
+                                </div>
+                                <div *ngIf="rowData.comp.checksum">
+                                    <b>{{rowData.comp.checksum.algorithm.tag}}</b>: 
+                                    <span [ngClass]="{'highlight': hashCopied}" [@enterAnimation]>
+                                        {{rowData.comp.checksum.hash}}
                                     </span>
-                                    <div>
-                                        <b>Type:</b>
-                                        <span style="margin-left:0.5em;" >{{ rowData.mediaType }} </span>
-                                    </div>
-                                    <div>
-                                        <b>Size</b>: 
-                                        <span *ngIf="rowData.size">{{ rowData.size }} </span>
-                                        <span *ngIf="!rowData.size"><i>Not Available</i></span>
-                                    </div>
+                                    <span id="hash-copy" (click)="copyToClipboard(rowData.comp.checksum.hash)" aria-label="Copy to clipboard" ngbTooltip="Copy to clipboard"><i class="fas fa-clone"></i></span><span [@enterAnimation] *ngIf="hashCopied" class="badge" style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Hash copied to clipboard</span>
                                 </div>
-                            </td>
-                        </tr>
-                    </ng-template>
-                </p-treeTable>
+                                <div *ngIf="rowData.comp.filepath">
+                                    <b>File path</b>: {{rowData.comp.filepath}}
+                                </div>
+                                <span >
+                                    <span *ngIf="rowData.filetype == 'nrdp:DataFile' ">Selected File</span>
+                                    <span *ngIf="rowData.filetype == 'nrdp:ChecksumFile' ">Selected Checksum File</span>
+                                    <span *ngIf="rowData.filetype == 'nrdp:Subcollection'">Selected SubCollection </span>
+                                </span>
+                                <div>
+                                    <b>Type:</b>
+                                    <span style="margin-left:0.5em;" >{{ rowData.mediaType }} </span>
+                                </div>
+                                <div>
+                                    <b>Size</b>: 
+                                    <span *ngIf="rowData.size">{{ rowData.size }} </span>
+                                    <span *ngIf="!rowData.size"><i>Not Available</i></span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-treeTable>
 
-                <ng-content select=".controls"></ng-content>
+            <ng-content select=".controls"></ng-content>
 
-            <!-- </div> -->
-
-            <!-- <ng-template #filesLoading> -->
-            <!-- </ng-template> -->
-        <!-- </div> -->
-    </div>
+        <ng-template #filesLoading>
+            <div>
+                <b>Files </b>
+            </div>
+            <p>
+                <i>Loading file list...</i>
+            </p>
+        </ng-template> -->
+</div>
     
     

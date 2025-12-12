@@ -33,7 +33,7 @@
                                         [disableControl]="isAdding || isEditing" 
                                         [placeHolderText]="placeholder" 
                                         [isNew]="apage.isNew"
-                                        [dataChanged]="mdupdsvc.fieldUpdated(fieldName, accessPages[i]['@id'])" 
+                                        [dataChanged]="dataChanged(fieldName, i)" 
                                         (command_out)="onApageChange($event, i)">
                                     </lib-text-edit>
                                 </div>
