@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
-
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
+import { ManageFileConfirmComponent } from './manage-file-confirm/manage-file-confirm.component';
 
 @Injectable({
     providedIn: 'root'
@@ -33,6 +33,23 @@ export class ConfirmationDialogService {
         modalRef.componentInstance.btnCancelText = btnCancelText;
         modalRef.componentInstance.showWarningIcon = showWarningIcon;
         modalRef.componentInstance.showCancelButton = showCancelButton;
+
+        return modalRef.result;
+    }
+
+    public confirmManageFiles(
+        title: string,
+        message: string,
+        dialogSize: 'sm' | 'lg' = 'sm'): Promise<boolean> {
+        let ngbModalOptions: NgbModalOptions = {
+            backdrop: 'static',
+            keyboard: false,
+            windowClass: "comfirmModalClass",
+            size: dialogSize
+        };
+        const modalRef = this.modalService.open(ManageFileConfirmComponent, ngbModalOptions);
+        modalRef.componentInstance.title = title;
+        modalRef.componentInstance.message = message;
 
         return modalRef.result;
     }

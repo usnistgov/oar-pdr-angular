@@ -9,20 +9,14 @@
         <!-- Edit button -->
         <button class="edit_button" type="button" 
         (click)="startEditing()" aria-label="Edit collection" ngbTooltip="Edit collection" style="cursor: pointer">
-            <i class="fas fa-pencil fa-sm"></i>
+            <i [class]="editIcon"></i>
         </button> 
     }
-
-    <!-- Close button -->
-    <!-- <button class="edit_button" *ngIf="isEditing" type="button" [disabled]="dataChanged"
-        (click)="closeEditBlock()" aria-label="close button" ngbTooltip="Close edit block">
-        <i class="fas fa-times"></i>
-    </button>    -->
     
     <!-- Restore button -->
     <button class="edit_button" *ngIf="updated" type="button"
     (click)="restoreOriginal()">
-        <i class="fas fa-undo fa-sm"
+        <i [class]="undoIcon"
             aria-label="Restore original" ngbTooltip="Restore original"></i>
     </button>              
 </div>
@@ -51,13 +45,13 @@
                 <td style="width: 90px;vertical-align: top;">
                     <!-- Save button -->
                     <button class="edit_button" type="button" (click)="saveCollection()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save collection">
-                        <i class="fas fa-check"></i>
+                        <i [class]="saveIcon"></i>
                     </button>
             
                     <!-- Cancel button -->
                     <button class="edit_button" type="button"
                         (click)="undoCurCollectionChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                        <i class="fas fa-times fa-sm"></i>
+                        <i [class]="cancelIcon"></i>
                     </button>
                 </td>          
             </tr>

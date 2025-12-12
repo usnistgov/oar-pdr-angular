@@ -1,5 +1,5 @@
 <div class="full-height">
-    <oar-pushing-sidebar style="width: 100%; height: fit-content;">
+    <oar-pushing-sidebar [marginLeft]="marginLeft" style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>Will you be uploading any files to be included with this publication?</p>
             <div class="radio-group">
@@ -17,11 +17,8 @@
                 </div>
             </div>
         </div>
-        <span class="sidebar-title">Question Help</span>
-        <div class="sidebar-content">
-            The primary public contact is a person familiar the content of this publication and,
-            thus, can answer questions from the public that wish to reference this publication or
-            make use of its contents.
-        </div>
+
+        <span class="sidebar-title">{{helpText["label"]}}</span>
+        <div class="sidebar-content" [innerHTML]="helpText['general']"></div>
     </oar-pushing-sidebar>
 </div>

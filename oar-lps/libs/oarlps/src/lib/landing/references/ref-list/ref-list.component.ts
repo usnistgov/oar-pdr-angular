@@ -262,7 +262,6 @@ export class RefListComponent implements OnInit {
         return new Promise<boolean>((resolve, reject) => {
             if(refid) {    // Update specific reference
                 this.mdupdsvc.update(this.fieldName, ref, refid).then((updateSuccess) => {
-                    // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                     if (updateSuccess){
                         this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                         this.chref.detectChanges();
@@ -278,7 +277,6 @@ export class RefListComponent implements OnInit {
                     let updmd = {};
                     updmd[this.fieldName] = this.record[this.fieldName];
                     this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
-                        // console.log("###DBG  update sent; success: "+updateSuccess.toString());
                         if (updateSuccess){
                             this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                             this.chref.detectChanges();

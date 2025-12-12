@@ -7,13 +7,6 @@
             </span>
         </div>
 
-        <!-- Label -->
-        @if(edstatsvc.isEditMode() || hasContact) {
-            <div class="editable_field" style="margin-left: 0px;">
-                <span style="margin-right: 0.5em;">Contact:</span>
-            </div>
-        }
-
         <div class="editable_field" style="min-width: fit-content;">
             <contact-pub 
                 [record]="record"
@@ -33,7 +26,7 @@
                         ngbTooltip="Edit contact" 
                         style="cursor: pointer">
 
-                        <i class="fas fa-pencil fa-sm"></i>
+                        <i [class]="editIcon"></i>
                     </button> 
 
                     @if(updated) {
@@ -43,7 +36,7 @@
                             type="button"
                             (click)="restoreOriginal()">
 
-                            <i class="fas fa-undo fa-sm"
+                            <i [class]="undoIcon"
                                aria-label="Restore original" 
                                ngbTooltip="Restore original">
                             </i>
@@ -61,7 +54,7 @@
                         aria-label="close button" 
                         ngbTooltip="Close edit block">
 
-                        <i class="fas fa-times"></i>
+                        <i [class]="closeIcon"></i>
                     </button>  
                 }
             </div>
@@ -84,6 +77,7 @@
                 </td>
     
                 <td style="width: 90px;vertical-align: top;">
+                    <!-- Save button -->
                     <button 
                         class="edit_button" 
                         *ngIf="edstatsvc.isEditMode()" 
@@ -93,9 +87,10 @@
                         [disabled]="!currentContact.dataChanged || !currentContact.fn" 
                         ngbTooltip="Save contact">
 
-                        <i class="fas fa-check"></i>
+                        <i [class]="saveIcon"></i>
                     </button>
             
+                    <!-- Undo button -->
                     <button 
                         class="edit_button" 
                         *ngIf="edstatsvc.isEditMode() && dataChanged" 
@@ -104,7 +99,7 @@
                         aria-label="undo button" 
                         ngbTooltip="Undo current changes">
 
-                        <i class="fas fa-undo fa-sm"></i>
+                        <i [class]="undoIcon"></i>
                     </button>
                 </td>          
             </tr>

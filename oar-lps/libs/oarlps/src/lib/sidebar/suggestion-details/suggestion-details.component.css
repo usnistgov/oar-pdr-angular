@@ -7,3 +7,15 @@
     margin-left: 1em;
     margin-bottom: .5em;
 }
+
+.summary {
+    cursor: pointer;
+}
+
+.summary:hover {
+    background-color: rgb(230, 230, 230);
+}
+
+.detail:hover {
+    background-color: rgb(230, 230, 230);
+}

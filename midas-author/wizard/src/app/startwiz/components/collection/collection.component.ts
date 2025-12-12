@@ -17,6 +17,8 @@ export class CollectionComponent implements OnInit {
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
+    @Input() helpText: any = {};
+    @Input() marginLeft: number = 40;
 
     constructor(
         private stepService: StepService,
@@ -32,6 +34,9 @@ export class CollectionComponent implements OnInit {
         }
     }
 
+    /**
+     * Update the step status when collection changed.
+     */    
     onSelectChange(evt: any) {
         this.thisStep.canGoNext = true;
         this.thisStep.isComplete = true;

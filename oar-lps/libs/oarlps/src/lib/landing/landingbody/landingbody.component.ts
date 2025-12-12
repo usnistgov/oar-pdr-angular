@@ -112,11 +112,23 @@ export class LandingBodyComponent {
                 this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
                break;
             }
+            case SectionPrefs.getFieldName(Sections.TOPICS): {
+                this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
             case SectionPrefs.getFieldName(Sections.KEYWORDS): {
                 this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
                break;
             }
             case SectionPrefs.getFieldName(Sections.DATA_ACCESS): {
+                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
+            case SectionPrefs.getFieldName(Sections.ACCESS_PAGES): {
+                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
+            case SectionPrefs.getFieldName(Sections.FILES): {
                 this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
                break;
             }

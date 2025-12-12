@@ -109,6 +109,18 @@ export class GlobalService {
         this._hasDataFiles.subscribe(subscriber);
     }
     
+    /**
+     * Set/get SubmissionData 
+     */
+    _submissionData: BehaviorSubject<SubmissionData> = new BehaviorSubject<SubmissionData>({} as SubmissionData);
+    public setSubmissionData(val: SubmissionData){
+        this._submissionData.next(val);
+    }
+    public watchSubmissionData(subscriber) {
+        this._submissionData.subscribe(subscriber);
+    }
+    
+
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
         let text = this.document.createElement("span"); 
         this.document.body.appendChild(text); 
@@ -221,7 +233,8 @@ export interface SectionMode {
 
 export interface SectionHelp {
     "section": string,
-    "topic": string
+    "topic": string,
+    "showGeneral": boolean
 }
 
 export const MODE = {
@@ -252,13 +265,15 @@ export class Sections {
     static readonly DOI = 'DOI';
     static readonly VERSION = 'Version';
     static readonly COLLECTION = 'Collection';
+    static readonly FILES = 'Files';
 }
 
 //_fieldName is the field name in Nerdm record
 let _fieldName = {};
 _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
-_fieldName[Sections.ACCESS_PAGES] = "components";
+_fieldName[Sections.ACCESS_PAGES] = "components";  //component
+// _fieldName[Sections.ACCESS_PAGES] = "links";  //component
 _fieldName[Sections.DESCRIPTION] = "description";
 // _fieldName[Sections.TOPICS] = "theme";
 _fieldName[Sections.TOPICS] = "topic";
@@ -276,12 +291,15 @@ _fieldName[Sections.CONTACT] = "contactPoint";
 _fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";
 _fieldName[Sections.DOI] = "doi";
 _fieldName[Sections.VERSION] = "version";
+_fieldName[Sections.FILES] = "files";
 
 let _displayName = {};
 _displayName[GENERAL] = Sections.GENERAL;
 _displayName["title"] = Sections.TITLE;
+// _displayName["links"] = Sections.ACCESS_PAGES;
 _displayName["components"] = Sections.ACCESS_PAGES;
 _displayName["description"] = Sections.DESCRIPTION;
+// _displayName["theme"] = Sections.TOPICS;
 _displayName["topic"] = Sections.TOPICS;
 _displayName["keyword"] = Sections.KEYWORDS;
 _displayName["identity"] = Sections.IDENTITY;
@@ -295,6 +313,7 @@ _displayName["contactPoint"] = Sections.CONTACT;
 _displayName["landingPage"] = Sections.VISIT_HOME_PAGE;
 _displayName["doi"] = Sections.DOI;
 _displayName["version"] = Sections.VERSION;
+_displayName["files"] = Sections.FILES;
 
 export class SectionPrefs {
     private static readonly _lSectionID = _fieldName;
@@ -353,6 +372,122 @@ export interface SubmitResponse {
     }
 }
 
+export interface RevisionDetails {
+    id: number,
+    label: string,
+    tooltip: string,
+    typeName: string,
+    majorChanges: boolean
+}
+
+export class SubmissionData {
+    goSubmit: boolean;
+    isRevision: boolean;
+    revisionIDs: number[];
+    submissionNotes: string;
+    revisionPurpose: string;
+
+    constructor(data: SubmissionData = null) {
+        if (!data) {
+            this.goSubmit = false;
+            this.isRevision = false;
+            this.revisionIDs = [];
+            this.submissionNotes = "";
+            this.revisionPurpose = "";
+        } else {
+            this.goSubmit = data.goSubmit;
+            this.isRevision = data.isRevision;
+            this.revisionIDs = data.revisionIDs;
+            this.submissionNotes = data.submissionNotes;
+            this.revisionPurpose = data.revisionPurpose;
+        }
+    }
+
+    addRevisionID(id: number) {
+        if (!this.revisionIDs) this.revisionIDs = [];
+
+        if ( !this.revisionIDs.includes(id) ) {
+            this.revisionIDs.push(id);
+        }
+    }
+
+    removeRevisionID(id: number) {
+        this.revisionIDs = this.revisionIDs.filter(revID => revID !== id); 
+    }
+
+    includes(id: number) {
+        if (!this.revisionIDs) return false;
+
+        return this.revisionIDs.includes(id);
+    }
+}
+
+export class RevisionTypes {
+    data: RevisionDetails[];
+
+    constructor() {
+        this.data = [
+            {
+                "id": 1,
+                "label": "Addition of new files",
+                "tooltip": "",
+                "typeName": "add_files",
+                "majorChanges": true
+            },
+            {
+                "id": 2,
+                "label": "Removal previously published files",
+                "tooltip": "",
+                "typeName": "remove_files",
+                "majorChanges": true
+            },
+            {
+                "id": 3,
+                "label": "Major changes to files or other data available on remote sites or in software repositories",
+                "tooltip": "",
+                "typeName": "change_major",
+                "majorChanges": true
+            },
+            {
+                "id": 4,
+                "label": "Minor corrections to files",
+                "tooltip": "",
+                "typeName": "change_minor",
+                "majorChanges": false
+            },
+            {
+                "id": 5,
+                "label": "Metadata changes",
+                "tooltip": "",
+                "typeName": "metadata",
+                "majorChanges": false
+            }
+        ]
+    }
+
+    getAllTypes() {
+        return this.data;
+    }
+
+    getNamebyID(id: number) {
+        let type = this.data.find((type) => type.id == id);
+        if (type) {
+            return type.typeName;
+        } else {
+            return null;
+        }
+    }
+
+    getIDbyName(typeName: string) {
+        let type = this.data.find((type) => type.typeName == typeName);
+        if (type) {
+            return type.id;
+        } else {
+            return null;
+        }
+    }
+}
+
 export class LandingConstants {
     public static get editModes(): any { 
         return {
@@ -370,14 +505,6 @@ export class LandingConstants {
             REVISE: 'revise' 
         }
     }; 
-
-    public static get reviseTypes(): any { 
-        return {
-            METADATA: 'metadata', 
-            TYPE02: 'reviseType02', 
-            TYPE03: 'reviseType03'
-        }
-    };  
 }
 
 export interface ColorScheme {
@@ -629,7 +756,7 @@ export class FilterTreeNode implements TreeNode {
             this._addCount(child, searchResults, collection, taxonomyURI);
         }
     }    
-
+  
     /**
      *  Refresh taxonomy for each node
      */
@@ -651,5 +778,18 @@ export class FilterTreeNode implements TreeNode {
         for (let child of tree.children) {
             this._refreshTaxonomy(child);
         }        
-    }
+    }  
+}
+
+//For display purpose
+export class iconClass {
+    static readonly EDIT = 'fas fa-pencil fa-sm';
+    static readonly CLOSE = 'fas fa-times';
+    static readonly SAVE = 'pi pi-save';
+    // static readonly SAVE = 'fas fa-check fa-sm';
+    static readonly CANCEL = 'fas fa-undo fa-sm';
+    static readonly UNDO = 'fas fa-undo fa-sm';
+    static readonly ADD = 'fas fa-plus faa-lg';
+    static readonly DELETE = 'fas fa-trash-alt';
+    static readonly RESET = 'faa faa-recycle';
 }

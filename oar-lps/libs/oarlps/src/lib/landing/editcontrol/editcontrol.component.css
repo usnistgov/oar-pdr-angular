@@ -1,9 +1,25 @@
-.edit-control-buttons {
+.control-wrapper {
+    display: flex;
     background-color: #153971;
     color: #FFFFFF; 
-    height: 100px;
+    height: 50px;
     padding-left: 4em; 
     padding-right: 4em;
+    width: 100%;
+}
+
+.current-mode {
+    color: white;
+    text-wrap: nowrap;
+    font-size: 20px;
+    font-weight: bolder !important;
+    margin: auto
+}
+
+.edit-control-buttons {
+    flex-grow: 1;
+    text-align: right;
+    text-wrap: nowrap;
 }
 
 .science-theme-background {
@@ -185,7 +201,6 @@ a:link, a:visited, a:hover, a:active {
 .ng-select.custom {
     border:0px;
     height: 35px;
-    width: 200px;
     min-height: 0px;
     border-radius: 5px;
     margin: .5em .5em;
@@ -226,11 +241,6 @@ a:link, a:visited, a:hover, a:active {
     border-radius: 5px;
     padding-top: 5px;
 }
-.control-wrapper {
-    display: flex;
-    flex-direction: row;
-    justify-content:right;
-}
 
 .modal-size > .modal-dialog {
     max-width: 1000px !important;
@@ -249,11 +259,19 @@ a:link, a:visited, a:hover, a:active {
     padding-right: 4em;
 }
 
-#current-mode {
-    color: white; 
-    text-align: right; 
-    margin-left: 3em; 
-    padding: .4em 0em .4em .5em; 
-    font-size: 20px; 
-    font-weight:bolder !important;
+.ng-select.custom.ng-select-disabled> ::ng-deep .ng-select-container {
+    min-height: 0px;
+    border-radius: 0;
+    color: lightgrey;
+}
+
+.splitter1 {
+    margin-right: .5em;
+    margin-left: .5em;
+    font-size: 20px;
+    font-weight: 100 !important;
+}
+
+#submitted {
+    font-weight: 100 !important;
 }
