@@ -10,7 +10,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { ButtonModule } from 'primeng/button';				
 import { TooltipModule } from 'primeng/tooltip';
+import { AppConfig } from '../../../config/config';
+import { AuthenticationService } from 'oarng';
 import { iconClass } from '../../../shared/globals/globals';
+import * as errors from '../../../errors/error';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -59,6 +62,8 @@ export class RefEditComponent implements OnInit {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
     deleteIcon = iconClass.DELETE;
+    doiEndpoint: string = "";
+    authToken: string = "";
 
     @Input() currentRef: Reference = {} as Reference;
     @Input() editMode: string = "edit";
@@ -69,7 +74,17 @@ export class RefEditComponent implements OnInit {
     constructor(
         private httpClient: HttpClient, 
         private chref: ChangeDetectorRef,  
-        public mdupdsvc : MetadataUpdateService) { }
+        private cfg: AppConfig,
+        public authsvc: AuthenticationService,
+        public mdupdsvc: MetadataUpdateService) { 
+            this.doiEndpoint = cfg.get<string>("dapEditing.doiEndpoint", "/midas/doi/2nerdm/ref/");
+        
+            this.authsvc.getCredentials().subscribe(
+                (creds) => {
+                    this.authToken = creds.token;
+                }
+            )
+        }
 
     ngOnInit(): void {
         if(this.isEditing) this.showAllFields = true;
@@ -151,16 +166,41 @@ export class RefEditComponent implements OnInit {
      */
     onDoiChange(event) {
         this.ref.doi = event.value;
-        this.httpClient.get("assets/sample-data/sample-reference.json").subscribe(data =>{
 
-            this.ref = JSON.parse(JSON.stringify(data)) as Reference;
+        // Remove the beginning slash if any
+        if (this.ref.doi.startsWith("/")) this.ref.doi = this.ref.doi.slice(1);
 
-            this.ref['isNew'] = this.isAdding;
-            this.onChange(false);
-        })
-        // Get ref data from backend...
-        // ...
-        this.showAllFields = true;
+        const url = this.doiEndpoint + this.ref.doi;
+        const hdrs = {"Accept":"application/json", "Authorization":"Bearer " + this.authToken};
+
+        this.httpClient.get(url, {headers: hdrs}).subscribe(
+            data => {
+                this.ref = JSON.parse(JSON.stringify(data)) as Reference;
+
+                this.citationLocked = true;
+                this.onChange(true);
+                this.showAllFields = true;
+            },
+            err => { 
+                let msg = err.message || err.statusText;
+                if (err.status) {
+                    if (err.status == 404)
+                        throw new errors.IDNotFound(this.ref.doi, err);
+                    if (err.status == 401)
+                        throw new errors.NotAuthorizedError(this.ref.doi, "get", err);
+                    if (err.status > 500)
+                        throw new errors.ServerError(msg || "Unknown Server Error", err);
+                    else 
+                        throw new errors.OARError("Unexpected resolver response: " + msg +" (" +
+                                                  err.status + ")", err);
+                }
+                else if (err.status == 0) 
+                    throw new errors.CommError("Unexpected communication error: "+msg, url, err);
+                else
+                    throw new errors.OARError("Unexected error during retrieval from URL (" + 
+                                              url + "): " + err.toString(), err);
+            }
+        );
     }
 
     /**
@@ -185,13 +225,17 @@ export class RefEditComponent implements OnInit {
         
         switch ( this.inputMethod ) {
             case "1": //useDOI
+                // By default, citation is not linked to other fields. User can edit content.
+                this.citationLocked = true; 
                 this.showAllFields = false;
                 break;
             case "2": //useRefData
+                // By default, citation is linked to other fields. User can't edit content.
                 this.citationLocked = false;
                 this.showAllFields = true;
                 break;
             default: //useCitationData
+                // By default, citation is not linked to other fields. User can edit content.
                 this.citationLocked = true;
                 this.showAllFields = false;
                 break;
@@ -200,13 +244,25 @@ export class RefEditComponent implements OnInit {
 
     /**
      * 
-     * @returns Citation lock icon class
+     * @returns Citation lock icon class based on editing status
      */
     citationLockClass() {
         if(this.citationLocked) {
-            return "faa faa-unlock";
-        }else{
             return "faa faa-lock";
+        }else{
+            return "faa faa-unlock";
+        }
+    }
+
+    /**
+     * 
+     * @returns tooltip of lock icon based on editing status
+     */
+    citationLockTooltip() {
+        if(this.citationLocked) {
+            return "Click to unlock citation";
+        }else{
+            return "Click to lock citation";
         }
     }
 
@@ -282,6 +338,9 @@ export class RefEditComponent implements OnInit {
         }
     }
 
+    /**
+     * Show/hide author edit block when user clicks on the icon. 
+     */
     authorExpandClick() {
         this.editBlockStatus = this.editBlockStatus=="collapsed"? "expanded" : "collapsed";
         this.chref.detectChanges();

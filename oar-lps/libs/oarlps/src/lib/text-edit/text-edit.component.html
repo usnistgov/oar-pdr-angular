@@ -28,7 +28,7 @@
                     (click)="editSave()" 
                     [disabled]="disableControl" 
                     aria-label="Edit button" 
-                    pTooltip="Edit this item"
+                    [pTooltip]="getTooltip('edit')"
                     tooltipPosition="top" >
                     <i [class]="getEditIconClass()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
@@ -86,7 +86,7 @@
                     pTooltip="Restore from original value" 
                     data-container="body"
                     tooltipPosition="top">
-                    <i class="fas fa-undo fa-sm"
+                    <i [class]="undoIcon"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>
 
@@ -114,7 +114,7 @@
                     aria-label="submit button" 
                     [pTooltip]="submitTooltip"
                     tooltipPosition="top">
-                    <i class="faa faa-check-circle"
+                    <i [class]="saveIcon"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>
             </td>
