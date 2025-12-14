@@ -1083,7 +1083,14 @@ export class FiltersComponent implements OnInit {
             this.collectionThemesWithCount[collection].upsertNodeFor(sortable[key], 1, searchResults, collection, this.taxonomyURI);
         }
 
-        this.deDup(this.collectionThemesWithCount[collection], collection);
+        // Re-generate taxonomy for each node and leaf so they can be count correctly
+        this.collectionThemesWithCount[collection].refreshTaxonomy();
+
+        // If any leaf's name matches sibling node's name, move it inside the sibling node
+        this.deDup(this.collectionThemesWithCount[collection], searchResults, collection);
+
+        // Now count matching result items for each node and leaf
+        this.collectionThemesWithCount[collection].addCount(searchResults, collection, this.taxonomyURI);
 
         if (sortable.length > 5) {
             this.showMoreLink = true;
@@ -1097,11 +1104,11 @@ export class FiltersComponent implements OnInit {
      * append ":Other"
      * @param collectionThemesWithCountCol - input array of tree nodes
      */
-    deDup(collectionThemesWithCountCol: any, collection: string) {
+    deDup(collectionThemesWithCountCol: any, searchResults: any, collection: string) {
         if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 1) {
             collectionThemesWithCountCol.children.forEach(child => {
                 if (child.children && child.children.length > 1) {
-                    this.deDup(child, collection);
+                    this.deDup(child, searchResults, collection);
                 } else {
                     //For a leaf, loop through siblings to see if any node has the same taxonomy (data field)
                     for (var i = 0; i < collectionThemesWithCountCol.children.length; i++) {
@@ -1109,7 +1116,6 @@ export class FiltersComponent implements OnInit {
                         if (sibling["data"][0] != child["data"][0] && sibling.children.length > child.children.length && sibling["data"][0].includes(child["data"][0])) {
                             child["data"][0] = child["data"][0] + ":Other";
                             child["key"] = sibling.key+"Other";
-                            child["keyname"] = sibling.keyname + "Other";
                             child["label"] = "Other---1";
                             child["level"]++; 
                             child.parent = sibling;
@@ -1121,62 +1127,12 @@ export class FiltersComponent implements OnInit {
                             if (!sibling["ediids"].includes(child.ediid)) {
                                 sibling["ediids"].push(child.ediid);
                             }
-                            sibling.count++;
-
-                            //Recount sibling.parent. Cannot simply add one because adding new node not necessary means more search result.
-                            this.count(sibling, collection);
                         }
                     }
                 }
             })
         }
     }
-
-    /**
-     * Count the search result from the given treenode
-     * @param treenode 
-     * @param collection - the collection the treenode belong to.
-     */
-    count(treenode: any, collection: string) {
-        if (treenode["data"]) {
-            let parentData = treenode["key"];
-            treenode["ediids"] = [];
-            treenode.count = 0;
-
-            for (let resultItem of this.searchResults) {
-                let found: boolean = false;
-                if (resultItem.topic && resultItem.topic.length > 0) {
-                    for (let topic of resultItem.topic) {
-                        if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
-                            if (collection == Collections.DEFAULT) {
-                                if (topic.tag.includes(parentData)) {
-                                    found = true;
-                                    break;
-                                }
-                            } else {
-                                let topics = topic.tag.split(":");
-                                if (topics.includes(parentData)) {
-                                    found = true;
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
-                if(found){
-                    if(!treenode["ediids"].includes(resultItem.ediid)){
-                        treenode["ediids"].push(resultItem.ediid);
-                        treenode.count++;
-                    }
-                }   
-            }
-        }
-
-        if (treenode.parent) {
-            this.count(treenode.parent, collection);
-        }
-    }        
 
     /**
      * Set the width of the filter column. If the filter is active, set the width to 25%. 
