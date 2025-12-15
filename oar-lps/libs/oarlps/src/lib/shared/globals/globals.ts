@@ -182,7 +182,7 @@ _theme[Themes.SCIENCE_THEME] = "ScienceTheme";
 _theme[Themes.DEFAULT_THEME] = "DefaultTheme";
 
 let _sourceLabel = {};
-_sourceLabel[Themes.SCIENCE_THEME] = "Collection";
+_sourceLabel[Themes.SCIENCE_THEME] = "Domain Collection";
 _sourceLabel[Themes.DEFAULT_THEME] = "Dataset";
 
 export class ThemesPrefs {
