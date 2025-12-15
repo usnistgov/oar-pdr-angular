@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { parse } from 'yaml';
+import { load as parse } from 'js-yaml';
 import { BehaviorSubject, Observable, Subject, of, throwError } from "rxjs";
 import { catchError, map, tap } from "rxjs/operators";
 import { Country } from "../model/country.model";

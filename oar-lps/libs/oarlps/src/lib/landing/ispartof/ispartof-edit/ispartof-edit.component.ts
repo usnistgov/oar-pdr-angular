@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, Input, SimpleChanges } from '@angular/core';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
@@ -41,8 +41,15 @@ export class IspartofEditComponent {
         {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
         {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
         {id: 3, displayName: "Forensics", value: "Forensics"},
-        {id: 4, displayName: "Do not add to any collection", value: "None"}
+        {id: 4, displayName: "Do not add to any domain collection", value: "None"}
     ]
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
 
     @Input() record: any[];
     @Input() inBrowser: boolean; 

@@ -12,7 +12,6 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
-import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -24,6 +23,8 @@ import { GlobalService, LandingConstants, CartService, DataCartStatus, CartActio
 import { RecordLevelMetrics, MetricsService, MetricsData, formatBytes } from 'oarlps';
 import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps';
 import { Themes, ThemesPrefs, Collections } from 'oarlps';
+import { HttpClient } from '@angular/common/http';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -58,7 +59,7 @@ import { Themes, ThemesPrefs, Collections } from 'oarlps';
         FrameModule
     ],
     providers: [
-        Title
+        Title, NgbActiveModal
     ],
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss'],
@@ -95,6 +96,7 @@ import { Themes, ThemesPrefs, Collections } from 'oarlps';
     ]
 })
 export class LandingPageComponent implements OnInit, AfterViewInit {
+    isPublicSite = true;
     pdrid: string;
     layoutCompact: boolean = true;
     layoutMode: string = 'horizontal';
@@ -103,7 +105,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     midasRecord: any = null;    // the new Midas record metadata
     reqId: string;             // the ID that was used to request this page
     inBrowser: boolean = false;
-    citetext: string = null;
     citationVisible: boolean = false;
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
@@ -190,6 +191,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     landingPageURL: string;
     landingPageServiceStr: string;
 
+
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
         event.stopPropagation();
@@ -228,12 +230,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 public breakpointObserver: BreakpointObserver,
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
-                public lpService: LandingpageService)
+                public lpService: LandingpageService,
+                private http: HttpClient)
     {
         // Init the size of landing page body and the help box
         this.updateScreenSize();
 
-        this.reqId = this.route.snapshot.paramMap.get('id');
+        this.reqId = this.requestedIDfromRoute(this.route).replace('ark:/88434/', '');
         this.inBrowser = isPlatformBrowser(platformId);
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
@@ -263,7 +266,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
+        const CollectionData1: any  = require('../../assets/site-constants/collections.json');
+        this.collectionObj = CollectionData1[this.collection] as any;
 
         switch(this.collection) {
             case Collections.FORENSICS: {
@@ -285,13 +289,20 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }, 0);
     }
 
+    protected requestedIDfromRoute(route : ActivatedRoute) : string {
+        return route.snapshot.url.map(u => u.toString()).join('/');
+    }
+
+    get citationtext() {
+        return (new NERDResource(this.md)).getCitation();
+    }
     /**
      * initialize the component.  This is called early in the lifecycle of the component by
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-        this.landingPageURL = this.cfg.get('PDRAPIs.mdService','/od/id/');
-        this.landingPageServiceStr = this.cfg.get('PDRAPIs.mdService','https://data.nist.gov/od/id/');
+        this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
+        this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
   
         this.arrRevisionTypes = REVISION_TYPES["default"];
         this.recordLevelMetrics = new RecordLevelMetrics();
@@ -311,13 +322,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
 
         this.globalService.setShowLPContent(true);
-        this._showContent = true;
         this.loadPublicData();
     }
 
     loadPublicData() {
         let metadataError = "";
-        var showError: boolean = true;
 
         this.nerdmReserv.getResource(this.reqId).subscribe(
             (data) => {
@@ -349,10 +358,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 }
             }
 
-            if (showError) {
-                if (metadataError == "not-found") {
-                    this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                }
+            if(this.inBrowser)
+                this._showContent = true;
+                
+            if (metadataError == "not-found") {
+                this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
             }
         },
         (err) => {
@@ -376,81 +386,23 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      getMetrics() {
         let ediid = this.md.ediid;
         let that = this;
-        this.metricsService.getFileLevelMetrics(ediid).subscribe(async (event) => {
-            // Some large dataset might take a while to download. Only handle the response
-            // when download is completed
-            if(event.type == HttpEventType.Response){
-                let response = await event.body.text();
-
-                that.fileLevelMetrics = JSON.parse(response);
-
-                if(that.fileLevelMetrics.FilesMetrics != undefined && that.fileLevelMetrics.FilesMetrics.length > 0 && that.md.components){
-                    // check if there is any current metrics data
-                    for(let i = 1; i < that.md.components.length; i++){
-                        let filepath = that.md.components[i].filepath;
-                        if(filepath) filepath = filepath.trim();
-
-                        that.metricsData.hasCurrentMetrics = that.fileLevelMetrics.FilesMetrics.find(x => x.filepath.substr(x.filepath.indexOf(ediid)+ediid.length+1).trim() == filepath) != undefined;
-                        if(that.metricsData.hasCurrentMetrics) break;
-                    }
-                }else{
-                    that.metricsData.hasCurrentMetrics = false;
-                }
-
-                // if(that.metricsData.hasCurrentMetrics){
-
-                // }else{
-                //     that.metricsData.dataReady = true;
-                // }
-                that.showMetrics = true;
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve file metrics: ", err);
-            this.metricsData.hasCurrentMetrics = false;
-            this.showMetrics = true;
-            this.metricsData.dataReady = true; // ready to display message
-        });
 
         //Get record level metrics
-        this.metricsService.getRecordLevelMetrics(ediid).subscribe(async (event) => {
-            if(event.type == HttpEventType.Response){
-                let response = await event.body.text();
+         this.metricsService.getRecordLevelMetrics(ediid).subscribe(
+             async (event) => {
+                 if (event.type == HttpEventType.Response) {
+                     let response = await event.body.text();
 
-                that.recordLevelMetrics = JSON.parse(await event.body.text());
-                that.handleRecordLevelData();
-
-                // let hasFile = false;
-
-                // if(that.md.components && that.md.components.length > 0){
-                //     that.md.components.forEach(element => {
-                //         if(element.filepath){
-                //             hasFile = true;
-                //             return;
-                //         }
-                //     });
-                // }
-
-                // if(hasFile){
-                //     //Now check if there is any metrics data
-                //     that.metricsData.totalDatasetDownload = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].record_download : 0;
-
-                //     that.metricsData.totalDownloadSize = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].total_size : 0;
-
-                //     that.metricsData.totalUsers = that.recordLevelMetrics.DataSetMetrics[0] != undefined? that.recordLevelMetrics.DataSetMetrics[0].number_users : 0;
-
-                //     that.metricsData.totalUsers = that.metricsData.totalUsers == undefined? 0 : that.metricsData.totalUsers;
-                // }
-
-                // that.metricsData.dataReady = true;
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve dataset metrics: ", err);
-            this.metricsData.hasCurrentMetrics = false;
-            this.showMetrics = true;
-            this.metricsData.dataReady = true;
-        });
+                     that.recordLevelMetrics = JSON.parse(await event.body.text());
+                     that.handleRecordLevelData();
+                 }
+            },
+            (err) => {
+                console.error("Failed to retrieve dataset metrics: ", err);
+                this.metricsData.hasCurrentMetrics = false;
+                this.showMetrics = true;
+                this.metricsData.dataReady = true;
+            });
     }
 
     /**
@@ -581,10 +533,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * apply housekeeping after view has been initialized
      */
     ngAfterViewInit() {
-        this.sidebarHeight = window.innerHeight - 250;
-
         if(this.inBrowser) {
-            if(this.splitter){
+            this.sidebarHeight = window.innerHeight - 250;
+
+            if (this.splitter) {
               this.splitterX = this.splitter.nativeElement.offsetLeft + 6;
             }
 
@@ -678,7 +630,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
         // set the document title
         this.setDocumentTitle();
-        this.showData();
+        if (this.inBrowser) {
+            this.showData();
+        }
     }
 
     /**
@@ -761,14 +715,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.citationDialogWith = 550;
 
         this.citationVisible = !this.citationVisible;
-    }
-
-    /**
-     * return text representing the recommended citation for this resource
-     */
-    getCitation(): string {
-        this.citetext = (new NERDResource(this.md)).getCitation();
-        return this.citetext;
     }
 
     /**

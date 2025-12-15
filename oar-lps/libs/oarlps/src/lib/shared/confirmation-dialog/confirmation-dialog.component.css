@@ -18,3 +18,10 @@
     background-color: grey;
     color: white;
 }
+
+.warning-icon {
+    color: rgb(252, 122, 0);
+    padding-left: .2em;
+    padding-right: .5em;
+    float: left;
+}

@@ -10,8 +10,9 @@ import { AppComponent } from './app.component';
 import { environment } from '../environments/environment-impl';
 import { LandingPageComponent } from './landing/landingpage.component';
 import { LandingAboutModule, SharedModule, DatacartModule, DirectivesModule, 
-         MetricsModule, OARLPSModule, NerdmModule, ConfigModule } from 'oarlps';
-import { GoogleAnalyticsService, UserMessageService } from 'oarlps';
+         MetricsModule, OARLPSModule, NerdmModule, ConfigModule, 
+         BrowserMetadataTransferModule} from 'oarlps';
+import { GoogleAnalyticsService, UserMessageService, ConfirmationDialogService } from 'oarlps';
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
 import { HeaderPubComponent, FooterComponent } from 'oarng';
 
@@ -46,7 +47,8 @@ enableProdMode();
         ConfigModule,
         HeaderPubComponent,
         LandingPageComponent,
-        FooterComponent
+        FooterComponent,
+        BrowserMetadataTransferModule
     ],
     exports: [],
     providers: [
@@ -54,6 +56,7 @@ enableProdMode();
         { provide: ErrorHandler, useClass: AppErrorHandler },
         GoogleAnalyticsService,
         UserMessageService,
+        ConfirmationDialogService,
         // fakeBackendProvider,
         DatePipe
     ],

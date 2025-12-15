@@ -2,7 +2,6 @@
     <div style="width: 100%;">
         <span class="recordType">
             <b>{{recordType}}</b>
-            <span *ngIf="recordType=='Science Theme'" class="badge version"> Beta</span>
         </span>
         <br>
         <app-title 
@@ -86,7 +85,8 @@
                         [record]="record" 
                         [inBrowser]="inBrowser"
                         [inViewMode]="inViewMode"
-                        [theme]="theme">
+                        [theme]="theme"
+                        [collection]="collection">
                     </Visithome-pub>
                 }
                 @else {
@@ -96,7 +96,8 @@
                         [inBrowser]="inBrowser"
                         [inViewMode]="inViewMode"
                         [theme]="theme"
-                        [isEditMode]="isEditMode">
+                        [isEditMode]="isEditMode"
+                        [collection]="collection">
                     </Visithome-midas>
                 }
             </div>
@@ -109,8 +110,11 @@
             </i>
         </span>
 
-        <!-- Info button -->
-        <i class="fas fa-info-circle link-icon" (click)="refreshHelpText()" title="About doi" ngbTooltip="About doi" style="cursor: pointer;margin-left: 10px;"></i> 
+        <!-- Info button (MIDAS only) -->
+        @if(!isPublicSite){
+            <i class="fas fa-info-circle link-icon" (click)="refreshHelpText()" title="About doi" ngbTooltip="About doi"
+            style="cursor: pointer;margin-left: 10px;"></i>
+        }
 
         <div class="describedin" *ngIf="primaryRefs.length > 0">
             <div>Described in
@@ -121,7 +125,7 @@
               <span *ngIf="ref.location; else nopreflink">
                   <span class="fas fa-external-link-alt">&nbsp;&nbsp;</span>
                   <i><a href={{ref.location}} target="blank"
-                        (click)="gaService.gaTrackEvent('outbound', $event, 'Resource title: ' + record.title, ref.location)">{{ ref.label }}</a><span *ngIf="i < primaryRefs.length-1">,</span></i>
+                        (click)="googleAnalytics(ref.location, $event, 'Resource title: ' + record.title)">{{ ref.label }}</a><span *ngIf="i < primaryRefs.length-1">,</span></i>
               </span>
               <ng-template #nopreflink>
                 <i>{{ ref.label }}<span *ngIf="i < primaryRefs.length-1">,</span></i>
@@ -131,6 +135,7 @@
         <pdr-version 
             [record]="record"
             [landingPageServiceStr]="landingPageServiceStr"
+            [isPublicSite]="isPublicSite"
             >
         </pdr-version>
     </div>

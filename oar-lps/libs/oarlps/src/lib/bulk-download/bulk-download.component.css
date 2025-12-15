@@ -12,4 +12,14 @@
   cursor: pointer;
   border-radius: 8px;
   height: 40px;
+  width: fit-content;
+}
+
+.anchor-button:hover {
+    background-color: var(--nist-blue-lighter);
+}
+
+.download-icon {
+    padding-bottom: 2px;
+    margin-right: 10px;
 }

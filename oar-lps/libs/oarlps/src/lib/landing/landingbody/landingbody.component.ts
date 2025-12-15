@@ -52,13 +52,13 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
 export class LandingBodyComponent {
     recordType: string = "";
     globalsvc = inject(GlobalService);
-    isEditMode: boolean;
+    isEditMode: boolean = false;
 
 
     // passed in by the parent component:
     @Input() md: NerdmRes = null;
     @Input() inBrowser: boolean = false;
-    @Input() editEnabled: boolean;
+    @Input() editEnabled: boolean = false;
 
     // Pass out download status
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();
@@ -68,7 +68,7 @@ export class LandingBodyComponent {
     @Input() metricsData: MetricsData;
     @Input() showJsonViewer: boolean = false;
     @Input() theme: string;
-    @Input() isPublicSite: boolean;
+    @Input() isPublicSite: boolean = true;
     @Input() edstatsvc: EditStatusService;
 
     @Input() landingPageURL: string;
@@ -112,11 +112,23 @@ export class LandingBodyComponent {
                 this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
                break;
             }
+            case SectionPrefs.getFieldName(Sections.TOPICS): {
+                this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
             case SectionPrefs.getFieldName(Sections.KEYWORDS): {
                 this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
                break;
             }
             case SectionPrefs.getFieldName(Sections.DATA_ACCESS): {
+                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
+            case SectionPrefs.getFieldName(Sections.ACCESS_PAGES): {
+                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
+               break;
+            }
+            case SectionPrefs.getFieldName(Sections.FILES): {
                 this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
                break;
             }
@@ -145,5 +157,26 @@ export class LandingBodyComponent {
      */
      setDownloadStatus(downloadStatus){
         this.dlStatus.emit(downloadStatus);
+     }
+    
+    /**
+     * In public side or MIDAS side preview mode, if nothing to display, hide the whole section.
+     * @returns show resource data section or not.
+     */
+    showResourceData() {
+        let show: boolean = false;
+        let hasDRS = (new NERDResource(this.md)).selectDynamicResourceComps().length > 0;
+        if (this.isPublicSite) {
+            show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
+        } else {
+            if (this.isEditMode) {
+                show = true;
+            } else {
+                show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
+            }
+        }
+
+        return show;
     }
+
 }

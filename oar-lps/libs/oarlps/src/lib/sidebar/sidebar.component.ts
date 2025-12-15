@@ -1,23 +1,49 @@
-import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Input, Output, EventEmitter, SimpleChanges, Self, ElementRef } from '@angular/core';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import { NerdmRes } from '../nerdm/nerdm';
 import { LandingpageService } from '../landing/landingpage.service';
 import { SidebarService } from './sidebar.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse } from '../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse, iconClass } from '../shared/globals/globals';
 import { HelpTopic } from '../landing/landingpage.service';
 import { CommonModule } from '@angular/common';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
+import { LandingConstants, SubmissionData, GlobalService } from '../shared/globals/globals';
+import { EditStatusService } from '../landing/editcontrol/editstatus.service';
+import { RevisionDetailsComponent } from '../landing/revision-details/revision-details.component';
+import revisionhelp from '../../assets/site-constants/revision-help.json';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-sidebar',
     standalone: true,
     imports: [
         CommonModule,
-        SuggestionsComponent
+        SuggestionsComponent,
+        RevisionDetailsComponent
     ],
     templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css'],
+    styleUrls: ['./sidebar.component.css', '../landing/landing.component.scss'],
     animations: [
+        trigger('slideToggle', [
+            state(
+                'visible',
+                style({
+                    transform: 'translateX(0)',
+                    opacity: 1,
+                    display: 'block',
+                })
+            ),
+            state(
+                'hidden',
+                style({
+                    transform: 'translateX(100%)',
+                    opacity: 0,
+                    display: 'none',
+                })
+            ),
+            transition('visible => hidden', [animate('300ms ease-in')]),
+            transition('hidden => visible', [animate('300ms ease-out')]),
+        ]),
         trigger("togglesbar", [
             state('sbvisible', style({
                 position: 'absolute',
@@ -37,25 +63,35 @@ import { SuggestionsComponent } from './suggestions/suggestions.component';
                 animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
             ])
         ]),
-        trigger('requiredExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        trigger('generalHelpExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),
-        trigger('warnExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-        trigger('recommendedExpand', [
-            state('collapsed', style({height: '0px', minHeight: '0'})),
-            state('expanded', style({height: '*'})),
-            transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
+        trigger('nextStepsExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),        
     ]
 })
 export class SidebarComponent implements OnInit {
-    sbarvisible : boolean = true;
+    sbarvisible: boolean = true;
+    hideSidebarBody: boolean = false;
     sidebarState: string = 'sbvisible';
     helpContent: string = "";
     fieldName: string = "sidebar";
@@ -63,10 +99,29 @@ export class SidebarComponent implements OnInit {
     title: string = "General Help";
     msgCompleted: string = "All data has been completed. No more suggestion.";
     // submitResponse: SubmitResponse = {} as SubmitResponse;
-    showRequired: boolean = true;
-    showWarnings: boolean = false;
-    showRecommended: boolean = false;
+    showGeneralHelp: boolean = true;
+    showNextSteps: boolean = true;
     ediid: string = "";
+    _editType: string;
+    EDIT_TYPES: any = LandingConstants.editTypes;
+    submissionData = new SubmissionData();
+    public revisionHelp:{} = revisionhelp;
+    showRevisionHelp: boolean = false;
+    ignoreRevisionType: boolean = false;
+    isMouseOverGeneralHeader = false;
+    isMouseOverNextSteps = false;
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
+    addIcon = iconClass.ADD;
+    delIcon = iconClass.DELETE;
+    resetIcon = iconClass.RESET;
+
+    sanitizedHtml: SafeHtml;
 
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: any = {};
@@ -77,10 +132,36 @@ export class SidebarComponent implements OnInit {
     // signal for scrolling to a section within the page
     @Output() scroll = new EventEmitter<string>();
 
-    constructor(private chref: ChangeDetectorRef,
-                public lpService: LandingpageService,
-                public sidebarService: SidebarService) { }
+    constructor(
+        private chref: ChangeDetectorRef,
+        public lpService: LandingpageService,
+        public edstatsvc: EditStatusService,
+        public globalService: GlobalService,
+        @Self() private element: ElementRef,
+        private sanitizer: DomSanitizer,
+        public sidebarService: SidebarService) { 
+        
+            this.edstatsvc.watchEditType((editType) => {
+                this._editType = editType;
+                this.showGeneralHelp = this._editType != this.EDIT_TYPES.REVISE;
+                this.showNextSteps = this.showGeneralHelp;
 
+                //When general help expanded, it will only be controlled manually
+                if (this.showGeneralHelp) {
+                    this.ignoreRevisionType = true;                
+                }
+            })
+        
+            this.globalService.watchSubmissionData(
+                (data) => {
+                    this.submissionData = new SubmissionData(data);
+            })
+    }
+
+    get maxHeight(): number {
+        return this.element.nativeElement.firstChild.offsetHeight;
+    }
+    
     ngOnInit(): void {
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
 
@@ -94,7 +175,12 @@ export class SidebarComponent implements OnInit {
             this.updateHelpContent(sectionHelp);
         });
 
-        if(this.record && this.record["@id"]) this.ediid = this.record["@id"];
+        if (this.record && this.record["@id"]) this.ediid = this.record["@id"];
+        
+        this.lpService.watchSubmitResponse((suggestions) => {
+            this.suggestions = suggestions as ReviewResponse;
+            this.chref.detectChanges();
+        })
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -105,7 +191,7 @@ export class SidebarComponent implements OnInit {
         //         this.suggestions = suggestions as ReviewResponse;
         //     })
     
-        //     this.chref.detectChanges();
+            this.chref.detectChanges();
         // }
     }
 
@@ -133,6 +219,10 @@ export class SidebarComponent implements OnInit {
         return !this.hasRequiredItems && !this.hasWarnItems && this.hasRecommendedItems;
     }
 
+    get isRevision() {
+        return this._editType == this.EDIT_TYPES.REVISE;
+    }
+
     /**
      * Update the help box text based on the input section data.
      * If topic is normal, display general help. Otherwise fetch the content from question-help.json based on section and topic.
@@ -142,11 +232,16 @@ export class SidebarComponent implements OnInit {
         // Update help content
         let generalHelp = this.helpContentAll[GENERAL]? this.helpContentAll[GENERAL] : "Default help text.<p>";
 
-        if(sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
-            sectionHelp.section = GENERAL;
+        if (sectionHelp.showGeneral != false) {
+            if(sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
+                sectionHelp.section = GENERAL;
+            }
+    
+            this.helpContent = generalHelp;
+        } else {
+            this.helpContent = "";
         }
 
-        this.helpContent = generalHelp;
         if(sectionHelp.section && sectionHelp.section != GENERAL) {
             // Add general help of the section first
             if(this.helpContentAll[sectionHelp.section]){
@@ -176,15 +271,27 @@ export class SidebarComponent implements OnInit {
 
         // Update help title
         if(this.helpContentAll[sectionHelp.section] && this.helpContentAll[sectionHelp.section]["label"])
-            this.title = this.helpContentAll[sectionHelp.section]["label"].trim() + " Help";
+            this.title = this.helpContentAll[sectionHelp.section]["label"].trim();
         else
-            this.title = SectionPrefs.getDispName(sectionHelp.section) + " Help";
+            this.title = SectionPrefs.getDispName(sectionHelp.section);
 
+        // Replace all icon names with real icon ones so innerHtml will display
+        this.helpContent = this.helpContent.replaceAll("editIcon", this.editIcon);
+        this.helpContent = this.helpContent.replaceAll("closeIcon", this.closeIcon);
+        this.helpContent = this.helpContent.replaceAll("saveIcon", this.saveIcon);
+        this.helpContent = this.helpContent.replaceAll("cancelIcon", this.cancelIcon);
+        this.helpContent = this.helpContent.replaceAll("undoIcon", this.undoIcon);
+        this.helpContent = this.helpContent.replaceAll("addIcon", this.addIcon);
+        this.helpContent = this.helpContent.replaceAll("delIcon", this.delIcon);
+        this.helpContent = this.helpContent.replaceAll("resetIcon", this.resetIcon);
+
+        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.helpContent);
         this.chref.detectChanges();
     }
 
     gotoSection(section: string) {
-        if(section=="topic") section = "theme";
+        //For old topic structure
+        // if(section=="topic") section = "theme";
         // let sectionID = SectionPrefs.getFieldName(section);
         let sectionID = section;
         let sectionHelp: SectionHelp = {} as SectionHelp;
@@ -213,8 +320,50 @@ export class SidebarComponent implements OnInit {
     toggleSbarView() {
         this.sbarvisible = ! this.sbarvisible;
 
-        this.sidebarState = this.sbarvisible? 'sbvisible' : 'sbhidden';
+        this.sidebarState = this.sbarvisible ? 'sbvisible' : 'sbhidden';
+        
+        if (!this.sbarvisible) {
+            setTimeout(() => {
+                this.hideSidebarBody = true;
+                //Refresh screen
+                this.chref.detectChanges();
+            }, 350);
+        } else {
+            this.hideSidebarBody = false;
+        }
+        
         this.sbarvisible_out.next(this.sbarvisible);
         this.chref.detectChanges();
+    }
+
+    updateSubmissionData(event) {
+        this.submissionData = event;
+
+        //Broadcast the change
+        this.globalService.setSubmissionData(this.submissionData);
+    }
+
+    processCommand(event) {
+        if (event == "getHelp") {
+            this.showRevisionHelp = !this.showRevisionHelp;
+
+            if (this.showGeneralHelp) this.showGeneralHelp = false;
+            else {
+                //Before display suggestion, Delay 350ms to allow the help window to go away.
+                setTimeout(() => {
+                    this.showGeneralHelp = true;
+                    //Refresh screen
+                    this.chref.detectChanges();
+                }, 350);
+            }
+        }
+    }
+
+    toogleGeneralHelp() {
+        this.showGeneralHelp = !this.showGeneralHelp;
+        setTimeout(() => {
+            //Refresh screen
+            this.chref.detectChanges();
+        }, 0);
     }
 }

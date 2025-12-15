@@ -42,7 +42,6 @@ export function serializeMetadataTransferFactory(doc : Document, mdtrx : Metadat
 {
     return () => {
         let mdclass = 'structured-data ';
-
         mdtrx.labels().forEach((id) => {
             let data = mdtrx.get(id) as NerdmRes;
             if (data == null)
@@ -51,7 +50,7 @@ export function serializeMetadataTransferFactory(doc : Document, mdtrx : Metadat
             // Creating the script for Nerdm data transfer
             let script = doc.createElement('script');
             script.id = escapeHTMLchars(SchemaLabel.NERDM_RESOURCE+':'+id, doc);
-            console.log("Embedding metadata with id='"+script.id+"'");
+            console.log("**** Public PDR Embedding metadata with id='"+script.id+"'");
             let type = "application/json";
             if (data && data.hasOwnProperty("@context"))
                 type = "application/ld+json";

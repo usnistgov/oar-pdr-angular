@@ -1,0 +1,1090 @@
+{
+  "ResultCount": 3,
+  "ResultData": [
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+        "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+        {
+            "@base": "ark:/88434/mds2-2777"
+        }
+        ],
+        "@type": [
+        "nrdp:PublicDataResource",
+        "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-2777",
+        "ediid": "ark:/88434/mds2-2777",
+        "version": "1.0.2",
+        "doi": "doi:10.18434/mds2-2777",
+        "title": "Data for \"Distributed contactless interconnects for millimeter-wave heterogeneous integration\"",
+        "contactPoint": {
+        "fn": "Nick Jungwirth",
+        "hasEmail": "mailto:nicholas.jungwirth@nist.gov"
+        },
+        "modified": "2022-12-15",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-2777",
+        "description": [
+        "Included here are figures and other relevant data from the paper \"Distributed contactless interconnects for millimeter-wave heterogeneous integration\", submitted to TMTT Letters. Abstract: State-of-the-art integrated circuits leverage dissimilar materials to optimize system performance. Such heterogeneous integration often involves multiple chips electrically coupled to one another via bump bonds or wire-bond interconnects. While these interconnects are a mature technology for low-frequency operation (\u003C 100 GHz), they have stringent fabrication requirements and are prone to failure during operation in the terahertz range (300 GHz to 10 THz). Next-generation integrated circuits require alternative interconnect topologies that are less sensitive to fabrication tolerances and conditions, are more robust, and have superior high-frequency performance. Here, we demonstrate distributed coupling to 325 GHz between broadside-coupled coplanar waveguides without bump bonds, wire bonds, or direct metal-to-metal bonding. The insertion loss of these contactless interconnects was approximately 1.4 dB at the maximum in the passbands at 63 GHz, 93 GHz, and 120 GHz. This interconnect topology enables robust integration of low-cost silicon with high-speed compound semiconductors for terahertz communications networks to improve reliability and increase yield."
+        ],
+        "keyword": [
+        "On-Wafer",
+        "microwave",
+        "amplifier",
+        "photomixers",
+        "frequency combiner",
+        "frequency comb",
+        "electronics",
+        "terahertz"
+        ],
+        "topic": [
+        {
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v1.0",
+            "tag": "Advanced Packaging: BEOL: Interconnect",
+            "@type": "Concept"
+        }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+        "name": "National Institute of Standards and Technology",
+        "@type": "org:Organization"
+        },
+        "language": [
+        "en"
+        ],
+        "bureauCode": [
+        "006:55"
+        ],
+        "programCode": [
+        "006:052"
+        ],
+        "theme": [
+        "Electronics: Electromagnetics",
+        "Metrology: Electrical/electromagnetic metrology"
+        ],
+        "components": [
+        {
+            "@id": "cmps/Fig2.tif",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Fig2.tif",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-2777/Fig2.tif",
+            "mediaType": "image/tiff",
+            "description": ". Fabrication process flow for the interconnect test structures investigated in this work.  Side view perspectives are cross-sections of the dashed vertical line in the corresponding plan view. Micrographs are optical microscope images of the interconnect test structure at each fabrication step. ",
+            "title": "Figure 2",
+            "size": 407364,
+            "checksum": {
+            "hash": "7121cc0af0cf34df728ff1677340cf28fb751b0a381058818106264a3e926632",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Fig3.tif",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Fig3.tif",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-2777/Fig3.tif",
+            "mediaType": "image/tiff",
+            "description": ". Simulated and experimentally measured transmission (S_12, (a)) and reflection (S_11, (b)) coefficients for interconnect test structures with coupling lengths l_c equal to (top row) 500 ?m, (middle row) 250 ?m, and (bottom row) 125 ?m. The maximum simulated transmission in each passband is indicated by the blue circular marker in (a). The dashes lines in (a) represent the net insertion loss of the transmission line regions and therefore set an upper bound on the transmission of the back-to-back configuration. ",
+            "title": "Figure 3",
+            "size": 833334,
+            "checksum": {
+            "hash": "45c8d7e6b0fed5d5a79170e7980eb64b51da2c3c93cb622cb7a58ed3089ce398",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure_3_Data.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure_3_Data.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-2777/Figure_3_Data.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "description": "Measured and simulated scattering parameter data for interconnects in a back-to-back condiguration.",
+            "title": "Figure 3 dataset",
+            "size": 439950,
+            "checksum": {
+            "hash": "552647c57c3d02acee0435a0617e9a946c9e54521f4b0debd015e9dde69f0c40",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/README.txt",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "README.txt",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-2777/README.txt",
+            "mediaType": "text/plain",
+            "description": "A txt document detailing the specifics of this dataset",
+            "title": "readme",
+            "size": 12675,
+            "checksum": {
+            "hash": "a6a7732bf2337d9ffadc964e5e629fead5dacc9bf24eaa7984b2260b9d79de28",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        }
+        ],
+        "annotated": "2025-10-11T15:58:14.315341",
+        "revised": "2023-02-10T19:53:10.178136",
+        "issued": null,
+        "firstIssued": "2023-02-10T19:53:10.178136",
+        "releaseHistory": {
+        "@id": "ark:/88434/mds2-2777/pdr:v",
+        "@type": [
+            "nrdr:ReleaseHistory"
+        ],
+        "hasRelease": [
+            {
+            "version": "1.0.0",
+            "issued": "2022-12-15",
+            "@id": "ark:/88434/mds2-2777.v1_0_0/pdr:v/1.0.0",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2777.v1_0_0/pdr:v/1.0.0",
+            "description": "initial release"
+            },
+            {
+            "version": "1.0.1",
+            "issued": "2024-09-24",
+            "@id": "ark:/88434/mds2-2777/pdr:v/1.0.1",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2777/pdr:v/1.0.1",
+            "description": "add CHIPS METIS metadata"
+            },
+            {
+            "version": "1.0.2",
+            "issued": "2025-10-11",
+            "@id": "ark:/88434/mds2-2777/pdr:v/1.0.2",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2777/pdr:v/1.0.2",
+            "description": "curator: fix CHIPS topic typo"
+            }
+        ]
+        },
+        "isPartOf": [
+        {
+            "@type": [
+            "nrda:ScienceTheme",
+            "nrdp:PublicDataResource"
+            ],
+            "@id": "ark:/88434/pdr0-0002",
+            "title": "CHIPS METIS Data"
+        }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+        "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+        {
+            "@base": "ark:/88434/mds2-2948"
+        }
+        ],
+        "@type": [
+        "nrdp:DataPublication",
+        "nrdp:PublicDataResource",
+        "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-2948",
+        "ediid": "ark:/88434/mds2-2948",
+        "version": "1.0.1",
+        "doi": "doi:10.18434/mds2-2948",
+        "title": "Cure Kinetics of Advanced Epoxy Molding Compound Using Dynamic Heating Scan",
+        "contactPoint": {
+        "fn": "Aaron M. Forster",
+        "hasEmail": "mailto:aaron.forster@chips.gov"
+        },
+        "modified": "2023-03-01",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-2948",
+        "description": [
+        "The data are associated with Figures in R. Tao, S. P. Phansalkar, A. M. Forster, B. Han, Investigation of Cure Kinetics of Advanced Epoxy Molding Compound Using Dynamic Heating Scan: An Overlooked Second Reaction, 2023 IEEE 73rd Electronic Components and Technology Conference (ECTC), Orlando, Florida, May 30 - June 2, 2023."
+        ],
+        "keyword": [
+        "differential scanning calorimetry",
+        "thermal gravimetric analysis",
+        "heat of reaction",
+        "glass transition",
+        "thermosets",
+        "filled polymers",
+        "advanced packaging",
+        "semiconductors"
+        ],
+        "topic": [
+        {
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v1.0",
+            "tag": "Advanced Packaging: BEOL: Adhesives",
+            "@type": "Concept"
+        }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+        "name": "National Institute of Standards and Technology",
+        "@type": "org:Organization"
+        },
+        "language": [
+        "en"
+        ],
+        "bureauCode": [
+        "006:55"
+        ],
+        "programCode": [
+        "006:052"
+        ],
+        "theme": [
+        "Materials: Materials characterization",
+        "Materials: Composites",
+        "Materials: Polymers",
+        "Chemistry: Chemical engineering and processing",
+        "Chemistry: Analytical chemistry",
+        "Chemistry: Thermochemical properties"
+        ],
+        "components": [
+        {
+            "@id": "cmps/Figure 3 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 3 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%203%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 3 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 3 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "3ecf8368b40bcd1105b936b46d7b7c08d03ca55d63e81313e43a27ec9d22a0b1",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        },
+        {
+            "@id": "cmps/Figure 2 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 2 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%202%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 5529634,
+            "checksum": {
+            "hash": "cba33d02da40be8088dbd65779e23d6a18daf60b10b927ab93fc8a0274fefed2",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 1 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 1 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%201%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 528117,
+            "checksum": {
+            "hash": "b92b4276b739779230ac880ed460c3acba864a1293d67e410effe58355aedef8",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 8 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 8 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%208%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 8 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 8 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "877a22f5b06e6fefa755dcb91f83c92e475d12fbc5d46331e4ef591ad9681d26",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        },
+        {
+            "@id": "cmps/Figure 7 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 7 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%207%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 7 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 7 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "14af335ac82f4a858bc29021ccfcfa28c2906a3a7f01eab782df1d9c5c026c37",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        },
+        {
+            "@id": "cmps/Figure 5 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 5 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%205%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 5 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 5 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "6127edc443aec515d0745c32e7f7e5e749270864b9f6399ca72c42f891db309e",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        },
+        {
+            "@id": "cmps/Figure 3 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 3 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%203%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 5373313,
+            "checksum": {
+            "hash": "5f8bf9ef3ae4f54643c664db7bf9ea0d90b92656b4aaec4eba8277874042eeca",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 2 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 2 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%202%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 2 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 2 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "1195ad9228b15543ed5c4c695cc92e6b62af915e1744b67a17d14477a34e4eef",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        },
+        {
+            "@id": "cmps/Figure 6 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 6 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%206%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 2473507,
+            "checksum": {
+            "hash": "0ba1dda043ff9b4504debed17bccc6fae389b6b997d543dfe2ebd2ab2843ae60",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 6 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 6 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%206%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 6 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 6 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "4b8d5acfd79b34679b2af31816ecc0bb975302a5ac41b1e50d2dd2de6cffd8d0",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        },
+        {
+            "@id": "cmps/2948_README.txt",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "2948_README.txt",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-2948/2948_README.txt",
+            "mediaType": "text/plain",
+            "title": "README",
+            "size": 1314,
+            "checksum": {
+            "hash": "790712e86b1ff1111adb91d56302a44c2ce455f038c2e937da8bcc7ff404a2dd",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 7 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 7 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%207%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 5612725,
+            "checksum": {
+            "hash": "0906b0a7b326431190875113f5bfee58f0d9b76d376ebcfbc9008ed3d41d7f04",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 5 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 5 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%205%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 2496327,
+            "checksum": {
+            "hash": "908b2bedc0401ed480b10584f10465487504d38814d7e13b3109ac58da9ca8c8",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 1 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 1 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%201%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 1 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 1 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "15c67a4c3deead5dce02dbbbd649232a440cfecbe52d7b9244e0ebc0e3010242",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        },
+        {
+            "@id": "cmps/Figure 8 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 8 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%208%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 737620,
+            "checksum": {
+            "hash": "8317f2591063ccf088ef3e938eed3f15c0ba1860ab3ac9912008a22eb30f38ba",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 4 ECTC.xlsx",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Figure 4 ECTC.xlsx",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%204%20ECTC.xlsx",
+            "mediaType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "size": 10246,
+            "checksum": {
+            "hash": "decc63a3c0bb80d1e5e87b45f5583cd42eb7f064f3f327f271e093ae7380d290",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Figure 4 ECTC.xlsx.sha256",
+            "@type": [
+            "nrdp:ChecksumFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "filepath": "Figure 4 ECTC.xlsx.sha256",
+            "downloadURL": "https://data.nist.gov/od/ds/ark:/88434/mds2-2948/Figure%204%20ECTC.xlsx.sha256",
+            "algorithm": {
+            "tag": "sha256",
+            "@type": "Thing"
+            },
+            "describes": "cmps/Figure 4 ECTC.xlsx",
+            "description": "SHA-256 checksum value for Figure 4 ECTC.xlsx",
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/ChecksumFile"
+            ],
+            "mediaType": "text/plain",
+            "size": 64,
+            "checksum": {
+            "hash": "4faab86b727cd3d409acce6bad8fe1a44a3ea0f1cd494f0b97da69302b418144",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            },
+            "valid": true
+        }
+        ],
+        "_editStatus": "done",
+        "authors": [
+        {
+            "familyName": "Tao",
+            "fn": "Ran Tao",
+            "givenName": "Ran",
+            "middleName": "",
+            "affiliation": [
+            {
+                "title": "National Institute of Standards and Technology",
+                "@type": "org:Organization",
+                "@id": "ror:05xpvk416"
+            }
+            ],
+            "orcid": "0000-0002-5208-7895",
+            "@type": "foaf:Person"
+        }
+        ],
+        "annotated": "2024-09-24T11:09:28.589740",
+        "revised": "2023-03-10T16:36:25.371516",
+        "issued": null,
+        "firstIssued": "2023-03-10T16:36:25.371516",
+        "releaseHistory": {
+        "@id": "ark:/88434/mds2-2948/pdr:v",
+        "@type": [
+            "nrdr:ReleaseHistory"
+        ],
+        "hasRelease": [
+            {
+            "version": "1.0.0",
+            "issued": "2023-03-01",
+            "@id": "ark:/88434/mds2-2948.v1_0_0/pdr:v/1.0.0",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2948.v1_0_0/pdr:v/1.0.0",
+            "description": "initial release"
+            },
+            {
+            "version": "1.0.1",
+            "issued": "2024-09-24",
+            "@id": "ark:/88434/mds2-2948/pdr:v/1.0.1",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2948/pdr:v/1.0.1",
+            "description": "add CHIPS METIS metadata"
+            }
+        ]
+        },
+        "versionHistory": [
+        {
+            "version": "1.0.1",
+            "issued": "2024-09-24",
+            "@id": "ark:/88434/mds2-2948",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2948",
+            "description": "add CHIPS METIS metadata"
+        }
+        ],
+        "isPartOf": [
+        {
+            "@type": [
+            "nrda:ScienceTheme",
+            "nrdp:PublicDataResource"
+            ],
+            "@id": "ark:/88434/pdr0-0002",
+            "title": "CHIPS METIS Data"
+        }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3867"
+            }
+        ],
+        "@type": [
+        "nrdp:DataPublication",
+        "nrdp:PublicDataResource",
+        "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+        "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3867",
+        "ediid": "ark:/88434/mds2-3867",
+        "version": "1.0.1",
+        "doi": "doi:10.18434/mds2-3867",
+        "title": "Elastic-plastic AFM indentation on copper",
+        "contactPoint": {
+        "fn": "Gheorghe Stan",
+        "hasEmail": "mailto:gheorghe.stan@nist.gov"
+        },
+        "modified": "2025-06-25",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3867",
+        "description": [
+        "Dataset from AFM single-step and multi-step indentations performed on hybrid-bonding copper patterns at room temperature"
+        ],
+        "keyword": [
+        "AFM",
+        "indentation",
+        "contact resonance",
+        "nanoscale plasticity",
+        "copper",
+        "advanced packaging",
+        "hybrid bonding"
+        ],
+        "topic": [
+        {
+            "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+            "tag": "Advanced Packaging: BEOL: Wire bonding",
+            "@type": "Concept"
+        }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+        "name": "National Institute of Standards and Technology",
+        "@type": "org:Organization"
+        },
+        "language": [
+        "en"
+        ],
+        "bureauCode": [
+        "006:55"
+        ],
+        "programCode": [
+        "006:052"
+        ],
+        "_editStatus": "done",
+        "theme": [
+        "Electronics: Semiconductors",
+        "Materials: Materials characterization",
+        "Materials: Metals",
+        "Nanotechnology: Nanomechanics",
+        "Nanotechnology: Nanometrology"
+        ],
+        "components": [
+        {
+            "@id": "cmps/3867_README.txt",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "3867_README.txt",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/3867_README.txt",
+            "mediaType": "text/plain",
+            "title": "3867_README",
+            "size": 13414,
+            "checksum": {
+            "hash": "87398bb90b9584b85a2a6be83df374ce2e5725ac3609fc445e9e7660086b7045",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Data_Figure_5.csv",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Data_Figure_5.csv",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_5.csv",
+            "mediaType": "text/csv",
+            "format": {
+            "description": "csv"
+            },
+            "description": " Multi-step AFM-indentation experiments. (i) Topographic line scan covering two indents within a Cu pad; (ii) A subset of force-indentation depth curves with the Hertzian fits superimposed on the unloading segments; (iii) Indentation stress-strain curve with stress-strain pairs from all experiments; (iv) Empirical cumulative distribution function of the indentation yield stress from all the experiments; (v) Average force-depth envelope curve for multi-step indentation experiments.",
+            "title": "Data for Figure 5",
+            "size": 226063,
+            "checksum": {
+            "hash": "70dea99a4e902f27b163ba5a9503961d2186d5502c1a4421604a884403a76333",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Data_Figure_2.csv",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Data_Figure_2.csv",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_2.csv",
+            "mediaType": "text/csv",
+            "format": {
+            "description": "csv"
+            },
+            "description": "CR-AFM measurements. (i) Indentation moduli over SiO2 and Cu regions as determined from CR-AFM mapping; (ii) Cross-section along the dashed line in (i); (iii) Histogram of the indentation moduli from the map shown in (a).",
+            "title": "Data for Figure 2",
+            "size": 11250,
+            "checksum": {
+            "hash": "1510e024ed287bf9c9af233ea23d44cb4d10cc7cd2afbc43ff20d6d177ee96ea",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Data_Figure_1.csv",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Data_Figure_1.csv",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_1.csv",
+            "mediaType": "text/csv",
+            "format": {
+            "description": "csv"
+            },
+            "description": "Representative experimental curves obtained by i) Contact Resonance AFM (CR-AFM), ii) single-step, and iii) multi-step AFM indentation.",
+            "title": "Data for Figure 1",
+            "size": 237524,
+            "checksum": {
+            "hash": "e42d8ed4e8076986f036e90ddafe025b92ca50e9144165e7453ede383c2863ac",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Data_Figure_4.csv",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Data_Figure_4.csv",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_4.csv",
+            "mediaType": "text/csv",
+            "format": {
+            "description": "csv"
+            },
+            "description": "AFM single-step indentation comparison of grain boundary (GBdry) and grain interior (GInt) plasticity. (i) Average force-indentation depth curves; (ii) Histogram fits for plastic metrics (number of pop-ins per indentation curve, plasticity index, cumulative excursion length, plastic work); (iii) Empirical cumulative distribution (ecdf) of maximum shear stress at fist pop-in.",
+            "title": "Data for Figure 4",
+            "size": 324277,
+            "checksum": {
+            "hash": "4c29bb6b5d349d3cf2dd8e0607ab180a8efcee8671653fc06673965af86a094e",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        },
+        {
+            "@id": "cmps/Data_Figure_3.csv",
+            "@type": [
+            "nrdp:DataFile",
+            "nrdp:DownloadableFile",
+            "dcat:Distribution"
+            ],
+            "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+            ],
+            "filepath": "Data_Figure_3.csv",
+            "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_3.csv",
+            "mediaType": "text/csv",
+            "format": {
+            "description": "csv"
+            },
+            "description": "AFM single-step indentation characterization on Cu pads. (a) Characteristic force-displacement curve; (b) Average force-indentation depth curves, with one standard deviation; (c) Histogram fits for plastic metrics: number of pop-ins per indentation curve, plasticity index, cumulative excursion length, and plastic work; (d) Empirical cumulative distribution (ecdf) of maximum shear stress at the first pop-in event.",
+            "title": "Data for Figure 3",
+            "size": 340357,
+            "checksum": {
+            "hash": "124343cb1760b4f4e76740850b85c1b8464345bd36901120f09da407cc987976",
+            "algorithm": {
+                "tag": "sha256",
+                "@type": "Thing"
+            }
+            }
+        }
+        ],
+        "authors": [
+        {
+            "familyName": "Stan",
+            "fn": "Gheorghe  Stan",
+            "givenName": "Gheorghe",
+            "middleName": "",
+            "affiliation": [
+            {
+                "title": "National Institute of Standards and Technology",
+                "subunits": [
+                "Materials Science Measurement Division"
+                ],
+                "@type": "org:Organization",
+                "@id": "ror:05xpvk416"
+            }
+            ],
+            "orcid": "0000-0001-5773-0328",
+            "@type": "foaf:Person"
+        },
+        {
+            "familyName": "Alderete",
+            "fn": "Nicolas  Alderete",
+            "givenName": "Nicolas",
+            "middleName": "",
+            "affiliation": [
+            {
+                "title": "National Institute of Standards and Technology",
+                "subunits": [
+                "Materials Science Measurement Division"
+                ],
+                "@type": "org:Organization",
+                "@id": "ror:05xpvk416"
+            }
+            ],
+            "orcid": "0000-0002-2145-8825",
+            "@type": "foaf:Person"
+        }
+        ],
+        "annotated": "2025-10-11T13:44:58.099408",
+        "revised": "2025-08-21T14:18:19.187020",
+        "issued": null,
+        "firstIssued": "2025-08-21T14:18:19.187020",
+        "isPartOf": [
+        {
+            "@type": [
+            "nrda:ScienceTheme",
+            "nrdp:PublicDataResource"
+            ],
+            "@id": "ark:/88434/pdr0-0002",
+            "title": "CHIPS Metrology Data"
+        }
+        ],
+        "releaseHistory": {
+        "@id": "ark:/88434/mds2-3867/pdr:v",
+        "@type": [
+            "nrdr:ReleaseHistory"
+        ],
+        "hasRelease": [
+            {
+            "version": "1.0.0",
+            "issued": "2025-06-25",
+            "@id": "ark:/88434/mds2-3867/pdr:v/1.0.0",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3867/pdr:v/1.0.0",
+            "description": "initial release"
+            },
+            {
+            "version": "1.0.1",
+            "issued": "2025-10-11",
+            "@id": "ark:/88434/mds2-3867/pdr:v/1.0.1",
+            "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3867/pdr:v/1.0.1",
+            "description": "initial release"
+            }
+        ]
+    }
+    }
+  ],
+  "PageSize": 0,
+  "Metrics": {
+    "ElapsedTime": 0.0123729705810547
+  }
+}

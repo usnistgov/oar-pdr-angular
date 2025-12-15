@@ -21,6 +21,7 @@ import { TreeModule } from 'primeng/tree';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DialogModule } from 'primeng/dialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { NERDmResourceService } from '../nerdm/nerdm.service';
 
 const MOBIL_LABEL_LIMIT = 20;
 const DESKTOP_LABEL_LIMIT = 50;
@@ -112,6 +113,7 @@ export class MetricsComponent implements OnInit {
         private datePipe: DatePipe,
         private searchService: SearchService,
         public gaService: GoogleAnalyticsService,
+        private nerdmReserv: NERDmResourceService,
         public metricsService: MetricsService) { 
 
             this.inBrowser = isPlatformBrowser(platformId);
@@ -119,7 +121,7 @@ export class MetricsComponent implements OnInit {
         }
 
     ngOnInit() {
-        this.lps = this.cfg.get("locations.landingPageService", "/od/id/");
+        this.lps = this.cfg.get("links.landingPageService", "/od/id/");
 
         this.detectScreenSize();
         this.recordLevelData = new RecordLevelMetrics();
@@ -132,32 +134,33 @@ export class MetricsComponent implements OnInit {
         // Expend the data tree to level one
         this.yAxisLabel = "";
 
-        if(this.inBrowser){
-            this.route.params.subscribe(queryParams => {
-                this.ediid = queryParams.id;
-                this.pdrHomeUrl = this.lps + this.ediid;
-                // Get dataset title
-                this.searchService.searchById(this.ediid, true).subscribe(md => {
-                    if(md) {
-                        this.record = md as NerdmRes;
-                        this.datasetTitle = md['title'];
-                        this.pdrid = md['@id'];
-        
-                        this.createNewDataHierarchy();
-                        if (this.files.length != 0){
-                            this.files = <TreeNode[]>this.files[0].data;
-                        }else{
-                            this.noChartData = true;
-                        }
-        
-                        this.expandToLevel(this.files, true, 0, 1);
+        this.route.params.subscribe(queryParams => {
+            this.ediid = queryParams.id;
+            this.pdrHomeUrl = this.lps + this.ediid;
+            // Get dataset title
+            this.nerdmReserv.getResource(this.ediid).subscribe(md => {
+            // this.searchService.searchById(this.ediid, true).subscribe(md => {
+                if(md) {
+                    this.record = md as NerdmRes;
+                    this.datasetTitle = md['title'];
+                    this.pdrid = md['@id'];
+    
+                    this.createNewDataHierarchy();
+                    if (this.files.length != 0){
+                        this.files = <TreeNode[]>this.files[0].data;
+                    }else{
+                        this.noChartData = true;
+                    }
+    
+                    this.expandToLevel(this.files, true, 0, 1);
 
+                    if (this.inBrowser) {
                         //Fetch metrics data regardless if there is chat data or not
                         this.getMetricsData();
                     }
-                })                              
-            });
-        }
+                }
+            })                              
+        });
     }
 
     /**
@@ -271,7 +274,6 @@ export class MetricsComponent implements OnInit {
             console.log("err", err);
             that.errorMsg = JSON.stringify(err);
             that.hasError = true;
-            console.log('this.hasError', that.hasError);
             that.emailSubject = 'PDR: Error getting file level metrics data';
             that.emailBody =
                 'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'

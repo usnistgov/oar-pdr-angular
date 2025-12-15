@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Author, Affiliation } from '../author';
 import { AuthorService } from '../author.service';
-import { Sections, SectionPrefs } from '../../../shared/globals/globals';
-import { NIST } from '../../../shared/globals/globals';
+import { NIST, Sections, SectionPrefs, iconClass } from '../../../shared/globals/globals';
 import { SDSuggestion } from 'oarng';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -34,6 +33,10 @@ export class AuthorEditComponent implements OnInit {
     //For people lookup - filter out from suggestions
     currentAuthors: SDSuggestion[];
     showDeptMsg: boolean = false;
+
+    //icon class names
+    deleteIcon = iconClass.DELETE;
+    addIcon = iconClass.ADD;
 
     @Input() author: Author;
     @Input() authors: Author[];

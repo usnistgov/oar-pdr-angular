@@ -101,6 +101,13 @@ export abstract class DAPUpdateService {
      */
     getMeta() : AnyObj { return this.getRecord().meta; }
 
+    getStatus(): AnyObj {
+        if (this._rec["status"])
+            return JSON.parse(JSON.stringify(this._rec["status"]));
+        else
+            return null;
+    }
+
     /** 
      * return the complete NERDm data 
      */
@@ -160,6 +167,15 @@ export abstract class DAPUpdateService {
     abstract setName(newname: string) : Observable<string>;
 
     /**
+     * update the file metadata to sync it to the files in the file manager
+     * @param fastscan  If true, ask the server to do only a quick rescan of 
+     *                  the files, prioritizing getting a complete list of 
+     *                  files over getting full extracted metadata.  This is 
+     *                  parameter is advisory only.
+     */
+    abstract syncFiles(fastscan?: boolean): Observable<Object>;
+
+    /**
      * review and validate the status of the record and return recommendations
      */
     abstract validate() : Observable<Object>;
@@ -172,8 +188,12 @@ export abstract class DAPUpdateService {
     /**
      *  Requests the record to be “finalized”
      */
-    abstract finalize(): Observable<Object>;
+    // abstract finalize(): Observable<Object>;
 
+    /**
+     *  Submit the request
+     */
+    abstract submit(): Observable<Object>;
 }
 
 /**
@@ -212,7 +232,7 @@ export abstract class DAPService extends NERDmResourceService {
      * if the user does not have delete permission.  
      */
     abstract deleteRec(id : string) : Observable<boolean>;
-
+    
     /**
      * return the DBIO record with the given ID.  Note for DAP records, the data property will 
      * not be complete but rather will be a summary.
@@ -257,8 +277,6 @@ export class MIDASDAPService extends DAPService implements SupportsAuthenticatio
 
         if (! url.endsWith('/')) url += '/';
         url += ediid + "/acls/write/:user";
-        console.log("Authentication request url: ", url);
-        console.log("Authentication request hdrs: ", JSON.stringify(hdrs));
   
         return this.webclient.get(url, {headers: hdrs}).pipe() as Observable<any>;
     }
@@ -444,7 +462,7 @@ function _headersFor(svc: SupportsAuthentication, meth: string) {
     meth = meth.toLowerCase();
     if (meth != "head")
         out['Accept'] = "application/json";
-    if (meth == "post" || meth == "put")
+    if (meth == "post" || meth == "put" || meth == "patch")
         out['Content-type'] = "application/json";
     if (svc.authToken)
         out['Authorization'] = "Bearer " + svc.authToken;
@@ -714,15 +732,49 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
         return this.webclient.get(url, {headers: hdrs, responseType: "json"});
     }
 
-    finalize(action: string = "finalize", message: string = ""): Observable<Object> {
+    // finalize(action: string = "finalize", message: string = ""): Observable<Object> {
+    //     const url = this.endpoint + this.recid + "/status";
+    //     const hdrs = _headersFor(this, "patch");
+    //     let body = {
+    //         "action": action
+    //     };
+    //     if (message) body["message"] = message; 
+
+    //     return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
+    // }
+
+    submit(action: string = "submit", option: any = null): Observable<Object> {
         const url = this.endpoint + this.recid + "/status";
         const hdrs = _headersFor(this, "patch");
         let body = {
             "action": action
         };
-        if (message) body["message"] = message; 
+
+        if (action == "finalize") {
+            if(option && option.message) body["message"] = option.message; 
+        } else if (action == "submit") {
+            if (option) body["action_options"] = option;
+        }
 
         return this.webclient.patch(url, body, {headers: hdrs, responseType: "json"});
+    }
+
+    /**
+     * update the file metadata to sync it to the files in the file manager
+     * @param fastscan  If true, ask the server to do only a quick rescan of 
+     *                  the files, prioritizing getting a complete list of 
+     *                  files over getting full extracted metadata.  This is 
+     *                  parameter is advisory only.
+     */
+    syncFiles(fastscan: boolean = false): Observable<Object> {
+        const url = this.endpoint + this.recid + "/file_space";
+        const hdrs = _headersFor(this, "put");
+        let body = {
+            "action": "sync",
+            "full": ! fastscan
+        };
+
+        return this.webclient.put(url, body, {headers: hdrs, responseType: "json"});
     }
 }
 
@@ -789,7 +841,16 @@ export class LocalDAPService extends DAPService {
             id: this._newid(),
             name: name,
             meta: meta,
-            data: data
+            data: data,
+            status: {
+                status: "edit",
+                action: "create",
+                message: "created",
+                todo: { 'REQ': [], 'WARN': [], 'REC': [] }
+            },
+            file_space: {
+                action: "create",
+            }
         };
         try {
             req = this._initialize(req);
@@ -1176,10 +1237,27 @@ export class LocalStoreDAPUpdateService extends DAPUpdateService {
         });
     }    
 
-    finalize(action: string='finalize', message: string = ''): Observable<Object> {
-        return of({
-            'REQ': [], 'WARN': [], 'REC': []
-        });
+    // finalize(action: string='finalize', message: string = ''): Observable<Object> {
+    //     return of({
+    //         'REQ': [], 'WARN': [], 'REC': []
+    //     });
+    // }
+
+    submit(action: string = 'submit', option: any = {}): Observable<Object> {
+        if (this._rec['status'] === undefined)
+            this._rec['status'] = {};
+        this._rec['status']['action'] = "submit";
+        this._rec['status']['message'] = "submitted";
+        this._saveRec(this._rec);
+        return of(this._rec['status']);
+    }
+
+    syncFiles(fastscan: boolean = false): Observable<Object> {
+        if (this._rec['file_space'] === undefined)
+            this._rec['file_space'] = {};
+        this._rec['file_space']['action'] = "sync";
+        this._saveRec(this._rec);
+        return of(this._rec['file_space']);
     }
 }
 
