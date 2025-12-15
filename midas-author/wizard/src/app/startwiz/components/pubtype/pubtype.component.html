@@ -37,10 +37,10 @@
                 <div class="radio">
                     <label>
                         <input type="radio" required name="resourceType" value="other" [(ngModel)]="dataModel.resourceType" (change)="onSelectChange($event)">
-                        Something else
+                        Other
                     </label>
                 </div>
-            </div>            
+            </div>
 
             <div class="collection">
                 <input type="checkbox" [(ngModel)]="dataModel.partOfCollection" (change)="toggleCollection()" aria-label="This publication will be published as part of an existing topical collection.">

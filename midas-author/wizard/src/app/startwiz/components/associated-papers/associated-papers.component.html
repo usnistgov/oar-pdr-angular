@@ -2,41 +2,41 @@
     <oar-pushing-sidebar [marginLeft]="marginLeft" style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>
-                Is there or will there be a literature article published regarding this {{dataModel.resourceType}}?
+                Is there—or will there be—an article published regarding this {{dataModel.resourceType}}?
             </p>
 
             <div class="radio-group">
                 <div class="radio">
                     <label title="No, this will be a stand-alone publication">
-                        <input 
-                            type="radio" 
-                            required 
-                            name="assocPageType" 
-                            value="stand-alone" 
-                            [(ngModel)]="dataModel.assocPageType" 
+                        <input
+                            type="radio"
+                            required
+                            name="assocPageType"
+                            value="stand-alone"
+                            [(ngModel)]="dataModel.assocPageType"
                             (change)="onAssocPaperTypeChange()">
                         No, this will be a stand-alone publication
                     </label>
                 </div>
                 <div class="radio">
-                    <label title="Yes, this (Data/Software/...) publication should be considered a supplement of the article">
-                        <input 
-                            type="radio" 
-                            required 
-                            name="assocPageType" 
-                            value="supplement" 
-                            [(ngModel)]="dataModel.assocPageType" 
+                    <label title="Yes, this {{dataModel.resourceType}} publication corresponds directly with the article.">
+                        <input
+                            type="radio"
+                            required
+                            name="assocPageType"
+                            value="supplement"
+                            [(ngModel)]="dataModel.assocPageType"
                             (change)="onAssocPaperTypeChange()">
-                        Yes, this {{dataModel.resourceType}} publication should be considered a supplement of the article
+                        Yes, this {{dataModel.resourceType}} publication corresponds directly with the article.
                     </label>
                 </div>
                 <div class="radio">
                     <label title="Yes, but the article is only loosely related this publication.">
-                        <input 
-                            type="radio" 
-                            required name="assocPageType" 
-                            value="loosely-related"  
-                            [(ngModel)]="dataModel.assocPageType" 
+                        <input
+                            type="radio"
+                            required name="assocPageType"
+                            value="loosely-related"
+                            [(ngModel)]="dataModel.assocPageType"
                             (change)="onAssocPaperTypeChange()">
                         Yes, but the article is only loosely related this publication.
                     </label>
