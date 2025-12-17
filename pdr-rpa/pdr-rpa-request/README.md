@@ -5,7 +5,7 @@ Angular application for requesting access to restricted public datasets in the N
 ## Features
 
 - **Config-driven forms**: Form fields, sections, and validation rules defined in YAML
-- **Angular Material UI**: Modern, accessible form components with dark mode support
+- **Angular Material UI**: Modern form components with dark mode support
 - **Dynamic validation**: Email blacklists, country restrictions, custom patterns per dataset
 - **reCAPTCHA integration**: Bot protection for form submissions
 
@@ -38,35 +38,13 @@ cd pdr-rpa/pdr-rpa-request
 npm start -- --port 4201
 ```
 
-Open http://localhost:4201/?ediid=ark:/88434/mds2-2909 in your browser.
+Open `http://localhost:4201/?ediid=ark:/88434/mds2-2909` in your browser.
 
 ### Running Tests
 
 ```bash
 cd pdr-rpa/pdr-rpa-request
 npm test
-```
-
-## Architecture
-
-```
-src/app/
-├── dynamic-form/                    # Dynamic form module
-│   ├── models/                      # TypeScript interfaces
-│   │   ├── field-config.model.ts    # Field definitions
-│   │   └── form-config.model.ts     # Form/section/dataset definitions
-│   ├── services/
-│   │   ├── form-config.service.ts   # Loads YAML config
-│   │   ├── form-builder.service.ts  # Builds FormGroup from config
-│   │   └── validator-factory.service.ts  # Creates validators
-│   └── components/
-│       ├── dynamic-form/            # Main form container
-│       ├── dynamic-field/           # Field type router
-│       ├── form-section/            # Section wrapper
-│       └── fields/                  # Individual field components
-├── app.component.ts                 # Main app, handles submission
-└── assets/
-    └── form-config.yaml             # Form configuration
 ```
 
 ## Configuration
@@ -97,10 +75,12 @@ datasets:
 
 settings:
   countriesUrl: "assets/countries.json"
-  recaptchaSiteKey: "your-site-key"
+  recaptchaSiteKey: "recaptcha-site-key"
 ```
 
 ## Adding a New Dataset
+
+To add a new dataset:
 
 1. Open `src/assets/form-config.yaml`
 2. Add a new entry to the `datasets` array:
@@ -237,7 +217,7 @@ This file contains deployment-specific settings:
 ```json
 {
   "baseUrl": "https://oardev.nist.gov/od/ds/rpa",
-  "recaptchaApiKey": "your-recaptcha-site-key"
+  "recaptchaApiKey": "recaptcha-site-key"
 }
 ```
 
