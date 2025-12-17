@@ -57,6 +57,7 @@ describe('AppComponent', () => {
 
   beforeEach(async () => {
     mockFormConfigService = {
+      getDataset: jest.fn().mockReturnValue(of(mockDataset)),
       getFormForDataset: jest.fn().mockReturnValue(of({
         form: mockFormConfig,
         dataset: mockDataset
@@ -117,6 +118,9 @@ describe('AppComponent', () => {
     fixture.detectChanges();
     tick();
 
+    // First it gets the dataset to determine the formId
+    expect(mockFormConfigService.getDataset).toHaveBeenCalledWith('ark:/88434/mds2-2909');
+    // Then it loads the form using the dataset's formId (defaults to 'rpa-request' if not specified)
     expect(mockFormConfigService.getFormForDataset).toHaveBeenCalledWith('rpa-request', 'ark:/88434/mds2-2909');
     expect(component.formConfig).toEqual(mockFormConfig);
     expect(component.selectedDataset).toEqual(mockDataset);
@@ -124,10 +128,17 @@ describe('AppComponent', () => {
 
   it('should set datasetNotFound to true when no ediid in query params', fakeAsync(() => {
     TestBed.resetTestingModule();
+    const noEdiidMockService = {
+      getDataset: jest.fn().mockReturnValue(of(mockDataset)),
+      getFormForDataset: jest.fn().mockReturnValue(of({
+        form: mockFormConfig,
+        dataset: mockDataset
+      }))
+    };
     TestBed.configureTestingModule({
       declarations: [AppComponent],
       providers: [
-        { provide: FormConfigService, useValue: mockFormConfigService },
+        { provide: FormConfigService, useValue: noEdiidMockService },
         { provide: RPAService, useValue: mockRpaService },
         {
           provide: ActivatedRoute,
@@ -207,9 +218,10 @@ describe('AppComponent', () => {
   });
 
   it('should set datasetNotFound when dataset lookup fails', fakeAsync(() => {
-    // Reset the module with a service that returns null
+    // Reset the module with a service that returns null for getDataset
     TestBed.resetTestingModule();
     const failingService = {
+      getDataset: jest.fn().mockReturnValue(of(null)), // Dataset not found
       getFormForDataset: jest.fn().mockReturnValue(of(null))
     };
 

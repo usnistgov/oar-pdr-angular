@@ -135,6 +135,255 @@ forms:
             type: recaptcha
             required: true
 
+  # Minimal form - fewer fields for simpler datasets (e.g., SRM data)
+  - id: rpa-request-minimal
+    title: Quick Access Request
+    subtitle: Streamlined Request Form
+    description: >
+      Please provide your contact information to request access to this dataset.
+      A download link will be sent to your email address.
+    submitButton:
+      label: Request Access
+      icon: download
+    successMessage: Your request was submitted successfully. You will receive an email with download instructions shortly.
+    errorMessage: Please correct the errors in the form before submitting.
+
+    sections:
+      # Contact Information Section (minimal)
+      - id: contact
+        title: Contact Information
+        fields:
+          - id: fullName
+            type: text
+            label: Full Name
+            placeholder: Your Full Name
+            required: true
+            autocomplete: name
+            validators:
+              - type: minLength
+                value: 2
+              - type: maxLength
+                value: 50
+            errorMessages:
+              required: Name is required.
+              minLength: Name must be at least 2 characters long.
+
+          - id: email
+            type: email
+            label: Email Address
+            placeholder: Your Email Address
+            required: true
+            autocomplete: email
+            validators:
+              - type: email
+            errorMessages:
+              required: Email is required.
+              email: Please enter a valid email address.
+
+          - id: organization
+            type: text
+            label: Organization
+            placeholder: Your Organization
+            required: true
+            autocomplete: organization
+
+          - id: country
+            type: select
+            label: Country
+            placeholder: Select a Country
+            required: true
+            optionsSource: countries
+            autocomplete: country-name
+
+      # Terms Section
+      - id: terms
+        title: Terms and Conditions
+        fields:
+          - id: disclaimers
+            type: disclaimer-display
+            optionsSource: dataset.disclaimers
+
+          - id: agreements
+            type: checkbox-group
+            optionsSource: dataset.agreements
+            allRequired: true
+
+      # Verification Section
+      - id: verification
+        title: Verification
+        fields:
+          - id: recaptcha
+            type: recaptcha
+            required: true
+
+  # Extended form - additional fields for sensitive/biometric datasets
+  - id: rpa-request-extended
+    title: Extended Access Request
+    subtitle: Additional Verification Required
+    description: >
+      This dataset requires additional information for access approval.
+      Please complete all sections below. Your request will be reviewed by a NIST representative.
+    submitButton:
+      label: Submit for Review
+      icon: verified_user
+    successMessage: Your request has been submitted for review. You will be notified via email once a decision has been made.
+    errorMessage: Please correct the errors in the form before submitting.
+
+    sections:
+      # Contact Information Section
+      - id: contact
+        title: Contact Information
+        fields:
+          - id: fullName
+            type: text
+            label: Point of Contact Name
+            placeholder: Your Full Name
+            required: true
+            autocomplete: name
+            validators:
+              - type: minLength
+                value: 2
+              - type: maxLength
+                value: 50
+              - type: latinOnly
+            errorMessages:
+              required: Point of contact name is required.
+              minLength: Name must be at least 2 characters long.
+              nonLatin: Name should only contain Latin characters.
+
+          - id: email
+            type: email
+            label: Point of Contact Email
+            placeholder: Your Company (NOT Personal) Email
+            required: true
+            autocomplete: email
+            validators:
+              - type: email
+            errorMessages:
+              required: Point of contact email is required.
+              email: Please enter a valid email address.
+              blacklisted: This email domain is not allowed.
+
+          - id: phone
+            type: tel
+            label: Point of Contact Phone Number
+            placeholder: Your Work (NOT Personal) Phone Number
+            required: true
+            autocomplete: tel
+
+      # Organization Section
+      - id: organization
+        title: Organization Details
+        fields:
+          - id: organization
+            type: text
+            label: Organization Name
+            placeholder: Your Company Name
+            required: true
+            autocomplete: organization
+
+          - id: address1
+            type: text
+            label: Organization Address Line 1
+            placeholder: "123 Main St."
+            required: true
+            autocomplete: address-line1
+
+          - id: address2
+            type: text
+            label: Organization Address Line 2 (Optional)
+            placeholder: Mailstop 1234
+            required: false
+            autocomplete: address-line2
+
+          - id: address3
+            type: text
+            label: Organization Address Line 3
+            placeholder: "City, XY, 12345"
+            required: true
+            autocomplete: address-line3
+
+          - id: country
+            type: select
+            label: Country
+            placeholder: Select a Country
+            required: true
+            optionsSource: countries
+            autocomplete: country-name
+
+      # Research Purpose Section (extended form only)
+      - id: research
+        title: Research Purpose
+        fields:
+          - id: projectTitle
+            type: text
+            label: Project/Research Title
+            placeholder: Title of your research project
+            required: true
+            validators:
+              - type: minLength
+                value: 5
+              - type: maxLength
+                value: 200
+            errorMessages:
+              required: Project title is required.
+              minLength: Project title must be at least 5 characters.
+
+          - id: intendedUse
+            type: textarea
+            label: Intended Use Description
+            placeholder: Please describe how you intend to use this dataset...
+            required: true
+            rows: 4
+            validators:
+              - type: minLength
+                value: 50
+              - type: maxLength
+                value: 2000
+            errorMessages:
+              required: Please describe your intended use of this dataset.
+              minLength: Description must be at least 50 characters.
+
+          - id: fundingSource
+            type: text
+            label: Funding Source (if applicable)
+            placeholder: e.g., NSF Grant #12345, Internal R&D
+            required: false
+
+      # Preferences Section
+      - id: preferences
+        fields:
+          - id: receiveEmails
+            type: checkbox
+            label: I would like to subscribe to email notifications about dataset updates.
+            required: false
+
+      # Terms Section
+      - id: terms
+        title: Terms and Conditions
+        fields:
+          - id: termsDisplay
+            type: terms-display
+            label: Dataset Terms of Use
+            optionsSource: dataset.terms
+
+          - id: disclaimers
+            type: disclaimer-display
+            optionsSource: dataset.disclaimers
+
+          - id: agreements
+            type: checkbox-group
+            optionsSource: dataset.agreements
+            allRequired: true
+
+      # Verification Section
+      - id: verification
+        title: Verification
+        fields:
+          - id: recaptcha
+            type: recaptcha
+            required: true
+
 # Dataset Configurations
 datasets:
   # NFIQ 2 Conformance Test Set
@@ -178,11 +427,12 @@ datasets:
       - "Korea, Democratic People's Republic of"
       - Syrian Arab Republic
 
-  # SRM 2969 Vitamin D
+  # SRM 2969 Vitamin D - uses minimal form (simpler data, fewer restrictions)
   - id: "ark:/88434/mds2-2419"
     name: SRM 2969 Vitamin D Metabolites in Frozen Human Serum (Total 25-Hydroxyvitamin D Low Level) Data
     description: SRM 2969 Electronic files containing certified values and their uncertainties, and the data used to assign those values.
     url: https://data.nist.gov/od/id/mds2-2419
+    formId: rpa-request-minimal
     requiresApproval: true
     terms: []
     disclaimers:
@@ -192,11 +442,12 @@ datasets:
     blockedEmails: []
     blockedCountries: []
 
-  # SRM 2970 Vitamin D
+  # SRM 2970 Vitamin D - uses minimal form (simpler data, fewer restrictions)
   - id: "ark:/88434/mds2-2420"
     name: SRM 2970 Vitamin D Metabolites in Frozen Human Serum (25-Hydroxyvitamin D2 High Level) Data
     description: Electronic files containing certified values and their uncertainties, and the data used to assign those values.
     url: https://data.nist.gov/od/id/mds2-2420
+    formId: rpa-request-minimal
     requiresApproval: true
     terms: []
     disclaimers:
@@ -370,7 +621,7 @@ datasets:
     blockedEmails: []
     blockedCountries: []
 
-  # IARPA Janus Benchmark
+  # IARPA Janus Benchmark - uses extended form (sensitive biometric data, requires justification)
   - id: "iarpa-janus-benchmark"
     name: IARPA Janus Benchmark
     description: >
@@ -378,6 +629,7 @@ datasets:
       processing of unconstrained in-the-wild face images. NOTE: The complete distribution
       is ~325GB in size and can take up to 24 hours to download.
     url: https://www.nist.gov/programs-projects/face-challenges
+    formId: rpa-request-extended
     requiresApproval: true
     terms:
       - "The Receiving Entity shall insert the following statement in any product, report, publication, presentation, and/or other document that references the data: This product contains or makes use of the following data made available by the Intelligence Advanced Research Projects Activity (IARPA)."

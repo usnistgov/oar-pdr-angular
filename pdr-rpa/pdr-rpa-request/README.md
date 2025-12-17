@@ -228,9 +228,27 @@ datasets:
 
 Predefined patterns: `latin-only`, `alpha`, `alphanumeric`, `numeric`, `phone`
 
-## Environment Configuration
+## Configuration
 
-Edit `src/environments/environment.ts`:
+### Runtime Configuration (`src/assets/config.json`)
+
+This file contains deployment-specific settings:
+
+```json
+{
+  "baseUrl": "https://oardev.nist.gov/od/ds/rpa",
+  "recaptchaApiKey": "your-recaptcha-site-key"
+}
+```
+
+| Property | Description |
+|----------|-------------|
+| `baseUrl` | Backend RPA API endpoint |
+| `recaptchaApiKey` | Google reCAPTCHA v2 site key |
+
+### Environment Configuration (`src/environments/environment.ts`)
+
+Build-time settings:
 
 ```typescript
 export const environment = {
@@ -244,14 +262,33 @@ export const environment = {
 };
 ```
 
-| Setting | Description |
-|---------|-------------|
-| `formConfigUrl` | Path to YAML config file |
-| `countriesUrl` | Path to countries JSON |
-| `configUrl` | Path to app config (API URLs) |
-| `recaptchaSiteKey` | Google reCAPTCHA v2 site key |
-| `debug` | Enable debug logging |
-| `simulateSubmission` | Bypass backend for UI testing |
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `formConfigUrl` | `'assets/form-config.yaml'` | Path to YAML config file |
+| `countriesUrl` | `'assets/countries.json'` | Path to countries JSON |
+| `configUrl` | `'assets/config.json'` | Path to app config (API URLs) |
+| `recaptchaSiteKey` | Test key | Google reCAPTCHA v2 site key |
+| `debug` | `true` | Enable verbose console logging |
+| `simulateSubmission` | `false` | Bypass backend for UI testing |
+
+### Debug Flags
+
+#### `debug: true`
+When enabled, logs to console:
+- Form configuration loading
+- Validation events
+- API requests and responses
+
+#### `simulateSubmission: true`
+Bypasses the backend API entirely. Use for:
+- UI/UX testing without backend
+- Form validation testing
+- Demo purposes
+
+The simulated response returns:
+```json
+{ "id": "test-123", "caseNum": "TEST-001" }
+```
 
 ## Dark Mode
 

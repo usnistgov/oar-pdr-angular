@@ -85,8 +85,17 @@ export class AppComponent implements OnInit {
     this.isLoading = true;
     this.datasetNotFound = false;
 
-    this.formConfigService.getFormForDataset('rpa-request', datasetId)
+    // First get the dataset to determine which form template to use
+    this.formConfigService.getDataset(datasetId)
       .pipe(
+        switchMap(dataset => {
+          if (!dataset) {
+            return of(null);
+          }
+          // Use dataset's formId if specified, otherwise default to 'rpa-request'
+          const formId = dataset.formId || 'rpa-request';
+          return this.formConfigService.getFormForDataset(formId, datasetId);
+        }),
         tap(result => {
           if (environment.debug) {
             console.log('[AppComponent] Loaded form config:', result);
