@@ -2,15 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
-import { PanelModule } from 'primeng/panel';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { DropdownModule } from 'primeng/dropdown';
-import { CardModule } from 'primeng/card';
-import { ChipModule } from 'primeng/chip';
-import { ButtonModule } from "primeng/button";
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RouterModule } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
@@ -20,9 +11,18 @@ import { environment } from '../environments/environment';
 import { RELEASE } from '../environments/release-info';
 import { ServiceModule } from './service/service.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ToastModule } from 'primeng/toast';
 import { HeaderComponent } from 'oarng';
 import { FooterComponent } from 'oarng';
+
+// Angular Material imports
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
     declarations: [
@@ -31,18 +31,8 @@ import { FooterComponent } from 'oarng';
     ],
     imports: [
         FrameModule,
-        BrowserModule, 
-        FormsModule, 
-        PanelModule, 
-        MessagesModule, 
-        MessageModule, 
-        DropdownModule, 
-        CardModule, 
-        ChipModule, 
-        ButtonModule, 
-        ToastModule,
-        ProgressSpinnerModule, 
-        OverlayPanelModule,
+        BrowserModule,
+        FormsModule,
         AppRoutingModule,
         HttpClientModule,
         BrowserAnimationsModule,
@@ -50,7 +40,16 @@ import { FooterComponent } from 'oarng';
         ServiceModule,
         RouterModule.forRoot([]),
         HeaderComponent,
-        FooterComponent
+        FooterComponent,
+        // Angular Material
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatTooltipModule,
+        MatDividerModule,
+        MatChipsModule
     ],
     providers: [
         { provide: RELEASE_INFO, useValue: RELEASE },

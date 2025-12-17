@@ -1,14 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppComponent, RecordDescription } from './app.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RPAService } from './service/rpa.service';
-import { MessageService } from 'primeng/api';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ConfigurationService, AuthenticationService, MockAuthenticationService } from 'oarng';
 import { RPAConfiguration } from './model/config.model';
 import { of } from 'rxjs';
 import { ApprovalResponse, Record, RecordWrapper } from './model/record';
 import { UnescapeHTMLPipe } from './pipe/unescape-html.pipe';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
+// Mock environment to disable simulation in tests
+jest.mock('../environments/environment', () => ({
+  environment: {
+    production: false,
+    configUrl: 'assets/config.json',
+    debug: false,
+    simulateData: false  // Disable simulation in tests
+  }
+}));
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -59,14 +70,14 @@ describe('AppComponent', () => {
       providers: [
         {
           provide: ActivatedRoute,
-          useValue: { queryParams: of({ id: 'ark:123' }) }, // <-- mock ActivatedRoute
+          useValue: { queryParams: of({ id: 'ark:123' }) },
         },
         { provide: ConfigurationService, useValue: mockConfigService },
         { provide: AuthenticationService, useClass: MockAuthenticationService },
         { provide: RPAService, useValue: mockRPAService },
-        MessageService,
       ],
-      imports: [HttpClientTestingModule]
+      imports: [HttpClientTestingModule, NoopAnimationsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
     })
       .compileComponents();
   });
@@ -75,6 +86,11 @@ describe('AppComponent', () => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    localStorage.removeItem('darkMode');
+    document.body.classList.remove('dark-mode');
   });
 
   it('should create', () => {
@@ -94,22 +110,6 @@ describe('AppComponent', () => {
   });
 
   it('should fetch the record and set the status', async () => {
-    const record: Record = {
-      id: '',
-      caseNum: '1234567890',
-      userInfo: {
-        fullName: 'John Doe',
-        organization: 'NIST',
-        email: 'john.doe@nist.gob',
-        receiveEmails: 'Yes',
-        country: 'United States',
-        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov',
-        productTitle: 'example title',
-        subject: 'example subject',
-        description: 'example description'
-      }
-    };
-
     expect(component.record).toBeTruthy();
     expect(component.status).toEqual('Approved');
     expect(component.statusDate).toEqual('2023-04-25T10:00:00.000Z');
@@ -144,6 +144,75 @@ describe('AppComponent', () => {
     );
   });
 
+  describe('dark mode', () => {
+    it('should initialize dark mode from localStorage', () => {
+      localStorage.setItem('darkMode', 'true');
+      component.initDarkMode();
+      expect(component.isDarkMode).toBe(true);
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+    });
+
+    it('should toggle dark mode', () => {
+      expect(component.isDarkMode).toBe(false);
+      component.toggleDarkMode();
+      expect(component.isDarkMode).toBe(true);
+      expect(document.body.classList.contains('dark-mode')).toBe(true);
+      expect(localStorage.getItem('darkMode')).toBe('true');
+    });
+  });
+
+  describe('toast notifications', () => {
+    it('should show toast with correct message and type', () => {
+      component.showToast('Test message', 'success');
+      expect(component.toastVisible).toBe(true);
+      expect(component.toastMessage).toBe('Test message');
+      expect(component.toastType).toBe('success');
+    });
+
+    it('should hide toast', () => {
+      component.showToast('Test', 'info');
+      expect(component.toastVisible).toBe(true);
+      component.hideToast();
+      expect(component.toastVisible).toBe(false);
+    });
+
+    it('should show error toast', () => {
+      component.showToast('Error occurred', 'error');
+      expect(component.toastVisible).toBe(true);
+      expect(component.toastType).toBe('error');
+    });
+  });
+
+  describe('error state', () => {
+    it('should have error properties initialized', () => {
+      expect(component.errorTitle).toBe('');
+      expect(component.errorMessage).toBe('');
+      expect(component.recordNotFound).toBe(false);
+    });
+
+    it('should set error state correctly', () => {
+      component.errorTitle = 'Test Error';
+      component.errorMessage = 'Something went wrong';
+      component.recordNotFound = true;
+
+      expect(component.errorTitle).toBe('Test Error');
+      expect(component.errorMessage).toBe('Something went wrong');
+      expect(component.recordNotFound).toBe(true);
+    });
+  });
+
+  describe('refreshPage', () => {
+    it('should call window.location.reload', () => {
+      const reloadMock = jest.fn();
+      Object.defineProperty(window, 'location', {
+        value: { reload: reloadMock },
+        writable: true
+      });
+
+      component.refreshPage();
+      expect(reloadMock).toHaveBeenCalled();
+    });
+  });
 
   describe('parseDescription', () => {
     it('should extract fields from a valid description string', () => {
