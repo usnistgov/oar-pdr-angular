@@ -30,12 +30,12 @@ git submodule update --init --recursive
 npm install --legacy-peer-deps
 
 # Build required libraries
-cd lib && npx ng build oarng && cd ..
-cd oar-lps && npx ng build oarlps && cd ..
+cd lib && npm run build && cd ..
+cd oar-lps && npm run build && cd ..
 
 # Run the application
 cd pdr-rpa/pdr-rpa-request
-npx ng serve --port 4201
+npm start -- --port 4201
 ```
 
 Open http://localhost:4201/?ediid=ark:/88434/mds2-2909 in your browser.
@@ -44,7 +44,7 @@ Open http://localhost:4201/?ediid=ark:/88434/mds2-2909 in your browser.
 
 ```bash
 cd pdr-rpa/pdr-rpa-request
-npx jest
+npm test
 ```
 
 ## Architecture
@@ -311,7 +311,7 @@ Run from repository root:
 ```bash
 git submodule update --init --recursive
 npm install --legacy-peer-deps
-cd lib && npx ng build oarng
+cd lib && npm run build
 ```
 
 ### "Dataset Not Found" error
@@ -325,8 +325,8 @@ Ensure the `ediid` query parameter matches a dataset ID in `form-config.yaml`.
 ### Tests failing
 ```bash
 # Run tests with verbose output
-npx jest --verbose
+npm test -- --verbose
 
 # Run specific test file
-npx jest src/app/dynamic-form/services/validator-factory.service.spec.ts
+npm test -- src/app/dynamic-form/services/validator-factory.service.spec.ts
 ```
