@@ -49,6 +49,9 @@ m2repo
 # Mac OSX
 .DS_Store
 
+# Documentation folder (Claude Code sessions)
+.docs/
+
 #angular
 */node_modules
 */.idea**

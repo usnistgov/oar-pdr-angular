@@ -4,10 +4,12 @@
 
 export const environment = {
   production: false,
-  datasetsConfigUrl: 'assets/datasets.yaml',
+  formConfigUrl: 'assets/form-config.yaml',
   countriesUrl: 'assets/countries.json',
   configUrl: 'assets/config.json',
-  debug: true
+  recaptchaSiteKey: '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI', // Test key - replace in production
+  debug: true,
+  simulateSubmission: false  // Set to true to bypass backend and simulate form submission
 };
 
 /*

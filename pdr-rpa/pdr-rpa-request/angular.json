@@ -31,13 +31,11 @@
                                 "output": "./assets/"
                             }
                         ],
-                        "styles": [                            
+                        "styles": [
+                            "@angular/material/prebuilt-themes/indigo-pink.css",
                             "../../node_modules/bootstrap/dist/css/bootstrap.css",
                             "../../node_modules/oarng/src/assets/styles/font-awesome/css/font-awesome.min.css",
-                            "src/styles.css",
-                            "../../node_modules/primeicons/primeicons.css",
-                            "../../node_modules/primeng/resources/themes/saga-blue/theme.css",
-                            "../../node_modules/primeng/resources/primeng.min.css"
+                            "src/styles.scss"
                         ],
                         "scripts": [
                             "../../node_modules/bootstrap/dist/js/bootstrap.js"
@@ -48,13 +46,13 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "3.5mb",
-                                    "maximumError": "3.5mb"
+                                    "maximumWarning": "4mb",
+                                    "maximumError": "4mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
-                                    "maximumWarning": "5kb",
-                                    "maximumError": "5kb"
+                                    "maximumWarning": "15kb",
+                                    "maximumError": "15kb"
                                 }
                             ],
                             "fileReplacements": [
