@@ -44,7 +44,6 @@ describe('serializeMetadataTransferFactory', function() {
         expect(scripts.length).toEqual(1);
         scripts = doc.head.getElementsByClassName('structured-data');
         expect(scripts.length).toEqual(1);
-        // console.log("el1", el);
         
         expect(scripts[0].tagName).toBe("SCRIPT");
         expect(scripts[0].getAttribute("id")).toBe("NERDm#Resource:boring");
@@ -52,7 +51,6 @@ describe('serializeMetadataTransferFactory', function() {
         expect(scripts[0].getAttribute("class")).toBe("structured-data NERDm Resource");
 
         let el_content = JSON.parse(scripts[0].textContent);
-        // console.log("el_content", el_content);
         expect(el_content['@context']).toEqual("https://intel.org");
         expect(el_content['@id']).toEqual("boring");
         expect(el_content['title']).toEqual("All about me!");
@@ -128,7 +126,6 @@ describe('serializeMetadataTransferFactory', function() {
 
         let el = scripts[0];
         let idatt = el.getAttribute("id");
-        // console.log("TESTING: metadata saved with id='"+idatt+"'");
         expect(idatt).not.toEqual(id);
         expect(idatt.includes(">")).not.toBe(true);
         expect(idatt.includes("<")).not.toBe(true);

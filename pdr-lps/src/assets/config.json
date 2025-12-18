@@ -7,7 +7,7 @@
         "mdService":   "https://data.nist.gov/rmm/"
     },
     "PDRAPIs": {
-        "mdSearch": "https://data.nist.gov/rmm/records/",
+        "mdSearch": "https://data.nist.gov/rmm/",
         "mdService": "https://data.nist.gov/od/id/",
         "metrics": "https://data.nist.gov/rmm/usagemetrics/",
         "serverSide": { 

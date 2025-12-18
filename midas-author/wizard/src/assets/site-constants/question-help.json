@@ -1,0 +1,31 @@
+{
+    "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='fas fa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='fas fa-pencil'></i> to the right of each field to edit.<p><p>* required field.",
+    "publicationType": {
+        "label": "Publication Type",
+        "general": "With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products, for example, data in addition to software that analyzes it. Please choose what you would consider to be the primary product. You can change this later.<p>"
+    },
+    "contactInfo": {
+        "label": "Contact Info",
+        "general": "The primary public contact is a person familiar with the content of this publication. This primary contact should be able to answer questions from the public that wish to reference this publication or make use of its contents."
+    },
+    "files": {
+        "label": "Files",
+        "general": "Select 'Yes' if you have files to upload. You will prompted to do so later. <p>Select 'No' if you are hosting the files on an external site, e.g., GitHub."
+    },
+    "software": {
+        "label": "Software",
+        "general": "With this question, you are telling us the <i>type</i> of product you are publishing. Your publication may present multiple types of products—for example, data plus software to analyze it—but, it is helpful for us to know what you consider is the most important product. And don't worry: you can change this later.<p><i>[Helpful examples, links to policy and guidance]</i>"
+    },
+    "associatedPapers": {
+        "label": "Associated Papers",
+        "general": "Select the first option if there are no associated papers being published with this data publication. <p> Select the second option if you are publishing a paper that directly describes the products in this publication, such as how they were created and analyzed.  In this case, this data publication would typically be referred to as a <i>supplement</i> to the paper.   <p> Select the third option if you plan to add bibliographical references (including papers or datasets) to this data publication but which do not directly describe the products being published here."
+    },
+    "name": {
+        "label": "Name",
+        "general": "When your draft publication is created, it is assigned both an identifier and a nickname. The system chooses the identifier, but you get to choose the nickname.<p></p>The nickname should be brief, about 16 characters or fewer (so it should not be the same as the publication title). If it is much longer than that, it may get truncated in the display. Each name must be unique among all the records you create. This nickname can be changed later."
+    },
+    "collection": {
+        "label": "Collection",
+        "general": "Some research programs at NIST have established special publication collections that focus on a particular topic or domain.  If this publication is part of one of those programs, select the applicatable collection.  <p>Note that approval from the collection owner will be required during the review process.  If this publication is not a part of one of these programs, select 'Do not add to any collection.'</p>"
+    }
+}

@@ -10,8 +10,8 @@ import { RELEASE } from '../environments/release-info';
 import { InputTextModule } from "primeng/inputtext";
 import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { HttpClientModule } from '@angular/common/http';
-import { ConfigModule } from 'oarlps';
-import { GoogleAnalyticsService } from "oarlps";
+import { ConfigModule, MetadataUpdateService } from 'oarlps';
+import { GoogleAnalyticsService, SidebarService } from "oarlps";
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent, HeaderComponent } from 'oarng';
@@ -40,8 +40,11 @@ import { FooterComponent, HeaderComponent } from 'oarng';
         HeaderComponent
     ],
     providers: [
-      { provide: RELEASE_INFO, useValue: RELEASE },
-      GoogleAnalyticsService
+        { provide: RELEASE_INFO, useValue: RELEASE },
+        GoogleAnalyticsService,
+        MetadataUpdateService,
+        SidebarService,
+        // fakeBackendProvider
     ],
     bootstrap: [AppComponent]
 })

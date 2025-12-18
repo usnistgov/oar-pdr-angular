@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges, inject } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { Themes, ThemesPrefs, Collections, GlobalService } from '../../shared/globals/globals';
-import { NerdmRes } from '../../nerdm/nerdm';
+import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { CartConstants } from '../../datacart/cartconstants';
 import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';
@@ -68,6 +68,7 @@ export class MenuComponent implements OnInit {
     globalsvc = inject(GlobalService);
     hasDataFiles: boolean = false;
     modalRef: any; //For citation pop up
+    citetext: string = null;
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -80,7 +81,7 @@ export class MenuComponent implements OnInit {
     // flag if metrics is ready to display
     @Input() showMetrics: boolean = false;
     
-    @Input() citetext: string;
+    // @Input() citetext: string;
 
     @Output() scroll = new EventEmitter<string>();
     
@@ -114,6 +115,8 @@ export class MenuComponent implements OnInit {
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
         this.buildMenu();
+
+        this.citetext = (new NERDResource(this.record)).getCitation();
     }
 
     ngOnChanges(ch: SimpleChanges) {

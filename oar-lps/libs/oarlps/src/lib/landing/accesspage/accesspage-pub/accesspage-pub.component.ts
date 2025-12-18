@@ -83,7 +83,10 @@ export class AccesspagePubComponent {
         if (this.record[this.fieldName]) {
             this.accessPages = this.selectAccessPages();
 
-            // If this is a science theme and the collection contains one or more components that contain both AccessPage (or SearchPage) and DynamicSourceSet, we want to remove it from accessPages array since it's already displayed in the search result.
+            // If this is a science theme and the collection contains one or more components 
+            // that contain both AccessPage (or SearchPage) and DynamicSourceSet, 
+            // we want to remove it from accessPages array since it's already displayed 
+            // in the search result.
             if(this.theme == this.scienceTheme) 
                 this.accessPages = this.accessPages.filter(cmp => ! cmp['@type'].includes("nrda:DynamicResourceSet"));
         }
@@ -110,11 +113,13 @@ export class AccesspagePubComponent {
     downloadBtnStyle() {
         if(this.theme == this.scienceTheme) {
             return {
+                '--button-text-color': 'white',
                 '--button-color': 'var(--science-theme-background-default)',
                 '--hover-color': 'var(--science-theme-background-light2)'
             };
         }else{
             return {
+                '--button-text-color': 'white',
                 '--button-color': 'var(--nist-green-default)',
                 '--hover-color': 'var(--nist-green-light)'
             };

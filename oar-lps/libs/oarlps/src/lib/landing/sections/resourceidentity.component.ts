@@ -2,7 +2,7 @@ import { Component, OnChanges, SimpleChanges, Input, ViewChild, effect, ChangeDe
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { VersionComponent } from '../version/version.component';
 import { EditStatusService } from '../../landing/editcontrol/editstatus.service';
-import { LandingConstants } from '../../landing/constants';
+import { LandingConstants } from '../../shared/globals/globals';
 import { Themes, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { Collections, GlobalService } from '../../shared/globals/globals';
@@ -19,6 +19,7 @@ import { ContactPubComponent } from '../contact/contact-pub/contact-pub.componen
 import { ContactMidasComponent } from '../contact/contact-midas/contact-midas.component';
 import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
 import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
+import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 
 /**
  * a component that lays out the "identity" section of a landing page
@@ -81,6 +82,7 @@ export class ResourceIdentityComponent implements OnChanges {
      */
     constructor(public editstatsvc: EditStatusService,
                 public globalService: GlobalService,
+                public gaService: GoogleAnalyticsService,
                 public lpService: LandingpageService)
     { 
         this.globalService.watchCollection((collection) => {
@@ -207,9 +209,9 @@ export class ResourceIdentityComponent implements OnChanges {
      * @param event - action event
      * @param title - action title
      */
-    // googleAnalytics(url: string, event, title) {
-    //     this.gaService.gaTrackEvent('homepage', event, title, url);
-    // }
+    googleAnalytics(url: string, event, title) {
+        this.gaService.gaTrackEvent('outbound', event, title, url);
+    }
 
     visitHomePageBtnStyle() {
         if(this.theme == this.scienceTheme) {

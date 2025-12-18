@@ -31,6 +31,7 @@ export class VisithomePubComponent {
     scienceTheme = Themes.SCIENCE_THEME;
     visitHomeURL: string = "";
     overflowStyle: string = 'hidden';
+    hover: boolean = false;
     
     constructor(public globalsvc: GlobalService,
                 public collectionService: CollectionService,

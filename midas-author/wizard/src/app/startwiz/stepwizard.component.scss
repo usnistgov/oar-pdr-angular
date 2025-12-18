@@ -8,8 +8,8 @@
 
 .step-page-container {
     flex: 1;
-    margin: 20px auto;
-    width: 80%;
+    // margin: 20px 120px;
+    // width: 80%;
 }
 
 .form-step {
@@ -22,7 +22,7 @@
     margin: 20px 0 0 20px;
     width: 100px;
     height: 40px;
-    float: right;
+    float: left;
     border-radius: 5px;
     border: none;
 
@@ -38,7 +38,7 @@
     margin: 20px 0 0 20px;
     width: 100px;
     height: 40px;
-    float: left;
+    float: right;
     border-radius: 5px;
     border: none;
 }

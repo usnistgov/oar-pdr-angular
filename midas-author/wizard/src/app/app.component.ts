@@ -74,7 +74,8 @@ export class AppComponent {
     handleRouteEvents() {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
-                const title = this.getTitle(this.router.routerState, this.router.routerState.root).join('-');
+                let title = this.getTitle(this.router.routerState, this.router.routerState.root).join('-');
+                if (!title) title = "DAP Wizard";
                 this.titleService.setTitle(title);
                 
                 gtag('event', 'page_view', {

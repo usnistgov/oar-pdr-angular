@@ -67,15 +67,26 @@ export class AppErrorHandler implements ErrorHandler {
  * an umbrella exception type for all specialized errors in an OAR Angular app
  */
 export class OARError extends Error {
+    protected _status: number = 0;
 
     /**
      * create the error
      * @param message   the explanation for the error
      * @param cause     (optional) another Error that this OARError is being raise in 
      *                  reaction to
+     * @param status    (optional) an HTTP status number associated with this error; if not 
+     *                  provided and cause is an OARErorr or an HTTP error, the status associated
+     *                  with it will be set.  Otherwise, it will be set to zero
      */
-    constructor(message : string, cause? : Error) {
+    constructor(message : string, cause? : Error, status : number = 0) {
         super(message, { cause: cause });
+        this._status = status;
+        if (! this._status && this.cause && this.cause['status'])
+            this._status = this.cause['status']
+    }
+
+    get status(): number {
+        return this._status;
     }
 }
 
@@ -90,9 +101,14 @@ export class IDNotFound extends OARError {
      * @param id   the ID that was requested but does not exist
      * @param cause     (optional) another Error that this OARError is being raise in 
      *                  reaction to
+     * @param status    (optional) an HTTP status number associated with this error; if not 
+     *                  provided and cause is an OARErorr or an HTTP error, the status associated
+     *                  with it will be set.  Otherwise, it will be set to 404
      */
-    constructor(public id : string, cause? : Error) {
-        super("Resource identifier not found: "+id, cause);
+    constructor(public id : string, cause? : Error, status : number = 0) {
+        super("Resource identifier not found: "+id, cause, status);
+        if (! this._status)
+            this._status = 404;
     }
 }
 
@@ -107,9 +123,14 @@ export class PartNotFound extends OARError {
      * @param part  the label or pointer to the part of the resource that does not exist
      * @param cause     (optional) another Error that this OARError is being raise in 
      *                  reaction to
+     * @param status    (optional) an HTTP status number associated with this error; if not 
+     *                  provided and cause is an OARErorr or an HTTP error, the status associated
+     *                  with it will be set.  Otherwise, it will be set to 404
      */
-    constructor(public id : string, public part : string, cause? : Error) {
-        super("Part not found on resource with id="+id+": "+part, cause);
+    constructor(public id : string, public part : string, cause? : Error, status : number = 0) {
+        super("Part not found on resource with id="+id+": "+part, cause, status);
+        if (! this._status)
+            this._status = 404;
     }
 }
 
@@ -130,12 +151,18 @@ export class NotAuthorizedError extends OARError {
      *                the other values.
      * @param cause   (optional) another Error that this OARError is being raise in 
      *                reaction to
+     * @param status  (optional) an HTTP status number associated with this error; if not 
+     *                provided and cause is an OARErorr or an HTTP error, the status associated
+     *                with it will be set.  Otherwise, it will be set to 401
      */
     constructor(public id: string, opverb: string = "access",
-                cause?: Error, message: string|null = null)
+                cause?: Error, message: string|null = null, status : number = 0)
     {
-        super((message) ? message : "User is not authorized to "+opverb+" record with ID="+id, cause);
+        super((message) ? message : "User is not authorized to "+opverb+" record with ID="+id,
+              cause, status);
         this.op = opverb;
+        if (! this._status)
+            this._status = 401;
     }
 }
 
@@ -148,9 +175,14 @@ export class BadInputError extends OARError {
      * create the error
      * @param message   the explanation for the error
      * @param cause     (optional) another Error that this OARError is being raise in 
+     * @param status    (optional) an HTTP status number associated with this error; if not 
+     *                  provided and cause is an OARErorr or an HTTP error, the status associated
+     *                  with it will be set.  Otherwise, it will be set to 400
      */
-    constructor(message: string, cause?: Error) {
-        super(message, cause);
+    constructor(message: string, cause?: Error, status : number = 0) {
+        super(message, cause, status);
+        if (! this._status)
+            this._status = 400;
     }
 }
 
@@ -185,9 +217,14 @@ export class ServerError extends OARError {
      * create the error
      * @param message   the explanation for the error
      * @param cause     (optional) another Error that this OARError is being raise in 
+     * @param status    (optional) an HTTP status number associated with this error; if not 
+     *                  provided and cause is an OARErorr or an HTTP error, the status associated
+     *                  with it will be set.  Otherwise, it will be set to 500
      */
-    constructor(message: string, cause?: Error) {
-        super(message, cause);
+    constructor(message: string, cause?: Error, status : number = 0) {
+        super(message, cause, status);
+        if (! this._status)
+            this._status = 500;
     }
 }
 
