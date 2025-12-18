@@ -153,6 +153,8 @@ export class DynamicFormBuilderService {
     }
 
     form.reset(defaultValues);
+    form.markAsPristine();
+    form.markAsUntouched();
   }
 
   /**
