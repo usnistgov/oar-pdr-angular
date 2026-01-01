@@ -8,7 +8,7 @@
 
             <!-- Text field -->
             <td class="text-field-wrapper">
-                <input class="editable-text-field" *ngIf="editing" type="text" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
+                <input class="editable-text-field" *ngIf="editing" type="text" (keyup.enter)="onKeyEnter(defaultAction)" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
                 <span *ngIf="!editing" class="display-text-field">
                     <div style="padding: 2px 10px;" *ngIf="currentVal && currentVal.trim() != ''; else notext">{{ currentVal }}</div>
                     <ng-template #notext>
@@ -44,7 +44,7 @@
                     [aria-label]="custBtnTooltip" 
                     [pTooltip]="custBtnTooltip"
                     tooltipPosition="top" >
-                    <i [class]="custBtnIcon"></i>
+                    <i class="custBtnIcon" data-toggle="tooltip" [title]="Costom"></i>
                 </button>
 
                 <!-- Edit only button-->
@@ -114,7 +114,7 @@
                     aria-label="submit button" 
                     [pTooltip]="submitTooltip"
                     tooltipPosition="top">
-                    <i [class]="saveIcon"
+                    <i [class]="submitIcon"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>
             </td>

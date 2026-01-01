@@ -1,52 +1,5 @@
-/* button {
-    margin-right: 4px;
-} */
-  
 .custom-class {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
 }
-
-/* .ref-row-placeholder {
-    width: 200px;
-    height: 200px;
-    display: flex;
-    justify-content: center;
-    background: #ccc;
-    border: dotted 3px #999;
-    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
-} */
-
-/* .reference-box {
-    width: 90%; 
-    border-left: 1px solid var(--background-light-grey02);
-    border-right: 1px solid var(--background-light-grey02);
-    padding: 10px 15px 10px 15px;
-    text-align: left;
-} */
-
-/* .control_box {
-    width: 5%;
-} */
-
-/* #del_ref_button {
-    border: 1px solid var(--background-light-grey02);
-} */
-
-/* #btn-add {
-    margin-top: 0px;
-    width: max-content;
-    height: 26px;
-    background-color: var(--nist-blue-default);
-    color: 'white'
-} */
-
-/* .control-btn {
-    width: 100px !important;
-} */
-
-/* .reorder-icon {
-    width: 40px;
-    height: 100%;
-} */

@@ -1,9 +1,16 @@
 <div class="editable_container" style="width: 100%;" >
+    <div *ngIf="errMessage">
+        <lib-single-msg-bar 
+            [message]="errMessage"
+            (command_out)="clearMessage()"
+        >
+        </lib-single-msg-bar>
+    </div>
     <div class="editable_field" style="width: calc(100% - 100px);" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, ref.dataChanged, ref['@id'])">
         <div style="width: 100%; padding: 0px 20px 20px 20px;">
             <!-- Controls -->
             <div class="add-option" *ngIf="isAdding">
-                <span style="margin-right: 1em;">Choose your reference entry method:</span>
+                <span style="margin-right: 1em;">Reference entry method:</span>
                 <span style="margin-right: 1em;">
                     <input type="radio" value="1" name="inputMethod" id="inputMethod1" [ngModel]="inputMethod" (change)="setInputMethod($event)">
                     <label for="inputMethod1"> &nbsp;DOI&nbsp;&nbsp;&nbsp;</label>
@@ -27,7 +34,14 @@
                         <span>DOI:</span>
                     </td>
                     <td colspan="2">
-                        <lib-text-edit [textField]="ref.doi" [submitButton]="true" submitTooltip="Submit DOI" [showBorder]="false" placeHolderText="Place DOI here" (command_out)="onDoiChange($event)"></lib-text-edit>
+                        <lib-text-edit 
+                            [textField]="ref.doi" 
+                            [submitButton]="true" 
+                            submitTooltip="Submit DOI" 
+                            [showBorder]="false" 
+                            placeHolderText="Place DOI here" 
+                            (command_out)="onDoiChange($event)">
+                        </lib-text-edit>
                     </td>
                 </tr>
 
@@ -149,7 +163,7 @@
 
                 <!-- In preparation -->
 
-                <tr data-toggle="tooltip" title="Citation" *ngIf="isEditing || (isAdding && !useDOI) || showAllFields">
+                <tr data-toggle="tooltip" title="Citation" *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
                     <td align="right">
                         <span>In Preparation:</span>
                     </td>
@@ -161,7 +175,7 @@
                 </tr>
 
                 <!-- Citation  -->
-                <tr data-toggle="tooltip" title="Citation" *ngIf="isEditing || (isAdding && !useDOI) || showAllFields">
+                <tr data-toggle="tooltip" title="Citation" *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
                     <td align="right">
                         <span>Citation:</span>
                     </td>
@@ -196,7 +210,7 @@
                 </tr>
 
                 <!-- URL -->
-                    <tr data-toggle="tooltip" title="Label" *ngIf="isEditing || (isAdding && !useDOI) || showAllFields">
+                <tr data-toggle="tooltip" title="Label" *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
                     <td align="right">
                         <span>URL:</span>
                     </td>
@@ -233,7 +247,7 @@
         <button 
             class="edit_button" 
             type="button"
-            (click)="commandOut('undoCurrentChanges')" 
+            (click)="commandOut('undoCurrentChanges');reset()" 
             aria-label="undo button" 
             pTooltip="Undo current changes"
             tooltipPosition="top" >

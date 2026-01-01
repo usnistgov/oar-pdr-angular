@@ -13,7 +13,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { AppConfig } from '../../../config/config';
 import { AuthenticationService } from 'oarng';
 import { iconClass } from '../../../shared/globals/globals';
-import * as errors from '../../../errors/error';
+import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg-bar.component';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -25,7 +25,8 @@ import * as errors from '../../../errors/error';
         TooltipModule,
         TextEditComponent,
         NgbModule,
-        RefAuthorComponent
+        RefAuthorComponent,
+        SingleMsgBarComponent
     ],
     templateUrl: './ref-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ref-edit.component.css'],
@@ -50,8 +51,6 @@ export class RefEditComponent implements OnInit {
     citationLocked: boolean = false;
     editBlockStatus: string = 'collapsed';
 
-    showRefData: boolean = false;
-    showCitationData: boolean = false;
     showAllFields: boolean = false;
     ref: Reference = {} as Reference;
 
@@ -63,7 +62,9 @@ export class RefEditComponent implements OnInit {
     undoIcon = iconClass.UNDO;
     deleteIcon = iconClass.DELETE;
     doiEndpoint: string = "";
+    doiLoaded: boolean = false;
     authToken: string = "";
+    errMessage: string
 
     @Input() currentRef: Reference = {} as Reference;
     @Input() editMode: string = "edit";
@@ -139,9 +140,8 @@ export class RefEditComponent implements OnInit {
 
         this.citationLocked = false;
         this.editBlockStatus = 'collapsed';
+        this.doiLoaded = false;
     
-        this.showRefData = false;
-        this.showCitationData = false;
         this.showAllFields = false; // Show all fields but doi
      
         this.chref.detectChanges();
@@ -175,32 +175,49 @@ export class RefEditComponent implements OnInit {
 
         this.httpClient.get(url, {headers: hdrs}).subscribe(
             data => {
-                this.ref = JSON.parse(JSON.stringify(data)) as Reference;
-
-                this.citationLocked = true;
-                this.onChange(true);
-                this.showAllFields = true;
+                if (data["pdr:comment"] && data["pdr:comment"] == "DOI does not exist yet") {
+                    this.errMessage = "DOI not found: " + this.ref.doi;
+                    
+                    // Show "Reference data interface" 
+                    this.citationLocked = false;
+                    this.showAllFields = true;
+                } else {
+                    let doi = this.ref.doi;
+                    this.ref = JSON.parse(JSON.stringify(data)) as Reference;
+                    if (!this.ref.doi) this.ref.doi = doi;
+                    
+                    this.citationLocked = true;
+                    this.onChange(true);
+                    this.showAllFields = false;
+                    this.doiLoaded = true;
+                }
             },
             err => { 
                 let msg = err.message || err.statusText;
                 if (err.status) {
-                    if (err.status == 404)
-                        throw new errors.IDNotFound(this.ref.doi, err);
-                    if (err.status == 401)
-                        throw new errors.NotAuthorizedError(this.ref.doi, "get", err);
-                    if (err.status > 500)
-                        throw new errors.ServerError(msg || "Unknown Server Error", err);
+                    if (err.status == 404) 
+                        this.errMessage = "DOI not found: " + this.ref.doi;
+                    if (err.status == 401) 
+                        this.errMessage = "Unauthorized access. Please login again.";
+                    if (err.status > 500) 
+                        this.errMessage = "Server error occurred when retrieving DOI data: " + this.ref.doi;
                     else 
-                        throw new errors.OARError("Unexpected resolver response: " + msg +" (" +
-                                                  err.status + ")", err);
+                        this.errMessage = "Unexpected resolver response: " + err.message +" (" +
+                                                  err.status + ")";
                 }
                 else if (err.status == 0) 
-                    throw new errors.CommError("Unexpected communication error: "+msg, url, err);
+                    this.errMessage = "Unexpected communication error: " + err.message + ".";
                 else
-                    throw new errors.OARError("Unexected error during retrieval from URL (" + 
-                                              url + "): " + err.toString(), err);
+                    this.errMessage = "Unexected error during retrieval from URL (" + 
+                        url + "): " + err.toString();
+                
+                console.warn(err.message + " DOI:" + this.ref.doi);
             }
         );
+    }
+
+    clearMessage() {
+        this.errMessage = "";
     }
 
     /**

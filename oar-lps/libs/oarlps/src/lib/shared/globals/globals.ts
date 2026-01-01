@@ -664,7 +664,7 @@ export class iconClass {
     static readonly EDIT = 'fas fa-pencil fa-sm';
     static readonly CLOSE = 'fas fa-times';
     static readonly SAVE = 'pi pi-save';
-    // static readonly SAVE = 'fas fa-check fa-sm';
+    static readonly SUBMIT = 'pi pi-check-square';
     static readonly CANCEL = 'fas fa-undo fa-sm';
     static readonly UNDO = 'fas fa-undo fa-sm';
     static readonly ADD = 'fas fa-plus faa-lg';

@@ -31,6 +31,7 @@ export class TextEditComponent implements OnInit {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
     deleteIcon = iconClass.DELETE;
+    submitIcon = iconClass.SUBMIT;
 
     @Input() textField: string = "";
     @Input() dragDropIcon: boolean = false;
@@ -51,6 +52,7 @@ export class TextEditComponent implements OnInit {
     @Input() forceReset: boolean = false;
     @Input() dataChanged: boolean = false;
     @Input() isNew: boolean = false;
+    @Input() defaultAction: string = "Submit"; // "Submit", "Save", "Add", etc.
 
     //Output actions: "Delete", "Cancel", "Save", etc.
     @Output() command_out = new EventEmitter<any>();
@@ -91,6 +93,8 @@ export class TextEditComponent implements OnInit {
 
         this.prevVal = this.textField;
         this.currentVal = this.textField;
+
+        console.log("custBtnIcon", this.custBtnIcon);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -277,4 +281,22 @@ export class TextEditComponent implements OnInit {
                 break;
          }
     }    
+
+    onKeyEnter(action: string = "Submit") {
+        switch ( action ) {
+            case 'Save':
+                this.onSave();
+                break;
+            case 'Submit':
+                this.submit();
+                break;
+            case 'Add':
+                this.add();
+                break;
+            default:
+                this.submit();
+                break;
+        }
+
+    }
 }

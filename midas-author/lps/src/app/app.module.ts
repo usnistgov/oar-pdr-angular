@@ -15,7 +15,10 @@ import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
 import { OARLPSModule, ConfigModule, EditControlModule, UserMessageService, ConfirmationDialogService,
          GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
- } from 'oarlps';
+} from 'oarlps';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -38,17 +41,20 @@ enableProdMode();
       AppComponent
     ],
     imports: [
-      OARLPSModule,
-      ErrorsModule,
-      AppRoutingModule,
-      LandingAboutComponent,
-      ConfigModule,
-      StaffDirModule,
-      EditControlModule.forRoot(environment),
-      FooterComponent,
-      HeaderComponent,
-      HeaderPubComponent,
-      LandingPageComponent
+        OARLPSModule,
+        ErrorsModule,
+        AppRoutingModule,
+        LandingAboutComponent,
+        ConfigModule,
+        StaffDirModule,
+        EditControlModule.forRoot(environment),
+        FooterComponent,
+        HeaderComponent,
+        HeaderPubComponent,
+        LandingPageComponent,
+        CommonModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot()
     ],
     exports: [AppComponent],
     providers: [
@@ -61,8 +67,7 @@ enableProdMode();
         GoogleAnalyticsService,
         DatePipe,
         UserMessageService,
-        ConfirmationDialogService,
-        // fakeBackendProvider
+        ConfirmationDialogService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

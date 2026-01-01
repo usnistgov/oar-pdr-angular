@@ -44,6 +44,7 @@ import {
   CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
 } from '@angular/core';
 import { GlobalService } from 'oarlps';
+import { NgToastService, TOAST_POSITIONS } from 'ng-angular-popup';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -69,7 +70,8 @@ export class AppComponent {
     inBrowser: boolean = false;
     appVersion: string = "1.0"
     authToken: string|null = null;
-
+    TOAST_POSITIONS = TOAST_POSITIONS; 
+    
     constructor(private gaService: GoogleAnalyticsService,
                 // public environmentService : EnvironmentService,
                 private authsvc: AuthenticationService,
