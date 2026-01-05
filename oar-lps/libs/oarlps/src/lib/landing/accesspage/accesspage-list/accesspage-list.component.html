@@ -1,35 +1,41 @@
 <div style="width: 100%;">
-    <!-- <div *ngIf="accessPages && accessPages.length > 0">
-        <b>Data and related material can be found at the following locations:</b>
-    </div> -->
+    <div *ngIf="errMessage">
+        <lib-single-msg-bar [message]="errMessage" (command_out)="clearMessage()">
+        </lib-single-msg-bar>
+    </div>
+    
     <div style="width: 100%;">
         <div class="editable_container" style="width: 100%; margin-bottom: .5em;">
             <div class="editable_field" style="width: calc(100% - 100px);">
                 <div class="apage-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                     <!-- <div style="margin-left: 10px;"><i>Use this area to add links to relevant websites including software repositories</i></div> -->
-                    <div *ngIf="accessPages && accessPages.length > 0; else noAccessPage" #dropListContainer class="example-container" cdkDropListGroup>
-                        <div style="width: 100%;" 
-                        *ngFor="let apage of accessPages; let i = index"
-                        cdkDropList
-                        [cdkDropListData]="i"
-                        >
-                            <div 
+                    <div *ngIf="accessPages && accessPages.length > 0; else noAccessPage" 
+                        #dropListContainer 
+                        class="example-container" 
+                        cdkDropListGroup>
+
+                        <div cdkDropList (cdkDropListDropped)="drop($event)" 
+                            class="list" 
+                            [style.background-color]="getRecordBackgroundColor()">
+
+                            <div class="list-item" 
+                                *ngFor="let apage of accessPages; let i = index" 
                                 cdkDrag
-                                [cdkDragData]="i"
-                                (cdkDragEntered)="dragEntered($event)"
-                                (cdkDragMoved)="dragMoved($event)"
-                                (cdkDragDropped)="dragDropped($event)"
-                                [cdkDragDisabled]="isAdding || isEditing"
-                                class="apage-row"
-                            >
-                                <div (click)="selectApage(i)" [ngStyle]="getActiveApageStyle(i)" style="width: 100%;"  [style.background-color]="getApageBackgroundColor(i)">
-                                    <lib-text-edit 
-                                        [textField]="apage.title" 
-                                        [dragDropIcon]="accessPages.length==1?false:true" [editButton]="false" 
+                                [style.cursor]="dragDropCursor"
+                                [cdkDragDisabled]="isDragDisabled">
+                        
+                                <div (click)="selectApage(i)" 
+                                    [ngStyle]="getActiveApageStyle(i)" 
+                                    style="width: 100%;"
+                                    [style.background-color]="getApageBackgroundColor(i)">
+
+                                    <lib-text-edit [textField]="apage.title" 
+                                        [dragDropIcon]="accessPages.length==1?false:true" 
+                                        [editButton]="false"
                                         [deleteButton]="true" 
                                         [restoreButton]="true" 
-                                        [editOnlyButton]="true"
-                                        [trashButton]="true" 
+                                        [editOnlyButton]="true" 
+                                        [trashButton]="true"
                                         [disableControl]="isAdding || isEditing" 
                                         [placeHolderText]="placeholder" 
                                         [isNew]="apage.isNew"

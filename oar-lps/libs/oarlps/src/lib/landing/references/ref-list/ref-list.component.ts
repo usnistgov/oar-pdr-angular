@@ -8,9 +8,8 @@ import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
-    CdkDragEnter,
-    CdkDragMove,
     moveItemInArray,
+    DragDropModule
 } from '@angular/cdk/drag-drop';
 import { Reference } from '../reference';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
@@ -33,7 +32,8 @@ import { TooltipModule } from 'primeng/tooltip';
         CollapseModule,
         TextEditComponent,
         RefEditComponent,
-        ConfirmationDialogComponent
+        ConfirmationDialogComponent,
+        DragDropModule
     ],
     templateUrl: './ref-list.component.html',
     styleUrls: ['../../landing.component.scss', '../references.component.css', './ref-list.component.css'],
@@ -118,8 +118,10 @@ export class RefListComponent implements OnInit {
 
     resetOriginalValue() {
         if(this.record && this.record['references'] && this.record['references'].length > 0) {
-            this.currentRef = this.record['references'][0];
+            if(!this.record['references'][this.currentRefIndex])
+                this.currentRefIndex = 0;
 
+            this.currentRef = this.record['references'][this.currentRefIndex];
             //Keep a copy of the record for undo purpose
             this.orig_record = JSON.parse(JSON.stringify(this.record));
         }
@@ -128,7 +130,9 @@ export class RefListComponent implements OnInit {
     get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
-
+    get isDragDisabled() { return this.isEditing || this.isAdding; }
+    get dragDropCursor() { return this.isDragDisabled ? 'not-allowed' : 'move'; }
+    
     /**
      * Check if any reference data changed or reference order changed
      */
@@ -422,90 +426,18 @@ export class RefListComponent implements OnInit {
         return false;
     }
 
-
     /**
-     * Return the link text of the given reference.  The text returned will be one of
-     * the following, in order or preference:
-     * 1. the value of the citation property (if set and is not empty)
-     * 2. the value of the label property (if set and is not empty)
-     * 3. to "URL: " appended by the value of the location property.
-     * @param ref   the NERDm reference object
-     */
-    // getReferenceText(ref){
-    //     if(ref['citation'] && ref['citation'].trim() != "") 
-    //         return ref['citation'];
-    //     if(ref['label'] && ref['label'].trim() != "")
-    //         return ref['label'];
-    //     if(ref['location'] && ref['location'].trim() != "")
-    //         return ref['location'];
-    //     return " ";
-    // }    
-
-    /**
-     * Drag drop function
-     */
-    dragEntered(event: CdkDragEnter<number>) {
-        const drag = event.item;
-        const dropList = event.container;
-        const dragIndex = drag.data;
-        const dropIndex = dropList.data;
-    
-        this.dragDropInfo = { dragIndex, dropIndex };
-    
-        const phContainer = dropList.element.nativeElement;
-        const phElement = phContainer.querySelector('.cdk-drag-placeholder');
-    
-        if (phElement) {
-          phContainer.removeChild(phElement);
-          phContainer.parentElement?.insertBefore(phElement, phContainer);
-    
-          moveItemInArray(this.record['references'], dragIndex, dropIndex);
-        }
-    }
-    
-    /**
-     * Drag drop function
+     * After drop, update reference array and other variables. Notify parent component about the change.
      * @param event 
-     * @returns 
      */
-    dragMoved(event: CdkDragMove<number>) {
-        if (!this.dropListContainer || !this.dragDropInfo) return;
-    
-        const placeholderElement =
-          this.dropListContainer.nativeElement.querySelector(
-            '.cdk-drag-placeholder'
-          );
-    
-        const receiverElement =
-          this.dragDropInfo.dragIndex > this.dragDropInfo.dropIndex
-            ? placeholderElement?.nextElementSibling
-            : placeholderElement?.previousElementSibling;
-    
-        if (!receiverElement) {
-          return;
-        }
-    
-        receiverElement.style.display = 'none';
-        this.dropListReceiverElement = receiverElement;
-    }
-    
-    /**
-     * Drag drop function
-     */
-    dragDropped(event: CdkDragDrop<number>) {
-        if (!this.dropListReceiverElement) {
-          return;
-        }
-        this.currentRefIndex = event.item.data;
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.record['references'], event.previousIndex, event.currentIndex);
+        this.currentRefIndex = event.currentIndex;
         this.currentRef = this.record.references[this.currentRefIndex];
         this.orderChanged = true;
         this.dataCommand.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
         // Update reference data
         this.updateMatadata();
-
-        this.dropListReceiverElement.style.removeProperty('display');
-        this.dropListReceiverElement = undefined;
-        this.dragDropInfo = undefined;
     }
 
     /**

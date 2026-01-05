@@ -3,7 +3,7 @@ import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
 import { Themes } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { ToastrService } from 'ngx-toastr';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import {
@@ -11,6 +11,7 @@ import {
     CdkDragEnter,
     CdkDragMove,
     moveItemInArray,
+    DragDropModule
 } from '@angular/cdk/drag-drop';
 import { DomSanitizer } from "@angular/platform-browser";
 import { CommonModule } from '@angular/common';
@@ -29,7 +30,8 @@ import { TooltipModule } from 'primeng/tooltip';
         AccesspageEditComponent,
         TextEditComponent,
         ButtonModule,
-        TooltipModule
+        TooltipModule,
+        DragDropModule
     ],
     templateUrl: './accesspage-list.component.html',
     styleUrls: ['../../landing.component.scss', './accesspage-list.component.css'],
@@ -79,9 +81,10 @@ export class AccesspageListComponent implements OnInit {
     @Input() fieldName: string;
     @Input() mdupdsvc : MetadataUpdateService;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
+    errMessage: string;
 
     constructor(
-                private notificationService: NotificationService,
+                private toastrService: ToastrService,
                 public lpService: LandingpageService,
                 private chref: ChangeDetectorRef) { 
 
@@ -96,7 +99,9 @@ export class AccesspageListComponent implements OnInit {
     get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
-
+    get isDragDisabled() { return this.isEditing || this.isAdding; }
+    get dragDropCursor() { return this.isDragDisabled ? 'not-allowed' : 'move'; }
+    
     /**
      * Check if any access page data changed or access page order changed
      */
@@ -249,6 +254,7 @@ export class AccesspageListComponent implements OnInit {
                     if (success) {
                         this.currentApageIndex = 0;
                         this.currentApage = this.record[this.fieldName][this.currentApageIndex];
+                        this.setMode(MODE.LIST);
                         this.forceReset = true; // Force accesspage editor to reset data
                     } else {
                         let msg = "Failed to restore access pages"
@@ -408,9 +414,9 @@ export class AccesspageListComponent implements OnInit {
                 delete postMessage.dataChanged;
 
                 this.mdupdsvc.update(this.fieldName, postMessage, compId, this.FieldNameAPI).then((updateSuccess) => {
-                    if (updateSuccess){
-                        this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
-                        // this.dataCommand.next(editmode);
+                    if (updateSuccess) {
+                        this.toastrService.success("Access page updated.");
+                        this.chref.detectChanges();
                         resolve(true);
                     }else{
                         let msg = "Access page update failed.";
@@ -428,8 +434,8 @@ export class AccesspageListComponent implements OnInit {
 
                 this.mdupdsvc.update(this.fieldName, postMessage, undefined, this.FieldNameAPI).then((updateSuccess) => {
                     if (updateSuccess){
-                        this.notificationService.showSuccessWithTimeout("Access page updated.", "", 3000);
-                        // this.dataCommand.next(editmode);
+                        this.toastrService.success("Access page updated.");
+                        this.chref.detectChanges();
                         resolve(true);
                     }else{
                         let msg = "Access page update failed.";
@@ -591,60 +597,16 @@ export class AccesspageListComponent implements OnInit {
         this.lpService.setCurrentSection("dataAccess");
     }
 
-    // Drag drop functions
-    dragEntered(event: CdkDragEnter<number>) {
-        const drag = event.item;
-        const dropList = event.container;
-        const dragIndex = drag.data;
-        const dropIndex = dropList.data;
-    
-        this.dragDropInfo = { dragIndex, dropIndex };
-    
-        const phContainer = dropList.element.nativeElement;
-        const phElement = phContainer.querySelector('.cdk-drag-placeholder');
-    
-        if (phElement) {
-          phContainer.removeChild(phElement);
-          phContainer.parentElement?.insertBefore(phElement, phContainer);
-    
-          moveItemInArray(this.accessPages, dragIndex, dropIndex);
-        }
-    }
-    
-    dragMoved(event: CdkDragMove<number>) {
-        if (!this.dropListContainer || !this.dragDropInfo) return;
-    
-        const placeholderElement =
-          this.dropListContainer.nativeElement.querySelector(
-            '.cdk-drag-placeholder'
-          );
-    
-        const receiverElement =
-          this.dragDropInfo.dragIndex > this.dragDropInfo.dropIndex
-            ? placeholderElement?.nextElementSibling
-            : placeholderElement?.previousElementSibling;
-    
-        if (!receiverElement) {
-          return;
-        }
-    
-        receiverElement.style.display = 'none';
-        this.dropListReceiverElement = receiverElement;
-    }
-    
-    dragDropped(event: CdkDragDrop<number>) {
-        if (!this.dropListReceiverElement) {
-          return;
-        }
-        this.currentApageIndex = event.item.data;
-        this.currentApage = this.accessPages[this.currentApageIndex];
-        // this.currentOrderChanged = true;
-        // this.dataCommand.next("editing");
-        this.saveListChanges();
+    /**
+     * After drop, update accessPages array and other variables. Notify parent component about the change.
+     * @param event 
+     */
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.accessPages, event.previousIndex, event.currentIndex);
 
-        this.dropListReceiverElement.style.removeProperty('display');
-        this.dropListReceiverElement = undefined;
-        this.dragDropInfo = undefined;
+        this.currentApageIndex = event.currentIndex;
+        this.currentApage = this.accessPages[this.currentApageIndex];
+        this.saveListChanges();        
     }
 
     /**

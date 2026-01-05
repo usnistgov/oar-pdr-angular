@@ -141,7 +141,7 @@ export class TextEditComponent implements OnInit {
     removeUndo() {
         if(this.editing){
             this.currentVal = this.prevVal;
-            this.command_out.next({"value":this.currentVal, "command":"UndoEdit"});
+            this.command_out.next({ "value": this.currentVal, "command": "UndoEdit" });
         }else{
             this.command_out.next({"value":this.currentVal, "command":"Delete"});
         }
@@ -175,7 +175,7 @@ export class TextEditComponent implements OnInit {
      * Submit this item
      */
     submit() {
-        this.command_out.next({"value":this.currentVal, "command":"submit"});
+        this.command_out.next({ "value": this.currentVal, "command": "submit" });
     }
 
     resetValue() {
@@ -216,8 +216,8 @@ export class TextEditComponent implements OnInit {
      * Return the opacity of dragdrop icon to indicate enable/disable status
      * @returns opacity
      */
-    ddIconOpacity() {
-        if(this.editing || this.disableControl){
+    iconOpacity(editing: boolean = false) {
+        if (editing || this.disableControl){
             return 0.3;
         }else{
             return 1;

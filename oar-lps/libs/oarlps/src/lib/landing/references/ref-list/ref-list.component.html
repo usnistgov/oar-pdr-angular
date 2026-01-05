@@ -5,32 +5,32 @@
             <!-- Drag and drop reference list-->
             <div class="reference-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                 <div *ngIf="record['references'] && record['references'].length > 0; else noReference" #dropListContainer class="example-container" cdkDropListGroup>
-                    <div style="width: 100%;" 
-                    *ngFor="let reference of record['references']; let i = index"
-                    cdkDropList
-                    [cdkDropListData]="i"
+                    <div 
+                        cdkDropList 
+                        (cdkDropListDropped)="drop($event)" 
+                        class="list"
+                        [style.background-color]="getRecordBackgroundColor()"
                     >
                         <div 
+                            class="list-item" 
+                            *ngFor="let reference of record['references']; let i = index"
                             cdkDrag
-                            [cdkDragData]="i"
-                            (cdkDragEntered)="dragEntered($event)"
-                            (cdkDragMoved)="dragMoved($event)"
-                            (cdkDragDropped)="dragDropped($event)"
-                            [cdkDragDisabled]="isAdding || isEditing"
-                            class="ref-row"
-                        >
-                            <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
+                            [style.cursor]="dragDropCursor"
+                            [cdkDragDisabled]="isDragDisabled">
+
+                            <div (click)="selectRef(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"
+                                [style.background-color]="getBackgroundColor(i)">
                                 <lib-text-edit 
                                     [textField]="reference.citation" 
                                     [dragDropIcon]="true" 
                                     [editButton]="false" 
-                                    [deleteButton]="true" 
-                                    [editOnlyButton]="true"
+                                    [deleteButton]="true"
+                                    [editOnlyButton]="true" 
                                     [restoreButton]="true" 
-                                    [disableControl]="isAdding || isEditing" 
+                                    [disableControl]="isAdding || isEditing"
                                     [placeHolderText]="placeholder" 
-                                    [isNew]="reference.isNew" 
-                                    [dataChanged]="mdupdsvc.fieldUpdated(fieldName, record[fieldName][i]['@id'])" 
+                                    [isNew]="reference.isNew"
+                                    [dataChanged]="mdupdsvc.fieldUpdated(fieldName, record[fieldName][i]['@id'])"
                                     (command_out)="onReferenceCommand($event, i)">
                                 </lib-text-edit>
                             </div>
