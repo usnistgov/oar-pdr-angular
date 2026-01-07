@@ -164,7 +164,7 @@ export class MenuComponent implements OnInit {
         let contactPoint = "";
         if (this.record['contactPoint'] && this.record['contactPoint'].fn) {
             contactPoint = this.record['contactPoint'].fn.trim();
-            if(contactPoint.indexOf(" ") > 0){
+            if(contactPoint && contactPoint.indexOf(" ") > 0){
                 contactPoint = '"' + contactPoint + '"';
             }
         }
@@ -197,7 +197,7 @@ export class MenuComponent implements OnInit {
         for(let i = 0; i < keywords.length; i++){
             if(i > 0) keywordString += ',';
 
-            if(keywords[i].trim().indexOf(" ") > 0)
+            if(keywords[i] && keywords[i].trim().indexOf(" ") > 0)
                 keywordString += '"' + keywords[i].trim() + '"';
             else
             keywordString += keywords[i].trim();

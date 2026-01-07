@@ -189,7 +189,7 @@ export class TopicPubComponent implements AfterContentInit {
                 this.record[this.fieldName].forEach(topic => {
                     if (topic['scheme'] && topic.tag) {
                         for(let col of this.collectionOrder) {
-                            if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                            if(topic['scheme'] && topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
                                 if(!this.topics[col]) {
                                     this.topics[col] = [topic];
                                 }else if(this.topics[col].indexOf(topic) < 0) {

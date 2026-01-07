@@ -585,7 +585,7 @@ export class FiltersComponent implements OnInit {
         let query = event.query;
         for (let i = 0; i < this.authors.length; i++) {
           let auth = this.authors[i];
-          if (auth.toLowerCase().indexOf(author.toLowerCase()) >= 0) {
+          if (auth && auth.toLowerCase().indexOf(author.toLowerCase()) >= 0) {
             filtered.push(auth);
           }
         }
@@ -609,7 +609,7 @@ export class FiltersComponent implements OnInit {
         // Handle current keyword: update suggested keywords and lookup
         for (let i = 0; i < this.keywords.length; i++) {
             let keyw = this.keywords[i].trim().toLowerCase();
-            if (keyw.indexOf(keyword) >= 0) {
+            if (keyw && keyw.indexOf(keyword) >= 0) {
                 //Avoid duplicate
                 if(this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] == undefined) {
                     this.suggestedKeywords.push(this.shortenKeyword(keyw));
@@ -622,7 +622,7 @@ export class FiltersComponent implements OnInit {
         this.selectedKeywords.forEach(kw => {
             for (let i = 0; i < this.keywords.length; i++) {
                 let keyw = this.keywords[i].trim().toLowerCase();
-                if (keyw.indexOf(kw.toLowerCase()) >= 0) {
+                if (keyw && keyw.indexOf(kw.toLowerCase()) >= 0) {
                     if(this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] == undefined) {
                         this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] = keyw;
                     }
@@ -768,7 +768,7 @@ export class FiltersComponent implements OnInit {
                     resourceTypes.push(tempType);
                 }
 
-                if (resourceTypesArray.indexOf(resType) < 0) {
+                if (resourceTypesArray && resourceTypesArray.indexOf(resType) < 0) {
                     resourceTypesArray.push(resType);
                 }
             }
@@ -938,7 +938,7 @@ export class FiltersComponent implements OnInit {
                     }
                     
                     for (let i = 0; i < keys.length; i++) {
-                        if(topic['scheme'].indexOf(this.taxonomyURI[Collections[keys[i]]]) >= 0) {
+                        if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections[keys[i]]]) >= 0) {
                             topicLabel = topics[0];
                             data = topic.tag;
 
@@ -947,7 +947,7 @@ export class FiltersComponent implements OnInit {
                                 topicLabel = topic.tag;
                             }
 
-                            if(allThemesArray[Collections[keys[i]]].indexOf(topicLabel) < 0) {
+                            if(allThemesArray[Collections[keys[i]]] && allThemesArray[Collections[keys[i]]].indexOf(topicLabel) < 0) {
                                 allThemes[Collections[keys[i]]].push({ label: topicLabel, value: data });
                                 allThemesArray[Collections[keys[i]]].push(topicLabel);
                             }
@@ -973,7 +973,7 @@ export class FiltersComponent implements OnInit {
 
                     for(let col of this.collectionOrder) {
                         for(let theme of allThemes[col]){
-                            if(topicTag.toLowerCase().indexOf(theme.label.toLowerCase()) > -1){
+                            if(topicTag && topicTag.toLowerCase().indexOf(theme.label.toLowerCase()) > -1){
                                 allUniqueThemes[col].push(theme.label);
                             }
                         }
@@ -1010,7 +1010,7 @@ export class FiltersComponent implements OnInit {
     findNthOccurence(string, nth, char) {
         let index = 0
         for (let i = 0; i < nth; i += 1) {
-          if (index !== -1) index = string.indexOf(char, index + 1)
+          if (string && index !== -1) index = string.indexOf(char, index + 1)
         }
         return index
     }
