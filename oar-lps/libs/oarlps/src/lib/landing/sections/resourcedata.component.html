@@ -1,7 +1,6 @@
 <div id="dataAccess" [ngStyle]="{'max-width': maxWidth+'px'}">
-    <div class="section-header">
+    <div class="section-header" *ngIf="showSectionTitle()">
         <lib-section-title [sectionTitle]="sectionTitle" [inBrowser]="inBrowser" sectionTag="dataAccessHeader" id="dataAccessHeader" #dataAccessHeader></lib-section-title>
-        
     </div>
 
     <dl >

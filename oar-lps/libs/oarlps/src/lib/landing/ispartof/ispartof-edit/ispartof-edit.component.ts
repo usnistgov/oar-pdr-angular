@@ -41,7 +41,7 @@ export class IspartofEditComponent {
         {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
         {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
         {id: 3, displayName: "Forensics", value: "Forensics"},
-        {id: 4, displayName: "Do not add to any collection", value: "None"}
+        {id: 4, displayName: "Do not add to any domain collection", value: "None"}
     ]
 
     //icon class names

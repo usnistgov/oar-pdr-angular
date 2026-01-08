@@ -11,6 +11,7 @@ import { DatePipe } from '@angular/common';
 import { SearchService } from '../shared/search-service/search-service.service';
 import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
 import * as env from '../../environments/environment';
+import { NERDmResourceService } from '../nerdm/nerdm.service';
 
 let fileLevelData = {
     "FilesMetricsCount": 3,
@@ -96,6 +97,7 @@ describe('MetricsComponent', () => {
             declarations: [  ],
             imports: [FormsModule, MetricsModule, HttpClientTestingModule],
             providers: [
+                NERDmResourceService,
                 GoogleAnalyticsService,
                 { provide: ActivatedRoute,  useValue: route },
                 { provide: AppConfig,       useValue: cfg }, DatePipe, SearchService, TransferState

@@ -165,7 +165,7 @@ export class AboutdatasetComponent implements OnChanges {
     getDownloadURL() : string {
         let out = this.cfgsvc.get("links.pdrIDResolver", "/od/id/");
         if (out.slice(-1) != '/') out += '/';
-        out += this.record['@id'];
+        out += this.record['@id'] + "?format=nerdm";
 
         return out;
     }

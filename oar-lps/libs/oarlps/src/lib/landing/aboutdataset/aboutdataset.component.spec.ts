@@ -150,6 +150,6 @@ describe('AboutdatasetComponent', () => {
 
     it('getDownloadURL()', () => {
         let url = component.getDownloadURL().substring(component.getDownloadURL().split("/", 3).join("/").length);
-        expect(url).toEqual("/od/id/ark:/88434/mds0000fbk");
+        expect(url).toEqual("/od/id/ark:/88434/mds0000fbk?format=nerdm");
     });
 });

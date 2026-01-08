@@ -63,7 +63,7 @@ export class IspartofComponent implements OnInit {
            
             this.isPartOf = [
                 article,
-                // this.cfg.get("locations.landingPageService") + coll['@id'],
+                // this.cfg.get("links.landingPageService") + coll['@id'],
                 this.landingPageServiceStr + coll['@id'],
                 title,
                 suffix

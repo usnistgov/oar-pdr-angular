@@ -1,6 +1,7 @@
-import { Injectable, signal } from '@angular/core';
+import { Inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SelectItem, TreeNode } from 'primeng/api';
+import { DOCUMENT } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class GlobalService {
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
     public fakeBackendAlerted = signal<boolean>(false);
 
-    constructor() { }
+    constructor(@Inject(DOCUMENT) private document: Document,) { }
 
     /**
      * Current collection.  
@@ -100,6 +101,14 @@ export class GlobalService {
         this._showLPContent.subscribe(subscriber);
     }
 
+    _hasDataFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public setHasDataFiles(val: boolean){
+        this._hasDataFiles.next(val);
+    }
+    public watchHasDataFiles(subscriber) {
+        this._hasDataFiles.subscribe(subscriber);
+    }
+    
     /**
      * Set/get SubmissionData 
      */
@@ -113,8 +122,8 @@ export class GlobalService {
     
 
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
-        let text = document.createElement("span"); 
-        document.body.appendChild(text); 
+        let text = this.document.createElement("span"); 
+        this.document.body.appendChild(text); 
      
         text.style.fontFamily = font; 
         text.style.fontSize = size + "px"; 
@@ -126,10 +135,37 @@ export class GlobalService {
         text.innerHTML = textString; 
      
         let width = Math.ceil(text.clientWidth); 
-        document.body.removeChild(text); 
+        this.document.body.removeChild(text); 
 
         return width * 0.9 + 50;
     }
+
+    /**
+     * Replace reserved chars with char name to avoid problems
+     * when parsing filter string in the result list component.
+     * For example, replace "&" with "aaamp". Replace "," with "commma". 
+     * result list component restores "aaamp" back to "&", "commma" back to ",".
+     * @param strng input string
+     */
+    escapeReservedChars(inputStrng: string) {
+        if (!inputStrng || inputStrng.trim() == "")
+            return "";
+        else
+            return inputStrng.replace(new RegExp("&", "g"), "aaamp").replace(new RegExp(",", "g"), "commma");
+    }    
+
+    /**
+     * Restore reserved chars. 
+     * For example, change "aaamp" back to "&", "commma" with ",".
+     * @param inputString 
+     */
+    restoreReservedChars(inputString: string) {
+        if(!inputString || inputString.trim() == "")
+            return "";
+        else
+            return inputString.replace(new RegExp("aaamp", "g"), "&").replace(new RegExp("commma", "g"), ","); 
+    }
+
 }
 
 export const NIST = "National Institute of Standards and Technology";
@@ -146,7 +182,7 @@ _theme[Themes.SCIENCE_THEME] = "ScienceTheme";
 _theme[Themes.DEFAULT_THEME] = "DefaultTheme";
 
 let _sourceLabel = {};
-_sourceLabel[Themes.SCIENCE_THEME] = "Collection";
+_sourceLabel[Themes.SCIENCE_THEME] = "Domain Collection";
 _sourceLabel[Themes.DEFAULT_THEME] = "Dataset";
 
 export class ThemesPrefs {
@@ -263,7 +299,7 @@ _displayName["title"] = Sections.TITLE;
 // _displayName["links"] = Sections.ACCESS_PAGES;
 _displayName["components"] = Sections.ACCESS_PAGES;
 _displayName["description"] = Sections.DESCRIPTION;
-_displayName["theme"] = Sections.TOPICS;
+// _displayName["theme"] = Sections.TOPICS;
 _displayName["topic"] = Sections.TOPICS;
 _displayName["keyword"] = Sections.KEYWORDS;
 _displayName["identity"] = Sections.IDENTITY;
@@ -523,24 +559,27 @@ export class FilterTreeNode implements TreeNode {
     expanded = false;
     keyname: string = '';
     key: string = '';
+    taxonomy: string = ''; // Only for this node
     parent = null;
     level: number = 1;
     selectable: boolean = true;
     unspecified: boolean[] = [];
     
-    constructor(label: string='', expanded: boolean = false, key: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1) {
+    constructor(label: string='', expanded: boolean = false, key: string=null, keyname: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1, taxonomy: string = "") {
         this.label = label;
         if(data && !this.data.includes(data))
             this.data.push(data);
         this.count = count;
         this.selectable = selectable;
         this.level = level;
-        this.keyname = key;
+        this.keyname = keyname;
+        if (!keyname) this.keyname = key;
         this.key = key;
         if(!key) {
             this.keyname = label;
             this.key = label;
         }
+        this.taxonomy = taxonomy;
     }
 
    /**
@@ -557,16 +596,15 @@ export class FilterTreeNode implements TreeNode {
     }
 
     _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}, parentKey:string = "") : TreeNode {
-        let nodeLabel: string = ''; 
-        // find the node corresponding to the given item in the data cart 
+        // find the node corresponding to the given item in the tree 
         for (let child of this.children) {
-            if (child.keyname == levels[0]) {
+            if (child.keyname == levels[0] && child.children.length > 0) {
                 if(searchResults) {
                     for (let resultItem of searchResults) {
                         let found: boolean = false;
                         if(resultItem.topic && resultItem.topic.length > 0){
                             for(let topic of resultItem.topic) {
-                                if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                                if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
                                     if(collection == Collections.DEFAULT) {
                                         if(topic.tag.includes(item[0])) {
                                             found = true;
@@ -604,11 +642,18 @@ export class FilterTreeNode implements TreeNode {
         }
 
         // ancestor does not exist yet; create it
-        let key = parentKey + levels[0];
+        let key = levels[0];
+        let keyname = levels[0];
+        let taxonomy = levels[0];
         let label = levels[0];
         let data = item[0];
-
         let count = 0;
+        let parent = this.parent;
+
+        if (parent && parent.key) {
+            key = parent.key + key;
+        }
+
         if (levels.length == 1) {
             label += "---" + item[1]; 
         }
@@ -617,26 +662,81 @@ export class FilterTreeNode implements TreeNode {
             count = item[1];
         }
 
-        let child = new FilterTreeNode(label, false, key, data, count, true, level+1);
+        let child = new FilterTreeNode(label, false, key, keyname, data, count, true, level+1, taxonomy);
         child.parent = this;
         this.children = [...this.children, child];
 
-        //Add only unique dataset to the count
-        if(searchResults) {
+        if (levels.length > 1){
+            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI, key);
+        }
+        return child;
+    }    
+
+    /**
+     *  Add count to each node
+     *  Loop through search result items and count those that natch the taxonomy of treenode.
+     * @param searchResults: search result array
+     * @param collection: Collection
+     * @param taxonomyURI: taxonomy URI to identify the topic.
+     */
+    addCount(searchResults: any = null, collection: string=null, taxonomyURI: any = {}) {
+        for (let child of this.children) {
+            this._addCount(child, searchResults, collection, taxonomyURI);
+        }
+    }
+
+    _addCount(tree: FilterTreeNode, searchResults: any = null, collection: string=null, taxonomyURI: any = {}) {
+        if (tree.label.slice(0, 5) == "Other")
+            console.log("tree", tree);
+
+        tree.count = 0;
+        tree.ediids = [];
+        tree.key = tree.keyname;
+        let taxonomy = tree.taxonomy;
+        let parent: FilterTreeNode = tree.parent;
+
+        while (parent && parent.level > 1) {
+            tree.key = parent.keyname + tree.key;
+            parent = parent.parent;
+        }
+
+        if (searchResults && searchResults.length > 0) {
             for (let resultItem of searchResults) {
                 let found: boolean = false;
                 if(resultItem.topic && resultItem.topic.length > 0){
                     for(let topic of resultItem.topic) {
-                        if(topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                        if (topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
+                            // For default collection (NIST), we only check if the taxonomy of the result item includes the taxonomy that we are looking for.
                             if(collection == Collections.DEFAULT) {
-                                if(topic.tag.includes(data)) {
+                                if(topic.tag.includes(taxonomy)) {
                                     found = true;
                                     break;
                                 }
-                            }else{
-                                if(topic.tag == data) {
-                                    found = true;
-                                    break;
+                            } else {
+                                // Handle "Other" specially because "Other" is not in any tag (we added it to resolve the case that node and leaf have the same name).
+                                if (tree.label.slice(0, 5) == "Other") {
+                                    if(topic.tag == taxonomy) {
+                                        found = true;
+                                        break;
+                                    }   
+                                } else {
+                                    // See if the taxonomy of the result item includes the taxonomy that we are looking for.
+                                    // We count it even if the taxonomy of the result item has move levels than the taxonomy that we are looking for.
+                                    let taxonomyToFind = taxonomy.split(":");
+                                    let taxonomyToSearch = topic.tag.split(":");
+
+                                    let foundMatch = true;
+                                    for (let i = 0; i < taxonomyToFind.length; i++) {
+                                        if (taxonomyToFind[i] != taxonomyToSearch[i]) {
+                                            foundMatch = false;
+                                            break;
+                                        }
+                                    }
+
+                                    if (foundMatch) {
+                                        found = true;
+                                        break;
+                                    }                                
                                 }
                             }
                         }
@@ -644,19 +744,41 @@ export class FilterTreeNode implements TreeNode {
                 }
 
                 if(found){
-                    if(!child.ediids.includes(resultItem.ediid)){
-                        child.ediids.push(resultItem.ediid);
-                        child.count++;
+                    if(!tree.ediids.includes(resultItem.ediid)){
+                        tree.ediids.push(resultItem.ediid);
+                        tree.count++;
                     }
                 }        
             }
         }
 
-        if (levels.length > 1){
-            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI, key);
+        for (let child of tree.children) {
+            this._addCount(child, searchResults, collection, taxonomyURI);
         }
-        return child;
     }    
+  
+    /**
+     *  Refresh taxonomy for each node
+     */
+    refreshTaxonomy() {
+        for (let child of this.children) {
+            this._refreshTaxonomy(child);
+        }        
+    }
+
+    _refreshTaxonomy(tree: FilterTreeNode) {
+        let parent: FilterTreeNode = tree.parent;
+        tree.taxonomy = tree.keyname;
+        
+        if(parent && parent.level > 1) {
+            if(parent.taxonomy)
+                tree.taxonomy = parent.taxonomy + ":" + tree.taxonomy;
+        }       
+        
+        for (let child of tree.children) {
+            this._refreshTaxonomy(child);
+        }        
+    }  
 }
 
 //For display purpose

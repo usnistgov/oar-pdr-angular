@@ -2,6 +2,12 @@
     margin-left: 1em;
 }
 
+.download_button {
+    width: 220px;
+    height: 2em;
+    margin-left: 0px;
+}
+
 /* Will be replaced by Angular material button later */
 .btn-primary {
     background-color: var(--nist-green-default);

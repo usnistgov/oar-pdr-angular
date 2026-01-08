@@ -2,7 +2,6 @@ import { Component, Input, SimpleChanges, ViewChild, effect, ChangeDetectorRef, 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, Themes, iconClass } from '../../../shared/globals/globals';
@@ -48,6 +47,7 @@ export class VisithomeMidasComponent {
     overflowStyle: string = 'hidden';
     globalsvc = inject(GlobalService);
     editStarted: boolean = false;
+    isPublicSite: boolean = false;
 
     //icon class names
     editIcon = iconClass.EDIT;
@@ -62,8 +62,7 @@ export class VisithomeMidasComponent {
                 public edstatsvc: EditStatusService,        
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
-                private notificationService: NotificationService,
-                private gaService: GoogleAnalyticsService) 
+                private notificationService: NotificationService) 
     { 
         effect(() => {
             // When edit mode changed, refresh the screen
@@ -349,16 +348,6 @@ export class VisithomeMidasComponent {
         }else{
             return "var(--nist-green-default)";
         }
-    }
-
-    /**
-     * Google Analytics track event
-     * @param url - URL that user visit
-     * @param event - action event
-     * @param title - action title
-     */
-    googleAnalytics(url: string, event, title) {
-        this.gaService.gaTrackEvent('homepage', event, title, url);
     }
 
     hideEditBlock() {

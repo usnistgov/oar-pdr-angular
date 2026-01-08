@@ -185,6 +185,22 @@ export class ResourceDataComponent implements OnChanges {
      */
      googleAnalytics(url: string, event, title) {
         this.gaService.gaTrackEvent('homepage', event, title, url);
+     }
+    
+    showSectionTitle() {
+        let show: boolean = false;
+
+        if (this.isPublicSite) {
+            show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
+        } else {
+            if (this.isEditMode) {
+                show = true;
+            } else {
+                show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
+            }
+        }
+
+        return show;
     }
 }
 

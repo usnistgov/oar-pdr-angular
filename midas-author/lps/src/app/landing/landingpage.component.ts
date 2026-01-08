@@ -201,7 +201,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     isEditMode: boolean = false;
     landingPageURL: string;
     landingPageServiceStr: string;
-    pubLandingPageURL: string = "http://localhost:4201/od/id/"
+    pubLandingPageURL: string = ""
     suggestions: ReviewResponse = {} as ReviewResponse;
     
     @HostListener('document:click', ['$event'])
@@ -360,6 +360,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
+      this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
+      this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
         this.helpWidthRatio = this.helpWidth / window.innerWidth;
 
         this.landingPageURL = this.cfg.get('PDRAPIs.mdService','/od/id/');
@@ -390,74 +392,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 // let param = queryParams.get("editmode");
                     let param = queryParams.get("editenabled");
                     this.paramEditEnabled = param.toLocaleLowerCase() == 'true';
-                    // if (param && param.toLocaleLowerCase() == 'true'){
-                    //     this.editRequested = true;
 
-                    //     this.mdupdsvc.isAuthorized(this.reqId).subscribe((result) => {
-                    //     this.globalService.setAuthorized(result);
-                    //     if(result) {
-                    //         this.editRequested = true;
-                    //         this.isEditMode = true;
-                    //         this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
-                    //         this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                    //         this.edstatsvc._setEditType(this.editTypes.NORMAL);
-                    //     }
-                    //     else {
-                    //         this.editRequested = false;
-                    //         this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    //         this._showContent = true;
-                    //         this.edstatsvc.setShowLPContent(true);
-                    //     }
-
-                    //     });
-                    // }else{
-                    //     this.editRequested = false;
-                    //     this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    //     this.edstatsvc.setShowLPContent(true);
-                    //     this._showContent = true;
-                    //     this.globalService.setAuthorized(false);
-                    // }
-                
-                
-                // Will enable following for revision mode
-                // switch(param.toLowerCase()) {
-                //     case "revise": {
-                //         this.editRequested = true;
-                //         this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
-                //         this.edstatsvc._setEditType(this.editTypes.REVISE);
-                //         this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                //         this.edstatsvc.setShowLPContent(false);
-                //         break;
-                //     }
-                //     case "edit": {
-                //         this.editRequested = true;
-                //         this.isEditMode = true;
-                //         this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
-                //         this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                //         this.edstatsvc._setEditType(this.editTypes.NORMAL);
-                //         this.edstatsvc.setShowLPContent(false);
-                //         break;
-                //     }
-                //     case "done": {
-                //         this.editRequested = false;
-                //         this.edstatsvc._setEditMode(this.EDIT_MODES.DONE_MODE);
-                //         this.edstatsvc.setShowLPContent(true);
-                //         break;
-                //     }
-                //     default: { // preview
-                //         this.editRequested = false;
-                //         this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                //         this.edstatsvc.setShowLPContent(true);
-                //         break;
-                //     }
-                // }
-
-                // if editEnabled = true, we don't want to display the data that came from mdserver
-                // Will set the display to true after the authentication process. If authentication failed,
-                // we set it to true and the data loaded from mdserver will be displayed. If authentication
-                // passed and draft data loaded from customization service, we will set this flag to true
-                // to display the data from MIDAS.
-                // this.edstatsvc.setShowLPContent(! this.editRequested);
             });
 
             // Retrive Nerdm record and keep it in case we need to display it in preview mode

@@ -14,7 +14,8 @@ SED_RE_OPT=r
 
 rpa_dists="pdr-rpa-request pdr-rpa-approve"
 dap_dists="midas-author-wizard midas-author-lps"
-avail_dists="$dap_dists $rpa_dists"
+pub_dists="pdr-lps"
+avail_dists="$dap_dists $rpa_dists $pdr-lps"
 
 function usage {
     cat <<EOF
@@ -97,7 +98,7 @@ while [ "$1" != "" ]; do
         -*)
             args=(${args[@]} $1)
             ;;
-        midas-author-lps|midas-author-wizard|pdr-rpa-request|pdr-rpa-approve)
+        midas-author-lps|midas-author-wizard|pdr-rpa-request|pdr-rpa-approve|pdr-lps)
             dists="$dists $1"
             ;;
         editable)

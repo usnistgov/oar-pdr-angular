@@ -39,7 +39,7 @@
         "general": "This field is for a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource.",
         "edit": "Click <i class='saveIcon'></i> to save. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
-    "theme":{
+    "topic":{
         "label": "Research Topics",
         "general": "You are in Research Topics section where you can select topics from the NIST Research Taxonomy. Select one or more topics that apply to this resource",
         "add": "Click <i class='editIcon'></i> to select topics for this resource. Click on the arrows to view subtopics. Double-click on a topic to select it for your resource. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",

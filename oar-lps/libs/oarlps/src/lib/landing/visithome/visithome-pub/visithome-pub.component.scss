@@ -1,15 +1,5 @@
 .home_button {
-    float:right;
-    width:220px;
-    height:2em;
-    line-height:1em;
-    background-color:var(--nist-green-default);
-    color:white;
-    border-radius: 5px;
-}
-
-.home_button:hover {
-    background-color: var(--nist-green-light);
+    float: right;
 }
 
 .myCustomModalClass .modal-dialog {

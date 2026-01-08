@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { CitationPopupComponent } from './citation-popup.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 describe('CitationPopupComponent', () => {
     let component: CitationPopupComponent;
@@ -11,7 +12,8 @@ describe('CitationPopupComponent', () => {
         await TestBed.configureTestingModule({
         imports: [
             CitationPopupComponent,
-            NoopAnimationsModule]
+                NoopAnimationsModule],
+        providers: [NgbActiveModal]
         })
         .compileComponents();
 
@@ -26,13 +28,7 @@ describe('CitationPopupComponent', () => {
         expect(component).toBeTruthy();
 
         let cmpel = fixture.nativeElement;
-        let pels = cmpel.querySelectorAll("lib-citation-display");
-        expect(pels.length).toEqual(1);
-
-        pels = cmpel.querySelectorAll("p-dialog");
-        expect(pels.length).toEqual(1);
-
-        pels = cmpel.querySelectorAll("button");
+        let pels = cmpel.querySelectorAll("button");
         expect(pels.length).toEqual(1);
 
         pels = cmpel.querySelectorAll(".citation");

@@ -19,8 +19,7 @@ export class SearchfieldsListService {
      */
     constructor(private http: HttpClient, private cfg: AppConfig) 
     {
-        // this.RMMAPIURL = cfg.get("PDRAPIs.mdService", "/rmm/");
-        this.RMMAPIURL = cfg.get("links.mdService", "/rmm/");
+        this.RMMAPIURL = cfg.get("PDRAPIs.mdSearch", "/rmm/");
     }
 
     ngOnInit(): void {

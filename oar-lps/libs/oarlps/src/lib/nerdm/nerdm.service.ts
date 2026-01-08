@@ -1,5 +1,5 @@
 import { isPlatformServer } from '@angular/common';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import * as rxjs from 'rxjs';
 import * as rxjsop from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
@@ -65,21 +65,37 @@ export class CachingNERDmResourceService extends NERDmResourceService {
         return this.cache.get(id) as NerdmRes;
     }
 
-    getResource(id : string) : Observable<NerdmRes> {
-        let rec : NerdmRes = this.queryCache(id);
-        if (rec !== undefined) 
+    getResource(id: string): Observable<NerdmRes> {
+        let rec: NerdmRes = this.queryCache(id);
+        if (rec !== undefined)
             return rxjs.of(rec);
 
         let out$ = this.del.getResource(id);
-        out$.subscribe(
-            (rcrd) => { this.cacheRecord(id, rcrd.data); },
-            (err) => {
-                if (err instanceof errors.IDNotFound)
-                    this.cacheRecord(id, null);
-                return rxjs.throwError(err);
+        out$.subscribe({
+            next: (rcrd) => { this.cacheRecord(id, rcrd); },
+            error: (err) => {
+                let msg = err.message
+                if (err instanceof errors.ServerError)
+                    msg = "Remote metadata server error"
+                this.cacheRecord(id, this._makeErrorRec(err.status, msg));
+                return throwError(() => err);
             }
-        )
+        })
         return out$;
+    }
+
+    /* 
+     * make a compliant NerdmRes that communicates a server-side error that occured while 
+     * fetching NERDm metadata
+     */
+    _makeErrorRec(status: number, message: string): NerdmRes {
+        if (status === undefined || status == null)
+            status = 0;
+        return {
+            "@id": "pdr:error",
+            "title": message,
+            "http:status": status
+        }
     }
 }
 
@@ -162,8 +178,33 @@ export class TransferResourceService extends NERDmResourceService {
      * @param id   the identifier of the resource to load
      */
     getResource(id : string) : Observable<NerdmRes> {
-        return rxjs.of(this.mdtrx.get(id) as NerdmRes);
+        let resmd: NerdmRes = this.mdtrx.get(id) as NerdmRes;
+
+        // Check for an error response from the server
+        if (! resmd || resmd["http:status"] == 404)
+            return rxjs.throwError(() => new errors.IDNotFound(id));
+        if (this._isErrorRec(resmd)) {
+            let msg = resmd["title"];
+            if (resmd["http:status"] == 401)
+                return rxjs.throwError(() => new errors.NotAuthorizedError(id));
+            if (resmd["http:status"] >= 500) {
+                if (! msg)
+                    msg = "Unknown server error";
+                return rxjs.throwError(() => new errors.ServerError(msg));
+            }
+            msg = "Unexpected response from metadata service: "+msg+" ("+
+                resmd["http:status"]+")";
+            return rxjs.throwError(() => new errors.OARError(msg));
+        }
+
+        // No error detected!
+        return rxjs.of(resmd);
     }
+
+    _isErrorRec(rec: NerdmRes): boolean {
+        return rec["@id"] == "pdr:error";
+    }
+    
 }
 
 /**
@@ -283,7 +324,7 @@ export class RMMResourceService extends NERDmResourceService {
                 // this will get handled by our global error handler
                 if (err.status == 404) 
                     return rxjs.throwError(new errors.IDNotFound(id));
-                return rxjs.throwError(err);
+                return rxjs.throwError(() => err);
             })
         );
     }
@@ -362,7 +403,6 @@ export function createResourceService(ngenv: IEnvironment, platid : Object, endp
     // Note: this implementation is based on the assumption that the app only needs one
     // NERDm record--the one for the resource being displayed.  If that assumption is no
     // longer true, this implementation should be changed (which would not be hard).
-
     let svc : NERDmResourceService|null = null
     if (isPlatformServer(platid)) {
         if (proc.env["PDR_METADATA_DIR"]) {

@@ -16,11 +16,20 @@
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of useMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [style.--background-default]="menuitem.isHeader? defaultColor: lighterColor" [style.--background-lighter]="lighterColor"
-            [style.--background-hover]="hoverColor" 
+            [style.--background-default]="menuitem.isHeader? defaultColor: lighterColor"
+            [style.--background-lighter]="lighterColor" [style.--background-hover]="hoverColor"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <i [class]="menuitem.icon"></i>
             {{menuitem.title}}
+        </td>
+    </tr>
+    <tr *ngIf="hasDataFiles">
+        <td class="menu-item menu-body" scope="row" [style.--background-default]="lighterColor"
+            [style.--background-lighter]="lighterColor" [style.--background-hover]="hoverColor">
+            <a href="{{bulkDownloadURL}}" target="_blank">
+                <i class="faa faa-download"></i>
+                Bulk Download
+            </a>
         </td>
     </tr>
 </table>

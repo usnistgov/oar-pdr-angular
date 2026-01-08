@@ -38,13 +38,13 @@ export class SearchService {
                 @Inject(PLATFORM_ID) private platformId: Object,
                 private cfg: AppConfig) 
     {
-        this.landingBackend = cfg.get("PDRAPIs.mdService", "/od/id/");
+        this.landingBackend = cfg.get("links.pdrIDResolver", "/od/id/");
         this.portalBase = cfg.get("links.portalBase", "/");
 
         if (this.landingBackend == "/unconfigured")
             throw new Error("Metadata service endpoint not configured!");
 
-        this.rmmBackend = cfg.get("PDRAPIs.mdService", "/rmm");
+        this.rmmBackend = cfg.get("PDRAPIs.mdSearch", "/rmm");
         if (this.rmmBackend == "/unconfigured")
             throw new Error("mdService endpoint not configured!");
 
