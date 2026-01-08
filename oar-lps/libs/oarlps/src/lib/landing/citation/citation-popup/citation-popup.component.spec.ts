@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { CitationPopupComponent } from './citation-popup.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -13,7 +13,7 @@ describe('CitationPopupComponent', () => {
         imports: [
             CitationPopupComponent,
                 NoopAnimationsModule],
-        providers: [NgbActiveModal]
+        providers: [NgbActiveModal, CollectionService]
         })
         .compileComponents();
 
@@ -21,6 +21,45 @@ describe('CitationPopupComponent', () => {
         component = fixture.componentInstance;
         component.citetext = "It's all about me!";
         component.visible = true;
+        component.allCollections =
+            {
+                "NIST": {
+                    "tag": "NIST R&D",
+                    "bannerUrl": "",
+                    "id":"",
+                    "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
+                    "colorPalette": "Green",
+                    "displayOrder": 4,
+                    "landingPage": true
+                },
+                "Forensics": {
+                    "tag": "Forensics",
+                    "bannerUrl": "assets/images/fingerprint.jpg",
+                    "id":"pdr0-0001",
+                    "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-forensics/",
+                    "colorPalette": "Cyan",
+                    "displayOrder": 2,
+                    "landingPage": true
+                },
+                "Semiconductors": {
+                    "tag": "CHIPS Metrology",
+                    "bannerUrl": "assets/images/METIS-Banner-Op1.png",
+                    "id":"pdr0-0002",
+                    "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/",
+                    "colorPalette": "Blue",
+                    "displayOrder": 1,
+                    "landingPage": true
+                },
+                "AM": {
+                    "tag": "Additive Manufacturing",
+                    "bannerUrl": "assets/images/AM_Banner3.jpg",
+                    "id":"pdr0-0003",
+                    "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/",
+                    "colorPalette": "AMGreen",
+                    "displayOrder": 3,
+                    "landingPage": true
+                }      
+            }
         fixture.detectChanges();
     });
 

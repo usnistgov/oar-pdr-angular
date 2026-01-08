@@ -307,15 +307,7 @@ export class FiltersComponent implements OnInit {
             }
         }
     }
-
-    get isForensics() {
-        return this.collection == Collections.FORENSICS;
-    }
-
-    get isSemiconductors() {
-        return this.collection == Collections.SEMICONDUCTORS;
-    }
-
+    
     toggleMoreOptions() {
         this.MoreOptionsDisplayed = !this.MoreOptionsDisplayed;
         if(this.MoreOptionsDisplayed)
@@ -737,6 +729,7 @@ export class FiltersComponent implements OnInit {
         this.filterStrings[Collections.DEFAULT] = "";
         this.filterStrings[Collections.FORENSICS] = "";        
         this.filterStrings[Collections.SEMICONDUCTORS] = "";
+        this.filterStrings[Collections.AM] = "";
 
         this.suggestedThemes = [];
         this.suggestedKeywords = [];
@@ -931,6 +924,7 @@ export class FiltersComponent implements OnInit {
         let allThemesAllArray: any = {};
         let topicLabel: string;
         let data: string;
+        let collection = '';
         this.unspecifiedCount = 0;
 
         keys.forEach(key => {
@@ -957,37 +951,30 @@ export class FiltersComponent implements OnInit {
                         // topicLabel = topics[0] + ":" + topics[1];
                         topicLabel = topic.tag;
                     }
+
+                    if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.AM]) >= 0) {
+                        collection = Collections.AM;
+                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
+                        collection = Collections.SEMICONDUCTORS;
+                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
+                        collection = Collections.FORENSICS;
+                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0) {
+                        collection = Collections.DEFAULT;
+                    } else {
+                        collection = '';
+                    }
                     
-                    if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
+                    if (collection != '') {
                         topicLabel = topics[0];
-                        data = topic.tag.trim();
-
-                        if(topics.length > 1){
-                            // topicLabel = topics[0] + ":" + topics[1];
-                            topicLabel = topic.tag.trim();
-                        }
-
-                        if(allThemesArray[Collections.SEMICONDUCTORS].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.SEMICONDUCTORS].push({ label: topicLabel, value: data });
-                            allThemesArray[Collections.SEMICONDUCTORS].push(topicLabel);
-                        }
-                    }else if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
                         data = topic.tag.trim();
 
                         if(topics.length > 1){
                             topicLabel = topic.tag.trim();
                         }
 
-                        if(allThemesArray[Collections.FORENSICS].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.FORENSICS].push({ label: topicLabel, value: data });
-                            allThemesArray[Collections.FORENSICS].push(topicLabel);
-                        }
-                    }else if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0){
-                        topicLabel = topics[0];
-
-                        if (allThemesArray[Collections.DEFAULT].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.DEFAULT].push({ label: topicLabel, value: topic.tag.trim() });
-                            allThemesArray[Collections.DEFAULT].push(topicLabel);
+                        if(allThemesArray[collection].indexOf(topicLabel) < 0) {
+                            allThemes[collection].push({ label: topicLabel, value: data });
+                            allThemesArray[collection].push(topicLabel);
                         }
                     }
                 }

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, SimpleChanges, AfterContentInit, C
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NerdmRes } from '../../../nerdm/nerdm';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, GlobalService } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, Collections, CollectionDisplay, GlobalService } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 
 @Component({
@@ -60,11 +60,16 @@ export class TopicPubComponent implements AfterContentInit {
         if(this.isDefaultCollection(collection))
             return true;
         else {
-            //Loop through "isPartOf" field
+            //Decide which collection topic to display
             if(this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
             this.record['isPartOf'].length > 0) {
-                for(let c of this.record['isPartOf']) {
-                    return (c.title.toLowerCase().indexOf(collection.toLowerCase()) > -1)
+                for (let c of this.record['isPartOf']) {
+                    let colDisplay = CollectionDisplay[collection.toUpperCase()] ? CollectionDisplay[collection.toUpperCase()] : "";    
+                    if (colDisplay != "") {
+                        return (c.title.toLowerCase().indexOf(colDisplay.toLowerCase()) > -1)
+                    } else {
+                        return false;
+                    }
                 }
             }else{
                 return false;
