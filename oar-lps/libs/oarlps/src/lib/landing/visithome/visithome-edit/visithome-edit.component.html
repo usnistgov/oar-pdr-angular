@@ -26,7 +26,7 @@
         </td>
 
         <!-- Control buttons -->
-        <td style="width: 30px;vertical-align: top;">
+        <td style="width: 30px;vertical-align: top; white-space: nowrap;">
             <!-- Save button -->
             <button class="edit_button" 
                     type="button" 
@@ -34,12 +34,12 @@
                     aria-label="edit button" 
                     [disabled]="!dataChanged" 
                     ngbTooltip="Save changes">
-                <i class="fas fa-check"></i>
+                <i [class]="saveIcon"></i>
             </button>
     
             <!-- Undo button -->
-            <button *ngIf="currentValueChanged" class="edit_button" style="margin: 10px 0px 0px 2px" (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
-                <i class="fas fa-undo fa-sm"></i>
+            <button *ngIf="currentValueChanged" class="edit_button" style="margin: -1px 0px 0px 0px" (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
+                <i [class]="undoIcon"></i>
             </button>
         </td>          
     </tr>

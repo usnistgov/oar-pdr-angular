@@ -1,71 +1,147 @@
-<div class="bar" style="color: white !important;">
-    Submit Confirmation
-</div>
-
-<div class="content">
-    <div  *ngIf="hasRequiredItems; else recommend">
-        We have reviewed your draft. There are required items to be finished. Please go back and re-edit:
+<div class="wrapper">
+    <div class="bar" style="color: white !important;">
+        Submit Confirmation
     </div>
-    <ng-template #recommend>
-        We have reviewed your draft. The following are the items we recommend. You can choose continue submitting or cancel submit and go back to edit:
-    </ng-template>
     
-    <div style="margin-top: 1em;">
-        <div *ngIf="hasRequiredItems" style="margin-bottom: .5em;font-weight: bold;"> 
-            <suggestions 
-                suggestionLabel="The following items are required"
-                [suggestions]="suggestions['req']"
-                showSug="true"
-                textOnly="true"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
+    <div class="content">
+        <div id="suggestions" >
+            @if(showHelp){
+                <i class="faa faa-times-circle btn-hide-help" (click)="processCommand('getHelp')" aria-hidden="true"></i>
+            }
+            <div [@slideToggle]="showHelp ? 'visible' : 'hidden'" class="sliding-div"
+                [ngStyle]="{'max-height':maxHeight + 'px'}">
+                <p [innerHTML]="revisionHelp['htmlcontent']"></p>
+                <!-- This is a placeholder for revision description.
+    
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Situation</th>
+                            <th>Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource; let i = index">
+                            <td>{{ i }}</td>
+                            <td>{{ data.position }}</td>
+                            <td>{{ data.situation }}</td>
+                        </tr>
+                    </tbody>          
+                </table> -->
+            </div>
+    
+            <div *ngIf="showSuggestion">
+                <div class="statement">
+                    <div *ngIf="hasRequiredItems; else recommend">
+                        We have reviewed your draft. There are required items to be finished. Please go back and re-edit:
+                    </div>
+                    <ng-template #recommend>
+                        We have reviewed your draft. The following are the items we recommend. You can choose continue
+                        submitting or cancel
+                        submit and go back to edit:
+                    </ng-template>
+                </div>
+    
+                <div class="suggestion-details">
+                    <div *ngIf="hasRequiredItems" class="suggestion-req suggestion-item">
+                        <suggestions suggestionLabel="The following items are required" [suggestions]="suggestions['req']"
+                            showSug="true" textOnly="true" (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+    
+                    <div *ngIf="hasWarnItems" class="suggestion-item">
+                        <suggestions suggestionLabel="Warning" [suggestions]="suggestions['warn']" showSug="true"
+                            textOnly="true" (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+    
+                    <div *ngIf="hasRecommendedItems">
+                        <suggestions suggestionLabel="The following items are recommended"
+                            [suggestions]="suggestions['rec']" showSug="true" textOnly="true"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+                </div>
+    
+                <div style="font-weight: bold; margin: .5em 0em;">Notes to reviewers:</div>
+                <textarea 
+                    cdkTextareaAutosize 
+                    cdkAutosizeMinRows="2" 
+                    cdkAutosizeMaxRows="5" 
+                    [(ngModel)]="submissionData.submissionNotes"
+                    (change)="onTextChange($event)"
+                    placeholder="Enter Submission Notes Here:"
+                    class="textbox">
+                </textarea>
+            </div>
         </div>
-
-        <div *ngIf="hasWarnItems" style="margin-bottom: .5em;"> 
-            <suggestions 
-                suggestionLabel="Warning"
-                [suggestions]="suggestions['warn']"
-                showSug="true"
-                textOnly="true"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
-        </div>
-
-        <div *ngIf="hasRecommendedItems"> 
-            <suggestions 
-                suggestionLabel="The following items are recommended"
-                [suggestions]="suggestions['rec']"
-                showSug="true"
-                textOnly="true"
-                (gotoSectionName)="gotoSection($event)">
-            </suggestions>
-        </div>
+    
+        @if(submissionData.isRevision) {
+            <div class="revision">
+                <revision-details 
+                    [submissionData]="submissionData" 
+                    (changedData)="updateSubmissionData($event)"
+                    (command)="processCommand($event)">
+                </revision-details>
+            </div>
+        }
     </div>
-</div>
-
-<hr>
-<div class="control-buttons">
-    <!-- Buttons are arranged from right to left -->
+    
+    
+    <hr>
+    <div class="control-buttons">
+        <!-- Buttons are arranged from right to left -->
         <!-- Continue Submit button -->
         <button 
-            pButton 
-            *ngIf="!hasRequiredItems"
-            class="btn btn-labeled" 
-            id="btn-submit" 
-            (click)="continueSubmit()"
+            pButton
+            type="button"
+            pTooltip="Proceed with Submission" 
+            tooltipPosition="bottom" 
+            class="btn btn-submit" 
+            (click)="continueSubmit()" 
+            [disabled]="hasRequiredItems" 
             label="Proceed with Submission" 
-            icon="fas fa-arrow-circle-up faa-1x icon-white" 
+            icon="fas fa-arrow-circle-up faa-1x icon-white"  
             iconPos="left">
         </button>
-
-        <!-- Cancel button -->
+      
         <button 
             pButton 
-            class="btn btn-labeled" 
-            id="btn-cancel" 
-            (click)="cancelSubmit()"
-            label="Back to Edit" 
-            icon="fas fa-times faa-1x icon-white" 
-            iconPos="left">
+            type="button" 
+            pTooltip="Back to Edit" 
+            tooltipPosition="bottom" 
+            class="btn btn-cancel"
+            (click)="cancelSubmit()" 
+            label="Back to Edit"
+            icon="fas fa-pencil faa-1x icon-white" iconPos="left">
         </button>
+
+        <!-- <button mat-fab extended aria-label="Proceed with Submission" stylaria-label="Add" class="mat-btn btn-submit"
+            (click)="continueSubmit()" disabled="true">
+            <mat-icon class="btn-icon">upload</mat-icon>
+            <span class="btn-label">Proceed with Submission</span>
+        </button> -->
+    
+        <!-- Cancel button -->
+        <!-- <button mat-fab extended aria-label="Back to Edit" stylaria-label="Add" class="mat-btn btn-cancel"
+            (click)="cancelSubmit()">
+            <mat-icon class="btn-icon">edit</mat-icon>
+            <span class="btn-label">Back to Edit</span>
+        </button> -->
+        <!-- 
+                <button 
+                    matButton="filled"
+                    class="btn btn-labeled" 
+                    id="btn-cancel" 
+                    (click)="cancelSubmit()"
+                    label="Back to Edit" 
+                    icon="fas fa-times faa-1x icon-white" 
+                    iconPos="left">
+                    Back to Edit
+                </button> -->
+    
+    
+        </div>
 </div>
+

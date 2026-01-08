@@ -9,7 +9,8 @@
     "resolveJsonModule": true
   },
   "files": [
-    "main.ts"
+    "main.ts",
+    "polyfills.ts"
   ],
   "include": [
     "**/*.d.ts"

@@ -23,7 +23,6 @@ describe('MessageBarComponent', () => {
         makeComp();
         fixture.detectChanges();
         let cmpel = fixture.nativeElement;
-        // console.log("messagebar root tag: "+cmpel.outerHTML);
         // expect(cmpel.getAttribute("class")).toEqual("messagebar");
         let mbardiv = cmpel.querySelectorAll(".messagebar");
         expect(mbardiv.length).toEqual(0);

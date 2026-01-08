@@ -5,6 +5,7 @@ import { MetadataUpdateService } from '../metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 describe('SubmitConfirmComponent', () => {
     let component: SubmitConfirmComponent;
@@ -14,7 +15,7 @@ describe('SubmitConfirmComponent', () => {
         
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ SubmitConfirmComponent ],
+            imports: [ SubmitConfirmComponent, BrowserAnimationsModule ],
             providers: [ 
                 UserMessageService, 
                 NgbActiveModal, 

@@ -22,7 +22,12 @@
             <p>
             <span style="color: red;"><sup>*</sup>recommended for datasets with more than 300 files</span>
             </p>
-            
+
+            <dl style="border: 2px solid black; background-color: #eeeeee; padding: 0ex 0.5ex 0ex 1ex; border-radius: 0.5ex; font-size: smaller; line-height: 2.5ex;">
+              <dt>Note:</dt>
+              <dd style="padding-left: 2em;"><i>This page mentions third party tools, some which may be commercial products; this does not imply endorsement by NIST.</i> </dd>
+            </dl>            
+
             <a name="download-all" #downloadall></a>
             <p class="smlabelStyle">Download all files through the Data Cart</p>
 
@@ -69,14 +74,14 @@
             <p class="smlabelStyle">Downloading large datasets using the rclone tool</p>
             <p style="margin-left: 2em;">
 
-            <a href="https://rclone.org/downloads/"
+            <a href="https://rclone.org/install/"
                 target="_blank"
                 rel="noopener"
                 pButton
                 label="Download rclone"
                 class="anchor-button p-button">
                 <i class="faa faa-download download-icon" aria-hidden="true"></i>
-                Download rclone
+                Install rclone
             </a>
 
             <p>
@@ -84,10 +89,13 @@
                 Data Cart will struggle to provide the data.  When the number of files is larger than about 300, we
                 recommend you try using <a href="https://rclone.org/">rclone</a>; it is a free, open-source tool
                 for transfering many files to and from remote storage (such as a cloud drive) easily and reliably.
-                The NIST PDR is fully compatible with rclone, making it an ideal tool for downloading large
-                datasets in bulk.  <a href="https://rclone.org/downloads/">It is available</a> for all major
-                computers, including Linux, Macs, and Windows, and can be installed manually or via common OS
-                software package managers (e.g. apt, rpm, Brew, etc.). 
+                The NIST PDR is fully compatible with rclone, making it a useful tool for downloading large
+                datasets in bulk.  <a href="https://rclone.org/install/">It is available</a> for all major
+                computers, including <a href="https://rclone.org/install/#linux">Linux</a>,
+                <a href="https://rclone.org/install/#macos">Macs</a>, and
+                <a href="https://rclone.org/install/#windows">Windows</a>, and can be installed manually or via 
+                common <a href="https://rclone.org/install/#package-managers">OS software package managers</a> 
+                (e.g. apt, rpm, Brew, etc.). 
             </p>
             <p>
                 After installing rclone, you can download all the files in a PDR dataset to your current directory

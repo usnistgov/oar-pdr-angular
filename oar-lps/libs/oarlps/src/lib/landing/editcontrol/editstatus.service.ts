@@ -1,7 +1,7 @@
 import { computed, Injectable, Signal, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UpdateDetails } from './interfaces';
-import { LandingConstants } from '../constants';
+import { LandingConstants } from '../../shared/globals/globals';
 
 /**
  * a service that can be used to monitor the editing status of the landing page.
@@ -75,14 +75,14 @@ export class EditStatusService {
      * Make editMode observable so any component that subscribe to it will
      * get an update once the mode changed.
      */
-    _reviseType : BehaviorSubject<string> =
-        new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
-    public setReviseType(val : string) { 
-        this._reviseType.next(val); 
-    }
-    public watchReviseType(subscriber) {
-        this._reviseType.subscribe(subscriber);
-    }
+    // _reviseType : BehaviorSubject<string> =
+    //     new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
+    // public setReviseType(val : string) { 
+    //     this._reviseType.next(val); 
+    // }
+    // public watchReviseType(subscriber) {
+    //     this._reviseType.subscribe(subscriber);
+    // }
 
     /**
      * Flag to tell the app to hide the content display or not. 
@@ -133,13 +133,6 @@ export class EditStatusService {
     private _authzd : boolean = false;
     _setAuthorized(val : boolean) { this._authzd = val; }
 
-    /**
-     * return true if it is possible to edit the landing page.  This will return false 
-     * when running as part of the public side of the PDR.
-     */
-    // public editingEnabled() : boolean {
-    //     return this.cfg.get("editEnabled", false);
-    // }
 
     /**
      * turn on editing controls allowing the user to edit the metadata

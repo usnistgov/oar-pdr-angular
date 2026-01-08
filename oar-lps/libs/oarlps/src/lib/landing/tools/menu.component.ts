@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges, inject } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { Themes, ThemesPrefs, Collections, GlobalService } from '../../shared/globals/globals';
-import { NerdmRes } from '../../nerdm/nerdm';
+import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { CartConstants } from '../../datacart/cartconstants';
 import { AppConfig } from '../../config/config';
 import * as _ from 'lodash-es';
@@ -10,6 +10,8 @@ import { MetricsData } from "../metrics-data";
 import { CommonModule } from '@angular/common';
 import { MenuModule } from 'primeng/menu';
 import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
+import { CitationPopupComponent } from '../citation/citation-popup/citation-popup.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 export class menuItem {
@@ -66,6 +68,8 @@ export class MenuComponent implements OnInit {
     globalsvc = inject(GlobalService);
     hasDataFiles: boolean = false;
     colorScheme: any;
+    modalRef: any; //For citation pop up
+    citetext: string = null;
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -76,7 +80,9 @@ export class MenuComponent implements OnInit {
     @Input() metricsData : MetricsData;
 
     // flag if metrics is ready to display
-    @Input() showMetrics : boolean = false;
+    @Input() showMetrics: boolean = false;
+    
+    // @Input() citetext: string;
 
     @Output() scroll = new EventEmitter<string>();
     
@@ -86,6 +92,7 @@ export class MenuComponent implements OnInit {
     constructor(public collectionService: CollectionService,
                 @Inject(PLATFORM_ID) private platformId: Object,
                 public globalService: GlobalService,
+                private modalService: NgbModal,
                 private cfg : AppConfig) 
     { 
         this.inBrowser = isPlatformBrowser(platformId);
@@ -113,6 +120,8 @@ export class MenuComponent implements OnInit {
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
         this.buildMenu();
+
+        this.citetext = (new NERDResource(this.record)).getCitation();
     }
 
     ngOnChanges(ch: SimpleChanges) {
@@ -226,7 +235,12 @@ export class MenuComponent implements OnInit {
      * (currently implemented as a pop-up).  
      */
     toggleCitation() {
-        this.toggle_citation.emit(true);
+        this.modalRef = this.modalService.open(CitationPopupComponent, { size: 'lg', backdrop: 'static' });
+        this.modalRef.componentInstance.citetext = this.citetext;
+        this.modalRef.result.then(
+            (result) => { },
+            (reason) => { }
+        ); 
     }
 
     /**
@@ -242,11 +256,11 @@ export class MenuComponent implements OnInit {
      * scroll to the specified section of the landing page
      */
     goToSection(sectname : string, url: string = "") {
-        if (sectname) {
-            console.info("scrolling to #"+sectname+"...");
-        }else{
-            console.info("scrolling to top of document");
-        }
+        // if (sectname) {
+        //     console.info("scrolling to #"+sectname+"...");
+        // }else{
+        //     console.info("scrolling to top of document");
+        // }
 
         switch(sectname) { 
             case "citation": { 

@@ -94,6 +94,8 @@ export * from './environments/ienvironment';
 export * from './environments/environment-impl';
 
 export * from './lib/shared/common-function/common-function.service';
+export * from './lib/shared/confirmation-dialog/confirmation-dialog.service';
+
 export * from './lib/landing/editcontrol/metadataupdate.service';
 export * from './lib/landing/landingpage.service';
 
@@ -119,3 +121,4 @@ export * from './lib/frame/usermessage.service';
 
 export * from './lib/bulk-download/bulk-download.component';
 export * from './lib/shared/collection-service/collection.service';
+export * from './lib/landing/revision-details/revision-details.component';

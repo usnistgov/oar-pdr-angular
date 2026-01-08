@@ -1,6 +1,4 @@
-* {
-    font-family: sans-serif;
-}
+// @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 :root {
     /* Colors */
@@ -43,6 +41,7 @@
 .oar-button {
     color: var(--button-text-color);
     background-color: var(--button-color);
+    border-color: var(--button-color);
     border-radius: 5px;
     cursor: pointer;
     text-align: center;
@@ -59,6 +58,7 @@
     background-color: var(--disabled-grey);
     color: var(--disable-text-color);
     cursor: default;
+    --warning: rgb(255, 140, 0);
 }
 
 .myCustomModalClass .modal-dialog {
@@ -150,10 +150,9 @@ h2 {
 
 .dialogHeader {
   background-color:var(--nist-blue-dark);
-  height: 4em;
+//   height: 2.5em;
   color:white;
   text-align: center;
-  padding-top: .5em;
 }
 
 .toast-bootstrap-compatibility-fix {
@@ -316,4 +315,33 @@ a {
 	outline-offset: -2px;
 }
 
+a,
+a:active,
+a:visited,
+a:focus {
+    outline: none !important;
+    border: none !important;
+    text-decoration: none !important;
+    box-shadow: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    -webkit-user-select: none;
+    /* Chrome/Safari */
+    -moz-user-select: none;
+    /* Firefox */
+    -ms-user-select: none;
+    /* IE10+ */
+    user-select: none;
+    -moz-outline-style: none;
+}
+.mat-btn {
+    border-radius: 8px !important;
+}
 
+.btn-icon {
+    margin-right: 5px !important;
+}
+
+.textbox {
+    border-radius: 5px;
+    padding: 5px;
+}

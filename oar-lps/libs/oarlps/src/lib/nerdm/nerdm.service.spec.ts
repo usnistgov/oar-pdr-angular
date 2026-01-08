@@ -1,7 +1,9 @@
 import * as nerdm from './nerdm';
 import * as nerdsvc from './nerdm.service';
+import * as errors from '../errors/error';
 import { Observable } from 'rxjs';
 import * as rxjs from 'rxjs';
+
 
 describe('TransferResourceService', function() {
 
@@ -11,6 +13,11 @@ describe('TransferResourceService', function() {
         "@id":  "ark:/88888/goober",
         ediid: "goober",
         title: "A Good Test"
+    };
+    let edata : nerdm.NerdmRes = {
+        "@id":  "pdr:error",
+        title: "Server collapse",
+        "http:status": 500
     };
 
     beforeEach(() => {
@@ -25,17 +32,36 @@ describe('TransferResourceService', function() {
                      (err)  => { fail(err); });
 
         let t2 = svc.getResource("gomer");
-        t2.subscribe((data) => { expect(data).toBeUndefined(); },
-                     (err)  => { fail(err);  });
+        t2.subscribe((data) => { fail("Failed to raise IDNotFound"); },
+                     (err)  => { expect(err).toBeInstanceOf(errors.IDNotFound); });
 
-        rxjs.merge(t1, t2).subscribe(null, null, () => { done(); });
+        rxjs.merge(t1, t2).subscribe(
+            null,
+            (err) => {
+                expect(err).toBeInstanceOf(errors.IDNotFound);
+                done();
+            },
+            () => { done(); });
+    });
+
+    it("getResource: handle server error", function(done) {
+        trx.set("gomer", edata);
+        svc.getResource("gomer").subscribe(
+            (data) => { fail("Failed to raise ServerError"); done(); },
+            (err)  => {
+                expect(err).toBeInstanceOf(errors.ServerError);
+                expect(err.status).toEqual(500);
+                done();
+            },
+            () => { done(); }
+        );
     });
 
 });
 
 class FailingResourceService extends nerdsvc.NERDmResourceService {
     getResource(id : string) : Observable<nerdm.NerdmRes> {
-        throw new Error("delegate service resorted to.");
+        return rxjs.throwError(() => new Error("delegate service resorted to."));
     }
 };
 
@@ -62,8 +88,25 @@ describe('CachingNERDmResourceService', function() {
                      ()     => { done(); });
     });
 
-    it('getResource() via delegate', function() {
-        expect(() => { svc.getResource("gomer") }).toThrowError();
+    it('getResource() via delegate', function(done) {
+        let t1 = svc.getResource("gomer");
+        t1.subscribe((data) => { fail("Failed to fail"); done(); },
+                     (err)  => {
+                         let ne = trx.get("gomer");
+                         expect(ne["@id"]).toEqual("pdr:error");
+                         expect(ne["title"]).toEqual("delegate service resorted to.");
+                         expect(ne["http:status"]).toEqual(0);
+                         expect(err).toBeInstanceOf(Error)
+                         done();
+                     },
+                     () => { done(); });
+    });
+
+    it('_makeErrorRec', function() {
+        let errnm = (svc as nerdsvc.CachingNERDmResourceService)._makeErrorRec(405, "Upstream error");
+        expect(errnm['@id']).toEqual("pdr:error");
+        expect(errnm['title']).toEqual("Upstream error");
+        expect(errnm['http:status']).toEqual(405);
     });
 });
 
@@ -92,11 +135,14 @@ describe('TransmittingResourceService', function() {
                      ()     => { done(); });
     });
 
-    it('getResource() via delegate', function() {
+    it('getResource() via delegate', function(done) {
         trx.set("goober", tdata);
         svc = new nerdsvc.TransmittingResourceService(new FailingResourceService(), trx);
 
-        expect(() => { svc.getResource("gomer") }).toThrowError();
+        let t1 = svc.getResource("gomer");
+        t1.subscribe((data) => { fail("Failed to fail"); done(); },
+                     (err)  => { expect(err).toBeInstanceOf(Error); done(); },
+                     ()     => { done(); });
     });
 
     it('getResource() caching to MetadataTransfer', function(done) {

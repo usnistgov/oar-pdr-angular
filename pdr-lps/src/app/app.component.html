@@ -6,48 +6,16 @@
     >
     <div class="custom-navbar">
         <a href="/pdr/about" target="_blank"><b style="color: white !important;">About</b></a> |
-        <a href="" target="_blank" style="color: white !important;"><b>Help</b></a> |
-        <a href="" target="_blank" style="color: white !important;"><b>Search</b></a> |
+        <a href="{{contactLink}}" target="_blank" style="color: white !important;"><b>Help</b></a> |
+        <a href="{{searchLink}}" target="_blank" style="color: white !important;"><b>Search</b></a> |
         <a href="/datacart/global_datacart" target="_blank" style="color: white !important;"><b>Cart</b><i
             class="faa faa-shopping-cart faa-1x"></i><span
             class="w3-badge badge-notify">{{cartLength}}</span></a>
     </div>
 </app-header-pub>
 
-    <!-- <app-header 
-        [appVersion]="appVersion" 
-        titleLn1="MIDAS" 
-        titleLn2="DATA PUBLISHING"
-        [cartLength]="cartLength">
-
-        <div class="bar-right daptool-navbar" style="float: right; margin: 15px 10px 0 0;color: white !important;">
-        <a href="/pdr/about" target="_blank"><b style="color: white !important;">About</b></a> |
-        <a href="" target="_blank" style="color: white !important;"><b>Help</b></a> |
-        <a href="" target="_blank" style="color: white !important;"><b>Search</b></a> |
-        <a href="/datacart/global_datacart" style="color: white !important;"><b>Cart</b><i
-            class="faa faa-shopping-cart faa-1x"></i><span
-            class="w3-badge badge-notify">{{cartLength}}</span></a>
-        </div>
-    </app-header> -->
-
-<!-- <app-header 
-    [appVersion]="appVersion" 
-    titleLn1="MIDAS" 
-    titleLn2="DATA PUBLISHING"
-    isPublicSite="true">
-
-    <div class="bar-right daptool-navbar" style="float: right; margin: 15px 10px 0 0;color: white !important;">
-      <a href="/pdr/about" target="_blank"><b style="color: white !important;">About</b></a> |
-      <a href="" target="_blank" style="color: white !important;"><b>Help</b></a> |
-      <a href="" target="_blank" style="color: white !important;"><b>Search</b></a> |
-      <a href="/datacart/global_datacart" style="color: white !important;"><b>Cart</b><i
-          class="faa faa-shopping-cart faa-1x"></i><span
-          class="w3-badge badge-notify">{{cartLength}}</span></a>
-    </div>
-  </app-header> -->
-
-  <div style="min-height: 58%;">
-    <router-outlet></router-outlet>
-  </div>
-  <app-footer></app-footer>
+<div style="min-height: 58%;">
+<router-outlet></router-outlet>
+</div>
+<app-footer></app-footer>
   

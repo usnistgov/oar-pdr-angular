@@ -124,6 +124,12 @@ describe('ResourceIdentityComponent', () => {
     }
 
     beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+        providers: [
+            GoogleAnalyticsService
+        ]})
+        .compileComponents();
+
         makeComp();
         component.inBrowser = true;
         component.ngOnChanges({})

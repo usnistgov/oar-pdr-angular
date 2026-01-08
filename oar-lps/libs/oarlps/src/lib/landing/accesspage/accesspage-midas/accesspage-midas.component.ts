@@ -5,7 +5,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { AccesspageListComponent } from '../accesspage-list/accesspage-list.component';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -56,6 +56,11 @@ export class AccesspageMidasComponent {
     scienceTheme = Themes.SCIENCE_THEME;
     globalsvc = inject(GlobalService);
     isPublicSite: boolean = false;
+
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    undoIcon = iconClass.UNDO;
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;

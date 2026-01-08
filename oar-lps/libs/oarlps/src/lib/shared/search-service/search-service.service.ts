@@ -38,13 +38,13 @@ export class SearchService {
                 @Inject(PLATFORM_ID) private platformId: Object,
                 private cfg: AppConfig) 
     {
-        this.landingBackend = cfg.get("PDRAPIs.mdService", "/od/id/");
+        this.landingBackend = cfg.get("links.pdrIDResolver", "/od/id/");
         this.portalBase = cfg.get("links.portalBase", "/");
 
         if (this.landingBackend == "/unconfigured")
             throw new Error("Metadata service endpoint not configured!");
 
-        this.rmmBackend = cfg.get("PDRAPIs.mdService", "/rmm");
+        this.rmmBackend = cfg.get("PDRAPIs.mdSearch", "/rmm");
         if (this.rmmBackend == "/unconfigured")
             throw new Error("mdService endpoint not configured!");
 
@@ -84,7 +84,6 @@ export class SearchService {
                 backend += 'records/';
         }
 
-        // console.log("Querying backend:", backend + searchValue);
         return this.http.get(backend + searchValue, { headers: new HttpHeaders({ timeout: '${10000}' }) });
     }
 
@@ -111,7 +110,6 @@ export class SearchService {
                         }
                     }),
                     catchError((err) => {
-                        // console.log(err);
                         if (err !== undefined) {
                             console.error("Failed to retrieve data for id=" + recordid + "; error status=" + err.status);
                             if ("message" in err) console.error("Reason: " + (<any>err).message);
@@ -138,8 +136,6 @@ export class SearchService {
      * @returns http response as an observable object
      */
     resolveSearchRequest(url: string): Observable<any> {
-
-        // console.log('search url', url);
         return this.http.get(this.portalBase+url);
     }
 }

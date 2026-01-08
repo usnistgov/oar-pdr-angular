@@ -64,7 +64,7 @@
                             <!-- Author list -->
                             <span *ngFor="let author of ref['authors']; let i = index">
                                 {{ author }}                 
-                                <i class="fas fa-times" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
+                                <i [class]="deleteIcon" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
                                         data-toggle="tooltip" title="Remove author"></i> 
                                 
                                 <span *ngIf="i < ref['authors'].length-1 ">,</span>
@@ -177,7 +177,7 @@
                             aria-label="reset button"
                             pTooltip="Reset" 
                             tooltipPosition="top" >
-                            <i class="fas fa-undo fa-sm" data-toggle="tooltip" title="Reset citation"></i>
+                            <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i>
                         </button>
 
                         <button 
@@ -226,7 +226,7 @@
             [disabled]="!ref.dataChanged" 
             pTooltip="Save current changes"
             tooltipPosition="top" >
-            <i class="fas fa-check fa-sm"></i>
+            <i [class]="saveIcon"></i>
         </button>
 
         <!-- Cancel button -->
@@ -237,7 +237,7 @@
             aria-label="undo button" 
             pTooltip="Undo current changes"
             tooltipPosition="top" >
-            <i class="fas fa-times"></i>
+            <i [class]="cancelIcon"></i>
         </button>
     </div>
 </div>

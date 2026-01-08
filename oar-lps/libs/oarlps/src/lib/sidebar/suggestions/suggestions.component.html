@@ -1,4 +1,4 @@
-<div class="subtitle">
+<div class="subtitle" (click)="showSuggestions = !showSuggestions;">
     <span style="margin-right: 5px;">
         &#8226;
     </span>
@@ -8,8 +8,7 @@
        (mouseover)="isMouseOver = true"
        (mouseleave)="isMouseOver = false"
        [ngClass]="{'fa-caret-right': !showSuggestions, 'fa-caret-down': showSuggestions}"
-       aria-label="Show warning steps"
-       (click)="showSuggestions = !showSuggestions;">
+       aria-label="Show warning steps">
     </i>
 </div>
 

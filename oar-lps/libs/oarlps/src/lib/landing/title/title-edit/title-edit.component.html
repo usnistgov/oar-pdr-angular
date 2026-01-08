@@ -10,20 +10,20 @@
   -->
 <div style="width: 100%;">
     <div style="display: table; margin-bottom: 0em;width:100%;">
-        <div class="editable_container" style="width:100%;">
+        <div class="editable_container no-wrap" style="width:100%;">
             <div class="editable_field red-star" *ngIf="edstatsvc.isEditMode()">
                 *
             </div>
 
             @if(isEditing) {
-                <div class="editable_field" [ngStyle]="titleWidth">
+                <div class="editable_field normal-wrap" [ngStyle]="titleWidth">
                     <h2 style="width: 100%;">
                         <textarea #title autocomplete="off" [(ngModel)]='record.title' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" style="width: 100%;cursor: text;" libTextareaAutoresize></textarea>
                     </h2>
                 </div>
             }
             @else {
-                <div class="editable_field" (click)="startEditing()" style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+                <div class="editable_field normal-wrap" (click)="startEditing()" style="width: fit-content;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
                     @if(record['title']) {
                         <span ><h2>{{record.title}}</h2></span>
                     }
@@ -45,14 +45,14 @@
                             tooltipPosition="top" 
                             aria-label="Edit title" 
                             style="cursor: pointer">
-                            <i class="fas fa-pencil fa-sm"></i>
+                            <i [class]="editIcon"></i>
                         </button> 
 
                         @if( updated ) {
                             <!-- Restore button, restore original value -->
                             <button class="edit_button" type="button" [disabled]="!updated" 
                                 (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
-                                <i class="fas fa-undo" data-toggle="tooltip" title="Undo title"></i>
+                                <i [class]="undoIcon" data-toggle="tooltip" title="Undo title"></i>
                             </button> 
                         }
                     }
@@ -60,13 +60,13 @@
                         <!-- Save button -->
                         <button class="edit_button" type="button" (click)="onSave()"
                         aria-label="save button" ngbTooltip="Save changes">
-                            <i class="fas fa-check icon_enabled"></i>
+                            <i class="icon_enabled" [class]="saveIcon"></i>
                         </button>
 
                         <!-- Cancel editing button: cancel current changes -->
                         <button class="edit_button" type="button"
                         (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                            <i class="fas fa-times fa-sm" data-toggle="tooltip" title="Undo current changes"></i>
+                            <i [class]="cancelIcon" data-toggle="tooltip" title="Undo current changes"></i>
                         </button>   
                     }
                 </div>

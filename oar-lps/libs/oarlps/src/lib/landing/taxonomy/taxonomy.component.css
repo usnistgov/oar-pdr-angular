@@ -48,3 +48,7 @@ input[type=checkbox] {width:20px; height:20px;}
     border-radius: 5px;
 }
 
+/* Set border color for the checkboxes in p-tree*/
+:host ::ng-deep .p-tree .p-checkbox-box {
+    border: 1px solid rgb(0, 162, 255) !important;
+}

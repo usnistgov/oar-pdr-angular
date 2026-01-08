@@ -1,0 +1,41 @@
+.warning {
+    display: inline-block;
+    width: 20px;
+    color: var(--warning);
+    height: 20px;
+}
+
+.title {
+    border-bottom: 1px solid lightgrey;
+    font-weight: bold;
+}
+
+.space1 {
+    margin-bottom: 1em;
+}
+
+.btn-help {
+    cursor: pointer;
+    scale: 1.3;
+    margin-left: 5px;
+    color: var(--nist-blue-light);
+}
+
+.btn-help:hover {
+    color: var(--nist-blue-lighter);
+}
+
+textarea {
+    width: 100%;
+}
+
+.listitem {
+    display: inline-block;
+    margin-left: 20px;
+}
+
+.dot {
+    margin-right: 10px;
+    scale: .5;
+}
+

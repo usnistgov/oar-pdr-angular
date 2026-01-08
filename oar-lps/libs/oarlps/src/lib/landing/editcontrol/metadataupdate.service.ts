@@ -10,9 +10,9 @@ import * as daperrs from '../../errors/error';
 import { Observable, map, switchMap, tap, of, catchError, throwError, Subscriber } from 'rxjs';
 import { UpdateDetails, DBIOrecord } from './interfaces';
 import { AuthService } from './auth.service';
-import { LandingConstants } from '../constants';
+import { LandingConstants } from '../../shared/globals/globals';
 import { EditStatusService } from './editstatus.service';
-import { AuthenticationService, Credentials, StaffDirectoryService } from 'oarng';
+import { AnyObj, AuthenticationService, Credentials, StaffDirectoryService } from 'oarng';
 import { LandingpageService } from '../landingpage.service';
 import { ReviewResponse } from '../../shared/globals/globals';
 
@@ -55,6 +55,23 @@ export class MetadataUpdateService {
 
     private _fileManagerUrl: BehaviorSubject<string> = new BehaviorSubject<string>("");
     suggestions: ReviewResponse = {} as ReviewResponse;
+    private _recStatus: AnyObj = {};
+    get recStatus() {
+        return this._recStatus;
+    }
+
+    get published() {
+        return this._recStatus.state == 'published';
+    }
+
+    get submitted() {
+        return this._recStatus.state == 'submitted';
+    }
+
+    private _authorized: boolean = false;
+    get authorized() {
+        return this._authorized;
+    }
 
     /**
      * Set the number of files downloaded
@@ -159,6 +176,12 @@ export class MetadataUpdateService {
                 this.dapUpdtSvc = recsvc as MIDASDAPUpdateService;
                 
                 let rec = this.dapUpdtSvc.getRecord()
+                this._recStatus = rec.status;
+
+                // for testing
+                // this._recStatus.state = "published";
+                // this._recStatus.published = this._recStatus.submitted;
+
                 if (rec.status?.modified) 
                     this.lastUpdate = {
                         userAttributes: { userName: rec.status?.byWho },
@@ -176,6 +199,7 @@ export class MetadataUpdateService {
                 this.checkUpdatedFields(data as NerdmRes);
             }),
             map((data) => {
+                this._authorized = true;
                 return true;
             }),
             catchError((err) => {
@@ -646,7 +670,6 @@ export class MetadataUpdateService {
                         this.originalDraftRec = JSON.parse(JSON.stringify(res));
                         this.currentRec = JSON.parse(JSON.stringify(res));
                     }else{
-                        console.log("Load data only...")
                         if(res["components"]) {
                             this.originalDraftRec["components"] =
                                 JSON.parse(JSON.stringify(res["components"]));
@@ -782,6 +805,18 @@ export class MetadataUpdateService {
     }
 
     /**
+     * sync the file metadata with the contents of the file space and return the 
+     * file space summary information.
+     */
+    public syncDataFiles() : Observable<Object> {
+        if (!this.dapUpdtSvc) {
+            console.error("Attempted to update without authorization!  Ignoring update.");
+            return of({});
+        }
+        return this.dapUpdtSvc.syncFiles();
+    }
+
+    /**
      * load files from the file manager.
      */
     public loadDataFiles(onSuccess?: () => void): Observable<Object> {
@@ -789,7 +824,7 @@ export class MetadataUpdateService {
             console.error("Attempted to update without authorization!  Ignoring update.");
             return of({});
         }
-        return this.dapUpdtSvc.getDataSubset("pdr:files").pipe(
+        return this.dapUpdtSvc.getDataSubset("pdr:f").pipe(
             tap((res) => {
                 if (onSuccess) onSuccess();
             }),
@@ -841,22 +876,39 @@ export class MetadataUpdateService {
     /**
      * Validate the status from backend
      */
-    public finalize(action: string="finalize", message: string = ""): Observable<Object> {
+    // public finalize(action: string="finalize", message: string = ""): Observable<Object> {
+    //     if (!this.dapUpdtSvc) {
+    //         console.error("Attempted to finalize without authorization!  Ignoring finalize.");
+    //         return of({});
+    //     }
+    //     return this.dapUpdtSvc.finalize(action, message).pipe(
+    //         tap((status) => {
+    //             //Do nothing to the return message for now. Just proceed.
+    //         }),
+    //         catchError((err) => {
+    //             console.error("err", err);
+    //             console.error("Failed to finalize: server error:" + err.message);
+    //             this.msgsvc.syserror(err.message);
+    //             return of(null);
+    //         }));
+    // }   
+
+    public submit(action: string = "submit", option: any = null): Observable<Object> {
         if (!this.dapUpdtSvc) {
             console.error("Attempted to finalize without authorization!  Ignoring finalize.");
             return of({});
         }
-        return this.dapUpdtSvc.finalize(action, message).pipe(
+        return this.dapUpdtSvc.submit(action, option).pipe(
             tap((status) => {
                 //Do nothing to the return message for now. Just proceed.
             }),
             catchError((err) => {
                 console.error("err", err);
-                console.error("Failed to finalize: server error:" + err.message);
+                console.error("Failed to submit: server error:" + err.message);
                 this.msgsvc.syserror(err.message);
-                return of(null);
-            }));
-    }   
+                return of({"error": err.message});
+            })); 
+    }
 
     public hasRequiredItems() {
         return this.suggestions && this.suggestions.req &&  this.suggestions.req.length > 0;

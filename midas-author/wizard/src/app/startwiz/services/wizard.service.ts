@@ -18,13 +18,13 @@ export class WizardService {
         {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
         {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
         {id: 3, displayName: "Forensics", value: "Forensics"},
-        {id: 4, displayName: "Do not add to any collection", value: "None"}
+        {id: 4, displayName: "Do not add to any domain collection", value: "None"}
     ]
 
     constructor(private httpcli: HttpClient,
                 private configSvc: AppConfig)
     {
-        this.MIDASAPI = this.configSvc.get('dapEditing.serviceEndpont', "/midas/dap/def/");
+        this.MIDASAPI = this.configSvc.get('dapEditing.serviceEndpont', "/midas/dap/mds3/");
     }
 
     setToken(token: string){

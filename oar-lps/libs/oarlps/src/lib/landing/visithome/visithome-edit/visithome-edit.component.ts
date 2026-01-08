@@ -3,7 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, 
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { LandingpageService } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { iconClass } from '../../../shared/globals/globals';
 
 @Component({
   selector: 'lib-visithome-edit',
@@ -22,6 +22,10 @@ export class VisithomeEditComponent implements OnInit {
     originalURL: string = "";
     msg: string = "";
     currentValueChanged: boolean = false;
+
+    //icon class names
+    saveIcon = iconClass.SAVE;
+    undoIcon = iconClass.UNDO;
 
     @Input() visitHomeURL: any;
     @Input() editMode: string;

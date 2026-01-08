@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { TreeNode } from 'primeng/api';
 import { Message } from 'primeng/api';
@@ -8,7 +8,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { SearchService } from '../../shared/search-service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { Collections, Collection, CollectionThemes, FilterTreeNode, GlobalService } from '../../shared/globals/globals';
+import { Collections, Collection, CollectionThemes, FilterTreeNode, GlobalService, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
 import { TreeModule } from 'primeng/tree';
@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { TaxonomyModule } from '../taxonomy/taxonomy.module';
 import { ButtonModule } from 'primeng/button';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CheckboxRequiredValidator } from '@angular/forms';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -143,6 +144,8 @@ export class FiltersComponent implements OnInit {
     exception: string;
     errorMsg: string;
 
+    globalsvc = inject(GlobalService);
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
@@ -203,21 +206,6 @@ export class FiltersComponent implements OnInit {
     }
 
     /**
-     * Replace reserved chars with char name to avoid problems
-     * when parsing filter string in the result list component.
-     * For example, replace "&" with "aaamp". result list component
-     * restore "aaamp" back to "&".
-     * @param strng input string
-     */
-    escapeReservedChars(inputStrng: string) {
-        let outputString: string;
-        if(!inputStrng || inputStrng.trim() == "")
-            return "";
-        else    
-            return inputStrng.replace(new RegExp("&", "g"), "aaamp")
-    }
-
-    /**
      * Form the filter string and refresh the result page
      */
     filterResults() {
@@ -232,24 +220,30 @@ export class FiltersComponent implements OnInit {
 
         // Resource type        
         if(this.filterStrings["@type"]) {
-            if(lFilterString != '') lFilterString += "&";
-            lFilterString += this.escapeReservedChars(this.filterStrings["@type"]);
+            if (lFilterString != '') lFilterString += "&";
+            
+            //Escape reserved chars already done in taxonomy component
+            lFilterString += this.filterStrings["@type"];
             lFilterString = this.removeEndingComma(lFilterString);
         }
 
         // Collections
         for(let col of this.collectionOrder) {
             if(this.filterStrings[col]) {
-                if(lFilterString != '') lFilterString += "&";
-                lFilterString += this.escapeReservedChars(this.filterStrings[col]);
+                if (lFilterString != '') lFilterString += "&";
+
+                //Escape reserved chars already done in taxonomy component
+                lFilterString += this.filterStrings[col];
                 lFilterString = this.removeEndingComma(lFilterString);
             }   
         }
 
         // Record has
         if(this.filterStrings["components.@type"]) {
-            if(lFilterString != '') lFilterString += "&";
-            lFilterString += this.escapeReservedChars(this.filterStrings["components.@type"]);
+            if (lFilterString != '') lFilterString += "&";
+            
+            //Escape reserved chars already done in taxonomy component
+            lFilterString += this.filterStrings["components.@type"];
             lFilterString = this.removeEndingComma(lFilterString);
         }
 
@@ -272,12 +266,16 @@ export class FiltersComponent implements OnInit {
 
             lFilterString += "keyword=";
             for (let keyword of this.selectedKeywords) {
-                lFilterString += this.escapeReservedChars(this.suggestedKeywordsLkup[keyword]) + ",";
+                lFilterString += this.globalsvc.escapeReservedChars(this.suggestedKeywordsLkup[keyword]) + ",";
             }
         }
 
         lFilterString = this.removeEndingComma(lFilterString);
         if(!lFilterString) lFilterString = "NoFilter";
+
+        //Remove ":Other"
+        lFilterString = lFilterString.replaceAll(":", ": ");
+        lFilterString = lFilterString.replaceAll(": Other", "");
 
         // console.log('lFilterString', lFilterString);
         this.filterString.emit(lFilterString);
@@ -444,6 +442,22 @@ export class FiltersComponent implements OnInit {
     }
 
     /**
+     * Loop through the search result and remove space after colon in topic tags.
+     * Will put the space back when constrcting search string.
+     */
+    unifyTopic() {
+        if (this.searchResults && this.searchResults.length > 1) {
+            this.searchResults.forEach(item => {
+                if (item.topic && item.topic.length > 0) {
+                    item.topic.forEach(t => {
+                        t["tag"] = t["tag"].replace(/: /g, ":");
+                    })
+                }
+            })
+        }
+    }
+
+    /**
      * If Search is successful, populate list of keywords themes and authors
      * @param searchResults 
      */
@@ -452,6 +466,8 @@ export class FiltersComponent implements OnInit {
         // this.themesWithCount = [];
         this.componentsWithCount = [];
         this.searchResults = searchResults;
+        
+        this.unifyTopic();
 
         this.keywords = this.collectKeywords(searchResults);
         this.collectThemes(searchResults);
@@ -483,9 +499,9 @@ export class FiltersComponent implements OnInit {
                 children: this.componentsWithCount,
             }];
 
-            this.componentsWithCount.push(new FilterTreeNode("DataFile - 0", false, "DataFile", "DataFile", 0));
-            this.componentsWithCount.push(new FilterTreeNode("AccessPage - 0", false, "AccessPage", "AccessPage", 0));
-            this.componentsWithCount.push(new FilterTreeNode("SubCollection - 0", false, "SubCollection", "SubCollection", 0));
+            this.componentsWithCount.push(new FilterTreeNode("DataFile - 0", false, "DataFile", "DataFile", "DataFile", 0));
+            this.componentsWithCount.push(new FilterTreeNode("AccessPage - 0", false, "AccessPage", "AccessPage", "AccessPage", 0));
+            this.componentsWithCount.push(new FilterTreeNode("SubCollection - 0", false, "SubCollection",  "SubCollection", "SubCollection", 0));
 
             this.componentsTree[0].selectable = false;
 
@@ -791,7 +807,7 @@ export class FiltersComponent implements OnInit {
             let count: any;
             count = _.countBy(this.resourceTypesAllArray, _.partial(_.isEqual, res.value))['true'];
 
-            this.resourceTypesWithCount.push(new FilterTreeNode(res.label + "---" + count, true, res.label, res.label, count));
+            this.resourceTypesWithCount.push(new FilterTreeNode(res.label + "---" + count, true, res.label, res.label, res.label, count));
         }
     }
 
@@ -898,7 +914,7 @@ export class FiltersComponent implements OnInit {
             if (this.showComponents.includes(comp.label)) {
                 count = _.countBy(this.componentsAllArray, _.partial(_.isEqual, comp.value))['true'];
 
-                this.componentsWithCount.push(new FilterTreeNode(comp.label + "---" + count, true, comp.label, comp.label, count));
+                this.componentsWithCount.push(new FilterTreeNode(comp.label + "---" + count, true, comp.label, comp.label, comp.label, count));
             }
         }
     }
@@ -928,32 +944,51 @@ export class FiltersComponent implements OnInit {
         for (let resultItem of searchResults) {
             if (typeof resultItem.topic !== 'undefined' && resultItem.topic.length > 0) {
                 for (let topic of resultItem.topic) {
+                    if (! topic['scheme'])
+                        continue;
+                    
                     let topics = topic.tag.split(":");
+                    topics = topics.map(t => t.trim());
+
                     topicLabel = topics[0];
-                    data = topic.tag;
+                    data = topic.tag.trim();
 
                     if(topics.length > 1){
                         // topicLabel = topics[0] + ":" + topics[1];
                         topicLabel = topic.tag;
                     }
                     
-                    for (let i = 0; i < keys.length; i++) {
-                        if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections[keys[i]]]) >= 0) {
-                            topicLabel = topics[0];
-                            data = topic.tag;
+                    if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
+                        topicLabel = topics[0];
+                        data = topic.tag.trim();
 
-                            if(topics.length > 1){
-                                // topicLabel = topics[0] + ":" + topics[1];
-                                topicLabel = topic.tag;
-                            }
+                        if(topics.length > 1){
+                            // topicLabel = topics[0] + ":" + topics[1];
+                            topicLabel = topic.tag.trim();
+                        }
 
-                            if(allThemesArray[Collections[keys[i]]] && allThemesArray[Collections[keys[i]]].indexOf(topicLabel) < 0) {
-                                allThemes[Collections[keys[i]]].push({ label: topicLabel, value: data });
-                                allThemesArray[Collections[keys[i]]].push(topicLabel);
-                            }
+                        if(allThemesArray[Collections.SEMICONDUCTORS].indexOf(topicLabel) < 0) {
+                            allThemes[Collections.SEMICONDUCTORS].push({ label: topicLabel, value: data });
+                            allThemesArray[Collections.SEMICONDUCTORS].push(topicLabel);
+                        }
+                    }else if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
+                        data = topic.tag.trim();
 
-                            break;
-                        }                        
+                        if(topics.length > 1){
+                            topicLabel = topic.tag.trim();
+                        }
+
+                        if(allThemesArray[Collections.FORENSICS].indexOf(topicLabel) < 0) {
+                            allThemes[Collections.FORENSICS].push({ label: topicLabel, value: data });
+                            allThemesArray[Collections.FORENSICS].push(topicLabel);
+                        }
+                    }else if(topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0){
+                        topicLabel = topics[0];
+
+                        if (allThemesArray[Collections.DEFAULT].indexOf(topicLabel) < 0) {
+                            allThemes[Collections.DEFAULT].push({ label: topicLabel, value: topic.tag.trim() });
+                            allThemesArray[Collections.DEFAULT].push(topicLabel);
+                        }
                     }
                 }
             } else {
@@ -969,12 +1004,12 @@ export class FiltersComponent implements OnInit {
 
             if (typeof resultItem.topic !== 'undefined' && resultItem.topic.length > 0) {
                 for (let topic of resultItem.topic) {
-                    let topicTag = topic.tag;
+                    let topicTag = topic.tag.trim();
 
                     for(let col of this.collectionOrder) {
                         for(let theme of allThemes[col]){
                             if(topicTag && topicTag.toLowerCase().indexOf(theme.label.toLowerCase()) > -1){
-                                allUniqueThemes[col].push(theme.label);
+                                allUniqueThemes[col].push(theme.label.replace(/: /g, ":"));
                             }
                         }
                     }
@@ -1052,10 +1087,54 @@ export class FiltersComponent implements OnInit {
             this.collectionThemesWithCount[collection].upsertNodeFor(sortable[key], 1, searchResults, collection, this.taxonomyURI);
         }
 
+        // Re-generate taxonomy for each node and leaf so they can be count correctly
+        this.collectionThemesWithCount[collection].refreshTaxonomy();
+
+        // If any leaf's name matches sibling node's name, move it inside the sibling node
+        this.deDup(this.collectionThemesWithCount[collection], searchResults, collection);
+
+        // Now count matching result items for each node and leaf
+        this.collectionThemesWithCount[collection].addCount(searchResults, collection, this.taxonomyURI);
+
         if (sortable.length > 5) {
             this.showMoreLink = true;
         } else {
             this.showMoreLink = false;
+        }
+    }
+
+    /**
+     * Loop through a given tree. If a node and it's sibling leaf have the same taxonomy (data field),
+     * append ":Other"
+     * @param collectionThemesWithCountCol - input array of tree nodes
+     */
+    deDup(collectionThemesWithCountCol: any, searchResults: any, collection: string) {
+        if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 1) {
+            collectionThemesWithCountCol.children.forEach(child => {
+                if (child.children && child.children.length > 1) {
+                    this.deDup(child, searchResults, collection);
+                } else {
+                    //For a leaf, loop through siblings to see if any node has the same taxonomy (data field)
+                    for (var i = 0; i < collectionThemesWithCountCol.children.length; i++) {
+                        let sibling = collectionThemesWithCountCol.children[i];
+                        if (sibling["data"][0] != child["data"][0] && sibling.children.length > child.children.length && sibling["data"][0].includes(child["data"][0])) {
+                            child["data"][0] = child["data"][0] + ":Other";
+                            child["key"] = sibling.key+"Other";
+                            child["label"] = "Other---1";
+                            child["level"]++; 
+                            child.parent = sibling;
+
+                            //Remove child from current parent and make it a child of the sibling
+                            collectionThemesWithCountCol.children = collectionThemesWithCountCol.children.filter(cc => cc["data"][0] != child.data[0]);
+                            collectionThemesWithCountCol["ediids"] = collectionThemesWithCountCol["ediids"].filter(ediid => ediid != child.ediid);
+                            sibling.children.push(child);
+                            if (!sibling["ediids"].includes(child.ediid)) {
+                                sibling["ediids"].push(child.ediid);
+                            }
+                        }
+                    }
+                }
+            })
         }
     }
 

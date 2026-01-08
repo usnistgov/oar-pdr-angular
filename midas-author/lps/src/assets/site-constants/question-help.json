@@ -1,30 +1,30 @@
 {
-    "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='fas fa-pencil'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='fas fa-pencil'></i> to the right of each field to edit.<p><p>* required field.",
+    "general": "This screen allows you to enter the information for creating your publication.  <p><p>On this page, you can:<ul><li>Click on <i class='editIcon'></i> next to the item you want to enter or update a piece of information,</li><li>Click the <b>Preview</b> button above to see how this page will look to the public with your changes so far, or </li><li>Click on the <b>Save</b> button above to save the changes to your draft and come back to this later.</li></ul><p><p>Click <i class='editIcon'></i> to the right of each field to edit.<p><p>* required field.",
     "title": {
         "label": "Title",
         "general": "The title should be written in plain language and include sufficient detail to facilitate search and discovery. <p><p> If this publication can be considered a supplement to a literature publication, consider using the same title with an extra annotation, like ': Supplementary Data'.",
-        "edit": "Type the title into the input box and then click the <i class='fas fa-check'></i> icon to save.",
+        "edit": "Type the title into the input box and then click the <i class='saveIcon'></i> icon to save.",
         "seealso": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "authors": {
         "label": "Authors",
         "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>Credit Contributor Roles Taxonomy</a>. Add affiliations and ORCIDs as available.",
-        "list": "Click <i class='fas fa-plus'></i> to add authors. Click <i class='fas fa-pencil'></i> to make edits.",
-        "add": "Click <i class='fas fa-check'></i> to save.",
-        "edit": "Click <i class='fas fa-check'></i> to save changes.<p><i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "list": "Click <i class='addIcon'></i> to add authors. Click <i class='editIcon'></i> to make edits.",
+        "add": "Click <i class='addIcon'></i> to save.",
+        "edit": "Click <i class='saveIcon'></i> to save changes.<p><i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         "dragdrop": "To change the order of authors listed, click on <img src='./assets/images/reorder_s.png'> on the left of each name, drag it to the right place in the list, and release the mouse button to drop it in place."
     },
     "contactPoint": {
         "label": "Contact Point",
-        "general": "Review the name of the NIST contact listed who will respond to questions about this resource. To edit this contact, click <i class='fas fa-pencil'></i>",
+        "general": "Review the name of the NIST contact listed who will respond to questions about this resource. To edit this contact, click <i class='editIcon'></i>",
         "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "edit": "Click <i class='fas fa-check'></i> to save changes. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        "edit": "Click <i class='saveIcon'></i> to save changes. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
     },
     "landingPage": {
         "label": "Visit Home Page",
-        "general": "The Home Page is the users' entry point for a resource. It provides contextual information and access to the resource itself (i.e. download links for data). Importantly, the DOI (digital object identifier) will point to this URL. <p><p> If you wish for this NIST Public Data Repository page to your Home Page, leave this box blank and click <i class='fas fa-times'></i> to close the entry field. If you would like to point to another home page enter the URL here.",
+        "general": "The Home Page is the users' entry point for a resource. It provides contextual information and access to the resource itself (i.e. download links for data). Importantly, the DOI (digital object identifier) will point to this URL. <p><p> If you wish for this NIST Public Data Repository page to your Home Page, leave this box blank and click <i class='closeIcon'></i> to close the entry field. If you would like to point to another home page enter the URL here.",
       "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-        "edit": "Enter a working URL for a homepage other than this repository landing page. Click <i class='fas fa-check'></i> to save changes<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        "edit": "Enter a working URL for a homepage other than this repository landing page. Click <i class='saveIcon'></i> to save changes<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
     },
     "doi": {
         "label": "Identifier",
@@ -37,35 +37,39 @@
     "description": {
         "label": "Description",
         "general": "This field is for a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource.",
-        "edit": "Click <i class='fas fa-check'></i> to save. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+        "edit": "Click <i class='saveIcon'></i> to save. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
-    "theme":{
+    "topic":{
         "label": "Research Topics",
         "general": "You are in Research Topics section where you can select topics from the NIST Research Taxonomy. Select one or more topics that apply to this resource",
-        "add": "Click <i class='fas fa-pencil'></i> to select topics for this resource. Click on the arrows to view subtopics. Double-click on a topic to select it for your resource. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-        "edit": "To edit your Research Topics selections, click on <i class='fas fa-pencil'></i>. Double click on topics to add them. Click <i class='fas fa-trash-alt'></i> to the right of topics to delete them.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        "add": "Click <i class='editIcon'></i> to select topics for this resource. Click on the arrows to view subtopics. Double-click on a topic to select it for your resource. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+        "edit": "To edit your Research Topics selections, click on <i class='editIcon'></i>. Double click on topics to add them. Click <i class='delIcon'></i> to the right of topics to delete them.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
     },
     "keyword": {
         "label": "Keywords",
         "general": "Add <i>keywords,</i> or subject terms that help both technical and non-technical users to discover this resource. Separate the terms with commas. You may enter up to a maximum of 4,000 characters",
-        "add": "Click <i class='fas fa-check'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "edit": "Click <i class='fas fa-pencil'></i> to edit your keywords or enter additional keywords. Separate the terms with commas.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+        "add": "Click <i class='saveIcon'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "edit": "Click <i class='editIcon'></i> to edit your keywords or enter additional keywords. Separate the terms with commas.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "components": {
         "label": "Access Page",
         "general": "You are in the Data Access section. Enter URLs for sites with related information on this resource, e.g. a GitHub repository. Each entry requires the URL, the 'Link text' or Title, and information 'About this link' or a description. Note: this area is not for links to files. To upload and link files use the 'Files' button below.",
-        "list": "Click <i class='fas fa-plus'></i> to enter URLs to sites with information related to this resource. Click <i class='fas fa-pencil'></i> to make edits.",
-        "add": "Separate each URL with a comma. When all URLS are entered, click <i class='fas fa-check'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-        "edit": "Separate each URL with a comma. When all URLS are entered, click <i class='fas fa-check'></i> to save.",
+        "list": "Click <i class='addIcon'></i> to enter URLs to sites with information related to this resource. Click <i class='editIcon'></i> to make edits.",
+        "add": "Separate each URL with a comma. When all URLS are entered, click <i class='saveIcon'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
+        "edit": "Separate each URL with a comma. When all URLS are entered, click <i class='saveIcon'></i> to save.",
         "dragdrop": "To change the order of URLs listed, click on <img src='./assets/images/reorder_s.png'> on the left of each link, drag it to the right place in the list, and release the mouse button to drop it in place.<p><p>"
     },
     "references": {
         "label": "References",
         "general": "You are in <i>References</i> section where you can add references or citations related to this resource. You may wish to include links to multiple types of resources such as a related publication or a software package. <p><p> <i>[Other Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "list": "Click <i class='fas fa-plus'></i> to add the URI of a related resource. Click <i class='fas fa-pencil'></i> to make changes to existing References listed here.",
-        "add": "Separate each Reference URL with a comma. When all References are entered, click <i class='fas fa-check'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "edit": "Separate each Reference URL with a comma. When all References are entered, click <i class='fas fa-check'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "list": "Click <i class='addIcon'></i> to add the URI of a related resource. Click <i class='editIcon'></i> to make changes to existing References listed here.",
+        "add": "Separate each Reference URL with a comma. When all References are entered, click <i class='saveIcon'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "edit": "Separate each Reference URL with a comma. When all References are entered, click <i class='saveIcon'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
         "dragdrop": "To change the order of references listed, click on <img src='./assets/images/reorder_s.png'> on the left of each reference, drag it to the right place in the list, and release the mouse button to drop it in place.  <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+    },
+    "Revision": {
+        "label": "Revision",
+        "general": "<b>Placeholder for Revision:</b><p></p><b>Metadata Update:</b> Placeholder for description.<br><b>File removal:</b> Placeholder for description.<br><b>Data change (minor):</b> Placeholder for description.<br><b>Data change (major):</b> Placeholder for description.<br><b>New file addition:</b> Placeholder for description."
     },
     "completed": "All data has been completed. No more suggestion."
 }

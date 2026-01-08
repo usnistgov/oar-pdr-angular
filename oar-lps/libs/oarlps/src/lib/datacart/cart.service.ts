@@ -32,7 +32,7 @@ export class CartService {
                 throw new Error("PDRAPIs.rpaBackend endpoint not configured!");
     
             if (! this.rpaBackend.endsWith("/")) this.rpaBackend += "/"
-            this.portalBase = cfg.get("locations.portalBase", "/unconfigured");
+            this.portalBase = cfg.get("links.portalBase", "/unconfigured");
     }
 
     /**

@@ -36,18 +36,5 @@ a,
 a:active,
 a:visited,
 a:focus {
-    outline: none !important;
-    border: none !important;
-    text-decoration: none !important;
-    box-shadow: none !important;
-    -webkit-tap-highlight-color: transparent !important;
-    -webkit-user-select: none;
-    /* Chrome/Safari */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* IE10+ */
-    user-select: none;
-    color: black !important;
-    -moz-outline-style: none;
+    color: black !important ;
 }

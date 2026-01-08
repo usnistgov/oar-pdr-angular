@@ -1,5 +1,5 @@
 <div class="full-height">
-    <oar-pushing-sidebar style="width: 100%; height: fit-content;">
+    <oar-pushing-sidebar [marginLeft]="marginLeft" style="width: 100%; height: fit-content;">
         <div class="main-content">
             <p>We're going to start with a few questions...</p>
 
@@ -37,29 +37,19 @@
                 <div class="radio">
                     <label>
                         <input type="radio" required name="resourceType" value="other" [(ngModel)]="dataModel.resourceType" (change)="onSelectChange($event)">
-                        Something else
+                        Other
                     </label>
                 </div>
-            </div>            
+            </div>
 
             <div class="collection">
-                <input type="checkbox" [(ngModel)]="dataModel.partOfCollection" (change)="toggleCollection()">
-                <span style="margin-left: .5em;">This publication will be published as part of an existing topical collection.</span>
+                <input type="checkbox" [(ngModel)]="dataModel.partOfCollection" (change)="toggleCollection()" aria-label="This publication will be published as part of an existing topical collection.">
+                <span style="margin-left: .5em;">This publication will be published as part of an existing domain collection.</span>
             </div>
         </div>
 
-        <span class="sidebar-title">Question Help</span>
-        <div class="sidebar-content">
-
-            <p>
-                With this question, you are telling us the <i>type</i> of product you are publishing.
-                Your publication may present multiple types of products--for example, data plus software
-                to analyze it--but, it is helpful for us to know what you consider is the most important
-                product. And don't worry: you can change this later.
-            <p>
-                <i>[Helpful examples, links to policy and guideance]</i>
-
-        </div>
+        <span class="sidebar-title">{{helpText["label"]}}</span>
+        <div class="sidebar-content" [innerHTML]="helpText['general']"></div>
     </oar-pushing-sidebar>
 
 </div>

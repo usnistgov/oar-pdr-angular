@@ -70,7 +70,7 @@ function realpath {
 #
 midas_author_names="midas-author-wizard midas-author-lps"
 pdr_rpa_names="pdr-rpa-request pdr-rpa-approve"
-DISTNAMES="$midas_author_names $pdr_rpa_names"
+DISTNAMES="$midas_author_names pdr-lps $pdr_rpa_names"
 declare -A APPSRCDIR=(                        \
     [midas-author-wizard]=midas-author/wizard \
     [midas-author-lps]=midas-author/lps       \

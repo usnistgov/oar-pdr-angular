@@ -94,10 +94,6 @@ export class TextEditComponent implements OnInit {
             this.currentVal = this.textField;
         }
 
-        if(changes.dataChanged) {
-            console.log("Data changed.", changes.dataChanged);
-        }
-
         this.chref.detectChanges();
     }
 

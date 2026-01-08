@@ -45,7 +45,7 @@ export class ResultitemComponent implements OnInit {
         this.homeBtnURL = this.resultItem.landingPage;
 
         if(this.resultItem.landingPage.indexOf(this.resultItem.ediid.split("/").at(-1)) >= 0) {
-          this.homeIconClass = "pi pi-arrow-up-right btn-icon";
+          this.homeIconClass = "pi pi-database btn-icon";
         } else {
           this.homeIconClass = "faa faa-external-link vertical-center";
         }

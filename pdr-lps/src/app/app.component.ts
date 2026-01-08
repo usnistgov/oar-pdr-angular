@@ -26,6 +26,8 @@ export class AppComponent {
     homeButtonLink: string = "";
     ga4Code: string = null;
     hostName: string = "dada.nist.gov";
+    contactLink: string = "";
+    searchLink: string = "";
 
     constructor(
         private gaService: GoogleAnalyticsService,
@@ -44,7 +46,9 @@ export class AppComponent {
     ngOnInit() {
         this.appVersion = this.cfg.get("systemVersion", "X.X") as string;
         this.homeButtonLink = this.cfg.get("links.portalBase", "") as string;
-
+        this.contactLink = this.cfg.get("links.pdrSearch", "/sdp/") + "#/help/contactus";
+        this.searchLink = this.cfg.get("links.pdrSearch", "/sdp/");
+        
         if(this.inBrowser){
             let globalcart = this.cartService.getGlobalCart();
             this.cartLength = globalcart.size();
@@ -60,7 +64,7 @@ export class AppComponent {
         if(this.inBrowser){
             this.gaCode = this.cfg.get("gaCode", "") as string;
             this.ga4Code = this.cfg.get("ga4Code", "") as string;
-            let homeurl = this.cfg.get("locations.portalBase", "data.nist.gov") as string;
+            let homeurl = this.cfg.get("links.portalBase", "data.nist.gov") as string;
 
             const url = new URL("https://" + homeurl);
             this.hostName = url.hostname;

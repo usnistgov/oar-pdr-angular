@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, inject } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { CollectionService } from '../../shared/collection-service/collection.service';
 
 @Component({
   selector: 'app-resultlist',
@@ -68,6 +69,8 @@ export class ResultlistComponent implements OnInit {
     lightColor: string;  
     lighterColor: string;  
 
+    globalsvc = inject(GlobalService);
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
@@ -112,10 +115,6 @@ export class ResultlistComponent implements OnInit {
         }
 
         // this.allCollections = this.collectionService.loadAllCollections();
-    }
-
-    onPageChange(value: any){
-        // console.log("this.currentPage", value.target.value);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -364,17 +363,6 @@ export class ResultlistComponent implements OnInit {
     }
 
     /**
-     * Restore reserved chars. For example, change "aaamp" back to "&".
-     * @param inputString 
-     */
-    restoreReservedChars(inputString: string) {
-        if(!inputString || inputString.trim() == "")
-            return "";
-        else
-            return inputString.replace(new RegExp("aaamp", "g"), "&"); 
-    }
-
-    /**
      * Apply filters from left side panel and the search word(s) from the search text box
      */
     filterResults() {
@@ -398,7 +386,7 @@ export class ResultlistComponent implements OnInit {
                                 object["@type"].forEach((oType) => {
                                     let types = filter.split("=")[1].split(",");
                                     types.forEach(type => {
-                                        if(oType.toLowerCase().includes(this.restoreReservedChars(type).toLowerCase()))
+                                        if(oType.toLowerCase().includes(this.globalsvc.restoreReservedChars(type).toLowerCase()))
                                             object.active = true;
                                     });
                                 })
@@ -416,7 +404,7 @@ export class ResultlistComponent implements OnInit {
                                 for(let oTopic of resultItem["topic"]) {
                                     for(let topic of topics) {
                                         let collection = topic.split("----")[0];
-                                        let topicValue = this.restoreReservedChars(topic.split("----")[1]);
+                                        let topicValue = this.globalsvc.restoreReservedChars(topic.split("----")[1]);
 
                                         if(oTopic['scheme'] && oTopic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
                                             if(collection == Collections.DEFAULT) {
@@ -443,7 +431,7 @@ export class ResultlistComponent implements OnInit {
                                         component["@type"].forEach((cType) => {
                                             let types = filter.split("=")[1].split(",");
                                             types.forEach(type => {
-                                                if(cType.toLowerCase().includes(this.restoreReservedChars(type).toLowerCase()))
+                                                if(cType.toLowerCase().includes(this.globalsvc.restoreReservedChars(type).toLowerCase()))
                                                     object.active = true;
                                             });
                                         })
@@ -476,7 +464,7 @@ export class ResultlistComponent implements OnInit {
                                 object["keyword"].forEach((keyword) => {
                                     //Loop through each search keyword from keyword filter
                                     filter.split("=")[1].split(",").forEach(kw => {
-                                        if(keyword.toLowerCase().includes(this.restoreReservedChars(kw))){
+                                        if(keyword.toLowerCase().includes(this.globalsvc.restoreReservedChars(kw))){
                                             object.active = true;
                                         }
                                     })   
@@ -510,7 +498,6 @@ export class ResultlistComponent implements OnInit {
      * @param event sort item
      */
     onSortByChange(event: any) {
-        // console.log("event", event.value);
         if(event.target.value == "none") {
             this.searchResultsForDisplay = JSON.parse(JSON.stringify(this.searchResultsForDisplayOriginal));
 

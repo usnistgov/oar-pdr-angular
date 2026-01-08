@@ -53,7 +53,7 @@ export class AppComponent {
         if(this.inBrowser){
             this.gaCode = this.cfg.get("gaCode", "") as string;
             this.ga4Code = this.cfg.get("ga4Code", "") as string;
-            let homeurl = this.cfg.get("locations.portalBase", "data.nist.gov") as string;
+            let homeurl = this.cfg.get("links.portalBase", "data.nist.gov") as string;
 
             const url = new URL("https://" + homeurl);
             this.hostName = url.hostname;
@@ -74,7 +74,8 @@ export class AppComponent {
     handleRouteEvents() {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationEnd) {
-                const title = this.getTitle(this.router.routerState, this.router.routerState.root).join('-');
+                let title = this.getTitle(this.router.routerState, this.router.routerState.root).join('-');
+                if (!title) title = "DAP Wizard";
                 this.titleService.setTitle(title);
                 
                 gtag('event', 'page_view', {
