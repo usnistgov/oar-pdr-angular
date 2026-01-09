@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, Input, SimpleChanges, AfterContentInit, C
 import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NerdmRes } from '../../../nerdm/nerdm';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, Collections, CollectionDisplay, GlobalService } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 
 @Component({
@@ -25,10 +25,11 @@ export class TopicPubComponent implements AfterContentInit {
     topicDisplay: any = {};
     topicShort: any = {};
     topicLong: any = {};
-    colorScheme: ColorScheme;
+    colorScheme: any;
     hovered: boolean = false;
     fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     allCollections: any = {};
+    maxBubbleLabelLength: number = 100; //Limit the number of characters inside a bubble. May define it in the config later.
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
@@ -38,10 +39,15 @@ export class TopicPubComponent implements AfterContentInit {
     componentData = { message: 'Initial data from child' };
 
     constructor(private chref: ChangeDetectorRef,
-                public collectionService: CollectionService)
+        public collectionService: CollectionService,
+        public globalService: GlobalService)
     {
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
+
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        })          
     }
 
     /**
@@ -54,11 +60,16 @@ export class TopicPubComponent implements AfterContentInit {
         if(this.isDefaultCollection(collection))
             return true;
         else {
-            //Loop through "isPartOf" field
+            //Decide which collection topic to display
             if(this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
             this.record['isPartOf'].length > 0) {
-                for(let c of this.record['isPartOf']) {
-                    return (c.title.toLowerCase().indexOf(collection.toLowerCase()) > -1)
+                for (let c of this.record['isPartOf']) {
+                    let colDisplay = CollectionDisplay[collection.toUpperCase()] ? CollectionDisplay[collection.toUpperCase()] : "";    
+                    if (colDisplay != "") {
+                        return (c.title.toLowerCase().indexOf(colDisplay.toLowerCase()) > -1)
+                    } else {
+                        return false;
+                    }
                 }
             }else{
                 return false;
@@ -92,14 +103,26 @@ export class TopicPubComponent implements AfterContentInit {
     }
 
     /**
-         * Set bubble color based on content
-         * @param topic 
-         */
+     * Set bubble color based on content
+     * @param topic 
+     */
     bubbleColor(topic) {
         if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
             return "#e6ecff";
         }else{
-            return "#ededed";
+            return this.colorScheme.lighterVar;
+        }
+    }
+
+    /**
+     * Return bubble label. If topic tag 
+     * @param topic 
+     */
+    bubbleLabel(topic) {
+        if (topic.tag.length > this.maxBubbleLabelLength) {
+            return topic.tag.substring(0, this.maxBubbleLabelLength) + "...";
+        } else {
+            return topic.tag.trim();
         }
     }
 
@@ -171,7 +194,7 @@ export class TopicPubComponent implements AfterContentInit {
                 this.record[this.fieldName].forEach(topic => {
                     if (topic['scheme'] && topic.tag) {
                         for(let col of this.collectionOrder) {
-                            if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                            if(topic['scheme'] && topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
                                 if(!this.topics[col]) {
                                     this.topics[col] = [topic];
                                 }else if(this.topics[col].indexOf(topic) < 0) {
