@@ -1,15 +1,16 @@
 :host ::ng-deep .autocomplete{ 
-    height: 50px; 
+    height: 30px; 
     width: 100%;
     margin-top: 5px;
     padding-left: 0px;
 }
 
 .inner-addon { 
+    width: 100%;
     position: relative; 
     margin-bottom: 10px;
     padding-top: -10px;
-    height: 30px;
+    height: 20px;
 }
 
 /* style icon */
@@ -22,5 +23,5 @@
 
 /* align icon */
 .left-addon .fa-user  { left:  5px;}
-.right-addon .fa-user { right: 10px;}
+.right-addon .fa-user { right: 10px; top: 10px}
 

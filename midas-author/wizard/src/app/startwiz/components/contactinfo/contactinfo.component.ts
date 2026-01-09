@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
-import { DataModel } from '../../models/data.model';
+import { DataModel, ContactDataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
 
@@ -11,6 +11,8 @@ import { StepService } from '../../services/step.service';
 export class ContactinfoComponent implements OnInit {
     lastStep: StepModel;
     thisStep: StepModel;
+    // the full record for the selected person
+    selected: any = null;
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
@@ -36,7 +38,7 @@ export class ContactinfoComponent implements OnInit {
 
     toggleContactName(evt:any) {
         if(this.dataModel.creatorIsContact) {
-            this.dataModel.contactName = undefined;
+            this.dataModel.contact = undefined;
 
             this.thisStep.isComplete = true;
         }else{
@@ -47,10 +49,26 @@ export class ContactinfoComponent implements OnInit {
     }
 
     /**
-     * Update the step status when contact name changed.
+     * Handle requests from child component - when contact info changed,
+     * update dataModel and step completion status.
+     * @param dataChanged parameter passed from child component
      */
-    onContactNameChanged() {
-        this.thisStep.isComplete = (this.dataModel.contactName?.trim() != "");
-        this.lastStep.canGoNext = this.stepService.allDone();
-    }
+    onDataChanged(dataChanged: any) {
+        switch(dataChanged.action) {
+            case 'peopleChanged':
+                this.selected = dataChanged.selectedPeopleRecord;
+                if (this.selected.lastName && this.selected.firstName) {
+                    this.dataModel.contact = {} as ContactDataModel;
+                    this.dataModel.contact.lastName = this.selected.lastName;
+                    this.dataModel.contact.firstName = this.selected.firstName;
+                    this.dataModel.contact.email = this.selected.emailAddress;
+
+                    this.thisStep.isComplete = (this.dataModel.contact != undefined);
+                    this.lastStep.canGoNext = this.stepService.allDone();                }
+    
+                break;                
+            default:
+                break;
+        }
+    }    
 }

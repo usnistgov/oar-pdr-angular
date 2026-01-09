@@ -18,15 +18,23 @@
             </div>
             <div style="margin-top: 1em;" *ngIf="dataModel.creatorIsContact != undefined && !dataModel.creatorIsContact">
                 <div style="margin-bottom: .5em;">Type in contact's name and select the appropriate match: </div>
-                <input
+                <!-- <input
                     class="input-box"
                     style="width: 300px;"
                     type="text"
                     pInputText
                     name="otherContact"
                     [(ngModel)]="dataModel.contactName"
-                    (input)="onContactNameChanged()"/>
+                    (input)="onContactNameChanged()"/> -->
+                <div style="width: 50%;height:30px;margin-bottom: 20px;">
+                    <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
+                </div>
             </div>
+<!-- 
+                <div style="width: 230px;margin-bottom: 20px;">
+                    <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
+                </div>
+ -->
         </div>
 
         <span class="sidebar-title">{{helpText["label"]}}</span>

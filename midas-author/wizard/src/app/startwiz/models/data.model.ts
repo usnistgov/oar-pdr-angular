@@ -3,7 +3,7 @@ export interface DataModel {
     provideLink?: boolean;
     softwareLink?: string;
     creatorIsContact?: boolean;
-    contactName?: string;
+    contact?: ContactDataModel;
     willUpload?: boolean;
     assocPageType?: string;
     recordname?: string;
@@ -15,4 +15,10 @@ export interface CollectionDataModel {
     id: number;
     displayName: string;
     value: string;
+}
+
+export interface ContactDataModel {
+    lastName: string;
+    firstName: string;
+    email: string;
 }
