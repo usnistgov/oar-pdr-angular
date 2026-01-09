@@ -16,6 +16,19 @@ export class GlobalService {
     constructor(@Inject(DOCUMENT) private document: Document,) { }
 
     /**
+     * Current color palette.  
+     * Make color palette observable for any component.
+     */
+    _colorPalette : BehaviorSubject<any> =
+        new BehaviorSubject<any>({});
+    public setColorPalette(val : any) { 
+        this._colorPalette.next(val); 
+    }
+    public watchColorPalette(subscriber) {
+        this._colorPalette.subscribe(subscriber);
+    }    
+
+    /**
      * Current collection.  
      * Make collection observable for any component.
      */
@@ -515,10 +528,24 @@ export interface ColorScheme {
     hover: string;
 }
 
+/**
+ * Collection field name
+ */
 export class Collections {
     static readonly DEFAULT = 'NIST';
     static readonly FORENSICS = 'Forensics';
     static readonly SEMICONDUCTORS = 'Semiconductors';
+    static readonly AM = 'AM';
+}
+
+/**
+ * Collection display name
+ */
+export class CollectionDisplay {
+    static readonly DEFAULT = 'NIST';
+    static readonly FORENSICS = 'Forensics';
+    static readonly SEMICONDUCTORS = 'Semiconductors';
+    static readonly AM = 'Additive Manufacturing';
 }
 
 export class Collection {

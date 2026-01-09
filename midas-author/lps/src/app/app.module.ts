@@ -62,8 +62,7 @@ enableProdMode();
         DatePipe,
         UserMessageService,
         NgbActiveModal,
-        ConfirmationDialogService,
-        // fakeBackendProvider
+        ConfirmationDialogService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

@@ -572,7 +572,7 @@ export class DataFilesComponent implements OnInit, OnChanges {
      * @returns boolean
      */
     isLeaf(fileNode: any) {
-        return (fileNode.comp['@type'].indexOf('nrdp:DataFile') > -1);
+        return (fileNode.comp['@type'] && fileNode.comp['@type'].indexOf('nrdp:DataFile') > -1);
     }
 
     /**

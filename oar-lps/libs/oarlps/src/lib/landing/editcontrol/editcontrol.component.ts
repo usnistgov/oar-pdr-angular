@@ -30,6 +30,7 @@ import { ButtonModule } from 'primeng/button';
 import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confirmation-dialog.module';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService, Credentials } from 'oarng';
+import { CollectionService } from '../../shared/collection-service/collection.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
   
@@ -79,12 +80,13 @@ export class EditControlComponent implements OnInit, OnChanges {
     submitResponse: SubmitResponse = {} as SubmitResponse;
     mobileMode: boolean = false;
     modalRef: any; // For submit pop up
-    imageURL: string = '';
     collection: string;
     collectionObj: any;
     message: string = "test";
     cred: Credentials = null;
     authorized: boolean = false;
+    collectionData: any;
+
     suggestions: ReviewResponse = {} as ReviewResponse;
     revisionStarted: boolean = false;
     editTypes = LandingConstants.editTypes;
@@ -95,12 +97,9 @@ export class EditControlComponent implements OnInit, OnChanges {
      * template via [(mdrec)].
      */
     @Input() mdrec: NerdmRes;
-    // @Output() mdrecChange = new EventEmitter<NerdmRes>();
 
-    /**
-     * the ID that was used to request the landing page
-     */
-    // @Input() requestID: string;
+    // Banner URL
+    @Input() imageURL: string;
 
     /**
      * the original resource identifier
@@ -139,11 +138,11 @@ export class EditControlComponent implements OnInit, OnChanges {
                         private chref: ChangeDetectorRef,
                         private modalService: NgbModal,
                         public globalService: GlobalService,
+                        public collectionService: CollectionService,
                         private msgsvc: UserMessageService) 
     {
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
-            this.loadBannerUrl();
         });
 
         this.globalService.watchMessage((message) => {
@@ -190,6 +189,55 @@ export class EditControlComponent implements OnInit, OnChanges {
         
         this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "768");
         this.portalURL = this.cfg.get("portalAPI", "https://mdsdev.nist.gov/portal/landing");
+    }
+
+
+
+    ngOnInit() {
+        let i = 0;
+
+        this.allRevisionTypes = this.revisionTypes.getAllTypes();
+        this.submissionData["isRevision"] = this.isRevision;
+        this.globalService.setSubmissionData(this.submissionData);
+
+        // set edit mode to view only on init
+        // this.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
+        this.ngOnChanges();
+        this.edstatsvc._watchRemoteStart((remoteObj) => {
+            // To remote start editing, resID need be set otherwise authorizeEditing()
+            // will do nothing and the app won't change to edit mode
+            if (remoteObj.resID) {
+                this.resID = remoteObj.resID;
+                this.startEditing(remoteObj.nologin, true);
+            }
+        });
+
+        this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
+            if (fileManagerUrl) {
+                this.fileManagerUrl = fileManagerUrl;
+            }
+        });     
+        
+        this.edstatsvc.watchEditMode((editMode) => {
+            this._editMode = editMode;
+        })
+
+        this.edstatsvc.watchEditType((editType) => {
+            this._editType = editType;
+            this.submissionData["isRevision"] = this.isRevision;
+            this.globalService.setSubmissionData(this.submissionData);
+            this.updateMode(true);
+        })
+
+        this.lpService.watchMobileMode((response) => {
+            this.mobileMode = response;
+        })
+
+        this.lpService.watchSubmitResponse((response) => {
+            this.submitResponse = response;
+        })
+
+        this.collectionData = this.collectionService.getCollectionData();
     }
 
     get hasRequiredItems() {
@@ -345,58 +393,6 @@ export class EditControlComponent implements OnInit, OnChanges {
     get fileManagerTooltip(){
         if(this.fileManagerUrl) return this.fileManagerUrl;
         else return "File Manager URL is not available."
-    }
-    
-    ngOnInit() {
-        let i = 0;
-        // Object.keys(REVISION_TYPES).map((key) => {
-        //     this.arrReviseTypes.push({id:i++, type: this.reviseTypes[key]});
-        // });
-
-        this.allRevisionTypes = this.revisionTypes.getAllTypes();
-        this.submissionData["isRevision"] = this.isRevision;
-        this.globalService.setSubmissionData(this.submissionData);
-
-        // set edit mode to view only on init
-        // this.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
-        this.ngOnChanges();
-        this.edstatsvc._watchRemoteStart((remoteObj) => {
-            // To remote start editing, resID need be set otherwise authorizeEditing()
-            // will do nothing and the app won't change to edit mode
-            if (remoteObj.resID) {
-                this.resID = remoteObj.resID;
-                this.startEditing(remoteObj.nologin, true);
-            }
-        });
-
-        this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
-            if (fileManagerUrl) {
-                this.fileManagerUrl = fileManagerUrl;
-            }
-        });     
-        
-        // this.lpService.watchSubmitResponse((response) => {
-        //     this.submitResponse = response;
-        // })
-
-        // this.edstatsvc.watchReviseType((revisionType) => {
-        //     this.revisionType = revisionType;
-        // })
-        
-        this.edstatsvc.watchEditMode((editMode) => {
-            this._editMode = editMode;
-        })
-
-        this.edstatsvc.watchEditType((editType) => {
-            this._editType = editType;
-            this.submissionData["isRevision"] = this.isRevision;
-            this.globalService.setSubmissionData(this.submissionData);
-            this.updateMode(true);
-        })
-
-        this.lpService.watchMobileMode((response) => {
-            this.mobileMode = response;
-        })
     }
 
     ngOnChanges() {

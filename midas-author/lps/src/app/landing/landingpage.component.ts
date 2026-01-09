@@ -13,7 +13,7 @@ import { NERDmResourceService, EditStatusService, MetadataUpdateService, GlobalS
 import { AppConfig, DataCartStatus, RecordLevelMetrics, formatBytes, CartActions,
          MetricsData } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { Themes, ThemesPrefs, Collections } from 'oarlps';
+import { Themes, ThemesPrefs, Collections, CollectionService } from 'oarlps';
 import { state, style, trigger, transition, animate } from '@angular/animations';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
@@ -193,7 +193,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     public helpContentAll:{} = questionhelp;
     helpContentUpdated: boolean = false;
     collection: string = Collections.DEFAULT;
+    collectionData: any;
     collectionObj: any;
+    allCollections: any = {};
     displayBanner: boolean = true;
     showStickMenu: boolean = false;
     isPublicSite: boolean = false;
@@ -241,6 +243,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
                 public authsvc: AuthenticationService,
+                public collectionService: CollectionService,
                 public lpService: LandingpageService)
     {
         // Init the size of landing page body and the help box
@@ -251,6 +254,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.cfg_editEnabled = cfg.get('dapEditing.editEnabled', false) as boolean;
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+
+        this.collectionData = require('../../assets/site-constants/collections.json');
+        this.collectionService.setCollectionData(this.collectionData);
+        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
         this.loadBannerUrl();
 
@@ -312,8 +319,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         effect(() => {
           // Triggered by isEditMode()
           this.edstatsvc.isEditMode();
-          // Refresh page
-          // this.chref.detectChanges();
         })
     }
 
@@ -322,33 +327,45 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     getCollection() {
-        if(this.reqId.includes("pdr0-0001"))
-            this.collection = Collections.FORENSICS;
-        else if(this.reqId.includes("pdr0-0002"))
-            this.collection = Collections.SEMICONDUCTORS;
-        else
-            this.collection = Collections.DEFAULT;
+        let keys = Object.keys(Collections);
+        let collectionKey: string = "";
 
+        for (let key of keys) {
+            if (key != "DEFAULT" && this.reqId.includes(this.allCollections[Collections[key]]["id"])) {
+                collectionKey = key;
+                break;
+            }
+        };
+
+        if (collectionKey == "") {
+            collectionKey = "DEFAULT";
+        }
+
+        this.collection = Collections[collectionKey];
         this.globalService.setCollection(this.collection);
     }
 
-    loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
+    loadColorPalette() {
+        let colorPalette: any;
+        let cp: any;
 
-        switch(this.collection) {
-            case Collections.FORENSICS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            case Collections.SEMICONDUCTORS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            default: {
-                this.imageURL = "";
-                break;
-            }
+        const colorPalettes: any = require('../../assets/site-constants/color-palettes.json');
+        if (this.collectionData && this.collectionData[this.collection]) {
+            cp = colorPalettes[this.collectionData[this.collection].colorPalette]
+            colorPalette = cp ? cp : colorPalettes[Collections.DEFAULT];
+        } else {
+            colorPalette = colorPalettes[Collections.DEFAULT];
         }
+    
+        this.globalService.setColorPalette(colorPalette);
+    
+    }
+    
+    loadBannerUrl() {
+        this.collectionObj = this.collectionData[this.collection] as any;
+
+        this.imageURL = this.collectionObj.bannerUrl;
+        if(this.collection == Collections.DEFAULT) this.imageURL = "";
 
         setTimeout(() => {
             // this.displayBanner = true;

@@ -1,4 +1,5 @@
 #filterHeader {
+    background-color: var(--background-default);
     border-bottom:.5px solid #e6e6e6;
     width: 100%;
     padding: .625em;
@@ -73,6 +74,7 @@
 
 .normalFilter {
     width: 100%;
+    background-color: var(--background-lighter);
 }
 
 .lbl-filter {
@@ -141,8 +143,10 @@
     height: 25px !important;
     color: white;
     float: right;
+    border-color: var(--background-light);
+    border-radius: 3px;
 }
 
 .clearall:hover {
-    background-color: rgb(50, 145, 240) !important;
+    background-color: var(--background-hover) !important;
 }
