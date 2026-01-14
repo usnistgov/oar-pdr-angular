@@ -260,6 +260,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
         this.loadBannerUrl();
+        this.loadColorPalette();
 
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
