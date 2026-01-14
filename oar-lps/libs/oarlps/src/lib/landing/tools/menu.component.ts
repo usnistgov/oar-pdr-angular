@@ -292,7 +292,6 @@ export class MenuComponent implements OnInit {
     }
 
     menuStyle(header: boolean) {
-        // let color = this.allCollections[this.collection].color;
         let defaultColor = this.colorScheme.defaultVar;
 
         if (!header) {
