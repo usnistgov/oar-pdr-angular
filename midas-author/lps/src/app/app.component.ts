@@ -44,7 +44,6 @@ import {
   CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
 } from '@angular/core';
 import { GlobalService } from 'oarlps';
-import { NgToastService, TOAST_POSITIONS } from 'ng-angular-popup';
 import { Title } from '@angular/platform-browser';
 
 declare const gtag: Function;
@@ -73,7 +72,6 @@ export class AppComponent {
     inBrowser: boolean = false;
     appVersion: string = "1.0"
     authToken: string|null = null;
-    TOAST_POSITIONS = TOAST_POSITIONS; 
     
     homeButtonLink: string = "";
     ga4Code: string = null;
