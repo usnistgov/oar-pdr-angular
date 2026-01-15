@@ -56,7 +56,7 @@ export class RefListComponent implements OnInit {
     currentRefIndex: number = 0;
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
-    record: NerdmRes = null;
+    record: NerdmRes = {} as NerdmRes;
 
     // For error message display
     errMessage: string

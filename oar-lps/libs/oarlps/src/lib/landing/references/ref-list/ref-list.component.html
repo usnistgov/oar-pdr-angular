@@ -8,7 +8,7 @@
         <div class="editable_field" style="width: calc(100% - 35px);">
             <!-- Drag and drop reference list-->
             <div class="reference-text edit_box" [style.background-color]="getRecordBackgroundColor()">
-                <div *ngIf="record['references'] && record['references'].length > 0; else noReference" #dropListContainer class="example-container" cdkDropListGroup>
+                <div *ngIf="record && record['references'] && record['references'].length > 0; else noReference" #dropListContainer class="example-container" cdkDropListGroup>
                     <div style="width: 100%;" 
                     *ngFor="let reference of record['references']; let i = index"
                     cdkDropList
