@@ -122,3 +122,5 @@ export * from './lib/frame/usermessage.service';
 export * from './lib/bulk-download/bulk-download.component';
 export * from './lib/shared/collection-service/collection.service';
 export * from './lib/landing/revision-details/revision-details.component';
+
+export * from './lib/landing/landingpage.service';

@@ -245,9 +245,12 @@ export class RefListComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORMAL)
-            this.globalsvc.sectionMode.set(sectionMode);
-            // this.lpService.setEditing(sectionMode);
+        //refreshHelp=false means this widget is closed by other widget, 
+        //do not broadcast the section mode because other widget already did that.
+        if (refreshHelp) {
+            // this.globalsvc.sectionMode.set(sectionMode);
+            this.lpService.setEditing(sectionMode);
+        }
 
         this.editmodeOutput.next(this.editMode);    
 

@@ -1,50 +1,15 @@
-import { Component, AfterViewInit, OnInit, PLATFORM_ID, Inject } from '@angular/core';
+import { Component, AfterViewInit, OnInit, PLATFORM_ID, Inject, HostListener } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, RouterOutlet, RouterLink, RouterState, ActivatedRoute } from '@angular/router';
 // import './content/modal.less';
 import { GoogleAnalyticsService } from 'oarlps'
 import { AppConfig } from 'oarlps';
-import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { AppRoutingModule } from './app-routing.module';
-import { LandingPageComponent } from './landing/landingpage.component';
-import { LandingPageModule } from './landing/landingpage.module';
-import { ErrorsModule, AppErrorHandler } from 'oarlps';
-
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { enableProdMode } from '@angular/core';
-import { ErrorHandler } from '@angular/core';
-
-import { HttpClientModule} from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DatePipe } from '@angular/common';
-
-import { ToastrModule } from 'ngx-toastr';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
-import { LandingAboutComponent } from 'oarlps';
-import { SharedModule } from 'oarlps';
-import { FragmentPolyfillModule } from "./fragment-polyfill.module";
-
-// import { ConfigModule } from './config/config.module';
-import { DatacartModule } from 'oarlps';
-import { DirectivesModule } from 'oarlps';
-import { MetricsModule } from 'oarlps';
-import { ModalComponent } from 'oarlps';
-import { ComboBoxComponent } from 'oarlps';
-import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
-import { OARLPSModule } from 'oarlps';
-import { environment } from '../environments/environment-impl';
-import { NerdmModule } from 'oarlps';
-import { ConfigModule } from 'oarlps';
-import { EditControlModule } from 'oarlps';
-import { OARngModule, AuthenticationService } from 'oarng';
-import { WizardModule, StaffDirModule } from 'oarng';
-import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
-import {
-  APP_INITIALIZER, APP_ID,
-  CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
-} from '@angular/core';
-import { GlobalService } from 'oarlps';
+import { AuthenticationService } from 'oarng';
+import { DefaultUrlSerializer, UrlTree } from '@angular/router';
+import { GlobalService, SectionMode, MODE } from 'oarlps';
 import { Title } from '@angular/platform-browser';
+import { LandingpageService } from 'oarlps';
 
 declare const gtag: Function;
 
@@ -76,14 +41,15 @@ export class AppComponent {
     homeButtonLink: string = "";
     ga4Code: string = null;
     hostName: string = "dada.nist.gov";
+    sectionMode: SectionMode;
 
     constructor(private gaService: GoogleAnalyticsService,
-                // public environmentService : EnvironmentService,
                 private authsvc: AuthenticationService,
                 private cfg: AppConfig,
                 public globalService: GlobalService,
                 public router: Router,
                 private titleService: Title,
+                public lpService: LandingpageService,
                 @Inject(DOCUMENT) private document: Document,
                 @Inject(PLATFORM_ID) private platformId: Object)
     {
@@ -91,15 +57,19 @@ export class AppComponent {
     }
 
     ngOnInit() {
-      this.appVersion = this.cfg.get("systemVersion", "X.X") as string;
+        this.appVersion = this.cfg.get("systemVersion", "X.X") as string;
 
-      this.authsvc.getCredentials().subscribe(
-        creds => {
-            if (creds.token) {
-                this.authToken = creds.token;
+        this.authsvc.getCredentials().subscribe(
+            creds => {
+                if (creds.token) {
+                    this.authToken = creds.token;
+                }
             }
-        }
-      );
+        );
+        
+        this.lpService.watchEditing((sectionMode: SectionMode) => {   
+            if (sectionMode) this.sectionMode = sectionMode;
+        })        
     }
 
     ngAfterViewInit(): void {
@@ -121,7 +91,17 @@ export class AppComponent {
         }
     }
 
-   /**
+    @HostListener('window:beforeunload', ['$event'])
+    handleBeforeUnload(event: BeforeUnloadEvent): void {
+        // To show a confirmation dialog (most modern browsers only show a generic message for security)
+        if (this.sectionMode.mode == MODE.EDIT || this.sectionMode.mode == MODE.ADD) {
+            event.preventDefault(); 
+            // Some browsers may still require event.returnValue = true (or an empty string) 
+            event.returnValue = ''; 
+        }
+    }
+
+    /**
      * GA4 code to track page view when user navigates to different pages
      */
     handleRouteEvents() {

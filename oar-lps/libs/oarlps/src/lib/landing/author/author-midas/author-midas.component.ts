@@ -193,10 +193,13 @@ export class AuthorMidasComponent {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORMAL)
+        //refreshHelp=false means this widget is closed by other widget, 
+        //do not broadcast the section mode because other widget already did that.
+        if (refreshHelp) {
             // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
-
+        }
+        
         switch ( this.editMode ) {
             case MODE.LIST:
                 this.isEditing = true;
