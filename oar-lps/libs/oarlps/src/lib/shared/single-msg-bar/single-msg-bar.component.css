@@ -1,0 +1,24 @@
+.msg-container {
+    position: relative;
+    border: 2px solid #fd8b00;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0px;
+    width: calc(100% - 35px);
+}
+
+.close-btn {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    cursor: pointer;
+    padding-top: -15px;
+    padding-right: -10px;
+    color: #fd8b00;
+}
+
+.close-icon {
+    background-color: white;
+    padding: 5px;
+}

@@ -3,6 +3,7 @@ import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDe
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
+import { iconClass } from '../shared/globals/globals';
 
 @Component({
     selector: 'lib-text-edit',
@@ -23,6 +24,15 @@ export class TextEditComponent implements OnInit {
     controlBoxWidth: string = "60px !important"
     editing: boolean = false;
 
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;
+    deleteIcon = iconClass.DELETE;
+    submitIcon = iconClass.SUBMIT;
+
     @Input() textField: string = "";
     @Input() dragDropIcon: boolean = false;
     @Input() editButton: boolean = true; // Default button
@@ -42,6 +52,7 @@ export class TextEditComponent implements OnInit {
     @Input() forceReset: boolean = false;
     @Input() dataChanged: boolean = false;
     @Input() isNew: boolean = false;
+    @Input() defaultAction: string = "Submit"; // "Submit", "Save", "Add", etc.
 
     //Output actions: "Delete", "Cancel", "Save", etc.
     @Output() command_out = new EventEmitter<any>();
@@ -82,6 +93,8 @@ export class TextEditComponent implements OnInit {
 
         this.prevVal = this.textField;
         this.currentVal = this.textField;
+
+        console.log("custBtnIcon", this.custBtnIcon);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -230,9 +243,9 @@ export class TextEditComponent implements OnInit {
      */
     getDelIconClass() {
         if(this.editing){
-            return "faa faa-undo";
+            return this.undoIcon;
         }else{
-            return "fas fa-trash-alt";
+            return this.deleteIcon;
         }
     }    
 
@@ -268,4 +281,22 @@ export class TextEditComponent implements OnInit {
                 break;
          }
     }    
+
+    onKeyEnter(action: string = "Submit") {
+        switch ( action ) {
+            case 'Save':
+                this.onSave();
+                break;
+            case 'Submit':
+                this.submit();
+                break;
+            case 'Add':
+                this.add();
+                break;
+            default:
+                this.submit();
+                break;
+        }
+
+    }
 }

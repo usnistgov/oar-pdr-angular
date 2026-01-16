@@ -72,6 +72,7 @@ export class AppComponent {
     inBrowser: boolean = false;
     appVersion: string = "1.0"
     authToken: string|null = null;
+    
     homeButtonLink: string = "";
     ga4Code: string = null;
     hostName: string = "dada.nist.gov";
