@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
-import { MODE, iconClass } from '../../../shared/globals/globals';
+import { MODE, iconClass, SectionPrefs, Sections } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
@@ -30,7 +30,7 @@ export const ROW_COLOR = '#1E6BA1';
     styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
 })
 export class TopicEditComponent implements OnInit {
-    fieldName = 'theme';
+    fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
     editMode: string = MODE.NORMAL; 
     dataChanged: boolean = false;
 
@@ -220,6 +220,11 @@ export class TopicEditComponent implements OnInit {
         this.selectedTopics = this.selectedTopics.filter(topic => topic != this.selectedTopics[index]);
         this.refreshTopicTree();
         this.dataChanged = true;
+        this.dataChangedOutput.emit(
+            {
+                "action": "dataChanged",
+                "data": this.selectedTopics
+            });
     }
     
     /**
@@ -236,7 +241,8 @@ export class TopicEditComponent implements OnInit {
 
             // this.selectedTopics.push(rowNode.node.data.researchTopic);
     
-                this.dataChanged = true;
+            this.dataChanged = true;
+            this.dataChangedOutput.emit({"action": "dataChanged","data": this.selectedTopics});
             // Reset search text box
             if (this.searchText != "") {
                 this.searchText = "";
