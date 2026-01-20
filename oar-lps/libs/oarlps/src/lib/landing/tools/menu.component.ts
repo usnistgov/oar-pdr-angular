@@ -34,7 +34,7 @@ export class menuItem {
         this.url = url;
         this.backgroundColor = backgroundColor;
         this.isHeader = isHeader;
-        this.icon = icon;
+        this.icon = icon;       
     }
 } 
 
@@ -67,6 +67,7 @@ export class MenuComponent implements OnInit {
     bulkDownloadURL: string = "";
     globalsvc = inject(GlobalService);
     hasDataFiles: boolean = false;
+    colorScheme: any;
     modalRef: any; //For citation pop up
     citetext: string = null;
 
@@ -89,7 +90,8 @@ export class MenuComponent implements OnInit {
     @Output() toggle_citation = new EventEmitter<boolean>();
 
     constructor(public collectionService: CollectionService,
-        @Inject(PLATFORM_ID) private platformId: Object,
+                @Inject(PLATFORM_ID) private platformId: Object,
+                public globalService: GlobalService,
                 private modalService: NgbModal,
                 private cfg : AppConfig) 
     { 
@@ -101,7 +103,12 @@ export class MenuComponent implements OnInit {
 
         this.globalsvc.watchHasDataFiles((value) => {
             this.hasDataFiles = value;
-        })        
+        });
+        
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+            this.setColor();
+        })         
     }
 
     ngOnInit(): void {
@@ -109,8 +116,6 @@ export class MenuComponent implements OnInit {
             this.bulkDownloadURL = this.bulkDownloadBase + this.record.ediid.replace('ark:/88434/', '');
 
         this.allCollections = this.collectionService.loadAllCollections();
-
-        this.setColor();
 
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
@@ -168,7 +173,7 @@ export class MenuComponent implements OnInit {
         let contactPoint = "";
         if (this.record['contactPoint'] && this.record['contactPoint'].fn) {
             contactPoint = this.record['contactPoint'].fn.trim();
-            if(contactPoint.indexOf(" ") > 0){
+            if(contactPoint && contactPoint.indexOf(" ") > 0){
                 contactPoint = '"' + contactPoint + '"';
             }
         }
@@ -201,7 +206,7 @@ export class MenuComponent implements OnInit {
         for(let i = 0; i < keywords.length; i++){
             if(i > 0) keywordString += ',';
 
-            if(keywords[i].trim().indexOf(" ") > 0)
+            if(keywords[i] && keywords[i].trim().indexOf(" ") > 0)
                 keywordString += '"' + keywords[i].trim() + '"';
             else
             keywordString += keywords[i].trim();
@@ -242,9 +247,9 @@ export class MenuComponent implements OnInit {
      * Set color variables
      */
     setColor() {
-        this.defaultColor = this.allCollections[this.collection].color.default;
-        this.lighterColor = this.allCollections[this.collection].color.lighter;
-        this.hoverColor = this.allCollections[this.collection].color.hover;
+        this.defaultColor = this.colorScheme.defaultVar;
+        this.lighterColor = this.colorScheme.lighterVar;
+        this.hoverColor = this.colorScheme.hoverVar;
     }   
     
     /**
@@ -284,5 +289,19 @@ export class MenuComponent implements OnInit {
      */
     bulkdownload() {
         window.open(this.bulkDownloadURL, "_blank");  
+    }
+
+    menuStyle(header: boolean) {
+        let defaultColor = this.colorScheme.defaultVar;
+
+        if (!header) {
+            defaultColor = this.colorScheme.lighterVar;
+        }
+
+        return {
+            '--background-default': defaultColor,
+            '--background-lighter': this.colorScheme.lighterVar,
+            '--background-hover': this.colorScheme.hoverVar
+        };
     }
 }

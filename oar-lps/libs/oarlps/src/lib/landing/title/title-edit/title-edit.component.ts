@@ -81,7 +81,7 @@ export class TitleEditComponent {
         // effect(() => {
         //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if( sectionMode ) {
+            if( sectionMode && sectionMode.section ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                     if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
                         if(this.isEditing){
@@ -220,11 +220,16 @@ export class TitleEditComponent {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORMAL){
+        //refreshHelp=false means this widget is closed by other widget, 
+        //do not broadcast the section mode because other widget already did that.
+        if(refreshHelp){
             this.lpService.setEditing(sectionMode);
             // this.globalsvc.sectionMode.set(sectionMode);
-        }else
+        }
+
+        if (editmode == MODE.NORMAL) {
             this.isEditing = false;
+        }
 
         this.chref.detectChanges();
     }

@@ -1,22 +1,274 @@
-/* You can add global styles to this file, and also import other style files */
-@import "primeicons/primeicons.css";
+/* Global Styles */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Header override - reduce horizontal padding */
+app-header .header-container,
+.header-container {
+  padding: 1em !important;
+}
 
 :root {
-    /* Colors */
-    --science-theme-background-default: #019fbb;
-    --science-theme-background-dark: #007287;
-    --science-theme-background-light: #f5fbfd;
-    --science-theme-background-light2: #e3f7fd;
-    --science-theme-background-blue: #017abb;
-    --science-theme-background-blue-hover: #2db2fa;
-    --nist-green-default: #257a2d;
-    --nist-green-dark: #1c6022;
-    --nist-green-light: #6bad73;
-    --nist-blue-default: #12659c;
-    --nist-blue-dark: #0c4870;
-    --nist-blue-light: #197dc0;
-    --background-light-grey: #eeeeee;
-    --white: #fff;
-    --default-red: #e31c3d;
-    font-family: sans-serif;
+  /* NIST Brand Colors */
+  --science-theme-background-default: #019fbb;
+  --science-theme-background-dark: #007287;
+  --science-theme-background-light: #f5fbfd;
+  --science-theme-background-light2: #e3f7fd;
+  --science-theme-background-blue: #017abb;
+  --science-theme-background-blue-hover: #2db2fa;
+  --nist-green-default: #257a2d;
+  --nist-green-dark: #1c6022;
+  --nist-green-light: #6bad73;
+  --nist-blue-default: #12659c;
+  --nist-blue-dark: #0c4870;
+  --nist-blue-light: #197dc0;
+  --background-light-grey: #eeeeee;
+  --white: #fff;
+  --default-red: #e31c3d;
+
+  /* Primary Colors */
+  --primary-color: #008097;
+  --primary-dark: #006778;
+  --primary-light: #00a3b8;
+  --accent-color: #12659c;
+
+  /* Text Colors */
+  --text-primary: #1e293b;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+
+  /* Background Colors */
+  --background-color: #f1f5f9;
+  --surface-color: #ffffff;
+  --border-color: #e2e8f0;
+
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: var(--background-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Angular Material Theme Overrides */
+.mat-mdc-card {
+  --mdc-elevated-card-container-color: var(--surface-color);
+}
+
+.mat-mdc-progress-spinner {
+  --mdc-circular-progress-active-indicator-color: var(--primary-color);
+}
+
+/* ========================================
+   DARK MODE STYLES
+   ======================================== */
+body.dark-mode {
+  --background-color: #0f172a;
+  --surface-color: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --border-color: #334155;
+}
+
+body.dark-mode .page-container {
+  background: var(--background-color);
+}
+
+body.dark-mode .approval-card {
+  background: var(--surface-color);
+  border-color: var(--border-color);
+}
+
+/* Details Section */
+body.dark-mode .details-section {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .section-title {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+body.dark-mode .section-title mat-icon {
+  color: var(--primary-light);
+}
+
+body.dark-mode .detail-item .label {
+  color: var(--text-muted);
+}
+
+body.dark-mode .detail-item .value {
+  color: var(--text-primary);
+}
+
+body.dark-mode .email-link {
+  color: #60a5fa;
+}
+
+body.dark-mode .email-link:hover {
+  color: var(--primary-light);
+}
+
+/* Product Card */
+body.dark-mode .product-card {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
+  border-color: #3b5998;
+}
+
+body.dark-mode .product-label {
+  color: #60a5fa;
+}
+
+body.dark-mode .product-title {
+  color: #93c5fd;
+}
+
+body.dark-mode .product-icon {
+  color: #60a5fa;
+}
+
+/* Action Notice - Pending (blue) */
+body.dark-mode .action-notice.notice-pending {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 100%);
+  border-color: #3b82f6;
+  color: #93c5fd;
+}
+
+body.dark-mode .action-notice.notice-pending mat-icon {
+  color: #60a5fa;
+}
+
+/* Action Notice - Approved (yellow/warning) */
+body.dark-mode .action-notice.notice-approved {
+  background: linear-gradient(135deg, #422006 0%, #451a03 100%);
+  border-color: #854d0e;
+  color: #fcd34d;
+}
+
+body.dark-mode .action-notice.notice-approved mat-icon {
+  color: #fbbf24;
+}
+
+/* Action Notice - Declined (green) */
+body.dark-mode .action-notice.notice-declined {
+  background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+  border-color: #059669;
+  color: #a7f3d0;
+}
+
+body.dark-mode .action-notice.notice-declined mat-icon {
+  color: #34d399;
+}
+
+/* Error Container */
+body.dark-mode .error-container h2 {
+  color: var(--text-primary);
+}
+
+body.dark-mode .error-container p {
+  color: var(--text-secondary);
+}
+
+/* Buttons */
+body.dark-mode .decline-btn {
+  background: transparent;
+  border-color: #f87171;
+  color: #f87171;
+}
+
+body.dark-mode .decline-btn:hover:not(:disabled) {
+  background: #dc2626;
+  color: white;
+}
+
+/* Dark mode FAB inversion */
+body.dark-mode .dark-mode-fab {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  color: var(--primary-color);
+}
+
+body.dark-mode .dark-mode-fab:hover {
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+}
+
+/* Material overrides in dark mode */
+body.dark-mode .mat-mdc-card {
+  --mdc-elevated-card-container-color: var(--surface-color);
+  background: var(--surface-color) !important;
+}
+
+body.dark-mode .mat-mdc-raised-button.mat-primary {
+  --mdc-protected-button-container-color: var(--primary-color);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Selection styling */
+::selection {
+  background: var(--primary-color);
+  color: white;
+}
+
+body.dark-mode ::selection {
+  background: var(--primary-light);
+  color: #0f172a;
 }

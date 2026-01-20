@@ -1,0 +1,226 @@
+# PDR RPA Approve
+
+Angular application for Subject Matter Experts (SMEs) to review and approve/decline dataset access requests submitted through the RPA Request Form.
+
+## Overview
+
+When a user requests access to a restricted dataset, the request is stored in Salesforce and an email with an approval link is sent to the designated SME. This application displays the request details and allows the SME to approve or decline the request.
+
+## Features
+
+- View request details (user info, organization, terms agreed to)
+- Approve or decline requests with one click
+- Toast notifications for action feedback
+- Angular Material UI with dark mode support
+- JWT-based authentication via URL token
+- Responsive design
+
+## Tech Stack
+
+- Angular 18
+- Angular Material
+- RxJS
+- oarng (shared NIST library)
+
+## Prerequisites
+
+- Node.js 18+
+- npm 9+
+
+## Installation
+
+```bash
+# From repository root
+git clone https://github.com/usnistgov/oar-pdr-angular.git
+cd oar-pdr-angular
+
+# Initialize submodules (required for oarng library)
+git submodule update --init --recursive
+
+# Install dependencies
+npm install --legacy-peer-deps
+
+# Build required libraries
+cd lib && npm run build && cd ..
+
+# Run the application
+cd pdr-rpa/pdr-rpa-approve
+npm start -- --port 4202
+```
+
+## Configuration
+
+### Runtime Configuration (`src/assets/config.json`)
+
+```json
+{
+  "baseUrl": "http://localhost:8083/od/ds/rpa"
+}
+```
+
+| Property | Description |
+|----------|-------------|
+| `baseUrl` | Backend RPA API endpoint |
+
+### Environment Configuration (`src/environments/environment.ts`)
+
+```typescript
+export const environment = {
+  production: false,
+  configUrl: 'assets/config.json',
+  debug: true,
+  simulateData: true
+};
+```
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `configUrl` | `'assets/config.json'` | Path to runtime config |
+| `debug` | `true` | Enable console logging |
+| `simulateData` | `true` | Bypass backend with mock data |
+
+### Simulation Mode
+
+When `simulateData: true`, the app bypasses the backend API and returns mock data:
+- Displays a sample record without requiring a valid JWT token
+- Approve/decline actions simulate success without calling the API
+
+Use for UI/UX testing without a running backend.
+
+## Running the App
+
+```bash
+# Development server
+npm start -- --port 4202
+
+# Production build
+npm run build -- --configuration production
+```
+
+## Usage
+
+The app is accessed via a URL with a record ID:
+
+```
+http://localhost:4202/?id=<record-id>
+```
+
+Authentication is handled by the `AuthenticationService` from the `oarng` library.
+
+### Workflow
+
+1. SME receives email with approval link containing record ID
+2. SME clicks link, app authenticates via `oarng` AuthenticationService
+3. App fetches request details from backend using record ID
+4. SME reviews request information:
+   - Requester name, email, organization
+   - Terms and agreements accepted
+   - Dataset being requested
+5. SME clicks **Approve** or **Decline**
+6. Backend updates Salesforce record and triggers appropriate email to requester
+
+## UI Components
+
+### Request Card
+
+Displays:
+- User Information (name, email, organization, country)
+- Terms and Conditions (what the user agreed to)
+- Dataset Information (name, description, link)
+
+### Action Buttons
+
+| Button | Action |
+|--------|--------|
+| **Approve** | Approves the request, triggers dataset access email to user |
+| **Decline** | Declines the request, triggers decline notification to user |
+
+### States
+
+| State | Display |
+|-------|---------|
+| Loading | Spinner while fetching record |
+| Error | Error message with refresh button |
+| Success | Request details with action buttons |
+| Processing | Disabled buttons during API call |
+
+## Dark Mode
+
+Click the floating button (bottom-right) to toggle dark mode. Preference is saved to localStorage.
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/request/accepted/{id}` | Fetch request details (uses JWT for auth) |
+| PATCH | `/request/accepted/{id}` | Update approval status |
+
+### PATCH Request Body
+
+```json
+{
+  "approvalStatus": "Approved"  // or "Declined"
+}
+```
+
+### Response
+
+```json
+{
+  "record": {
+    "id": "record-id",
+    "caseNum": "CASE-001",
+    "userInfo": {
+      "fullName": "John Doe",
+      "email": "john@example.com",
+      "organization": "ACME Inc",
+      "country": "United States",
+      "productTitle": "Dataset Name",
+      "subject": "ark:/88434/mds2-2909"
+    }
+  },
+  "status": "Approved"
+}
+```
+
+## Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run with coverage
+npm test -- --coverage
+
+# Run specific test
+npm test -- src/app/app.component.spec.ts
+```
+
+## Error Handling
+
+| Error | Display |
+|-------|---------|
+| Invalid/expired token | "Invalid or expired token" with contact info |
+| Network error | "Failed to load record" with refresh button |
+| Approval failed | Toast notification with error details |
+
+## Troubleshooting
+
+### "Cannot find module 'oarng'"
+
+Run from repository root:
+```bash
+git submodule update --init --recursive
+npm install --legacy-peer-deps
+cd lib && npm run build
+```
+
+### Buttons not working
+
+1. Check browser console for errors
+2. Verify `baseUrl` in `config.json` is correct
+3. Check network tab for API response
+
+### CORS errors
+
+Ensure the backend has CORS configured to allow requests from your development server (e.g., `http://localhost:4202`).

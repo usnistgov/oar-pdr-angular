@@ -32,6 +32,7 @@ export class VisithomePubComponent {
     visitHomeURL: string = "";
     overflowStyle: string = 'hidden';
     hover: boolean = false;
+    colorScheme: any;
     
     constructor(public globalsvc: GlobalService,
                 public collectionService: CollectionService,
@@ -40,6 +41,10 @@ export class VisithomePubComponent {
 
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
+
+        this.globalsvc.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        })        
 
     }
 
@@ -78,12 +83,10 @@ export class VisithomePubComponent {
      * @returns 
      */
     visitHomePageBtnStyle() {
-        let color = this.allCollections[this.collection].color;
-
         return {
             '--button-text-color': 'white',
-            '--button-color': color.defaultVar,
-            '--hover-color': color.hoverVar,
+            '--button-color': this.colorScheme.defaultVar,
+            '--hover-color': this.colorScheme.hoverVar,
             '--disable-color': 'var(--disabled-grey)',
             '--disable-text-color': 'var(--disabled-grey-text)'
         };

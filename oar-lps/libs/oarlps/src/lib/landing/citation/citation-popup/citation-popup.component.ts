@@ -5,7 +5,7 @@ import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { CitationDisplayComponent } from '../citation-display/citation-display.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Themes, Collections } from '../../../shared/globals/globals';
+import { Themes, Collections, GlobalService } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -39,6 +39,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class CitationPopupComponent {
     allCollections: any = {};
+    colorScheme: any;
 
     @Input() citetext : string;
     @Input() visible : boolean;
@@ -50,15 +51,17 @@ export class CitationPopupComponent {
     constructor(
         public activeModal: NgbActiveModal,
         public collectionService: CollectionService,
+        public globalService: GlobalService,
         private chref: ChangeDetectorRef) {
         
         this.allCollections = this.collectionService.loadAllCollections();
+
+        this.globalService.watchColorPalette((colorPalette) => {
+        this.colorScheme = colorPalette;
+        })  
     }
     
     ngOnInit() {
-        // console.log("citetext", this.citetext);
-        // console.log("visible", this.visible);
-        // console.log("width", this.width);
     }
 
     ngAfterViewInit() {
@@ -91,12 +94,12 @@ export class CitationPopupComponent {
      * @returns 
      */
     btnStyle() {
-        let color = this.allCollections[this.collection].color;
+        // let color = this.allCollections[this.collection].colorPalette;
 
         return {
             '--button-text-color': 'white',
-            '--button-color': color.defaultVar,
-            '--hover-color': color.hoverVar,
+            '--button-color': this.colorScheme.defaultVar,
+            '--hover-color': this.colorScheme.hoverVar,
             '--disable-color': 'var(--disabled-grey)',
             '--disable-text-color': 'var(--disabled-grey-text)'
         };

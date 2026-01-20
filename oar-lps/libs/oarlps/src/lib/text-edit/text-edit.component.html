@@ -8,7 +8,7 @@
 
             <!-- Text field -->
             <td class="text-field-wrapper">
-                <input class="editable-text-field" *ngIf="editing" type="text" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
+                <input class="editable-text-field" *ngIf="editing" type="text" (keyup.enter)="onKeyEnter(defaultAction)" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
                 <span *ngIf="!editing" class="display-text-field">
                     <div style="padding: 2px 10px;" *ngIf="currentVal && currentVal.trim() != ''; else notext">{{ currentVal }}</div>
                     <ng-template #notext>
@@ -44,7 +44,7 @@
                     [aria-label]="custBtnTooltip"
                     [pTooltip]="custBtnTooltip"
                     tooltipPosition="top" >
-                    <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"></i>
+                    <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" [title]="Costom"></i>
                 </button>
 
                 <!-- Edit only button-->
@@ -86,7 +86,7 @@
                     pTooltip="Restore from original value" 
                     data-container="body"
                     tooltipPosition="top">
-                    <i class="fas fa-undo fa-sm" [style.opacity]="iconOpacity(editing)"
+                    <i [class]="undoIcon" [style.opacity]="iconOpacity(editing)"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>
 
@@ -114,7 +114,7 @@
                     aria-label="submit button" 
                     [pTooltip]="submitTooltip"
                     tooltipPosition="top">
-                    <i class="faa faa-check-circle" [style.opacity]="iconOpacity()"
+                    <i [class]="submitIcon" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>
             </td>

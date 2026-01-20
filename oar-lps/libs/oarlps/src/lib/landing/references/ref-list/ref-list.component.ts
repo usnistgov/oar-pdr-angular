@@ -20,6 +20,7 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'lib-ref-list',
@@ -55,6 +56,10 @@ export class RefListComponent implements OnInit {
     currentRefIndex: number = 0;
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
+    record: NerdmRes = {} as NerdmRes;
+
+    // For error message display
+    errMessage: string
 
     // For warning pop up
     modalRef: any;
@@ -73,7 +78,7 @@ export class RefListComponent implements OnInit {
     };
 
     // passed in by the parent component:
-    @Input() record: NerdmRes = null;
+    @Input() nerdmRecord: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
@@ -82,7 +87,8 @@ export class RefListComponent implements OnInit {
         private modalService: NgbModal,  
         private notificationService: NotificationService,
         private chref: ChangeDetectorRef,  
-        public lpService: LandingpageService) { 
+        public lpService: LandingpageService,
+        private toastrService: ToastrService) { 
 
     }
 
@@ -109,7 +115,7 @@ export class RefListComponent implements OnInit {
     }
 
     ngOnChanges(ch : SimpleChanges) {
-        if (ch.record){
+        if (ch.nerdmRecord){
             this.resetOriginalValue();
         }
 
@@ -117,8 +123,10 @@ export class RefListComponent implements OnInit {
     }
 
     resetOriginalValue() {
-        if(this.record && this.record['references'] && this.record['references'].length > 0) {
-            if(!this.record['references'][this.currentRefIndex])
+        if(this.nerdmRecord && this.nerdmRecord['references'] && this.nerdmRecord['references'].length > 0) {
+            this.record = JSON.parse(JSON.stringify(this.nerdmRecord));
+            
+            if (!this.record['references'][this.currentRefIndex])
                 this.currentRefIndex = 0;
 
             this.currentRef = this.record['references'][this.currentRefIndex];
@@ -240,9 +248,12 @@ export class RefListComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORMAL)
-            this.globalsvc.sectionMode.set(sectionMode);
-            // this.lpService.setEditing(sectionMode);
+        //refreshHelp=false means this widget is closed by other widget, 
+        //do not broadcast the section mode because other widget already did that.
+        if (refreshHelp) {
+            // this.globalsvc.sectionMode.set(sectionMode);
+            this.lpService.setEditing(sectionMode);
+        }
 
         this.editmodeOutput.next(this.editMode);    
 
@@ -266,13 +277,20 @@ export class RefListComponent implements OnInit {
         return new Promise<boolean>((resolve, reject) => {
             if(refid) {    // Update specific reference
                 this.mdupdsvc.update(this.fieldName, ref, refid).then((updateSuccess) => {
-                    if (updateSuccess){
-                        this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                    if (updateSuccess) {
+                        if(this.isAdding){
+                            ref["isNew"] = false;
+                            this.toastrService.success("Reference added successfully.");
+                        } else {
+                            this.toastrService.success("Reference updated successfully.");  
+                        }
+                        ref.dataChanged = false;
                         this.chref.detectChanges();
                         resolve(true);
                     }else{
                         let msg = "References update failed";
                         console.error(msg);
+                        this.errMessage = msg;
                         resolve(false);
                     }
                 });
@@ -288,6 +306,7 @@ export class RefListComponent implements OnInit {
                         }else{
                             let msg = "References update failed";
                             console.error(msg);
+                            this.errMessage = msg;
                             resolve(false);
                         }
                     });
@@ -318,29 +337,22 @@ export class RefListComponent implements OnInit {
                 var postMessage: any = {};
                 postMessage = JSON.parse(JSON.stringify(this.currentRef));
 
-                //Delete temp keys
-                // postMessage[this.fieldName].forEach(ref => {
-                //     delete ref['isNew'];
-                //     delete ref['dataChanged'];
-                // });
-
                 this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                     if (rec){
-                        // this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
-                        // this.currentRef = this.record[this.fieldName].at(-1); // last reference
-                        // this.currentRefIndex = this.record[this.fieldName].length - 1;
                         this.currentRef.dataChanged = false;
                         this.chref.detectChanges();
+                        this.toastrService.success("Reference added successfully.");
                     }else{
                         let msg = "Failed to add reference";
                         console.error(msg);
+                        this.errMessage = msg;
                         return;
                     }
                 });
             }else{  //If no data has been entered, remove this reference
                 this.removeRef(this.currentRefIndex);
             }
-        }else{
+        }else{ // Not adding, update current reference if data changed
             this.updateMatadata(this.currentRef, this.currentRef["@id"]);
         }
 
@@ -376,6 +388,7 @@ export class RefListComponent implements OnInit {
                 }else{
                     let msg = "Failed to undo " + this.fieldName + " metadata"
                     console.error(msg);
+                    this.errMessage = msg;
                     return;
                 }
             });
@@ -481,6 +494,7 @@ export class RefListComponent implements OnInit {
                     } else {
                         let msg = "Failed to restore reference";
                         console.error(msg);
+                        this.errMessage = msg;
                     }
                 })
 
@@ -527,6 +541,7 @@ export class RefListComponent implements OnInit {
                     }else{
                         let msg = "Update failed";
                         console.error(msg);
+                        this.errMessage = msg;
                     }
                 })
             }else{

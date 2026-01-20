@@ -15,7 +15,10 @@ import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
 import { OARLPSModule, ConfigModule, EditControlModule, UserMessageService, ConfirmationDialogService,
          GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
 } from 'oarlps';
- import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrModule } from 'ngx-toastr';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -38,17 +41,20 @@ enableProdMode();
       AppComponent
     ],
     imports: [
-      OARLPSModule,
-      ErrorsModule,
-      AppRoutingModule,
-      LandingAboutComponent,
-      ConfigModule,
-      StaffDirModule,
-      EditControlModule.forRoot(environment),
-      FooterComponent,
-      HeaderComponent,
-      HeaderPubComponent,
-      LandingPageComponent
+        OARLPSModule,
+        ErrorsModule,
+        AppRoutingModule,
+        LandingAboutComponent,
+        ConfigModule,
+        StaffDirModule,
+        EditControlModule.forRoot(environment),
+        FooterComponent,
+        HeaderComponent,
+        HeaderPubComponent,
+        LandingPageComponent,
+        CommonModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot()
     ],
     exports: [AppComponent],
     providers: [
@@ -62,8 +68,7 @@ enableProdMode();
         DatePipe,
         UserMessageService,
         NgbActiveModal,
-        ConfirmationDialogService,
-        // fakeBackendProvider
+        ConfirmationDialogService
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

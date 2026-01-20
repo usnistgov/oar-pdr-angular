@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   configUrl: 'assets/config.json',
-  debug: true
+  debug: true,
+  simulateData: true  // Set to false to use real backend
 };
 
 /*

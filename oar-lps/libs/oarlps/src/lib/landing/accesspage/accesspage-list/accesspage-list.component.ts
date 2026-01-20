@@ -506,13 +506,12 @@ export class AccesspageListComponent implements OnInit {
         this.dataCommand.next(editmode);
 
         // Update help text
-        if(refreshHelp){
+        //refreshHelp=false means this widget is closed by other widget, 
+        //do not broadcast the section mode because other widget already did that.
+        if (refreshHelp) {
             this.refreshHelpText(editmode);
-        }  
-
-        if(editmode != MODE.NORMAL)
-            // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
+        }  
 
         this.chref.detectChanges();
     }

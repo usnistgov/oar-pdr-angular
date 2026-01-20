@@ -13,6 +13,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
+import { AuthenticationService } from 'oarng';
+
 
 describe('SingleRefComponent', () => {
     let component: RefEditComponent;
@@ -21,10 +23,10 @@ describe('SingleRefComponent', () => {
     cfg.loadConfig(env.config);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
-    let authsvc: AuthService = new MockAuthService(undefined);
     let dapsvc : DAPService = new LocalDAPService();
     let edstatsvc = new EditStatusService();
-
+    let authsvc: AuthenticationService;
+    
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             imports: [ 
@@ -35,6 +37,7 @@ describe('SingleRefComponent', () => {
             providers: [ 
                 UserMessageService, 
                 HttpHandler,
+                AuthenticationService,
                 DatePipe,
                 { provide: AppConfig, useValue: cfg },
                 { provide: AuthService, useValue: authsvc },
@@ -49,6 +52,9 @@ describe('SingleRefComponent', () => {
     }));
 
     beforeEach(() => {
+        authsvc = TestBed.inject(AuthenticationService);
+        authsvc.setCredential({userId: "test",userAttributes:null, token:"fake token"});
+
         fixture = TestBed.createComponent(RefEditComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

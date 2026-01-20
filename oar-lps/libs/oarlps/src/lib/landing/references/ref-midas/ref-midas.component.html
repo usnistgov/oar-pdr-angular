@@ -74,7 +74,7 @@
 -->
 @if (loadEditRefBlock) {
     <div style="width: 100%;" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
-        <lib-ref-list #reflist [record]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
+        <lib-ref-list #reflist [nerdmRecord]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
     </div>
 }
 

@@ -460,7 +460,7 @@ export class TopicEditComponent implements OnInit {
     *   search treeNode, if found set visible to true
     */
     setTreenodeVisible(tree: TreeNode, topic: string) {
-        if (tree.data.researchTopic.toLowerCase().indexOf(topic.toLowerCase()) > -1) {
+        if (tree.data && tree.data.researchTopic.toLowerCase().indexOf(topic.toLowerCase()) > -1) {
         if (tree != null) {
             tree.data.bkcolor = "#E7FFFE";
             if (tree.parent == null) {

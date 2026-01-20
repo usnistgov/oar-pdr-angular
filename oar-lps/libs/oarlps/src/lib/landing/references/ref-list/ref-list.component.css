@@ -1,10 +1,5 @@
-/* button {
-    margin-right: 4px;
-} */
-  
 .custom-class {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
 }
-

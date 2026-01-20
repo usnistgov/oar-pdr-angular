@@ -1,5 +1,9 @@
 <div class="references">
-    <!-- <div class="section-header"><h3><b>References</b></h3></div> -->
+    <div *ngIf="errMessage">
+        <lib-single-msg-bar [message]="errMessage" (command_out)="clearMessage()">
+        </lib-single-msg-bar>
+    </div>
+
     <div class="editable_container"  style="width: 100%;">
         <div class="editable_field" style="width: calc(100% - 35px);">
             <!-- Drag and drop reference list-->
