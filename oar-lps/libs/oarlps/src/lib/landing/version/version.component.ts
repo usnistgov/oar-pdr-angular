@@ -1,6 +1,6 @@
-import { Component, OnChanges, Input } from '@angular/core';
-import { NerdmRes } from '../../nerdm/nerdm';
-import { LandingConstants } from '../../shared/globals/globals';
+import { Component, OnChanges, Input, inject } from '@angular/core';
+import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import { LandingConstants, GlobalService } from '../../shared/globals/globals';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
@@ -45,6 +45,8 @@ export class VersionComponent implements OnChanges {
     fieldName = SectionPrefs.getFieldName(Sections.VERSION);
     expandButtonAlterText: string = "Open version history";
     expandIconClass: string = "faa-caret-right";
+    globalsvc = inject(GlobalService);
+    majorVersion: string = "";
 
     @Input() record: NerdmRes = null;
     @Input() landingPageServiceStr: string;
@@ -65,6 +67,9 @@ export class VersionComponent implements OnChanges {
         });
 
         this.lpssvc = this.landingPageServiceStr;
+
+        if(this.record && this.record.version)
+            this.majorVersion = (new NERDResource(this.record)).getMajorVersion();
     }
 
     ngOnChanges() {
@@ -85,11 +90,11 @@ export class VersionComponent implements OnChanges {
      * convert a full (3-field) version into an abbreviated version string 
      * having just the first two fields
      */
-    majorVersion(version: string) : string {
-        let ver = version.split('.');
-        if (ver.length < 2) return version;
-        return ver.slice(0, 2).join('.');
-    }
+    // majorVersion(version: string) : string {
+    //     let ver = version.split('.');
+    //     if (ver.length < 2) return version;
+    //     return ver.slice(0, 2).join('.');
+    // }
 
     /**
      * return a list of releases.  I
