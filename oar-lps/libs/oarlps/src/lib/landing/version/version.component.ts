@@ -87,16 +87,6 @@ export class VersionComponent implements OnChanges {
     }
 
     /**
-     * convert a full (3-field) version into an abbreviated version string 
-     * having just the first two fields
-     */
-    // majorVersion(version: string) : string {
-    //     let ver = version.split('.');
-    //     if (ver.length < 2) return version;
-    //     return ver.slice(0, 2).join('.');
-    // }
-
-    /**
      * return a list of releases.  I
      */
     getReleases() {
