@@ -14,6 +14,12 @@ export class ContactinfoComponent implements OnInit {
     // the full record for the selected person
     selected: any = null;
 
+    // Using dataModel for two way binding causes issues with laypout,
+    // so we use local variables and update dataModel on change events.
+    lastName: string = '';
+    firstName: string = ''; 
+    contactEmail: string = '';
+
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
     @Input() helpText: any = {};
@@ -33,18 +39,56 @@ export class ContactinfoComponent implements OnInit {
     }
 
     ngAfterContentInit() {
+        this.updateContact();
         this.cdr.detectChanges();
     }
-
+       
     toggleContactName(evt:any) {
         if(this.dataModel.creatorIsContact) {
             this.dataModel.contact = undefined;
 
             this.thisStep.isComplete = true;
-        }else{
+        } else {
+            this.updateContact();
             this.thisStep.isComplete = false;
         }
 
+        this.lastStep.canGoNext = this.stepService.allDone();
+    }
+
+    /**
+     * Update local contact fields from data model
+     */
+    updateContact() {
+        this.lastName = this.dataModel.contact?.lastName || '';
+        this.firstName = this.dataModel.contact?.firstName || '';
+        this.contactEmail = this.dataModel.contact?.email || '';   
+    }
+
+    /**
+     * Update data model when a contact field is changed
+     * @param field The field that changed (lastName, firstName, email)
+     */
+    onContactChanged(field: string) {
+        if(!this.dataModel.contact) {
+            this.dataModel.contact = {} as ContactDataModel;
+        }
+
+        switch(field) {
+            case 'lastName':
+                this.dataModel.contact.lastName = this.lastName;
+                break;
+            case 'firstName':
+                this.dataModel.contact.firstName = this.firstName;
+                break;
+            case 'email':
+                this.dataModel.contact.email = this.contactEmail;
+                break;
+            default:
+                break;
+        }
+
+        this.thisStep.isComplete = (this.dataModel.contact.lastName != '' && this.dataModel.contact.firstName != '');
         this.lastStep.canGoNext = this.stepService.allDone();
     }
 
@@ -62,6 +106,7 @@ export class ContactinfoComponent implements OnInit {
                     this.dataModel.contact.lastName = this.selected.lastName;
                     this.dataModel.contact.firstName = this.selected.firstName;
                     this.dataModel.contact.email = this.selected.emailAddress;
+                    this.updateContact();
 
                     this.thisStep.isComplete = (this.dataModel.contact != undefined);
                     this.lastStep.canGoNext = this.stepService.allDone();                }
