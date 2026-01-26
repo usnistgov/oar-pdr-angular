@@ -3,12 +3,12 @@
         <tr style="width: 100% !important;">
             <!-- Drag drop icon -->
             <td *ngIf="dragDropIcon" class="dragdrop">
-                <img src="./assets/images/reorder.png" class="dragdropicon" [style.opacity]="ddIconOpacity()" ngbTooltip="Drag and re-position this item" alt="Drag and re-position this item">
+                <img src="./assets/images/reorder.png" class="dragdropicon" [style.opacity]="iconOpacity()" ngbTooltip="Drag and re-position this item" alt="Drag and re-position this item">
             </td>
 
             <!-- Text field -->
             <td class="text-field-wrapper">
-                <input class="editable-text-field" *ngIf="editing" type="text" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
+                <input class="editable-text-field" *ngIf="editing" type="text" (keyup.enter)="onKeyEnter(defaultAction)" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
                 <span *ngIf="!editing" class="display-text-field">
                     <div style="padding: 2px 10px;" *ngIf="currentVal && currentVal.trim() != ''; else notext">{{ currentVal }}</div>
                     <ng-template #notext>
@@ -27,10 +27,10 @@
                     type="button" 
                     (click)="editSave()" 
                     [disabled]="disableControl" 
-                    aria-label="Edit button" 
-                    pTooltip="Edit this item"
+                    [aria-label]="getTooltip('edit')"
+                    [pTooltip]="getTooltip('edit')"
                     tooltipPosition="top" >
-                    <i [class]="getEditIconClass()"
+                    <i [class]="getEditIconClass()" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
 
@@ -41,10 +41,10 @@
                     type="button" 
                     (click)="cust();" 
                     [disabled]="disableControl" 
-                    [aria-label]="custBtnTooltip" 
+                    [aria-label]="custBtnTooltip"
                     [pTooltip]="custBtnTooltip"
                     tooltipPosition="top" >
-                    <i [class]="custBtnIcon"></i>
+                    <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" [title]="Costom"></i>
                 </button>
 
                 <!-- Edit only button-->
@@ -57,7 +57,7 @@
                     aria-label="Edit button" 
                     pTooltip="Edit this item"
                     tooltipPosition="top" >
-                    <i [class]="getEditOnlyIconClass()"
+                    <i [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity(editing)"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></i>
                 </button>
 
@@ -68,10 +68,10 @@
                     type="button" 
                     (click)="removeUndo()" 
                     [disabled]="disableControl" 
-                    aria-label="Delete button" 
-                    pTooltip="Delete this item"
+                    [aria-label]="getTooltip('delete')"
+                    [pTooltip]="getTooltip('delete')"
                     tooltipPosition="top">
-                    <i [class]="getDelIconClass()"
+                    <i [class]="getDelIconClass()" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="getTooltip('delete')"></i>
                 </button>
 
@@ -81,12 +81,12 @@
                     class="edit_button" 
                     type="button" 
                     (click)="restore()" 
-                    [disabled]="disableControl || !dataChanged || isNew" 
+                    [disabled]="disableControl || !dataChanged || isNew || editing" 
                     aria-label="Restore button" 
                     pTooltip="Restore from original value" 
                     data-container="body"
                     tooltipPosition="top">
-                    <i class="fas fa-undo fa-sm"
+                    <i [class]="undoIcon" [style.opacity]="iconOpacity(editing)"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i>
                 </button>
 
@@ -100,7 +100,7 @@
                     aria-label="Add button" 
                     pTooltip="Add new item"
                     tooltipPosition="top">
-                    <i class="faa faa-plus"
+                    <i class="faa faa-plus" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="Add"></i>
                 </button>
 
@@ -114,7 +114,7 @@
                     aria-label="submit button" 
                     [pTooltip]="submitTooltip"
                     tooltipPosition="top">
-                    <i class="faa faa-check-circle"
+                    <i [class]="submitIcon" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="submit"></i>
                 </button>
             </td>

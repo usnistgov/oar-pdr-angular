@@ -58,6 +58,10 @@ export class SuggestionsComponent {
             this.showSuggestions = this.showSug;
             this.chref.detectChanges();
         }
+
+        if(changes.Suggestion){
+            // console.log("suggestion changed:", changes.Suggestion);
+        }
     }
     
     gotoSection(section) {

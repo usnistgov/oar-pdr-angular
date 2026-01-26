@@ -10,7 +10,6 @@ import { WizardModule } from 'oarng';
 import { AuthModule, RELEASE_INFO } from 'oarng';
 import { RELEASE } from '../environments/release-info';
 import { InputTextModule } from "primeng/inputtext";
-import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { HttpClientModule } from '@angular/common/http';
 import { ConfigModule, MetadataUpdateService } from 'oarlps';
 import { GoogleAnalyticsService, SidebarService } from "oarlps";

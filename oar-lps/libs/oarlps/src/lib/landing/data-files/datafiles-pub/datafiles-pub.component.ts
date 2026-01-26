@@ -27,6 +27,7 @@ import { BulkConfirmComponent } from '../bulk-confirm/bulk-confirm.component';
 import { AppConfig } from '../../../config/config';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import * as MediaTypeMapping from '../../../../assets/fext2format.json';
+import { FormsModule } from '@angular/forms';
 
 // Define the maximum and minimum height for the virtual scroll window of the tree table.
 // We set maximum window size because the bigger the size the slower the performance.
@@ -98,6 +99,7 @@ interface DataFileItem {
         OverlayPanelModule, 
         ProgressSpinnerModule, 
         ButtonModule, 
+        FormsModule,
         TooltipModule, 
         NgbModule
     ],
@@ -256,6 +258,10 @@ export class DatafilesPubComponent {
 
         if (this.record)
             this.useMetadata();
+    }
+
+    get displayDataSection() {
+        return this.displayMode != 'restrict_preview' && (this.isPublicSite && this.files.length > 0 || !this.isPublicSite);
     }
 
     /**
@@ -745,7 +751,7 @@ export class DatafilesPubComponent {
      * @returns boolean
      */
     isLeaf(fileNode: any) {
-        return (fileNode.comp['@type'].indexOf('nrdp:DataFile') > -1);
+        return (fileNode.comp['@type'] && fileNode.comp['@type'].indexOf('nrdp:DataFile') > -1);
     }
 
     /**

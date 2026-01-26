@@ -193,10 +193,13 @@ export class AuthorMidasComponent {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORMAL)
+        //refreshHelp=false means this widget is closed by other widget, 
+        //do not broadcast the section mode because other widget already did that.
+        if (refreshHelp) {
             // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
-
+        }
+        
         switch ( this.editMode ) {
             case MODE.LIST:
                 this.isEditing = true;
@@ -295,4 +298,16 @@ export class AuthorMidasComponent {
         this.orderChanged = false;
         this.hideEditBlock();
     }   
+
+    /**
+     * Return the opacity of dragdrop icon to indicate enable/disable status
+     * @returns opacity
+     */
+    iconOpacity() {
+        if (this.childIsEditing || this.childIsAdding){
+            return 0.3;
+        }else{
+            return 1;
+        } 
+    }    
 }

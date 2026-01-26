@@ -2,27 +2,30 @@
 
     <!-- Add new author -->
     <div style="margin: 0px 10px;">
-        <lib-text-edit [textField]="newAuthor" [customButton]="true" custBtnTooltip="Add author to the list" custBtnIcon="fas fa-check fa-sm" [showBorder]="false" placeHolderText="Put author's name here" (command_out)="editAction($event)"></lib-text-edit>
+        <lib-text-edit [textField]="newAuthor" [disableControl]="editingAuthorIndex!=-1" [customButton]="true" custBtnTooltip="Add author to the list" custBtnIcon="fas fa-check fa-sm" defaultAction="Add" [showBorder]="false" placeHolderText="Put author's name here" (command_out)="editAction($event)"></lib-text-edit>
     </div>
 
     <!-- Existing authors -->
     <div #dropListContainer class="example-container" cdkDropListGroup>
-        <div style="width: 100%;" 
-        *ngFor="let author of ref['authors']; let i = index"
-        cdkDropList
-        [cdkDropListData]="i"
-        >
-            <div 
+        <div cdkDropList 
+            (cdkDropListDropped)="drop($event)" 
+            class="list">
+
+            <div class="list-item" 
+                *ngFor="let author of ref['authors']; let i = index" 
                 cdkDrag
-                [cdkDragData]="i"
-                (cdkDragEntered)="dragEntered($event)"
-                (cdkDragMoved)="dragMoved($event)"
-                (cdkDragDropped)="dragDropped($event)"
-                [cdkDragDisabled]="editingAuthorIndex != -1"
-                class="ref-row"
-            >
+                [cdkDragDisabled]="isDragDisabled">
+        
                 <div style="width: 100%;">
-                    <lib-text-edit [textField]="author" [dragDropIcon]="true" [showBorder]="false" placeHolderText="Put author's name here" [disableControl]="(editingAuthorIndex!=-1) && (editingAuthorIndex!=i)" [forceReset]="forceReset" (command_out)="editAction($event, i)"></lib-text-edit>
+                    <lib-text-edit 
+                        [textField]="author" 
+                        [dragDropIcon]="true" 
+                        [showBorder]="false" 
+                        placeHolderText="Put author's name here"
+                        [disableControl]="(editingAuthorIndex!=-1) && (editingAuthorIndex!=i)" 
+                        [forceReset]="forceReset"
+                        (command_out)="editAction($event, i)">
+                    </lib-text-edit>
                 </div>
             </div>
         </div>

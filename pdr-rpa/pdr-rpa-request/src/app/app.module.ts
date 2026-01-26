@@ -1,70 +1,71 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
-
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { DropdownModule } from 'primeng/dropdown';
-import { CardModule } from 'primeng/card';
-import { ChipModule } from 'primeng/chip';
-import { ButtonModule } from "primeng/button";
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { PanelModule } from 'primeng/panel';
+// Angular Material Modules
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FrameModule } from 'oarng';
-import { RECAPTCHA_BASE_URL, RecaptchaFormsModule, RecaptchaModule } from 'ng-recaptcha';
+// ng-recaptcha
+import { RECAPTCHA_BASE_URL } from 'ng-recaptcha';
+
+// oarng components
+import { FrameModule, HeaderComponent, FooterComponent } from 'oarng';
+
+// App components
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+
+// Dynamic form module
+import { DynamicFormComponent } from './dynamic-form';
+
+// Services
 import { ServiceModule } from './service/service.module';
-import { RequestFormTermsComponent } from './components/request-form-terms/request-form-terms.component';
-import { ToastModule } from 'primeng/toast';
-import { HeaderComponent } from 'oarng';
-import { FooterComponent } from 'oarng';
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        RequestFormTermsComponent
-    ],
-    imports: [
-        FrameModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        HttpClientModule,
-        FormsModule,
-        ReactiveFormsModule,
-        CommonModule,
-        PanelModule,
-        PanelModule,
-        MessagesModule,
-        MessageModule,
-        DropdownModule,
-        CardModule,
-        ChipModule,
-        ButtonModule,
-        ToastModule,
-        ProgressSpinnerModule,
-        OverlayPanelModule,
-        RecaptchaModule,
-        RecaptchaFormsModule,
-        ServiceModule,
-        RouterModule.forRoot([]),
-        HeaderComponent,
-        FooterComponent
-    ],
-    providers: [
-        {
-            provide: RECAPTCHA_BASE_URL,
-            useValue: "https://recaptcha.net/recaptcha/api.js", // "google.com" domain might be unavailable in some countries
-        },
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent
+  ],
+  imports: [
+    // Angular
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule,
+    CommonModule,
+    RouterModule.forRoot([]),
+    AppRoutingModule,
+
+    // Angular Material
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatButtonModule,
+
+    // oarng
+    FrameModule,
+    HeaderComponent,
+    FooterComponent,
+
+    // App (ServiceModule provides RECAPTCHA_SETTINGS)
+    ServiceModule,
+    DynamicFormComponent
+  ],
+  providers: [
+    {
+      provide: RECAPTCHA_BASE_URL,
+      useValue: 'https://recaptcha.net/recaptcha/api.js'
+    }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

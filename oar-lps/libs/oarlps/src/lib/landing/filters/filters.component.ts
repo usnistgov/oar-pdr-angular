@@ -8,8 +8,18 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { SearchService } from '../../shared/search-service';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
-import { Collections, Collection, CollectionThemes, FilterTreeNode, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { Collections, Collection, CollectionThemes, FilterTreeNode, GlobalService, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
+import { CommonModule } from '@angular/common';
+import { TreeModule } from 'primeng/tree';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+import { InputTextareaModule } from 'primeng/inputtextarea';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { FormsModule } from '@angular/forms';
+import { TaxonomyModule } from '../taxonomy/taxonomy.module';
+import { ButtonModule } from 'primeng/button';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CheckboxRequiredValidator } from '@angular/forms';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
@@ -81,7 +91,7 @@ export class FiltersComponent implements OnInit {
     collectionOrder: string[] = [Collections.DEFAULT];
 
 //  Color
-    colorScheme: ColorScheme;
+    colorScheme: any;
     collapedFilerColor: string;  //For collaped filter
 
     componentsTree: TreeNode[] = [];
@@ -119,13 +129,13 @@ export class FiltersComponent implements OnInit {
 
     filterStyle = {'width':'100%', 'background-color': '#FFFFFF','font-weight': '400','font-style': 'italic'};
 
-    ResourceTypeStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
-    'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'};
+    // ResourceTypeStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
+    // 'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'};
 
-    researchTopicStyle = {'width':'100%','padding-top': '.5em', 'padding-bottom': '.5em', 'background-color': 'var(--science-theme-background-light)', 'overflow':'hidden','border-width':'0'};
+    // researchTopicStyle = {'width':'100%','padding-top': '.5em', 'padding-bottom': '.5em', 'background-color': 'var(--science-theme-background-light)', 'overflow':'hidden','border-width':'0'};
 
-    recordHasStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
-    'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'}
+    // recordHasStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
+    // 'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'}
 
     //Error handling
     queryStringErrorMessage: string = "";
@@ -149,6 +159,7 @@ export class FiltersComponent implements OnInit {
     @Output() filterString = new EventEmitter<string>();  
 
     constructor(
+        public globalService: GlobalService,
         public taxonomyListService: TaxonomyListService,
         public searchFieldsListService: SearchfieldsListService,
         public searchService: SearchService,
@@ -156,7 +167,11 @@ export class FiltersComponent implements OnInit {
         private chref: ChangeDetectorRef,
         private cfg: AppConfig
     ) { 
-
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+            // Set colors
+            this.setColor();
+        })
     }
 
     ngOnInit(): void {
@@ -167,16 +182,14 @@ export class FiltersComponent implements OnInit {
         this.searchResultsError = [];
         this.MoreOptionsDisplayed = (this.theme == 'ScienceTheme');
         this.setFilterWidth();
+        let allCols = this.collectionService.loadAllCollections();
 
-        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
-        this.colorScheme = this.collectionService.getColorScheme(this.collection);
-
-        // Set colors
-        this.setColor();
+        if(allCols)
+            this.allCollections = JSON.parse(JSON.stringify(allCols));
     }
 
     setColor() {
-        this.collapedFilerColor = "linear-gradient(" +  this.colorScheme.default + ", white)";
+        this.collapedFilerColor = "linear-gradient(" +  this.colorScheme.defaultVar + ", white)";
     }
 
     /**
@@ -294,15 +307,7 @@ export class FiltersComponent implements OnInit {
             }
         }
     }
-
-    get isForensics() {
-        return this.collection == Collections.FORENSICS;
-    }
-
-    get isSemiconductors() {
-        return this.collection == Collections.SEMICONDUCTORS;
-    }
-
+    
     toggleMoreOptions() {
         this.MoreOptionsDisplayed = !this.MoreOptionsDisplayed;
         if(this.MoreOptionsDisplayed)
@@ -588,7 +593,7 @@ export class FiltersComponent implements OnInit {
         let query = event.query;
         for (let i = 0; i < this.authors.length; i++) {
           let auth = this.authors[i];
-          if (auth.toLowerCase().indexOf(author.toLowerCase()) >= 0) {
+          if (auth && auth.toLowerCase().indexOf(author.toLowerCase()) >= 0) {
             filtered.push(auth);
           }
         }
@@ -612,7 +617,7 @@ export class FiltersComponent implements OnInit {
         // Handle current keyword: update suggested keywords and lookup
         for (let i = 0; i < this.keywords.length; i++) {
             let keyw = this.keywords[i].trim().toLowerCase();
-            if (keyw.indexOf(keyword) >= 0) {
+            if (keyw && keyw.indexOf(keyword) >= 0) {
                 //Avoid duplicate
                 if(this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] == undefined) {
                     this.suggestedKeywords.push(this.shortenKeyword(keyw));
@@ -625,7 +630,7 @@ export class FiltersComponent implements OnInit {
         this.selectedKeywords.forEach(kw => {
             for (let i = 0; i < this.keywords.length; i++) {
                 let keyw = this.keywords[i].trim().toLowerCase();
-                if (keyw.indexOf(kw.toLowerCase()) >= 0) {
+                if (keyw && keyw.indexOf(kw.toLowerCase()) >= 0) {
                     if(this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] == undefined) {
                         this.suggestedKeywordsLkup[this.shortenKeyword(keyw)] = keyw;
                     }
@@ -724,6 +729,7 @@ export class FiltersComponent implements OnInit {
         this.filterStrings[Collections.DEFAULT] = "";
         this.filterStrings[Collections.FORENSICS] = "";        
         this.filterStrings[Collections.SEMICONDUCTORS] = "";
+        this.filterStrings[Collections.AM] = "";
 
         this.suggestedThemes = [];
         this.suggestedKeywords = [];
@@ -771,7 +777,7 @@ export class FiltersComponent implements OnInit {
                     resourceTypes.push(tempType);
                 }
 
-                if (resourceTypesArray.indexOf(resType) < 0) {
+                if (resourceTypesArray && resourceTypesArray.indexOf(resType) < 0) {
                     resourceTypesArray.push(resType);
                 }
             }
@@ -911,30 +917,22 @@ export class FiltersComponent implements OnInit {
      * @param searchResults - search results
      */
     collectThemes(searchResults: any[]) {
+        let keys = Object.keys(Collections);
         let allThemes: any = {};
-        allThemes[Collections.DEFAULT] = [];
-        allThemes[Collections.FORENSICS] = [];
-        allThemes[Collections.SEMICONDUCTORS] = [];
-
         let allThemesArray: any = {};
-        allThemesArray[Collections.DEFAULT] = [];
-        allThemesArray[Collections.FORENSICS] = [];
-        allThemesArray[Collections.SEMICONDUCTORS] = [];
-
+        let allUniqueThemes: any = {};
+        let allThemesAllArray: any = {};
         let topicLabel: string;
         let data: string;
-
-        let allUniqueThemes: any = {};
-        allUniqueThemes[Collections.DEFAULT] = [];
-        allUniqueThemes[Collections.FORENSICS] = [];
-        allUniqueThemes[Collections.SEMICONDUCTORS] = [];
-
-        let allThemesAllArray: any = {};
-        allThemesAllArray[Collections.DEFAULT] = [];
-        allThemesAllArray[Collections.FORENSICS] = [];
-        allThemesAllArray[Collections.SEMICONDUCTORS] = [];
-
+        let collection = '';
         this.unspecifiedCount = 0;
+
+        keys.forEach(key => {
+            allThemes[Collections[key]] = [];
+            allThemesArray[Collections[key]] = [];
+            allUniqueThemes[Collections[key]] = [];
+            allThemesAllArray[Collections[key]] = [];
+        });
         
         //Collecting all themes
         for (let resultItem of searchResults) {
@@ -953,37 +951,30 @@ export class FiltersComponent implements OnInit {
                         // topicLabel = topics[0] + ":" + topics[1];
                         topicLabel = topic.tag;
                     }
+
+                    if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.AM]) >= 0) {
+                        collection = Collections.AM;
+                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
+                        collection = Collections.SEMICONDUCTORS;
+                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
+                        collection = Collections.FORENSICS;
+                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0) {
+                        collection = Collections.DEFAULT;
+                    } else {
+                        collection = '';
+                    }
                     
-                    if(topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
+                    if (collection != '') {
                         topicLabel = topics[0];
-                        data = topic.tag.trim();
-
-                        if(topics.length > 1){
-                            // topicLabel = topics[0] + ":" + topics[1];
-                            topicLabel = topic.tag.trim();
-                        }
-
-                        if(allThemesArray[Collections.SEMICONDUCTORS].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.SEMICONDUCTORS].push({ label: topicLabel, value: data });
-                            allThemesArray[Collections.SEMICONDUCTORS].push(topicLabel);
-                        }
-                    }else if(topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
                         data = topic.tag.trim();
 
                         if(topics.length > 1){
                             topicLabel = topic.tag.trim();
                         }
 
-                        if(allThemesArray[Collections.FORENSICS].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.FORENSICS].push({ label: topicLabel, value: data });
-                            allThemesArray[Collections.FORENSICS].push(topicLabel);
-                        }
-                    }else if(topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0){
-                        topicLabel = topics[0];
-
-                        if (allThemesArray[Collections.DEFAULT].indexOf(topicLabel) < 0) {
-                            allThemes[Collections.DEFAULT].push({ label: topicLabel, value: topic.tag.trim() });
-                            allThemesArray[Collections.DEFAULT].push(topicLabel);
+                        if(allThemesArray[collection].indexOf(topicLabel) < 0) {
+                            allThemes[collection].push({ label: topicLabel, value: data });
+                            allThemesArray[collection].push(topicLabel);
                         }
                     }
                 }
@@ -1004,7 +995,7 @@ export class FiltersComponent implements OnInit {
 
                     for(let col of this.collectionOrder) {
                         for(let theme of allThemes[col]){
-                            if(topicTag.toLowerCase().indexOf(theme.label.toLowerCase()) > -1){
+                            if(topicTag && topicTag.toLowerCase().indexOf(theme.label.toLowerCase()) > -1){
                                 allUniqueThemes[col].push(theme.label.replace(/: /g, ":"));
                             }
                         }
@@ -1041,7 +1032,7 @@ export class FiltersComponent implements OnInit {
     findNthOccurence(string, nth, char) {
         let index = 0
         for (let i = 0; i < nth; i += 1) {
-          if (index !== -1) index = string.indexOf(char, index + 1)
+          if (string && index !== -1) index = string.indexOf(char, index + 1)
         }
         return index
     }
@@ -1157,4 +1148,12 @@ export class FiltersComponent implements OnInit {
         else
             return "";
     }
+
+    filterBkColor() {
+        return {
+            '--background-default': this.colorScheme.defaultVar,
+            '--background-lighter': this.colorScheme.lighterVar,
+            '--background-hover': this.colorScheme.hoverVar
+        };
+    }    
 }

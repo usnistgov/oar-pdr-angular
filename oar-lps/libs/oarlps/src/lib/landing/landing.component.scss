@@ -603,3 +603,30 @@ a:visited {
     cursor: pointer;
     color: var(--nist-blue-dark3);
 }
+
+// Drag and drop styles
+.list {
+    width: 100%;
+    max-width: 100%;
+}
+
+.list-item {
+    width: 100%;
+    margin-bottom: 8px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: move;
+}
+
+.list-item:last-child {
+    margin-bottom: 0;
+}
+
+.cdk-drag-preview {
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.cdk-drag-placeholder {
+    opacity: 0.3;
+}

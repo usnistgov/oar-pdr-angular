@@ -52,7 +52,7 @@ export class TopicMidasComponent implements OnInit {
     topicDisplay: any = {};
     topicShort: any = {};
     topicLong: any = {};
-    colorScheme: ColorScheme;
+    // colorScheme: any;
     hovered: boolean = false;
 
     //icon class names
@@ -79,7 +79,8 @@ export class TopicMidasComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     constructor(public mdupdsvc: MetadataUpdateService,
-                private cfg: AppConfig,
+        private cfg: AppConfig,
+                // public globalService: GlobalService,
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService, 
                 public collectionService: CollectionService,
@@ -93,6 +94,10 @@ export class TopicMidasComponent implements OnInit {
         this.globalsvc.watchCollection((collection) => {
             this.collection = collection;
         });    
+
+        // this.globalService.watchColorPalette((colorPalette) => {
+        //     this.colorScheme = colorPalette;
+        // })    
     }
 
     updated(collection: string = Collections.DEFAULT) { 
@@ -117,7 +122,7 @@ export class TopicMidasComponent implements OnInit {
 
     ngOnInit() {
         let editMode = this.isEditMode;
-        this.colorScheme = this.collectionService.getColorScheme(this.collection);
+        // this.colorScheme = this.collectionService.getColorScheme(this.collection);
 
         this.updateResearchTopics();
         this.originalTopics = JSON.parse(JSON.stringify(this.topics));
@@ -363,9 +368,12 @@ export class TopicMidasComponent implements OnInit {
         }
 
         //Broadcast the current section and mode
-        if(editmode != MODE.NORMAL)
+        //refreshHelp=false means this widget is closed by other widget, 
+        //do not broadcast the section mode because other widget already did that.
+        if (refreshHelp) {
             // this.globalsvc.sectionMode.set(sectionMode);
-            this.lpService.setEditing(sectionMode);   
+            this.lpService.setEditing(sectionMode);
+        }
         
         this.chref.detectChanges();
     }

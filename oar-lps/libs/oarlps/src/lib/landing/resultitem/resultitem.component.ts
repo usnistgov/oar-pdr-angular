@@ -36,7 +36,7 @@ export class ResultitemComponent implements OnInit {
 
     @Input() resultItem: any;
     @Input() PDRAPIURL: string = "/od/id/";
-    @Input() colorScheme: ColorScheme;
+    @Input() colorScheme: any;
 
     constructor() { }
 
