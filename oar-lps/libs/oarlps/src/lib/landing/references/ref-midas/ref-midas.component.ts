@@ -337,4 +337,16 @@ export class RefMidasComponent {
         this.orderChanged = false; 
         this.hideEditBlock();
     }   
+
+   /**
+     * Return the opacity of dragdrop icon to indicate enable/disable status
+     * @returns opacity
+     */
+    iconOpacity() {
+        if (this.childIsEditing || this.childIsAdding){
+            return 0.3;
+        }else{
+            return 1;
+        } 
+    }           
 }

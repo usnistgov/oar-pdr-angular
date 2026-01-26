@@ -56,6 +56,7 @@ export class AccesspageMidasComponent {
     scienceTheme = Themes.SCIENCE_THEME;
     globalsvc = inject(GlobalService);
     isPublicSite: boolean = false;
+    childEditMode: string = MODE.NORMAL;
 
     //icon class names
     editIcon = iconClass.EDIT;
@@ -110,6 +111,8 @@ export class AccesspageMidasComponent {
     get isListing() { return this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
+    get childIsEditing() { return this.childEditMode==MODE.EDIT }
+    get childIsAdding() { return this.childEditMode==MODE.ADD }
 
     /**
      * Return true if any access page was updated.
@@ -330,5 +333,30 @@ export class AccesspageMidasComponent {
                 }
             });
         }
+    }    
+
+    /**
+     * Return the opacity of dragdrop icon to indicate enable/disable status
+     * @returns opacity
+     */
+    iconOpacity() {
+        if (this.childIsEditing || this.childIsAdding){
+            return 0.3;
+        }else{
+            return 1;
+        } 
+    }       
+
+    /**
+     * Update the edit status of child component 
+     * so we can set the status of the close button
+     * @param editmode editmode from child component
+     */
+    setChildEditMode(editmode: string) {
+        this.childEditMode = editmode;
+        setTimeout(() => {
+            this.chref.detectChanges();
+        }, 0);
+        
     }    
 }

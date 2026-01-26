@@ -9,6 +9,7 @@ import {
     CdkDragEnter,
     CdkDragMove,
     moveItemInArray,
+    DragDropModule
 } from '@angular/cdk/drag-drop';
 import { AuthorEditComponent } from '../author-edit/author-edit.component';
 import { CommonModule } from '@angular/common';
@@ -26,7 +27,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         AuthorEditComponent,
         TextEditComponent,
         ButtonModule,
-        NgbModule 
+        NgbModule,
+        DragDropModule
     ],
     templateUrl: './author-list.component.html',
     styleUrls: ['../../landing.component.scss', './author-list.component.css'],
@@ -39,14 +41,11 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ]
 })
 export class AuthorListComponent implements OnInit {
-    // editingAuthorIndex: number = -1; // Indicating which author is being edited
     currentAuthorIndex: number = 0;
     currentAuthor: Author; // for drag drop
     currentAuthors: Author[] = [];
-    // currentEditingAuthor: Author // for editing
     savedRecord: any = {}; // Previously saved record
     originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
-    // forceReset: boolean = false;
     newAuthor: Author = {} as Author;
     placeholder: string = "Enter author data below";
     editBlockStatus: string = 'collapsed';
@@ -88,7 +87,6 @@ export class AuthorListComponent implements OnInit {
      }
 
     ngOnInit(): void {
-        // this.onRecordChanged();
     }
 
     onSectionModeChanged(sectionMode: SectionMode) {
@@ -139,7 +137,9 @@ export class AuthorListComponent implements OnInit {
     get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
     get isEditing() { return this.editMode==MODE.EDIT }
     get isAdding() { return this.editMode==MODE.ADD }
-
+    get isDragDisabled() { return this.isEditing || this.isAdding; }
+    get dragDropCursor() { return this.isDragDisabled ? 'not-allowed' : 'move'; }
+    
     /**
      * Check if any author data changed or author order changed
      */
@@ -279,17 +279,10 @@ export class AuthorListComponent implements OnInit {
         let postMessage: any = {}; 
 
         if(this.isAdding) {  // Temp disable this function
-            // postMessage[this.fieldName] = [];
-            // this.record[this.fieldName].forEach(author => {
-            //     postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
-            // });
             postMessage = JSON.parse(JSON.stringify(this.currentAuthor));
 
             this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                 if (rec){
-                    // this.record[this.fieldName] = JSON.parse(JSON.stringify(rec));
-                    // this.currentAuthor = this.record[this.fieldName].at(-1); // last author
-                    // this.currentAuthorIndex = this.record[this.fieldName].length - 1;
                     this.currentAuthor.dataChanged = false;
 
                     if(closeAll)
@@ -693,59 +686,15 @@ export class AuthorListComponent implements OnInit {
         }
     }
 
-    // Drag and drop
-    dragEntered(event: CdkDragEnter<number>) {
-        const drag = event.item;
-        const dropList = event.container;
-        const dragIndex = drag.data;
-        const dropIndex = dropList.data;
-    
-        this.dragDropInfo = { dragIndex, dropIndex };
-    
-        const phContainer = dropList.element.nativeElement;
-        const phElement = phContainer.querySelector('.cdk-drag-placeholder');
-    
-        if (phElement) {
-            phContainer.removeChild(phElement);
-            phContainer.parentElement?.insertBefore(phElement, phContainer);
-    
-            moveItemInArray(this.record[this.fieldName], dragIndex, dropIndex);
-        }
-    }
-    
-    dragMoved(event: CdkDragMove<number>) {
-        if (!this.dropListContainer || !this.dragDropInfo) return;
-    
-        const placeholderElement =
-            this.dropListContainer.nativeElement.querySelector(
-            '.cdk-drag-placeholder'
-            );
-    
-        const receiverElement =
-            this.dragDropInfo.dragIndex > this.dragDropInfo.dropIndex
-            ? placeholderElement?.nextElementSibling
-            : placeholderElement?.previousElementSibling;
-    
-        if (!receiverElement) {
-            return;
-        }
-    
-        receiverElement.style.display = 'none';
-        this.dropListReceiverElement = receiverElement;
-    }
-    
-    dragDropped(event: CdkDragDrop<number>) {
-        if (!this.dropListReceiverElement) {
-            return;
-        }
-
+    /**
+     * After drop, update author array and other variables. Notify parent component about the change.
+     * @param event 
+     */
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.record[this.fieldName], event.previousIndex, event.currentIndex);
         this.onOrderChange();
 
-        this.currentAuthorIndex = event.item.data;
+        this.currentAuthorIndex = event.currentIndex;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-
-        this.dropListReceiverElement.style.removeProperty('display');
-        this.dropListReceiverElement = undefined;
-        this.dragDropInfo = undefined;
     }
 }

@@ -4,35 +4,32 @@
             <div class="edit_box" >
                 <!-- Existing authors -->
                 <div #dropListContainer class="example-container" cdkDropListGroup>
-                    <div style="width: 100%;" 
-                    *ngFor="let author of record[fieldName]; let i = index"
-                    cdkDropList
-                    [cdkDropListData]="i"
-                    >
-                        <div 
+                    <div cdkDropList 
+                        (cdkDropListDropped)="drop($event)" 
+                        class="list" 
+                        [style.background-color]="getRecordBackgroundColor()">
+
+                        <div class="list-item" 
+                            *ngFor="let author of record[fieldName]; let i = index"
                             cdkDrag
-                            [cdkDragData]="i"
-                            (cdkDragEntered)="dragEntered($event)"
-                            (cdkDragMoved)="dragMoved($event)"
-                            (cdkDragDropped)="dragDropped($event)"
-                            [cdkDragDisabled]="isAdding || isEditing"
-                            class="author-row"
-                        >
-                            <div (click)="selectAuthor(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"  [style.background-color]="getBackgroundColor(i)">
+                            [style.cursor]="dragDropCursor"
+                            [cdkDragDisabled]="isDragDisabled">
+                    
+                            <div (click)="selectAuthor(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"
+                                [style.background-color]="getBackgroundColor(i)">
                                 <lib-text-edit 
                                     [textField]="getAuthorName(i)" 
-                                    [dragDropIcon]="record[fieldName].length==1?false:true" 
+                                    [dragDropIcon]="record[fieldName].length==1?false:true"
                                     [editButton]="false" 
-                                    [editOnlyButton]="true"
+                                    [editOnlyButton]="true" 
                                     [deleteButton]="true" 
-                                    [restoreButton]="true" 
+                                    [restoreButton]="true"
                                     [disableControl]="isAdding || isEditing" 
                                     [placeHolderText]="placeholder" 
-                                    [isNew]="author.isNew" 
+                                    [isNew]="author.isNew"
                                     [dataChanged]="onAuthorListChanged(fieldName, author['@id'])" 
                                     (command_out)="onAuthorCommand($event, i)">
                                 </lib-text-edit>
-
                             </div>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import {
     CdkDragEnter,
     CdkDragMove,
     moveItemInArray,
+    DragDropModule
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
@@ -14,10 +15,11 @@ import { TextEditComponent } from '../../../text-edit/text-edit.component';
   standalone: true,
   imports: [
       CommonModule,
-      TextEditComponent
+      TextEditComponent,
+      DragDropModule
   ],
   templateUrl: './ref-author.component.html',
-  styleUrls: ['./ref-author.component.css']
+  styleUrls: ['../../landing.component.scss', './ref-author.component.css']
 })
 export class RefAuthorComponent implements OnInit {
     editingAuthorIndex: number = -1; // Indicating which author is being edited
@@ -53,6 +55,8 @@ export class RefAuthorComponent implements OnInit {
         this.editingAuthorIndex = -1;
     }
     
+    get dragDropCursor() { return (this.editingAuthorIndex == -1) ? 'move' : 'not-allowed'; } 
+
     editAction(action: any, index: number = 0) {
         switch ( action.command.toLowerCase() ) {
             case "delete":
@@ -71,7 +75,7 @@ export class RefAuthorComponent implements OnInit {
             case "edit":
                 this.editingAuthorIndex = index;
                 break;
-            case "undo":
+            case "undoedit":
                 this.editingAuthorIndex = -1;
                 break;                  
             default: 
@@ -185,51 +189,12 @@ export class RefAuthorComponent implements OnInit {
         }
     }
 
-    // Drag and drop
-    dragEntered(event: CdkDragEnter<number>) {
-        const drag = event.item;
-        const dropList = event.container;
-        const dragIndex = drag.data;
-        const dropIndex = dropList.data;
-    
-        this.dragDropInfo = { dragIndex, dropIndex };
-    
-        const phContainer = dropList.element.nativeElement;
-        const phElement = phContainer.querySelector('.cdk-drag-placeholder');
-    
-        if (phElement) {
-            phContainer.removeChild(phElement);
-            phContainer.parentElement?.insertBefore(phElement, phContainer);
-    
-            moveItemInArray(this.ref['authors'], dragIndex, dropIndex);
-        }
-    }
-    
-    dragMoved(event: CdkDragMove<number>) {
-        if (!this.dropListContainer || !this.dragDropInfo) return;
-    
-        const placeholderElement =
-            this.dropListContainer.nativeElement.querySelector(
-            '.cdk-drag-placeholder'
-            );
-    
-        const receiverElement =
-            this.dragDropInfo.dragIndex > this.dragDropInfo.dropIndex
-            ? placeholderElement?.nextElementSibling
-            : placeholderElement?.previousElementSibling;
-    
-        if (!receiverElement) {
-            return;
-        }
-    
-        receiverElement.style.display = 'none';
-        this.dropListReceiverElement = receiverElement;
-    }
-    
-    dragDropped(event: CdkDragDrop<number>) {
-        if (!this.dropListReceiverElement) {
-            return;
-        }
+    /**
+     * After drop, update author array and other variables. Notify parent component about the change.
+     * @param event 
+     */    
+    drop(event: CdkDragDrop<string[]>) {
+        moveItemInArray(this.ref['authors'], event.previousIndex, event.currentIndex);
 
         if(this.editingAuthorIndex != -1){
             this.ref["authors"][this.editingAuthorIndex] = this.currentEditingAuthor;
@@ -238,12 +203,8 @@ export class RefAuthorComponent implements OnInit {
 
         this.onChange(true);
 
-        this.currentAuthorIndex = event.item.data;
+        this.currentAuthorIndex = event.currentIndex;
         this.currentAuthor = this.ref.authors[this.currentAuthorIndex];
-        this.dataChanged.emit(true);
-
-        this.dropListReceiverElement.style.removeProperty('display');
-        this.dropListReceiverElement = undefined;
-        this.dragDropInfo = undefined;
-    }
+        this.dataChanged.emit(true);        
+    }    
 }
