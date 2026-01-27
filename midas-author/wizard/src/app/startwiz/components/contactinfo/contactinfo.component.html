@@ -17,73 +17,37 @@
                 </div>
             </div>
             <div style="margin-top: 1em;" *ngIf="dataModel.creatorIsContact != undefined && !dataModel.creatorIsContact">
-                <table width="100%" align="center">
-                    <!-- People Lookup -->
-                    <tr>
-                        <td colspan="2">Type in contact's name and select the appropriate match:</td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" align="left">
-                            <div style="width: 100%;margin-bottom: 20px;padding-right: .5em;">
-                                <div>
-                                    <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
-                                </div>
+                <div class="container">
+                    <div id="left">
+                        <div style="margin-bottom: 5px;">
+                            Name of group or individual contact:
+                        </div>
+                        <input type="text" 
+                            [(ngModel)]="name" 
+                            (input)="onContactChanged('name')" 
+                            id="lastname-input"
+                            placeholder="Name is required." 
+                            style="width: 100%;height: 2em;" />
+                        
+                        <div style="margin-top: 1em;margin-bottom: 5px;">
+                            Contact's email address:
+                        </div>
+                        <input type="text" 
+                            [(ngModel)]="email" 
+                            (input)="onContactChanged('email')" 
+                            id="email-input" 
+                            placeholder="Email"
+                            style="width: 100%;height: 2em;" />
+                    </div>
+                    <div id="right">
+                        Type in contact's name and select the appropriate match:
+                        <div style="width: 100%;margin-bottom: 20px;padding-right: .5em;">
+                            <div>
+                                <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
                             </div>
-                        </td>
-                    </tr>
-                
-                    <!-- Last Name -->
-                    <tr>
-                        <td width="80px" align="left">
-                            <span style="white-space: nowrap;" data-toggle="tooltip"
-                                title="This field is required">Last/Group Name:</span>
-                        </td>
-                        <td align="left" style="padding-right: 1em;">
-                            <input type="text" 
-                                [(ngModel)]="lastName" 
-                                (input)="onContactChanged('lastName')" 
-                                id="lastname-input"
-                                placeholder="Last name" 
-                                style="width: 100%;height: 2em;margin: 3px 10px;" />                        
-                        </td>
-                    </tr>
-
-                    <!-- First Name -->
-                    <tr>
-                        <td align="left">
-                            <span style="white-space: nowrap;" 
-                                data-toggle="tooltip" 
-                                title="This field is required">First Name:</span>
-                        </td>
-                        <td align="left" style="padding-right: 1em;">
-                            <input type="text" 
-                                [(ngModel)]="firstName" 
-                                (input)="onContactChanged('firstName')" 
-                                id="firstname-input"
-                                placeholder="First name" 
-                                style="width: 100%;height: 2em;margin: 3px 10px;" />                        
-                        </td>
-                    </tr>
-
-                    <!-- Email -->
-                    <tr>
-                        <td align="left">
-                            <span
-                                data-toggle="tooltip" 
-                                title="This field is recommended">
-                                Email:
-                            </span>
-                        </td>
-                        <td align="left" style="padding-right: 1em;">
-                            <input type="text" 
-                                [(ngModel)]="contactEmail" 
-                                (input)="onContactChanged('email')" 
-                                id="email-input" 
-                                placeholder="Email"
-                                style="width: 100%;height: 2em;margin: 3px 10px;" />
-                        </td>
-                    </tr>
-                </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

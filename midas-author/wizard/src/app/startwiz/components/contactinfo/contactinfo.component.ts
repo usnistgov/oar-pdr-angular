@@ -16,9 +16,8 @@ export class ContactinfoComponent implements OnInit {
 
     // Using dataModel for two way binding causes issues with laypout,
     // so we use local variables and update dataModel on change events.
-    lastName: string = '';
-    firstName: string = ''; 
-    contactEmail: string = '';
+    name: string = '';
+    email: string = '';
 
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
@@ -60,9 +59,8 @@ export class ContactinfoComponent implements OnInit {
      * Update local contact fields from data model
      */
     updateContact() {
-        this.lastName = this.dataModel.contact?.lastName || '';
-        this.firstName = this.dataModel.contact?.firstName || '';
-        this.contactEmail = this.dataModel.contact?.email || '';   
+        this.name = this.dataModel.contact?.name || '';
+        this.email = this.dataModel.contact?.email || '';  
     }
 
     /**
@@ -75,20 +73,17 @@ export class ContactinfoComponent implements OnInit {
         }
 
         switch(field) {
-            case 'lastName':
-                this.dataModel.contact.lastName = this.lastName;
-                break;
-            case 'firstName':
-                this.dataModel.contact.firstName = this.firstName;
+            case 'name':
+                this.dataModel.contact.name = this.name;
                 break;
             case 'email':
-                this.dataModel.contact.email = this.contactEmail;
+                this.dataModel.contact.email = this.email;
                 break;
             default:
                 break;
         }
 
-        this.thisStep.isComplete = (this.dataModel.contact.lastName != '' && this.dataModel.contact.firstName != '');
+        this.thisStep.isComplete = (this.dataModel.creatorIsContact || (!this.dataModel.creatorIsContact && this.dataModel.contact.name != ''));
         this.lastStep.canGoNext = this.stepService.allDone();
     }
 
@@ -103,8 +98,7 @@ export class ContactinfoComponent implements OnInit {
                 this.selected = dataChanged.selectedPeopleRecord;
                 if (this.selected.lastName && this.selected.firstName) {
                     this.dataModel.contact = {} as ContactDataModel;
-                    this.dataModel.contact.lastName = this.selected.lastName;
-                    this.dataModel.contact.firstName = this.selected.firstName;
+                    this.dataModel.contact.name = this.selected.lastName + ', ' + this.selected.firstName;
                     this.dataModel.contact.email = this.selected.emailAddress;
                     this.updateContact();
 

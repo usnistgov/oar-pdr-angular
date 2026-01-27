@@ -18,7 +18,6 @@ export interface CollectionDataModel {
 }
 
 export interface ContactDataModel {
-    lastName: string;
-    firstName: string;
+    name: string;
     email: string;
 }
