@@ -268,20 +268,21 @@ export class TopicMidasComponent implements OnInit {
 
     /**
      * Handle requests from child component
-     * @param dataChanged parameter passed from child component
+     * @param dataChanged parameter passed from child component. It's an object containing action and data.
+     * "action" current just accepts "dataChanged". "data" is the updated topic list.
      */
     onDataChange(dataChanged: any) {
         switch(dataChanged.action) {
             case 'dataChanged':
-                if(dataChanged[this.fieldName] && dataChanged[this.fieldName].length>0){
+                if(dataChanged["data"] && dataChanged["data"].length>0){
                     this.record[this.fieldName] = [];
-                    dataChanged[this.fieldName].forEach((topic) => {
+                    dataChanged["data"].forEach((topic) => {
                         this.record[this.fieldName].push(topic.tag);
                     })
                 }
 
                 // For new topic structure (topic field)
-                // this.record[this.fieldName] = dataChanged[this.fieldName];
+                this.topics[this.editCollection] = dataChanged["data"];
                 this.dataChanged = true;
                 break;
             default:
