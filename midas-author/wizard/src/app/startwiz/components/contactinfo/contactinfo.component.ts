@@ -98,7 +98,7 @@ export class ContactinfoComponent implements OnInit {
                 this.selected = dataChanged.selectedPeopleRecord;
                 if (this.selected.lastName && this.selected.firstName) {
                     this.dataModel.contact = {} as ContactDataModel;
-                    this.dataModel.contact.name = this.selected.lastName + ', ' + this.selected.firstName;
+                    this.dataModel.contact.name = this.selected.firstName + " " + this.selected.lastName;
                     this.dataModel.contact.email = this.selected.emailAddress;
                     this.updateContact();
 
