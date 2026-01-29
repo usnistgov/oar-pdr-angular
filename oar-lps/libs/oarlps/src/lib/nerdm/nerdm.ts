@@ -1,7 +1,7 @@
 /**
  * Classes and interfaces to support the NERDm metadata infrastructure
  */
-import { Injectable, InjectionToken } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Themes, ThemesPrefs } from '../shared/globals/globals';
 import * as _ from 'lodash-es';
 
@@ -69,7 +69,7 @@ export interface NerdmRes {
  * displaying it.
  */
 export class NERDResource {
-
+    
     /**
      * wrap a NerdRes record (the data that describes a data resource)
      */
@@ -79,71 +79,93 @@ export class NERDResource {
      * return the recommend text for citing this resource
      */
     getCitation() : string {
-      if(this.data != null){
-        if (this.data['citation'])
-            return this.data.citation;
+        if(this.data != null){
+            if (this.data['citation'])
+                return this.data.citation;
 
-        let out = ""
-        if (this.data['authors']) {
-            for (let i = 0; i < this.data['authors'].length; i++) {
-                let author = this.data['authors'][i];
-                if (author.familyName !== null && author.familyName !== undefined)
-                    out += author.familyName + ', ';
-                if (author.givenName !== null && author.givenName !== undefined)
-                    out += author.givenName;
-                if (author.middleName !== null && author.middleName !== undefined)
-                    out += ' ' + author.middleName;
-                if (i != this.data['authors'].length - 1)
-                    out += ', ';
+            let out = ""
+            if (this.data['authors']) {
+                for (let i = 0; i < this.data['authors'].length; i++) {
+                    let author = this.data['authors'][i];
+                    if (author.familyName !== null && author.familyName !== undefined)
+                        out += author.familyName + ', ';
+                    if (author.givenName !== null && author.givenName !== undefined)
+                        out += author.givenName;
+                    if (author.middleName !== null && author.middleName !== undefined)
+                        out += ' ' + author.middleName;
+                    if (i != this.data['authors'].length - 1)
+                        out += ', ';
+                }
+            }
+            else if (this.data['contactPoint'] && this.data['contactPoint']['fn']) {
+                out += this.data['contactPoint']['fn'];
+            }
+            else if (this.data['publisher'] && this.data['publisher']['name']) {
+                out += this.data['publisher']['name'];
+            }
+            else {
+                out += "National Institute of Standards and Technology";
+            }
+
+            let date = this.data['issued'];
+            if (! date)
+                date = this.data['modified'];
+            if (date)
+                out += ' (' + date.split('-')[0] + ')';
+
+            if (this.data['title'])
+                out += ', ' + this.data['title'];
+            if (this.data['publisher'] && this.data['publisher']['name']) 
+                out += ', ' + this.data['publisher']['name'];
+
+            if (this.data['doi']) {
+                let doi = this.data['doi'];
+                if (doi.startsWith("doi:"))
+                    doi = "https://doi.org/" + doi.split(':').slice(1).join(':')
+                out += ', ' + doi;
+            }
+            else if (this.data['landingPage']) {
+                out += ', ' + this.data['landingPage'];
+            }
+
+            date = new Date();
+            let version = this.data['version'] ? "Version: " + this.getMajorVersion(this.data['version'])+ ", " : "";
+            out += " (" + version;
+            out += "Accessed " + date.getFullYear() + '-';
+
+            let n = date.getMonth() + 1;
+            n = (n < 10) ? "0" + n.toString() : n.toString();
+            out += n + '-';
+            n = date.getDate();
+            n = (n < 10) ? "0" + n.toString() : n.toString();
+            out += n + ')';
+            
+            return out;
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+
+    /**
+     * convert a full (3-field) version into an abbreviated version string 
+     * having just the first two fields
+     */
+    getMajorVersion(version: string = ""): string {
+        if (!version) {
+            if (this.data && this.data['version'] && typeof this.data['version'] === 'string') {
+                version = this.data['version'];
+            } else {
+                return "";
             }
         }
-        else if (this.data['contactPoint'] && this.data['contactPoint']['fn']) {
-            out += this.data['contactPoint']['fn'];
-        }
-        else if (this.data['publisher'] && this.data['publisher']['name']) {
-            out += this.data['publisher']['name'];
-        }
-        else {
-            out += "National Institute of Standards and Technology";
-        }
-
-        let date = this.data['issued'];
-        if (! date)
-            date = this.data['modified'];
-        if (date)
-            out += ' (' + date.split('-')[0] + ')';
-
-        if (this.data['title'])
-            out += ', ' + this.data['title'];
-        if (this.data['publisher'] && this.data['publisher']['name']) 
-            out += ', ' + this.data['publisher']['name'];
-
-        if (this.data['doi']) {
-            let doi = this.data['doi'];
-            if (doi.startsWith("doi:"))
-                doi = "https://doi.org/" + doi.split(':').slice(1).join(':')
-            out += ', ' + doi;
-        }
-        else if (this.data['landingPage']) {
-            out += ', ' + this.data['landingPage'];
-        }
-
-        date = new Date();
-        out += " (Accessed " + date.getFullYear() + '-'
-        let n = date.getMonth() + 1;
-        n = (n < 10) ? "0" + n.toString() : n.toString();
-        out += n + '-';
-        n = date.getDate();
-        n = (n < 10) ? "0" + n.toString() : n.toString();
-        out += n + ')';
         
-        return out;
-      }
-      else
-      {
-        return "";
-      }
-    }
+        let ver = version.split('.');
+        if (ver.length < 2) return version;
+        return ver.slice(0, 2).join('.');
+    }  
 
     static _isstring(v : any, i?, a?) : boolean {
         return typeof v === 'string' || v instanceof String;
