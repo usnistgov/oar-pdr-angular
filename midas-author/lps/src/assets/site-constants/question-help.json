@@ -71,5 +71,10 @@
         "label": "Revision",
         "general": "<b>Placeholder for Revision:</b><p></p><b>Metadata Update:</b> Placeholder for description.<br><b>File removal:</b> Placeholder for description.<br><b>Data change (minor):</b> Placeholder for description.<br><b>Data change (major):</b> Placeholder for description.<br><b>New file addition:</b> Placeholder for description."
     },
+    "isPartOf": {
+        "label": "Is part of",
+        "general": "<b>Placeholder for IsPartOf:</b><p></p>Placeholder for description.",
+        "edit": "Placeholder for editing instruction. Click <i class='saveIcon'></i> to save.<p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+    },
     "completed": "All data has been completed. No more suggestion."
 }

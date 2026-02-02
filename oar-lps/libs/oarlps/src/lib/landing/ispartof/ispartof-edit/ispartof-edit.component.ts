@@ -1,11 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, inject, Input, SimpleChanges } from '@angular/core';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass, Collections } from '../../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { CollectionService } from '../../../shared/collection-service/collection.service';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { IspartofPubComponent } from '../ispartof-pub/ispartof-pub.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'ispartof-edit',
@@ -13,7 +17,9 @@ import { TooltipModule } from 'primeng/tooltip';
     imports: [
             CommonModule,
             ButtonModule,
-            TooltipModule
+            TooltipModule,
+            NgbModule,
+            IspartofPubComponent
     ],
     templateUrl: './ispartof-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ispartof-edit.component.css'],
@@ -29,20 +35,21 @@ export class IspartofEditComponent {
     isPartOf: string[] = null;
     dataChanged: boolean = false;
     isEditing: boolean = false;
-    fieldName = SectionPrefs.getFieldName(Sections.FACILITATORS);
+    fieldName = SectionPrefs.getFieldName(Sections.ISPARTOF);
     editBlockStatus: string = 'collapsed';
     editMode: string = MODE.NORMAL; 
     overflowStyle: string = 'hidden';
-    selectedCollection: string = "Forensics";
+    selectedCollection: string = "None"; // currently selected collection
+    savedCollection: string = "None"; // currently saved collection
+    collectionHistory: string[] = []; // history of selected collections for undo purposes
     originalCollection: string = null;
     globalsvc = inject(GlobalService);
 
-    collectionData = [
-        {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
-        {id: 2, displayName: "Chips Metrology (METIS)", value: "Metrology"},
-        {id: 3, displayName: "Forensics", value: "Forensics"},
-        {id: 4, displayName: "Do not add to any domain collection", value: "None"}
-    ]
+    //Collection data
+    collectionOrder: string[] = [Collections.DEFAULT];
+    allCollections: any = {};
+
+    collectionData = [];
 
     //icon class names
     editIcon = iconClass.EDIT;
@@ -58,10 +65,38 @@ export class IspartofEditComponent {
     constructor(
         public mdupdsvc : MetadataUpdateService, 
         private chref: ChangeDetectorRef,
-        public lpService: LandingpageService
-    ){ }
+        public collectionService: CollectionService,
+        public lpService: LandingpageService,
+        private notificationService: NotificationService) {
+        
+        this.collectionOrder = this.collectionService.getCollectionForDisplay();
+        this.allCollections = this.collectionService.loadAllCollections();
+    }
 
     ngOnInit(): void {
+        let id = 1
+        for (let col of this.collectionOrder) {
+            if (this.allCollections[col].theme !== "ScienceTheme") continue; // Only show science theme collections
+            
+            this.collectionData.push({
+                id: id++,
+                displayName: this.allCollections[col].displayName,
+                value: this.allCollections[col].value
+            });
+        }
+
+        this.collectionData.push({
+            id: id,
+            displayName: "Do not add to any domain collection",
+            value: "None"
+        });
+
+        this.selectedCollection = this.getSelectedCollectionName();
+        this.savedCollection = this.selectedCollection;
+        this.originalCollection = this.selectedCollection;
+        this.collectionHistory.push(this.selectedCollection);
+            
+        // Watch editing status
         this.lpService.watchEditing((sectionMode: SectionMode) => {
             if( sectionMode ) {
                 if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
@@ -82,7 +117,21 @@ export class IspartofEditComponent {
     }
 
     ngOnChanges(changes: SimpleChanges) {
+        if (changes.record) {
+            this.selectedCollection = this.getSelectedCollectionName();
+            this.savedCollection = this.selectedCollection;
+        }
         this.chref.detectChanges();
+    }
+
+    getSelectedCollectionName() {
+        let collectionID = "";
+        if(this.record && this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
+            this.record['isPartOf'].length > 0 && this.record['isPartOf'][0]['@id']) {
+                collectionID = this.record['isPartOf'][0]['@id'].replace("ark:/88434/", '');
+        }
+
+        return this.collectionService.getCollectionNameByID(collectionID);
     }
 
     /**
@@ -108,6 +157,14 @@ export class IspartofEditComponent {
      */
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); } 
  
+    undo() {
+        this.collectionHistory.pop(); // Remove current selection
+        this.selectedCollection = this.collectionHistory.pop();
+        this.dataChanged = true;
+        this.saveCollection(true);
+        this.chref.detectChanges();
+    }   
+
     /**
      * Refresh the help text
      */
@@ -178,13 +235,60 @@ export class IspartofEditComponent {
         } 
     }    
 
+    /**
+     * Save the current collection
+     * @param refreshHelp indicates if help text need to be refreshed after save
+     */
     saveCollection(refreshHelp) {
         //Save collection then close edit block
-
-        this.dataChanged = false;
-        this.setMode(MODE.NORMAL, refreshHelp);
-
+        if (this.dataChanged) {
+            this.collectionHistory.push(this.selectedCollection);
+            
+            if(this.selectedCollection == "None") {
+                this.mdupdsvc.delete(this.fieldName).then((updateSuccess) => {
+                    if (updateSuccess) {
+                        this.savedCollection = this.selectedCollection;
+                        this.notificationService.showSuccessWithTimeout("IsPartOf deleted.", "", 3000);
+                        this.setMode(MODE.NORMAL, refreshHelp);
+                    } else {
+                        let msg = "IsPartOf deletion failed.";
+                        console.error(msg);
+                    }
+                });
+            } else {
+                var postMessage: any = {};
+                postMessage[this.fieldName] = {"label": this.selectedCollection};
+                
+                this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
+                    if (updateSuccess){
+                        this.dataChanged = false;
+                        this.savedCollection = this.selectedCollection;
+                        this.notificationService.showSuccessWithTimeout("IsPartOf updated.", "", 3000);
+                        this.setMode(MODE.NORMAL, refreshHelp);
+                    }else{
+                        let msg = "IsPartOf update failed.";
+                        console.error(msg);
+                    }
+                });                
+            }
+        }else{
+            this.setMode(MODE.NORMAL, refreshHelp);
+            this.chref.detectChanges();
+        }
     }
+
+    deleteCollection() {
+        this.mdupdsvc.delete(this.fieldName).then((updateSuccess) => {
+            if (updateSuccess){
+                this.selectedCollection = "None";
+                this.notificationService.showSuccessWithTimeout("IsPartOf deleted.", "", 3000);
+                this.setMode(MODE.NORMAL, true);
+            }else{
+                let msg = "IsPartOf delete failed.";
+                console.error(msg);
+            }
+        });
+    }   
 
     undoCurCollectionChanges() {
         this.selectedCollection = this.originalCollection;
@@ -196,4 +300,28 @@ export class IspartofEditComponent {
         this.selectedCollection = event.target.value;
         this.dataChanged = true;
     }    
+
+   /**
+     * Return icon class of edit button
+     * @returns icon class
+     */
+    getEditIconClass() {
+        if(this.isEditing){
+            return this.editIcon + " icon_disabled";
+        }else{
+            return this.editIcon + " icon_enabled";
+        }
+    }    
+
+   /**
+     * Return icon class of edit button
+     * @returns icon class
+     */
+    getUndoIconClass() {
+        if(this.isEditing){
+            return this.undoIcon + " icon_disabled";
+        }else{
+            return this.undoIcon + " icon_enabled";
+        }
+    }        
 }

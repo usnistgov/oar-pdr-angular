@@ -11,7 +11,7 @@ import { DAPService, LocalDAPService, createDAPService } from '../../../nerdm/da
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { environment } from '../../../../environments/environment-impl';
-
+import { ToastrModule } from 'ngx-toastr';
 
 describe('IspartofEditComponent', () => {
     let component: IspartofEditComponent;
@@ -25,7 +25,7 @@ describe('IspartofEditComponent', () => {
     
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [IspartofEditComponent],
+      imports: [IspartofEditComponent, ToastrModule.forRoot() ],
       providers: [
         UserMessageService, 
         HttpHandler,

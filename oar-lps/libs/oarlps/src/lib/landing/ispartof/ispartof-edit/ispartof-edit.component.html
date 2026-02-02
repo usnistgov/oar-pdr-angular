@@ -1,40 +1,53 @@
 <div class="editable_field">
-    Add to domain collection
+    @if(this.savedCollection == 'None') {
+        @if(isEditMode){
+            Add to domain collection
+        }
+    } @else {
+        <ispartof-pub [record]="record" [landingPageServiceStr]="landingPageServiceStr"></ispartof-pub>
+    }
 </div>
 
 <!-- Control buttons -->
-<div class="editable_field" style="white-space: nowrap;">
+<div *ngIf="isEditMode" class="editable_field" style="white-space: nowrap;">
 
-    @if(!isEditing) {
-        <!-- Edit button -->
-        <button class="edit_button" type="button" 
-        (click)="startEditing()" aria-label="Edit collection" ngbTooltip="Edit collection" style="cursor: pointer">
-            <i [class]="editIcon"></i>
-        </button> 
-    }
+    <!-- Edit button -->
+    <button class="edit_button" 
+        type="button" 
+        (click)="startEditing()" 
+        aria-label="Edit collection" 
+        ngbTooltip="Edit collection" 
+        style="cursor: pointer">
+        <i [class]="getEditIconClass()"></i>
+    </button> 
     
-    <!-- Restore button -->
-    <button class="edit_button" *ngIf="updated" type="button"
-    (click)="restoreOriginal()">
-        <i [class]="undoIcon"
-            aria-label="Restore original" ngbTooltip="Restore original"></i>
+    <!-- Undo button -->
+    <button class="edit_button" 
+        *ngIf="collectionHistory.length > 1" 
+        type="button"
+        ngbTooltip="Undo Current Change"
+        (click)="undo()">
+        <i [class]="getUndoIconClass()"></i>
     </button>              
 </div>
 
 <!-- Editor -->
 <!-- Lazy loading in edit mode. Never get loaded in public mode -->
 @if(isEditing){
-    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;margin-left: 20px;" [style.overflow] = "overflowStyle">
-        <table style="width: 100%;">
+    <div [@editExpand]="editBlockStatus" [style.overflow] = "overflowStyle">
+        <table>
             <tr  style="width: 100%;">
                 <!-- Text edit area -->
-                <td class="edit-block" style="width: calc(100%-90px);">
-                    <div class="radio-group">
+                <td style="padding: 10px 0px;">
+                    <div class="radio-group editing-block">
                         <div *ngFor="let col of collectionData" class="radio">
                             <label [title]="col.displayName">
-                                <input type="radio" required name="col" [value]="col.value" [(ngModel)]="selectedCollection" 
-                                [checked]="col.value === selectedCollection"
-                                (change)="colChanged($event)">
+                                <input type="radio" 
+                                    required name="col" 
+                                    [value]="col.value" 
+                                    [(ngModel)]="selectedCollection" 
+                                    [checked]="col.value === selectedCollection"
+                                    (change)="colChanged($event)">
                                 {{col.displayName}}
                             </label>
                         </div>
@@ -42,16 +55,24 @@
                 </td>
 
                 <!-- Control buttons -->
-                <td style="width: 90px;vertical-align: top;">
+                <td style="padding: 10px 0px;width: 90px;vertical-align: top;">
                     <!-- Save button -->
-                    <button class="edit_button" type="button" (click)="saveCollection()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save collection">
+                    <button class="edit_button" 
+                        type="button" 
+                        (click)="saveCollection()" 
+                        aria-label="edit button" 
+                        [disabled]="!dataChanged" 
+                        ngbTooltip="Save collection and close editing block">
                         <i [class]="saveIcon"></i>
                     </button>
             
                     <!-- Cancel button -->
-                    <button class="edit_button" type="button"
-                        (click)="undoCurCollectionChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                        <i [class]="cancelIcon"></i>
+                    <button class="edit_button" 
+                        type="button"
+                        (click)="undoCurCollectionChanges()" 
+                        aria-label="undo button" 
+                        ngbTooltip="Undo and close editing block">
+                        <i [class]="closeIcon"></i>
                     </button>
                 </td>          
             </tr>

@@ -1,14 +1,8 @@
 @if(isPublicSite) {
     @if(isPartOf) {
-        <ispartof-pub [isPartOf]="isPartOf"></ispartof-pub>
+        <ispartof-pub [record]="record" [landingPageServiceStr]="landingPageServiceStr"></ispartof-pub>
     }
 }
 @else {
-    @if(isEditMode) {
-        <ispartof-edit [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></ispartof-edit>
-    }
-    @else {
-        <ispartof-pub [isPartOf]="isPartOf"></ispartof-pub>
-    }
+    <ispartof-edit [record]="record" [inBrowser]="inBrowser" [isEditMode]="isEditMode"></ispartof-edit>
 }
-

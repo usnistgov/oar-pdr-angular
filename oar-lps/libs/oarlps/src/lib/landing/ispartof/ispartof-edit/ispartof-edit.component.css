@@ -1,0 +1,14 @@
+.editing-block {
+    width: calc(100%-90px);
+    max-width: 500px;
+    padding: 10px;
+    border: 1px solid lightgrey;
+    border-radius: 5px;
+    background-color: var(--background-light-grey);
+    overflow: hidden;
+}
+
+td {
+    vertical-align: top;
+    margin: 10px 0px;
+}

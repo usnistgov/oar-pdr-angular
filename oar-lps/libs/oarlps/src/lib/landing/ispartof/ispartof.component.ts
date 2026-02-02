@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { NERDResource } from '../../nerdm/nerdm';
 import { GlobalService } from '../../shared/globals/globals';
 import { IspartofEditComponent } from './ispartof-edit/ispartof-edit.component';
@@ -25,7 +25,7 @@ export class IspartofComponent implements OnInit {
     @Input() landingPageServiceStr: string;
     @Input() isPublicSite: boolean = true;  
 
-    constructor(public globalsvc: GlobalService) { 
+    constructor(public globalsvc: GlobalService, private chref: ChangeDetectorRef) { 
     }
 
     ngOnInit(): void {}
@@ -33,6 +33,8 @@ export class IspartofComponent implements OnInit {
     ngOnChanges(changes: SimpleChanges) {
         if (this.recordLoaded())
             this.useMetadata();  // initialize internal component data based on metadata
+
+        this.chref.detectChanges();
     }
 
     recordLoaded() {
@@ -63,18 +65,10 @@ export class IspartofComponent implements OnInit {
            
             this.isPartOf = [
                 article,
-                // this.cfg.get("links.landingPageService") + coll['@id'],
                 this.landingPageServiceStr + coll['@id'],
                 title,
                 suffix
             ];
-
-            // let collectionIndex = this.collectionData.findIndex(c => this.isPartOf[2].includes(c.displayName))
-
-            // if(collectionIndex >= 0) {
-            //     this.selectedCollection = this.collectionData[collectionIndex].value;
-            //     this.originalCollection = this.selectedCollection;
-            // }
         }
     }   
 }

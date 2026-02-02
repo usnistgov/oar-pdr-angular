@@ -626,6 +626,15 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
     }
 
     /**
+     * Delete a property of the NERDm record data.
+     * @param propname Property name to delete
+     * @returns true if the field was deleted successfully.
+     */
+    delDataSubset(propname: string) : Observable<Object> {
+        return this._updateWithMethod("DELETE", propname, null);
+    }
+
+    /**
      * update some property of the NERDm record data.  When the property is an object with 
      * subproperties, the given object will be merged in with the existing object value, 
      * overriding the subproperties where their names overlap.
