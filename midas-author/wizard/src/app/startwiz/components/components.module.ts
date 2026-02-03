@@ -11,6 +11,8 @@ import { ContactinfoComponent } from './contactinfo/contactinfo.component';
 import { RecordNameComponent } from './recordname/recordname.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { CollectionComponent } from './collection/collection.component';
+import { PeopleComponent } from 'oarlps';
+import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 
 @NgModule({
     declarations: [
@@ -28,7 +30,9 @@ import { CollectionComponent } from './collection/collection.component';
         FormsModule,
         ReactiveFormsModule,
         WizardModule,
-        InputTextModule
+        InputTextModule,
+        PeopleComponent,
+        AutoCompleteModule
     ],
     exports: [
         AssociatedPapersComponent,

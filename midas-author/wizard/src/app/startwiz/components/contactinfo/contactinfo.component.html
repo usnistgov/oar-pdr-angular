@@ -17,15 +17,37 @@
                 </div>
             </div>
             <div style="margin-top: 1em;" *ngIf="dataModel.creatorIsContact != undefined && !dataModel.creatorIsContact">
-                <div style="margin-bottom: .5em;">Type in contact's name and select the appropriate match: </div>
-                <input
-                    class="input-box"
-                    style="width: 300px;"
-                    type="text"
-                    pInputText
-                    name="otherContact"
-                    [(ngModel)]="dataModel.contactName"
-                    (input)="onContactNameChanged()"/>
+                <div class="container">
+                    <div id="left">
+                        <div style="margin-bottom: 5px;">
+                            Name of group or individual contact:
+                        </div>
+                        <input type="text" 
+                            [(ngModel)]="name" 
+                            (input)="onContactChanged('name')" 
+                            id="lastname-input"
+                            placeholder="Name is required." 
+                            style="width: 100%;height: 2em;" />
+                        
+                        <div style="margin-top: 1em;margin-bottom: 5px;">
+                            Contact's email address:
+                        </div>
+                        <input type="text" 
+                            [(ngModel)]="email" 
+                            (input)="onContactChanged('email')" 
+                            id="email-input" 
+                            placeholder="Email"
+                            style="width: 100%;height: 2em;" />
+                    </div>
+                    <div id="right">
+                        Type in contact's name and select the appropriate match:
+                        <div style="width: 100%;margin-bottom: 20px;padding-right: .5em;">
+                            <div>
+                                <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

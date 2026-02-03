@@ -1,6 +1,8 @@
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import {
+    CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
+} from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { StepWizModule } from './startwiz/stepwizard.module';
@@ -14,6 +16,8 @@ import { GoogleAnalyticsService, SidebarService } from "oarlps";
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent, HeaderComponent } from 'oarng';
+import { PeopleComponent } from 'oarlps';
+import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
 
 @NgModule({
     declarations: [
@@ -36,14 +40,18 @@ import { FooterComponent, HeaderComponent } from 'oarng';
             progressBar: true,
         }),
         FooterComponent,
-        HeaderComponent
+        HeaderComponent,
+        PeopleComponent
     ],
     providers: [
         { provide: RELEASE_INFO, useValue: RELEASE },
         GoogleAnalyticsService,
         MetadataUpdateService,
-        SidebarService
+        SidebarService,
+        StaffDirectoryService
+        // fakeBackendProvider
     ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent]
 })
 export class AppModule { }
