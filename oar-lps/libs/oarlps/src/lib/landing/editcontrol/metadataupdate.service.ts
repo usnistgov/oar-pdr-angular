@@ -382,7 +382,7 @@ export class MetadataUpdateService {
                 return true;
             }),
             catchError((err) => {
-                console.error("Failed to delete isPartOf: " + err.message)
+                console.error("Failed to delete " + subsetname + ": " + err.message);
                 this.msgsvc.error("Warning: there was a problem while deleting " + subsetname);
                 return of(null);
             })
