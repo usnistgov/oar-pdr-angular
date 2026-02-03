@@ -361,6 +361,35 @@ export class MetadataUpdateService {
         ).toPromise();
     }
 
+    public delete(subsetname: string, subsetnameAPI: string = undefined): Promise<boolean>{
+        let fieldName = subsetname.split("-")[0];
+        if (!subsetnameAPI) subsetnameAPI = fieldName;
+        
+        let obs = this.dapUpdtSvc.delDataSubset(subsetnameAPI);
+        
+        return obs.pipe(
+            tap((data) => {
+                //Delete all origfields related to the subset
+                Object.keys(this.origfields).forEach((fKey) => {
+                    if (fKey.includes(subsetname)) 
+                        delete this.origfields[fKey];
+                })
+                
+                this.stampUpdateDate();
+                this.updateInMemoryRec(data, fieldName);
+            }),
+            map<Object, boolean>((data) => {
+                return true;
+            }),
+            catchError((err) => {
+                console.error("Failed to delete " + subsetname + ": " + err.message);
+                this.msgsvc.error("Warning: there was a problem while deleting " + subsetname);
+                return of(null);
+            })
+        ).toPromise();        
+    }
+
+
     /**
      * Update saved record for undo purpose
      * @param res Dataset object, could be Nerdm record or a subset or a particular record of a subset

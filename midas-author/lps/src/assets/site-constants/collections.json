@@ -6,7 +6,10 @@
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
         "colorPalette": "Green",
         "displayOrder": 4,
-        "landingPage": true
+        "landingPage": true,
+        "displayName": "NIST",
+        "value": "NIST",
+        "theme": "default"
     },
     "Forensics": {
         "tag": "Forensics",
@@ -15,7 +18,10 @@
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-forensics/",
         "colorPalette": "Cyan",
         "displayOrder": 2,
-        "landingPage": true
+        "landingPage": true,
+        "displayName": "Forensics",
+        "value": "Forensics",
+        "theme": "ScienceTheme"
     },
     "Semiconductors": {
         "tag": "CHIPS Metrology",
@@ -24,7 +30,10 @@
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/",
         "colorPalette": "Blue",
         "displayOrder": 1,
-        "landingPage": true
+        "landingPage": true,
+        "displayName": "Chips Metrology (METIS)",
+        "value": "Metrology",
+        "theme": "ScienceTheme"
     },
     "AM": {
         "tag": "Additive Manufacturing",
@@ -33,6 +42,9 @@
         "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/",
         "colorPalette": "LightBlue",
         "displayOrder": 3,
-        "landingPage": true
+        "landingPage": true,
+        "displayName": "Additive Manufacturing",
+        "value": "AdditiveManufacturing",
+        "theme": "ScienceTheme"
     }      
 }

@@ -279,6 +279,7 @@ export class Sections {
     static readonly VERSION = 'Version';
     static readonly COLLECTION = 'Collection';
     static readonly FILES = 'Files';
+    static readonly ISPARTOF = 'IsPartOf';
 }
 
 //_fieldName is the field name in Nerdm record
@@ -305,6 +306,7 @@ _fieldName[Sections.VISIT_HOME_PAGE] = "landingPage";
 _fieldName[Sections.DOI] = "doi";
 _fieldName[Sections.VERSION] = "version";
 _fieldName[Sections.FILES] = "files";
+_fieldName[Sections.ISPARTOF] = "isPartOf";
 
 let _displayName = {};
 _displayName[GENERAL] = Sections.GENERAL;
@@ -327,6 +329,7 @@ _displayName["landingPage"] = Sections.VISIT_HOME_PAGE;
 _displayName["doi"] = Sections.DOI;
 _displayName["version"] = Sections.VERSION;
 _displayName["files"] = Sections.FILES;
+_displayName["isPartOf"] = Sections.ISPARTOF;
 
 export class SectionPrefs {
     private static readonly _lSectionID = _fieldName;

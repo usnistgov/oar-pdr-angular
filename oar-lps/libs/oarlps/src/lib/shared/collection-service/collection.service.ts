@@ -33,6 +33,18 @@ export class CollectionService {
         return this.collectionForDisplay;
     }
 
+    getCollectionNameByID(collectionID: string) {
+        if (!collectionID) return "None";
+        
+        if (this.collectionData) {
+            const foundKey = Object.keys(this.collectionData).find(key => this.collectionData[key].id === collectionID);
+            if(foundKey) {
+                return this.collectionData[foundKey].value;
+            } else {
+                return "None";
+            }
+        }
+    }
     /**
      * Loads collection data from json file for nist and given collection
      * @param collection collection to be loaded
