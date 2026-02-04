@@ -18,7 +18,7 @@
         "label": "Contact Point",
         "general": "Review the name of the NIST contact listed who will respond to questions about this resource. To edit this contact, click <i class='editIcon'></i>",
         "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "edit": "Click <i class='saveIcon'></i> to save changes. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        "edit": "Click <i class='saveIcon'></i> to save changes. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "landingPage": {
         "label": "Visit Home Page",
