@@ -36,7 +36,7 @@
     },
     "description": {
         "label": "Description",
-        "general": "This field is for a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Avoid copying the entire abstract if the entirety is not relevant to this discrete resource.",
+        "general": "This field is for a human-readable description of your resource that will enable a user to quickly identify whether it is of interest. You may wish to use part of the abstract of a related publication. Do not copy and paste the paper's abstract here if it does not sufficiently describe the data as a standalone object.",
         "edit": "Click <i class='saveIcon'></i> to save. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "topic":{
