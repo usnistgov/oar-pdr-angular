@@ -22,9 +22,9 @@
     },
     "landingPage": {
         "label": "Visit Home Page",
-        "general": "The Home Page is the users' entry point for a resource. It provides contextual information and access to the resource itself (i.e. download links for data). Importantly, the DOI (digital object identifier) will point to this URL. <p><p> If you wish for this NIST Public Data Repository page to your Home Page, leave this box blank and click <i class='closeIcon'></i> to close the entry field. If you would like to point to another home page enter the URL here.",
-      "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-        "edit": "Enter a working URL for a homepage other than this repository landing page. Click <i class='saveIcon'></i> to save changes<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        "general": "The Home Page is the user's entry point for a resource. It provides contextual information and access to the resource itself (e.g., download links for data). Importantly, the DOI (digital object identifier) will point to this URL. <p><p> If you wish for this NIST Public Data Repository page to be your home page, leave this box blank and click <i class='fas fa-times'></i> to close the entry field. If you would like to point to another home page enter the URL here.",
+        "add": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "edit": "Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "doi": {
         "label": "Identifier",
