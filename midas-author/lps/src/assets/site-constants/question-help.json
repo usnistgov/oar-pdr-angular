@@ -28,7 +28,7 @@
     },
     "doi": {
         "label": "Identifier",
-        "general": "Place holder for identifier help."
+        "general": "For more information on what a DOI is, see <a href='https://www.doi.org/the-identifier/what-is-a-doi/'>the DOI Foundation page</a>."
     },
     "version": {
         "label": "Version",
