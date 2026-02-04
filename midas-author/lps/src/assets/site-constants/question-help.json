@@ -32,7 +32,7 @@
     },
     "version": {
         "label": "Version",
-        "general": "Placeholder for version help."
+        "general": "The “version” of your publication is represented by three numbers that increase with each revision. See the <a href='https://inet.nist.gov/mr/library/midas-user-guides/midas-tools/digital-asset-publication-dap#Versions'>MIDAS User Guide.</a>"
     },
     "description": {
         "label": "Description",
