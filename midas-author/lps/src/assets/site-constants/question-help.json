@@ -42,8 +42,8 @@
     "topic":{
         "label": "Research Topics",
         "general": "You are in Research Topics section where you can select topics from the NIST Research Taxonomy. Select one or more topics that apply to this resource",
-        "add": "Click <i class='editIcon'></i> to select topics for this resource. Click on the arrows to view subtopics. Double-click on a topic to select it for your resource. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>",
-        "edit": "To edit your Research Topics selections, click on <i class='editIcon'></i>. Double click on topics to add them. Click <i class='delIcon'></i> to the right of topics to delete them.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guideance</a>]</i>"
+        "add": "Click <i class='fas fa-pencil'></i> to select topics for this resource. Click on the arrows to view subtopics. Double-click on a topic to select it for your resource. <p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "edit": "To edit your Research Topics selections, click on <i class='fas fa-pencil'></i>. Double click on topics to add them. Click <i class='fas fa-trash-alt'></i> to the right of topics to delete them.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "keyword": {
         "label": "Keywords",
