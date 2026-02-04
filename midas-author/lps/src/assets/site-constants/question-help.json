@@ -47,9 +47,9 @@
     },
     "keyword": {
         "label": "Keywords",
-        "general": "Add <i>keywords,</i> or subject terms that help both technical and non-technical users to discover this resource. Separate the terms with commas. You may enter up to a maximum of 4,000 characters",
-        "add": "Click <i class='saveIcon'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
-        "edit": "Click <i class='editIcon'></i> to edit your keywords or enter additional keywords. Separate the terms with commas.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+        "general": "Add subject keywords that help both technical and non-technical users discover this resource. Separate the terms with commas. We recommend entering three to five keywords.",
+        "add": "Click <i class='fas fa-check'></i> to save.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
+        "edit": "Click <i class='fas fa-pencil'></i> to edit your keywords or enter additional keywords.<p><p> <i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
     },
     "components": {
         "label": "Access Page",
