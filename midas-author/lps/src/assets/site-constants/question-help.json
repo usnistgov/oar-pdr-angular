@@ -8,7 +8,7 @@
     },
     "authors": {
         "label": "Authors",
-        "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>Credit Contributor Roles Taxonomy</a>. Add affiliations and ORCIDs as available.",
+        "general": "This section should list all authors or collaborators whose work falls under one of the 14 roles listed in the <a href='https://credit.niso.org/'>Credit Contributor Roles Taxonomy</a>. All NIST researchers are required to include an ORCID.",
         "list": "Click <i class='addIcon'></i> to add authors. Click <i class='editIcon'></i> to make edits.",
         "add": "Click <i class='addIcon'></i> to save.",
         "edit": "Click <i class='saveIcon'></i> to save changes.<p><i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>",
