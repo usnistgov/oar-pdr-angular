@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of, throwError, Subscriber } from 'rxjs';
 import { AppConfig } from 'oarlps';
-import { ConfigurationService } from 'oarng';
+import { ConfigurationService, Credentials } from 'oarng';
 import { CollectionDataModel } from '../models/data.model';
 
 @Injectable({
@@ -11,8 +11,8 @@ import { CollectionDataModel } from '../models/data.model';
 export class WizardService {
     readonly saveapi : string = "dap/mds3";
     resid: string = "1234";
-    token: string = "fake token"
     MIDASAPI: string;
+    cred: Credentials|null = null;
 
     collectionData: CollectionDataModel[] = [
         {id: 1, displayName: "Additive Manufacturing", value: "AdditiveManufacturing"},
@@ -24,19 +24,68 @@ export class WizardService {
     constructor(private httpcli: HttpClient,
                 private configSvc: AppConfig)
     {
-        this.MIDASAPI = this.configSvc.get('dapEditing.serviceEndpont', "/midas/dap/mds3/");
+        this.MIDASAPI = this.configSvc.get('dapEditing.serviceEndpoint', "/midas/dap/mds3/");
     }
 
-    setToken(token: string){
-        this.token = token;
+    setCred(cred: Credentials) {
+        this.cred = cred;
+    }   
+
+    getCred(): Credentials|null {
+        return this.cred;
     }
 
     public getCollectionData(): CollectionDataModel[] {
         return this.collectionData;
     }
 
+    /**
+     * Return existing record names for the owner.
+     * @param owner The owner of the records.
+     * @returns List of existing records.
+     */
+    public getExistingRecords(owner: string): Observable<string[]> {
+        if (!this.cred || this.cred.token == "") {
+            let err = "You are not authorized to edit this record.";
+            console.error(err);
+            return new Observable<string[]>(subscriber => { subscriber.error(err) });
+        }
+
+        return new Observable<string[]>(subscriber => {
+            let url = this.MIDASAPI + "?owner=" + owner;
+
+            let obs: Observable<string[]> =
+                this.httpcli.get<string[]>(url, { headers: { "Authorization": "Bearer " + this.cred.token } });
+
+            this._wrapRespObs(obs, subscriber);
+        });
+    }
+
+    /**
+     * Return a record by owner and name.
+     * @param owner The owner of the record.
+     * @param name The name of the record.
+     * @returns The record data if it exists, otherwise return empty.
+     */
+    public getRecordByName(owner: string, name: string) : Observable<Object> {
+        if(!this.cred || this.cred.token == "") {
+            let err = "You are not authorized to edit this record.";
+            console.error(err);
+            return new Observable<Object>(subscriber=>{ subscriber.error(err)});
+        }
+
+        return new Observable<Object>(subscriber => {
+          let url = this.MIDASAPI + "?owner=" + owner + "&name=" + name;
+
+          let obs : Observable<Object> =
+              this.httpcli.get(url, { headers: { "Authorization": "Bearer " + this.cred.token } });
+
+          this._wrapRespObs(obs, subscriber);
+        });
+    }
+
     public updateMetadata(md : Object) : Observable<Object> {
-        if(this.token == "") {
+        if(!this.cred || this.cred.token == "") {
             let err = "You are not authorized to edit this record.";
             console.error(err);
             return new Observable<Object>(subscriber=>{ subscriber.error(err)});
@@ -47,7 +96,7 @@ export class WizardService {
           let body = JSON.stringify(md);
 
           let obs : Observable<Object> =
-              this.httpcli.post(url, body, { headers: { "Authorization": "Bearer " + this.token } });
+              this.httpcli.post(url, body, { headers: { "Authorization": "Bearer " + this.cred.token } });
 
           this._wrapRespObs(obs, subscriber);
         });
