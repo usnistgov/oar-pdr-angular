@@ -23,7 +23,7 @@ export class RecordNameComponent implements OnInit {
     
     constructor(
         private cdr: ChangeDetectorRef,
-        private wizardService: WizardService,
+        public wizardService: WizardService,
         private stepService: StepService) { }
 
     ngOnInit(): void {
