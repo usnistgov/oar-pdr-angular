@@ -13,7 +13,23 @@
                     pInputText
                     name="recordname"
                     [(ngModel)]="dataModel.recordname"
-                    (input)="onRecordNameChanged()"/>
+                    (input)="onRecordNameChanged($event)"
+                    [ngStyle]="inputStyle()">
+
+                <button type="button" class="common-btn form-btn" (click)="toggleNames()" style="height: 30px;">
+                    {{showNames ? 'Hide' : 'Show'}} existing names 
+                </button>  
+
+                <div *ngIf="dataModel.recordname && nameTaken()">
+                    <p  style="color: red;">This name is already taken. Please choose another name.</p>
+                </div>
+
+                <div *ngIf="showNames" style="margin-top: .5em;">
+                    Used record names:<p>
+                    <div *ngFor="let name of existingRecordNamesForDisplay" style="margin-top: .5em;margin-left: 20px;">
+                        {{name}}
+                    </div>
+                </div>
             </div>
         </div>
         <span class="sidebar-title">{{helpText["label"]}}</span>

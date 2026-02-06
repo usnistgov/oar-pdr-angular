@@ -107,7 +107,7 @@ export class StepWizardComponent implements OnInit {
             next: (creds) =>{
                 if (creds && creds.token) {
                     this._creds = creds;
-                    this.wizardService.setToken(creds.token);
+                    this.wizardService.setCred(creds);
                     this.authStatus = AuthStatus.AUTHORIZED;
 
                     this.reset();

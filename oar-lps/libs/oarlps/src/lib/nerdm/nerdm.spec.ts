@@ -189,18 +189,16 @@ describe('NERDResource', function() {
         let nrd2 = new nerdm.NERDResource(testdata['test2']);
         nrd2.data["@type"][0] = "nrdp:PublicDataResource";
         let cstr = nrd2.getCitation();
-        expect(cstr.startsWith("Doe, John, Plant, Robert (2011), Test2, National Institute of Standards and Technology, https://doi.org/XXXXX/MMMMM (Accessed ")).toBe(true);
-        // expect(cstr).toEqual("Doe, John, Plant, Robert (2011) Test2, National Institute of Standards and Technology, https://doi.org/XXXXX/MMMMM (Accessed ");
+        expect(cstr.startsWith("Doe, John, Plant, Robert (2011), Test2, National Institute of Standards and Technology, https://doi.org/XXXXX/MMMMM (Version:")).toBe(true);
 
         nrd2 = new nerdm.NERDResource(testdata['test1']);
         cstr = nrd2.getCitation();
-//        expect(cstr).toBe("Patricia Flanagan (2019), Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32, National Institute of Standards and Technology, https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds (Accessed ");
-        expect(cstr).toContain("Patricia Flanagan (2019), Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32, National Institute of Standards and Technology, https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds (Accessed ");
+        expect(cstr).toContain("Patricia Flanagan (2019), Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32, National Institute of Standards and Technology, https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds (Version:");
 
         let nrd1 = new nerdm.NERDResource(_.cloneDeep(testdata['test1']));
         delete nrd1.data['contactPoint']['fn'];
         cstr = nrd1.getCitation();
-        expect(cstr).toContain("National Institute of Standards and Technology (2019), Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32, National Institute of Standards and Technology, https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds (Accessed ");
+        expect(cstr).toContain("National Institute of Standards and Technology (2019), Multiple Encounter Dataset (MEDS-I) - NIST Special Database 32, National Institute of Standards and Technology, https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds (Version:");
     });
 
     it('resourceLabel', () => {
