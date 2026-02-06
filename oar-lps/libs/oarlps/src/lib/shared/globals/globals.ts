@@ -547,7 +547,7 @@ export class Collections {
 export class CollectionDisplay {
     static readonly DEFAULT = 'NIST';
     static readonly FORENSICS = 'Forensics';
-    static readonly SEMICONDUCTORS = 'CHIPS Metrology Data';
+    static readonly SEMICONDUCTORS = 'CHIPS METIS Data';
     static readonly AM = 'Additive Manufacturing';
 }
 
