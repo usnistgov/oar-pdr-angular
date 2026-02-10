@@ -75,20 +75,21 @@ export class AppComponent {
     ngAfterViewInit(): void {
         // Called after ngAfterContentInit when the component's view has been initialized.
         // Applies to components only.
-        if(this.inBrowser){
-            this.gaCode = this.cfg.get("gaCode", "") as string;
-            this.ga4Code = this.cfg.get("ga4Code", "") as string;
-            let homeurl = this.cfg.get("links.portalBase", "data.nist.gov") as string;
+        // GA tracking is disabled for MIDAS - only enabled for public site
+        // if(this.inBrowser){
+        //     this.gaCode = this.cfg.get("gaCode", "") as string;
+        //     this.ga4Code = this.cfg.get("ga4Code", "") as string;
+        //     let homeurl = this.cfg.get("links.portalBase", "data.nist.gov") as string;
 
-            const url = new URL("https://" + homeurl);
-            this.hostName = url.hostname;
+        //     const url = new URL("https://" + homeurl);
+        //     this.hostName = url.hostname;
 
 
-            this.gaService.appendGaTrackingCode(this.gaCode, this.ga4Code, this.hostName);
+        //     this.gaService.appendGaTrackingCode(this.gaCode, this.ga4Code, this.hostName);
 
-            //Add GA4 code to track page view
-            this.handleRouteEvents();
-        }
+        //     //Add GA4 code to track page view
+        //     this.handleRouteEvents();
+        // }
     }
 
     @HostListener('window:beforeunload', ['$event'])

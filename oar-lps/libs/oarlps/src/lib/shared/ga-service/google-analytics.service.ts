@@ -6,20 +6,13 @@
 
 import { Injectable } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { environment } from '../../../environments/environment-impl';
-
 declare let gas: Function;
 declare let _initAutoTracker: Function;
 
 @Injectable()
 export class GoogleAnalyticsService {
-    // GA is enabled only on public site (when useMIDASDAPService is false)
-    private enabled: boolean = !environment.context.useMIDASDAPService;
-
     // Tracking pageview
     gaTrackPageview(url: string, title: string) {
-        if (!this.enabled) return;
-
         setTimeout(() => {
             gas('send', 'pageview', url, title);
         }, 1000);
@@ -27,8 +20,6 @@ export class GoogleAnalyticsService {
 
     // Tracking events
     gaTrackEvent(category: string, event?: any, label?: string, action?: string) {
-        if (!this.enabled) return;
-
         if (action == undefined) {
             // menu item
             if (event && event.item != undefined) {
@@ -67,8 +58,6 @@ export class GoogleAnalyticsService {
      *   and adds it to the top of current page.
      */
     public appendGaTrackingCode(gaCode: string, ga4Code: string, hostname: string = "dada.nist.gov") {
-        if (!this.enabled) return;
-
         try {
             //GA3
             let scriptId = '_fed_an_ua_tag';
