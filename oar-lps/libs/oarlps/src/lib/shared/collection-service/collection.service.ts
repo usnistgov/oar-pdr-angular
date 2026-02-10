@@ -88,4 +88,18 @@ export class CollectionService {
     public getCollectionData() {
         return this.collectionData;
     }
+
+    public getDefaultCollection() {
+        if (!this.collectionData) {
+            console.warn("No collection data loaded yet!");
+            return {};
+        } else {
+            let key = Object.keys(this.collectionData).find(k => this.collectionData[k]['theme'] === 'default');
+            if (key) {
+                return this.loadCollection(key);
+            } else {
+                return {};
+            }
+        }
+    }
 }

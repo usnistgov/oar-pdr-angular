@@ -36,7 +36,7 @@ export class TopicMidasComponent implements OnInit {
     scienceThemeTopics: any[] = [];
     recordType: string = "";
 
-    //NIST Taxonomy URI si defined in /assets/site-constants/collections.json
+    //NIST Taxonomy URI si defined in /assets/collection/collections.json
     standardNISTTaxonomyURI: string = "https://data.nist.gov/od/dm/nist-themes/v1.1";
     allCollections: any = {};
     //  Array to define the collection order

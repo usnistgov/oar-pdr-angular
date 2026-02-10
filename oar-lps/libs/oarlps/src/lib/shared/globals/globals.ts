@@ -552,10 +552,16 @@ export class CollectionDisplay {
 }
 
 export class Collection {
+    id: string;
+    tag: string;
     bannerUrl: string;
     taxonomyURI: string;
-    color: ColorScheme;
+    colorPalette: ColorScheme;
+    displayOrder: number;
+    displayName: string;
+    value: string;
     theme: CollectionThemes;
+    taxonomyFileName: string;
 }
 
 export interface ColorScheme {

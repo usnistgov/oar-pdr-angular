@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { TreeTableModule } from 'primeng/treetable';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CollectionService } from '../../../shared/collection-service/collection.service';
 
 export const ROW_COLOR = '#1E6BA1';
 
@@ -42,6 +43,7 @@ export class TopicEditComponent implements OnInit {
     taxonomyTree: TreeNode[] = [];
     toggle: Boolean = true;  
     originalSelectedTopicsTopics: any[] = [];
+    collectionData: any;
     // selectedTopics: any[] = [];
 
     //icon class names
@@ -63,14 +65,14 @@ export class TopicEditComponent implements OnInit {
 
 
     constructor(public mdupdsvc: MetadataUpdateService,
-                private taxonomyListService: TaxonomyListService,
+        private taxonomyListService: TaxonomyListService,
+                public collectionService: CollectionService,
                 private msgsvc: UserMessageService) { }
 
     ngOnInit(): void {
-        //Clone this.nistTaxonomyTopics
-        // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
-
-        this.taxonomyListService.get(0).subscribe((result) => {
+        this.collectionData = this.collectionService.getCollectionData();
+        
+        this.taxonomyListService.get(this.collection, 0).subscribe((result) => {
             if (result != null && result != undefined)
                 this.buildTaxonomyTree(result);
     

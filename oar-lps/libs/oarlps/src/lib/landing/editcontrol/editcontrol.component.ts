@@ -23,7 +23,6 @@ import {
 import { LandingpageService } from '../landingpage.service';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
-import * as CollectionData from '../../../assets/site-constants/collections.json';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ButtonModule } from 'primeng/button';
@@ -81,7 +80,6 @@ export class EditControlComponent implements OnInit, OnChanges {
     mobileMode: boolean = false;
     modalRef: any; // For submit pop up
     collection: string;
-    collectionObj: any;
     message: string = "test";
     cred: Credentials = null;
     authorized: boolean = false;
@@ -410,22 +408,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     loadBannerUrl() {
-        this.collectionObj = CollectionData[this.collection] as any;
-
-        switch(this.collection) {
-            case Collections.FORENSICS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            case Collections.SEMICONDUCTORS: {
-                this.imageURL = this.collectionObj.bannerUrl;
-                break;
-            }
-            default: {
-                this.imageURL = "";
-                break;
-            }
-        }
+        this.imageURL = this.collectionData[this.collection].bannerUrl;
 
         setTimeout(() => {
             // this.displayBanner = true;
