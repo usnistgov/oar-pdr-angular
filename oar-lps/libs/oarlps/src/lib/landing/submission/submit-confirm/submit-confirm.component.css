@@ -14,7 +14,7 @@
 .btn-cancel {
     width: 300px;
     height: 35px;
-    background-color:var(--warning);
+    background-color:var(--nist-green-default);
     color:white;
 }
 
@@ -114,17 +114,12 @@
 }
 
 table,th,td {
-    border: 1px solid grey;
+    border: 0px solid grey;
     border-collapse: collapse;
     padding: 5px;
+    background-color: #ebebeb;
+    margin-bottom: 0.5em;
 }
-
-table tr:nth-child(odd) {
-    background-color: #f1f1f1;
-}
-
-table tr:nth-child(even) {
-    background-color: #ffffff; }
 
 textarea {
     width: 100%;
@@ -132,4 +127,16 @@ textarea {
 
 .btn-submit:disabled {
     background-color: #c4c4c4;
-    color: rgb(0, 0, 0); }
+    color: rgb(0, 0, 0); 
+}
+
+.reviewers {
+    border: 1px solid #c2c2c2;
+    background-color:#ededed;
+    padding: 0px 5px;
+    margin: 3px;
+    border-radius: 20px;
+    text-align: center;
+    margin-right: 5px;
+    line-height: 25px;
+}

@@ -6,33 +6,21 @@ import {
     RevisionTypes,
     RevisionDetails,
     SubmissionData,
+    Reviewers,
     GlobalService
 } from '../../../shared/globals/globals';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatIconModule } from '@angular/material/icon';
-// import { MatCheckboxModule } from '@angular/material/checkbox';
-// import { MatFormFieldModule } from '@angular/material/form-field';
 import revisionhelp from '../../../../assets/site-constants/revision-help.json';
 import { TooltipPosition, MatTooltipModule } from '@angular/material/tooltip';
 import { SuggestionsComponent } from '../../../sidebar/suggestions/suggestions.component';
-// import {
-//     MatDialog,
-//     MAT_DIALOG_DATA,
-//     MatDialogActions,
-//     MatDialogClose,
-//     MatDialogContent,
-//     MatDialogRef,
-//     MatDialogTitle,
-// } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { CdkTextareaAutosize, TextFieldModule} from '@angular/cdk/text-field';
-// import { MatInputModule } from '@angular/material/input';
-// import { MatSelectModule } from '@angular/material/select';
-// import { MatTableModule } from '@angular/material/table';
 import { RevisionDetailsComponent } from '../../revision-details/revision-details.component';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { iconClass } from '../../../shared/globals/globals';
+import { PeopleComponent } from '../../people/people.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 export interface PeriodicElement {
     situation: string;
@@ -62,11 +50,13 @@ const ELEMENT_DATA: PeriodicElement[] = [
         FormsModule,
         ButtonModule,
         TextFieldModule,
-        RevisionDetailsComponent
+        RevisionDetailsComponent,
+        PeopleComponent,
+        NgbModule
 ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './submit-confirm.component.html',
-    styleUrls: ['./submit-confirm.component.css'],
+    styleUrls: ['./submit-confirm.component.css', '../../landing.component.scss'],
     animations: [
         trigger('slideToggle', [
             state(
@@ -98,19 +88,25 @@ export class SubmitConfirmComponent implements OnInit {
     revisionTypes = new RevisionTypes();
     revisionType: string;
     submissionData = new SubmissionData();
-    showHelp: boolean = false;
-    showSuggestion: boolean = true;
+    showHelp: boolean = false; // Used to control display of help section within the component
+    showSuggestion: boolean = true; // Used to control display of suggestion section within the component
+    showReviewersWidget: boolean = false; // Used to control display of reviewers widget
     componentHeight: number;
     public revisionHelp:{} = revisionhelp;
 
     displayedColumns: string[] = ['position', 'situation', 'examples'];
     dataSource = ELEMENT_DATA;
 
+    //icon class names
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    closeCircleIcon = iconClass.CLOSE_CIRCLE;
+
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
     // @Input() revisionType: string;
     // @Output() changedData: EventEmitter<SubmissionData> = new EventEmitter();
     @Output() returnValue: EventEmitter<SubmissionData> = new EventEmitter();
-    
+
     constructor(
         private mdupdsvc: MetadataUpdateService,
         public activeModal: NgbActiveModal,
@@ -130,6 +126,19 @@ export class SubmitConfirmComponent implements OnInit {
 
         this.allRevisionTypes = this.revisionTypes.getAllTypes();
         this.suggestions = this.mdupdsvc.getSuggestions();
+        this.submissionData.reviewers = [] as Reviewers[];
+        // this.submissionData.reviewers = [{
+        //     nistId: '12345678',
+        //     firstName: 'Jane',
+        //     lastName: 'Doe',
+        //     eMail: 'test@nist.gov'
+        // },{
+        //     nistId: '12345678',
+        //     firstName: 'John',
+        //     lastName: 'Doe',
+        //     eMail: 'test1@nist.gov'
+        // }]
+        
     }
 
     ngAfterViewInit() {
@@ -154,6 +163,14 @@ export class SubmitConfirmComponent implements OnInit {
 
     get hasRecommendedItems() {
         return this.mdupdsvc.hasRecommendedItems();
+    }
+
+    get reviewerPrompt() {
+        if(this.submissionData && this.submissionData.reviewers && this.submissionData.reviewers.length > 0) {
+            return "Edit technical reviewers";
+        }else {
+            return "Add technical reviewers (optional)";
+        }
     }
 
     /**
@@ -205,4 +222,46 @@ export class SubmitConfirmComponent implements OnInit {
         }
     }
     
+    toggleReviewersWidget() {
+        this.showReviewersWidget = !this.showReviewersWidget;
+        this.chref.detectChanges();
+    }
+
+    removeReviewer(index: number) {
+        if (this.submissionData && this.submissionData.reviewers) {
+            this.submissionData.reviewers.splice(index, 1);
+            this.globalService.setSubmissionData(this.submissionData);
+            this.chref.detectChanges();
+        }
+    }
+
+    onDataChanged(dataChanged: any) {
+        switch(dataChanged.action) {
+            case 'fieldChanged':
+                break;
+
+            case 'peopleChanged':
+                let selected = dataChanged.selectedPeopleRecord;
+
+                this.submissionData.reviewers.push(
+                    {
+                        nistId: '',
+                        firstName: selected.firstName,
+                        lastName: selected.lastName,
+                        eMail: selected.email
+                    }                                           
+                )
+
+                this.globalService.setSubmissionData(this.submissionData);
+                this.chref.detectChanges();
+
+                break;     
+            
+            case 'orgChanged':
+                break;     
+            
+            default:
+                break;
+        }
+    }
 }

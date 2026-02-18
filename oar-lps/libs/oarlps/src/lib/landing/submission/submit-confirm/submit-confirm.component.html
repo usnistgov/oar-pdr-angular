@@ -31,7 +31,7 @@
                 </table> -->
             </div>
     
-            <div *ngIf="showSuggestion">
+            <div *ngIf="showSuggestion" class="statement">
                 <div class="statement">
                     <div *ngIf="hasRequiredItems; else recommend">
                         We have reviewed your draft. There are required items to be finished. Please go back and re-edit:
@@ -75,6 +75,70 @@
                     class="textbox">
                 </textarea>
             </div>
+
+            <!-- Reviewers -->
+            <div>
+                <div class="editable_field linked-text statement" (click)="toggleReviewersWidget()">
+                    {{reviewerPrompt}}
+                    <!-- <i class="fas expand-btn amplifiable" [class.amplified]="isMouseOver" (mouseover)="isMouseOver = true"
+                        (mouseleave)="isMouseOver = false"
+                        [ngClass]="{'fa-caret-right': !showReviewersWidget, 'fa-caret-down': showReviewersWidget}" aria-label="Show warning steps">
+                    </i> -->
+                </div>
+
+                <!-- Control buttons -->
+                <div class="editable_field" style="white-space: nowrap;">
+                    @if(!showReviewersWidget) {
+                        <!-- Edit button -->
+                        <button class="edit_button" type="button" (click)="toggleReviewersWidget()" aria-label="Edit reviewers"
+                            ngbTooltip="Edit reviewers">
+                            <i [class]="editIcon"></i>
+                        </button>
+                    }
+
+                    @if(showReviewersWidget) {
+                        <!-- Close edit block -->
+                        <button class="edit_button" type="button" (click)="toggleReviewersWidget()" aria-label="Close edit block"
+                            ngbTooltip="Close edit block">
+                            <i [class]="closeIcon"></i>
+                        </button>
+                    }
+                </div>
+
+                @if(showReviewersWidget) {
+                    <table>
+                        <tr>
+                            <td align="right" width="20%">
+                                <span style="margin: 0em .5em;" ngbTooltip="People lookup">
+                                    NIST People Lookup:</span>
+                            </td>
+                            <td>
+                                <div style="width: 100%; padding-right: 1em; margin-bottom: 20px;margin-top: 10px;">
+                                    <div style="margin: -20px -10px 15px 10px;">
+                                        <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
+                                    </div>
+                                </div>
+                        
+                            </td>
+                        </tr>
+                    </table>
+                }
+
+                <!-- Display reviewers if any -->
+                <div *ngIf="submissionData && submissionData.reviewers && submissionData.reviewers.length > 0" class="current-reviewers">
+                    <span 
+                        class="reviewers" 
+                        *ngFor="let reviewer of submissionData.reviewers; let i =index">
+                        <span style="display: inline-block;white-space: nowrap">{{reviewer.firstName}} {{reviewer.lastName}}</span>
+                        <span *ngIf="showReviewersWidget" style="margin-left: 5px;">
+                            <i [class]="closeCircleIcon" 
+                                aria-label="Delete reviewer"
+                                (click)="removeReviewer(i)">
+                            </i>
+                        </span>
+                    </span>
+                </div>
+            </div>
         </div>
     
         @if(submissionData.isRevision) {
@@ -116,32 +180,6 @@
             label="Back to Edit"
             icon="fas fa-pencil faa-1x icon-white" iconPos="left">
         </button>
-
-        <!-- <button mat-fab extended aria-label="Proceed with Submission" stylaria-label="Add" class="mat-btn btn-submit"
-            (click)="continueSubmit()" disabled="true">
-            <mat-icon class="btn-icon">upload</mat-icon>
-            <span class="btn-label">Proceed with Submission</span>
-        </button> -->
-    
-        <!-- Cancel button -->
-        <!-- <button mat-fab extended aria-label="Back to Edit" stylaria-label="Add" class="mat-btn btn-cancel"
-            (click)="cancelSubmit()">
-            <mat-icon class="btn-icon">edit</mat-icon>
-            <span class="btn-label">Back to Edit</span>
-        </button> -->
-        <!-- 
-                <button 
-                    matButton="filled"
-                    class="btn btn-labeled" 
-                    id="btn-cancel" 
-                    (click)="cancelSubmit()"
-                    label="Back to Edit" 
-                    icon="fas fa-times faa-1x icon-white" 
-                    iconPos="left">
-                    Back to Edit
-                </button> -->
-    
-    
-        </div>
+    </div>
 </div>
 

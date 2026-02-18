@@ -267,6 +267,9 @@ a {
 .linked-text {
     cursor: pointer;
     color:var(--nist-blue-default);
+}
+
+.indented {
     margin-left: 1em;
 }
 
@@ -395,4 +398,13 @@ a:focus {
 
 .display-none {
     display: none;
+}
+
+.amplifiable {
+    transition: transform 0.2s ease-in-out;
+}
+
+.amplified {
+    transform: scale(3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }

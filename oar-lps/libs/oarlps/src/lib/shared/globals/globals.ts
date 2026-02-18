@@ -396,12 +396,20 @@ export interface RevisionDetails {
     majorChanges: boolean
 }
 
+export interface Reviewers {
+    nistId: string;
+    firstName: string;
+    lastName: string;
+    eMail: string;
+}
+
 export class SubmissionData {
     goSubmit: boolean;
     isRevision: boolean;
     revisionIDs: number[];
     submissionNotes: string;
     revisionPurpose: string;
+    reviewers: Reviewers[];
 
     constructor(data: SubmissionData = null) {
         if (!data) {
@@ -410,12 +418,14 @@ export class SubmissionData {
             this.revisionIDs = [];
             this.submissionNotes = "";
             this.revisionPurpose = "";
+            this.reviewers = [];
         } else {
             this.goSubmit = data.goSubmit;
             this.isRevision = data.isRevision;
             this.revisionIDs = data.revisionIDs;
             this.submissionNotes = data.submissionNotes;
             this.revisionPurpose = data.revisionPurpose;
+            this.reviewers = data.reviewers;
         }
     }
 
@@ -822,4 +832,5 @@ export class iconClass {
     static readonly ADD = 'fas fa-plus faa-lg';
     static readonly DELETE = 'fas fa-trash-alt';
     static readonly RESET = 'faa faa-recycle';
+    static readonly CLOSE_CIRCLE = 'pi pi-times-circle'; 
 }
