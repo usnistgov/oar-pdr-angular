@@ -113,12 +113,21 @@
                                     NIST People Lookup:</span>
                             </td>
                             <td>
-                                <div style="width: 100%; padding-right: 1em; margin-bottom: 20px;margin-top: 10px;">
-                                    <div style="margin: -20px -10px 15px 10px;">
-                                        <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
-                                    </div>
+                                <div style="width: 100%; padding-right: 1em;">
+                                    <!-- <lib-people (dataChanged)="onDataChanged($event)"></lib-people> -->
+                                    <p-autoComplete 
+                                        [inputStyle]="{'width': '100%'}" 
+                                        styleClass="autocomplete" 
+                                        [placeholder]="placeHolderText"
+                                        [(ngModel)]="selectedSuggestion" 
+                                        [suggestions]="peopleSuggestions" 
+                                        (completeMethod)="set_suggestions($event)"
+                                        (onSelect)="getFullRecord($event)" 
+                                        field="display" 
+                                        inputId="person" 
+                                        [appendTo]="'body'" 
+                                        id="searchicon" />
                                 </div>
-                        
                             </td>
                         </tr>
                     </table>

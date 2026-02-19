@@ -21,6 +21,9 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { iconClass } from '../../../shared/globals/globals';
 import { PeopleComponent } from '../../people/people.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
+import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+
 
 export interface PeriodicElement {
     situation: string;
@@ -52,7 +55,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
         TextFieldModule,
         RevisionDetailsComponent,
         PeopleComponent,
-        NgbModule
+        NgbModule,
+        AutoCompleteModule
 ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './submit-confirm.component.html',
@@ -102,6 +106,27 @@ export class SubmitConfirmComponent implements OnInit {
     closeIcon = iconClass.CLOSE;
     closeCircleIcon = iconClass.CLOSE_CIRCLE;
 
+    // Fro people service
+    minPromptLength = 2;
+
+    // the index we will download after the first minPromptLength (2) characters are typed
+    index: SDSIndex|null = null;
+
+    // the current list of suggested completions matching what has been typed so far.
+    peopleSuggestions: SDSuggestion[] = [];
+
+    // the suggested completion that was picked; it contains a reference to the full record
+    selectedSuggestion: SDSuggestion|null = null;
+
+    // the full record for the selected person
+    selected: any = null;
+
+    // the organizations that the selected person is a member of
+    selectedOrgs: any[]|null = null;
+
+    placeHolderText: string;
+
+
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
     // @Input() revisionType: string;
     // @Output() changedData: EventEmitter<SubmissionData> = new EventEmitter();
@@ -111,6 +136,7 @@ export class SubmitConfirmComponent implements OnInit {
         private mdupdsvc: MetadataUpdateService,
         public activeModal: NgbActiveModal,
         public globalService: GlobalService,
+        private ps: StaffDirectoryService,
         @Self() private element: ElementRef,
         private chref: ChangeDetectorRef){
         // @Inject(MAT_DIALOG_DATA) public data) {
@@ -127,6 +153,8 @@ export class SubmitConfirmComponent implements OnInit {
         this.allRevisionTypes = this.revisionTypes.getAllTypes();
         this.suggestions = this.mdupdsvc.getSuggestions();
         this.submissionData.reviewers = [] as Reviewers[];
+        this.placeHolderText = "Enter at least " + this.minPromptLength + " chars to search...";
+
         // this.submissionData.reviewers = [{
         //     nistId: '12345678',
         //     firstName: 'Jane',
@@ -264,4 +292,69 @@ export class SubmitConfirmComponent implements OnInit {
                 break;
         }
     }
+
+    // People service
+    set_suggestions(ev: AutoCompleteCompleteEvent) {
+        if (ev.query) {
+            if (ev.query.length >= this.minPromptLength) {  // don't do anything unless we have 2 chars
+                if (! this.index) {
+                    // retrieve initial index
+                    this.ps.getPeopleIndexFor(ev.query).subscribe({
+                        next:(pi) => {
+                            // save it to use with subsequent typing
+                            this.index = pi;
+                            if (this.index != null) {
+                                // pull out the matching suggestions
+                                this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.query);
+                                this.index = null;
+                            }
+                        },
+                        error:(e) => {
+                            console.error('Failed to pull people index for "'+ev.query+'": '+e)
+                        }
+                    });
+                }
+                else
+                    // pull out the matching suggestions
+                    this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.query);
+            }
+            else if (this.index) {
+                this.index = null;
+                this.peopleSuggestions = [];
+            }
+
+            this.chref.detectChanges();
+        }
+    }    
+
+    getFullRecord(ev: AutoCompleteSelectEvent) {
+        let sugg = ev.value as SDSuggestion;
+        
+        sugg.getRecord().subscribe({
+            next: (rec) => { 
+                this.selected = rec;
+                if(this.selected.lastName && this.selected.firstName){
+                    this.getOrgs(this.selectedSuggestion);
+                }
+            },
+            error: (err) => {
+                console.error("Failed to resolve suggestion into person data");
+            }
+        });
+    }    
+
+    getOrgs(selected: SDSuggestion) {
+        if (selected) {
+            this.ps.getOrgsFor(selected.id).subscribe({
+                next: (recs) => {
+                    //Get first 3 units and then reverse the order
+                    this.selectedOrgs = recs.slice(0, 3).reverse();
+                    this.selectedSuggestion = null;
+                },
+                error: (err) => {
+                    console.error("Failed to resolve person id into org data");
+                }
+            });
+        }
+    }    
 }
