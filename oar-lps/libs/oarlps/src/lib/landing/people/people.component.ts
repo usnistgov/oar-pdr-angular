@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
@@ -40,6 +40,7 @@ export class PeopleComponent {
     
     constructor(
         private ps: StaffDirectoryService,
+        private chref: ChangeDetectorRef,
         public authsvc: AuthenticationService) {
         
         this.authsvc.getCredentials().subscribe(
@@ -91,6 +92,9 @@ export class PeopleComponent {
                 this.index = null;
                 this.suggestions = [];
             }
+
+            this.chref.detectChanges();
+            this.chref.markForCheck();
         }
     }    
 
