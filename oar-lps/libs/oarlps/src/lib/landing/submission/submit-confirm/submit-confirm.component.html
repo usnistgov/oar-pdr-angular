@@ -115,7 +115,22 @@
                             <td>
                                 <div style="width: 100%; padding-right: 1em;">
                                     <!-- <lib-people (dataChanged)="onDataChanged($event)"></lib-people> -->
-                                    <p-autoComplete 
+                                    <input #name 
+                                        class="input input-box" 
+                                        type="text" 
+                                        pInputText 
+                                        name="peopleSearch" 
+                                        [(ngModel)]="query"
+                                        (input)="set_suggestions($event)">
+
+                                    <div *ngIf="peopleSuggestions.length > 0">
+                                        <div *ngFor="let suggestion of peopleSuggestions" 
+                                            class="suggestion-item" 
+                                            (click)="getFullRecord(suggestion)">
+                                            {{suggestion.display}}
+                                        </div>
+                                    </div>
+                                    <!-- <p-autoComplete 
                                         [inputStyle]="{'width': '100%'}" 
                                         styleClass="autocomplete" 
                                         [placeholder]="placeHolderText"
@@ -126,7 +141,7 @@
                                         field="display" 
                                         inputId="person" 
                                         [appendTo]="'body'" 
-                                        id="searchicon" />
+                                        id="searchicon" /> -->
                                 </div>
                             </td>
                         </tr>

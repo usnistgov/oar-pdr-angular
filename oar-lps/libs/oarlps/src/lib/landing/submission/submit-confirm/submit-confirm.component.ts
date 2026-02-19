@@ -115,6 +115,7 @@ export class SubmitConfirmComponent implements OnInit {
     // the current list of suggested completions matching what has been typed so far.
     peopleSuggestions: SDSuggestion[] = [];
 
+    query: string = '';
     // the suggested completion that was picked; it contains a reference to the full record
     selectedSuggestion: SDSuggestion|null = null;
 
@@ -294,37 +295,36 @@ export class SubmitConfirmComponent implements OnInit {
     }
 
     // People service
-    set_suggestions(ev: AutoCompleteCompleteEvent) {
-        if (ev.query) {
-            if (ev.query.length >= this.minPromptLength) {  // don't do anything unless we have 2 chars
-                if (! this.index) {
-                    // retrieve initial index
-                    this.ps.getPeopleIndexFor(ev.query).subscribe({
-                        next:(pi) => {
-                            // save it to use with subsequent typing
-                            this.index = pi;
-                            if (this.index != null) {
-                                // pull out the matching suggestions
-                                this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.query);
-                                this.index = null;
-                            }
-                        },
-                        error:(e) => {
-                            console.error('Failed to pull people index for "'+ev.query+'": '+e)
+    set_suggestions(ev: any) {
+        if (ev.target.value.length >= this.minPromptLength) {  // don't do anything unless we have 2 chars
+            if (!this.index) {
+                let lQuery = ev.target.value as string;
+                // retrieve initial index
+                this.ps.getPeopleIndexFor(lQuery).subscribe(
+                    (pi) => {
+                        // save it to use with subsequent typing
+                        this.index = pi;
+                        if (this.index != null) {
+                            // pull out the matching suggestions
+                            this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.target.value);
+                            this.index = null;
                         }
-                    });
-                }
-                else
-                    // pull out the matching suggestions
-                    this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.query);
+                    },
+                    (e) => {
+                        console.error('Failed to pull people index for "'+ev.target.value+'": '+e)
+                    }                    
+                );
             }
-            else if (this.index) {
-                this.index = null;
-                this.peopleSuggestions = [];
-            }
-
-            this.chref.detectChanges();
+            else
+                // pull out the matching suggestions
+                this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.target.value);
         }
+        else if (this.index) {
+            this.index = null;
+            this.peopleSuggestions = [];
+        }
+
+        this.chref.detectChanges();
     }    
 
     getFullRecord(ev: AutoCompleteSelectEvent) {
@@ -336,6 +336,19 @@ export class SubmitConfirmComponent implements OnInit {
                 if(this.selected.lastName && this.selected.firstName){
                     this.getOrgs(this.selectedSuggestion);
                 }
+
+                this.query = this.selected.firstName + " " + this.selected.lastName;
+                    
+                this.submissionData.reviewers.push({
+                    nistId: this.selected.id,
+                    firstName: this.selected.firstName,
+                    lastName: this.selected.lastName,
+                    eMail: this.selected.emailAddress ? this.selected.emailAddress : ""
+                });
+                
+                this.globalService.setSubmissionData(this.submissionData);
+                this.peopleSuggestions = [];
+                this.chref.detectChanges();
             },
             error: (err) => {
                 console.error("Failed to resolve suggestion into person data");
