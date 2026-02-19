@@ -139,13 +139,20 @@ export class SubmitConfirmComponent implements OnInit {
         public globalService: GlobalService,
         private ps: StaffDirectoryService,
         @Self() private element: ElementRef,
+        public authsvc: AuthenticationService,
         private chref: ChangeDetectorRef){
         // @Inject(MAT_DIALOG_DATA) public data) {
 
         this.globalService.watchSubmissionData(
             (data) => {
                 this.submissionData = new SubmissionData(data);
-        })
+            })
+        
+        this.authsvc.getCredentials().subscribe(
+            (creds) => {
+                ps.setAuthToken(creds.token);
+            }
+        )
     }
 
     ngOnInit(): void {
