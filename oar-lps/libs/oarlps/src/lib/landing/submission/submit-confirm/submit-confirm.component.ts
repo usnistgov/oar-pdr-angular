@@ -347,7 +347,7 @@ export class SubmitConfirmComponent implements OnInit {
                     this.getOrgs(this.selectedSuggestion);
                 }
 
-                this.query = this.selected.firstName + " " + this.selected.lastName;
+                this.query = "";
                     
                 this.submissionData.reviewers.push({
                     nistId: this.selected.id,
@@ -357,6 +357,8 @@ export class SubmitConfirmComponent implements OnInit {
                 });
                 
                 this.globalService.setSubmissionData(this.submissionData);
+                this.index = null;
+                this.peopleSuggestions = [];
                 this.showDropdown = false;
                 this.chref.detectChanges();
             },

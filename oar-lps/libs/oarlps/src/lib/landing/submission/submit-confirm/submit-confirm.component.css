@@ -113,6 +113,10 @@
     overflow-y: scroll;
 }
 
+table {
+    width: 100%;
+}
+
 table,th,td {
     border: 0px solid grey;
     border-collapse: collapse;
@@ -167,7 +171,6 @@ li {
 
 .autocomplete-input {
     width: 100%;
-    padding: 8px;
     box-sizing: border-box;
 }
 
