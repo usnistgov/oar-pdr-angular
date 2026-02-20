@@ -357,7 +357,7 @@ export class SubmitConfirmComponent implements OnInit {
                 });
                 
                 this.globalService.setSubmissionData(this.submissionData);
-                this.peopleSuggestions = [];
+                this.showDropdown = false;
                 this.chref.detectChanges();
             },
             error: (err) => {

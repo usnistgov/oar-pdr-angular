@@ -142,10 +142,12 @@
                     </table>
 
                     <ul class="autocomplete-dropdown" 
-                        *ngIf="peopleSuggestions.length > 0" 
+                        *ngIf="showDropdown" 
                         [ngClass]="{ 'scrollable': enableScroll }">
-                        
-                        <li *ngFor="let suggestion of peopleSuggestions">
+
+                        <li 
+                            *ngFor="let suggestion of peopleSuggestions"
+                            (click)="getFullRecord(suggestion)">
                             {{ suggestion.display }}
                         </li>
                     </ul>
