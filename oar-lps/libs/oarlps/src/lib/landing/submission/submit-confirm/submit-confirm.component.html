@@ -122,7 +122,8 @@
                                         name="peopleSearch" 
                                         [(ngModel)]="query"
                                         (input)="set_suggestions($event)"
-                                        (focus)="set_suggestions($event)">
+                                        (focus)="set_suggestions($event)"
+                                        (blur)="hideDropdown()">
 
                                     <!-- <p-autoComplete 
                                         [inputStyle]="{'width': '100%'}" 
@@ -147,7 +148,7 @@
 
                         <li 
                             *ngFor="let suggestion of peopleSuggestions"
-                            (click)="getFullRecord(suggestion)">
+                            (mousedown)="getFullRecord(suggestion); $event.preventDefault()">
                             {{ suggestion.display }}
                         </li>
                     </ul>

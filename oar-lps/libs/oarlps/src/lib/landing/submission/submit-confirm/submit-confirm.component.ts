@@ -397,4 +397,10 @@ export class SubmitConfirmComponent implements OnInit {
         this.showDropdown = false;
         }
     }  
+
+    hideDropdown() {
+    setTimeout(() => {
+        this.showDropdown = false;
+    }, 150);
+    }    
 }
