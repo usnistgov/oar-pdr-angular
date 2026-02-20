@@ -1,4 +1,4 @@
-import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, inject, Input, OnInit, ElementRef, ViewChild, Self, Output } from '@angular/core';
+import { afterNextRender, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inject, inject, Input, OnInit, ElementRef, ViewChild, Self, Output, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MetadataUpdateService } from '../../../landing/editcontrol/metadataupdate.service';
 import {
@@ -107,6 +107,7 @@ export class SubmitConfirmComponent implements OnInit {
     closeCircleIcon = iconClass.CLOSE_CIRCLE;
 
     // Fro people service
+    showDropdown = false;
     minPromptLength = 2;
 
     // the index we will download after the first minPromptLength (2) characters are typed
@@ -140,6 +141,7 @@ export class SubmitConfirmComponent implements OnInit {
         private ps: StaffDirectoryService,
         @Self() private element: ElementRef,
         public authsvc: AuthenticationService,
+        private eRef: ElementRef,
         private chref: ChangeDetectorRef){
         // @Inject(MAT_DIALOG_DATA) public data) {
 
@@ -331,6 +333,7 @@ export class SubmitConfirmComponent implements OnInit {
             this.peopleSuggestions = [];
         }
 
+        this.showDropdown = this.peopleSuggestions.length > 0 && ev.target.value.length > 0;
         this.chref.detectChanges();
     }    
 
@@ -381,4 +384,12 @@ export class SubmitConfirmComponent implements OnInit {
     get enableScroll(): boolean {
         return this.peopleSuggestions.length > 5;
     }
+
+    // Close dropdown when clicking outside
+    @HostListener('document:click', ['$event'])
+    onClickOutside(event: Event) {
+        if (!this.eRef.nativeElement.contains(event.target)) {
+            this.showDropdown = false;
+        }
+    }    
 }

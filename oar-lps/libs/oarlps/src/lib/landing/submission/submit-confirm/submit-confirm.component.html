@@ -116,29 +116,14 @@
                                 <div style="width: 100%; padding-right: 1em;">
                                     <!-- <lib-people (dataChanged)="onDataChanged($event)"></lib-people> -->
                                     <input #name 
-                                        class="input input-box" 
+                                        class="autocomplete-input" 
                                         type="text" 
                                         pInputText 
                                         name="peopleSearch" 
                                         [(ngModel)]="query"
-                                        (input)="set_suggestions($event)">
+                                        (input)="set_suggestions($event)"
+                                        (focus)="set_suggestions($event)">
 
-
-
-                                    <div *ngIf="peopleSuggestions.length > 0" 
-                                        [ngClass]="{ 'scrollable': enableScroll }">
-
-                                        <ul>
-                                            <li *ngFor="let suggestion of peopleSuggestions">
-                                                {{ suggestion.display }}
-                                            </li>
-                                        </ul>
-                                        <!-- <div *ngFor="let suggestion of peopleSuggestions" 
-                                            class="suggestion-item" 
-                                            (click)="getFullRecord(suggestion)">
-                                            {{suggestion.display}}
-                                        </div> -->
-                                    </div>
                                     <!-- <p-autoComplete 
                                         [inputStyle]="{'width': '100%'}" 
                                         styleClass="autocomplete" 
@@ -155,6 +140,15 @@
                             </td>
                         </tr>
                     </table>
+
+                    <ul class="autocomplete-dropdown" 
+                        *ngIf="peopleSuggestions.length > 0" 
+                        [ngClass]="{ 'scrollable': enableScroll }">
+                        
+                        <li *ngFor="let suggestion of peopleSuggestions">
+                            {{ suggestion.display }}
+                        </li>
+                    </ul>
                 }
 
                 <!-- Display reviewers if any -->
