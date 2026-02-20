@@ -123,12 +123,21 @@
                                         [(ngModel)]="query"
                                         (input)="set_suggestions($event)">
 
-                                    <div *ngIf="peopleSuggestions.length > 0">
-                                        <div *ngFor="let suggestion of peopleSuggestions" 
+
+
+                                    <div *ngIf="peopleSuggestions.length > 0" 
+                                        [ngClass]="{ 'scrollable': enableScroll }">
+
+                                        <ul>
+                                            <li *ngFor="let suggestion of peopleSuggestions">
+                                                {{ suggestion.display }}
+                                            </li>
+                                        </ul>
+                                        <!-- <div *ngFor="let suggestion of peopleSuggestions" 
                                             class="suggestion-item" 
                                             (click)="getFullRecord(suggestion)">
                                             {{suggestion.display}}
-                                        </div>
+                                        </div> -->
                                     </div>
                                     <!-- <p-autoComplete 
                                         [inputStyle]="{'width': '100%'}" 

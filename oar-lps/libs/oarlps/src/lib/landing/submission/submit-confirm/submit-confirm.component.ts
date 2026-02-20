@@ -334,8 +334,8 @@ export class SubmitConfirmComponent implements OnInit {
         this.chref.detectChanges();
     }    
 
-    getFullRecord(ev: AutoCompleteSelectEvent) {
-        let sugg = ev.value as SDSuggestion;
+    getFullRecord(ev: SDSuggestion) {
+        let sugg = ev;
         
         sugg.getRecord().subscribe({
             next: (rec) => { 
@@ -377,4 +377,8 @@ export class SubmitConfirmComponent implements OnInit {
             });
         }
     }    
+
+    get enableScroll(): boolean {
+        return this.peopleSuggestions.length > 5;
+    }
 }

@@ -147,3 +147,20 @@ textarea {
     margin-top: 5px;
     padding-left: 0px;
 }
+
+.scrollable {
+    max-height: 200px;
+    /* Adjust height as needed */
+    overflow-y: auto;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    padding: 8px;
+    border-bottom: 1px solid #eee;
+}
