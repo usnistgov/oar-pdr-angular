@@ -130,8 +130,7 @@ export class SubmitConfirmComponent implements OnInit {
 
 
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
-    // @Input() revisionType: string;
-    // @Output() changedData: EventEmitter<SubmissionData> = new EventEmitter();
+    @ViewChild('container') container!: ElementRef;
     @Output() returnValue: EventEmitter<SubmissionData> = new EventEmitter();
 
     constructor(
@@ -389,9 +388,13 @@ export class SubmitConfirmComponent implements OnInit {
 
     // Close dropdown when clicking outside
     @HostListener('document:click', ['$event'])
-    onClickOutside(event: Event) {
-        if (!this.eRef.nativeElement.contains(event.target)) {
-            this.showDropdown = false;
+    onDocumentClick(event: MouseEvent) {
+        const clickedInside = this.container?.nativeElement.contains(
+        event.target as Node
+        );
+
+        if (!clickedInside) {
+        this.showDropdown = false;
         }
-    }    
+    }  
 }
