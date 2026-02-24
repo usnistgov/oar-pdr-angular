@@ -259,11 +259,20 @@ export class SubmitConfirmComponent implements OnInit {
         }
     }
     
+    /**
+     * When user click on the "Add technical reviewers" link, 
+     * toggle the display of the reviewers widget. 
+     * The reviewers widget allows users to edit/add technical reviewers to their submission.
+     */
     toggleReviewersWidget() {
         this.showReviewersWidget = !this.showReviewersWidget;
         this.chref.detectChanges();
     }
 
+    /**
+     * Remove a reviewer from the list of reviewers for this submission.
+     * @param index the index of the reviewer to remove from the list of reviewers for this submission
+     */
     removeReviewer(index: number) {
         if (this.submissionData && this.submissionData.reviewers) {
             this.submissionData.reviewers.splice(index, 1);
@@ -272,37 +281,14 @@ export class SubmitConfirmComponent implements OnInit {
         }
     }
 
-    onDataChanged(dataChanged: any) {
-        switch(dataChanged.action) {
-            case 'fieldChanged':
-                break;
-
-            case 'peopleChanged':
-                let selected = dataChanged.selectedPeopleRecord;
-
-                this.submissionData.reviewers.push(
-                    {
-                        nistId: '',
-                        firstName: selected.firstName,
-                        lastName: selected.lastName,
-                        eMail: selected.email
-                    }                                           
-                )
-
-                this.globalService.setSubmissionData(this.submissionData);
-                this.chref.detectChanges();
-
-                break;     
-            
-            case 'orgChanged':
-                break;     
-            
-            default:
-                break;
-        }
-    }
-
-    // People service
+    /**
+     * Set the list of suggestions for the autocomplete widget based on the current input. 
+     * If the input is at least minPromptLength characters, 
+     * then pull the suggestions from the server (if we haven't already) 
+     * and filter them based on the current input. If the input is less than minPromptLength characters, 
+     * clear the suggestions.
+     * @param ev 
+     */
     set_suggestions(ev: any) {
         if (ev.target.value.length >= this.minPromptLength) {  // don't do anything unless we have 2 chars
             if (!this.index) {
@@ -336,6 +322,11 @@ export class SubmitConfirmComponent implements OnInit {
         this.chref.detectChanges();
     }    
 
+    /**
+     * Get the full person record for the selected suggestion and add that person to the list of reviewers 
+     * for this submission.
+     * @param ev selected suggestion for a person to add as a reviewer for this submission
+     */
     getFullRecord(ev: SDSuggestion) {
         let sugg = ev;
         
@@ -367,6 +358,13 @@ export class SubmitConfirmComponent implements OnInit {
         });
     }    
 
+    /**
+     * Get the organizations that the selected reviewer is a member of 
+     * and save those as part of the submission data for this submission.
+     * @param selected: selected suggestion for a person to add as a reviewer for this submission; 
+     * contains reference to the full person record for that reviewer, 
+     * which is used to pull the organizations that reviewer is a member of.
+     */
     getOrgs(selected: SDSuggestion) {
         if (selected) {
             this.ps.getOrgsFor(selected.id).subscribe({
@@ -382,6 +380,11 @@ export class SubmitConfirmComponent implements OnInit {
         }
     }    
 
+    /**
+     * Determine whether to enable scrolling for the list of suggestions for people based on 
+     * the number of suggestions returned;
+     * if there are more than 5 suggestions, enable scrolling; otherwise, disable scrolling.
+     */
     get enableScroll(): boolean {
         return this.peopleSuggestions.length > 5;
     }
@@ -398,9 +401,13 @@ export class SubmitConfirmComponent implements OnInit {
         }
     }  
 
+    /**
+     * Hide the dropdown list of suggestions for people after a short delay 
+     * to allow time for a click on a suggestion to register before the dropdown is hidden.
+     */
     hideDropdown() {
-    setTimeout(() => {
-        this.showDropdown = false;
-    }, 150);
+        setTimeout(() => {
+            this.showDropdown = false;
+        }, 150);
     }    
 }

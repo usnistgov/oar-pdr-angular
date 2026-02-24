@@ -78,20 +78,25 @@
 
             <!-- Reviewers -->
             <div>
-                <div class="editable_field linked-text statement" (click)="toggleReviewersWidget()">
+                <div 
+                    class="editable_field linked-text statement" 
+                    (click)="toggleReviewersWidget()">
+
                     {{reviewerPrompt}}
-                    <!-- <i class="fas expand-btn amplifiable" [class.amplified]="isMouseOver" (mouseover)="isMouseOver = true"
-                        (mouseleave)="isMouseOver = false"
-                        [ngClass]="{'fa-caret-right': !showReviewersWidget, 'fa-caret-down': showReviewersWidget}" aria-label="Show warning steps">
-                    </i> -->
+
                 </div>
 
                 <!-- Control buttons -->
                 <div class="editable_field" style="white-space: nowrap;">
                     @if(!showReviewersWidget) {
                         <!-- Edit button -->
-                        <button class="edit_button" type="button" (click)="toggleReviewersWidget()" aria-label="Edit reviewers"
+                        <button 
+                            class="edit_button" 
+                            type="button" 
+                            (click)="toggleReviewersWidget()" 
+                            aria-label="Edit reviewers"
                             ngbTooltip="Edit reviewers">
+
                             <i [class]="editIcon"></i>
                         </button>
                     }
@@ -114,7 +119,6 @@
                             </td>
                             <td>
                                 <div style="width: 100%; padding-right: 1em;">
-                                    <!-- <lib-people (dataChanged)="onDataChanged($event)"></lib-people> -->
                                     <input #name 
                                         class="autocomplete-input" 
                                         type="text" 
@@ -124,19 +128,6 @@
                                         (input)="set_suggestions($event)"
                                         (focus)="set_suggestions($event)"
                                         (blur)="hideDropdown()">
-
-                                    <!-- <p-autoComplete 
-                                        [inputStyle]="{'width': '100%'}" 
-                                        styleClass="autocomplete" 
-                                        [placeholder]="placeHolderText"
-                                        [(ngModel)]="selectedSuggestion" 
-                                        [suggestions]="peopleSuggestions" 
-                                        (completeMethod)="set_suggestions($event)"
-                                        (onSelect)="getFullRecord($event)" 
-                                        field="display" 
-                                        inputId="person" 
-                                        [appendTo]="'body'" 
-                                        id="searchicon" /> -->
                                 </div>
                             </td>
                         </tr>
@@ -185,7 +176,19 @@
     
     <hr>
     <div class="control-buttons">
-        <!-- Buttons are arranged from right to left -->
+        <!-- Back to Edit button -->
+        <button 
+            pButton 
+            type="button" 
+            pTooltip="Back to Edit" 
+            tooltipPosition="bottom" 
+            class="btn btn-cancel"
+            (click)="cancelSubmit()" 
+            label="Back to Edit" 
+            icon="fas fa-pencil faa-1x icon-white" 
+            iconPos="left">
+        </button>
+
         <!-- Continue Submit button -->
         <button 
             pButton
@@ -198,17 +201,6 @@
             label="Proceed with Submission" 
             icon="fas fa-arrow-circle-up faa-1x icon-white"  
             iconPos="left">
-        </button>
-      
-        <button 
-            pButton 
-            type="button" 
-            pTooltip="Back to Edit" 
-            tooltipPosition="bottom" 
-            class="btn btn-cancel"
-            (click)="cancelSubmit()" 
-            label="Back to Edit"
-            icon="fas fa-pencil faa-1x icon-white" iconPos="left">
         </button>
     </div>
 </div>
