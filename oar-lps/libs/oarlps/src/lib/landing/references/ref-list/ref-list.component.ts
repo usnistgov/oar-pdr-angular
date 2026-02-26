@@ -20,7 +20,6 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'lib-ref-list',
@@ -87,8 +86,7 @@ export class RefListComponent implements OnInit {
         private modalService: NgbModal,  
         private notificationService: NotificationService,
         private chref: ChangeDetectorRef,  
-        public lpService: LandingpageService,
-        private toastrService: ToastrService) { 
+        public lpService: LandingpageService) { 
 
     }
 
@@ -280,9 +278,9 @@ export class RefListComponent implements OnInit {
                     if (updateSuccess) {
                         if(this.isAdding){
                             ref["isNew"] = false;
-                            this.toastrService.success("Reference added successfully.");
+                            this.notificationService.showSuccessWithTimeout("Successfully added " + this.fieldName + ".", "", 3000);
                         } else {
-                            this.toastrService.success("Reference updated successfully.");  
+                            this.notificationService.showSuccessWithTimeout("Successfully updated " + this.fieldName + ".", "", 3000);
                         }
                         ref.dataChanged = false;
                         this.chref.detectChanges();
@@ -300,11 +298,11 @@ export class RefListComponent implements OnInit {
                     updmd[this.fieldName] = this.record[this.fieldName];
                     this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                         if (updateSuccess){
-                            this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                            this.notificationService.showSuccessWithTimeout("Successfully updated " + this.fieldName + ".", "", 3000);
                             this.chref.detectChanges();
                             resolve(true);
                         }else{
-                            let msg = "References update failed";
+                            let msg = this.fieldName + " update failed";
                             console.error(msg);
                             this.errMessage = msg;
                             resolve(false);
@@ -341,9 +339,9 @@ export class RefListComponent implements OnInit {
                     if (rec){
                         this.currentRef.dataChanged = false;
                         this.chref.detectChanges();
-                        this.toastrService.success("Reference added successfully.");
+                        this.notificationService.showSuccessWithTimeout("Successfully added " + this.fieldName + ".", "", 3000);
                     }else{
-                        let msg = "Failed to add reference";
+                        let msg = "Failed to add " + this.fieldName;
                         console.error(msg);
                         this.errMessage = msg;
                         return;

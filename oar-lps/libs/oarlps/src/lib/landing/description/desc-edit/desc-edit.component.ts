@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
 
 @Component({
     selector: 'desc-edit',
@@ -52,6 +53,7 @@ export class DescEditComponent {
                 public edstatsvc: EditStatusService,      
                 private ngbModal: NgbModal,
                 private chref: ChangeDetectorRef,
+                private notificationService: NotificationService,
                 public lpService: LandingpageService){
                     
                 this.globalsvc.watchLpsLeftWidth(width => {
@@ -211,6 +213,7 @@ export class DescEditComponent {
                 if (updateSuccess){
                     this.setBackground(this.description);
                     this.setMode(MODE.NORMAL, refreshHelp);
+                    this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
                     this.isEditing = false;
                 }else{
                     let msg = "Description update failued";
@@ -281,8 +284,9 @@ export class DescEditComponent {
             if (success){
                 this.setMode(MODE.NORMAL);
                 this.setBackground(this.description);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
             }else{
-                let msg = "Failed to undo description metadata";
+                let msg = "Failed to undo " + this.fieldName + " metadata";
                 console.error(msg);
             }
         });

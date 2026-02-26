@@ -178,10 +178,6 @@ export class MetadataUpdateService {
                 let rec = this.dapUpdtSvc.getRecord()
                 this._recStatus = rec.status;
 
-                // for testing
-                // this._recStatus.state = "published";
-                // this._recStatus.published = this._recStatus.submitted;
-
                 if (rec.status?.modified) 
                     this.lastUpdate = {
                         userAttributes: { userName: rec.status?.byWho },

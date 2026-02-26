@@ -89,12 +89,9 @@ export class TextEditComponent implements OnInit {
 
         this.controlBoxWidth = buttonCount * 29 + "px !important";
         if(this.dragDropIcon) buttonCount += 1;
-        // this.editboxWidth = "calc(100% - " + buttonCount*30 + "px)"; //Reserve space for icon buttons
 
         this.prevVal = this.textField;
         this.currentVal = this.textField;
-
-        console.log("custBtnIcon", this.custBtnIcon);
     }
 
     ngOnChanges(changes: SimpleChanges): void {

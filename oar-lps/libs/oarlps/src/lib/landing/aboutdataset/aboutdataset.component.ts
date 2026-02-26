@@ -103,7 +103,8 @@ export class AboutdatasetComponent implements OnChanges {
 
     ngOnInit(): void {
         this.nerdmRecord["Native JSON (NERDm)"] = this.record;
-        this.nerdmDocUrl = this.cfgsvc.get("links.nerdmAbout", "/od/dm/nerdm/");        this.citetext = (new NERDResource(this.record)).getCitation();
+        this.nerdmDocUrl = this.cfgsvc.get("links.nerdmAbout", "/od/dm/nerdm/");
+        this.citetext = (new NERDResource(this.record)).getCitation();
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
         // set the isPartOf rendering, listing all of the collections this dataset is formally

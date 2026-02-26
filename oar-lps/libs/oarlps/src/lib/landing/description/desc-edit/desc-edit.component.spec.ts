@@ -9,6 +9,7 @@ import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('DescEditComponent', () => {
     let component: DescEditComponent;
@@ -21,7 +22,7 @@ describe('DescEditComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [DescEditComponent],
+            imports: [DescEditComponent, ToastrModule.forRoot()],
             providers: [ 
                 UserMessageService, 
                 HttpHandler,

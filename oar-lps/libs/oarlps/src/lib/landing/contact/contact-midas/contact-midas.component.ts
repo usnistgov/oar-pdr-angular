@@ -339,7 +339,7 @@ export class ContactMidasComponent {
             if (updateSuccess){
                 this.setMode(MODE.NORMAL, refreshHelp);
                 this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Contact updated.", "", 3000);
             }else{
                 let msg = "Contact update failed.";
                 console.error(msg);

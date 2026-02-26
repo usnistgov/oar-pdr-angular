@@ -86,6 +86,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     cred: Credentials = null;
     authorized: boolean = false;
     collectionData: any;
+    forceDisplay: boolean = false;
 
     suggestions: ReviewResponse = {} as ReviewResponse;
     revisionStarted: boolean = false;
@@ -892,4 +893,8 @@ export class EditControlComponent implements OnInit, OnChanges {
 
         this.lpService.setSectionHelp(sectionHelp);
     }    
+
+    toogleMessage() {
+        this.forceDisplay = !this.forceDisplay;
+    }
 }

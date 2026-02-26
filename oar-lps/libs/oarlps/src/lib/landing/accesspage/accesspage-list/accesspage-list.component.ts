@@ -20,6 +20,7 @@ import { AccesspageEditComponent } from '../accesspage-edit/accesspage-edit.comp
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
 
 @Component({
     selector: 'lib-accesspage-list',
@@ -83,7 +84,7 @@ export class AccesspageListComponent implements OnInit {
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
     errMessage: string;
 
-    constructor(
+    constructor(private notificationService: NotificationService,
                 private toastrService: ToastrService,
                 public lpService: LandingpageService,
                 private chref: ChangeDetectorRef) { 
@@ -376,6 +377,9 @@ export class AccesspageListComponent implements OnInit {
                             this.record[this.fieldName][this.currentApageIndex].dataChanged = false;
 
                         this.setMode(editmode, refreshHelp);
+
+                        this.notificationService.showSuccessWithTimeout("Successfully added access page.", "", 3000);
+
                     }else{
                         let msg = "Failed to add reference";
                         console.error(msg);
@@ -390,6 +394,8 @@ export class AccesspageListComponent implements OnInit {
                 if(success){
                     this.currentApage.dataChanged = false;
                     this.setMode(editmode, refreshHelp);
+                    this.notificationService.showSuccessWithTimeout("Successfully updated access page.", "", 3000);
+
                 }else{
                     console.error("Update failed.")
                 }
