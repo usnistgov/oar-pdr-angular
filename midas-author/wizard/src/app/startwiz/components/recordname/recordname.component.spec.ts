@@ -3,6 +3,8 @@ import { RecordNameComponent } from './recordname.component';
 import { StepService } from '../../services/step.service';
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
+import { WizardService } from '../../services/wizard.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('RecordNameComponent', () => {
   let component: RecordNameComponent;
@@ -10,9 +12,11 @@ describe('RecordNameComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-        declarations: [ RecordNameComponent ],
+        declarations: [RecordNameComponent],
+        imports: [HttpClientTestingModule],
         providers: [ 
-            StepService
+            StepService,
+            WizardService
         ]
     })
     .compileComponents();
@@ -31,6 +35,12 @@ describe('RecordNameComponent', () => {
         new StepModel(6, 'Name',true,false),
         new StepModel(7, 'Collection',false,false)
     ];
+    component.wizardService.setCred({
+        token: "fake-token",
+        userId: "id",
+        userAttributes: {}
+    });
+      
     fixture.detectChanges();
   });
 
