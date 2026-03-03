@@ -6,7 +6,18 @@ import { NerdmRes } from '../../../nerdm/nerdm';
 import { AppConfig } from '../../../config/config';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, Collections, ColorScheme, GlobalService, iconClass } from '../../../shared/globals/globals';
+import {
+    SectionMode,
+    SectionHelp,
+    MODE,
+    SectionPrefs,
+    Sections,
+    Collections,
+    ColorScheme,
+    GlobalService,
+    iconClass,
+    Topic
+} from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { CommonModule } from '@angular/common';
 import { TopicEditComponent } from '../topic-edit/topic-edit.component';
@@ -46,6 +57,12 @@ export class TopicMidasComponent implements OnInit {
     editScheme: string = "https://data.nist.gov/od/dm/nist-themes/v1.1"; //current topic scheme pass to the edit component
     topics: any = {};
     originalTopics: any = {};   //For undo purpose
+
+    //keep the topics that are not being edited, 
+    // this is for the case when there are multiple topic collections 
+    // and user only want to edit one collection, 
+    // we need to keep the other collections unchanged.
+    otherTopics: Topic = {} as Topic;  
 
     //For display
     topicBreakPoint: number = 5;
@@ -177,21 +194,10 @@ export class TopicMidasComponent implements OnInit {
      * and the help side bar can update the info.
      */
     startEditing(collection: string = Collections.DEFAULT) {
-        // setTimeout(()=>{ // this will make the execution after the above boolean has changed
-        //     this.topicElement.nativeElement.focus();
-        // },0);  
-
         this.editCollection = collection;
         this.editScheme = this.allCollections[this.editCollection].taxonomyURI;
         this.selectedTopics = [];
-        //For new topic structure
-        // if(this.topics && this.topics[collection]) {
-        //     for(let obj of this.topics[collection]) {
-        //         this.selectedTopics.push(obj.tag);
-        //     } 
-        // }
 
-        //For old topic structure (theme)
         if(this.topics && this.topics[collection]) {
             for(let topic of this.topics[collection]) {
                 this.selectedTopics.push(topic);
@@ -248,9 +254,20 @@ export class TopicMidasComponent implements OnInit {
         let topics: any[] = [];
         // let col = "NIST";
 
-        if(inputTopics[this.editCollection] && inputTopics[this.editCollection].length > 0) {
-            for(let topic of inputTopics[this.editCollection]) {
-                topics.push(topic);
+        for (let collection of this.collectionOrder) {
+            if (inputTopics[collection] && inputTopics[collection].length > 0) {
+                for (let topic of inputTopics[collection]) {
+                    topics.push(topic);
+                }
+            }
+        }
+
+        //Restore the topics that are not in the main collections, such as those without scheme or with other schemes.
+        if(this.otherTopics) {
+            for(let key in this.otherTopics) {
+                if(this.otherTopics[key] && this.otherTopics[key].tag) {
+                    topics.push(this.otherTopics[key]);
+                }
             }
         }
 
@@ -258,7 +275,9 @@ export class TopicMidasComponent implements OnInit {
     }
 
     /**
-     * Cancel current editing. Set this section to normal mode. Restore topics from previously saved ones.
+     * Cancel current editing. 
+     * Set this section to normal mode. 
+     * Restore topics from previously saved ones.
      */
     cancelEditing() {
         this.updateResearchTopics();
@@ -274,15 +293,14 @@ export class TopicMidasComponent implements OnInit {
     onDataChange(dataChanged: any) {
         switch(dataChanged.action) {
             case 'dataChanged':
-                if(dataChanged["data"] && dataChanged["data"].length>0){
-                    this.record[this.fieldName] = [];
-                    dataChanged["data"].forEach((topic) => {
-                        this.record[this.fieldName].push(topic.tag);
-                    })
-                }
-
                 // For new topic structure (topic field)
+                // Update current topics
                 this.topics[this.editCollection] = dataChanged["data"];
+
+                // Update the record with the updated topic list in Nerdm format (full topic list). 
+                // This is for staging area and will not update the original record until user click save button.
+                this.record[this.fieldName] = this.restoreTopics(this.topics);
+
                 this.dataChanged = true;
                 break;
             default:
@@ -380,57 +398,12 @@ export class TopicMidasComponent implements OnInit {
     }
 
     /**
-     * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
-     * will be cut off. But if overflow style is visible, the animation is not working.
-     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
-     * Then tooltip will not be cut off. 
-     */    
-    // setOverflowStyle() {
-    //     if(this.editBlockStatus == 'collapsed') {
-    //         this.overflowStyle = 'hidden';
-    //     }else {
-    //         this.overflowStyle = 'hidden';
-    //         setTimeout(() => {
-    //             this.overflowStyle = 'visible';
-    //         }, 1000);
-    //     } 
-    // }
-
-    /**
-     * Update the research topic lists
-     */
-    // updateResearchTopics() {
-    //     if(this.record) {
-    //         this.scienceThemeTopics = [];
-    //         this.nistTaxonomyTopics = [];
-
-    //         if(this.record['topic']) {
-    //             this.record['topic'].forEach(topic => {
-    //                 if(topic['scheme'].indexOf(this.standardNISTTaxonomyURI) < 0){
-    //                     if(this.scienceThemeTopics.indexOf(topic.tag) < 0)
-    //                         this.scienceThemeTopics.push(topic.tag);
-    //                 }
-    //             });
-    //         }
-
-    //         if(this.record['theme']) {
-    //             this.record['theme'].forEach(topic => {
-    //                 if(this.nistTaxonomyTopics.indexOf(topic) < 0)
-    //                     this.nistTaxonomyTopics.push(topic);
-    //             });
-    //         }
-    //     }
-    // }
-
-
-    /**
      * Update the research topic lists
      */
     updateResearchTopics() {
         this.topics = {};
         if(this.record) {
             if (this.record[this.fieldName]) {
-                //For new topic structure
                 this.record[this.fieldName].forEach(topic => {
                     if (topic['scheme'] && topic.tag) {
                         for(let col of this.collectionOrder) {
@@ -440,19 +413,14 @@ export class TopicMidasComponent implements OnInit {
                                 }else if(this.topics[col].indexOf(topic) < 0) {
                                     this.topics[col].push(topic);
                                 }
+                            } else {
+                                this.otherTopics[topic.tag] = topic;
                             }
                         }
+                    } else {
+                        this.otherTopics[topic.tag] = topic;
                     }
                 });
-
-                //For old topic (under theme field)
-                // this.record[this.fieldName].forEach(topic => {
-                //     if(!this.topics["NIST"]) {
-                //             this.topics["NIST"] = [topic];
-                //         }else if(this.topics["NIST"].indexOf(topic) < 0) {
-                //             this.topics["NIST"].push(topic);
-                //         }
-                // });
             }
         }
 
@@ -486,97 +454,10 @@ export class TopicMidasComponent implements OnInit {
                 this.notificationService.showSuccessWithTimeout("Reverted changes to research topic.", "", 3000);
                 this.setMode(MODE.NORMAL);
                 this.updateResearchTopics();
-                // this.setBackground();
             } else{
                 let msg = "Failed to undo research topic";
                 console.error(msg);
             }
         });
     }
-
-    /**
-     * Function to Check if record has topics
-     */
-    // checkTopics() {
-    //     if (Array.isArray(this.record[this.fieldName])) {
-    //         if (this.record[this.fieldName].length > 0)
-    //             return true;
-    //         else
-    //             return false;
-    //     }
-    //     else {
-    //         return false;
-    //     }
-    // }
-
-    /**
-     * Set bubble color based on content
-     * @param topic 
-     */
-    // bubbleColor(topic) {
-    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-    //         return "#e6ecff";
-    //     }else{
-    //         return "#ededed";
-    //     }
-    // }
-
-    /**
-     * Set border for "More..." and "Less..." button when mouse over
-     * @param keyword 
-     * @returns 
-     */    
-    // borderStyle(topic) {
-    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-    //         if(this.hovered){
-    //             return "1px solid blue";
-    //         }else{
-    //             return "1px solid #ededed";
-    //         }
-    //     }else{
-    //         return "1px solid #ededed";
-    //     }
-    // }
-
-    /**
-     * Set cursor type for "More..." and "Less..." button
-     * @param topic 
-     * @returns 
-     */
-    // setCursor(topic) {
-    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-    //         return "pointer";
-    //     }else{
-    //         return "";
-    //     }
-    // }
-
-    // mouseEnter(topic) {
-    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-    //         this.hovered = true;
-    //     }
-    // }
-
-    // mouseOut(topic) {
-    //     if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-    //         this.hovered = false;
-    //     }
-    // }
-
-    /**
-     * Display short/long list based on which button was clicked.
-     * @param topic 
-     */
-    // topicClick(topic, collection) {
-    //     if(topic.tag == "Show more...") {
-    //         this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicLong[collection]));
-    //     }
-
-    //     if(topic.tag == "Show less...") {
-    //         this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicShort[collection]));
-    //     }
-
-    //     this.hovered = false;
-    // }
-
 }

@@ -583,6 +583,13 @@ export interface CollectionThemes {
     collectionSelectedThemesNode: any[];
 }
 
+export interface Topic {
+    tag: string;
+    label: string;
+    scheme: string;
+    count?: number; 
+}
+
 /**
  * A TreeNode that knows how to insert and update items from a data cart
  */
