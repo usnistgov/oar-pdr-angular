@@ -248,10 +248,10 @@ export class IspartofEditComponent {
                 this.mdupdsvc.delete(this.fieldName).then((updateSuccess) => {
                     if (updateSuccess) {
                         this.savedCollection = this.selectedCollection;
-                        this.notificationService.showSuccessWithTimeout("IsPartOf deleted.", "", 3000);
+                        this.notificationService.showSuccessWithTimeout("Collection removed successfully.", "", 3000);
                         this.setMode(MODE.NORMAL, refreshHelp);
                     } else {
-                        let msg = "IsPartOf deletion failed.";
+                        let msg = "Failed to remove collection.";
                         console.error(msg);
                     }
                 });
@@ -263,10 +263,10 @@ export class IspartofEditComponent {
                     if (updateSuccess){
                         this.dataChanged = false;
                         this.savedCollection = this.selectedCollection;
-                        this.notificationService.showSuccessWithTimeout("IsPartOf updated.", "", 3000);
+                        this.notificationService.showSuccessWithTimeout("Successfully updated.", "", 3000);
                         this.setMode(MODE.NORMAL, refreshHelp);
                     }else{
-                        let msg = "IsPartOf update failed.";
+                        let msg = "Update failed.";
                         console.error(msg);
                     }
                 });                
@@ -281,10 +281,10 @@ export class IspartofEditComponent {
         this.mdupdsvc.delete(this.fieldName).then((updateSuccess) => {
             if (updateSuccess){
                 this.selectedCollection = "None";
-                this.notificationService.showSuccessWithTimeout("IsPartOf deleted.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Successfully deleted.", "", 3000);
                 this.setMode(MODE.NORMAL, true);
             }else{
-                let msg = "IsPartOf delete failed.";
+                let msg = "Failed to remove collection.";
                 console.error(msg);
             }
         });

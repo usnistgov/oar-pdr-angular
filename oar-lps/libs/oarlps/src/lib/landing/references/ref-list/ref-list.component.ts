@@ -278,9 +278,9 @@ export class RefListComponent implements OnInit {
                     if (updateSuccess) {
                         if(this.isAdding){
                             ref["isNew"] = false;
-                            this.notificationService.showSuccessWithTimeout("Successfully added " + this.fieldName + ".", "", 3000);
+                            this.notificationService.showSuccessWithTimeout("Successfully added reference.", "", 3000);
                         } else {
-                            this.notificationService.showSuccessWithTimeout("Successfully updated " + this.fieldName + ".", "", 3000);
+                            this.notificationService.showSuccessWithTimeout("Successfully updated reference.", "", 3000);
                         }
                         ref.dataChanged = false;
                         this.chref.detectChanges();
@@ -298,11 +298,11 @@ export class RefListComponent implements OnInit {
                     updmd[this.fieldName] = this.record[this.fieldName];
                     this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                         if (updateSuccess){
-                            this.notificationService.showSuccessWithTimeout("Successfully updated " + this.fieldName + ".", "", 3000);
+                            this.notificationService.showSuccessWithTimeout("Successfully updated reference.", "", 3000);
                             this.chref.detectChanges();
                             resolve(true);
                         }else{
-                            let msg = this.fieldName + " update failed";
+                            let msg = "Reference update failed";
                             console.error(msg);
                             this.errMessage = msg;
                             resolve(false);
@@ -339,9 +339,9 @@ export class RefListComponent implements OnInit {
                     if (rec){
                         this.currentRef.dataChanged = false;
                         this.chref.detectChanges();
-                        this.notificationService.showSuccessWithTimeout("Successfully added " + this.fieldName + ".", "", 3000);
+                        this.notificationService.showSuccessWithTimeout("Successfully added reference.", "", 3000);
                     }else{
-                        let msg = "Failed to add " + this.fieldName;
+                        let msg = "Failed to add reference";
                         console.error(msg);
                         this.errMessage = msg;
                         return;
@@ -381,10 +381,10 @@ export class RefListComponent implements OnInit {
                     }
             
                     this.orderChanged = false;
-                    this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to reference.", "", 3000);
                     this.setMode(MODE.LIST);
                 }else{
-                    let msg = "Failed to undo " + this.fieldName + " metadata"
+                    let msg = "Failed to undo reference metadata"
                     console.error(msg);
                     this.errMessage = msg;
                     return;

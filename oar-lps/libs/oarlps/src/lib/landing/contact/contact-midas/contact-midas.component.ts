@@ -377,7 +377,7 @@ export class ContactMidasComponent {
             if (success){
                 this.setMode();
                 this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to contacts.", "", 3000);
             }else{
                 let msg = "Failed to restore original value."
                 console.error(msg);

@@ -213,7 +213,7 @@ export class DescEditComponent {
                 if (updateSuccess){
                     this.setBackground(this.description);
                     this.setMode(MODE.NORMAL, refreshHelp);
-                    this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
+                    this.notificationService.showSuccessWithTimeout("Description updated.", "", 3000);
                     this.isEditing = false;
                 }else{
                     let msg = "Description update failued";
@@ -284,9 +284,9 @@ export class DescEditComponent {
             if (success){
                 this.setMode(MODE.NORMAL);
                 this.setBackground(this.description);
-                this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to description.", "", 3000);
             }else{
-                let msg = "Failed to undo " + this.fieldName + " metadata";
+                let msg = "Failed to undo description metadata";
                 console.error(msg);
             }
         });
