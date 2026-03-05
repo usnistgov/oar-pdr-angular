@@ -16,6 +16,7 @@
     height: 35px;
     background-color:var(--nist-green-default);
     color:white;
+    margin-right: 1em;
 }
 
 .btn-label {
