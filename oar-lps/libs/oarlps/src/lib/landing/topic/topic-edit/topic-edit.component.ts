@@ -130,10 +130,14 @@ export class TopicEditComponent implements OnInit {
         *   build taxonomy tree
         */
     buildTaxonomyTree(result: any) {
-        let allTaxonomy: any = result;
+        // filter out deprecated topics
+        let allTaxonomy = result.filter(topic => {
+            return topic.deprecatedSince === undefined || topic.deprecatedSince === null || topic.deprecatedSince === "";
+        });
+
         var tempTaxonomyTree = {}
-        if (result != null && result != undefined) {
-            tempTaxonomyTree["data"] = this.arrangeIntoTaxonomyTree(result);
+        if (allTaxonomy != null && allTaxonomy != undefined) {
+            tempTaxonomyTree["data"] = this.arrangeIntoTaxonomyTree(allTaxonomy);
             this.taxonomyTree.push(tempTaxonomyTree);
         }
 
@@ -160,7 +164,7 @@ export class TopicEditComponent implements OnInit {
                     let tempId: string = '';
                     for (var k = 0; k < j + 1; k++) {
                         tempId = tempId + pathParts[k].trim();
-                        
+
                         if (k < j) {
                             tempId = tempId + ": ";
                         }
