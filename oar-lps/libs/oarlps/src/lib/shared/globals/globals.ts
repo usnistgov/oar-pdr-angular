@@ -584,10 +584,10 @@ export interface CollectionThemes {
 }
 
 export interface Topic {
+    id: number;
     tag: string;
-    label: string;
     scheme: string;
-    count?: number; 
+    '@type': string;
 }
 
 /**

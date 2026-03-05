@@ -159,8 +159,8 @@ export class TopicEditComponent implements OnInit {
                 for (var j = 0; j < pathParts.length; j++) {
                     let tempId: string = '';
                     for (var k = 0; k < j + 1; k++) {
-                        tempId = tempId + pathParts[k];
-                        // tempId = tempId + pathParts[k].replace(/ /g, "");
+                        tempId = tempId + pathParts[k].trim();
+                        
                         if (k < j) {
                             tempId = tempId + ": ";
                         }
@@ -239,7 +239,11 @@ export class TopicEditComponent implements OnInit {
         if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
             //Need to create a topic object before push
             this.selectedTopics.push(
-                {"tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
+                {
+                    "tag": rowNode.node.data.researchTopic,
+                    "scheme": this.scheme,
+                    "@type": 'Concept'
+                });
 
             // this.selectedTopics.push(rowNode.node.data.researchTopic);
     

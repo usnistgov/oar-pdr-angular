@@ -62,7 +62,7 @@ export class TopicMidasComponent implements OnInit {
     // this is for the case when there are multiple topic collections 
     // and user only want to edit one collection, 
     // we need to keep the other collections unchanged.
-    otherTopics: Topic = {} as Topic;  
+    otherTopics: Topic[] = [];  
 
     //For display
     topicBreakPoint: number = 5;
@@ -257,18 +257,18 @@ export class TopicMidasComponent implements OnInit {
         for (let collection of this.collectionOrder) {
             if (inputTopics[collection] && inputTopics[collection].length > 0) {
                 for (let topic of inputTopics[collection]) {
+                    delete topic.id;
                     topics.push(topic);
                 }
             }
         }
 
         //Restore the topics that are not in the main collections, such as those without scheme or with other schemes.
-        if(this.otherTopics) {
-            for(let key in this.otherTopics) {
-                if(this.otherTopics[key] && this.otherTopics[key].tag) {
-                    topics.push(this.otherTopics[key]);
-                }
-            }
+        if (this.otherTopics.length > 0) {
+            this.otherTopics.forEach((topic) => {
+                delete topic.id;
+                topics.push(topic);
+            });
         }
 
         return topics;
@@ -401,10 +401,14 @@ export class TopicMidasComponent implements OnInit {
      * Update the research topic lists
      */
     updateResearchTopics() {
+        let originalTopics = [];
         this.topics = {};
+        let counter = 0;
         if(this.record) {
             if (this.record[this.fieldName]) {
                 this.record[this.fieldName].forEach(topic => {
+                    topic["id"] = counter++;
+                    originalTopics.push(topic);
                     if (topic['scheme'] && topic.tag) {
                         for(let col of this.collectionOrder) {
                             if(topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
@@ -413,15 +417,21 @@ export class TopicMidasComponent implements OnInit {
                                 }else if(this.topics[col].indexOf(topic) < 0) {
                                     this.topics[col].push(topic);
                                 }
-                            } else {
-                                this.otherTopics[topic.tag] = topic;
                             }
                         }
-                    } else {
-                        this.otherTopics[topic.tag] = topic;
-                    }
+                    } 
                 });
             }
+
+            // Get the topics that do not belong to main collections, such as those without scheme or with other schemes.
+
+            for (let col of this.collectionOrder) {
+                if(this.topics[col] && this.topics[col].length > 0) {
+                    const idsToRemove = new Set(this.topics[col].map(item => item.id));
+                    originalTopics = originalTopics.filter(item => !idsToRemove.has(item.id));
+                }
+            }
+            this.otherTopics = originalTopics;
         }
 
         //For display
