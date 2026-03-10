@@ -3,48 +3,52 @@
         "tag": "NIST R&D",
         "bannerUrl": "",
         "id":"",
-        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/",
+        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes/v1.1",
         "colorPalette": "Green",
         "displayOrder": 4,
         "landingPage": true,
         "displayName": "NIST",
+        "theme": "default",        
         "value": "NIST",
-        "theme": "default"
+        "taxonomyFileName": "default-taxonomy.json"
     },
     "Forensics": {
         "tag": "Forensics",
         "bannerUrl": "assets/images/fingerprint.jpg",
         "id":"pdr0-0001",
-        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-forensics/",
+        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
         "colorPalette": "Cyan",
         "displayOrder": 2,
         "landingPage": true,
         "displayName": "Forensics",
         "value": "Forensics",
-        "theme": "ScienceTheme"
+        "theme": "ScienceTheme",
+        "taxonomyFileName": "forensics-taxonomy.json"
     },
     "Semiconductors": {
         "tag": "CHIPS Metrology",
         "bannerUrl": "assets/images/METIS-Banner-Op1.png",
         "id":"pdr0-0002",
-        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/",
+        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
         "colorPalette": "Blue",
         "displayOrder": 1,
         "landingPage": true,
         "displayName": "Chips Metrology (METIS)",
+        "theme": "ScienceTheme",
         "value": "Metrology",
-        "theme": "ScienceTheme"
+        "taxonomyFileName": "chipsmetrology-taxonomy.json"
     },
     "AM": {
         "tag": "Additive Manufacturing",
         "bannerUrl": "assets/images/AM_Banner3.jpg",
         "id":"pdr0-0003",
-        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/",
+        "taxonomyURI": "https://data.nist.gov/od/dm/nist-themes-additivemanufacturing/v1.0",
         "colorPalette": "LightBlue",
         "displayOrder": 3,
         "landingPage": true,
         "displayName": "Additive Manufacturing",
+        "theme": "ScienceTheme",
         "value": "AdditiveManufacturing",
-        "theme": "ScienceTheme"
+        "taxonomyFileName": "AM_taxonomy.json"
     }      
 }

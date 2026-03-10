@@ -244,7 +244,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
 
-        this.collectionData = require('../../assets/site-constants/collections.json');
+        this.collectionData = require('../../assets/collection/collections.json');
         this.collectionService.setCollectionData(this.collectionData);
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
@@ -285,7 +285,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let colorPalette: any;
         let cp: any;
 
-        const colorPalettes: any = require('../../assets/site-constants/color-palettes.json');
+        const colorPalettes: any = require('../../assets/collection/color-palettes.json');
         if (this.collectionData && this.collectionData[this.collection]) {
             cp = colorPalettes[this.collectionData[this.collection].colorPalette]
             colorPalette = cp ? cp : colorPalettes[Collections.DEFAULT];
@@ -298,7 +298,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     loadBannerUrl() {
-        // const CollectionData1: any  = require('../../assets/site-constants/collections.json');
+        // const CollectionData1: any  = require('../../assets/collection/collections.json');
         this.collectionObj = this.collectionData[this.collection] as any;
 
         this.imageURL = this.collectionObj.bannerUrl;
