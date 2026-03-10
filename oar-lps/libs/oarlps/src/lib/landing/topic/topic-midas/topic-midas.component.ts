@@ -48,13 +48,13 @@ export class TopicMidasComponent implements OnInit {
     recordType: string = "";
 
     //NIST Taxonomy URI si defined in /assets/collection/collections.json
-    standardNISTTaxonomyURI: string = "https://data.nist.gov/od/dm/nist-themes/v1.1";
+    standardNISTTaxonomyURI: string = "https://data.nist.gov/od/dm/nist-themes/v2.0";
     allCollections: any = {};
     //  Array to define the collection order
     collectionOrder: string[] = [Collections.DEFAULT];
     collection: string;
     editCollection: string; //parameter pass to the edit component
-    editScheme: string = "https://data.nist.gov/od/dm/nist-themes/v1.1"; //current topic scheme pass to the edit component
+    editScheme: string = "https://data.nist.gov/od/dm/nist-themes/v2.0"; //current topic scheme pass to the edit component
     topics: any = {};
     originalTopics: any = {};   //For undo purpose
 
