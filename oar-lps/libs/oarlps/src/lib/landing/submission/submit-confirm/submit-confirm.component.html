@@ -33,14 +33,14 @@
     
             <div *ngIf="showSuggestion" class="statement">
                 <div class="statement">
-                    <div *ngIf="hasRequiredItems; else recommend">
+                    @if(hasRequiredItems) {
                         We have reviewed your draft. There are required items to be finished. Please go back and re-edit:
-                    </div>
-                    <ng-template #recommend>
-                        We have reviewed your draft. The following are the items we recommend. You can choose continue
-                        submitting or cancel
-                        submit and go back to edit:
-                    </ng-template>
+                    } @else if(hasWarnItems) {
+                        We have reviewed your draft and found some warnings to consider. To address the warnings, selelct "Back to Edit". To
+                        ignore warnings and continue with submission, choose "Proceed with Submission".
+                    } @else {
+                        We have reviewed your draft and found no required items or warnings. 
+                    }
                 </div>
     
                 <div class="suggestion-details">
@@ -56,12 +56,12 @@
                         </suggestions>
                     </div>
     
-                    <div *ngIf="hasRecommendedItems">
+                    <!-- <div *ngIf="hasRecommendedItems">
                         <suggestions suggestionLabel="The following items are recommended"
                             [suggestions]="suggestions['rec']" showSug="true" textOnly="true"
                             (gotoSectionName)="gotoSection($event)">
                         </suggestions>
-                    </div>
+                    </div> -->
                 </div>
     
                 <div style="font-weight: bold; margin: .5em 0em;">Notes to reviewers:</div>
@@ -123,6 +123,7 @@
                                         class="autocomplete-input" 
                                         type="text" 
                                         pInputText 
+                                        [placeholder]="placeHolderText"
                                         name="peopleSearch" 
                                         [(ngModel)]="query"
                                         (input)="set_suggestions($event)"

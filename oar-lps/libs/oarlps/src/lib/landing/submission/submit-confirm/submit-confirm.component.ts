@@ -109,6 +109,7 @@ export class SubmitConfirmComponent implements OnInit {
     // Fro people service
     showDropdown = false;
     minPromptLength = 2;
+    placeHolderText: string;
 
     // the index we will download after the first minPromptLength (2) characters are typed
     index: SDSIndex|null = null;
@@ -125,9 +126,6 @@ export class SubmitConfirmComponent implements OnInit {
 
     // the organizations that the selected person is a member of
     selectedOrgs: any[]|null = null;
-
-    placeHolderText: string;
-
 
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
     @ViewChild('container') container!: ElementRef;
