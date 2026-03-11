@@ -289,8 +289,10 @@ export class AuthorListComponent implements OnInit {
                         this.setMode(MODE.NORMAL, refreshHelp);
                     else
                         this.setMode(MODE.LIST, refreshHelp);
+
+                    this.notificationService.showSuccessWithTimeout("Author added.", "", 3000);
                 }else{
-                    let msg = "Failed to add author";
+                    let msg = "Failed to add author.";
                     console.error(msg);
                     return;
                 }
@@ -304,6 +306,9 @@ export class AuthorListComponent implements OnInit {
                         else
                             this.setMode(MODE.LIST, refreshHelp);
                         // this.chref.detectChanges();
+                        
+                        this.notificationService.showSuccessWithTimeout("Author updated.", "", 3000);
+
                     }else{
                         let msg = "Update failed";
                         console.error(msg);
@@ -376,11 +381,11 @@ export class AuthorListComponent implements OnInit {
                 this.setMode(MODE.NORMAL, true);
                 this.orderChanged = false;
                 this.forceReset = true;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to authors.", "", 3000);
                 // this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
                 this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
             }else{
-                let msg = "Failed to undo keywords metadata";
+                let msg = "Failed to undo author's metadata";
                 console.error(msg);   
             }
                 

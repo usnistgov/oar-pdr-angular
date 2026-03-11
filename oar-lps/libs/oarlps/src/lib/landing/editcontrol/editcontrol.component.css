@@ -147,6 +147,12 @@
     float: right;
 }
 
+#ec-info-btn-sm {
+    margin: 10px 0em auto 0.2em;
+    font-size: 15px;
+    cursor: pointer;
+}
+
 .fileDialog {
     z-index: 999;
 }

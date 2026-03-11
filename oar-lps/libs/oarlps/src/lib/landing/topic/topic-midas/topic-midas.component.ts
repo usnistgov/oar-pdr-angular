@@ -224,7 +224,7 @@ export class TopicMidasComponent implements OnInit {
                 this.updateResearchTopics();
                 this.setMode(MODE.NORMAL,refreshHelp);
             } else
-                console.error("acknowledge topic update failure");
+                console.error("Topic update failed.");
         });
 
         this.dataChanged = false;
@@ -349,10 +349,10 @@ export class TopicMidasComponent implements OnInit {
         this.mdupdsvc.undo(this.fieldName+"-"+collection, null, null, this.restoreTopics(this.topics)).then((success) => {
             if (success){
                 this.dataChanged = false;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to topics.", "", 3000);
                 this.setMode();
             }else
-                console.error("Failed to undo landingpage metadata")
+                console.error("Failed to undo topic metadata")
         });
     }
 
@@ -461,11 +461,11 @@ export class TopicMidasComponent implements OnInit {
     undoEditing() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success) {
-                this.notificationService.showSuccessWithTimeout("Reverted changes to research topic.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to research topics.", "", 3000);
                 this.setMode(MODE.NORMAL);
                 this.updateResearchTopics();
             } else{
-                let msg = "Failed to undo research topic";
+                let msg = "Failed to undo research topics metadata";
                 console.error(msg);
             }
         });

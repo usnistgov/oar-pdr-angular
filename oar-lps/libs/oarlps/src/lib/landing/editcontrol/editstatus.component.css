@@ -10,3 +10,12 @@
 .ec-status-spinner {
     color: rgb(22, 20, 59);
 }
+
+.badge {
+    color: #ffffff;
+    background-color: var(--nist-green-default);
+    padding: 2px 8px;
+    margin: 4px 5px 0px 0px;
+    border-radius: 20px;
+    float: right;
+}

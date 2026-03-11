@@ -231,9 +231,9 @@ export class VisithomeMidasComponent {
             if (updateSuccess){
                 this.setMode(MODE.NORMAL, refreshHelp);
                 this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout(this.fieldName + " updated.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Visit Home URL updated.", "", 3000);
             }else{
-                let msg = "Updating " + this.fieldName + " failed.";
+                let msg = "failed to update Visit Home URL.";
                 console.error(msg);
             }
         });        
@@ -333,9 +333,9 @@ export class VisithomeMidasComponent {
                 this.setMode();
                 this.chref.detectChanges();
                 this.visitHomeEdit.currentValueChanged = false;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to landingpage.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to Visit Home URL.", "", 3000);
             }else{
-                let msg = "Failed to undo landingpage metadata";
+                let msg = "Failed to undo Visit Home URL metadata";
                 console.error(msg);
             }
         });
