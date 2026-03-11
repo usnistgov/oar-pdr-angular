@@ -325,9 +325,9 @@ export class AccesspageMidasComponent {
                     // });
 
                     this.setMode(MODE.NORMAL);
-                    this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to access page.", "", 3000);
                 }else{
-                    let msg = "Failed to undo " + this.fieldName + " metadata";
+                    let msg = "Failed to undo access page metadata";
                     console.error(msg);
                     return;
                 }

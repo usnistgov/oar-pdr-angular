@@ -7,7 +7,11 @@
             <span *ngIf="message" style="border: 1px solid white; color: white;cursor: pointer;" (click)="message=''"><i class="fas fa-times"></i></span>
             {{currentMode}}
             <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" class="splitter1"> | </span>
-            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" id="submitted">{{mdupdsvc.recStatus.state}}</span>
+            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" id="submitted">
+                {{mdupdsvc.recStatus.state}}
+                <i class="fas fa-info-circle" id="ec-info-btn-sm" (click)="toogleMessage()" data-toggle="tooltip"
+                    title="Show message"></i>
+            </span>
         </div>
 
         <div *ngIf="screenWidth <= screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE" style="color: white; float: left; margin: 0.5em .5em 0em 1em; font-size: 15px;" [ngbTooltip]="editModeTooltip">
@@ -147,7 +151,7 @@
 
 <!-- status message bar -->
  <div id="statusbar">
-    <pdr-edit-status [(mdrec)]="mdrec"></pdr-edit-status>
+    <pdr-edit-status [(mdrec)]="mdrec" [forceDisplay]="forceDisplay"></pdr-edit-status>
  </div>
 
 

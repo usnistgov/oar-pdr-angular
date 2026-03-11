@@ -227,9 +227,9 @@ export class AuthorMidasComponent {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
             if (success){
                 this.setMode();
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to authors.", "", 3000);
             }else
-                console.error("Failed to undo keywords metadata");
+                console.error("Failed to undo author's metadata");
         });
     }
 

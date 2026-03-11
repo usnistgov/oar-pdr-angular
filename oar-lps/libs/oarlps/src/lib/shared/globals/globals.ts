@@ -557,15 +557,21 @@ export class Collections {
 export class CollectionDisplay {
     static readonly DEFAULT = 'NIST';
     static readonly FORENSICS = 'Forensics';
-    static readonly SEMICONDUCTORS = 'CHIPS Metrology Data';
+    static readonly SEMICONDUCTORS = 'CHIPS METIS Data';
     static readonly AM = 'Additive Manufacturing';
 }
 
 export class Collection {
+    id: string;
+    tag: string;
     bannerUrl: string;
     taxonomyURI: string;
-    color: ColorScheme;
+    colorPalette: ColorScheme;
+    displayOrder: number;
+    displayName: string;
+    value: string;
     theme: CollectionThemes;
+    taxonomyFileName: string;
 }
 
 export interface ColorScheme {
@@ -585,6 +591,13 @@ export interface CollectionThemes {
     collectionThemesTree: FilterTreeNode[];
     collectionShowMoreLink: boolean;
     collectionSelectedThemesNode: any[];
+}
+
+export interface Topic {
+    id: number;
+    tag: string;
+    scheme: string;
+    '@type': string;
 }
 
 /**

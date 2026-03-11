@@ -41,9 +41,9 @@ export class EditStatusComponent implements OnInit {
     _editmode: string;
     contentStatusColer: string = "var(--nist-green-default);"
     resourceType: string = "resource";
-    showMsg: boolean = true;
 
     @Input() mdrec: NerdmRes;
+    @Input() forceDisplay: boolean = false;  // if true, display the message even if there is no update details. This is used to display a message when the record is in outside-midas mode and there is no update details.
 
     /**
      * construct the component
@@ -114,9 +114,32 @@ export class EditStatusComponent implements OnInit {
     ngOnChanges(changes: SimpleChanges): void {
         //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
         //Add '${implements OnChanges}' to the class.
-        if(this.mdrec) this.setContentStatusColor(this.mdrec);
+        if (this.mdrec) this.setContentStatusColor(this.mdrec);
     }
     
+    get action() {
+        if (this.mdupdsvc.recStatus.published) {
+                return "Published";
+        } else if (this.mdupdsvc.recStatus.submitted) {
+            return "Submitted";
+        } else if (this._updateDetails && this._updateDetails._updateDate) { // _updateDate is either the date of last edit or last save, depending on the status of the record
+            return "Saved";
+        } else {
+            return "";
+        }      
+    }
+
+    get user() {
+        let user = "Unknown user";
+        if (this.updateDetails) {
+            if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userName)
+                user = this.updateDetails.userAttributes.userName;
+            if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userLastName)
+                user = user + " " + this.updateDetails.userAttributes.userLastName;  
+        }
+        return user;
+    }
+
     public setContentStatusColor(record: NerdmRes) {
         let required: boolean = false;
         let recommended: boolean = false;
@@ -178,7 +201,7 @@ export class EditStatusComponent implements OnInit {
     public showMessage(msg : string, inprogress : boolean = false, color : string = "black") {
         this.message = msg;
         this.messageColor = color;
-        this._isProcessing = inprogress;
+        this._isProcessing = inprogress;     
     }
 
     /**
@@ -189,21 +212,16 @@ export class EditStatusComponent implements OnInit {
         case this.EDIT_MODES.EDIT_MODE:
               // We are editing the metadata (and are logged in)
             if (this.updateDetails){
-                let user = "Unknown user";
-                if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userName)
-                    user = this.updateDetails.userAttributes.userName;
-                if(this.updateDetails.userAttributes && this.updateDetails.userAttributes.userLastName)
-                    user = user + " " + this.updateDetails.userAttributes.userLastName;
-
                 // Check if this record has been edited or published
                
                 let message = "";
                 if (this.mdupdsvc.recStatus.published) {
-                    message = "Published by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.published * 1000), "MMM d, y, h:mm:ss a"));
+                    // message = "by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.published * 1000), "MMM d, y, h:mm:ss a"));
+                    message = "by " + this.user + " on " + new Date(this.mdupdsvc.recStatus.published * 1000).toLocaleString();
                 } else if (this.mdupdsvc.recStatus.submitted) {
-                    message = "Submitted by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.submitted * 1000), "MMM d, y, h:mm:ss a"));
-                } else if (this.mdupdsvc.recStatus.modified) {
-                    message = "Edited by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.modified * 1000), "MMM d, y, h:mm:ss a"));
+                    message = "by " + this.user + " on " + new Date(this.mdupdsvc.recStatus.submitted * 1000).toLocaleString();
+                } else if (this._updateDetails._updateDate) { // _updateDate is either the date of last edit or last save, depending on the status of the record
+                    message = "by " + this.user + " on " + this._updateDetails._updateDate;
                 }
 
                 this.showMessage(message);
@@ -211,11 +229,21 @@ export class EditStatusComponent implements OnInit {
                 this.showMessage('');
           break;
         case this.EDIT_MODES.PREVIEW_MODE:
-            if (this.updateDetails)
-                this.showMessage("There are un-submitted changes last edited on " + this.updateDetails._updateDate + ".  Click on the Edit button to continue editing.", 
-                false, "rgb(255, 115, 0)");
-            else
+              if (this.updateDetails) {
+                  if (this.mdupdsvc.recStatus.published) {
+                        this.showMessage("There are un-submitted changes last edited on " + this.updateDetails._updateDate + ".  Click on the Revise Record button to continue editing.",
+                            false, "rgb(255, 115, 0)");
+                    } else if(this.mdupdsvc.recStatus.submitted) {
+                        this.showMessage("by " + this.user + " on " + new Date(this.mdupdsvc.recStatus.submitted * 1000).toLocaleString(),
+                            false, "rgb(255, 115, 0)");
+                    } else {
+                        this.showMessage("There are un-submitted changes last edited on " + this.updateDetails._updateDate + ".  Click on the Edit button to continue editing.",
+                            false, "rgb(255, 115, 0)");
+                    }
+
+              } else{
                 this.showMessage('To see any previously edited inputs or to otherwise edit this page, click on the "Edit" button.');
+              }
           break;   
         case this.EDIT_MODES.DONE_MODE:
             this.showMessage('');

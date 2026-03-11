@@ -22,7 +22,11 @@ import {
 } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+<<<<<<< submit-close
 import { SubmitConfirmComponent } from '../submission/submit-confirm/submit-confirm.component';
+=======
+import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
+>>>>>>> integration
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ButtonModule } from 'primeng/button';
@@ -80,11 +84,11 @@ export class EditControlComponent implements OnInit, OnChanges {
     mobileMode: boolean = false;
     modalRef: any; // For submit pop up
     collection: string;
-    collectionObj: any;
     message: string = "test";
     cred: Credentials = null;
     authorized: boolean = false;
     collectionData: any;
+    forceDisplay: boolean = false;
 
     suggestions: ReviewResponse = {} as ReviewResponse;
     revisionStarted: boolean = false;
@@ -876,4 +880,8 @@ export class EditControlComponent implements OnInit, OnChanges {
 
         this.lpService.setSectionHelp(sectionHelp);
     }    
+
+    toogleMessage() {
+        this.forceDisplay = !this.forceDisplay;
+    }
 }

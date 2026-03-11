@@ -18,7 +18,6 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
-import CollectionData from '../../assets/site-constants/collections.json';
 import { CommonModule } from '@angular/common';
 import { DownloadStatusModule, SearchresultModule, DoneModule, LandingpageService } from 'oarlps';
 import { MetricsinfoComponent, MessageBarComponent, SidebarComponent, CitationPopupComponent,
@@ -255,7 +254,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
 
-        this.collectionData = require('../../assets/site-constants/collections.json');
+        this.collectionData = require('../../assets/collection/collections.json');
         this.collectionService.setCollectionData(this.collectionData);
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
@@ -350,7 +349,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let colorPalette: any;
         let cp: any;
 
-        const colorPalettes: any = require('../../assets/site-constants/color-palettes.json');
+        const colorPalettes: any = require('../../assets/collection/color-palettes.json');
         if (this.collectionData && this.collectionData[this.collection]) {
             cp = colorPalettes[this.collectionData[this.collection].colorPalette]
             colorPalette = cp ? cp : colorPalettes[Collections.DEFAULT];

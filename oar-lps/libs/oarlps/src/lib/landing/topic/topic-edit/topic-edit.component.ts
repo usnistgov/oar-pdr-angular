@@ -13,6 +13,7 @@ import { ButtonModule } from 'primeng/button';
 import { TreeTableModule } from 'primeng/treetable';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { CollectionService } from '../../../shared/collection-service/collection.service';
 
 export const ROW_COLOR = '#1E6BA1';
 
@@ -42,6 +43,7 @@ export class TopicEditComponent implements OnInit {
     taxonomyTree: TreeNode[] = [];
     toggle: Boolean = true;  
     originalSelectedTopicsTopics: any[] = [];
+    collectionData: any;
     // selectedTopics: any[] = [];
 
     //icon class names
@@ -63,14 +65,14 @@ export class TopicEditComponent implements OnInit {
 
 
     constructor(public mdupdsvc: MetadataUpdateService,
-                private taxonomyListService: TaxonomyListService,
+        private taxonomyListService: TaxonomyListService,
+                public collectionService: CollectionService,
                 private msgsvc: UserMessageService) { }
 
     ngOnInit(): void {
-        //Clone this.nistTaxonomyTopics
-        // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
-
-        this.taxonomyListService.get(0).subscribe((result) => {
+        this.collectionData = this.collectionService.getCollectionData();
+        
+        this.taxonomyListService.get(this.collection, 0).subscribe((result) => {
             if (result != null && result != undefined)
                 this.buildTaxonomyTree(result);
     
@@ -128,10 +130,14 @@ export class TopicEditComponent implements OnInit {
         *   build taxonomy tree
         */
     buildTaxonomyTree(result: any) {
-        let allTaxonomy: any = result;
+        // filter out deprecated topics
+        let allTaxonomy = result.filter(topic => {
+            return topic.deprecatedSince === undefined || topic.deprecatedSince === null || topic.deprecatedSince === "";
+        });
+
         var tempTaxonomyTree = {}
-        if (result != null && result != undefined) {
-            tempTaxonomyTree["data"] = this.arrangeIntoTaxonomyTree(result);
+        if (allTaxonomy != null && allTaxonomy != undefined) {
+            tempTaxonomyTree["data"] = this.arrangeIntoTaxonomyTree(allTaxonomy);
             this.taxonomyTree.push(tempTaxonomyTree);
         }
 
@@ -157,8 +163,8 @@ export class TopicEditComponent implements OnInit {
                 for (var j = 0; j < pathParts.length; j++) {
                     let tempId: string = '';
                     for (var k = 0; k < j + 1; k++) {
-                        tempId = tempId + pathParts[k];
-                        // tempId = tempId + pathParts[k].replace(/ /g, "");
+                        tempId = tempId + pathParts[k].trim();
+
                         if (k < j) {
                             tempId = tempId + ": ";
                         }
@@ -237,7 +243,11 @@ export class TopicEditComponent implements OnInit {
         if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
             //Need to create a topic object before push
             this.selectedTopics.push(
-                {"tag": rowNode.node.data.researchTopic, "scheme": this.scheme} );
+                {
+                    "tag": rowNode.node.data.researchTopic,
+                    "scheme": this.scheme,
+                    "@type": 'Concept'
+                });
 
             // this.selectedTopics.push(rowNode.node.data.researchTopic);
     

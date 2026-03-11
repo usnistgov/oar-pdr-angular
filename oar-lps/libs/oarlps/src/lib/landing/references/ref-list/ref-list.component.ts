@@ -20,7 +20,6 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'lib-ref-list',
@@ -87,8 +86,7 @@ export class RefListComponent implements OnInit {
         private modalService: NgbModal,  
         private notificationService: NotificationService,
         private chref: ChangeDetectorRef,  
-        public lpService: LandingpageService,
-        private toastrService: ToastrService) { 
+        public lpService: LandingpageService) { 
 
     }
 
@@ -280,9 +278,9 @@ export class RefListComponent implements OnInit {
                     if (updateSuccess) {
                         if(this.isAdding){
                             ref["isNew"] = false;
-                            this.toastrService.success("Reference added successfully.");
+                            this.notificationService.showSuccessWithTimeout("Successfully added reference.", "", 3000);
                         } else {
-                            this.toastrService.success("Reference updated successfully.");  
+                            this.notificationService.showSuccessWithTimeout("Successfully updated reference.", "", 3000);
                         }
                         ref.dataChanged = false;
                         this.chref.detectChanges();
@@ -300,11 +298,11 @@ export class RefListComponent implements OnInit {
                     updmd[this.fieldName] = this.record[this.fieldName];
                     this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                         if (updateSuccess){
-                            this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                            this.notificationService.showSuccessWithTimeout("Successfully updated reference.", "", 3000);
                             this.chref.detectChanges();
                             resolve(true);
                         }else{
-                            let msg = "References update failed";
+                            let msg = "Reference update failed";
                             console.error(msg);
                             this.errMessage = msg;
                             resolve(false);
@@ -341,7 +339,7 @@ export class RefListComponent implements OnInit {
                     if (rec){
                         this.currentRef.dataChanged = false;
                         this.chref.detectChanges();
-                        this.toastrService.success("Reference added successfully.");
+                        this.notificationService.showSuccessWithTimeout("Successfully added reference.", "", 3000);
                     }else{
                         let msg = "Failed to add reference";
                         console.error(msg);
@@ -383,10 +381,10 @@ export class RefListComponent implements OnInit {
                     }
             
                     this.orderChanged = false;
-                    this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to reference.", "", 3000);
                     this.setMode(MODE.LIST);
                 }else{
-                    let msg = "Failed to undo " + this.fieldName + " metadata"
+                    let msg = "Failed to undo reference metadata"
                     console.error(msg);
                     this.errMessage = msg;
                     return;
