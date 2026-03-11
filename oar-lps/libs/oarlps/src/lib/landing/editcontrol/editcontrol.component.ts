@@ -22,11 +22,7 @@ import {
 } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-<<<<<<< submit-close
 import { SubmitConfirmComponent } from '../submission/submit-confirm/submit-confirm.component';
-=======
-import { SubmitConfirmComponent } from './submit-confirm/submit-confirm.component';
->>>>>>> integration
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ButtonModule } from 'primeng/button';
