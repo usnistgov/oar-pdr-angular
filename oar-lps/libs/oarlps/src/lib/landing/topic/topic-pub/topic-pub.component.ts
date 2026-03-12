@@ -193,8 +193,18 @@ export class TopicPubComponent implements AfterContentInit {
             if (this.record[this.fieldName]) {
                 this.record[this.fieldName].forEach(topic => {
                     if (topic['scheme'] && topic.tag) {
-                        for(let col of this.collectionOrder) {
-                            if(topic['scheme'] && topic['scheme'].indexOf(this.allCollections[col].taxonomyURI) >= 0){
+                        for (let col of this.collectionOrder) {
+                            //Check if the topic scheme contains the collection taxonomy URI. If so, assign the topic to the collection.
+                            //Remove the version number in the URI to make sure the topic is still displayed when the taxonomy is updated to a new version.
+                            //The taxonomyURI must have the version number at the end of the URI and separated by a "/" for this to work.
+                            //Remove ending "/" if any for the comparison.
+                            let URI2Compare = this.allCollections[col].taxonomyURI;
+                            if(URI2Compare[URI2Compare.length - 1] == "/") {
+                                URI2Compare = URI2Compare.substring(0, URI2Compare.length - 1);
+                            }
+
+                            let URI_without_version = URI2Compare.substring(0, URI2Compare.lastIndexOf("/"));
+                            if(topic['scheme'] && topic['scheme'].substring(0, topic['scheme'].lastIndexOf("/")) == URI_without_version){
                                 if(!this.topics[col]) {
                                     this.topics[col] = [topic];
                                 }else if(this.topics[col].indexOf(topic) < 0) {

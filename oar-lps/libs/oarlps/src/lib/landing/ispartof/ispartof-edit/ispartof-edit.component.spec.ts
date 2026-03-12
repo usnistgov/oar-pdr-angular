@@ -12,6 +12,8 @@ import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { environment } from '../../../../environments/environment-impl';
 import { ToastrModule } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('IspartofEditComponent', () => {
     let component: IspartofEditComponent;
@@ -30,6 +32,8 @@ describe('IspartofEditComponent', () => {
         UserMessageService, 
         HttpHandler,
         DatePipe,
+        provideHttpClient(),
+        provideHttpClientTesting(),
         { provide: AppConfig, useValue: cfg },
         { provide: AuthService, useValue: authsvc },
         { provide: DAPService, useFactory: createDAPService, 

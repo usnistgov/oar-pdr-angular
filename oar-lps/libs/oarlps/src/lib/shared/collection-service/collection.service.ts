@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class CollectionService {
     allCollections: any = null;
     collectionData: any = null;
 
-    constructor() {
+    constructor(private http: HttpClient) {
     }
 
     serviceInit() {
@@ -80,6 +82,10 @@ export class CollectionService {
             return Object.assign(new Collection(), this.collectionData[Collections.DEFAULT]);  
     }
 
+    public loadCollectionFromJson(): Observable<any> {
+        return this.http.get('./assets/collection/collections.json');
+    }
+
     public setCollectionData(data: any) {
         this.collectionData = data;
         this.serviceInit();
@@ -102,4 +108,9 @@ export class CollectionService {
             }
         }
     }
+
+    public loadColorPalettesFromJson(): Observable<any> {
+        return this.http.get('./assets/collection/color-palettes.json');
+    }
+
 }
