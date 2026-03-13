@@ -247,8 +247,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.collectionService.loadCollectionFromJson().subscribe({
             next: (data) => {
                 this.collectionData = data;
-
-                this.collectionService.setCollectionData(this.collectionData);
                 this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
                 this.getCollection();
                 this.loadBannerUrl();
@@ -346,7 +344,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.arrRevisionTypes = REVISION_TYPES["default"];
         this.recordLevelMetrics = new RecordLevelMetrics();
         this.displaySpecialMessage = false;
-        this.CART_ACTIONS = CartActions.cartActions;
+        this.CART_ACTIONS = CartActions.cartActions;             
 
         if(this.inBrowser){
             this.cartChangeHandler = this.cartChanged.bind(this);

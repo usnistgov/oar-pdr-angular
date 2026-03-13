@@ -257,8 +257,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.collectionService.loadCollectionFromJson().subscribe({
             next: (data) => {
                 this.collectionData = data;
-
-                this.collectionService.setCollectionData(this.collectionData);
                 this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
                 this.getCollection();
                 this.loadBannerUrl();

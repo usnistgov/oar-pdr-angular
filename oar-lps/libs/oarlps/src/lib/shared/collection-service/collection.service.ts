@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
-import { Observable } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -16,8 +16,7 @@ export class CollectionService {
     allCollections: any = null;
     collectionData: any = null;
 
-    constructor(private http: HttpClient) {
-    }
+    constructor(private http: HttpClient) {}
 
     serviceInit() {
         let that = this;
@@ -83,7 +82,17 @@ export class CollectionService {
     }
 
     public loadCollectionFromJson(): Observable<any> {
-        return this.http.get('./assets/collection/collections.json');
+        return this.http.get('./assets/collection/collections.json').pipe(
+            tap({
+                    next: (data) => {
+                        this.collectionData = data;
+                        this.serviceInit();
+                    }, 
+                    error: (error) => {
+                        console.error("Failed to load color palettes from json file", error);
+                    }
+            })
+        )as Observable<any>
     }
 
     public setCollectionData(data: any) {
