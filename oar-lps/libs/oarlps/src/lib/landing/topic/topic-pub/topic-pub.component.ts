@@ -42,9 +42,6 @@ export class TopicPubComponent implements AfterContentInit {
         public collectionService: CollectionService,
         public globalService: GlobalService)
     {
-        this.collectionOrder = this.collectionService.getCollectionForDisplay();
-        this.allCollections = this.collectionService.loadAllCollections();
-
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
         })          
@@ -79,6 +76,7 @@ export class TopicPubComponent implements AfterContentInit {
     }    
 
     ngOnInit() {
+        this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
         this.updateResearchTopics();
     }
