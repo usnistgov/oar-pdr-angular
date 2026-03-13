@@ -177,7 +177,8 @@ export class FiltersComponent implements OnInit {
     ngOnInit(): void {
         // this.collectionService.loadAllCollections();
 
-        this.collectionOrder = this.collectionService.getCollectionOrder();
+        this.collectionOrder = this.collectionService.getCollectionForDisplay();
+
         this.msgs = [];
         this.searchResultsError = [];
         this.MoreOptionsDisplayed = (this.theme == 'ScienceTheme');

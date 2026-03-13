@@ -244,19 +244,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
 
-        this.collectionService.loadCollectionFromJson().subscribe({
-            next: (data) => {
-                this.collectionData = data;
-                this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
-                this.getCollection();
-                this.loadBannerUrl();
-                this.loadColorPalette();                
-            },
-            error: (err) => {
-                console.error("Failed to load collection data from json file", err);
-            }
-        });
-
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
         });
@@ -346,6 +333,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.displaySpecialMessage = false;
         this.CART_ACTIONS = CartActions.cartActions;             
 
+        this.collectionData = this.collectionService.getCollectionData();
+        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
+        this.getCollection();
+        this.loadBannerUrl();
+        this.loadColorPalette();   
+        
         if(this.inBrowser){
             this.cartChangeHandler = this.cartChanged.bind(this);
             window.addEventListener("storage", this.cartChangeHandler);

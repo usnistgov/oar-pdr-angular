@@ -92,6 +92,10 @@ export class TopicPubComponent implements AfterContentInit {
      * @param changes 
      */
     ngOnChanges(changes: SimpleChanges): void {
+        //Load collectionOrder and allCollections in case ngOnChanges is called before ngOnInit and the collection data is not loaded yet.
+        this.collectionOrder = this.collectionService.getCollectionForDisplay();
+        this.allCollections = this.collectionService.loadAllCollections();
+
         this.updateResearchTopics();
         this.chref.detectChanges();
     }

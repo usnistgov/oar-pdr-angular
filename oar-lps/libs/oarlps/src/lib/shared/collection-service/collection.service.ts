@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
-import { Observable, of, tap } from 'rxjs';
+import { firstValueFrom, Observable, of, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -24,6 +24,22 @@ export class CollectionService {
         this.collectionOrder = this.collectionOrder.filter(function(v) { return v !== 'default' });
         this.collectionForDisplay = Object.keys(this.collectionData).sort(function(a,b){return that.collectionData[a]["displayOrder"]-that.collectionData[b]["displayOrder"]}).filter(key => that.collectionData[key].landingPage); 
         this.loadAllCollections();
+    }
+
+    public async loadLocalData(): Promise<any> { // Function must be async and return a Promise
+        const dataUrl = './assets/collection/collections.json'; // Path to json file
+
+        try {
+                // Use firstValueFrom to convert the Observable to a Promise
+                const data = await firstValueFrom(this.http.get<any>(dataUrl));
+                console.log('Data loaded:', data);
+                this.collectionData = data;
+                this.serviceInit();
+                return data;
+            } catch (error) {
+                console.error('Error loading local data:', error);
+                throw error; // Handle errors with try/catch blocks
+        }
     }
 
     getCollectionOrder() {
@@ -79,20 +95,6 @@ export class CollectionService {
             return Object.assign(new Collection(), this.collectionData[collection]);  
         else    
             return Object.assign(new Collection(), this.collectionData[Collections.DEFAULT]);  
-    }
-
-    public loadCollectionFromJson(): Observable<any> {
-        return this.http.get('./assets/collection/collections.json').pipe(
-            tap({
-                    next: (data) => {
-                        this.collectionData = data;
-                        this.serviceInit();
-                    }, 
-                    error: (error) => {
-                        console.error("Failed to load color palettes from json file", error);
-                    }
-            })
-        )as Observable<any>
     }
 
     public setCollectionData(data: any) {
