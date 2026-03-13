@@ -333,7 +333,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.displaySpecialMessage = false;
         this.CART_ACTIONS = CartActions.cartActions;             
 
-        this.collectionData = this.collectionService.getCollectionData();
+        this.collectionData = require('../../assets/collection/collections.json');
+        this.collectionService.setCollectionData(this.collectionData);
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
         this.loadBannerUrl();

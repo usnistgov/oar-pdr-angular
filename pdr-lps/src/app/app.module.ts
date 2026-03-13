@@ -18,11 +18,11 @@ import { HeaderPubComponent, FooterComponent } from 'oarng';
 
 enableProdMode();
 
-export function initializeApp(collectionService: CollectionService) {
-  return async () => {
-    await collectionService.loadLocalData()
-  };
-}
+// export function initializeApp(collectionService: CollectionService) {
+//   return async () => {
+//     await collectionService.loadLocalData()
+//   };
+// }
 
 /**
  * The Landing Page Service Application
@@ -63,13 +63,13 @@ export function initializeApp(collectionService: CollectionService) {
         GoogleAnalyticsService,
         CollectionService,
         ConfirmationDialogService,
-        DatePipe,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeApp,
-            deps: [CollectionService],
-            multi: true
-        }
+        DatePipe
+        // {
+        //     provide: APP_INITIALIZER,
+        //     useFactory: initializeApp,
+        //     deps: [CollectionService],
+        //     multi: true
+        // }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

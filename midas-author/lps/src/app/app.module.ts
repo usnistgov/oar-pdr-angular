@@ -31,11 +31,11 @@ export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   }
 }
 
-export function initializeApp(collectionService: CollectionService) {
-  return async () => {
-    await collectionService.loadLocalData()
-  };
-}
+// export function initializeApp(collectionService: CollectionService) {
+//   return async () => {
+//     await collectionService.loadLocalData()
+//   };
+// }
 
 enableProdMode();
 
@@ -74,13 +74,13 @@ enableProdMode();
         DatePipe,
         CollectionService,
         NgbActiveModal,
-        ConfirmationDialogService,
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeApp,
-            deps: [CollectionService],
-            multi: true
-        }
+        ConfirmationDialogService
+        // {
+        //     provide: APP_INITIALIZER,
+        //     useFactory: initializeApp,
+        //     deps: [CollectionService],
+        //     multi: true
+        // }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
