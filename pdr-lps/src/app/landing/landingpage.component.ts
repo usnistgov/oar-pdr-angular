@@ -324,7 +324,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * initialize the component.  This is called early in the lifecycle of the component by
      * the Angular rendering infrastructure.
      */
-    ngOnInit() {
+    async ngOnInit() {
         this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
         this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
   
@@ -333,7 +333,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.displaySpecialMessage = false;
         this.CART_ACTIONS = CartActions.cartActions;             
 
-        this.collectionData = require('../../assets/collection/collections.json');
+        // this.collectionData = require('../../assets/collection/collections.json');
+        this.collectionData = await this.collectionService.loadLocalData();
         this.collectionService.setCollectionData(this.collectionData);
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
