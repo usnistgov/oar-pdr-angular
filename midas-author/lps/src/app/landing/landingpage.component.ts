@@ -254,13 +254,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
 
-        this.collectionData = require('../../assets/collection/collections.json');
-        this.collectionService.setCollectionData(this.collectionData);
-        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
-        this.getCollection();
-        this.loadBannerUrl();
-        this.loadColorPalette();
-
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
         });
@@ -348,17 +341,26 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     loadColorPalette() {
         let colorPalette: any;
         let cp: any;
+        let colorPalettes: any;
 
-        const colorPalettes: any = require('../../assets/collection/color-palettes.json');
-        if (this.collectionData && this.collectionData[this.collection]) {
-            cp = colorPalettes[this.collectionData[this.collection].colorPalette]
-            colorPalette = cp ? cp : colorPalettes[Collections.DEFAULT];
-        } else {
-            colorPalette = colorPalettes[Collections.DEFAULT];
-        }
-    
-        this.globalService.setColorPalette(colorPalette);
-    
+        this.collectionService.loadColorPalettesFromJson().subscribe({
+            next: (data) => {
+                colorPalettes = data;
+
+                if (this.collectionData && this.collectionData[this.collection]) {
+                    cp = colorPalettes[this.collectionData[this.collection].colorPalette]
+                    colorPalette = cp ? cp : colorPalettes[Collections.DEFAULT];
+                } else {
+                    colorPalette = colorPalettes[Collections.DEFAULT];
+                }
+            
+                this.globalService.setColorPalette(colorPalette);                
+            },
+            error: (err) => {
+                //Will add notification for this error later. For now just log it in console and use default color palette.
+                console.error("Failed to load color palettes from json file", err);
+            }
+        });
     }
     
     loadBannerUrl() {
@@ -388,6 +390,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.recordLevelMetrics = new RecordLevelMetrics();
         this.displaySpecialMessage = false;
         this.CART_ACTIONS = CartActions.cartActions;
+
+        this.collectionData = require('../../assets/collection/collections.json');
+        this.collectionService.setCollectionData(this.collectionData); 
+        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
+        this.getCollection();
+        this.loadBannerUrl();
+        this.loadColorPalette();   
 
         // Only listen to storage change if we are not in edit mode
         if(this.inBrowser && !this.cfg_editEnabled){

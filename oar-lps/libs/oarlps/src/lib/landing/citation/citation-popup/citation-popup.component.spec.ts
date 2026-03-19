@@ -3,6 +3,8 @@ import { CollectionService } from '../../../shared/collection-service/collection
 import { CitationPopupComponent } from './citation-popup.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('CitationPopupComponent', () => {
     let component: CitationPopupComponent;
@@ -10,10 +12,14 @@ describe('CitationPopupComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-        imports: [
-            CitationPopupComponent,
+            imports: [
+                CitationPopupComponent,
                 NoopAnimationsModule],
-        providers: [NgbActiveModal, CollectionService]
+            providers: [
+                NgbActiveModal,
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                CollectionService]
         })
         .compileComponents();
 

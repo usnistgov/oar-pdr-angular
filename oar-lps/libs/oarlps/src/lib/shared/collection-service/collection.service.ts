@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Themes, ThemesPrefs, Collections, Collection, ColorScheme, CollectionThemes } from '../../shared/globals/globals';
+import { firstValueFrom, Observable, of, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +16,7 @@ export class CollectionService {
     allCollections: any = null;
     collectionData: any = null;
 
-    constructor() {
-    }
+    constructor(private http: HttpClient) {}
 
     serviceInit() {
         let that = this;
@@ -23,6 +24,22 @@ export class CollectionService {
         this.collectionOrder = this.collectionOrder.filter(function(v) { return v !== 'default' });
         this.collectionForDisplay = Object.keys(this.collectionData).sort(function(a,b){return that.collectionData[a]["displayOrder"]-that.collectionData[b]["displayOrder"]}).filter(key => that.collectionData[key].landingPage); 
         this.loadAllCollections();
+    }
+
+    public async loadLocalData(): Promise<any> { // Function must be async and return a Promise
+        const dataUrl = './assets/collection/collections.json'; // Path to json file
+
+        try {
+                // Use firstValueFrom to convert the Observable to a Promise
+                const data = await firstValueFrom(this.http.get<any>(dataUrl));
+                console.log('Data loaded:', data);
+                this.collectionData = data;
+                this.serviceInit();
+                return data;
+            } catch (error) {
+                console.error('Error loading local data:', error);
+                throw error; // Handle errors with try/catch blocks
+        }
     }
 
     getCollectionOrder() {
@@ -102,4 +119,9 @@ export class CollectionService {
             }
         }
     }
+
+    public loadColorPalettesFromJson(): Observable<any> {
+        return this.http.get('./assets/collection/color-palettes.json');
+    }
+
 }
