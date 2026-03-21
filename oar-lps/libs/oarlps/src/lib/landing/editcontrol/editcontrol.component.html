@@ -162,23 +162,38 @@
 <p-overlayPanel class="fileDialog" #op3 [dismissable]="true" [showCloseIcon]="true"
 [style]="{'display':'inline-block','position':'related','left':'20%','right':'5%','max-width':'800px'}" appendToBody=true>
     <div class="overlay-title">
-        About the Control Buttons
+        About the Edit Mode Buttons
     </div>
 
-    <div style="margin-bottom: .5em;">The three large buttons on the upper right of the page allow you to control your session:</div>
+    <div style="margin-bottom: .5em;">The buttons above allow you to control your session:</div>
     <table class="table">
         <tbody>
             <tr>
+                <th scope="row">Manage Files</th>
+                <td> Opens the File Manager where you can upload and organize files that are part of this publication.  The File Manager will appear in a separate tab in your browser.</td>
+            </tr>
+        <tbody>
+            <tr>
                 <th scope="row">Preview</th>
-                <td>Shows you how the page will look to visitors (removes edit controls). Use the “Edit” button to return to the editing page from the preview page.</td>
+                <td> Switches to Preview Mode to show you how the page will look to the public after publication. The editing controls and buttons will be hidden.  When in preview mode, this button will change to "Edit"; click it again to return to Edit Mode.</td>
             </tr>
             <tr>
                 <th scope="row">Discard</th>
-                <td>	Discards any changes that have been made to the landing page. Use this button to abandon any changes you have made. You will have the opportunity to continue editing using the initial contents of the landing page.</td>
+                <td> Discards all changes that have been made to this page in the current session (since it was opened).  Use this button to abandon any changes you have made. You will have the opportunity to continue editing using the initial contents of the page.</td>
             </tr>
             <tr>
-                <th scope="row">Finish</th>
-                <td>Finish your editing session. Carefully follow the instructions which will appear on the screen. You will be instructed to return to the MIDAS system and accept or reject the new landing page.</td>
+                <th scope="row">Submit for Review</th>
+                <td> Click this button when all edits are complete and you 
+                     are ready to submit it for publication.  Your draft will 
+                     be analyzed for any missing data or recommended improvements
+                     that can be made; these will appear in a pop-up window
+                     where you can either confirm the submission or return to
+                     editing.  (If any missing data is required, you will
+                     not be able to proceed with the submission.)  Proceeding
+                     with the submission will usually send the draft through
+                     the NPS review process; however, if only minor changes
+                     are indicated, NPS review is not required and the draft
+                     will be submitted directly for publication.  </td>
             </tr>
         </tbody>
     </table>
