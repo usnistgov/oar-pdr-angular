@@ -5,13 +5,19 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
-import { Themes } from '../../../shared/globals/globals';
+import { Themes, iconClass } from '../../../shared/globals/globals';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faArrowUpRightFromSquare,
+    faCaretDown,
+    faCaretRight
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'accesspage-pub',
     standalone: true,
-    imports: [ CommonModule, CollapseModule, NgbModule ],
+    imports: [ CommonModule, CollapseModule, NgbModule, FontAwesomeModule ],
     templateUrl: './accesspage-pub.component.html',
     styleUrls: ['../../landing.component.scss', './accesspage-pub.component.css'],
     animations: [
@@ -35,14 +41,27 @@ export class AccesspagePubComponent {
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
 
+    //icons
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+    arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+
+    isMouseOver: boolean = false;
+    
     @Input() record: NerdmRes = null;
     @Input() theme: string;
     @Input() isPublicSite: boolean = true;
     
     constructor( private gaService: GoogleAnalyticsService,
         public globalsvc: GlobalService,
+        public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef ) {
         
+        iconLibrary.addIcons(
+            faArrowUpRightFromSquare,
+            faCaretDown,
+            faCaretRight
+        );
     }
 
     ngOnInit(): void {
@@ -124,5 +143,12 @@ export class AccesspagePubComponent {
                 '--hover-color': 'var(--nist-green-light)'
             };
         }
+    }
+
+    iconName(aPage: any) {
+        if (aPage['showDesc']) {
+            return this.caretDownIcon;
+        }
+        return this.caretRightIcon;
     }
 }

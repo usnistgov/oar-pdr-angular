@@ -22,6 +22,15 @@ import { FieldsetModule } from 'primeng/fieldset';
 import { DialogModule } from 'primeng/dialog';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { NERDmResourceService } from '../nerdm/nerdm.service';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faCircleArrowDown,
+    faCircleArrowUp,
+    faChartBar,
+    faDownload,
+    faFileArrowDown
+} from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../shared/globals/globals';
 
 const MOBIL_LABEL_LIMIT = 20;
 const DESKTOP_LABEL_LIMIT = 50;
@@ -39,7 +48,8 @@ const DESKTOP_LABEL_LIMIT = 50;
         ButtonModule,
         CommonModule, 
         FormsModule,
-        HorizontalBarchartComponent
+        HorizontalBarchartComponent,
+        FontAwesomeModule
     ],
     templateUrl: './metrics.component.html',
     styleUrls: ['./metrics.component.css', '../landing/landing.component.scss']
@@ -97,6 +107,15 @@ export class MetricsComponent implements OnInit {
     emailSubject: string = "";
     emailBody: string = "";
 
+    //icon class names
+    circleUpIcon = iconClass.CIRCLE_ARROW_UP;
+    circleDownIcon = iconClass.CIRCLE_ARROW_DOWN;
+    chartBarIcon = iconClass.CHART_BAR;
+    downloadIcon = iconClass.DOWNLOAD;
+    fileDownloadIcon = iconClass.FILE_DOWNLOAD;
+
+    isMouseOver: boolean = false;
+
     recordLevelData : RecordLevelMetrics;
         
     // injected as ViewChilds so that this class can send messages to it with a synchronous method call.
@@ -114,8 +133,17 @@ export class MetricsComponent implements OnInit {
         private searchService: SearchService,
         public gaService: GoogleAnalyticsService,
         private nerdmReserv: NERDmResourceService,
+        public iconLibrary: FaIconLibrary,
         public metricsService: MetricsService) { 
 
+            iconLibrary.addIcons(
+                faCircleArrowDown,
+                faCircleArrowUp,
+                faChartBar,
+                faDownload,
+                faFileArrowDown
+            ); 
+        
             this.inBrowser = isPlatformBrowser(platformId);
             this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");
         }

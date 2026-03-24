@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges, inject } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections, GlobalService } from '../../shared/globals/globals';
+import { Themes, ThemesPrefs, Collections, GlobalService, iconClass } from '../../shared/globals/globals';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { CartConstants } from '../../datacart/cartconstants';
 import { AppConfig } from '../../config/config';
@@ -12,14 +12,21 @@ import { MenuModule } from 'primeng/menu';
 import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
 import { CitationPopupComponent } from '../citation/citation-popup/citation-popup.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faArrowCircleRight,
+    faAnglesRight,
+    faArrowUpRightFromSquare,
+    faCartPlus,
+    faDownload
+} from '@fortawesome/free-solid-svg-icons';
 
 export class menuItem {
     title: string;
     backgroundColor: string;
     isHeader: boolean;
     sectionName: string;
-    icon: string;
+    icon: any;
     url: string;
 
     constructor(title: string, 
@@ -27,7 +34,7 @@ export class menuItem {
                 url: string,
                 backgroundColor: string = "white", 
                 isHeader: boolean = false,
-                icon: string = "")
+                icon: any = null)
     {
         this.title = title;
         this.sectionName = sectionName;
@@ -39,15 +46,16 @@ export class menuItem {
 } 
 
 @Component({
-  selector: 'app-menu',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MenuModule,
-    MetricsinfoComponent
-  ],
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+    selector: 'app-menu',
+    standalone: true,
+    imports: [
+        CommonModule,
+        MenuModule,
+        MetricsinfoComponent,
+        FontAwesomeModule
+    ],
+    templateUrl: './menu.component.html',
+    styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
     defaultColor: string;
@@ -71,6 +79,13 @@ export class MenuComponent implements OnInit {
     modalRef: any; //For citation pop up
     citetext: string = null;
 
+    //Icons
+    arrowCircleRightIcon = iconClass.ARROW_CIRCLE_RIGHT;
+    anglesRightIcon = iconClass.ANGLES_RIGHT;
+    arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+    cartPlusIcon = iconClass.CART_PLUS;
+    downloadIcon = iconClass.DOWNLOAD;
+
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
     @Input() collection: string = Collections.DEFAULT;
@@ -93,8 +108,17 @@ export class MenuComponent implements OnInit {
                 @Inject(PLATFORM_ID) private platformId: Object,
                 public globalService: GlobalService,
                 private modalService: NgbModal,
+                public iconLibrary: FaIconLibrary,
                 private cfg : AppConfig) 
     { 
+        iconLibrary.addIcons(
+            faArrowCircleRight,
+            faAnglesRight,
+            faArrowUpRightFromSquare,
+            faCartPlus,
+            faDownload
+        );
+
         this.inBrowser = isPlatformBrowser(platformId);
         this.bulkDownloadBase = cfg.get('links.pdrHome');
         if (! this.bulkDownloadBase.endsWith('/'))
@@ -131,16 +155,16 @@ export class MenuComponent implements OnInit {
     
     buildMenu() {
         this.gotoMenu.push(new menuItem("Go To...", "", "", this.defaultColor, true));
-        this.gotoMenu.push(new menuItem("Top", "top", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
-        this.gotoMenu.push(new menuItem("Description", "description", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
-        this.gotoMenu.push(new menuItem("Data Access", "dataAccess", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
-        this.gotoMenu.push(new menuItem("About This "+this.resourceType, "about","", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
+        this.gotoMenu.push(new menuItem("Top", "top", "", this.lighterColor, false, this.arrowCircleRightIcon));
+        this.gotoMenu.push(new menuItem("Description", "description", "", this.lighterColor, false, this.arrowCircleRightIcon));
+        this.gotoMenu.push(new menuItem("Data Access", "dataAccess", "", this.lighterColor, false, this.arrowCircleRightIcon));
+        this.gotoMenu.push(new menuItem("About This "+this.resourceType, "about","", this.lighterColor, false, this.arrowCircleRightIcon));
 
         this.useMenu.push(new menuItem("Use", "", "", this.defaultColor, true));
-        this.useMenu.push(new menuItem("Citation", "citation", "", this.lighterColor, false, "faa faa-angle-double-right"));
-        this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, "faa faa-angle-double-right"));
-        this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, "faa faa-external-link"));
-        this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, "faa faa-cart-plus"));
+        this.useMenu.push(new menuItem("Citation", "citation", "", this.lighterColor, false, this.anglesRightIcon));
+        this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, this.anglesRightIcon));
+        this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, this.arrowUpRightFromSquareIcon));
+        this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, this.cartPlusIcon));
 
         let searchbase = this.cfg.get("links.pdrSearch","/sdp/");
         if (searchbase.slice(-1) != '/') searchbase += "/";
@@ -219,8 +243,8 @@ export class MenuComponent implements OnInit {
 
         this.findMenu.push(new menuItem("Find", "", "", this.defaultColor, true));
 
-        this.findMenu.push(new menuItem(resourceLabel, "", searchbase + "#/search?q=keyword%3D" + keywordString, this.lighterColor, false, "faa faa-external-link" ))
-        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("links.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
+        this.findMenu.push(new menuItem(resourceLabel, "", searchbase + "#/search?q=keyword%3D" + keywordString, this.lighterColor, false, "arrow-up-right-from-square" ))
+        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("links.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "arrow-up-right-from-square" ))
 
 
     }

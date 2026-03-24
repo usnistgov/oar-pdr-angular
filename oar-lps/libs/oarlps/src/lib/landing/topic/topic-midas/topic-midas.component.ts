@@ -22,6 +22,13 @@ import { CollectionService } from '../../../shared/collection-service/collection
 import { CommonModule } from '@angular/common';
 import { TopicEditComponent } from '../topic-edit/topic-edit.component';
 import { TopicPubComponent } from '../topic-pub/topic-pub.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'topic-midas',
@@ -30,7 +37,8 @@ import { TopicPubComponent } from '../topic-pub/topic-pub.component';
         CommonModule, 
         TopicEditComponent,
         TopicPubComponent,
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './topic-midas.component.html',
     styleUrls: ['../topic.component.css','../../landing.component.scss'],
@@ -101,8 +109,16 @@ export class TopicMidasComponent implements OnInit {
                 private chref: ChangeDetectorRef,
                 public lpService: LandingpageService, 
                 public collectionService: CollectionService,
-                private notificationService: NotificationService)
-    {
+                public iconLibrary: FaIconLibrary,
+                private notificationService: NotificationService) {
+
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo
+        );
+        
         this.standardNISTTaxonomyURI = this.cfg.get("standardNISTTaxonomyURI", "https://data.nist.gov/od/dm/nist-themes/");
 
         this.collectionOrder = this.collectionService.getCollectionForDisplay();

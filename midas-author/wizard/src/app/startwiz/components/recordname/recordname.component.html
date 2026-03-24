@@ -33,6 +33,6 @@
             </div>
         </div>
         <span class="sidebar-title">{{helpText["label"]}}</span>
-        <div class="sidebar-content" [innerHTML]="helpText['general']"></div>
+        <div class="sidebar-content" [innerHTML]="sanitizedHtml"></div>
     </oar-pushing-sidebar>
 </div>

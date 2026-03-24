@@ -14,6 +14,15 @@ import { TreeTableModule } from 'primeng/treetable';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faTrashCan,
+    faRecycle
+} from '@fortawesome/free-solid-svg-icons';
 
 export const ROW_COLOR = '#1E6BA1';
 
@@ -26,6 +35,7 @@ export const ROW_COLOR = '#1E6BA1';
         ButtonModule,
         NgbModule,
         OverlayPanelModule,
+        FontAwesomeModule,
         TreeTableModule],
     templateUrl: './topic-edit.component.html',
     styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
@@ -65,9 +75,20 @@ export class TopicEditComponent implements OnInit {
 
 
     constructor(public mdupdsvc: MetadataUpdateService,
-        private taxonomyListService: TaxonomyListService,
+                private taxonomyListService: TaxonomyListService,
                 public collectionService: CollectionService,
-                private msgsvc: UserMessageService) { }
+                public iconLibrary: FaIconLibrary,
+                private msgsvc: UserMessageService) { 
+        
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faTrashCan,
+            faRecycle
+        );
+    }
 
     ngOnInit(): void {
         this.collectionData = this.collectionService.getCollectionData();

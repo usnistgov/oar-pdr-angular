@@ -6,12 +6,20 @@ import { VersionComponent } from '../version/version.component';
 import { MetricsData } from "../metrics-data";
 import { trigger, style, animate, transition } from '@angular/animations';
 import { formatBytes } from '../../utils';
-import { Themes, ThemesPrefs } from '../../shared/globals/globals';
-import { GlobalService } from '../../shared/globals/globals';
+import { Themes, ThemesPrefs, GlobalService, iconClass } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FieldsetModule } from 'primeng/fieldset';
 import { ButtonModule } from 'primeng/button';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faSpinner,
+    faChartBar,
+    faCaretDown,
+    faCaretRight,
+    faFileCode,
+    faCopy
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'aboutdataset-detail',
@@ -21,7 +29,8 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer';
         CommonModule, 
         FieldsetModule, 
         ButtonModule, 
-        NgxJsonViewerModule
+        NgxJsonViewerModule,
+        FontAwesomeModule
     ],
     templateUrl: './aboutdataset.component.html',
     styleUrls: ['./aboutdataset.component.scss'],
@@ -57,6 +66,14 @@ export class AboutdatasetComponent implements OnChanges {
     isPartOf: string[][] = null;
     maxWidth: number = 1000;
     
+     //Icons
+    spinnerIcon = iconClass.SPINNER;
+    chartBarIcon = iconClass.CHART_BAR;
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+    fileCodeIcon = iconClass.FILE_CODE;
+    copyIcon = iconClass.COPY;
+
     private _collapsed: boolean = false;
     @Input() record: NerdmRes;
     @Input() inBrowser: boolean;
@@ -66,6 +83,7 @@ export class AboutdatasetComponent implements OnChanges {
     @Input() mobileMode : boolean|null = false;
 
     @Input() metricsData: MetricsData;
+    // Flag to control whether the JSON viewer is shown or not. Default is false.
     @Input() showJsonViewer: boolean = false;
 
     /**
@@ -94,8 +112,18 @@ export class AboutdatasetComponent implements OnChanges {
     constructor(private cfgsvc: AppConfig, 
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
-                public gaService: GoogleAnalyticsService)
-    { 
+                public iconLibrary: FaIconLibrary,
+                public gaService: GoogleAnalyticsService){ 
+
+        iconLibrary.addIcons(
+            faSpinner,
+            faChartBar,
+            faCaretDown,
+            faCaretRight,
+            faFileCode,
+            faCopy
+        );
+
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width;
         })
@@ -212,5 +240,29 @@ export class AboutdatasetComponent implements OnChanges {
 
     get hasCurrentMetrics() {
         return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
+    }
+
+    /**
+     * Returns the icon class for the JSON viewer indicator based on whether the viewer is currently shown or not.
+     * @returns Icon class of show Json viewer indicator
+     */
+    showJsonClass() {
+        if (this.showJsonViewer) {
+            return this.caretDownIcon;
+        } else {
+            return this.caretRightIcon;
+        }
+    }
+
+    /**
+     * Returns the tooltip text for the JSON viewer indicator based on whether the viewer is currently shown or not.
+     * @returns Tooltip
+     */
+    jsonViewerTooltip() {
+        if (this.showJsonViewer) {
+            return "Collapse JSON viewer";
+        } else {
+            return "Expand JSON viewer";
+        }
     }
 }

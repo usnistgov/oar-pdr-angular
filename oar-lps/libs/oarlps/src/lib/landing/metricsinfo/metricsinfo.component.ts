@@ -12,13 +12,19 @@ import * as _ from 'lodash-es';
 import { formatBytes } from '../../utils';
 import { CommonModule } from '@angular/common';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Collections, GlobalService } from '../../shared/globals/globals';
+import { Collections, GlobalService, iconClass } from '../../shared/globals/globals';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faSpinner,
+    faChartBar
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-metricsinfo',
     standalone: true,
     imports: [
-        CommonModule
+        CommonModule,
+        FontAwesomeModule
     ],
     templateUrl: './metricsinfo.component.html',
     styleUrls: ['./metricsinfo.component.css']
@@ -54,12 +60,22 @@ export class MetricsinfoComponent implements OnInit {
     delayTimeForMetricsRefresh: number = 300; 
     time: any;
 
+    //Icons
+    spinnerIcon = iconClass.SPINNER;
+    chartBarIcon = iconClass.CHART_BAR;
+
     constructor(public commonFunctionService: CommonFunctionService,
                 public metricsService: MetricsService,
-        public collectionService: CollectionService,
+                public collectionService: CollectionService,
                 public globalService: GlobalService,
+                public iconLibrary: FaIconLibrary,
                 private cfg: AppConfig) 
     { 
+        iconLibrary.addIcons(
+            faSpinner,
+            faChartBar
+        );
+        
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
 
         this.globalService.watchColorPalette((colorPalette) => {

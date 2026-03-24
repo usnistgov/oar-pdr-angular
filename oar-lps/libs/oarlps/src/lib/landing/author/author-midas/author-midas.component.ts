@@ -13,7 +13,13 @@ import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { AuthorPubComponent } from '../author-pub/author-pub.component';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
-
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'author-midas',
     standalone: true,
@@ -23,7 +29,8 @@ import { TooltipModule } from 'primeng/tooltip';
         AuthorPubComponent,
         CollapseModule,
         ButtonModule,
-        TooltipModule
+        TooltipModule,
+        FontAwesomeModule
     ],
     templateUrl: './author-midas.component.html',
     styleUrls: ['./author-midas.component.scss', '../../landing.component.scss'],
@@ -63,8 +70,15 @@ export class AuthorMidasComponent {
                 public edstatsvc: EditStatusService,
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
+                public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) { 
 
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo
+        );
     }
 
     /**

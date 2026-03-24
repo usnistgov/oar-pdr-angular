@@ -57,7 +57,8 @@
                 [disabled]="isEditing || isAdding" 
                 pTooltip="Add references"
                 tooltipPosition="top" >
-                <i [class]="addIconClass()"></i>
+                <!-- <i [class]="addIconClass()"></i> -->
+                <fa-icon *ngIf="addIcon" [icon]="['fas', addIcon]" size="sm"></fa-icon>
             </button>
         </div>
     </div>

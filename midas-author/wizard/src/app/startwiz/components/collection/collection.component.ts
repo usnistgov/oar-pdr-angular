@@ -4,6 +4,7 @@ import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
 import { CollectionDataModel } from '../../models/data.model';
 import { WizardService } from '../../services/wizard.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-collection',
@@ -15,17 +16,23 @@ export class CollectionComponent implements OnInit {
     lastStep: StepModel;
     collectionData: CollectionDataModel[] = [];
 
+    sanitizedHtml: SafeHtml;
+
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
     @Input() helpText: any = {};
     @Input() marginLeft: number = 40;
 
     constructor(
+        private sanitizer: DomSanitizer,
         private stepService: StepService,
         private wizardService: WizardService
     ) { }
 
     ngOnInit(): void {
+        let helpContent = this.stepService.iconHandler(this.helpText['general']);
+        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(helpContent);
+
         this.thisStep = this.stepService.getStep("Collection");
         this.lastStep = this.stepService.getLastStep();
         this.collectionData = this.wizardService.getCollectionData();

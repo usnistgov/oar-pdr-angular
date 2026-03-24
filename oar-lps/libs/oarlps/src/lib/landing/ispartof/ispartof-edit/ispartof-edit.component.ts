@@ -10,16 +10,24 @@ import { CollectionService } from '../../../shared/collection-service/collection
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { IspartofPubComponent } from '../ispartof-pub/ispartof-pub.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'ispartof-edit',
     standalone: true,
     imports: [
             CommonModule,
-            ButtonModule,
-            TooltipModule,
+            // ButtonModule,
+            // TooltipModule,
             NgbModule,
-            IspartofPubComponent
+            IspartofPubComponent,
+            FontAwesomeModule
     ],
     templateUrl: './ispartof-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ispartof-edit.component.css'],
@@ -51,7 +59,7 @@ export class IspartofEditComponent {
 
     collectionData = [];
 
-    //icon class names
+    //icon class
     editIcon = iconClass.EDIT;
     closeIcon = iconClass.CLOSE;
     saveIcon = iconClass.SAVE;
@@ -67,8 +75,16 @@ export class IspartofEditComponent {
         private chref: ChangeDetectorRef,
         public collectionService: CollectionService,
         public lpService: LandingpageService,
+        public iconLibrary: FaIconLibrary,
         private notificationService: NotificationService) {
         
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo
+        );
+
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();
     }
@@ -307,9 +323,9 @@ export class IspartofEditComponent {
      */
     getEditIconClass() {
         if(this.isEditing){
-            return this.editIcon + " icon_disabled";
+            return "icon_disabled";
         }else{
-            return this.editIcon + " icon_enabled";
+            return "icon_enabled";
         }
     }    
 
@@ -319,9 +335,9 @@ export class IspartofEditComponent {
      */
     getUndoIconClass() {
         if(this.isEditing){
-            return this.undoIcon + " icon_disabled";
+            return "icon_disabled";
         }else{
-            return this.undoIcon + " icon_enabled";
+            return "icon_enabled";
         }
     }        
 }

@@ -48,7 +48,7 @@
                 [disabled]="isEditing || isAdding" 
                 pTooltip="Add author"
                 tooltipPosition="top" >
-                <i [class]="addIconClass()"></i>
+                <fa-icon *ngIf="addIcon" [icon]="['fas', addIcon]" [class]="addIconClass()"></fa-icon>
             </button>
         </div>
     </div>
@@ -80,13 +80,13 @@
                             aria-label="edit button" 
                             [disabled]="!currentAuthor || !currentAuthor.dataChanged" 
                             ngbTooltip="Save authors">
-                        <i [class]="saveIcon"></i>
+                        <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]"></fa-icon>
                     </button>
 
                     <!-- Cancel button -->
                     <button class="edit_button" type="button"
                         (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                        <i [class]="cancelIcon"></i>
+                        <fa-icon *ngIf="cancelIcon" [icon]="['fas', cancelIcon]"></fa-icon>
                     </button>
                 </div>
             </td>

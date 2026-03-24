@@ -11,14 +11,14 @@
                 @if(!isEditing) {
                     <!-- Edit button -->
                     <button class="edit_button" type="button" (click)="startEditing()" aria-label="Edit keywords" ngbTooltip="Edit keywords">
-                        <i [class]="editIcon"></i>
+                        <fa-icon *ngIf="editIcon" [icon]="['fas', editIcon]" size="sm"></fa-icon>
                     </button>
                 }
 
                 @if(isEditing && !dataChanged) {
                     <!-- Close edit block -->
                     <button class="edit_button" type="button" (click)="setMode()" aria-label="Close edit block" ngbTooltip="Close edit block">
-                        <i [class]="closeIcon"></i>
+                        <fa-icon *ngIf="closeIcon" [icon]="['fas', closeIcon]"></fa-icon>
                     </button>
                 }
 
@@ -26,13 +26,13 @@
                     <!-- Save button -->
                     <button class="edit_button" type="button" (click)="onSave()"
                     aria-label="save button" ngbTooltip="Save changes">
-                        <i [class]="saveIcon"></i>
+                        <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]"></fa-icon>
                     </button>
 
                     <!-- Cancel editing button - Undo current changes -->
                     <button class="edit_button" type="button"
                     (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                        <i [class]="cancelIcon"></i>
+                        <fa-icon *ngIf="cancelIcon" [icon]="['fas', cancelIcon]"></fa-icon>
                     </button>
                 }
 
@@ -40,7 +40,7 @@
                     <!-- Undo button - Restore original keywords -->
                     <button class="edit_button" type="button"
                         (click)="restoreOriginal()" aria-label="Restore original keywords" ngbTooltip="Restore original keywords">
-                        <i [class]="undoIcon"></i>
+                        <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]"></fa-icon>
                     </button>
                 }
             </div>

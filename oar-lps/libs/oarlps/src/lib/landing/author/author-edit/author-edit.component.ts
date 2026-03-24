@@ -8,6 +8,17 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { PeopleComponent } from '../../people/people.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faPlus,
+    faLock,
+    faUnlock,
+    faTrashCan
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'lib-author-edit',
@@ -17,7 +28,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
             FormsModule,
             PeopleComponent,
             ButtonModule,
-            NgbModule
+            NgbModule,
+            FontAwesomeModule
         ],
   templateUrl: './author-edit.component.html',
   styleUrls: ['../../landing.component.scss', './author-edit.component.css']
@@ -37,6 +49,8 @@ export class AuthorEditComponent implements OnInit {
     //icon class names
     deleteIcon = iconClass.DELETE;
     addIcon = iconClass.ADD;
+    lockIcon = iconClass.LOCK;
+    unlockIcon = iconClass.UNLOCK;
 
     @Input() author: Author;
     @Input() authors: Author[];
@@ -48,8 +62,20 @@ export class AuthorEditComponent implements OnInit {
     
     constructor(
         private chref: ChangeDetectorRef,
-        private authorService: AuthorService)
-         { }
+        public iconLibrary: FaIconLibrary,
+        private authorService: AuthorService) { 
+        
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faPlus,
+            faLock,
+            faUnlock,
+            faTrashCan
+        );           
+    }
 
     ngOnInit(): void {
         if(!this.author) {

@@ -78,14 +78,31 @@
                             <!-- Author list -->
                             <span *ngFor="let author of ref['authors']; let i = index">
                                 {{ author }}                 
-                                <i [class]="deleteIcon" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
-                                        data-toggle="tooltip" title="Remove author"></i> 
-                                
+                                <!-- <i [class]="deleteIcon" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
+                                        data-toggle="tooltip" title="Remove author"></i>  -->
+
+                                <fa-icon 
+                                    *ngIf="deleteIcon" 
+                                    [icon]="['fas', deleteIcon]" 
+                                    size="sm"
+                                    (click)="removeAuthor(i)" 
+                                    style="cursor: pointer;color: var(--nist-blue-default);"
+                                    data-toggle="tooltip" 
+                                    title="Remove author">
+                                </fa-icon>
+
                                 <span *ngIf="i < ref['authors'].length-1 ">,</span>
                             </span>
                             <!-- expand button -->
-                            <i style="margin-left: 1rem;" class="fas"
-                                [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" (click)="authorExpandClick();"></i>
+                            <!-- <i style="margin-left: 1rem;" class="fas"
+                                [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" (click)="authorExpandClick();"></i> -->
+
+                            <fa-icon 
+                                *ngIf="caretRightIcon && caretDownIcon" 
+                                [icon]="['fas', expandIconClass()]" 
+                                size="sm"
+                                (click)="authorExpandClick()">
+                            </fa-icon>
                         </div>
                         <!-- Author editor -->
                         <div [@editExpand]="editBlockStatus" [ngStyle]="getAuthorStyle()">
@@ -191,7 +208,8 @@
                             aria-label="reset button"
                             pTooltip="Reset" 
                             tooltipPosition="top" >
-                            <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i>
+                            <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]" size="sm" data-toggle="tooltip" title="Reset citation"></fa-icon>
+                            <!-- <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i> -->
                         </button>
 
                         <button 
@@ -202,9 +220,17 @@
                             aria-label="lock/unlock button"
                             [pTooltip]="citationLockTooltip()" 
                             tooltipPosition="top">
-                            <i [class]="citationLockClass()" 
+                            <fa-icon 
+                                *ngIf="lockIcon && undoIcon" 
+                                [icon]="['fas', citationLockClass()]" 
+                                size="sm"
                                 data-toggle="tooltip" 
-                                [title]="citationLockTooltip()"></i>
+                                [title]="citationLockTooltip()">
+                            </fa-icon>
+
+                            <!-- <i [class]="citationLockClass()" 
+                                data-toggle="tooltip" 
+                                [title]="citationLockTooltip()"></i> -->
                         </button>
                     </td>
                 </tr>
@@ -240,7 +266,8 @@
             [disabled]="!ref.dataChanged" 
             pTooltip="Save current changes"
             tooltipPosition="top" >
-            <i [class]="saveIcon"></i>
+            <!-- <i [class]="saveIcon"></i> -->
+            <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]" size="sm"></fa-icon>
         </button>
 
         <!-- Cancel button -->
@@ -251,7 +278,8 @@
             aria-label="undo button" 
             pTooltip="Undo current changes"
             tooltipPosition="top" >
-            <i [class]="cancelIcon"></i>
+            <!-- <i [class]="cancelIcon"></i> -->
+            <fa-icon *ngIf="cancelIcon" [icon]="['fas', cancelIcon]" size="sm"></fa-icon>
         </button>
     </div>
 </div>

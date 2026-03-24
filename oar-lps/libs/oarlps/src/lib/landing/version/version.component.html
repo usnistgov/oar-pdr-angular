@@ -5,12 +5,30 @@
         <i style="cursor: pointer; margin-left: .5em;" class="faa" aria-hidden="true" data-toggle="tooltip"
             [title]="expandButtonAlterText" [aria-label]="expandButtonAlterText" [ngClass]="expandIconClass"
             (click)="expandHistory()"></i>
+
+        <fa-icon 
+            *ngIf="record.versionHistory || record.releaseHistory && caretRightIcon && caretDownIcon" 
+            [class.amplified]="isMouseOver" 
+            [icon]="['fas', expandIconClass]"
+            [title]="expandButtonAlterText" 
+            [aria-label]="expandButtonAlterText" 
+            class="amplifiable" 
+            (mouseover)="isMouseOver = true" 
+            (mouseleave)="isMouseOver = false"
+            (click)="expandHistory()">
+        </fa-icon>
     </span>
 
     <!-- Info button (MIDAS only) -->
     @if(!isPublicSite) {
-        <i class="fas fa-info-circle link-icon" (click)="refreshHelpText()" title="About version" ngbTooltip="About version"
-        style="cursor: pointer;margin-right: 10px;"></i>
+        <fa-icon 
+            *ngIf="circleInfoIcon" 
+            [icon]="['fas', circleInfoIcon]"
+            (click)="refreshHelpText()"
+            title="About version" 
+            ngbTooltip="About version"
+            style="cursor: pointer;margin-right: 10px;">
+        </fa-icon>
     } 
 
     <span class="" *ngIf="record.firstIssued" style="padding-right: 10pt;">

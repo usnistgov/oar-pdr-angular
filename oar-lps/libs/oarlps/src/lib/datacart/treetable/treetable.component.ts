@@ -26,6 +26,17 @@ import { DisplayPrefs } from '../displayprefs';
 import { DataCartStatus } from '../cartstatus';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { isPlatformBrowser } from '@angular/common';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faCircleArrowDown,
+    faCircleArrowUp,
+    faEye,
+    faEyeSlash,
+    faCloudDownload,
+    faDownload
+} from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../shared/globals/globals';
+
 
 /**
  * the structure used as the data item in a TreeNode displaying an item in the cart (or its parent collection) 
@@ -254,6 +265,16 @@ export class TreetableComponent implements OnInit, AfterViewInit {
     mobHeight: number;
     defaultExpandLevel: number = 3;
 
+    //icon class names
+    circleUpIcon = iconClass.CIRCLE_ARROW_UP;
+    circleDownIcon = iconClass.CIRCLE_ARROW_DOWN;
+    eyeIcon = iconClass.EYE;
+    eyeSlashIcon = iconClass.EYE_SLASH;
+    cloudDownloadIcon = iconClass.CLOUD_DOWNLOAD;
+    downloadIcon = iconClass.DOWNLOAD;
+
+    isMouseOver: boolean = false;
+
     @Input() cartName: string;
 
     @ViewChild("ngtt")
@@ -269,8 +290,18 @@ export class TreetableComponent implements OnInit, AfterViewInit {
         public cartService: CartService,
         public gaService: GoogleAnalyticsService,
         private ngZone: NgZone,
+        public iconLibrary: FaIconLibrary,
         @Inject(PLATFORM_ID) private platformId: Object
     ) { 
+        iconLibrary.addIcons(
+            faCircleArrowDown,
+            faCircleArrowUp,
+            faEye,
+            faEyeSlash,
+            faCloudDownload,
+            faDownload
+        ); 
+
         this.inBrowser = isPlatformBrowser(platformId);
         this.CART_CONSTANTS = CartConstants.cartConst;
 

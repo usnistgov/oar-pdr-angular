@@ -1,10 +1,19 @@
 <div class="msg-container">
     {{message}}
     <span class="close-btn">
-        <i class="pi pi-times-circle close-icon" 
+        <!-- <i class="pi pi-times-circle close-icon" 
             (click)="commandOut('clear')"
             pTooltip="Close message bar"
-            aria-label="Close message bar" ></i>
+            aria-label="Close message bar" ></i> -->
+
+        <fa-icon 
+            *ngIf="closeIcon" 
+            [icon]="['fas', closeIcon]" 
+            size="sm"
+            class="close-icon"
+            aria-label="Close button" 
+            ngbTooltip="Close message bar">
+        </fa-icon>
     </span>
 </div>
 

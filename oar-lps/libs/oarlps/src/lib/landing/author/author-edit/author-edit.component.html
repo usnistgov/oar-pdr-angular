@@ -74,10 +74,27 @@
                 <input type="text" [(ngModel)]="author.fn" class="text-input-right-button"
                     style="margin-right: 5px;"
                     (input)="onFullNameChange(author, $event.target.value)" />
-                <i *ngIf="!author.fnLocked" class="faa faa-unlock" (click)="author.fnLocked = !author.fnLocked"
+
+                <fa-icon 
+                    *ngIf="!author.fnLocked && unlockIcon" 
+                    [icon]="['fas', unlockIcon]" 
+                    (click)="author.fnLocked = !author.fnLocked"
+                    style="cursor:pointer;" 
+                    ngbTooltip="Allow full name been updated automatically">
+                </fa-icon>
+
+                <fa-icon 
+                    *ngIf="author.fnLocked && lockIcon" 
+                    [icon]="['fas', lockIcon]" 
+                    (click)="author.fnLocked = !author.fnLocked"
+                    style="cursor:pointer;" 
+                    ngbTooltip="Prevent full name from been updated automatically">
+                </fa-icon>
+
+                <!-- <i *ngIf="!author.fnLocked" class="faa faa-unlock" (click)="author.fnLocked = !author.fnLocked"
                     style="cursor:pointer;" ngbTooltip="Allow full name been updated automatically"></i>
                 <i *ngIf="author.fnLocked" class="faa faa-lock" (click)="author.fnLocked = !author.fnLocked"
-                    style="cursor:pointer;" ngbTooltip="Prevent full name from been updated automatically"></i>
+                    style="cursor:pointer;" ngbTooltip="Prevent full name from been updated automatically"></i> -->
             </td>
         </tr>
 
@@ -121,7 +138,7 @@
             <td align="left" *ngIf="author">
                 <!-- Add button -->
                 <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add affiliation" style="float: right;margin: 5px;">
-                    <i [class]="addIcon"></i>
+                    <fa-icon *ngIf="addIcon" [icon]="['fas', addIcon]"></fa-icon>
                 </button>
 
                 <div class="text-input-right-button" style="margin-left: 10px;border: 1px solid lightgrey;height:fit-content;min-height: 30px;">
@@ -139,9 +156,13 @@
                                 placeholder="Please enter organization name" />
 
                                 <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                    <i [class]="deleteIcon" (click)="deleteAffiliation(aff)"
+                                    <fa-icon *ngIf="deleteIcon" [icon]="['fas', deleteIcon]" (click)="deleteAffiliation(aff)"
                                     style="cursor: pointer;" data-toggle="tooltip"
-                                    title="Delete affiliation"></i>
+                                    title="Delete affiliation"></fa-icon>
+
+                                    <!-- <i [class]="deleteIcon" (click)="deleteAffiliation(aff)"
+                                    style="cursor: pointer;" data-toggle="tooltip"
+                                    title="Delete affiliation"></i> -->
                                 </span>
                             </div>
 
@@ -162,15 +183,26 @@
                                             placeholder="Please enter department/Division name" />
 
                                         <span *ngIf="i==aff.subunits.length-1" class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                            <i [class]="addIcon" (click)="addSubunit(j, aff.subunits[i])"
+                                            <fa-icon *ngIf="addIcon" [icon]="['fas', addIcon]" (click)="addSubunit(j, aff.subunits[i])"
                                             style="cursor: pointer;" data-toggle="tooltip"
-                                            title="Add subunit"></i>
+                                            title="Add subunit"></fa-icon>
+
+                                            <!-- <i [class]="addIcon" (click)="addSubunit(j, aff.subunits[i])"
+                                            style="cursor: pointer;" data-toggle="tooltip"
+                                            title="Add subunit"></i> -->
                                         </span>                                            
                                             
                                         <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                            <i [class]="deleteIcon" (click)="deleteUnit(j, aff.subunits[i])"
+                                            <fa-icon *ngIf="deleteIcon" 
+                                                [icon]="['fas', deleteIcon]" 
+                                                (click)="deleteUnit(j, aff.subunits[i])"
+                                                style="cursor: pointer;" 
+                                                data-toggle="tooltip"
+                                                title="Delete subunit"></fa-icon>
+
+                                            <!-- <i [class]="deleteIcon" (click)="deleteUnit(j, aff.subunits[i])"
                                             style="cursor: pointer;" data-toggle="tooltip"
-                                            title="Delete subunit"></i>
+                                            title="Delete subunit"></i> -->
                                         </span>
 
                                     </div>

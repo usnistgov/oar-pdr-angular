@@ -10,7 +10,7 @@ import { EditStatusService } from '../../../landing/editcontrol/editstatus.servi
 import { LandingConstants } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
@@ -28,6 +28,22 @@ import { AppConfig } from '../../../config/config';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import * as MediaTypeMapping from '../../../../assets/fext2format.json';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faDownload,
+    faCartPlus,
+    faSpinner,
+    faCircleInfo,
+    faMagnifyingGlass,
+    faCircleArrowUp,
+    faCircleArrowDown,
+    faCaretDown,
+    faCaretRight,
+    faLock,
+    faCopy,
+    faHandPointRight
+} from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
 // Define the maximum and minimum height for the virtual scroll window of the tree table.
 // We set maximum window size because the bigger the size the slower the performance.
@@ -101,7 +117,8 @@ interface DataFileItem {
         ButtonModule, 
         FormsModule,
         TooltipModule, 
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './datafiles-pub.component.html',
     styleUrls: [
@@ -193,6 +210,21 @@ export class DatafilesPubComponent {
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
         
+    //icon class names
+    circleIcon = iconClass.CIRCLE;
+    downloadIcon = iconClass.DOWNLOAD;
+    cartPlusIcon = iconClass.CART_PLUS;
+    spinnerIcon = iconClass.SPINNER;
+    circleInfoIcon = iconClass.CIRCLE_INFO
+    searchIcon = iconClass.SEARCH;
+    circleArrowUpIcon = iconClass.CIRCLE_ARROW_UP;
+    circleArrowDownIcon = iconClass.CIRCLE_ARROW_DOWN;
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+    lockIcon = iconClass.LOCK;
+    copyIcon = iconClass.COPY;
+    handPointRightIcon = iconClass.HAND_POINT_RIGHT;
+
     @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
     
     constructor(private cartService: CartService,
@@ -204,8 +236,25 @@ export class DatafilesPubComponent {
                 public edstatsvc: EditStatusService,
                 private gaService: GoogleAnalyticsService,
                 private cfg: AppConfig,
+                public iconLibrary: FaIconLibrary,
                 private ngZone: NgZone)
     {
+        iconLibrary.addIcons(
+            faCircle,
+            faDownload,
+            faCartPlus,
+            faSpinner,
+            faCircleInfo,
+            faMagnifyingGlass,
+            faCircleArrowUp,
+            faCircleArrowDown,
+            faCaretDown,
+            faCaretRight,
+            faLock,
+            faCopy,
+            faHandPointRight
+        );  
+
         this.cols = [
             { field: 'name', header: 'Name', width: '60%' },
             { field: 'mediaType', header: 'File Type', width: 'auto' },
@@ -739,9 +788,9 @@ export class DatafilesPubComponent {
      */
     fileDetailsDisplayClass(fileNode: any) {
         if(fileNode.comp.DetailsDisplayed){
-            return 'faa faa-caret-down';
+            return 'caret-down';
         }else{
-            return 'faa faa-caret-right';
+            return 'caret-right';
         }
     }
 

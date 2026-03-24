@@ -44,7 +44,8 @@
                     <span (click)="showLargeFileManagerHelpPopup($event,op1)" class="large-collection-upload-help" title="How to upload large dataset" ngbTooltip="How to upload large dataset" >
                         Learn alternate ways to upload for large datasets 
                         <!-- Info button -->
-                        <i class="fas fa-info-circle link-icon"></i> 
+                        <!-- <i class="fas fa-info-circle link-icon"></i>  -->
+                        <fa-icon *ngIf="circleInfoIcon" [icon]="['fas', circleInfoIcon]" size="sm"></fa-icon>
                     </span>
                 </div>
             }

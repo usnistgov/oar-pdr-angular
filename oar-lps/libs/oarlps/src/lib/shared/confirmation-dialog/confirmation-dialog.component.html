@@ -2,12 +2,27 @@
     <h4>{{ title }}</h4>
 </div>
 <div class="modal-body center">
-    <i *ngIf="showWarningIcon" class="faa faa-warning faa-2x warning-icon"></i>
+    <!-- <i 
+        *ngIf="showWarningIcon" 
+        class="faa faa-warning faa-2x warning-icon">
+    </i> -->
+    <fa-icon 
+        *ngIf="warningIcon" 
+        [icon]="['fas', warningIcon]" 
+        size="x2">
+    </fa-icon>
     <span [innerHTML]="message"></span>
 </div>
 <div class="modal-footer center">
     <button type="button" pButton id="cd-ok-button" type="submit"
         (click)="accept()">{{ btnOkText }}</button>
-    <button *ngIf="showCancelButton" type="button" pButton type="submit"
-    id="cd-cancel-button" (click)="decline()">{{ btnCancelText }}</button>
+    <button 
+        *ngIf="showCancelButton" 
+        type="button" 
+        pButton 
+        type="submit"
+        id="cd-cancel-button" 
+        (click)="decline()">
+        {{ btnCancelText }}
+    </button>
 </div>

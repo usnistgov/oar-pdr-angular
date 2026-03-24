@@ -51,21 +51,27 @@
 }
 
 #ec-files-btn {
-    /* background-color:rgb(50, 57, 193);
-    color:rgb(255, 255, 255); */
+    background-color:var(--nist-blue-light);
+    color:rgb(255, 255, 255);
     width: 180px;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+#ec-files-btn:hover {
+    background-color: var(--nist-blue-lighter) !important;
 }
 
 #ec-files-btn-sm {
-    /* background-color:rgb(50, 57, 193);
-    color:rgb(255, 255, 255); */
+    background-color:var(--nist-blue-light);
+    color:rgb(255, 255, 255);
     min-width: 80px;
 }
 
 #ec-files-btn-mo {
-    /* background-color:rgb(50, 57, 193);
-    color:rgb(255, 255, 255); */
-    min-width: 50px;
+    background-color:var(--nist-blue-light);
+    color:rgb(255, 255, 255);
+    width: 40px;
 }
 
 /* #ec-files-btn.hover {
@@ -102,6 +108,12 @@
     background-color:var(--science-theme-background-default);
     color:white;
     min-width: 200px;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+#ec-review-btn:hover {
+    background-color: var(--science-theme-background-hover) !important;
 }
 
 #ec-review-btn-sm {
@@ -110,38 +122,54 @@
     min-width: 100px;
 }
 
+#ec-review-btn-sm:hover {
+    background-color: var(--science-theme-background-hover) !important;
+}
+
 #ec-review-btn-mo {
     background-color:var(--science-theme-background-default);
     color:white;
-    min-width: 40px;
+    width: 40px;
 }
 
 #ec-discard-btn {
     background-color:rgb(94, 94, 94);
     color:white;
     min-width: 120px;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+#ec-discard-btn:hover {
+    background-color: var(--disabled-grey) !important;
 }
 
 #ec-discard-btn-sm {
     background-color:rgb(94, 94, 94);
     color:white;
-    min-width: 40px;
+    width: 40px;
 }
 
 #ec-preview-btn {
     background-color:var(--nist-blue-dark2);
     color:white;
     min-width: 120px;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+#ec-preview-btn:hover {
+    background-color: var(--science-theme-background-hover) !important;
 }
 
 #ec-preview-btn-mo {
     background-color:var(--nist-blue-dark2);
     color:white;
-    min-width: 40px;
+    width: 40px;
 }
 
 #ec-info-btn {
-    margin: 10px 0em auto 0.2em;
+    margin: 0px 0em auto 0.2em;
     font-size: 30px;
     cursor: pointer;
     float: right;
@@ -280,4 +308,9 @@ a:link, a:visited, a:hover, a:active {
 
 #submitted {
     font-weight: 100 !important;
+}
+
+.btn fa-icon {
+    margin-right: 8px;
+    /* Adds spacing between the icon and text */
 }

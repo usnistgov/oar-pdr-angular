@@ -17,6 +17,13 @@ import { TagModule } from 'primeng/tag';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { LandingConstants, iconClass } from '../../../shared/globals/globals';
 import { KeywordPubComponent } from '../keyword-pub/keyword-pub.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'keyword-midas',
@@ -32,7 +39,8 @@ import { KeywordPubComponent } from '../keyword-pub/keyword-pub.component';
         ChipModule,
         TagModule,
         ToastrModule,
-        KeywordPubComponent
+        KeywordPubComponent,
+        FontAwesomeModule
     ],
     templateUrl: './keyword-midas.component.html',
     styleUrls: ['./keyword-midas.component.scss', '../../landing.component.scss']
@@ -73,8 +81,15 @@ export class KeywordMidasComponent {
                 private ngbModal: NgbModal, 
                 public lpService: LandingpageService,    
                 private chref: ChangeDetectorRef,
+                public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService){ 
 
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo
+        );        
     }
 
     /**

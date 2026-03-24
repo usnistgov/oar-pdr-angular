@@ -18,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent, HeaderComponent } from 'oarng';
 import { PeopleComponent } from 'oarlps';
 import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     declarations: [
@@ -41,7 +42,8 @@ import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } 
         }),
         FooterComponent,
         HeaderComponent,
-        PeopleComponent
+        PeopleComponent,
+        FontAwesomeModule
     ],
     providers: [
         { provide: RELEASE_INFO, useValue: RELEASE },

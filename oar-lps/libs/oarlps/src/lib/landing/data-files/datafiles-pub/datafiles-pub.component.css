@@ -72,3 +72,12 @@ body .p-treetable .p-treetable-data tr.p-state-highlight .p-row-editor a {
     margin-top: 2em;
     fill: var(--science-theme-background-blue);
 }
+
+fa-icon.small svg {
+    transform: scale(0.7);
+}
+
+.badge {
+    left: 0px;
+}
+

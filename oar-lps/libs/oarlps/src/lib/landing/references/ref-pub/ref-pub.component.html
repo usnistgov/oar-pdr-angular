@@ -2,7 +2,12 @@
     <div class="reference-text for-public">
         <div style="margin: 0em 0em .5em 0em;" *ngFor="let ref of record['references']" class="ref-entry">
             <span *ngIf="ref.location; else noreflink">
-                <span class="fas fa-external-link-alt">&nbsp;</span>
+                <!-- <span class="fas fa-external-link-alt">&nbsp;</span> -->
+                <fa-icon 
+                    *ngIf="arrowUpRightFromSquareIcon" 
+                    [icon]="['fas', arrowUpRightFromSquareIcon]"
+                    style="padding-right: .5em;"></fa-icon>
+                    
                 <a href={{ref.location}} target="blank">{{ getReferenceText(ref) }}</a>
             </span>
             <ng-template #noreflink>

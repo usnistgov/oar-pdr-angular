@@ -23,9 +23,13 @@
                             </td>
                             <!-- Delete button -->
                             <td width="50px">
-                                <i [class]="deleteIcon" (click)="deleteTopic(i)"
-                                    style="float: right;cursor: pointer;color:grey; margin: .5em;" data-toggle="tooltip"
-                                    title="Delete affiliation"></i>
+                                <fa-icon 
+                                    *ngIf="deleteIcon" 
+                                    [icon]="['fas', deleteIcon]"
+                                    (click)="deleteTopic(i)"
+                                    style="float: right;cursor: pointer;color:grey; margin: .5em;" 
+                                    data-toggle="tooltip"
+                                    title="Delete affiliation"></fa-icon>
                             </td>
                         </tr>
                     </table>
@@ -48,7 +52,13 @@
                     - Display only first level
                     - No filtering
                     -->
-                    <i [class]="resetIcon" class = "reset" (click)="showAllTopics()" data-toggle="tooltip" title="Reset"></i>
+                    <!-- <i [class]="resetIcon" class = "reset" (click)="showAllTopics()" data-toggle="tooltip" title="Reset"></i> -->
+                    <fa-icon 
+                        *ngIf="resetIcon" 
+                        [icon]="['fas', resetIcon]"
+                        (click)="showAllTopics()" 
+                        data-toggle="tooltip" 
+                        title="Reset"></fa-icon>
                 </div>
                 <div style="clear: both;"></div>
                 <div #panel0
@@ -75,14 +85,14 @@
         <td style="width: 90px;vertical-align: top;">
             <!-- Save button -->
             <button class="edit_button" type="button" (click)="onSave()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
-                <i [class]="saveIcon"></i>
+                <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]"></fa-icon>
             </button>
     
             <!-- Cancel button -->
             <!-- <button *ngIf="dataChanged" class="edit_button" type="button" -->
             <button class="edit_button" type="button"
                 (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
-                <i [class]="undoIcon"></i>
+                <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]"></fa-icon>
             </button>             
         </td>          
     </tr>

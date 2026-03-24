@@ -2,18 +2,29 @@
 <div class="ui-g top-banner" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')'}">
     <div *ngIf="inBrowser" class="inner-top-banner">
         <span class="top-banner-text top-label">
-            <i class="faa faa-bar-chart faa-lg" style="padding-right: .5em;text-shadow: 1px 1px 2px darkgrey;"></i><label>Dataset Metrics</label>
+            <!-- <i class="faa faa-bar-chart faa-lg" style="padding-right: .5em;text-shadow: 1px 1px 2px darkgrey;"></i><label>Dataset Metrics</label> -->
+            <fa-icon 
+                [icon]="['fas', chartBarIcon]" 
+                style="padding-right: .5em;text-shadow: 1px 1px 2px darkgrey;">
+            </fa-icon>
+            <label>Dataset Metrics</label>
         </span>
         <div *ngIf="screenWidth > screenSizeBreakPoint" style="float: right;">
-            <button (click)="saveMetricsAsImage()" pButton iconPos="left" icon="faa faa-download faa-1x icon-white"
-                label="Download Graphics"
+            <button 
+                (click)="saveMetricsAsImage()" 
                 [disabled]="noChartData || noDatasetSummary"
                 [ngStyle]="{'width':'200px', 'height':'35px', 'float':'right', 'background-color':'green','margin-top':'1em', 'margin-right':'1.5em'}">
+
+                <fa-icon [icon]="['fas', fileDownloadIcon]"></fa-icon>
+                Download Graphics
             </button>
-            <button (click)="saveMetrics()" pButton iconPos="left" icon="faa faa-download faa-1x icon-white"
-                label="Download Metrics"
+            <button 
+                (click)="saveMetrics()" 
                 [disabled]="noChartData || noDatasetSummary"
                 [ngStyle]="{'width':'200px', 'height':'35px', 'float':'right', 'background-color':'green', 'margin-right':'0.5em','margin-top':'1em'}">
+            
+                <fa-icon [icon]="['fas', downloadIcon]"></fa-icon>
+                Download Metrics
             </button>
         </div>
     </div>
@@ -21,13 +32,24 @@
 
 <!-- For small screen, display the two download buttons in the separated lines -->
 <div class="mobile-button-container" *ngIf="screenWidth <= screenSizeBreakPoint" >
-    <button (click)="saveMetrics()" pButton label="Download Metrics" class="p-button-sm"
-    [disabled]="noChartData || noDatasetSummary"
-    [ngStyle]="{'background-color':'green', 'margin-right':'0.5em'}">
+    <button 
+        (click)="saveMetrics()" 
+        label="Download Metrics" 
+        class="button-sm"
+        [disabled]="noChartData || noDatasetSummary"
+        [ngStyle]="{'background-color':'green', 'margin-right':'0.5em'}">
+
+        <fa-icon [icon]="['fas', fileDownloadIcon]"></fa-icon>
     </button>
-    <button (click)="saveMetricsAsImage()" pButton label="Download Graphics" class="p-button-sm"
-    [disabled]="noChartData || noDatasetSummary"
-    [ngStyle]="{'background-color':'green'}">
+
+    <button
+        (click)="saveMetricsAsImage()" 
+        label="Download Graphics" 
+        class="button-sm"
+        [disabled]="noChartData || noDatasetSummary"
+        [ngStyle]="{'background-color':'green'}">
+
+        <fa-icon [icon]="['fas', downloadIcon]"></fa-icon>
     </button>
 </div>
 
@@ -165,12 +187,36 @@
                     <span *ngIf="col.header == 'Name'">
                         <span (click)="expandToLevel(files, !isExpanded, 0, null)"
                             style="padding-right:0.5em;">
-                            <i *ngIf="!isExpanded" class="faa faa-arrow-circle-down faa-1x icon-white"
+                            <!-- <i *ngIf="!isExpanded" class="faa faa-arrow-circle-down faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                 title="Expand All"></i>
                             <i *ngIf="isExpanded" class="fas fa-arrow-circle-up faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Collapse All"></i>
+                                title="Collapse All"></i> -->
+
+                            <fa-icon 
+                                *ngIf="!isExpanded && circleDownIcon" 
+                                [class.amplified]="isMouseOver" 
+                                [icon]="['fas', circleDownIcon]"
+                                class="amplifiable" 
+                                style="cursor: pointer;" 
+                                (mouseover)="isMouseOver = true" 
+                                (mouseleave)="isMouseOver = false"
+                                data-toggle="tooltip" 
+                                title="Expand All">
+                            </fa-icon>
+
+                            <fa-icon 
+                                *ngIf="isExpanded && circleUpIcon" [
+                                class.amplified]="isMouseOver" 
+                                [icon]="['fas', circleUpIcon]"
+                                class="amplifiable" 
+                                style="cursor: pointer;"
+                                (mouseover)="isMouseOver = true" 
+                                (mouseleave)="isMouseOver = false"
+                                data-toggle="tooltip"
+                                title="Collapse All">
+                            </fa-icon>
                         </span>
                     </span>
                     {{col.header}}

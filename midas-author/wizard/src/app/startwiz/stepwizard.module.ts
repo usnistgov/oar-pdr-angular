@@ -8,6 +8,7 @@ import { ComponentsModule } from './components/components.module';
 import { WizardService } from './services/wizard.service';
 import { FrameModule, SidebarComponent, PeopleComponent } from 'oarlps';
 import { ButtonModule } from 'primeng/button';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     imports: [
@@ -20,7 +21,8 @@ import { ButtonModule } from 'primeng/button';
         FrameModule,
         ButtonModule,
         SidebarComponent,
-        PeopleComponent
+        PeopleComponent,
+        FontAwesomeModule
     ],
     declarations: [StepWizardComponent],
     providers: [

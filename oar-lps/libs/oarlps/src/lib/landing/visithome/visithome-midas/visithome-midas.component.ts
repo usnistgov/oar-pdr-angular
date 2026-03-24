@@ -10,6 +10,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { VisithomePubComponent } from '../visithome-pub/visithome-pub.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'Visithome-midas',
@@ -19,7 +26,8 @@ import { VisithomePubComponent } from '../visithome-pub/visithome-pub.component'
         FormsModule,
         VisithomeEditComponent,
         VisithomePubComponent,
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './visithome-midas.component.html',
     styleUrls: ['./visithome-midas.component.scss', '../../landing.component.scss'],
@@ -62,8 +70,16 @@ export class VisithomeMidasComponent {
                 public edstatsvc: EditStatusService,        
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
+                public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) 
     { 
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo
+        );
+
         effect(() => {
             // When edit mode changed, refresh the screen
             // Need to tell effect which signal trigger this function

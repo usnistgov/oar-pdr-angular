@@ -62,7 +62,7 @@
                     *ngIf="!isEditing && !isAdding" 
                     pTooltip="Add access page"
                     tooltipPosition="top">
-                    <i [class]="addIcon"></i>
+                    <fa-icon *ngIf="addIcon" [icon]="['fas', addIcon]"></fa-icon>
                 </button>
             </div>
         </div>

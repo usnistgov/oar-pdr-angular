@@ -2,19 +2,27 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter, ViewChild, ElementRef, ChangeDetectorRef, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { LandingpageService } from '../../landingpage.service';
 import { iconClass } from '../../../shared/globals/globals';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faEraser
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'lib-visithome-edit',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    NgbModule
-  ],
-  templateUrl: './visithome-edit.component.html',
-  styleUrls: ['./visithome-edit.component.css', '../../landing.component.scss']
+    selector: 'lib-visithome-edit',
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        NgbModule,
+        FontAwesomeModule
+    ],
+    templateUrl: './visithome-edit.component.html',
+    styleUrls: ['./visithome-edit.component.css', '../../landing.component.scss']
 })
 export class VisithomeEditComponent implements OnInit {
     tempReturn: any;
@@ -26,6 +34,7 @@ export class VisithomeEditComponent implements OnInit {
     //icon class names
     saveIcon = iconClass.SAVE;
     undoIcon = iconClass.UNDO;
+    eraserIcon = iconClass.ERASER;
 
     @Input() visitHomeURL: any;
     @Input() editMode: string;
@@ -38,7 +47,18 @@ export class VisithomeEditComponent implements OnInit {
 
     @ViewChild('url') urlElement: ElementRef;
     
-    constructor(private chref: ChangeDetectorRef) { }
+    constructor(
+        public iconLibrary: FaIconLibrary,
+        private chref: ChangeDetectorRef) {
+        
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faEraser
+        );
+    }
 
     ngOnInit(): void {
         this.originalURL = this.visitHomeURL;

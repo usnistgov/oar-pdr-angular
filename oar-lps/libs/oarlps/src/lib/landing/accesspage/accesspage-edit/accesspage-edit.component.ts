@@ -6,6 +6,12 @@ import { FormsModule } from '@angular/forms';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { iconClass } from '../../../shared/globals/globals';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-accesspage-edit',
@@ -14,7 +20,8 @@ import { iconClass } from '../../../shared/globals/globals';
         CommonModule,
         FormsModule,
         TooltipModule,
-        ButtonModule
+        ButtonModule,
+        FontAwesomeModule
     ],
     templateUrl: './accesspage-edit.component.html',
     styleUrls: ['../../landing.component.scss', './accesspage-edit.component.css']
@@ -35,7 +42,16 @@ export class AccesspageEditComponent implements OnInit {
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
-    constructor(public mdupdsvc : MetadataUpdateService) { }
+    constructor(
+        public mdupdsvc: MetadataUpdateService,
+        public iconLibrary: FaIconLibrary) { 
+        
+        iconLibrary.addIcons(
+            faXmark,
+            faSave,
+            faUndo
+        );  
+    }
 
     ngOnInit(): void {
         if(this.currentApage) {

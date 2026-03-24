@@ -44,3 +44,19 @@ body .p-treetable .p-treetable-data tr.p-state-highlight .p-row-editor a {
     float: right;
     cursor: pointer;
 }
+
+.badge-notify {
+    background-color: var(--nist-green-default);
+    color: white;
+    position: relative;
+    left: 22px;
+    right: -5px;
+    top: -15px;
+    font-size: 9px;
+    font-weight: bold;
+    height: 15px;
+    width: 15px;
+    padding: 3px 3px 3px 3px;
+    border-radius: 25px;
+    margin-left: -1.5em;
+}

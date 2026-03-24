@@ -18,7 +18,7 @@
         aria-label="Edit collection" 
         ngbTooltip="Edit collection" 
         style="cursor: pointer">
-        <i [class]="getEditIconClass()"></i>
+        <fa-icon *ngIf="editIcon" [icon]="['fas', editIcon]" [class]="getEditIconClass()" size="sm"></fa-icon>
     </button> 
     
     <!-- Undo button -->
@@ -27,7 +27,7 @@
         type="button"
         ngbTooltip="Undo Current Change"
         (click)="undo()">
-        <i [class]="getUndoIconClass()"></i>
+        <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]" [class]="getUndoIconClass()" size="sm"></fa-icon>
     </button>              
 </div>
 
@@ -63,7 +63,7 @@
                         aria-label="edit button" 
                         [disabled]="!dataChanged" 
                         ngbTooltip="Save collection and close editing block">
-                        <i [class]="saveIcon"></i>
+                        <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]"></fa-icon>
                     </button>
             
                     <!-- Cancel button -->
@@ -72,7 +72,7 @@
                         (click)="undoCurCollectionChanges()" 
                         aria-label="undo button" 
                         ngbTooltip="Undo and close editing block">
-                        <i [class]="closeIcon"></i>
+                        <fa-icon *ngIf="closeIcon" [icon]="['fas', closeIcon]"></fa-icon>
                     </button>
                 </td>          
             </tr>

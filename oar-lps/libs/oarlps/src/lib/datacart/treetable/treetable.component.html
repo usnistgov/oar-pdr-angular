@@ -8,27 +8,71 @@
                 <tr>
                     <th [ngStyle]="headerStyle(titleWidth)" ttResizableColumn>
                         <span (click)="expandToLevel(dataTree.children, !isExpanded, null)" style="padding-right:0.5em;">
-                            <i *ngIf="!isExpanded" class="fas fa-arrow-circle-down faa-1x icon-white"
+                            <!-- <i *ngIf="!isExpanded" class="fas fa-arrow-circle-down faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                 title="Expand All"></i>
                             <i *ngIf="isExpanded" class="fas fa-arrow-circle-up faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Collapse All"></i>
+                                title="Collapse All"></i> -->
+
+                            <fa-icon 
+                                *ngIf="!isExpanded && circleDownIcon" 
+                                [class.amplified]="isMouseOver" 
+                                [icon]="['fas', circleDownIcon]"
+                                class="amplifiable" 
+                                style="cursor: pointer;" 
+                                (mouseover)="isMouseOver = true" 
+                                (mouseleave)="isMouseOver = false"
+                                data-toggle="tooltip" 
+                                title="Expand All">
+                            </fa-icon>
+
+                            <fa-icon 
+                                *ngIf="isExpanded && circleUpIcon" 
+                                [ class.amplified]="isMouseOver" 
+                                [icon]="['fas', circleUpIcon]"
+                                class="amplifiable" 
+                                style="cursor: pointer;" 
+                                (mouseover)="isMouseOver = true" 
+                                (mouseleave)="isMouseOver = false"
+                                data-toggle="tooltip" 
+                                title="Collapse All">
+                            </fa-icon>
                         </span>
                         <span (click)="showZipFilesNames = !showZipFilesNames" style="padding-right:0.5em;">
-                            <i *ngIf="!showZipFilesNames" class="fas fa-eye faa-1x icon-white"
+                            <!-- <i *ngIf="!showZipFilesNames" class="fas fa-eye faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                 title="Show Zip Files"></i>
                             <i *ngIf="showZipFilesNames" class="fas fa-eye-slash faa-1x icon-white"
                                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Hide Zip Files"></i>
+                                title="Hide Zip Files"></i> -->
+
+                            <fa-icon 
+                                *ngIf="!showZipFilesNames && eyeIcon" 
+                                [icon]="['fas', eyeIcon]"
+                                data-toggle="tooltip"
+                                title="Show Zip Files">
+                            </fa-icon>
+
+                            <fa-icon 
+                                *ngIf="showZipFilesNames && eyeSlashIcon" 
+                                [icon]="['fas', eyeSlashIcon]" 
+                                data-toggle="tooltip" 
+                                title="Hide Zip Files">
+                            </fa-icon>                        
                         </span>
                         Name
                     </th>
                     <th [ngStyle]="headerStyle(typeWidth)" ttResizableColumn>Media Type</th>
                     <th [ngStyle]="headerStyle(sizeWidth)" ttResizableColumn>Size</th>
                     <th [ngStyle]="headerStyle(actionWidth)" ttResizableColumn>
-                        <i class="fas fa-cloud-download-alt" aria-hidden="true" data-toggle="tooltip" title="Actions"></i>
+                        <!-- <i class="fas fa-cloud-download-alt" aria-hidden="true" data-toggle="tooltip" title="Actions"></i> -->
+                        <fa-icon 
+                            *ngIf="cloudDownloadIcon" 
+                            [icon]="['fas', cloudDownloadIcon]" 
+                            data-toggle="tooltip"
+                            title="Actions">
+                        </fa-icon>
                     </th>
                     <th [ngStyle]="headerStyle(statusWidth)" ttResizableColumn>
                         Status
@@ -69,13 +113,26 @@
                         <div *ngIf="rowData.cartItem;else space_holder" style="display:inline;color: green;" >
                             <a *ngIf="rowData.cartItem.downloadStatus != 'downloading'" href='{{rowData.cartItem.downloadURL}}' target='_blank' download="download" data-toggle="tooltip" 
                                 title="Download this file" aria-label="Download this file">
-                                <i class="fas fa-download"
-                                    aria-hidden="true" (click)="setFileDownloaded(rowData)"></i>
+                                <!-- <i class="fas fa-download"
+                                    aria-hidden="true" (click)="setFileDownloaded(rowData)"></i> -->
+
+                                <fa-icon 
+                                    *ngIf="downloadIcon" 
+                                    [icon]="['fas', downloadIcon]" 
+                                    (click)="setFileDownloaded(rowData)"
+                                    aria-hidden="true">
+                                </fa-icon>
                             </a>
                             <a *ngIf="rowData.cartItem.downloadStatus == 'downloading'" data-toggle="tooltip" 
                             title="Download this file" aria-label="Download this file">
-                            <i class="fas fa-download"
-                                aria-hidden="true"></i>
+                            <!-- <i class="fas fa-download"
+                                aria-hidden="true"></i> -->
+
+                            <fa-icon 
+                                *ngIf="downloadIcon" 
+                                [icon]="['fas', downloadIcon]" 
+                                aria-hidden="true">
+                            </fa-icon>
                         </a>
                         </div>
                         <ng-template #space_holder>
@@ -85,8 +142,18 @@
                     <td [ngStyle]="bodyStyle(statusWidth)">
                         <div id="downloadstatus" *ngIf="rowData.cartItem" style="display:inline;"
                             [ngStyle]="{'color':getDownloadStatusColor(rowData.cartItem.downloadStatus)}">
-                            <i [class]="getIconClass(rowData.cartItem.downloadStatus)" style="margin-right: .5em;"
-                                aria-hidden="true" data-toggle="tooltip" title="{{rowData.cartItem.downloadStatus}}"></i>
+                            <!-- <i [class]="getIconClass(rowData.cartItem.downloadStatus)" style="margin-right: .5em;"
+                                aria-hidden="true" data-toggle="tooltip" title="{{rowData.cartItem.downloadStatus}}"></i> -->
+
+                            <fa-icon 
+                                [icon]="['fas', getIconClass(rowData.cartItem.downloadStatus)]" 
+                                style="margin-right: .5em;"
+                                aria-hidden="true"
+                                aria-hidden="true" 
+                                data-toggle="tooltip" 
+                                title="{{rowData.cartItem.downloadStatus}}">
+                            </fa-icon>
+
                             <p-progressSpinner *ngIf="rowData.cartItem.downloadStatus == 'downloading'"
                                 [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
                             <span

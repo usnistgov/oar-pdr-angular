@@ -6,6 +6,14 @@ import { CartService } from '../cart.service';
 import { DataCart } from '../cart';
 import { DownloadService } from '../../shared/download-service/download-service.service';
 import { isPlatformBrowser } from '@angular/common';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faDownload,
+    faTrashCan,
+    faTrash,
+    faCloudDownload
+} from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../shared/globals/globals';
 
 @Component({
   selector: 'app-cartcontrol',
@@ -22,6 +30,12 @@ export class CartcontrolComponent implements OnInit, OnChanges {
     totalDownloaded: number = 0;
     datacart: DataCart = null;
 
+    //icon class
+    downloadIcon = iconClass.DOWNLOAD;
+    cloudDownloadIcon = iconClass.CLOUD_DOWNLOAD;
+    deleteIcon = iconClass.DELETE;
+    deleteIcon2 = iconClass.DELETE2;
+
     @Input() cartName: string;
     @Output() onDownloadSelected = new EventEmitter<boolean>();  
     @Output() onRemoveSelected = new EventEmitter<boolean>();  
@@ -30,8 +44,16 @@ export class CartcontrolComponent implements OnInit, OnChanges {
     constructor(
         private cfg: AppConfig,
         public cartService: CartService,
-        @Inject(PLATFORM_ID) private platformId: Object
-    ) { 
+        public iconLibrary: FaIconLibrary,
+        @Inject(PLATFORM_ID) private platformId: Object) { 
+
+        iconLibrary.addIcons(
+            faDownload,
+            faTrashCan,
+            faTrash,
+            faCloudDownload
+        );
+        
         this.inBrowser = isPlatformBrowser(platformId);
         this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");
     }

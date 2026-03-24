@@ -14,7 +14,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -31,6 +31,8 @@ import { FrameModule } from '../../../frame/frame.module';
 import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
 declare var _initAutoTracker: Function;
 
@@ -47,7 +49,8 @@ declare var _initAutoTracker: Function;
         ButtonModule, 
         TooltipModule, 
         NgbModule,
-        DatafilesPubComponent
+        DatafilesPubComponent,
+        FontAwesomeModule
     ],
     templateUrl: './datafiles-midas.component.html',
     styleUrls: [
@@ -106,6 +109,9 @@ export class DatafilesMidasComponent {
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
         
+    //icon class names
+    circleInfoIcon = iconClass.CIRCLE_INFO;
+
     constructor(private cfg: AppConfig,
                 public editstatsvc: EditStatusService,
                 public breakpointObserver: BreakpointObserver,
@@ -115,8 +121,11 @@ export class DatafilesMidasComponent {
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
                 private confirmDialogSvc: ConfirmationDialogService,
+                public iconLibrary: FaIconLibrary,
                 private ngZone: NgZone)
     {
+        iconLibrary.addIcons(faCircleInfo);
+
         this.cols = [
             { field: 'name', header: 'Name', width: '60%' },
             { field: 'mediaType', header: 'Media Type', width: 'auto' },

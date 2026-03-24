@@ -8,7 +8,7 @@
                             [ngStyle]="visitHomePageBtnStyle()"
                             (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
                     
-                        <i class="fas fa-external-link-alt" pButtonIcon style="padding-right: .5em;"></i>
+                        <fa-icon *ngIf="arrowUpRightFromSquareIcon" [icon]="['fas', arrowUpRightFromSquareIcon]" pButtonIcon style="padding-right: .5em;"></fa-icon>
                         <span pButtonLabel>Visit Home Page</span>
                     </button>
                 </a>
@@ -19,8 +19,12 @@
                             class="oar-button home_button"
                             [ngStyle]="visitHomePageBtnStyle()">
 
-                        <i class="fas fa-external-link-alt" pButtonIcon
-                            style="padding-right: .5em;"></i>
+                        <!-- <i class="fas fa-external-link-alt" pButtonIcon
+                            style="padding-right: .5em;"></i> -->
+                        <fa-icon *ngIf="arrowUpRightFromSquareIcon" 
+                            [icon]="['fas', arrowUpRightFromSquareIcon]" 
+                            pButtonIcon
+                            style="padding-right: .5em;"></fa-icon>
                             <span pButtonLabel>Visit Home Page</span>
                     </button>
             }

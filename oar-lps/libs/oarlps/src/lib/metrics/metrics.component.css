@@ -120,3 +120,7 @@
     padding-top: 1em;
     color: #12659c; 
 }
+
+.button-sm {
+    width: 40px;
+}
