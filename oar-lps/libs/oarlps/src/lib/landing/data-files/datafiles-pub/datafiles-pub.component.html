@@ -11,7 +11,8 @@
             <!-- <i class="fas fa-spinner fa-spin"></i>  -->
             <fa-icon 
                 *ngIf="spinnerIcon" 
-                [icon]="['fas', spinnerIcon]">
+                [icon]="['fas', spinnerIcon]"
+                [animation]="'spin'">
             </fa-icon>
             Loading file list...
         </p>
@@ -27,12 +28,14 @@
                         ngbTooltip="Download all disabled in edit mode">
                     </span> -->
 
+                    <!-- Download icon in MIDAS side -->
                     <span class="fa-stack grey-color" size="2x" style="margin: -5px -22px 0 10px" aria-label="Download all"
                         ngbTooltip="Download all disabled in edit mode">
                         <fa-icon *ngIf="circleIcon" [icon]="['far', circleIcon]" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
                         <fa-icon *ngIf="downloadIcon" [icon]="['fas', downloadIcon]" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
                     </span>
 
+                    <!-- Add all to cart icon in MIDAS side -->
                     <span class="fa-stack grey-color" size="2x" style="margin: -5px -2em 0px 10px" aria-label="Add all to data cart"
                         ngbTooltip="Add all to data cart disabled in edit mode">
                         <fa-icon *ngIf="circleIcon" [icon]="['far', circleIcon]" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
@@ -48,6 +51,8 @@
                 <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
                     <span><b id="filelist-heading">Files </b> </span>
                     <!-- <a class="fa-stack fa-lg icon-download" style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all" -->
+
+                    <!-- Download icon in public side -->
                     <a style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all"
                         [ngbTooltip]="downloadAllTooltip" [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
                         <!-- <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
@@ -76,22 +81,17 @@
                                     [icon]="['fas', spinnerIcon]" 
                                     class="fa-stack-1x small" 
                                     style="top: 6px;" 
-                                    [spin]="true" 
+                                    [animation]="'spin'"
                                     aria-hidden="true">
                                 </fa-icon>
                             </ng-template>
                         </span>
-
-                        <!-- <fa-stack>
-                            <fa-icon *ngIf="circleIcon" [icon]="['fas', circleIcon]" size="2x"></fa-icon>
-                            <fa-icon *ngIf="downloadIcon && !isAddingToDownloadAllCart" [icon]="['fas', downloadIcon]" size="xs" aria-hidden="true"></fa-icon>
-                            <ng-template #show_spinner1>
-                                <fa-icon *ngIf="spinnerIcon" [icon]="['fas', spinnerIcon]" size="xs" [spin]="true" aria-hidden="true"></fa-icon>
-                            </ng-template>
-                        </fa-stack> -->
                     </a>
                     <a id="routeToDatacart" target="_blank" [routerLink]="['/datacart', 'popup']" style="display:none"></a>
+
+                    <!-- Add all to cart icon in public side -->
                     <span 
+                        class="icon-cart"
                         style="width: 30px;" 
                         (click)="toggleAllFilesInGlobalCart(files)" 
                         [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',}" 
@@ -103,7 +103,7 @@
                         <ng-template #show_spinner><i class="fas fa-spinner fa-spin fa-stack-1x spinner"
                                 aria-hidden="true"></i></ng-template> -->
 
-                        <span class="fa-stack" size="2x" style="margin: -5px -2em 0px 10px" aria-label="Add all to cart"
+                        <span class="fa-stack" size="2x" style="margin: 8px -2em 0px 10px" aria-label="Add all to cart"
                             ngbTooltip="Add all to cart">
                             <fa-icon 
                                 *ngIf="circleIcon" 
@@ -123,20 +123,11 @@
                                     [icon]="['fas', spinnerIcon]" 
                                     class="fa-stack-1x small" 
                                     style="top: 8px; left: -2px;" 
-                                    [spin]="true"
+                                    [animation]="'spin'"
                                     aria-hidden="true">
                                 </fa-icon>
                             </ng-template>
                         </span>
-
-                        <!-- <fa-stack>
-                            <fa-icon *ngIf="circleIcon" [icon]="['fas', circleIcon]" size="2x"></fa-icon>
-                            <fa-icon *ngIf="cartPlusIcon && !isTogglingAllInGlobalCart; else show_spinner" [icon]="['fas', cartPlusIcon]"
-                                size="xs" aria-hidden="true"></fa-icon>
-                            <ng-template #show_spinner>
-                                <fa-icon *ngIf="spinnerIcon" [icon]="['fas', spinnerIcon]" size="xs" [spin]="true" aria-hidden="true"></fa-icon>
-                            </ng-template>
-                        </fa-stack> -->
 
                         <span class="w3-badge badge-notify">{{cartLength}}</span>
                     </span>
@@ -259,6 +250,10 @@
                             <fa-icon 
                                 *ngIf="caretRightIcon && caretDownIcon" 
                                 [icon]="['fas', fileDetailsDisplayClass(rowData)]" 
+                                [class.amplified]="rowData.isMouseOver"
+                                class="amplifiable"
+                                (mouseover)="rowData.isMouseOver = true" 
+                                (mouseleave)="rowData.isMouseOver = false"                                
                                 size="sm">
                             </fa-icon>
                             <!-- <i [ngClass]='fileDetailsDisplayClass(rowData)'></i> -->

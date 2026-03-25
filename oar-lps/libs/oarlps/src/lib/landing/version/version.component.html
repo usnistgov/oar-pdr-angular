@@ -2,12 +2,12 @@
     <span class="" *ngIf="record.version" style="padding-right: 10pt;"> 
         Version: <strong>{{majorVersion}}</strong></span>
     <span class="" *ngIf="record.versionHistory || record.releaseHistory" style="padding-right: 15pt;">...
-        <i style="cursor: pointer; margin-left: .5em;" class="faa" aria-hidden="true" data-toggle="tooltip"
+        <!-- <i style="cursor: pointer; margin-left: .5em;" class="faa" aria-hidden="true" data-toggle="tooltip"
             [title]="expandButtonAlterText" [aria-label]="expandButtonAlterText" [ngClass]="expandIconClass"
-            (click)="expandHistory()"></i>
+            (click)="expandHistory()"></i> -->
 
         <fa-icon 
-            *ngIf="record.versionHistory || record.releaseHistory && caretRightIcon && caretDownIcon" 
+            *ngIf="caretRightIcon && caretDownIcon" 
             [class.amplified]="isMouseOver" 
             [icon]="['fas', expandIconClass]"
             [title]="expandButtonAlterText" 

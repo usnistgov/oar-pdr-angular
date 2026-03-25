@@ -5,9 +5,11 @@ import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { CitationDisplayComponent } from '../citation-display/citation-display.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Themes, Collections, GlobalService } from '../../../shared/globals/globals';
+import { Themes, Collections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { animate, style, transition, trigger } from '@angular/animations';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faCopy, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-citation-popup',
@@ -17,7 +19,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
         ButtonModule, 
         DialogModule, 
         SharedModule,
-        CitationDisplayComponent
+        CitationDisplayComponent,
+        FontAwesomeModule
     ],
     templateUrl: './citation-popup.component.html',
     styleUrl: './citation-popup.component.css',
@@ -41,6 +44,10 @@ export class CitationPopupComponent {
     allCollections: any = {};
     colorScheme: any;
 
+    //icon class names
+    copyIcon = iconClass.COPY;
+    closeIcon = iconClass.CLOSE;
+
     @Input() citetext : string;
     @Input() visible : boolean;
     @Input() width: number;
@@ -52,8 +59,10 @@ export class CitationPopupComponent {
         public activeModal: NgbActiveModal,
         public collectionService: CollectionService,
         public globalService: GlobalService,
+        public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef) {
         
+        iconLibrary.addIcons(faCopy, faXmark);
         this.allCollections = this.collectionService.loadAllCollections();
 
         this.globalService.watchColorPalette((colorPalette) => {

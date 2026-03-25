@@ -3,6 +3,9 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ZipData } from '../../shared/download-service/zipData';
 import { formatBytes } from '../../utils';
 import { AppConfig } from '../../config/config';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faDownload, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../shared/globals/globals';
 
 @Component({
     selector: 'app-download-confirm',
@@ -10,6 +13,10 @@ import { AppConfig } from '../../config/config';
     styleUrls: ['./download-confirm.component.css','../datacart.component.css']
 })
 export class DownloadConfirmComponent implements OnInit {
+    //icon class names
+    downloadIcon = iconClass.DOWNLOAD;
+    closeIcon = iconClass.CLOSE;
+
     @Input() bundle_plan_size: number;
     @Input() zipData: ZipData[];
     @Input() totalFiles: number;
@@ -17,9 +24,13 @@ export class DownloadConfirmComponent implements OnInit {
 
     bundleSizeAlert: number;
 
-    constructor(public activeModal: NgbActiveModal,
-                private cfg: AppConfig) 
-    { }
+    constructor(
+        public activeModal: NgbActiveModal,
+        public iconLibrary: FaIconLibrary,
+        private cfg: AppConfig) { 
+        
+        iconLibrary.addIcons(faDownload, faXmark);
+    }
 
     ngOnInit() 
     {

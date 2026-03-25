@@ -56,7 +56,8 @@ export class AppComponent {
     gaCode: string;
     inBrowser: boolean = false;
     appVersion: string = "1.0"
-    authToken: string|null = null;
+    authToken: string | null = null;
+    useNewIcons: boolean = true;
     
     homeButtonLink: string = "";
     ga4Code: string = null;

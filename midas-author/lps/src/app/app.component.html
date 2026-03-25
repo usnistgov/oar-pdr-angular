@@ -4,7 +4,8 @@
 <app-header
     [appVersion]="appVersion"
     titleLn1="MIDAS"
-    titleLn2="DATA PUBLISHING">
+    titleLn2="DATA PUBLISHING"
+    [useNewIcons]="useNewIcons">
 
     <!-- <div class="bar-right custom-navbar" >
       |  <a href="/pdr/about" target="_blank"><b>About</b></a> |
@@ -19,4 +20,4 @@
 <div style="min-height: 58%;">
   <router-outlet></router-outlet>
 </div>
-<app-footer></app-footer>
+<app-footer [useNewIcons]="useNewIcons"></app-footer>

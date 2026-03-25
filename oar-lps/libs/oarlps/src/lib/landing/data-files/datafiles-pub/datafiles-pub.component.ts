@@ -486,6 +486,7 @@ export class DatafilesPubComponent {
                                                                               : this.formatBytes(comp.size);
                 out['DetailsDisplayed'] = false;
                 out['DetailsDisplayed02'] = false;
+                out['isMouseOver'] = false;
             }
             return out;
         }

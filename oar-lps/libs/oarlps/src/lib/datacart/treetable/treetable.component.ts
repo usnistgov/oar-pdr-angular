@@ -33,7 +33,8 @@ import {
     faEye,
     faEyeSlash,
     faCloudDownload,
-    faDownload
+    faDownload,
+    faCheck
 } from '@fortawesome/free-solid-svg-icons';
 import { iconClass } from '../../shared/globals/globals';
 
@@ -272,6 +273,7 @@ export class TreetableComponent implements OnInit, AfterViewInit {
     eyeSlashIcon = iconClass.EYE_SLASH;
     cloudDownloadIcon = iconClass.CLOUD_DOWNLOAD;
     downloadIcon = iconClass.DOWNLOAD;
+    checkIcon = iconClass.CHECK;
 
     isMouseOver: boolean = false;
 
@@ -299,7 +301,8 @@ export class TreetableComponent implements OnInit, AfterViewInit {
             faEye,
             faEyeSlash,
             faCloudDownload,
-            faDownload
+            faDownload,
+            faCheck
         ); 
 
         this.inBrowser = isPlatformBrowser(platformId);

@@ -1,16 +1,41 @@
 <!-- Display zip files if any -->
 <div *ngIf="inBrowser" class="full-span">
     <!-- Show current task -->
-    <div *ngIf="showCurrentTask" style="text-align: center; margin:auto; width:100%;"><i class="fas fa-spinner fa-spin" style="color:#1E6BA1;" aria-hidden="true"></i><span style="padding-left: .5em;">{{currentTask}}</span></div>
+    <div *ngIf="showCurrentTask" style="text-align: center; margin:auto; width:100%;">
+        <!-- <i class="fas fa-spinner fa-spin" style="color:#1E6BA1;" aria-hidden="true"></i> -->
+        <fa-icon 
+            *ngIf="spinnerIcon" 
+            [icon]="['fas', spinnerIcon]" 
+            [animation]="'spin'" 
+            style="color:#1E6BA1;" 
+            aria-hidden="true">
+        </fa-icon>
+        <span style="padding-left: .5em;">{{currentTask}}</span></div>
     <!-- header -->
     <div *ngIf="zipData.length > 0" class="header-green" style="width: 100%;" data-toggle="tooltip" title="Zip Files">
         <span class="span30">
             <!-- Toggle button to show/hide zip files-->
             <span (click)="showZipFiles = !showZipFiles">
-                <i *ngIf="!showZipFiles" class="fas fa-arrow-circle-down faa-1x icon-white"
+                <!-- <i *ngIf="!showZipFiles" class="fas fa-arrow-circle-down faa-1x icon-white"
                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Expand All"></i>
                 <i *ngIf="showZipFiles" class="fas fa-arrow-circle-up faa-1x icon-white"
-                    style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i>
+                    style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i> -->
+
+                <fa-icon 
+                    *ngIf="showZipFiles && circleDownIcon" 
+                    [icon]="['fas', circleDownIcon]" 
+                    style="cursor: pointer;color: rgb(255, 255, 255);" 
+                    data-toggle="tooltip" 
+                    title="Expand All">
+                </fa-icon>
+
+                <fa-icon 
+                    *ngIf="showZipFiles && circleUpIcon" 
+                    [icon]="['fas', circleUpIcon]"
+                    style="cursor: pointer;color: rgb(255, 255, 255);" 
+                    data-toggle="tooltip" 
+                    title="Collapse All">
+                </fa-icon>
             </span>
             Zip File Name
         </span>
@@ -39,23 +64,56 @@
                             [striped]="true"></ngb-progressbar>
                     </span>
 
-                    <span (click)="cancelDownloadZip(zip)" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel current download"><i class="fas fa-times"></i></span>
+                    <span (click)="cancelDownloadZip(zip)" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel current download">
+                        <!-- <i class="fas fa-times"></i> -->
+
+                        <fa-icon 
+                            *ngIf="cancelIcon" 
+                            [icon]="['fas', cancelIcon]" 
+                            aria-hidden="true">
+                        </fa-icon>
+                    </span>
                 </div>
                 <ng-template #not_downloading style="display:inline-block;">
                     <div *ngIf="zip.downloadStatus != 'error'; else download_error" style="display:inline-block;"
                         [ngStyle]="{'color':getDownloadStatusColor(zip.downloadStatus)}">
-                        <i [class]="getIconClass(zip.downloadStatus)" style="margin-top: 8px;"></i>
+                        <!-- <i [class]="getIconClass(zip.downloadStatus)" style="margin-top: 8px;"></i> -->
+
+                        <fa-icon 
+                            *ngIf="zip.downloadStatus"
+                            [icon]="['fas', getIconClass(zip.downloadStatus)]" 
+                            style="margin-top: 8px;"
+                            aria-hidden="true">
+                        </fa-icon>
+
                         {{getStatusForDisplay(zip.downloadStatus)}}
                     </div>
                     <ng-template #download_error>
                         <div style="display:inline-block;margin-left: .5em;font-size: 0.8em; color: red; cursor: pointer;" (click)="openErrZipDetails($event,op5,zip) ">
-                            <i class="fas fa-exclamation-triangle" [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"></i>
+                            <!-- <i class="fas fa-exclamation-triangle" [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"></i> -->
+
+                            <fa-icon 
+                                *ngIf="warningIcon" 
+                                [icon]="['fas', warningIcon]" 
+                                [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"
+                                aria-hidden="true">
+                            </fa-icon>
+
                             <u>{{getStatusForDisplay(zip.downloadStatus)}}</u>
                         </div>
                     </ng-template>
-                    <i *ngIf="zip.downloadStatus != null" class="faa faa-repeat"
+                    <!-- <i *ngIf="zip.downloadStatus != null" class="faa faa-repeat"
                         style="display: inline-block; margin-left: .5em; font-size: 0.8em; color: #1E6BA1; cursor: pointer;"
-                        data-toggle="tooltip" title="Retry" (click)="downloadOneZip(zip)"></i>
+                        data-toggle="tooltip" title="Retry" (click)="downloadOneZip(zip)"></i> -->
+
+                    <fa-icon 
+                        *ngIf="zip.downloadStatus != null && repeatIcon" 
+                        [icon]="['fas', repeatIcon]" 
+                        style="display: inline-block; margin-left: .5em; font-size: 0.8em; color: #1E6BA1; cursor: pointer;"
+                        data-toggle="tooltip" 
+                        title="Retry" 
+                        (click)="downloadOneZip(zip)">
+                    </fa-icon>
                 </ng-template>
             </span>
         </div>
@@ -71,7 +129,12 @@
                     <ngb-progressbar type="info" [value]="overallProgress" textType="white" [showValue]="true"
                         [striped]="true"></ngb-progressbar>
                 </span>
-                <span (click)="cancelDownloadAllConfirmation()" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel all downloads"><i class="fas fa-times"></i></span>
+                <span (click)="cancelDownloadAllConfirmation()" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel all downloads">
+                    <!-- <i class="fas fa-times"></i> -->
+
+                    <fa-icon *ngIf="cancelIcon" [icon]="['fas', cancelIcon]" aria-hidden="true">
+                    </fa-icon>
+                </span>
             </div>
             <ng-template #not_overall_downloading style="display:inline-block;">
                 <span *ngIf="overallStatus === 'complete';else other">
@@ -93,11 +156,28 @@
     *ngIf="inBrowser && (bundlePlanStatus == 'error' || bundlePlanStatus == 'internal error' || bundlePlanStatus === 'warnings')">
     <div class="header-orange" data-toggle="tooltip" title="Bundle message details">
         <span style="margin-left: .5em;" *ngIf="bundlePlanMessage" (click)="showMessage = !showMessage">
-            <i *ngIf="showMessage; else hideMessage" class="fas fa-arrow-circle-up faa-1x icon-white"
-                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i>
+            <!-- <i *ngIf="showMessage; else hideMessage" class="fas fa-arrow-circle-up faa-1x icon-white"
+                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i> -->
+
+            <fa-icon 
+                *ngIf="showMessage && circleDownIcon; else hideMessage" 
+                [icon]="['fas', circleDownIcon]" 
+                style="cursor: pointer;color: rgb(255, 255, 255);"
+                data-toggle="tooltip" 
+                title="Collapse All">
+            </fa-icon>
+
             <ng-template #hideMessage>
-                <i class="fas fa-arrow-circle-down faa-1x icon-white"
-                    style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Expand All"></i>
+                <!-- <i class="fas fa-arrow-circle-down faa-1x icon-white"
+                    style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Expand All"></i> -->
+
+                <fa-icon 
+                    *ngIf="circleDownIcon" 
+                    [icon]="['fas', circleDownIcon]"
+                    style="cursor: pointer;color: rgb(255, 255, 255);" 
+                    data-toggle="tooltip" 
+                    title="Expand All">
+                </fa-icon>
             </ng-template>
         </span>
         Message

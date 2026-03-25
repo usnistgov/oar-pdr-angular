@@ -848,7 +848,10 @@ export class iconClass {
     static readonly RESET = 'recycle';
     static readonly CLOSE_CIRCLE = 'circle-xmark'; 
     static readonly ARROW_CIRCLE_RIGHT = "arrow-circle-right";
+    static readonly ANGLES_UP = "angles-up";
     static readonly ANGLES_RIGHT = "angles-right";
+    static readonly ANGLES_DOWN = "angles-down";
+    static readonly ANGLES_LEFT = "angles-left";
     static readonly ARROW_UP_RIGHT_FROM_SQUARE = "arrow-up-right-from-square";
     static readonly CART_PLUS = "cart-plus";
     static readonly DOWNLOAD = "download";    
@@ -876,4 +879,5 @@ export class iconClass {
     static readonly WARNING = 'triangle-exclamation';
     static readonly FILE_DOWNLOAD = 'file-arrow-down';
     static readonly CLOUD_DOWNLOAD = 'cloud-download';
+    static readonly REPEAT = 'repeat';
 }

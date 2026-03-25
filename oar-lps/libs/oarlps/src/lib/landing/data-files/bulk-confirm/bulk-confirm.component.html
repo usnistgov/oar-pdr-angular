@@ -18,7 +18,13 @@ Click "Proceed Bulk Download" to continue downloading. Or click on "Cancel Bulk 
                 (click)="continueBulkDownload()"
                 label="Proceed Bulk Download" 
                 iconPos="left">
-                <i class="faa faa-download faa-1x icon-white" style="color: #fff; margin-right: 10px;"></i>
+                <!-- <i class="faa faa-download faa-1x icon-white" style="color: #fff; margin-right: 10px;"></i> -->
+
+                <fa-icon 
+                    *ngIf="downloadIcon" 
+                    [icon]="['fas', downloadIcon]" 
+                    style="color: #fff; margin-right: 10px;">
+                </fa-icon>
             </button>
 
             <!-- Cancel button -->
@@ -29,7 +35,13 @@ Click "Proceed Bulk Download" to continue downloading. Or click on "Cancel Bulk 
                 (click)="cancelBulkDownload()"
                 label="Cancel Bulk Download" 
                 iconPos="left">
-                <i class="faa faa-times faa-1x icon-white" style="color: #fff; margin-right: 10px;"></i>
+                <!-- <i class="faa faa-times faa-1x icon-white" style="color: #fff; margin-right: 10px;"></i> -->
+
+                <fa-icon 
+                    *ngIf="cancelIcon" 
+                    [icon]="['fas', cancelIcon]" 
+                    style="color: #fff; margin-right: 10px;">
+                </fa-icon>
             </button>
     </div>
 </div>

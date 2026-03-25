@@ -1,6 +1,9 @@
 import { Component, Optional, Input } from '@angular/core';
 import { UserMessageService, Message } from './usermessage.service';
 import { CommonModule } from '@angular/common';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../shared/globals/globals';
 
 /**
  * A Component that can receive and display messages.
@@ -20,10 +23,17 @@ export class MessageBarComponent {
     private nextid = 0;
     messages : Message[] = [];
 
+    //icon class names
+    cancleIcon = iconClass.CANCEL;
+
+
     @Input() defSysErrorPrefix : string = "There was an internal hiccup.";
     // bgcolor : string = "#FCF9CD";
     // public constructor(@Optional() private svc : UserMessageService) {
-    public constructor(svc : UserMessageService) {
+    public constructor(svc: UserMessageService, public iconLibrary: FaIconLibrary) {
+        
+        iconLibrary.addIcons(faXmark); 
+        
         if (svc) {
             svc.subscribe({
                 next: (msg) => {
