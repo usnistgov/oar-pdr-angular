@@ -37,7 +37,7 @@
             title="Copy to clipboard">
             
             <!-- <i class="faa faa-clone"></i> -->
-            <fa-icon *ngIf="copyIcon" [icon]="['fas', copyIcon]" size="sm"></fa-icon>
+            <fa-icon [icon]="faCopy" size="sm"></fa-icon>
         </span>
         
         <span 
@@ -88,8 +88,7 @@
                     class="json-export-btn nist-blue-bc" 
                     (click)="onjson()">
                     <fa-icon 
-                        *ngIf="fileCodeIcon" 
-                        [icon]="['fas', fileCodeIcon]" 
+                        [icon]="faFileCode" 
                         size="sm" 
                         data-toggle="tooltip" 
                         title="Download Json file" 
@@ -142,8 +141,7 @@
             <a href="{{metricsData.url}}" target="_blank">
                 <!-- <i class="faa faa-bar-chart" style="margin-right: 5px;"></i> -->
                 <fa-icon 
-                    *ngIf="chartBarIcon" 
-                    [icon]="['fas', chartBarIcon]" 
+                    [icon]="faChartBar" 
                     size="sm" 
                     data-toggle="tooltip" 
                     title="View metrics"></fa-icon>

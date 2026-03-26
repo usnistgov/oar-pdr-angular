@@ -880,4 +880,5 @@ export class iconClass {
     static readonly FILE_DOWNLOAD = 'file-arrow-down';
     static readonly CLOUD_DOWNLOAD = 'cloud-download';
     static readonly REPEAT = 'repeat';
+    static readonly GLOBE = 'globe';
 }

@@ -14,6 +14,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { AuthenticationService, MockAuthenticationService } from 'oarng';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('EditControlComponent', () => {
     let component : EditControlComponent;
@@ -27,7 +28,7 @@ describe('EditControlComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ HttpClientTestingModule ],
+            imports: [ HttpClientTestingModule, FontAwesomeTestingModule ],
             declarations: [  ],
             providers: [
                     UserMessageService, 

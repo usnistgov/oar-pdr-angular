@@ -45,7 +45,7 @@
                             ngbTooltip="Edit title"
                             style="cursor: pointer">
 
-                            <fa-icon *ngIf="editIcon" [icon]="['fas', editIcon]" size="sm"></fa-icon>
+                            <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                         </button> 
 
                         @if( updated ) {
@@ -58,7 +58,7 @@
                                 aria-label="Restore button" 
                                 ngbTooltip="Restore original title">
 
-                                <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]"></fa-icon>
+                                <fa-icon [icon]="faUndo"></fa-icon>
                             </button> 
                         }
                     }
@@ -72,8 +72,7 @@
 
                             <fa-icon 
                                 class="icon_enabled" 
-                                *ngIf="saveIcon" 
-                                [icon]="['fas', saveIcon]">
+                                [icon]="faSave">
                             </fa-icon>
                         </button>
 
@@ -85,8 +84,7 @@
                             aria-label="undo button" 
                             ngbTooltip="Cancel edit">
                             <fa-icon 
-                                *ngIf="cancelIcon" 
-                                [icon]="['fas', cancelIcon]" 
+                                [icon]="faUndo" 
                                 data-toggle="tooltip" 
                                 title="Cancel edit">
                             </fa-icon>

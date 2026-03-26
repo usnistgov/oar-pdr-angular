@@ -36,8 +36,7 @@
                     <!-- <i class="pi pi-search" style="top: 25px;"></i> -->
 
                     <fa-icon 
-                        *ngIf="searchIcon" 
-                        [icon]="['fas', searchIcon]" 
+                        [icon]="faMagnifyingGlass" 
                         style="top: 25px;">
                     </fa-icon>
 
@@ -72,9 +71,8 @@
         <!-- <i class="faa faa-spinner faa-spin faa-stack-2x" style="color:#1E6BA1;" aria-hidden="true"></i> -->
 
         <fa-icon 
-            *ngIf="spinnerIcon" 
-            [icon]="['fas', spinnerIcon]" 
-            [animation]="'spin'" 
+            [icon]="faSpinner" 
+            [spin]="true" 
             style="color:#1E6BA1;" 
             aria-hidden="true">
         </fa-icon>

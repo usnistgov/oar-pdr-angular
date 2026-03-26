@@ -22,7 +22,7 @@
                     style="padding: 3px 10px;" (click)="clearFilters()">
                 
                     <fa-icon 
-                        [icon]="['fas', closeIcon]" 
+                        [icon]="faXmark" 
                         style="zoom: 100%;color: #fff;cursor: pointer;">
                     </fa-icon>
                 Clear all
@@ -33,7 +33,7 @@
             <!-- Display spinner while waiting for search result -->
             <div class="spinner" *ngIf="searching">
                 <!-- <i class="faa faa-spinner faa-spin faa-stack-2x" [style.color]="colorScheme.defaultVar" aria-hidden="true"></i> -->
-                <fa-icon [icon]="['fas', spinnerIcon]" [animation]="'spin'" [style.color]="colorScheme.defaultVar" aria-hidden="true"></fa-icon>
+                <fa-icon [icon]="faSpinner" [spin]="true" [style.color]="colorScheme.defaultVar" aria-hidden="true"></fa-icon>
             </div>
 
             <div style="padding-left: -1em;padding-right: -2em;" *ngIf="isActive && !searching">
@@ -122,7 +122,7 @@
             <i class="faa faa-angle-double-right collapsedFilterIcon"></i>
 
             <fa-icon 
-                [icon]="['fas', anglesRightIcon]" 
+                [icon]="faAnglesRight" 
                 class="collapsedFilterIcon"
                 style="zoom: 100%;color: #fff;cursor: pointer;">
             </fa-icon>

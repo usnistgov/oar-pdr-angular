@@ -17,6 +17,9 @@ export class DownloadConfirmComponent implements OnInit {
     downloadIcon = iconClass.DOWNLOAD;
     closeIcon = iconClass.CLOSE;
 
+    faDownload = faDownload;
+    faXmark = faXmark;
+
     @Input() bundle_plan_size: number;
     @Input() zipData: ZipData[];
     @Input() totalFiles: number;

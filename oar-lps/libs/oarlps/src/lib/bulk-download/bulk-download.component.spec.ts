@@ -6,6 +6,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { TransferState } from '@angular/core';
 import { AppConfig } from '../config/config';
 import * as env from '../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('BulkDownloadComponent', () => {
   let component: BulkDownloadComponent;
@@ -26,10 +28,19 @@ describe('BulkDownloadComponent', () => {
 
     await TestBed.configureTestingModule({
       declarations: [  ],
-      imports: [ NoopAnimationsModule, BulkDownloadComponent ],
+      imports: [ NoopAnimationsModule, BulkDownloadComponent, FontAwesomeTestingModule ],
       providers: [
         { provide: ActivatedRoute,  useValue: route },
         { provide: AppConfig, useValue: cfg },
+        {
+            provide: FaTestingConfig,
+            useValue: {
+                circleIcon: 'undo',
+                downloadIcon: 'undo',
+                cartPlusIcon: 'undo',
+                copyIcon: 'undo'
+            }
+        }
       ]
     })
     .compileComponents();

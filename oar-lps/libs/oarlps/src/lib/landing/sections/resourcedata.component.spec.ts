@@ -10,6 +10,7 @@ import { DatafilesPubComponent } from '../data-files/datafiles-pub/datafiles-pub
 import { DatafilesMidasComponent } from '../data-files/datafiles-midas/datafiles-midas.component';
 import { Component } from '@angular/core';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('ResourceDataComponent', () => {
     let component: ResourceDataComponent;
@@ -90,7 +91,8 @@ describe('ResourceDataComponent', () => {
         TestBed.configureTestingModule({
             providers: [
                 GoogleAnalyticsService
-            ]
+            ],
+            imports: [ FontAwesomeTestingModule ]
         })
         .compileComponents();
 

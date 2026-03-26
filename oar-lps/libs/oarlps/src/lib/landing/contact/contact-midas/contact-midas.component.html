@@ -26,7 +26,7 @@
                         ngbTooltip="Edit contact" 
                         style="cursor: pointer">
 
-                        <fa-icon *ngIf="editIcon" [icon]="['fas', editIcon]" size="sm"></fa-icon>
+                        <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                     </button> 
 
                     @if(updated) {
@@ -37,8 +37,7 @@
                             (click)="restoreOriginal()">
 
                             <fa-icon 
-                                *ngIf="undoIcon" 
-                                [icon]="['fas', undoIcon]" 
+                                [icon]="faUndo" 
                                 aria-label="Restore original" 
                                 ngbTooltip="Restore original">
                             </fa-icon>
@@ -57,8 +56,7 @@
                         ngbTooltip="Close edit block">
 
                         <fa-icon 
-                            *ngIf="closeIcon" 
-                            [icon]="['fas', closeIcon]" 
+                            [icon]="faXmark" 
                             aria-label="Close edit block" 
                             ngbTooltip="Close edit block">
                         </fa-icon>
@@ -95,8 +93,7 @@
                         ngbTooltip="Save contact">
 
                         <fa-icon 
-                            *ngIf="saveIcon" 
-                            [icon]="['fas', saveIcon]" 
+                            [icon]="faSave" 
                             aria-label="Save button" 
                             ngbTooltip="Save current changes">
                         </fa-icon>
@@ -112,8 +109,7 @@
                         ngbTooltip="Undo current changes">
 
                         <fa-icon 
-                            *ngIf="undoIcon" 
-                            [icon]="['fas', undoIcon]" 
+                            [icon]="faUndo" 
                             aria-label="undo button" 
                             ngbTooltip="Undo current changes">
                         </fa-icon>

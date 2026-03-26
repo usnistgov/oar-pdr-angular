@@ -14,6 +14,7 @@ import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/da
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { AuthenticationService } from 'oarng';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 
 describe('SingleRefComponent', () => {
@@ -33,7 +34,8 @@ describe('SingleRefComponent', () => {
                 RefEditComponent,
                 HttpClientTestingModule, 
                 NoopAnimationsModule, 
-                ToastrModule.forRoot() ],
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule ],
             providers: [ 
                 UserMessageService, 
                 HttpHandler,

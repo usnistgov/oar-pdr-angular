@@ -124,6 +124,19 @@ export class EditControlComponent implements OnInit, OnChanges {
     eyeIcon = iconClass.EYE;
     externalLinkIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faTimes = faTimes;
+    faCircleInfo = faCircleInfo;
+    faDownload = faDownload;
+    faCircleArrowUp = faCircleArrowUp;
+    faEye = faEye;
+    faTrashCan = faTrashCan;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;
+    faCircle = faCircle;
+    
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
      * template via [(mdrec)].

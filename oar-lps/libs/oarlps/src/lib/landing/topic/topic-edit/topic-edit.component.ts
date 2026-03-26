@@ -62,6 +62,13 @@ export class TopicEditComponent implements OnInit {
     resetIcon = iconClass.RESET;
     deleteIcon = iconClass.DELETE;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faTrashCan = faTrashCan;
+    faRecycle = faRecycle;
+
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;
     @Input() collection: string;

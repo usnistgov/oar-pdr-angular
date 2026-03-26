@@ -71,6 +71,11 @@ export class AccesspageMidasComponent {
     closeIcon = iconClass.CLOSE;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @Input() record: NerdmRes = null;
     @Input() theme: string;
     @Input() isEditMode: boolean = true;

@@ -36,6 +36,11 @@ export class CartcontrolComponent implements OnInit, OnChanges {
     deleteIcon = iconClass.DELETE;
     deleteIcon2 = iconClass.DELETE2;
 
+    faDownload = faDownload;
+    faTrashCan = faTrashCan;
+    faTrash = faTrash;
+    faCloudDownload = faCloudDownload;
+
     @Input() cartName: string;
     @Output() onDownloadSelected = new EventEmitter<boolean>();  
     @Output() onRemoveSelected = new EventEmitter<boolean>();  

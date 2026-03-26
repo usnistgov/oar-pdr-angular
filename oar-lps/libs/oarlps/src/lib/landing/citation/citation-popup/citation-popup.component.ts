@@ -48,6 +48,9 @@ export class CitationPopupComponent {
     copyIcon = iconClass.COPY;
     closeIcon = iconClass.CLOSE;
 
+    faCopy = faCopy;
+    faXmark = faXmark;
+    
     @Input() citetext : string;
     @Input() visible : boolean;
     @Input() width: number;

@@ -48,6 +48,7 @@ export class EditStatusComponent implements OnInit {
 
     //icon class names
     spinnerIcon = iconClass.SPINNER;
+    faSpinner = faSpinner;
 
     @Input() mdrec: NerdmRes;
     @Input() forceDisplay: boolean = false;  // if true, display the message even if there is no update details. This is used to display a message when the record is in outside-midas mode and there is no update details.

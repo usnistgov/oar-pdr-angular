@@ -10,9 +10,8 @@
         <p>
             <!-- <i class="fas fa-spinner fa-spin"></i>  -->
             <fa-icon 
-                *ngIf="spinnerIcon" 
-                [icon]="['fas', spinnerIcon]"
-                [animation]="'spin'">
+                [icon]="faSpinner"
+                [spin]="true">
             </fa-icon>
             Loading file list...
         </p>
@@ -31,15 +30,15 @@
                     <!-- Download icon in MIDAS side -->
                     <span class="fa-stack grey-color" size="2x" style="margin: -5px -22px 0 10px" aria-label="Download all"
                         ngbTooltip="Download all disabled in edit mode">
-                        <fa-icon *ngIf="circleIcon" [icon]="['far', circleIcon]" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
-                        <fa-icon *ngIf="downloadIcon" [icon]="['fas', downloadIcon]" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
+                        <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
+                        <fa-icon [icon]="faDownload" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
                     </span>
 
                     <!-- Add all to cart icon in MIDAS side -->
                     <span class="fa-stack grey-color" size="2x" style="margin: -5px -2em 0px 10px" aria-label="Add all to data cart"
                         ngbTooltip="Add all to data cart disabled in edit mode">
-                        <fa-icon *ngIf="circleIcon" [icon]="['far', circleIcon]" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
-                        <fa-icon *ngIf="cartPlusIcon" [icon]="['fas', cartPlusIcon]" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
+                        <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
+                        <fa-icon [icon]="faCartPlus" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
                     </span>
                     <!-- <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;"
                         aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
@@ -64,24 +63,22 @@
                         <span class="fa-stack" size="2x" style="margin: -5px -22px 0 10px" aria-label="Download all"
                             ngbTooltip="Download all">
                             <fa-icon 
-                                *ngIf="circleIcon" 
-                                [icon]="['far', circleIcon]" 
+                                [icon]="faCircle" 
                                 class="fa-stack-2x" 
                                 style="scale: 1.5;right: 20px;top: 8px;">
                             </fa-icon>
                             <fa-icon 
-                                *ngIf="downloadIcon && !isAddingToDownloadAllCart; else show_spinner1" 
-                                [icon]="['fas', downloadIcon]" 
+                                *ngIf="!isAddingToDownloadAllCart; else show_spinner1" 
+                                [icon]="faDownload" 
                                 class="fa-stack-1x small" 
                                 style="top: 6px;">
                             </fa-icon>
                             <ng-template #show_spinner1>
                                 <fa-icon 
-                                    *ngIf="spinnerIcon" 
-                                    [icon]="['fas', spinnerIcon]" 
+                                    [icon]="faSpinner" 
                                     class="fa-stack-1x small" 
                                     style="top: 6px;" 
-                                    [animation]="'spin'"
+                                    [spin]="true"
                                     aria-hidden="true">
                                 </fa-icon>
                             </ng-template>
@@ -106,24 +103,22 @@
                         <span class="fa-stack" size="2x" style="margin: 8px -2em 0px 10px" aria-label="Add all to cart"
                             ngbTooltip="Add all to cart">
                             <fa-icon 
-                                *ngIf="circleIcon" 
-                                [icon]="['far', circleIcon]" 
+                                [icon]="faCircle" 
                                 class="fa-stack-2x" 
                                 style="scale: 1.5;right: 20px;top: 8px;">
                             </fa-icon>
                             <fa-icon 
-                                *ngIf="cartPlusIcon && !isTogglingAllInGlobalCart; else show_spinner1" 
-                                [icon]="['fas', cartPlusIcon]"
+                                *ngIf="!isTogglingAllInGlobalCart; else show_spinner1" 
+                                [icon]="faCartPlus"
                                 class="fa-stack-1x small" 
                                 style="top: 8px; left: -2px;">
                             </fa-icon>
                             <ng-template #show_spinner1>
                                 <fa-icon 
-                                    *ngIf="spinnerIcon" 
-                                    [icon]="['fas', spinnerIcon]" 
+                                    [icon]="faSpinner" 
                                     class="fa-stack-1x small" 
                                     style="top: 8px; left: -2px;" 
-                                    [animation]="'spin'"
+                                    [spin]="true"
                                     aria-hidden="true">
                                 </fa-icon>
                             </ng-template>
@@ -149,8 +144,8 @@
             
                     <!-- Info button -->
                     <fa-icon 
-                        *ngIf="editIcon && largeDataset" 
-                        [icon]="['fas', circleInfoIcon]" 
+                        *ngIf="largeDataset" 
+                        [icon]="faCircleInfo" 
                         data-toggle="tooltip" 
                         title="Large dataset"
                         style="margin-left: 10px;" >
@@ -170,7 +165,7 @@
             This dataset is very large. So we have built a special area for accessing it. See our
             <a href="{{bulkDownloadURL}}" target="_blank">
                 <!-- <i class="faa faa-hand-o-right"></i> -->
-                <fa-icon *ngIf="handPointRightIcon" [icon]="['fas', handPointRightIcon]" size="sm"></fa-icon>
+                <fa-icon [icon]="faHandPointRight" size="sm"></fa-icon>
                 <span style="text-decoration: underline; margin-left: 5px;">dedicated page</span>
             </a>
             for downloaing large data.
@@ -187,8 +182,7 @@
                 <div style="text-align: right; height: 20px;margin-bottom: 10px;padding-top: 0px;border-color: 1px solid red;">
                     <!-- <i class="pi pi-search" style="margin:4px 4px 0 0" aria-label="Search on file or folder name"></i> -->
                     <fa-icon 
-                        *ngIf="searchIcon" 
-                        [icon]="['fas', searchIcon]" 
+                        [icon]="faMagnifyingGlass" 
                         size="sm" 
                         data-toggle="tooltip" 
                         title="Search on file or folder name"
@@ -212,16 +206,16 @@
                             <span (click)="toogleTree(!isExpanded);tt.filterGlobal(searchText, 'contains')"
                                 style="padding-right:0.5em;">
                                 <fa-icon 
-                                    *ngIf="!isExpanded && circleArrowDownIcon" 
-                                    [icon]="['fas', circleArrowDownIcon]" 
+                                    *ngIf="!isExpanded" 
+                                    [icon]="faCircleArrowDown" 
                                     size="sm" 
                                     data-toggle="tooltip" 
                                     title="Expand All">
                                 </fa-icon>
 
                                 <fa-icon 
-                                    *ngIf="isExpanded && circleArrowUpIcon" 
-                                    [icon]="['fas', circleArrowUpIcon]" 
+                                    *ngIf="isExpanded" 
+                                    [icon]="faCircleArrowUp" 
                                     size="sm"
                                     data-toggle="tooltip" 
                                     title="Collapse All">
@@ -275,8 +269,7 @@
                                             aria-hidden="true"></i> -->
 
                                         <fa-icon 
-                                            *ngIf="downloadIcon" 
-                                            [icon]="['fas', downloadIcon]" 
+                                            [icon]="faDownload" 
                                             size="sm"
                                             [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
                                             aria-hidden="true">
@@ -295,8 +288,8 @@
                                         data-toggle="tooltip" title="Request access"></i> -->
 
                                     <fa-icon 
-                                        *ngIf="lockIcon && isLeaf(rowData) && displayMode == 'restrict'; else space_holder" 
-                                        [icon]="['fas', lockIcon]" 
+                                        *ngIf="isLeaf(rowData) && displayMode == 'restrict'; else space_holder" 
+                                        [icon]="faLock" 
                                         size="sm" 
                                         (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')" 
                                         aria-hidden="true"
@@ -315,8 +308,7 @@
                                         <!-- <i class="fas fa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i> -->
 
                                         <fa-icon 
-                                            *ngIf="downloadIcon" 
-                                            [icon]="['fas', downloadIcon]" 
+                                            [icon]="faDownload" 
                                             [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
                                             size="sm" 
                                             aria-hidden="true">
@@ -339,8 +331,7 @@
                                         title="Remove from cart"></i> -->
 
                                     <fa-icon 
-                                        *ngIf="cartPlusIcon" 
-                                        [icon]="['fas', cartPlusIcon]" 
+                                        [icon]="faCartPlus" 
                                         class="green-cart"
                                         size="sm" 
                                         aria-hidden="true"
@@ -357,8 +348,7 @@
                                             title="Add to cart"></i> -->
 
                                         <fa-icon 
-                                            *ngIf="cartPlusIcon" 
-                                            [icon]="['fas', cartPlusIcon]" 
+                                            [icon]="faCartPlus" 
                                             class="blue-cart" 
                                             size="sm" 
                                             aria-hidden="true"
@@ -375,8 +365,7 @@
                                         aria-hidden="true" data-toggle="tooltip" title="Request access"></i> -->
 
                                     <fa-icon 
-                                        *ngIf="lockIcon" 
-                                        [icon]="['fas', lockIcon]" 
+                                        [icon]="faLock" 
                                         size="sm" 
                                         (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')"
                                         aria-hidden="true"
@@ -410,7 +399,7 @@
                                     <!-- <i
                                         class="faa faa-clone"></i> -->
 
-                                    <fa-icon *ngIf="copyIcon" [icon]="['fas', copyIcon]" size="sm"></fa-icon>
+                                    <fa-icon [icon]="faCopy" size="sm"></fa-icon>
                                     </span>
                                     <span 
                                         [@enterAnimation] 

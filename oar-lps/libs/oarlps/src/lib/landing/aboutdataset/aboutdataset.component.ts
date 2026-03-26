@@ -74,6 +74,13 @@ export class AboutdatasetComponent implements OnChanges {
     fileCodeIcon = iconClass.FILE_CODE;
     copyIcon = iconClass.COPY;
 
+    faSpinner = faSpinner;
+    faChartBar = faChartBar;
+    faCaretDown = faCaretDown;
+    faCaretRight = faCaretRight;
+    faFileCode = faFileCode;
+    faCopy = faCopy;
+
     private _collapsed: boolean = false;
     @Input() record: NerdmRes;
     @Input() inBrowser: boolean;

@@ -35,6 +35,10 @@ export class AccesspageEditComponent implements OnInit {
     saveIcon = iconClass.SAVE;
     cancelIcon = iconClass.CANCEL;
 
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @Input() currentApage: NerdmComp = {} as NerdmComp;
     @Input() editMode: string = "edit";
     @Input() fieldName: string;

@@ -71,6 +71,7 @@ export class AccesspageListComponent implements OnInit {
 
     //icon class names
     addIcon = iconClass.ADD;
+    faPlus = faPlus;
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 

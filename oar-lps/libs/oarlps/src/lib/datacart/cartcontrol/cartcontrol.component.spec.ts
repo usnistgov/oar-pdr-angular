@@ -9,6 +9,8 @@ import { CartService } from '../../datacart/cart.service';
 import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { BadgeModule } from 'primeng/badge';
 import * as env from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+
 
 describe('CartcontrolComponent', () => {
     let component: CartcontrolComponent;
@@ -23,6 +25,7 @@ describe('CartcontrolComponent', () => {
         declarations: [ CartcontrolComponent ],
         imports: [
             HttpClientTestingModule,
+            FontAwesomeTestingModule,
             BadgeModule],
         providers: [
             CartService,
@@ -40,6 +43,7 @@ describe('CartcontrolComponent', () => {
         fixture = TestBed.createComponent(CartcontrolComponent);
         component = fixture.componentInstance;
         component.cartName = "goob";
+       
         fixture.detectChanges();
     });
 

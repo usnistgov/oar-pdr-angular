@@ -75,6 +75,11 @@ export class KeywordMidasComponent {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @ViewChild('keyword') public chipsElement: Chips;
 
     constructor(public mdupdsvc : MetadataUpdateService,        

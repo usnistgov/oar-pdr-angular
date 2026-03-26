@@ -3,7 +3,7 @@
         Dataset Metrics 
         <!-- Display spinner while loading metrics data -->
         <span *ngIf="!metricsData.dataReady" class="metrics-spinner" style="color:#ffffff;width: 1em;float: right;">
-            <fa-icon [icon]="['fas', spinnerIcon]"  [animation]="'spin'"></fa-icon>
+            <fa-icon [icon]="faSpinner"  [spin]="true"></fa-icon>
         </span>
     </div>
 
@@ -24,7 +24,7 @@
                 <div style="width: 100%;text-align: right;margin-top: -15px;font-size: small;">
                     <a *ngIf="hasCurrentMetrics" href="{{metricsData.url}}" target="_blank">
                         <span data-toggle="tooltip" title="More Metrics Data">
-                            <fa-icon [icon]="['fas', chartBarIcon]" style="margin-right: 5px;"></fa-icon>
+                            <fa-icon [icon]="faChartBar" style="margin-right: 5px;"></fa-icon>
                             More...
                         </span>
                     </a>

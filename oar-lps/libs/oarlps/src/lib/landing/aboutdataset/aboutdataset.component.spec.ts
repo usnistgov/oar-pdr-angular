@@ -12,6 +12,8 @@ import { By } from "@angular/platform-browser";
 import { MetricsData } from "../metrics-data";
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import * as _ from 'lodash-es';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+
 
 describe('AboutdatasetComponent', () => {
     let service: AppConfig;
@@ -35,7 +37,7 @@ describe('AboutdatasetComponent', () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ AboutdatasetComponent, NoopAnimationsModule, HttpClientTestingModule ],
+            imports: [ AboutdatasetComponent, NoopAnimationsModule, HttpClientTestingModule, FontAwesomeTestingModule ],
             providers: [
                 { provide: AppConfig, useValue: cfg },
                 AppConfig,

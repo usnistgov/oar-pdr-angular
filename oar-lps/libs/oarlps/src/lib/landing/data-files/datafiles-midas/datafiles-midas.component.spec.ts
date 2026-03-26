@@ -23,6 +23,7 @@ import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { DatafilesMidasComponent } from './datafiles-midas.component';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('DatafilesMidasComponent', () => {
     let component: DatafilesMidasComponent;
@@ -64,7 +65,8 @@ describe('DatafilesMidasComponent', () => {
                 DatafilesMidasComponent,
                 TreeTableModule,
                 BrowserAnimationsModule,
-                ToastrModule.forRoot()],
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
                 UserMessageService, 

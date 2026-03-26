@@ -109,6 +109,15 @@ export class BundleplanComponent implements OnInit {
     repeatIcon = iconClass.REPEAT;
     undoIcon = iconClass.UNDO;
 
+    faSpinner = faSpinner;
+    faCircleArrowDown = faCircleArrowDown;
+    faCircleArrowUp = faCircleArrowUp;
+    faXmark = faXmark;
+    faTriangleExclamation = faTriangleExclamation;
+    faDownload = faDownload;
+    faRepeat = faRepeat;
+    faUndo = faUndo;
+
     @Input() cartName: string;
     @Output() outputOverallStatus = new EventEmitter<string>();
 

@@ -57,7 +57,7 @@
             [disabled]="noURL || !accessPage || !accessPage?.dataChanged" 
             pTooltip="Save current changes"
             tooltipPosition="top" >
-            <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]"></fa-icon>
+            <fa-icon [icon]="faSave"></fa-icon>
         </button>
 
         <!-- Cancel button -->
@@ -68,7 +68,7 @@
             aria-label="undo button" 
             pTooltip="Undo current changes"
             tooltipPosition="top">
-            <fa-icon *ngIf="cancelIcon" [icon]="['fas', cancelIcon]"></fa-icon>
+            <fa-icon [icon]="faXmark"></fa-icon>
         </button>
     </div>
 </div>

@@ -51,6 +51,15 @@ export class AuthorEditComponent implements OnInit {
     addIcon = iconClass.ADD;
     lockIcon = iconClass.LOCK;
     unlockIcon = iconClass.UNLOCK;
+    
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faPlus = faPlus;
+    faLock = faLock;
+    faUnlock = faUnlock;
+    faTrashCan = faTrashCan;
 
     @Input() author: Author;
     @Input() authors: Author[];

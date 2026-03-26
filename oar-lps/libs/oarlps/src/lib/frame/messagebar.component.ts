@@ -25,7 +25,7 @@ export class MessageBarComponent {
 
     //icon class names
     cancleIcon = iconClass.CANCEL;
-
+    faXmark = faXmark;
 
     @Input() defSysErrorPrefix : string = "There was an internal hiccup.";
     // bgcolor : string = "#FCF9CD";

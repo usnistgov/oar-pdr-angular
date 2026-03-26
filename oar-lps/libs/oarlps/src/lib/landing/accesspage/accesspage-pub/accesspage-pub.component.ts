@@ -46,6 +46,10 @@ export class AccesspagePubComponent {
     caretDownIcon = iconClass.CARET_DOWN;
     arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
 
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;
+    faCaretDown = faCaretDown;
+    faCaretRight = faCaretRight;
+
     isMouseOver: boolean = false;
     
     @Input() record: NerdmRes = null;

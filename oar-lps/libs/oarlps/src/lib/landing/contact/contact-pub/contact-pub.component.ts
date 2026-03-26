@@ -35,6 +35,9 @@ export class ContactPubComponent {
     caretRightIcon = iconClass.CARET_RIGHT;
     caretDownIcon = iconClass.CARET_DOWN;
 
+    faCaretDown = faCaretDown;
+    faCaretRight = faCaretRight;
+
     @Input() record: any[];
     @Input() isPublicSite: boolean = true;
     

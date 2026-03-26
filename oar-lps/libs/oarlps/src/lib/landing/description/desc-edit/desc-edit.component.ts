@@ -55,6 +55,11 @@ export class DescEditComponent {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @ViewChild('desc') descElement: ElementRef;
     
     constructor(public mdupdsvc : MetadataUpdateService,  

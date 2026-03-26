@@ -66,6 +66,11 @@ export class RefMidasComponent {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;

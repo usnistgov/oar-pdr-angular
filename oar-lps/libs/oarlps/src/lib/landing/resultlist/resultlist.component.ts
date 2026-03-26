@@ -77,6 +77,9 @@ export class ResultlistComponent implements OnInit {
     spinnerIcon = iconClass.SPINNER;
     searchIcon = iconClass.SEARCH;    
 
+    faMagnifyingGlass = faMagnifyingGlass;
+    faSpinner = faSpinner;
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;

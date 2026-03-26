@@ -66,6 +66,11 @@ export class IspartofEditComponent {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @Input() record: any[];
     @Input() inBrowser: boolean; 
     @Input() isEditMode: boolean;

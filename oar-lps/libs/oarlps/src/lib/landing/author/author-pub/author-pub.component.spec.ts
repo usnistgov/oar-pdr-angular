@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { testdata } from '../../../../environments/environment';
 import { AuthorPubComponent } from './author-pub.component';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('AuthorPubComponent', () => {
     let component: AuthorPubComponent;
@@ -9,7 +10,7 @@ describe('AuthorPubComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-        imports: [AuthorPubComponent]
+        imports: [AuthorPubComponent, FontAwesomeTestingModule]
         })
         .compileComponents();
 

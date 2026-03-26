@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SuggestionsComponent } from './suggestions.component';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('SuggestionsComponent', () => {
   let component: SuggestionsComponent;
@@ -8,7 +9,7 @@ describe('SuggestionsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SuggestionsComponent, BrowserAnimationsModule]
+      imports: [SuggestionsComponent, BrowserAnimationsModule, FontAwesomeTestingModule]
     })
     .compileComponents();
 

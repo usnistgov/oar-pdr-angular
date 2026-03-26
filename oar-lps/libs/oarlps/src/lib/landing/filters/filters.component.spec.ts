@@ -13,6 +13,7 @@ import { TaxonomyModule } from '../taxonomy/taxonomy.module';
 import { TaxonomyComponent } from '../taxonomy/taxonomy.component';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { config } from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('FiltersComponent', () => {
     let component: FiltersComponent;
@@ -30,7 +31,8 @@ describe('FiltersComponent', () => {
                 FormsModule,
                 TreeModule,
                 BrowserAnimationsModule,
-                TaxonomyModule],
+                TaxonomyModule,
+                FontAwesomeTestingModule],
             providers: [
                 SearchService,
                 CollectionService,

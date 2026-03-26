@@ -16,9 +16,9 @@
                                 title="Collapse All"></i> -->
 
                             <fa-icon 
-                                *ngIf="!isExpanded && circleDownIcon" 
+                                *ngIf="!isExpanded" 
                                 [class.amplified]="isMouseOver" 
-                                [icon]="['fas', circleDownIcon]"
+                                [icon]="faCircleArrowDown"
                                 class="amplifiable" 
                                 style="cursor: pointer;" 
                                 (mouseover)="isMouseOver = true" 
@@ -28,9 +28,9 @@
                             </fa-icon>
 
                             <fa-icon 
-                                *ngIf="isExpanded && circleUpIcon" 
+                                *ngIf="isExpanded" 
                                 [ class.amplified]="isMouseOver" 
-                                [icon]="['fas', circleUpIcon]"
+                                [icon]="faCircleArrowUp"
                                 class="amplifiable" 
                                 style="cursor: pointer;" 
                                 (mouseover)="isMouseOver = true" 
@@ -48,15 +48,15 @@
                                 title="Hide Zip Files"></i> -->
 
                             <fa-icon 
-                                *ngIf="!showZipFilesNames && eyeIcon" 
-                                [icon]="['fas', eyeIcon]"
+                                *ngIf="!showZipFilesNames" 
+                                [icon]="faEye"
                                 data-toggle="tooltip"
                                 title="Show Zip Files">
                             </fa-icon>
 
                             <fa-icon 
-                                *ngIf="showZipFilesNames && eyeSlashIcon" 
-                                [icon]="['fas', eyeSlashIcon]" 
+                                *ngIf="showZipFilesNames" 
+                                [icon]="faEyeSlash" 
                                 data-toggle="tooltip" 
                                 title="Hide Zip Files">
                             </fa-icon>                        
@@ -68,8 +68,7 @@
                     <th [ngStyle]="headerStyle(actionWidth)" ttResizableColumn>
                         <!-- <i class="fas fa-cloud-download-alt" aria-hidden="true" data-toggle="tooltip" title="Actions"></i> -->
                         <fa-icon 
-                            *ngIf="cloudDownloadIcon" 
-                            [icon]="['fas', cloudDownloadIcon]" 
+                            [icon]="faCloudDownload" 
                             data-toggle="tooltip"
                             title="Actions">
                         </fa-icon>
@@ -117,8 +116,7 @@
                                     aria-hidden="true" (click)="setFileDownloaded(rowData)"></i> -->
 
                                 <fa-icon 
-                                    *ngIf="downloadIcon" 
-                                    [icon]="['fas', downloadIcon]" 
+                                    [icon]="faDownload" 
                                     (click)="setFileDownloaded(rowData)"
                                     aria-hidden="true">
                                 </fa-icon>
@@ -129,8 +127,7 @@
                                 aria-hidden="true"></i> -->
 
                             <fa-icon 
-                                *ngIf="downloadIcon" 
-                                [icon]="['fas', downloadIcon]" 
+                                [icon]="faDownload" 
                                 aria-hidden="true">
                             </fa-icon>
                         </a>

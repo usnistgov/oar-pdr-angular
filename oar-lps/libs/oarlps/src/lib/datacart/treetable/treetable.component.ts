@@ -275,6 +275,14 @@ export class TreetableComponent implements OnInit, AfterViewInit {
     downloadIcon = iconClass.DOWNLOAD;
     checkIcon = iconClass.CHECK;
 
+    faCircleArrowDown = faCircleArrowDown;
+    faCircleArrowUp = faCircleArrowUp;
+    faEye = faEye;
+    faEyeSlash = faEyeSlash;
+    faCloudDownload = faCloudDownload;
+    faDownload = faDownload;
+    faCheck = faCheck;
+
     isMouseOver: boolean = false;
 
     @Input() cartName: string;

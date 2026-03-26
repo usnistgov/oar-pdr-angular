@@ -12,6 +12,7 @@ import { SearchService } from '../shared/search-service/search-service.service';
 import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
 import * as env from '../../environments/environment';
 import { NERDmResourceService } from '../nerdm/nerdm.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 let fileLevelData = {
     "FilesMetricsCount": 3,
@@ -95,7 +96,7 @@ describe('MetricsComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [  ],
-            imports: [FormsModule, MetricsModule, HttpClientTestingModule],
+            imports: [FormsModule, MetricsModule, HttpClientTestingModule, FontAwesomeTestingModule],
             providers: [
                 NERDmResourceService,
                 GoogleAnalyticsService,

@@ -82,8 +82,7 @@
                                         data-toggle="tooltip" title="Remove author"></i>  -->
 
                                 <fa-icon 
-                                    *ngIf="deleteIcon" 
-                                    [icon]="['fas', deleteIcon]" 
+                                    [icon]="faTrashCan" 
                                     size="sm"
                                     (click)="removeAuthor(i)" 
                                     style="cursor: pointer;color: var(--nist-blue-default);"
@@ -208,7 +207,7 @@
                             aria-label="reset button"
                             pTooltip="Reset" 
                             tooltipPosition="top" >
-                            <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]" size="sm" data-toggle="tooltip" title="Reset citation"></fa-icon>
+                            <fa-icon [icon]="faUndo" size="sm" data-toggle="tooltip" title="Reset citation"></fa-icon>
                             <!-- <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i> -->
                         </button>
 
@@ -267,7 +266,7 @@
             pTooltip="Save current changes"
             tooltipPosition="top" >
             <!-- <i [class]="saveIcon"></i> -->
-            <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]" size="sm"></fa-icon>
+            <fa-icon [icon]="faSave" size="sm"></fa-icon>
         </button>
 
         <!-- Cancel button -->
@@ -279,7 +278,7 @@
             pTooltip="Undo current changes"
             tooltipPosition="top" >
             <!-- <i [class]="cancelIcon"></i> -->
-            <fa-icon *ngIf="cancelIcon" [icon]="['fas', cancelIcon]" size="sm"></fa-icon>
+            <fa-icon [icon]="faUndo" size="sm"></fa-icon>
         </button>
     </div>
 </div>

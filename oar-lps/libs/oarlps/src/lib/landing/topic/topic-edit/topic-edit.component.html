@@ -24,8 +24,7 @@
                             <!-- Delete button -->
                             <td width="50px">
                                 <fa-icon 
-                                    *ngIf="deleteIcon" 
-                                    [icon]="['fas', deleteIcon]"
+                                    [icon]="faXmark"
                                     (click)="deleteTopic(i)"
                                     style="float: right;cursor: pointer;color:grey; margin: .5em;" 
                                     data-toggle="tooltip"
@@ -54,8 +53,7 @@
                     -->
                     <!-- <i [class]="resetIcon" class = "reset" (click)="showAllTopics()" data-toggle="tooltip" title="Reset"></i> -->
                     <fa-icon 
-                        *ngIf="resetIcon" 
-                        [icon]="['fas', resetIcon]"
+                        [icon]="faRecycle"
                         (click)="showAllTopics()" 
                         data-toggle="tooltip" 
                         title="Reset"></fa-icon>
@@ -85,14 +83,14 @@
         <td style="width: 90px;vertical-align: top;">
             <!-- Save button -->
             <button class="edit_button" type="button" (click)="onSave()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
-                <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]"></fa-icon>
+                <fa-icon [icon]="faSave"></fa-icon>
             </button>
     
             <!-- Cancel button -->
             <!-- <button *ngIf="dataChanged" class="edit_button" type="button" -->
             <button class="edit_button" type="button"
                 (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
-                <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]"></fa-icon>
+                <fa-icon [icon]="faUndo"></fa-icon>
             </button>             
         </td>          
     </tr>

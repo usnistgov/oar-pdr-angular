@@ -79,6 +79,16 @@ export class RefEditComponent implements OnInit {
     lockIcon = iconClass.LOCK;
     unlockIcon = iconClass.UNLOCK;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faTrashCan = faTrashCan;
+    faCaretDown = faCaretDown;
+    faCaretRight = faCaretRight;
+    faLock = faLock;
+    faUnlock = faUnlock;
+
     doiEndpoint: string = "";
     doiLoaded: boolean = false;
     authToken: string = "";

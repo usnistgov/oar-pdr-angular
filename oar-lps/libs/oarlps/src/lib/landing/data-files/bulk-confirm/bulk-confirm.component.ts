@@ -18,6 +18,9 @@ export class BulkConfirmComponent implements OnInit {
     downloadIcon = iconClass.DOWNLOAD;
     closeIcon = iconClass.CLOSE;
 
+    faDownload = faDownload;
+    faXmark = faXmark;
+
     @Output() returnValue: EventEmitter<boolean> = new EventEmitter();
     
     constructor(

@@ -16,6 +16,7 @@ import { DAPService, createDAPService, LocalDAPService } from '../nerdm/dap.serv
 import { environment } from '../../environments/environment-impl';
 import { EditStatusService } from '../landing/editcontrol/editstatus.service';
 import { UserMessageService } from '../frame/usermessage.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
@@ -54,7 +55,7 @@ describe('SidebarComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-        imports: [BrowserAnimationsModule, SidebarComponent],
+        imports: [BrowserAnimationsModule, SidebarComponent, FontAwesomeTestingModule],
         providers: [
             { provide: AppConfig, useValue: cfg },
             { provide: DAPService, useFactory: createDAPService, 

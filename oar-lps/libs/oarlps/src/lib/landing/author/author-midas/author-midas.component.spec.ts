@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler, HttpRequest } from '@angular/common/http';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('AuthorMidasComponent', () => {
     let component: AuthorMidasComponent;
@@ -32,7 +33,8 @@ describe('AuthorMidasComponent', () => {
         imports: [
             AuthorMidasComponent, 
             FormsModule, 
-            ToastrModule.forRoot()],
+            ToastrModule.forRoot(),
+            FontAwesomeTestingModule],
         providers: [
             UserMessageService, 
             HttpHandler,

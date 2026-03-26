@@ -15,6 +15,7 @@ import { AuthorPubComponent } from '../author/author-pub/author-pub.component';
 import { AuthorMidasComponent } from '../author/author-midas/author-midas.component';
 import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
 import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('ResourceIdentityComponent', () => {
 
@@ -125,9 +126,10 @@ describe('ResourceIdentityComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-        providers: [
-            GoogleAnalyticsService
-        ]})
+            imports: [FontAwesomeTestingModule],
+            providers: [
+                GoogleAnalyticsService
+            ]})
         .compileComponents();
 
         makeComp();

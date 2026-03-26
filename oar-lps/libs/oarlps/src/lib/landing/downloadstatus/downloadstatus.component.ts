@@ -18,6 +18,8 @@ export class DownloadstatusComponent implements OnInit {
     //icon class names
     closeIcon = iconClass.CLOSE;
 
+    faXmark = faXmark;
+    
     @Input() inBrowser: boolean;
 
     constructor(public iconLibrary: FaIconLibrary) { 

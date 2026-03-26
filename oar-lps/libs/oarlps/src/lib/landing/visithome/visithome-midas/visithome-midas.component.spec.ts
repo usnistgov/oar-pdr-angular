@@ -14,6 +14,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('VisithomeMidasComponent', () => {
     let component: VisithomeMidasComponent;
@@ -27,9 +28,10 @@ describe('VisithomeMidasComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
         imports: [
-                VisithomeMidasComponent,
+            VisithomeMidasComponent,
             BrowserAnimationsModule,
-            ToastrModule.forRoot()
+            ToastrModule.forRoot(),
+            FontAwesomeTestingModule
         ],
         providers: [
             UserMessageService, 

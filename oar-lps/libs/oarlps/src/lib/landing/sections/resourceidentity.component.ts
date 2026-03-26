@@ -74,6 +74,7 @@ export class ResourceIdentityComponent implements OnChanges {
 
     //icon class names
     circleInfoIcon = iconClass.CIRCLE_INFO;
+    faCircleInfo = faCircleInfo;
 
     // passed in by the parent component:
     @Input() record: NerdmRes = null;

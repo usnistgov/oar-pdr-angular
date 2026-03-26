@@ -68,6 +68,12 @@ export class ContactMidasComponent {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faTrashCan = faTrashCan
+
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
 

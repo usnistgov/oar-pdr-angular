@@ -4,8 +4,7 @@
     <div *ngIf="showCurrentTask" style="text-align: center; margin:auto; width:100%;">
         <!-- <i class="fas fa-spinner fa-spin" style="color:#1E6BA1;" aria-hidden="true"></i> -->
         <fa-icon 
-            *ngIf="spinnerIcon" 
-            [icon]="['fas', spinnerIcon]" 
+            [icon]="faSpinner" 
             [animation]="'spin'" 
             style="color:#1E6BA1;" 
             aria-hidden="true">
@@ -22,16 +21,16 @@
                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i> -->
 
                 <fa-icon 
-                    *ngIf="showZipFiles && circleDownIcon" 
-                    [icon]="['fas', circleDownIcon]" 
+                    *ngIf="showZipFiles" 
+                    [icon]="faCircleArrowDown" 
                     style="cursor: pointer;color: rgb(255, 255, 255);" 
                     data-toggle="tooltip" 
                     title="Expand All">
                 </fa-icon>
 
                 <fa-icon 
-                    *ngIf="showZipFiles && circleUpIcon" 
-                    [icon]="['fas', circleUpIcon]"
+                    *ngIf="showZipFiles" 
+                    [icon]="faCircleArrowUp"
                     style="cursor: pointer;color: rgb(255, 255, 255);" 
                     data-toggle="tooltip" 
                     title="Collapse All">
@@ -68,8 +67,7 @@
                         <!-- <i class="fas fa-times"></i> -->
 
                         <fa-icon 
-                            *ngIf="cancelIcon" 
-                            [icon]="['fas', cancelIcon]" 
+                            [icon]="faXmark" 
                             aria-hidden="true">
                         </fa-icon>
                     </span>
@@ -93,8 +91,7 @@
                             <!-- <i class="fas fa-exclamation-triangle" [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"></i> -->
 
                             <fa-icon 
-                                *ngIf="warningIcon" 
-                                [icon]="['fas', warningIcon]" 
+                                [icon]="faTriangleExclamation" 
                                 [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"
                                 aria-hidden="true">
                             </fa-icon>
@@ -107,8 +104,8 @@
                         data-toggle="tooltip" title="Retry" (click)="downloadOneZip(zip)"></i> -->
 
                     <fa-icon 
-                        *ngIf="zip.downloadStatus != null && repeatIcon" 
-                        [icon]="['fas', repeatIcon]" 
+                        *ngIf="zip.downloadStatus != null" 
+                        [icon]="faRepeat" 
                         style="display: inline-block; margin-left: .5em; font-size: 0.8em; color: #1E6BA1; cursor: pointer;"
                         data-toggle="tooltip" 
                         title="Retry" 
@@ -132,7 +129,7 @@
                 <span (click)="cancelDownloadAllConfirmation()" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel all downloads">
                     <!-- <i class="fas fa-times"></i> -->
 
-                    <fa-icon *ngIf="cancelIcon" [icon]="['fas', cancelIcon]" aria-hidden="true">
+                    <fa-icon [icon]="faXmark" aria-hidden="true">
                     </fa-icon>
                 </span>
             </div>
@@ -160,8 +157,8 @@
                 style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Collapse All"></i> -->
 
             <fa-icon 
-                *ngIf="showMessage && circleDownIcon; else hideMessage" 
-                [icon]="['fas', circleDownIcon]" 
+                *ngIf="showMessage; else hideMessage" 
+                [icon]="faCircleArrowDown" 
                 style="cursor: pointer;color: rgb(255, 255, 255);"
                 data-toggle="tooltip" 
                 title="Collapse All">
@@ -172,8 +169,7 @@
                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip" title="Expand All"></i> -->
 
                 <fa-icon 
-                    *ngIf="circleDownIcon" 
-                    [icon]="['fas', circleDownIcon]"
+                    [icon]="faCircleArrowDown"
                     style="cursor: pointer;color: rgb(255, 255, 255);" 
                     data-toggle="tooltip" 
                     title="Expand All">

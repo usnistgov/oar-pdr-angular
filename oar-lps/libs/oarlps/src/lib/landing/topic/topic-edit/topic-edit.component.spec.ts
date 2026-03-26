@@ -13,6 +13,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import * as env from '../../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('TopicEditComponent', () => {
     let component: TopicEditComponent;
@@ -30,7 +31,9 @@ describe('TopicEditComponent', () => {
             imports: [ 
                 TopicEditComponent,
                 HttpClientTestingModule, 
-                ToastrModule.forRoot() ],
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule
+            ],
             providers: [ 
                 UserMessageService, 
                 HttpHandler,

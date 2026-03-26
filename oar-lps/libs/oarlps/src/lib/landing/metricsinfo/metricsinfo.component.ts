@@ -64,6 +64,9 @@ export class MetricsinfoComponent implements OnInit {
     spinnerIcon = iconClass.SPINNER;
     chartBarIcon = iconClass.CHART_BAR;
 
+    faSpinner = faSpinner;
+    faChartBar = faChartBar;
+
     constructor(public commonFunctionService: CommonFunctionService,
                 public metricsService: MetricsService,
                 public collectionService: CollectionService,

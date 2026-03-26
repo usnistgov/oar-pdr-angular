@@ -112,6 +112,8 @@ export class DatafilesMidasComponent {
     //icon class names
     circleInfoIcon = iconClass.CIRCLE_INFO;
 
+    faCircleInfo = faCircleInfo;
+    
     constructor(private cfg: AppConfig,
                 public editstatsvc: EditStatusService,
                 public breakpointObserver: BreakpointObserver,

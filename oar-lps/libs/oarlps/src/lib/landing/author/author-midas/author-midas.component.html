@@ -28,7 +28,7 @@
                     pTooltip="Edit author" 
                     tooltipPosition="top" 
                     style="cursor: pointer">
-                    <fa-icon *ngIf="editIcon" [icon]="['fas', editIcon]" size="sm" [style.opacity]="iconOpacity()"></fa-icon>
+                    <fa-icon [icon]="faPencil" size="sm" [style.opacity]="iconOpacity()"></fa-icon>
                 </button> 
 
                 <!-- Hide button - hide edit block -->
@@ -41,7 +41,7 @@
                     aria-label="Hide edit block" 
                     pTooltip="Hide edit block"
                     tooltipPosition="top" >                     
-                    <fa-icon *ngIf="closeIcon" [icon]="['fas', closeIcon]" [style.opacity]="iconOpacity()"></fa-icon>
+                    <fa-icon [icon]="faXmark" [style.opacity]="iconOpacity()"></fa-icon>
                 </button> 
 
                 <!-- Undo all changes button -->
@@ -54,7 +54,7 @@
                     aria-label="undo button" 
                     pTooltip="Undo"
                     tooltipPosition="top">
-                    <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]" [style.opacity]="iconOpacity()"></fa-icon>
+                    <fa-icon [icon]="faUndo" [style.opacity]="iconOpacity()"></fa-icon>
                 </button>             
             </div>
         }

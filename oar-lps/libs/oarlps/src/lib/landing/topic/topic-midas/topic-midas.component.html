@@ -13,7 +13,7 @@
             aria-label="edit button" 
             ngbTooltip="Edit topics">
 
-            <fa-icon *ngIf="editIcon" [icon]="['fas', editIcon]" size="sm"></fa-icon>
+            <fa-icon [icon]="faPencil" size="sm"></fa-icon>
         </button>
 
         <!-- Close edit block -->
@@ -26,13 +26,13 @@
             aria-label="Close edit block" 
             ngbTooltip="Close edit block">
 
-            <fa-icon *ngIf="closeIcon" [icon]="['fas', closeIcon]"></fa-icon>
+            <fa-icon [icon]="faXmark"></fa-icon>
         </button>
 
         <!-- Restore original -->
         <button *ngIf="updated(data)" class="edit_button" type="button"
         (click)="restoreOriginal(data)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
-            <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]"></fa-icon>
+            <fa-icon [icon]="faUndo"></fa-icon>
         </button>     
     </ng-template>
 </topic-pub>

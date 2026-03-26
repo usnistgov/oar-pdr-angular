@@ -14,6 +14,7 @@ import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/da
 import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('AccesspageMidasComponent', () => {
     let component: AccesspageMidasComponent;
@@ -32,7 +33,8 @@ describe('AccesspageMidasComponent', () => {
             imports: [
                 AccesspageMidasComponent, 
                 BrowserAnimationsModule,
-                ToastrModule.forRoot()],
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule],
             providers: [
                 GoogleAnalyticsService,
                 UserMessageService, 

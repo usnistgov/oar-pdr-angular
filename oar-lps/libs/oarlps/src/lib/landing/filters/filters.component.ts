@@ -146,6 +146,13 @@ export class FiltersComponent implements OnInit {
     anglesRightIcon = iconClass.ANGLES_RIGHT;
     closeIcon = iconClass.CLOSE;
 
+    faSpinner = faSpinner;
+    faAnglesDown = faAnglesDown;
+    faAnglesLeft = faAnglesLeft;
+    faAnglesRight = faAnglesRight;
+    faAnglesUp = faAnglesUp;
+    faXmark = faXmark;
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;

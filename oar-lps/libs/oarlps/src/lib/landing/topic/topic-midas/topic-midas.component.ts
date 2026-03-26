@@ -87,6 +87,11 @@ export class TopicMidasComponent implements OnInit {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;   // false if running server-side
     @Input() isEditMode: boolean = true;

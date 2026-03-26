@@ -2,7 +2,7 @@ import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, effec
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { trigger, style, animate, transition } from '@angular/animations';
-import { Themes, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { Themes, ColorScheme, GlobalService, iconClass } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +13,8 @@ import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accessp
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
 import { DatafilesPubComponent } from '../data-files/datafiles-pub/datafiles-pub.component';
 import { DatafilesMidasComponent } from '../data-files/datafiles-midas/datafiles-midas.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faGlobe, faLock } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * a component that lays out the "Data Access" section of a landing page.  This includes (as applicable)
@@ -29,7 +31,8 @@ import { DatafilesMidasComponent } from '../data-files/datafiles-midas/datafiles
         DatafilesMidasComponent,
         SearchresultModule,
         AccesspagePubComponent,
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl:   './resourcedata.component.html',
     styleUrls:   [
@@ -68,6 +71,13 @@ export class ResourceDataComponent implements OnChanges {
     maxWidth: number = 1000;
     isEditMode: boolean = true;
 
+    //icon class
+    globeIcon = iconClass.GLOBE;   
+    lockIcon = iconClass.LOCK;
+
+    faGlobe = faGlobe;
+    faLock = faLock;
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
@@ -84,9 +94,14 @@ export class ResourceDataComponent implements OnChanges {
      * create an instance of the Identity section
      */
     constructor(public globalService: GlobalService,
-                public edstatsvc: EditStatusService,
-                private gaService: GoogleAnalyticsService)
-    { 
+        public edstatsvc: EditStatusService,
+        public iconLibrary: FaIconLibrary,
+        private gaService: GoogleAnalyticsService){ 
+
+        iconLibrary.addIcons(
+            faGlobe, faLock
+        );
+        
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
         });

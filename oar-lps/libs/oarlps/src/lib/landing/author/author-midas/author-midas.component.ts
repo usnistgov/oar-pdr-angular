@@ -60,6 +60,11 @@ export class AuthorMidasComponent {
     closeIcon = iconClass.CLOSE;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @Input() record: any[];
     @Input() isEditMode: boolean;
     @Input() fieldName: string;

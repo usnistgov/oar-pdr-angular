@@ -9,7 +9,7 @@
                 style="border: 1px solid white; color: white;cursor: pointer;" 
                 (click)="message=''">
                 <!-- <i class="fas fa-times"></i> -->
-                <fa-icon *ngIf="timesIcon" [icon]="['fas', timesIcon]"></fa-icon>
+                <fa-icon [icon]="faTimes"></fa-icon>
             </span>
             {{currentMode}}
             <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" class="splitter1"> | </span>
@@ -20,8 +20,7 @@
 
                 <fa-icon 
                     id="ec-info-btn-sm" 
-                    *ngIf="circleInfoIcon" 
-                    [icon]="['fas', circleInfoIcon]" 
+                    [icon]="faCircleInfo" 
                     (click)="toogleMessage()"
                     data-toggle="tooltip" 
                     title="Show message">
@@ -41,8 +40,8 @@
                 size="2x" 
                 style="margin-right:-1em;color: white;">
 
-                <fa-icon *ngIf="circleIcon" [icon]="['far', circleIcon]" class="fa-stack-2x" style="scale: 0.8;"></fa-icon>
-                <fa-icon *ngIf="downloadIcon" [icon]="['fas', downloadIcon]" class="fa-stack-1x small"></fa-icon>
+                <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 0.8;"></fa-icon>
+                <fa-icon [icon]="faDownload" class="fa-stack-1x small"></fa-icon>
             </span>
         </div>
     </div>
@@ -70,8 +69,7 @@
 
         <fa-icon 
             id="ec-info-btn"
-            *ngIf="circleInfoIcon" 
-            [icon]="['fas', circleInfoIcon]" 
+            [icon]="faCircleInfo" 
             (click)="showEditControlHelpPopup($event,op3)"
             data-toggle="tooltip" 
             title="Show edit control help">
@@ -91,7 +89,7 @@
             label="Submit for Review" 
             iconPos="left">
 
-            <fa-icon [icon]="['fas', circleArrowUpIcon]"></fa-icon> Submit for Review
+            <fa-icon [icon]="faCircleArrowUp"></fa-icon> Submit for Review
         </button>
 
         <!-- <button class="btn" id="ec-review-btn" type="button">
@@ -110,7 +108,7 @@
              label="Submit" 
              iconPos="left">
 
-            <fa-icon [icon]="['fas', circleArrowUpIcon]"></fa-icon>
+            <fa-icon [icon]="faCircleArrowUp"></fa-icon>
             Submit
             <!-- <ng-template pTemplate="content">
                 <fa-icon *ngIf="circleArrowUpIcon" [icon]="['fas', circleArrowUpIcon]"></fa-icon>
@@ -129,7 +127,7 @@
             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit" 
             icon="fas fa-arrow-circle-up faa-1x icon-white">
 
-            <fa-icon [icon]="['fas', circleArrowUpIcon]"></fa-icon>
+            <fa-icon [icon]="faCircleArrowUp"></fa-icon>
             <!-- <ng-template pTemplate="content">
                 <fa-icon *ngIf="circleArrowUpIcon" [icon]="['fas', circleArrowUpIcon]"></fa-icon>
             </ng-template> -->
@@ -146,7 +144,7 @@
             (click)="confirmDiscardEdits()" 
             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
 
-            <fa-icon [icon]="['fas', deleteIcon]"></fa-icon>
+            <fa-icon [icon]="faTrashCan"></fa-icon>
             Discard
         </button>
         
@@ -160,7 +158,7 @@
             (click)="confirmDiscardEdits()" 
             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
 
-            <fa-icon [icon]="['fas', deleteIcon]"></fa-icon>
+            <fa-icon [icon]="faTrashCan"></fa-icon>
         </button>
 
         <!-- 
@@ -181,7 +179,7 @@
             id="ec-edit-btn" 
             [disabled]="!editEnable">
 
-            <fa-icon [icon]="['fas', editIcon]"></fa-icon>
+            <fa-icon [icon]="faPencil"></fa-icon>
             {{editBtnLabel}}
         </button>
         
@@ -196,7 +194,7 @@
             id="ec-edit-btn-sm"
             [disabled]="!editEnable">
 
-            <fa-icon [icon]="['fas', editIcon]"></fa-icon>
+            <fa-icon [icon]="faPencil"></fa-icon>
         </button>
 
         <!-- Preview button -->
@@ -212,7 +210,7 @@
             id="ec-preview-btn" 
             [disabled]="!readyEdit">
 
-            <fa-icon [icon]="['fas', eyeIcon]"></fa-icon>Preview
+            <fa-icon [icon]="faEye"></fa-icon>Preview
         </button>
         
         <!-- mobile mode -->
@@ -226,7 +224,7 @@
             id="ec-preview-btn-mo" 
             [disabled]="!readyEdit">
 
-            <fa-icon [icon]="['fas', eyeIcon]"></fa-icon>
+            <fa-icon [icon]="faEye"></fa-icon>
         </button>
 
         <!-- Manage Files button -->
@@ -241,7 +239,7 @@
             (click)="openFileManager()"
             [disabled]="!readyEdit">
 
-            <fa-icon [icon]="['fas', externalLinkIcon]"></fa-icon>Manage Files
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Manage Files
         </button>
 
         <button 
@@ -254,7 +252,7 @@
             (click)="openFileManager()"
             [disabled]="!readyEdit">
 
-            <fa-icon [icon]="['fas', externalLinkIcon]"></fa-icon>Files
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Files
         </button>
 
         <button 
@@ -268,7 +266,7 @@
             (click)="openFileManager()" 
             [disabled]="!readyEdit">
 
-            <fa-icon [icon]="['fas', externalLinkIcon]"></fa-icon>
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
         </button>
     </div>
 </div>

@@ -225,6 +225,20 @@ export class DatafilesPubComponent {
     copyIcon = iconClass.COPY;
     handPointRightIcon = iconClass.HAND_POINT_RIGHT;
 
+    faDownload = faDownload;
+    faCartPlus = faCartPlus;
+    faSpinner = faSpinner;
+    faCircleInfo = faCircleInfo;
+    faMagnifyingGlass = faMagnifyingGlass;
+    faCircleArrowUp = faCircleArrowUp;
+    faCircleArrowDown = faCircleArrowDown;
+    faCaretDown = faCaretDown;
+    faCaretRight = faCaretRight;
+    faLock = faLock;
+    faCopy = faCopy;
+    faHandPointRight = faHandPointRight;
+    faCircle = faCircle;
+    
     @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
     
     constructor(private cartService: CartService,

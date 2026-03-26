@@ -3,6 +3,7 @@ import { DownloadConfirmComponent } from './download-confirm.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { config } from '../../../environments/environment';
 import { AppConfig } from '../../config/config';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('DownloadConfirmComponent', () => {
   let component: DownloadConfirmComponent;
@@ -13,6 +14,7 @@ describe('DownloadConfirmComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ DownloadConfirmComponent ],
+      imports: [ FontAwesomeTestingModule ],
       providers: [{ provide: AppConfig, useValue: cfg }, NgbActiveModal]
     })
     .compileComponents();

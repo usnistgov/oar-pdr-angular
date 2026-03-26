@@ -20,6 +20,7 @@ import { provideRouter } from '@angular/router';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { AuthenticationService, MockAuthenticationService } from 'oarng';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('RefListComponent', () => {
     let component: RefListComponent;
@@ -35,7 +36,8 @@ describe('RefListComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 NoopAnimationsModule,
-                ToastrModule.forRoot()
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule
             ],
             providers: [
                 UserMessageService, 

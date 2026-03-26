@@ -41,10 +41,10 @@
                 </span> -->
                 <!-- Download icon -->
                 <span class="fa-stack" size="2x" style="margin: -5px -22px 0 10px">
-                    <fa-icon *ngIf="circleIcon" [icon]="['far', circleIcon]" class="fa-stack-2x"
+                    <fa-icon [icon]="faCircle" class="fa-stack-2x"
                         style="scale: 1.5;right: 23px;top: 8px;">
                     </fa-icon>
-                    <fa-icon *ngIf="downloadIcon" [icon]="['fas', downloadIcon]"
+                    <fa-icon [icon]="faDownload"
                         class="fa-stack-1x small" style="top: 6px;">
                     </fa-icon>
                 </span>
@@ -72,10 +72,10 @@
                 <!-- Add to cart icon -->
                 (<span class="fa-stack" size="2x" style="margin: -4px -1em 0px 15px" aria-label="Add all to cart"
                     ngbTooltip="Add all to cart">
-                    <fa-icon *ngIf="circleIcon" [icon]="['far', circleIcon]" class="fa-stack-2x"
+                    <fa-icon [icon]="faCircle" class="fa-stack-2x"
                         style="scale: 1.5;right: 20px;top: 8px;">
                     </fa-icon>
-                    <fa-icon *ngIf="cartPlusIcon" [icon]="['fas', cartPlusIcon]"
+                    <fa-icon [icon]="faCartPlus"
                         class="fa-stack-1x small" style="top: 8px; left: -2px;">
                     </fa-icon>
                 </span>)
@@ -104,8 +104,7 @@
                 class="anchor-button p-button">
                 <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
                 <fa-icon 
-                    *ngIf="downloadIcon" 
-                    [icon]="['fas', downloadIcon]" 
+                    [icon]="faDownload" 
                     size="sm"
                     class="download-icon">
                 </fa-icon>
@@ -144,8 +143,7 @@
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
                     <fa-icon 
-                        *ngIf="copyIcon" 
-                        [icon]="['fas', copyIcon]" 
+                        [icon]="faCopy" 
                         size="sm" 
                         class="clone-icon">
                     </fa-icon>
@@ -177,8 +175,7 @@
                 <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
 
                 <fa-icon 
-                    *ngIf="downloadIcon" 
-                    [icon]="['fas', downloadIcon]" 
+                    [icon]="faDownload" 
                     size="sm" 
                     class="download-icon">
                 </fa-icon>
@@ -219,8 +216,7 @@
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
                     <fa-icon 
-                        *ngIf="copyIcon" 
-                        [icon]="['fas', copyIcon]" 
+                        [icon]="faCopy" 
                         size="sm" 
                         class="clone-icon">
                     </fa-icon>
@@ -258,8 +254,7 @@
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
                     <fa-icon 
-                        *ngIf="copyIcon" 
-                        [icon]="['fas', copyIcon]" 
+                        [icon]="faCopy" 
                         size="sm" 
                         class="clone-icon">
                     </fa-icon>
@@ -293,8 +288,7 @@
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
                     <fa-icon 
-                        *ngIf="copyIcon" 
-                        [icon]="['fas', copyIcon]" 
+                        [icon]="faCopy" 
                         size="sm" 
                         class="clone-icon">
                     </fa-icon>

@@ -51,6 +51,11 @@ export class BulkDownloadComponent implements OnInit {
     cartPlusIcon = iconClass.CART_PLUS;
     copyIcon = iconClass.COPY;
 
+    faDownload = faDownload;
+    faCartPlus = faCartPlus;
+    faCopy = faCopy;
+    faCircle = faCircle;
+
     @ViewChild('downloadall') downloadAll: ElementRef;
     @ViewChild('rclone') rclone: ElementRef;
     @ViewChild('pyscript') pyscript: ElementRef;

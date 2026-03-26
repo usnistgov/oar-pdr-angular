@@ -71,6 +71,12 @@ export class AuthorListComponent implements OnInit {
     cancelIcon = iconClass.CANCEL;
     addIcon = iconClass.ADD;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faPlus = faPlus
+
     @Input() record: any[];
     @Input() forceReset: boolean = false;
     @Input() fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);

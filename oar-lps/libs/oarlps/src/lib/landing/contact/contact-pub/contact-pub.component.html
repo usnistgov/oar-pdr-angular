@@ -12,9 +12,9 @@
             </strong>.
 
             <fa-icon 
-                *ngIf="!clickContact && caretRightIcon" 
+                *ngIf="!clickContact" 
                 [class.amplified]="isMouseOver"
-                [icon]="['fas', caretRightIcon]"
+                [icon]="faCaretRight"
                 class="amplifiable"
                 (mouseover)="isMouseOver = true"
                 (mouseleave)="isMouseOver = false"
@@ -22,9 +22,9 @@
             </fa-icon>
 
             <fa-icon 
-                *ngIf="clickContact && caretDownIcon" 
+                *ngIf="clickContact" 
                 [class.amplified]="isMouseOver"
-                [icon]="['fas', caretDownIcon]" 
+                [icon]="faCaretDown" 
                 class="amplifiable"
                 (mouseover)="isMouseOver = true" 
                 (mouseleave)="isMouseOver = false"

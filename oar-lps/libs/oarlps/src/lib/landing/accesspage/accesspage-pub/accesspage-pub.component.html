@@ -26,8 +26,7 @@
                         <div class="indent-content"
                              *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
                             <!-- <i class="fas fa-external-link-alt">  -->
-                            <fa-icon *ngIf="arrowUpRightFromSquareIcon" 
-                                [icon]="['fas', arrowUpRightFromSquareIcon]">
+                            <fa-icon [icon]="faArrowUpRightFromSquare">
 
                                 <span style="margin-left:0em;">
                                     <span *ngIf="apage['description']; else noAccessTitle">
@@ -83,8 +82,8 @@
                                         (click)="googleAnalytics(apage['accessURL'], 
                                         $event, 'Download Data')">
                                         <!-- <i class="fas fa-external-link-alt" style="padding-right: 3px"></i> -->
-                                        <fa-icon *ngIf="arrowUpRightFromSquareIcon" 
-                                            [icon]="['fas', arrowUpRightFromSquareIcon]" 
+                                        <fa-icon 
+                                            [icon]="faArrowUpRightFromSquare" 
                                             style="padding-right: 3px;">
                                         </fa-icon>
                                         Download Data

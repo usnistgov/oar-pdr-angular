@@ -51,10 +51,7 @@
                 id="btn-cancel" 
                 (click)="CancelDownload()">
 
-                <fa-icon 
-                    *ngIf="downloadIcon" 
-                    [icon]="['fas', closeIcon]">
-                </fa-icon>
+                <fa-icon [icon]="faXmark"></fa-icon>
                 Cancel Download
             </button>
 
@@ -64,10 +61,7 @@
                 id="btn-download" 
                 (click)="ContinueDownload()">
 
-                <fa-icon 
-                    *ngIf="downloadIcon" 
-                    [icon]="['fas', downloadIcon]">
-                </fa-icon>
+                <fa-icon [icon]="faDownload"></fa-icon>
                 Start Download
             </button>
     </div>

@@ -76,16 +76,16 @@
                     (input)="onFullNameChange(author, $event.target.value)" />
 
                 <fa-icon 
-                    *ngIf="!author.fnLocked && unlockIcon" 
-                    [icon]="['fas', unlockIcon]" 
+                    *ngIf="!author.fnLocked" 
+                    [icon]="faUnlock" 
                     (click)="author.fnLocked = !author.fnLocked"
                     style="cursor:pointer;" 
                     ngbTooltip="Allow full name been updated automatically">
                 </fa-icon>
 
                 <fa-icon 
-                    *ngIf="author.fnLocked && lockIcon" 
-                    [icon]="['fas', lockIcon]" 
+                    *ngIf="author.fnLocked" 
+                    [icon]="faLock" 
                     (click)="author.fnLocked = !author.fnLocked"
                     style="cursor:pointer;" 
                     ngbTooltip="Prevent full name from been updated automatically">
@@ -138,7 +138,7 @@
             <td align="left" *ngIf="author">
                 <!-- Add button -->
                 <button class="edit_button" type="button" (click)="addAffiliation()" aria-label="add button" ngbTooltip="Add affiliation" style="float: right;margin: 5px;">
-                    <fa-icon *ngIf="addIcon" [icon]="['fas', addIcon]"></fa-icon>
+                    <fa-icon [icon]="faPlus"></fa-icon>
                 </button>
 
                 <div class="text-input-right-button" style="margin-left: 10px;border: 1px solid lightgrey;height:fit-content;min-height: 30px;">
@@ -156,7 +156,7 @@
                                 placeholder="Please enter organization name" />
 
                                 <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                    <fa-icon *ngIf="deleteIcon" [icon]="['fas', deleteIcon]" (click)="deleteAffiliation(aff)"
+                                    <fa-icon [icon]="faTrashCan" (click)="deleteAffiliation(aff)"
                                     style="cursor: pointer;" data-toggle="tooltip"
                                     title="Delete affiliation"></fa-icon>
 
@@ -183,7 +183,7 @@
                                             placeholder="Please enter department/Division name" />
 
                                         <span *ngIf="i==aff.subunits.length-1" class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                            <fa-icon *ngIf="addIcon" [icon]="['fas', addIcon]" (click)="addSubunit(j, aff.subunits[i])"
+                                            <fa-icon [icon]="faPlus" (click)="addSubunit(j, aff.subunits[i])"
                                             style="cursor: pointer;" data-toggle="tooltip"
                                             title="Add subunit"></fa-icon>
 
@@ -193,8 +193,8 @@
                                         </span>                                            
                                             
                                         <span class="p-inputgroup-addon" style="margin-top: 8px !important;height: 2em;">
-                                            <fa-icon *ngIf="deleteIcon" 
-                                                [icon]="['fas', deleteIcon]" 
+                                            <fa-icon 
+                                                [icon]="faTrashCan" 
                                                 (click)="deleteUnit(j, aff.subunits[i])"
                                                 style="cursor: pointer;" 
                                                 data-toggle="tooltip"

@@ -10,8 +10,16 @@ import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { TreeTableModule } from 'primeng/treetable';
 import { AppConfig } from '../../config/config';
 import * as env from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('CartTreeNode', () => {
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [ FontAwesomeTestingModule ],
+        })
+        .compileComponents();
+    }));
+
     it('constructor', () => {
         let node = new CartTreeNode();
         expect(node.children).toEqual([]);

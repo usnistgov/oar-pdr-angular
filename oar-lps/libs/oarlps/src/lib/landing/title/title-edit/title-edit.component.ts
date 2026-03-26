@@ -56,6 +56,11 @@ export class TitleEditComponent {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;    
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     constructor(public mdupdsvc: MetadataUpdateService,
                 public edstatsvc: EditStatusService,
                 public lpService: LandingpageService, 

@@ -81,7 +81,8 @@ export class RefListComponent implements OnInit {
 
     //icon class names
     addIcon = iconClass.ADD;    
-
+    faPlus = faPlus;
+    
     // passed in by the parent component:
     @Input() nerdmRecord: NerdmRes = null;
     @Input() inBrowser: boolean = false;
