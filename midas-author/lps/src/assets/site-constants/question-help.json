@@ -27,7 +27,7 @@
     },
     "doi": {
         "label": "Identifier",
-        "general": "Normally, the identifier shown here is a digital object identifier (DOI).  Use this identifier to reference this publication in other publications.  For more information on what a DOI is and how to use it, see [Link to an RAQ: What's a DOI and why do I care?]."
+        "general": "Normally, the identifier shown here is a digital object identifier (DOI). Use this identifier to reference this publication in other publications. For more information on what a DOI is and how to use it, see <a href='https://inet.nist.gov/mr/library/midas-user-guides#what-is-doi'>FAQ: What's a DOI and why do I care?</a>."
     },
     "version": {
         "label": "Version",
