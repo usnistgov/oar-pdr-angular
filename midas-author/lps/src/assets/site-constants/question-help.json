@@ -23,7 +23,7 @@
         "label": "Visit Home Page",
         "general": "<p>The Home Page is the user's entry point for this publication. It provides contextual information and access to the resource itself (e.g., download links for data). Importantly, the DOI (digital object identifier) will point to this URL. </p><p> If you wish for this NIST Public Data Repository page to be your home page, leave this box blank and click <i class='fas fa-times'></i> to close the entry field. If you would like to point to another home page (which you maintain), enter the URL here.</p>",
         "add": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes.  </p><p> <i>[Link to an FAQ: Can I have my DOI point to a different page that the one in the PDR?]</i>",
-        "edit": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes.  </p><p> See also <i>[Link to an FAQ: Can I have my DOI point to a different page that the one in the PDR?]</i></p>"
+        "edit": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes.  </p><p> See also <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#doi-homepage'>FAQ: Do I have to use a DOI (Digital Object Identifier)? Can I use my own homepage?</a></i></p>"
     },
     "doi": {
         "label": "Identifier",
