@@ -16,6 +16,7 @@ import { AuthorMidasComponent } from '../author/author-midas/author-midas.compon
 import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
 import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('ResourceIdentityComponent', () => {
 
@@ -128,7 +129,16 @@ describe('ResourceIdentityComponent', () => {
         TestBed.configureTestingModule({
             imports: [FontAwesomeTestingModule],
             providers: [
-                GoogleAnalyticsService
+                GoogleAnalyticsService,
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo',
+                        downloadIcon: 'undo',
+                        cartPlusIcon: 'undo',
+                        copyIcon: 'undo'
+                    }
+                }                
             ]})
         .compileComponents();
 

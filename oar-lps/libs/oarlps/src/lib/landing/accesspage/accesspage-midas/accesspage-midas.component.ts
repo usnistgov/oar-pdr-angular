@@ -67,9 +67,9 @@ export class AccesspageMidasComponent {
     childEditMode: string = MODE.NORMAL;
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // undoIcon = iconClass.UNDO;
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -88,12 +88,12 @@ export class AccesspageMidasComponent {
                 public iconLibrary: FaIconLibrary,
                 private chref: ChangeDetectorRef) { 
 
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );             
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );             
     }
 
     ngOnInit(): void {

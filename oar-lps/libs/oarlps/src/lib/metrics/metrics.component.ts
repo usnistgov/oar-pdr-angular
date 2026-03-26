@@ -114,6 +114,12 @@ export class MetricsComponent implements OnInit {
     downloadIcon = iconClass.DOWNLOAD;
     fileDownloadIcon = iconClass.FILE_DOWNLOAD;
 
+    faCircleArrowDown = faCircleArrowDown;
+    faCircleArrowUp = faCircleArrowUp;
+    faChartBar = faChartBar;
+    faDownload = faDownload;
+    faFileArrowDown = faFileArrowDown
+
     isMouseOver: boolean = false;
 
     recordLevelData : RecordLevelMetrics;
@@ -136,13 +142,13 @@ export class MetricsComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         public metricsService: MetricsService) { 
 
-            iconLibrary.addIcons(
-                faCircleArrowDown,
-                faCircleArrowUp,
-                faChartBar,
-                faDownload,
-                faFileArrowDown
-            ); 
+            // iconLibrary.addIcons(
+            //     faCircleArrowDown,
+            //     faCircleArrowUp,
+            //     faChartBar,
+            //     faDownload,
+            //     faFileArrowDown
+            // ); 
         
             this.inBrowser = isPlatformBrowser(platformId);
             this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");

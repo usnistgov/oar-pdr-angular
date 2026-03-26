@@ -67,9 +67,9 @@ export class AuthorListComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     //icon class names
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    addIcon = iconClass.ADD;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // addIcon = iconClass.ADD;
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -100,13 +100,13 @@ export class AuthorListComponent implements OnInit {
                 public iconLibrary: FaIconLibrary,
                 public lpService: LandingpageService) { 
 
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo,
-            faPlus
-        );        
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo,
+        //     faPlus
+        // );        
      }
 
     ngOnInit(): void {

@@ -35,10 +35,7 @@ describe('BulkDownloadComponent', () => {
         {
             provide: FaTestingConfig,
             useValue: {
-                circleIcon: 'undo',
-                downloadIcon: 'undo',
-                cartPlusIcon: 'undo',
-                copyIcon: 'undo'
+                circleIcon: 'undo'
             }
         }
       ]

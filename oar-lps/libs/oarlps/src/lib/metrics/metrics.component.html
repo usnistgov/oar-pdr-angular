@@ -4,7 +4,7 @@
         <span class="top-banner-text top-label">
             <!-- <i class="faa faa-bar-chart faa-lg" style="padding-right: .5em;text-shadow: 1px 1px 2px darkgrey;"></i><label>Dataset Metrics</label> -->
             <fa-icon 
-                [icon]="['fas', chartBarIcon]" 
+                [icon]="faChartBar" 
                 style="padding-right: .5em;text-shadow: 1px 1px 2px darkgrey;">
             </fa-icon>
             <label>Dataset Metrics</label>
@@ -15,7 +15,7 @@
                 [disabled]="noChartData || noDatasetSummary"
                 [ngStyle]="{'width':'200px', 'height':'35px', 'float':'right', 'background-color':'green','margin-top':'1em', 'margin-right':'1.5em'}">
 
-                <fa-icon [icon]="['fas', fileDownloadIcon]"></fa-icon>
+                <fa-icon [icon]="faFileArrowDown"></fa-icon>
                 Download Graphics
             </button>
             <button 
@@ -23,7 +23,7 @@
                 [disabled]="noChartData || noDatasetSummary"
                 [ngStyle]="{'width':'200px', 'height':'35px', 'float':'right', 'background-color':'green', 'margin-right':'0.5em','margin-top':'1em'}">
             
-                <fa-icon [icon]="['fas', downloadIcon]"></fa-icon>
+                <fa-icon [icon]="faDownload"></fa-icon>
                 Download Metrics
             </button>
         </div>
@@ -39,7 +39,7 @@
         [disabled]="noChartData || noDatasetSummary"
         [ngStyle]="{'background-color':'green', 'margin-right':'0.5em'}">
 
-        <fa-icon [icon]="['fas', fileDownloadIcon]"></fa-icon>
+        <fa-icon [icon]="faFileArrowDown"></fa-icon>
     </button>
 
     <button
@@ -49,7 +49,7 @@
         [disabled]="noChartData || noDatasetSummary"
         [ngStyle]="{'background-color':'green'}">
 
-        <fa-icon [icon]="['fas', downloadIcon]"></fa-icon>
+        <fa-icon [icon]="faDownload"></fa-icon>
     </button>
 </div>
 
@@ -195,9 +195,9 @@
                                 title="Collapse All"></i> -->
 
                             <fa-icon 
-                                *ngIf="!isExpanded && circleDownIcon" 
+                                *ngIf="!isExpanded" 
                                 [class.amplified]="isMouseOver" 
-                                [icon]="['fas', circleDownIcon]"
+                                [icon]="faCircleArrowDown"
                                 class="amplifiable" 
                                 style="cursor: pointer;" 
                                 (mouseover)="isMouseOver = true" 
@@ -207,9 +207,9 @@
                             </fa-icon>
 
                             <fa-icon 
-                                *ngIf="isExpanded && circleUpIcon" [
+                                *ngIf="isExpanded" [
                                 class.amplified]="isMouseOver" 
-                                [icon]="['fas', circleUpIcon]"
+                                [icon]="faCircleArrowUp"
                                 class="amplifiable" 
                                 style="cursor: pointer;"
                                 (mouseover)="isMouseOver = true" 

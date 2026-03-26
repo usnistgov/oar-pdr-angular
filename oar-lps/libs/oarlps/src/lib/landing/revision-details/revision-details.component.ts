@@ -47,9 +47,9 @@ export class RevisionDetailsComponent {
     policyPageLink: string = "";
 
     //icon class
-    circleQuestionIcon = iconClass.CIRCLE_QUESTION;
-    circleIcon = iconClass.CIRCLE;
-    arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+    // circleQuestionIcon = iconClass.CIRCLE_QUESTION;
+    // circleIcon = iconClass.CIRCLE;
+    // arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
 
     faCircleQuestion = faCircleQuestion;
     faCircle = faCircle;
@@ -62,11 +62,11 @@ export class RevisionDetailsComponent {
     @Output() command: EventEmitter<any> = new EventEmitter();
         
     constructor(public iconLibrary: FaIconLibrary, public cdRef: ChangeDetectorRef) { 
-        iconLibrary.addIcons(
-            faCircleQuestion,
-            faCircle,
-            faArrowUpRightFromSquare
-        );
+        // iconLibrary.addIcons(
+        //     faCircleQuestion,
+        //     faCircle,
+        //     faArrowUpRightFromSquare
+        // );
     }
 
     ngOnInit(): void {

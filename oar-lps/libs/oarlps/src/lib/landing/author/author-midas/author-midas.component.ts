@@ -56,9 +56,9 @@ export class AuthorMidasComponent {
     editingStarted: boolean = false; // Signal child component editing started
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // undoIcon = iconClass.UNDO;
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -78,12 +78,12 @@ export class AuthorMidasComponent {
                 public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) { 
 
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );
     }
 
     /**

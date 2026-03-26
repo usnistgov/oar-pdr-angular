@@ -110,7 +110,7 @@ export class DatafilesMidasComponent {
     currentKey: string = '';
         
     //icon class names
-    circleInfoIcon = iconClass.CIRCLE_INFO;
+    // circleInfoIcon = iconClass.CIRCLE_INFO;
 
     faCircleInfo = faCircleInfo;
     
@@ -126,7 +126,7 @@ export class DatafilesMidasComponent {
                 public iconLibrary: FaIconLibrary,
                 private ngZone: NgZone)
     {
-        iconLibrary.addIcons(faCircleInfo);
+        // iconLibrary.addIcons(faCircleInfo);
 
         this.cols = [
             { field: 'name', header: 'Name', width: '60%' },

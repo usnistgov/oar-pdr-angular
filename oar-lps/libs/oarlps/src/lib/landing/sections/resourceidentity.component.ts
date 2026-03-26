@@ -73,7 +73,7 @@ export class ResourceIdentityComponent implements OnChanges {
     facilitatorsFieldName = SectionPrefs.getFieldName(Sections.FACILITATORS);
 
     //icon class names
-    circleInfoIcon = iconClass.CIRCLE_INFO;
+    // circleInfoIcon = iconClass.CIRCLE_INFO;
     faCircleInfo = faCircleInfo;
 
     // passed in by the parent component:
@@ -93,9 +93,9 @@ export class ResourceIdentityComponent implements OnChanges {
                 public iconLibrary: FaIconLibrary,
                 public lpService: LandingpageService)
     { 
-        iconLibrary.addIcons(
-            faCircleInfo
-        );
+        // iconLibrary.addIcons(
+        //     faCircleInfo
+        // );
 
         this.globalService.watchCollection((collection) => {
             this.collection = collection;

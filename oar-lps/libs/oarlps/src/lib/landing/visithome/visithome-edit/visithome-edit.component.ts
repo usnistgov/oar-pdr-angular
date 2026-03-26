@@ -32,9 +32,13 @@ export class VisithomeEditComponent implements OnInit {
     currentValueChanged: boolean = false;
 
     //icon class names
-    saveIcon = iconClass.SAVE;
-    undoIcon = iconClass.UNDO;
-    eraserIcon = iconClass.ERASER;
+    // saveIcon = iconClass.SAVE;
+    // undoIcon = iconClass.UNDO;
+    // eraserIcon = iconClass.ERASER;
+
+    faSave = faSave;
+    faUndo = faUndo;
+    faEraser = faEraser;
 
     @Input() visitHomeURL: any;
     @Input() editMode: string;
@@ -51,13 +55,13 @@ export class VisithomeEditComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef) {
         
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo,
-            faEraser
-        );
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo,
+        //     faEraser
+        // );
     }
 
     ngOnInit(): void {

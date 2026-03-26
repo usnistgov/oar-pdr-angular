@@ -31,10 +31,10 @@ export class CartcontrolComponent implements OnInit, OnChanges {
     datacart: DataCart = null;
 
     //icon class
-    downloadIcon = iconClass.DOWNLOAD;
-    cloudDownloadIcon = iconClass.CLOUD_DOWNLOAD;
-    deleteIcon = iconClass.DELETE;
-    deleteIcon2 = iconClass.DELETE2;
+    // downloadIcon = iconClass.DOWNLOAD;
+    // cloudDownloadIcon = iconClass.CLOUD_DOWNLOAD;
+    // deleteIcon = iconClass.DELETE;
+    // deleteIcon2 = iconClass.DELETE2;
 
     faDownload = faDownload;
     faTrashCan = faTrashCan;
@@ -52,12 +52,12 @@ export class CartcontrolComponent implements OnInit, OnChanges {
         public iconLibrary: FaIconLibrary,
         @Inject(PLATFORM_ID) private platformId: Object) { 
 
-        iconLibrary.addIcons(
-            faDownload,
-            faTrashCan,
-            faTrash,
-            faCloudDownload
-        );
+        // iconLibrary.addIcons(
+        //     faDownload,
+        //     faTrashCan,
+        //     faTrash,
+        //     faCloudDownload
+        // );
         
         this.inBrowser = isPlatformBrowser(platformId);
         this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");

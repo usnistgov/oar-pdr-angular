@@ -74,8 +74,8 @@ export class ResultlistComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     //icon class names
-    spinnerIcon = iconClass.SPINNER;
-    searchIcon = iconClass.SEARCH;    
+    // spinnerIcon = iconClass.SPINNER;
+    // searchIcon = iconClass.SEARCH;    
 
     faMagnifyingGlass = faMagnifyingGlass;
     faSpinner = faSpinner;
@@ -96,7 +96,7 @@ export class ResultlistComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         public gaService: GoogleAnalyticsService) { 
 
-        iconLibrary.addIcons(faMagnifyingGlass, faSpinner);
+        // iconLibrary.addIcons(faMagnifyingGlass, faSpinner);
 
         this.searchService.watchClearAll((clearAll: boolean) => {
             if(clearAll) {

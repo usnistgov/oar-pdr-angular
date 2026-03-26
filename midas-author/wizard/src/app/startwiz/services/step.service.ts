@@ -184,6 +184,8 @@ export class StepService {
     }
 
     iconHandler(helpContent: string): string {
+        if (!helpContent) return helpContent;
+        
         this.editIcon = icon({ iconName: 'pencil', prefix: 'fas' }).html.join('');
         this.saveIcon = icon({ iconName: 'save', prefix: 'fas' }).html.join('');
         this.closeIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');

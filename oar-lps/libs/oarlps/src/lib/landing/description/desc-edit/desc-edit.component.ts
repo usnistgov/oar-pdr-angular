@@ -49,11 +49,11 @@ export class DescEditComponent {
     globalsvc = inject(GlobalService);
     
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -70,12 +70,12 @@ export class DescEditComponent {
                 public iconLibrary: FaIconLibrary,
                 public lpService: LandingpageService){
        
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );        
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );        
         
         this.globalsvc.watchLpsLeftWidth(width => {
             this.onResize(width + 20);

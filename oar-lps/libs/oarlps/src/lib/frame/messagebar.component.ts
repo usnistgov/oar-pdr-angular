@@ -24,7 +24,7 @@ export class MessageBarComponent {
     messages : Message[] = [];
 
     //icon class names
-    cancleIcon = iconClass.CANCEL;
+    // cancleIcon = iconClass.CANCEL;
     faXmark = faXmark;
 
     @Input() defSysErrorPrefix : string = "There was an internal hiccup.";
@@ -32,7 +32,7 @@ export class MessageBarComponent {
     // public constructor(@Optional() private svc : UserMessageService) {
     public constructor(svc: UserMessageService, public iconLibrary: FaIconLibrary) {
         
-        iconLibrary.addIcons(faXmark); 
+        // iconLibrary.addIcons(faXmark); 
         
         if (svc) {
             svc.subscribe({

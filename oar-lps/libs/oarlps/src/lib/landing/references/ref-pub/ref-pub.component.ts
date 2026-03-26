@@ -22,8 +22,9 @@ export class RefPubComponent {
     currentRefIndex: number = 0;
 
     //Icon name
-    arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
-      
+    // arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;  
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
 
@@ -31,9 +32,9 @@ export class RefPubComponent {
         public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef) { 
         
-        iconLibrary.addIcons(
-            faArrowUpRightFromSquare
-        );
+        // iconLibrary.addIcons(
+        //     faArrowUpRightFromSquare
+        // );
     }
 
     ngOnInit(): void {

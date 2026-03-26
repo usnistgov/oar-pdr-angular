@@ -15,8 +15,8 @@ import { iconClass } from '../../../shared/globals/globals';
 export class BulkConfirmComponent implements OnInit {
 
     //icon class names
-    downloadIcon = iconClass.DOWNLOAD;
-    closeIcon = iconClass.CLOSE;
+    // downloadIcon = iconClass.DOWNLOAD;
+    // closeIcon = iconClass.CLOSE;
 
     faDownload = faDownload;
     faXmark = faXmark;
@@ -27,7 +27,7 @@ export class BulkConfirmComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         public activeModal: NgbActiveModal) { 
         
-        iconLibrary.addIcons(faDownload, faXmark);
+        // iconLibrary.addIcons(faDownload, faXmark);
     }
 
     ngOnInit(): void {

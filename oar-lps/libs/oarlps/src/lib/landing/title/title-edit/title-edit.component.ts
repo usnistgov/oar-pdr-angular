@@ -50,11 +50,11 @@ export class TitleEditComponent {
     fileManagerTooltip: string = "testing";
 
     //icon class
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;    
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;    
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -69,12 +69,12 @@ export class TitleEditComponent {
                 public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) 
     {
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );
 
         effect(() => {
             if(this.edstatsvc.isEditMode()){

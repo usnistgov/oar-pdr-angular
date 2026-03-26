@@ -14,6 +14,7 @@ import { AppConfig } from '../../../config/config';
 import { config, testdata } from '../../../../environments/environment';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('DatafilesPubComponent', () => {
     let component: DatafilesPubComponent;
@@ -37,6 +38,12 @@ describe('DatafilesPubComponent', () => {
                 CartService,
                 GoogleAnalyticsService,
                 { provide: AppConfig, useValue: cfg },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
+                }
             ]
         })
         .compileComponents();

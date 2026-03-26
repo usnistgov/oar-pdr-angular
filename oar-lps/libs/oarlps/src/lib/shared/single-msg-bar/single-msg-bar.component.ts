@@ -20,11 +20,13 @@ export class SingleMsgBarComponent {
     //Icons
     closeIcon = iconClass.CIRCLE_XMARK;
 
+    faCircleXmark = faCircleXmark;
+
     @Input() message: string = "";
     @Output() command_out: EventEmitter<any> = new EventEmitter();
 
     constructor(public iconLibrary: FaIconLibrary) {
-        this.iconLibrary.addIcons(faCircleXmark);
+        // this.iconLibrary.addIcons(faCircleXmark);
     }
 
     /**

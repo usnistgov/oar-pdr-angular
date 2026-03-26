@@ -70,7 +70,7 @@ export class AccesspageListComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     //icon class names
-    addIcon = iconClass.ADD;
+    // addIcon = iconClass.ADD;
     faPlus = faPlus;
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
@@ -94,7 +94,7 @@ export class AccesspageListComponent implements OnInit {
                 public iconLibrary: FaIconLibrary,
                 private chref: ChangeDetectorRef) { 
 
-        iconLibrary.addIcons(faPlus);          
+        // iconLibrary.addIcons(faPlus);          
     }
 
     ngOnInit(): void {

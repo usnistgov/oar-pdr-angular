@@ -14,7 +14,7 @@
                         <td width="30px" align="left" style="vertical-align:top;">
                             <!-- Clear text button-->
                             <button class="edit_button" style="margin: 10px 0px 0px 2px" [disabled]="!visitHomeURL" (click)="clearText()" aria-label="Clear button" ngbTooltip="Clear URL">
-                                <fa-icon *ngIf="eraserIcon" [icon]="['fas', eraserIcon]"></fa-icon>
+                                <fa-icon [icon]="faEraser"></fa-icon>
                             </button>
                         </td>
                     </tr>
@@ -34,12 +34,12 @@
                     aria-label="edit button" 
                     [disabled]="!dataChanged" 
                     ngbTooltip="Save changes">
-                <fa-icon *ngIf="saveIcon" [icon]="['fas', saveIcon]"></fa-icon>
+                <fa-icon [icon]="faSave"></fa-icon>
             </button>
     
             <!-- Undo button -->
             <button *ngIf="currentValueChanged" class="edit_button" style="margin: -1px 0px 0px 0px" (click)="commandOut('undoCurrentChanges')" aria-label="Undo button" ngbTooltip="Undo current changes">
-                <fa-icon *ngIf="undoIcon" [icon]="['fas', undoIcon]"></fa-icon>
+                <fa-icon [icon]="faUndo"></fa-icon>
             </button>
         </td>          
     </tr>

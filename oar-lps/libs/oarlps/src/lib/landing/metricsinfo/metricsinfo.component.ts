@@ -61,8 +61,8 @@ export class MetricsinfoComponent implements OnInit {
     time: any;
 
     //Icons
-    spinnerIcon = iconClass.SPINNER;
-    chartBarIcon = iconClass.CHART_BAR;
+    // spinnerIcon = iconClass.SPINNER;
+    // chartBarIcon = iconClass.CHART_BAR;
 
     faSpinner = faSpinner;
     faChartBar = faChartBar;
@@ -74,10 +74,10 @@ export class MetricsinfoComponent implements OnInit {
                 public iconLibrary: FaIconLibrary,
                 private cfg: AppConfig) 
     { 
-        iconLibrary.addIcons(
-            faSpinner,
-            faChartBar
-        );
+        // iconLibrary.addIcons(
+        //     faSpinner,
+        //     faChartBar
+        // );
         
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
 

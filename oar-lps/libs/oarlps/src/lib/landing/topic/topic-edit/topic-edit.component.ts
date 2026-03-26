@@ -57,10 +57,10 @@ export class TopicEditComponent implements OnInit {
     // selectedTopics: any[] = [];
 
     //icon class names
-    saveIcon = iconClass.SAVE;
-    undoIcon = iconClass.UNDO;
-    resetIcon = iconClass.RESET;
-    deleteIcon = iconClass.DELETE;
+    // saveIcon = iconClass.SAVE;
+    // undoIcon = iconClass.UNDO;
+    // resetIcon = iconClass.RESET;
+    // deleteIcon = iconClass.DELETE;
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -87,14 +87,14 @@ export class TopicEditComponent implements OnInit {
                 public iconLibrary: FaIconLibrary,
                 private msgsvc: UserMessageService) { 
         
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo,
-            faTrashCan,
-            faRecycle
-        );
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo,
+        //     faTrashCan,
+        //     faRecycle
+        // );
     }
 
     ngOnInit(): void {

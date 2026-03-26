@@ -7,6 +7,7 @@ import { config, testdata } from '../../../environments/environment';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { LandingConstants } from '../../shared/globals/globals';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('VersionComponent', () => {
     let component : VersionComponent;
@@ -23,6 +24,12 @@ describe('VersionComponent', () => {
             providers: [
                 {
                     provide: AppConfig, useValue: cfg
+                },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
                 }
             ]
         }).compileComponents();

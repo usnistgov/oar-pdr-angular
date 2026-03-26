@@ -6,6 +6,7 @@ import { config, testdata } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -23,7 +24,18 @@ describe('MenuComponent', () => {
       providers: [
         HttpClient,
         HttpTestingController,
-        { provide: AppConfig,  useValue: cfg }
+        { provide: AppConfig, useValue: cfg },
+        {
+            provide: FaTestingConfig,
+            useValue: {
+                arrowCircleRightIcon: 'undo',
+                anglesRightIcon: 'undo',
+                arrowUpRightFromSquareIcon: 'undo',
+                cartPlusIcon: 'undo',
+                downloadIcon: 'undo'
+            }
+        }        
+
     ]
     })
     .compileComponents();

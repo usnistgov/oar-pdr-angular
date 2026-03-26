@@ -15,7 +15,8 @@ import { iconClass } from '../globals/globals';
 })
 export class ConfirmationDialogComponent implements OnInit {
    
-    warningIcon = iconClass.WARNING;
+    // warningIcon = iconClass.WARNING;
+    faTriangleExclamation = faTriangleExclamation;
 
     @Input() public title: string;
     @Input() public message: string;
@@ -29,9 +30,9 @@ export class ConfirmationDialogComponent implements OnInit {
         @Inject(NgbActiveModal) public activeModal: NgbActiveModal,
         public iconLibrary: FaIconLibrary,) { 
         
-        iconLibrary.addIcons(
-            faTriangleExclamation
-        );
+        // iconLibrary.addIcons(
+        //     faTriangleExclamation
+        // );
     }
 
     ngOnInit() {

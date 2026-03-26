@@ -69,11 +69,11 @@ export class KeywordMidasComponent {
     globalsvc = inject(GlobalService);
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -89,12 +89,12 @@ export class KeywordMidasComponent {
                 public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService){ 
 
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );        
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );        
     }
 
     /**

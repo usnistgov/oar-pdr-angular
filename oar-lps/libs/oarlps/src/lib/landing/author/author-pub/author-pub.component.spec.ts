@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { testdata } from '../../../../environments/environment';
 import { AuthorPubComponent } from './author-pub.component';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('AuthorPubComponent', () => {
     let component: AuthorPubComponent;
@@ -10,7 +11,16 @@ describe('AuthorPubComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-        imports: [AuthorPubComponent, FontAwesomeTestingModule]
+            imports: [AuthorPubComponent, FontAwesomeTestingModule],
+            providers: [
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        caretRightIcon: 'undo',
+                        caretDownIcon: 'undo'
+                    }
+                }
+            ]
         })
         .compileComponents();
 

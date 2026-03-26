@@ -17,6 +17,7 @@ import { environment } from '../../environments/environment-impl';
 import { EditStatusService } from '../landing/editcontrol/editstatus.service';
 import { UserMessageService } from '../frame/usermessage.service';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
@@ -62,7 +63,25 @@ describe('SidebarComponent', () => {
                 deps: [ environment, HttpClient, AppConfig ] },
             { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
                 new UserMessageService(), edstatsvc, dapsvc, null)
-            } 
+            },
+        {
+            provide: FaTestingConfig,
+            useValue: {
+                editIcon: 'undo',
+                closeIcon: 'undo',
+                saveIcon: 'undo',
+                cancelIcon: 'undo',
+                undoIcon: 'undo',
+                addIcon: 'undo',
+                delIcon: 'undo',
+                resetIcon: 'undo',
+
+                caretRightIcon: 'undo',
+                caretDownIcon: 'undo',
+                circleQuestionIcon: 'undo',
+                circleXmarkIcon: 'undo',
+            }
+        }            
         ]
     })
     .compileComponents();

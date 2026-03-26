@@ -58,11 +58,16 @@ export class VisithomeMidasComponent {
     isPublicSite: boolean = false;
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
     
@@ -73,12 +78,12 @@ export class VisithomeMidasComponent {
                 public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) 
     { 
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );
 
         effect(() => {
             // When edit mode changed, refresh the screen

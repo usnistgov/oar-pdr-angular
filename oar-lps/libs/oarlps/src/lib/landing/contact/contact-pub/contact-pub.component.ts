@@ -32,8 +32,8 @@ export class ContactPubComponent {
     isMouseOver: boolean = false;
     
     //icon class names
-    caretRightIcon = iconClass.CARET_RIGHT;
-    caretDownIcon = iconClass.CARET_DOWN;
+    // caretRightIcon = iconClass.CARET_RIGHT;
+    // caretDownIcon = iconClass.CARET_DOWN;
 
     faCaretDown = faCaretDown;
     faCaretRight = faCaretRight;
@@ -49,10 +49,10 @@ export class ContactPubComponent {
         public iconLibrary: FaIconLibrary,
         private contactService: ContactService) {
         
-        iconLibrary.addIcons(
-            faCaretDown,
-            faCaretRight
-        );  
+        // iconLibrary.addIcons(
+        //     faCaretDown,
+        //     faCaretRight
+        // );  
     }
 
     email(hasEmail)

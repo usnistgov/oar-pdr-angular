@@ -47,10 +47,10 @@ export class AuthorEditComponent implements OnInit {
     showDeptMsg: boolean = false;
 
     //icon class names
-    deleteIcon = iconClass.DELETE;
-    addIcon = iconClass.ADD;
-    lockIcon = iconClass.LOCK;
-    unlockIcon = iconClass.UNLOCK;
+    // deleteIcon = iconClass.DELETE;
+    // addIcon = iconClass.ADD;
+    // lockIcon = iconClass.LOCK;
+    // unlockIcon = iconClass.UNLOCK;
     
     faPencil = faPencil;
     faXmark = faXmark;
@@ -74,16 +74,16 @@ export class AuthorEditComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         private authorService: AuthorService) { 
         
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo,
-            faPlus,
-            faLock,
-            faUnlock,
-            faTrashCan
-        );           
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo,
+        //     faPlus,
+        //     faLock,
+        //     faUnlock,
+        //     faTrashCan
+        // );           
     }
 
     ngOnInit(): void {

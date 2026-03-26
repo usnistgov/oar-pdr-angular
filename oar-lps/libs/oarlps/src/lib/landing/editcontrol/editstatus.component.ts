@@ -47,7 +47,7 @@ export class EditStatusComponent implements OnInit {
     resourceType: string = "resource";
 
     //icon class names
-    spinnerIcon = iconClass.SPINNER;
+    // spinnerIcon = iconClass.SPINNER;
     faSpinner = faSpinner;
 
     @Input() mdrec: NerdmRes;
@@ -68,7 +68,7 @@ export class EditStatusComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         public lpService: LandingpageService) {
 
-        iconLibrary.addIcons(faSpinner);
+        // iconLibrary.addIcons(faSpinner);
         
         effect(() => {
             this.message = this.globalsvc.message();

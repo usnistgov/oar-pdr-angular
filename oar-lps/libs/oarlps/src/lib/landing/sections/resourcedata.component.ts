@@ -98,9 +98,9 @@ export class ResourceDataComponent implements OnChanges {
         public iconLibrary: FaIconLibrary,
         private gaService: GoogleAnalyticsService){ 
 
-        iconLibrary.addIcons(
-            faGlobe, faLock
-        );
+        // iconLibrary.addIcons(
+        //     faGlobe, faLock
+        // );
         
         this.globalService.watchCollection((collection) => {
             this.collection = collection;

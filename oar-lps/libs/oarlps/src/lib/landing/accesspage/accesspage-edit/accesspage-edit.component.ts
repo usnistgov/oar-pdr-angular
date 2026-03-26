@@ -32,8 +32,8 @@ export class AccesspageEditComponent implements OnInit {
     accessPage: NerdmComp = {} as NerdmComp;
 
     //icon class names
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
 
     faXmark = faXmark;
     faSave = faSave;
@@ -50,11 +50,11 @@ export class AccesspageEditComponent implements OnInit {
         public mdupdsvc: MetadataUpdateService,
         public iconLibrary: FaIconLibrary) { 
         
-        iconLibrary.addIcons(
-            faXmark,
-            faSave,
-            faUndo
-        );  
+        // iconLibrary.addIcons(
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );  
     }
 
     ngOnInit(): void {

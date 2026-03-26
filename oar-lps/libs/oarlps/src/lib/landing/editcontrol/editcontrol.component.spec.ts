@@ -15,6 +15,7 @@ import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.s
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { AuthenticationService, MockAuthenticationService } from 'oarng';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('EditControlComponent', () => {
     let component : EditControlComponent;
@@ -31,17 +32,23 @@ describe('EditControlComponent', () => {
             imports: [ HttpClientTestingModule, FontAwesomeTestingModule ],
             declarations: [  ],
             providers: [
-                    UserMessageService, 
-                    {provide: AuthenticationService, useValue: new MockAuthenticationService(null)},
-                    HttpHandler,
-                    DatePipe,
-                    { provide: AppConfig, useValue: cfg },
-                    { provide: AuthService, useValue: authsvc },
-                    { provide: DAPService, useFactory: createDAPService, 
-                        deps: [ env, HttpClient, AppConfig ] },
-                    { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                        new UserMessageService(), edstatsvc, dapsvc, null)
+                UserMessageService, 
+                {provide: AuthenticationService, useValue: new MockAuthenticationService(null)},
+                HttpHandler,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    new UserMessageService(), edstatsvc, dapsvc, null)
+                },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
                     }
+                }
             ]
         }).compileComponents();
 

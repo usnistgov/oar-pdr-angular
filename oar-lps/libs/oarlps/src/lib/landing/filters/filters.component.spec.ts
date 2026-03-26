@@ -14,6 +14,7 @@ import { TaxonomyComponent } from '../taxonomy/taxonomy.component';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { config } from '../../../environments/environment';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('FiltersComponent', () => {
     let component: FiltersComponent;
@@ -36,7 +37,13 @@ describe('FiltersComponent', () => {
             providers: [
                 SearchService,
                 CollectionService,
-                { provide: AppConfig,       useValue: cfg }
+                { provide: AppConfig, useValue: cfg },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
+                }                
             ]
         })
         .compileComponents();

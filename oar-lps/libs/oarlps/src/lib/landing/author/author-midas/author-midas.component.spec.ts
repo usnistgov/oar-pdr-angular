@@ -15,6 +15,7 @@ import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/da
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler, HttpRequest } from '@angular/common/http';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('AuthorMidasComponent', () => {
     let component: AuthorMidasComponent;
@@ -46,6 +47,12 @@ describe('AuthorMidasComponent', () => {
             { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
                 new UserMessageService(), edstatsvc, dapsvc, null)
             },
+            {
+                provide: FaTestingConfig,
+                useValue: {
+                    circleIcon: 'undo'
+                }
+            }
         ]
         })
         .compileComponents();

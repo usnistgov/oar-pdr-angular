@@ -15,6 +15,7 @@ import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('AccesspageMidasComponent', () => {
     let component: AccesspageMidasComponent;
@@ -46,7 +47,13 @@ describe('AccesspageMidasComponent', () => {
                     deps: [ environment, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
                     new UserMessageService(), edstatsvc, dapsvc, null)
-                } 
+                },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
+                }                
             ]
         })
         .compileComponents();

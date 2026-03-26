@@ -16,14 +16,14 @@ export class DownloadstatusComponent implements OnInit {
     inited: boolean = false;
 
     //icon class names
-    closeIcon = iconClass.CLOSE;
+    // closeIcon = iconClass.CLOSE;
 
     faXmark = faXmark;
     
     @Input() inBrowser: boolean;
 
     constructor(public iconLibrary: FaIconLibrary) { 
-        iconLibrary.addIcons(faXmark);
+        // iconLibrary.addIcons(faXmark);
     }
 
     ngOnInit() {

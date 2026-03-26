@@ -60,11 +60,11 @@ export class IspartofEditComponent {
     collectionData = [];
 
     //icon class
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;
 
     faPencil = faPencil;
     faXmark = faXmark;
@@ -83,12 +83,12 @@ export class IspartofEditComponent {
         public iconLibrary: FaIconLibrary,
         private notificationService: NotificationService) {
         
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );
 
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
         this.allCollections = this.collectionService.loadAllCollections();

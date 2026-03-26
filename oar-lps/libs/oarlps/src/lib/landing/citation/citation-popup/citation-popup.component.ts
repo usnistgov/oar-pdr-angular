@@ -45,8 +45,8 @@ export class CitationPopupComponent {
     colorScheme: any;
 
     //icon class names
-    copyIcon = iconClass.COPY;
-    closeIcon = iconClass.CLOSE;
+    // copyIcon = iconClass.COPY;
+    // closeIcon = iconClass.CLOSE;
 
     faCopy = faCopy;
     faXmark = faXmark;
@@ -65,7 +65,8 @@ export class CitationPopupComponent {
         public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef) {
         
-        iconLibrary.addIcons(faCopy, faXmark);
+        // iconLibrary.addIcons(faCopy, faXmark);
+        
         this.allCollections = this.collectionService.loadAllCollections();
 
         this.globalService.watchColorPalette((colorPalette) => {

@@ -14,8 +14,8 @@ import { iconClass } from '../../shared/globals/globals';
 })
 export class DownloadConfirmComponent implements OnInit {
     //icon class names
-    downloadIcon = iconClass.DOWNLOAD;
-    closeIcon = iconClass.CLOSE;
+    // downloadIcon = iconClass.DOWNLOAD;
+    // closeIcon = iconClass.CLOSE;
 
     faDownload = faDownload;
     faXmark = faXmark;
@@ -32,7 +32,7 @@ export class DownloadConfirmComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         private cfg: AppConfig) { 
         
-        iconLibrary.addIcons(faDownload, faXmark);
+        // iconLibrary.addIcons(faDownload, faXmark);
     }
 
     ngOnInit() 

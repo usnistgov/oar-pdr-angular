@@ -4,8 +4,7 @@
             <span *ngIf="ref.location; else noreflink">
                 <!-- <span class="fas fa-external-link-alt">&nbsp;</span> -->
                 <fa-icon 
-                    *ngIf="arrowUpRightFromSquareIcon" 
-                    [icon]="['fas', arrowUpRightFromSquareIcon]"
+                    [icon]="faArrowUpRightFromSquare"
                     style="padding-right: .5em;"></fa-icon>
                     
                 <a href={{ref.location}} target="blank">{{ getReferenceText(ref) }}</a>

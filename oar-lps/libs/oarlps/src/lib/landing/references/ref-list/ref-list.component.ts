@@ -80,7 +80,7 @@ export class RefListComponent implements OnInit {
     };
 
     //icon class names
-    addIcon = iconClass.ADD;    
+    // addIcon = iconClass.ADD;    
     faPlus = faPlus;
     
     // passed in by the parent component:
@@ -96,7 +96,7 @@ export class RefListComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         public lpService: LandingpageService) { 
 
-        iconLibrary.addIcons( faPlus); 
+        // iconLibrary.addIcons( faPlus); 
     }
 
     ngOnInit(): void {
