@@ -3,8 +3,7 @@
     "title": {
         "label": "Title",
         "general": "<p>The title should be written in plain language and include sufficient detail to facilitate search and discovery. </p><p> If this publication can be considered a supplement to a literature publication, consider using the same title with an extra annotation, like ': Supplementary Data'.</p>",
-        "edit": "Type the title into the input box and then click the <i class='saveIcon'></i> icon to save.",
-        "seealso": "<i>[Helpful examples, <a href='https://data.nist.gov/sdp/#/policy'>links to policy and guidance</a>]</i>"
+        "edit": "Type the title into the input box and then click the <i class='saveIcon'></i> icon to save."
     },
     "authors": {
         "label": "Authors",
