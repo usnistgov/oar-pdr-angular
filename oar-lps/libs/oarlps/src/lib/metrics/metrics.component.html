@@ -11,17 +11,20 @@
         </span>
         <div *ngIf="screenWidth > screenSizeBreakPoint" style="float: right;">
             <button 
+                class="control-btns"
                 (click)="saveMetricsAsImage()" 
                 [disabled]="noChartData || noDatasetSummary"
-                [ngStyle]="{'width':'200px', 'height':'35px', 'float':'right', 'background-color':'green','margin-top':'1em', 'margin-right':'1.5em'}">
+                id="mc-download-graphics-btn"
+            >
 
                 <fa-icon [icon]="faFileArrowDown"></fa-icon>
                 Download Graphics
             </button>
             <button 
+                class="control-btns"
                 (click)="saveMetrics()" 
                 [disabled]="noChartData || noDatasetSummary"
-                [ngStyle]="{'width':'200px', 'height':'35px', 'float':'right', 'background-color':'green', 'margin-right':'0.5em','margin-top':'1em'}">
+                id="mc-download-metrics-btn">
             
                 <fa-icon [icon]="faDownload"></fa-icon>
                 Download Metrics

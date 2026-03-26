@@ -31,8 +31,8 @@ import { FrameModule } from '../../../frame/frame.module';
 import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleInfo, faRefresh, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 declare var _initAutoTracker: Function;
 
@@ -110,9 +110,9 @@ export class DatafilesMidasComponent {
     currentKey: string = '';
         
     //icon class names
-    // circleInfoIcon = iconClass.CIRCLE_INFO;
-
     faCircleInfo = faCircleInfo;
+    faRefresh = faRefresh;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;
     
     constructor(private cfg: AppConfig,
                 public editstatsvc: EditStatusService,
@@ -123,11 +123,8 @@ export class DatafilesMidasComponent {
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
                 private confirmDialogSvc: ConfirmationDialogService,
-                public iconLibrary: FaIconLibrary,
                 private ngZone: NgZone)
     {
-        // iconLibrary.addIcons(faCircleInfo);
-
         this.cols = [
             { field: 'name', header: 'Name', width: '60%' },
             { field: 'mediaType', header: 'Media Type', width: 'auto' },

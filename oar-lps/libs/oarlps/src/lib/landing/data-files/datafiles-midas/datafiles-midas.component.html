@@ -9,31 +9,27 @@
                 <div style="width: 100%; height: 40px; margin-top: 10px;">
                     <!-- Refresh Files button -->
                     <button 
-                        pButton 
                         type="submit" 
-                        class="p-button-sm light-blue-btn" 
-                        id="btn-fm" 
-                        (click)="reloadFiles()" 
-                        label="Refresh Files" 
-                        [icon]="refreshFilesIcon" 
-                        iconPos="left" 
-                        style="float: right;">
+                        class="control-btn" 
+                        id="fc-refresh-btn" 
+                        ngbTooltip="Refresh the list of files from MIDAS"
+                        (click)="reloadFiles()">
+
+                        <fa-icon [icon]="faRefresh"></fa-icon>
+                        Refresh Files
                     </button>
     
                     <!-- Manage Files button -->
                     <button 
-                        pButton 
-                        [pTooltip]="fileManagerTooltip" 
-                        tooltipPosition="bottom" 
-                        tooltipStyleClass="tooltip-style" 
                         type="submit" 
-                        class="p-button-sm light-blue-btn" 
-                        id="btn-fm" label="Manage Files" 
-                        icon="fas fa-external-link-alt fa-1x icon-white" 
-                        iconPos="left" 
-                        style="margin-right: 10px; float: right;" 
+                        class="control-btn" 
+                        id="fc-manage-btn"
                         [disabled]="!authorized"
-                        (click)="openFileManager()">
+                        (click)="openFileManager()"
+                        [ngbTooltip]="fileManagerTooltip">
+
+                        <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+                        Manage Files
                     </button>
     
                     <!-- <button pButton [pTooltip]="fileManagerUrl" tooltipPosition="bottom" tooltipStyleClass="tooltip-style" type="submit" class="p-button-sm light-blue-btn" id="btn-fm" label="Manage Files" icon="fas fa-external-link-alt fa-1x icon-white" iconPos="left" style="margin-right: 10px; float: right;" (click)="openFileManager()">
@@ -44,7 +40,6 @@
                     <span (click)="showLargeFileManagerHelpPopup($event,op1)" class="large-collection-upload-help" title="How to upload large dataset" ngbTooltip="How to upload large dataset" >
                         Learn alternate ways to upload for large datasets 
                         <!-- Info button -->
-                        <!-- <i class="fas fa-info-circle link-icon"></i>  -->
                         <fa-icon [icon]="faCircleInfo" size="sm"></fa-icon>
                     </span>
                 </div>

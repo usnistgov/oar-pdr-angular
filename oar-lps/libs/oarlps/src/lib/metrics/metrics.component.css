@@ -124,3 +124,34 @@
 .button-sm {
     width: 40px;
 }
+
+.control-btns {
+    width: 200px;
+    float: right;
+    margin-top: 1em;
+    border: 0px;
+    border-radius: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 2.5em;
+    margin-right: 1em;
+    width: max-content;
+}
+
+#mc-download-graphics-btn {
+    background-color: var(--science-theme-background-default);
+    color: white;
+}   
+
+#mc-download-graphics-btn:hover {
+    background-color: var(--science-theme-background-hover);
+}
+
+#mc-download-metrics-btn {
+    background-color: var(--nist-green-default);
+    color: white;
+}
+
+#mc-download-metrics-btn:hover {
+    background-color: var(--nist-green-hover);
+}
