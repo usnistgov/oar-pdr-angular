@@ -23,15 +23,15 @@
         "label": "Visit Home Page",
         "general": "<p>The Home Page is the user's entry point for this publication. It provides contextual information and access to the resource itself (e.g., download links for data). Importantly, the DOI (digital object identifier) will point to this URL. </p><p> If you wish for this NIST Public Data Repository page to be your home page, leave this box blank and click <i class='fas fa-times'></i> to close the entry field. If you would like to point to another home page (which you maintain), enter the URL here.</p>",
         "add": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes.  </p><p> <i>[Link to an FAQ: Can I have my DOI point to a different page that the one in the PDR?]</i>",
-        "edit": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes.  </p><p> See also <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#doi-homepage'>FAQ: Do I have to use a DOI (Digital Object Identifier)? Can I use my own homepage?</a></i></p>"
+        "edit": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes.  </p><p> See also the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#doi-homepage'>FAQ: Do I have to use a DOI (Digital Object Identifier)? Can I use my own homepage?</a></i></p>"
     },
     "doi": {
         "label": "Identifier",
-        "general": "Normally, the identifier shown here is a digital object identifier (DOI). Use this identifier to reference this publication in other publications. For more information on what a DOI is and how to use it, see <a href='https://inet.nist.gov/mr/library/midas-user-guides#what-is-doi'>FAQ: What's a DOI and why do I care?</a>."
+        "general": "Normally, the identifier shown here is a digital object identifier (DOI). Use this identifier to reference this publication in other publications. For more information on what a DOI is and how to use it, see the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#what-is-doi'>FAQ: What's a DOI and why do I care?</a></i>"
     },
     "version": {
         "label": "Version",
-        "general": "<p>You can update this publication after it's been published for the first time with both minor edits (like tweaking the abstract) or major changes, like adding or updating files.  We track the changes by assigning a version to the publication.  Readers will have access to past versions by opening up the version history displayed here. </p> <p> Version labels follow a semantic pattern; for more information on the meaning of each digit, see the <i>[Link to FAQ: What does the version label refer to and how is it assigned?]</p>"
+        "general": "<p>You can update this publication after it's been published for the first time with both minor edits (like tweaking the abstract) or major changes, like adding or updating files.  We track the changes by assigning a version to the publication.  Readers will have access to past versions by opening up the version history displayed here. </p> <p> Version labels follow a semantic pattern; for more information on the meaning of each digit, see the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#what-is-doi'>FAQ: What does the version label refer to and how is it assigned?</a></i></p>"
     },
     "description": {
         "label": "Description",
