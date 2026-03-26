@@ -4,6 +4,8 @@ import { CitationPopupComponent } from './citation-popup.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('CitationPopupComponent', () => {
     let component: CitationPopupComponent;
@@ -15,7 +17,11 @@ describe('CitationPopupComponent', () => {
                 CitationPopupComponent,
                 FontAwesomeTestingModule,
                 NoopAnimationsModule],
-        providers: [NgbActiveModal, CollectionService]
+            providers: [
+                NgbActiveModal,
+                provideHttpClient(),
+                provideHttpClientTesting(),
+                CollectionService]
         })
         .compileComponents();
 

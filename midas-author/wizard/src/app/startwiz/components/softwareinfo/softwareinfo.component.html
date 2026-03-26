@@ -1,25 +1,25 @@
 <div class="full-height">
     <oar-pushing-sidebar [marginLeft]="marginLeft" style="width: 100%; height: fit-content;">
         <div class="main-content">
-            <p>Would you like to provide a link to a public software repository (e.g. in GitHub)?</p>
+            <p>Will you be including a link to a public software repository (e.g. in GitHub)?</p>
             <div class="radio-group">
                 <div class="radio">
                     <label title="downloadable files or a searchable database">
                         <input type="radio" required name="provideLink" [value]="true" (change)="toggleSoftwareLink($event)" [(ngModel)]="dataModel.provideLink">
-                        Yes
+                        Yes, <i>I want to include a link to the software repository</i>
                     </label>
                 </div>
                 <div class="radio">
                     <label title="source code or a downloadable application one may install and run">
                         <input type="radio" required name="provideLink" [value]="false"  (change)="toggleSoftwareLink($event)"
                         [(ngModel)]="dataModel.provideLink">
-                        No
+                        No, <i>the software will made available in some other way.</i>
                     </label>
                 </div>
             </div>
 
             <div style="margin-top: 1em;" *ngIf="dataModel.provideLink">
-                <div style="margin-bottom: .5em;">Type in software link: </div>
+                <div style="margin-bottom: .5em;">If the software respository URL is known now, enter it here: </div>
                 <input 
                     class="input-box input" 
                     type="text" 

@@ -1,5 +1,5 @@
 .editing-block {
-    width: calc(100%-90px);
+    width: 100%;
     max-width: 500px;
     padding: 10px;
     border: 1px solid lightgrey;
