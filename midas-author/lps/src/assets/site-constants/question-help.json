@@ -73,7 +73,7 @@
     "isPartOf": {
         "label": "Collection Membership",
         "general": "If this publication should be part of one of our special-purpose domain collections, you can request for inclusion here.  Note that if you do, the collection maintainer will be asked to approve that your publication should be added.",
-        "edit": "<p>Click on one of the named collections to request that this publication be added to it. Then click <i class='saveIcon'></i> to save. </p><p> <i>[Link to an FAQ: Should or can my publication be added to a collection?]</i></p>"
+        "edit": "<p>Click on one of the named collections to request that this publication be added to it. Then click <i class='saveIcon'></i> to save. </p><p> See also the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#curated-collection'>FAQ: What is a Curated Collection?</a></i></p>"
     },
     "completed": "<p>This publication looks good!  We have no more suggestions. </p><p> If you are satisfied with the content, click on 'Submit for Review' to proceed with review and publication.</p>"
 }
