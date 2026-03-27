@@ -18,18 +18,7 @@ const routes: Routes = [
 
     // Copied datacart routes here to test lazyloading
     { path: 'datacart',
-    //   loadChildren: () => import('oarlps').then(m => m.DatacartModule),
-      children: [
-          {   path: ':cartname',
-              loadComponent: () => import('oarlps')
-                  .then(mod => mod.DatacartComponent),
-              canDeactivate: [LeaveWhileDownloadingGuard]   
-            },
-          {   path: 'ark:/:naan/:cartname',
-              loadComponent: () => import('oarlps')
-                  .then(mod => mod.DatacartComponent),
-              canDeactivate: [LeaveWhileDownloadingGuard]   }
-      ]
+      loadChildren: () => import('oarlps').then(m => m.DatacartModule),
     },
     // app paths
     { path: 'about',         component: LandingAboutComponent },

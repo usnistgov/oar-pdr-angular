@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { BadgeModule } from 'primeng/badge';
 import { TreetableComponent } from './treetable/treetable.component';
 import { LeaveWhileDownloadingGuard } from './leave.guard';
+import { DatacartRoutingModule } from './datacart-routing.module';
 
 @NgModule({
     declarations: [
@@ -30,7 +31,8 @@ import { LeaveWhileDownloadingGuard } from './leave.guard';
     ],
     imports: [
         CommonModule, SharedModule, ProgressSpinnerModule, NgbModule, TreeModule, FieldsetModule,
-        DialogModule, OverlayPanelModule, TreeTableModule, ButtonModule, TooltipModule, BadgeModule
+        DialogModule, OverlayPanelModule, TreeTableModule, ButtonModule, TooltipModule, BadgeModule,
+        DatacartRoutingModule
     ],
     exports: [
         DatacartComponent
