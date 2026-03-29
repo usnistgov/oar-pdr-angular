@@ -4,7 +4,9 @@
         <div class="bodyTextSize">
             <p>
                 The NIST Public Data Repository allows users to download a single data file from a dataset by clicking 
-                on the download icon (<span class="faa faa-download" style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"></span>) to the right of file's name in the file listing; 
+                on the download icon (
+                <fa-icon [icon]="faDownload" style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"></fa-icon>
+                ) to the right of file's name in the file listing; 
                 however, more often you will want to download many files from the dataset.  
             </p>
             <p>
@@ -96,19 +98,22 @@
             <p class="smlabelStyle">Downloading large datasets using the rclone tool</p>
             <p style="margin-left: 2em;">
 
-            <a href="https://rclone.org/install/"
-                target="_blank"
-                rel="noopener"
-                pButton
-                label="Download rclone"
-                class="anchor-button p-button">
-                <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
-                <fa-icon 
-                    [icon]="faDownload" 
-                    size="sm"
-                    class="download-icon">
-                </fa-icon>
-                Install rclone
+            <a href="https://rclone.org/install/">
+                <button
+                    type="button" 
+                    class="oar-button"
+                    [ngStyle]="btnStyle()"
+                    target="_blank"
+                    rel="noopener">
+                    <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
+
+                    <fa-icon 
+                        [icon]="faDownload" 
+                        size="sm" 
+                        class="download-icon">
+                    </fa-icon>
+                    Install rclone
+                </button>
             </a>
 
             <p>
@@ -166,20 +171,22 @@
             <p class="smlabelStyle">Downloading large datasets using the Python script, pdrdownload.py</p>
             <p style="margin-left: 2em;">
 
-            <a href="{{pdrbase}}od/tools/pdrdownload.py"
-                target="_blank"
-                rel="noopener"
-                pButton
-                label="Download pdrdownload.py"
-                class="anchor-button p-button">
-                <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
+            <a href="{{pdrbase}}od/tools/pdrdownload.py">
+                <button
+                    type="button" 
+                    class="oar-button"
+                    [ngStyle]="btnStyle()"
+                    target="_blank"
+                    rel="noopener">
+                    <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
 
-                <fa-icon 
-                    [icon]="faDownload" 
-                    size="sm" 
-                    class="download-icon">
-                </fa-icon>
-                Download pdrdownload.py
+                    <fa-icon 
+                        [icon]="faDownload" 
+                        size="sm" 
+                        class="download-icon">
+                    </fa-icon>
+                    Download pdrdownload.py
+                </button>
             </a>
 
             <code style="padding-left: 1em;">This script requires Python 3.8 or higher</code>

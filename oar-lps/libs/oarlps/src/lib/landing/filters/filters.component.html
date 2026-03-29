@@ -33,7 +33,7 @@
             <!-- Display spinner while waiting for search result -->
             <div class="spinner" *ngIf="searching">
                 <!-- <i class="faa faa-spinner faa-spin faa-stack-2x" [style.color]="colorScheme.defaultVar" aria-hidden="true"></i> -->
-                <fa-icon [icon]="faSpinner" [spin]="true" [style.color]="colorScheme.defaultVar" aria-hidden="true"></fa-icon>
+                <fa-icon [icon]="faSpinner" [animation]="'spin'" [style.color]="colorScheme.defaultVar" aria-hidden="true"></fa-icon>
             </div>
 
             <div style="padding-left: -1em;padding-right: -2em;" *ngIf="isActive && !searching">
@@ -119,7 +119,7 @@
 
         <!-- Collapsed filters -->
         <div>
-            <i class="faa faa-angle-double-right collapsedFilterIcon"></i>
+            <!-- <i class="faa faa-angle-double-right collapsedFilterIcon"></i> -->
 
             <fa-icon 
                 [icon]="faAnglesRight" 

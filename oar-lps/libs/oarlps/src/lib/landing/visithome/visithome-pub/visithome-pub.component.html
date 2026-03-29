@@ -3,18 +3,22 @@
         <div class="editable_container">
             @if(hasVisitHomeURL) {
                 <a href={{record[fieldName]}} target="_blank">
-                    <button pButton 
+                    <button type="button" 
                             class="oar-button home_button" 
                             [ngStyle]="visitHomePageBtnStyle()"
                             (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
                     
-                        <fa-icon *ngIf="arrowUpRightFromSquareIcon" [icon]="['fas', arrowUpRightFromSquareIcon]" pButtonIcon style="padding-right: .5em;"></fa-icon>
-                        <span pButtonLabel>Visit Home Page</span>
+                        <fa-icon 
+                            *ngIf="arrowUpRightFromSquareIcon" 
+                            [icon]="['fas', arrowUpRightFromSquareIcon]" 
+                            style="padding-right: .5em;">
+                        </fa-icon>
+                        Visit Home Page
                     </button>
                 </a>
             }
             @else if(!isPublicSite){
-                    <button pButton  
+                    <button type="button" 
                             disabled=true
                             class="oar-button home_button"
                             [ngStyle]="visitHomePageBtnStyle()">
@@ -23,9 +27,8 @@
                             style="padding-right: .5em;"></i> -->
                         <fa-icon *ngIf="arrowUpRightFromSquareIcon" 
                             [icon]="['fas', arrowUpRightFromSquareIcon]" 
-                            pButtonIcon
                             style="padding-right: .5em;"></fa-icon>
-                            <span pButtonLabel>Visit Home Page</span>
+                            Visit Home Page
                     </button>
             }
         </div>

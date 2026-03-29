@@ -156,11 +156,11 @@ export class ComboBoxComponent implements OnInit {
     event.stopPropagation(); // Stop the propagation to prevent reaching document
   }
 
-  arrowClass(){
-    if(this.showDropDown){
-      return "faa faa-angle-up";
-    } else{
-      return "faa faa-angle-down";
-    }
-  }
+//   arrowClass(){
+//     if(this.showDropDown){
+//       return "faa faa-angle-up";
+//     } else{
+//       return "faa faa-angle-down";
+//     }
+//   }
 }

@@ -26,28 +26,28 @@
                         <div class="indent-content"
                              *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
                             <!-- <i class="fas fa-external-link-alt">  -->
-                            <fa-icon [icon]="faArrowUpRightFromSquare">
+                            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
 
-                                <span style="margin-left:0em;">
-                                    <span *ngIf="apage['description']; else noAccessTitle">
-                                        <a href="{{apage['accessURL']}}" 
-                                           title="{{apage['description']}}" 
-                                           (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                           'Resource title: ' + record.title,
-                                                                           apage['accessURL'])">
-                                            &nbsp;&nbsp;{{apage['title']}}
-                                        </a>
-                                    </span>
-                                    <ng-template #noAccessTitle>
-                                        <a href="{{apage['accessURL']}}" 
-                                           (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                           'Resource title: ' + record.title,
-                                                                           apage['accessURL'])">
-                                            &nbsp;&nbsp;{{apage['title']}}
-                                        </a>
-                                    </ng-template>
+                            <span style="margin-left:0em;">
+                                <span *ngIf="apage['description']; else noAccessTitle">
+                                    <a href="{{apage['accessURL']}}" 
+                                        title="{{apage['description']}}" 
+                                        (click)="gaService.gaTrackEvent('homepage', $event, 
+                                                                        'Resource title: ' + record.title,
+                                                                        apage['accessURL'])">
+                                        &nbsp;&nbsp;{{apage['title']}}
+                                    </a>
                                 </span>
-                            </fa-icon>
+                                <ng-template #noAccessTitle>
+                                    <a href="{{apage['accessURL']}}" 
+                                        (click)="gaService.gaTrackEvent('homepage', $event, 
+                                                                        'Resource title: ' + record.title,
+                                                                        apage['accessURL'])">
+                                        &nbsp;&nbsp;{{apage['title']}}
+                                    </a>
+                                </ng-template>
+                            </span>
+                            
                             <div *ngIf="apage['description']">
                                 <div style="cursor: pointer;color: #1471AE;" 
                                      (click)="apage[showDesc] = !apage[showDesc];chref.detectChanges()">

@@ -4,11 +4,12 @@ import { ButtonModule } from 'primeng/button';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faDownload, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { iconClass } from '../../../shared/globals/globals';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-bulk-confirm',
   standalone: true,
-  imports: [ ButtonModule, FontAwesomeModule ],
+  imports: [ CommonModule, FontAwesomeModule ],
   templateUrl: './bulk-confirm.component.html',
   styleUrls: ['./bulk-confirm.component.css']
 })
@@ -50,4 +51,16 @@ export class BulkConfirmComponent implements OnInit {
         this.returnValue.emit(false);
         this.activeModal.close('Close click');
     }    
+
+    btnStyle() {
+        // let color = this.allCollections[this.collection].colorPalette;
+
+        return {
+            '--button-text-color': 'white',
+            '--button-color': 'var(--science-theme-background-default)',
+            '--hover-color': 'var(--science-theme-background-hover)',
+            '--disable-color': 'var(--disabled-grey)',
+            '--disable-text-color': 'var(--disabled-grey-text)'
+        };
+    }      
 }

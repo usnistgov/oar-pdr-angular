@@ -28,7 +28,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FrameModule } from '../../../frame/frame.module';
-import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -311,4 +310,22 @@ export class DatafilesMidasComponent {
     setDownloadStatus(downloadStatus){
         this.dlStatus.emit(downloadStatus);
     }    
+
+    /**
+     * Button style
+     * @returns 
+     */
+    btnStyle() {
+        // let color = this.allCollections[this.collection].colorPalette;
+
+        return {
+            '--button-text-color': 'white',
+            '--button-color': 'var(--nist-green-default)',
+            '--hover-color': 'var(--nist-green-hover)',
+            '--disable-color': 'var(--disabled-grey)',
+            '--disable-text-color': 'var(--disabled-grey-text)',
+            'margin-bottom': '.5em',
+            'width': '200px'
+        };
+    }         
 }

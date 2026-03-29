@@ -73,14 +73,13 @@
         </tbody>
     </table>
     <div style="height: .2em; width: 100%; background-color: #1c4d9b; margin: -1em 0 .5em 0;"></div>
-    <div>
-        <button pButton 
+    <div style="text-align: center;">
+        <button 
             type="button" 
+            class="oar-button"
+            [ngStyle]="btnStyle()"
             tooltipPosition="bottom" 
-            class="btn btn-labeled light-blue-btn"
-            (click)="hideOverlay(this,op1)" 
-            label="Close" 
-            style="margin-bottom: .5em;">
+            (click)="hideOverlay(this,op1)">Close
         </button>
     </div>
 </p-overlayPanel>

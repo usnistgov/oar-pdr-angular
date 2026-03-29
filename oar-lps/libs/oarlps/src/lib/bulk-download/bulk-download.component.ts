@@ -188,4 +188,16 @@ export class BulkDownloadComponent implements OnInit {
             } 
         } 
     }
+
+    btnStyle() {
+        // let color = this.allCollections[this.collection].colorPalette;
+
+        return {
+            '--button-text-color': 'white',
+            '--button-color': 'var(--science-theme-background-default)',
+            '--hover-color': 'var(--science-theme-background-hover)',
+            '--disable-color': 'var(--disabled-grey)',
+            '--disable-text-color': 'var(--disabled-grey-text)'
+        };
+    }    
 }

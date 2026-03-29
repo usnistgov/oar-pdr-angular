@@ -9,6 +9,7 @@ import { CartService } from 'oarlps';
 import { UserMessageService } from 'oarlps';
 import { Title } from '@angular/platform-browser';
 import { DOCUMENT } from '@angular/common';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
 
 declare const gtag: Function;
 
@@ -28,6 +29,8 @@ export class AppComponent {
     hostName: string = "dada.nist.gov";
     contactLink: string = "";
     searchLink: string = "";
+
+    faCartShopping = faCartShopping;
 
     constructor(
         private gaService: GoogleAnalyticsService,
