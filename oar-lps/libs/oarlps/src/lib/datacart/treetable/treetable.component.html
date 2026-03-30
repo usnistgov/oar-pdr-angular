@@ -143,6 +143,7 @@
                                 aria-hidden="true" data-toggle="tooltip" title="{{rowData.cartItem.downloadStatus}}"></i> -->
 
                             <fa-icon 
+                                *ngIf="getIconClass(rowData.cartItem.downloadStatus)"
                                 [icon]="['fas', getIconClass(rowData.cartItem.downloadStatus)]" 
                                 style="margin-right: .5em;"
                                 aria-hidden="true"
