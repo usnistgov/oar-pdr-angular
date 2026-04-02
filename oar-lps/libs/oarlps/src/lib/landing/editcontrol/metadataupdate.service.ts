@@ -715,7 +715,7 @@ export class MetadataUpdateService {
                   
                 if (err instanceof daperrs.IDNotFound) {
                     this.resetMetadata();
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                 }
                 else {
                     console.error("Failed to retrieve draft metadata changes: server error:" + err.message);

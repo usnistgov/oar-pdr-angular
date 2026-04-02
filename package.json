@@ -46,8 +46,14 @@
         "typescript": "5.4.5"
     },
     "dependencies": {
+        "@fortawesome/angular-fontawesome": "^0.15.0",
+        "@fortawesome/fontawesome-svg-core": "^6.6.0",
+        "@fortawesome/free-solid-svg-icons": "^6.6.0",
+        "@fortawesome/free-regular-svg-icons": "^6.6.0",
+        "@fortawesome/free-brands-svg-icons": "^6.6.0",        
         "@ng-select/ng-select": "^12.0.6",
         "js-yaml": "^4.1.0",
-        "rxjs": "~7.8.1"
+        "rxjs": "~7.8.1",
+        "listr2": "^9.0.5"
     }
 }

@@ -12,12 +12,13 @@ import { RELEASE } from '../environments/release-info';
 import { InputTextModule } from "primeng/inputtext";
 import { HttpClientModule } from '@angular/common/http';
 import { ConfigModule, MetadataUpdateService } from 'oarlps';
-import { GoogleAnalyticsService, SidebarService } from "oarlps";
+import { GoogleAnalyticsService, SidebarService, SpinnerInterceptor, SpinnerComponent } from "oarlps";
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FooterComponent, HeaderComponent } from 'oarng';
 import { PeopleComponent } from 'oarlps';
 import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 @NgModule({
     declarations: [
@@ -41,15 +42,16 @@ import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } 
         }),
         FooterComponent,
         HeaderComponent,
-        PeopleComponent
+        PeopleComponent,
+        SpinnerComponent
     ],
     providers: [
         { provide: RELEASE_INFO, useValue: RELEASE },
         GoogleAnalyticsService,
         MetadataUpdateService,
         SidebarService,
-        StaffDirectoryService
-        // fakeBackendProvider
+        StaffDirectoryService,
+        { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent]

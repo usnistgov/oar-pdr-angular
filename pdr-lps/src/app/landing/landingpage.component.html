@@ -97,11 +97,11 @@
   
 <!-- Show spinner -->
 <div *ngIf="!_showContent">
-    <pdr-done [message]="loadingMessage"></pdr-done>
+    <pdr-msg-page [message]="loadingMessage"></pdr-msg-page>
 </div>
 
 <!-- Display done page -->
 <div [ngStyle]="{'display': displaySpecialMessage? 'block' : 'none'}">
-    <pdr-done [message]='message'></pdr-done>
+    <pdr-msg-page [message]='message'></pdr-msg-page>
 </div>
   
