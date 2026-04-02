@@ -20,7 +20,6 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
@@ -78,8 +77,7 @@ enableProdMode();
         CollectionService,
         NgbActiveModal,
         ConfirmationDialogService,
-        { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
-        fakeBackendProvider
+        { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true }
         // {
         //     provide: APP_INITIALIZER,
         //     useFactory: initializeApp,
