@@ -167,18 +167,18 @@ export class EditControlComponent implements OnInit, OnChanges {
                 if (md && md != this.mdrec) {
                     if(md && !md["keyword"]) md["keyword"] = [];
                     this.mdrec = md as NerdmRes;
-                    this.edstatsvc._setLastUpdated(this.mdupdsvc.lastUpdate);
+                    this.edstatsvc.setLastUpdated(this.mdupdsvc.lastUpdate);
                     // this.mdrecChange.emit(md as NerdmRes);
                 }
             }
         );
 
-        this.edstatsvc._setLastUpdated(this.mdupdsvc.lastUpdate);
-        this.edstatsvc._setAuthorized(this.isAuthorized());
+        this.edstatsvc.setLastUpdated(this.mdupdsvc.lastUpdate);
+        this.edstatsvc.setAuthorized(this.isAuthorized());
 
         this.authsvc.getCredentials().subscribe((cred) => {
             this.cred = cred;
-            this.edstatsvc._setUserID(this.cred.userID);
+            this.edstatsvc.setUserID(this.cred.userID);
         })
 
         //Load suggestions:
@@ -202,7 +202,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         // set edit mode to view only on init
         // this.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
         this.ngOnChanges();
-        this.edstatsvc._watchRemoteStart((remoteObj) => {
+        this.edstatsvc.watchRemoteStart((remoteObj) => {
             // To remote start editing, resID need be set otherwise authorizeEditing()
             // will do nothing and the app won't change to edit mode
             if (remoteObj.resID) {
@@ -215,7 +215,7 @@ export class EditControlComponent implements OnInit, OnChanges {
             if (fileManagerUrl) {
                 this.fileManagerUrl = fileManagerUrl;
             }
-        });     
+        });
         
         this.edstatsvc.watchEditMode((editMode) => {
             this._editMode = editMode;
@@ -448,8 +448,8 @@ export class EditControlComponent implements OnInit, OnChanges {
     setEditMode(editmode : string){
         this._editMode = editmode;
         //broadcast the editmode
-        this.edstatsvc.editMode.set(editmode);
-        this.edstatsvc._setEditMode(editmode);
+        // this.edstatsvc.editMode.set(editmode);
+        this.edstatsvc.setEditMode(editmode);
         this.chref.detectChanges();
     }
 
@@ -568,7 +568,7 @@ export class EditControlComponent implements OnInit, OnChanges {
 
                     //See if this is revision
                     if (this.mdupdsvc.published && !this.revisionStarted) {
-                        this.edstatsvc._setEditType(this.editTypes.REVISE);
+                        this.edstatsvc.setEditType(this.editTypes.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["typeName"]);
                         this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else if (this.mdupdsvc.submitted) {
@@ -771,12 +771,12 @@ export class EditControlComponent implements OnInit, OnChanges {
 
                     if(authenticated){
                       subscriber.next(Boolean(this._dapUpdtsvc));
-                      this.edstatsvc._setUserID(this.mdupdsvc.authsvc.userID);
-                      this.edstatsvc._setAuthorized(true);
+                      this.edstatsvc.setUserID(this.mdupdsvc.authsvc.userID);
+                      this.edstatsvc.setAuthorized(true);
                     }else{
                       subscriber.next(false);
-                      this.edstatsvc._setAuthorized(false);
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                      this.edstatsvc.setAuthorized(false);
+                      this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                     }
                     
                     subscriber.complete();
@@ -789,8 +789,8 @@ export class EditControlComponent implements OnInit, OnChanges {
                     this.msgsvc.syserror(msg);
                     subscriber.next(false);
                     subscriber.complete();
-                    this.edstatsvc._setAuthorized(false);
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                    this.edstatsvc.setAuthorized(false);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                 }
             );
         });

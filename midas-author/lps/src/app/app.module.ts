@@ -13,12 +13,15 @@ import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
 import { OARLPSModule, ConfigModule, EditControlModule, CollectionService, ConfirmationDialogService,
-         GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
+    GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent,
+    SpinnerInterceptor
 } from 'oarlps';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { fakeBackendProvider } from './_helpers/fakeBackendInterceptor';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -74,7 +77,9 @@ enableProdMode();
         DatePipe,
         CollectionService,
         NgbActiveModal,
-        ConfirmationDialogService
+        ConfirmationDialogService,
+        { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
+        fakeBackendProvider
         // {
         //     provide: APP_INITIALIZER,
         //     useFactory: initializeApp,

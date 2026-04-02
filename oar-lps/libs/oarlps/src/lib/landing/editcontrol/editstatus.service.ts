@@ -18,10 +18,13 @@ export class EditStatusService {
     public EDIT_MODES: any = LandingConstants.editModes;
     public editMode = signal("");
 
-    isEditMode: Signal<boolean> = computed(() => {
-        return (this.editMode() == this.EDIT_MODES.EDIT_MODE)
-    });
+    // isEditMode: Signal<boolean> = computed(() => {
+    //     return (this.editMode() == this.EDIT_MODES.EDIT_MODE)
+    // });
 
+    isEditMode() {
+        return this._editMode.value == this.EDIT_MODES.EDIT_MODE;
+    }
     /**
      * construct the service
      */
@@ -34,7 +37,7 @@ export class EditStatusService {
      */
     get lastUpdated() : UpdateDetails { return this._lastupdate; }
     private _lastupdate : UpdateDetails = null;   // null object means unknown
-    _setLastUpdated(updateDetails : UpdateDetails) { this._lastupdate = updateDetails; }
+    public setLastUpdated(updateDetails : UpdateDetails) { this._lastupdate = updateDetails; }
 
     /**
      * flag indicating the current edit mode.  
@@ -43,7 +46,7 @@ export class EditStatusService {
      */
     _editMode : BehaviorSubject<string> =
         new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
-    _setEditMode(val : string) { 
+    public setEditMode(val : string) { 
         this._editMode.next(val); 
         this._isEditMode.next(val == this.EDIT_MODES.EDIT_MODE);
     }
@@ -63,7 +66,7 @@ export class EditStatusService {
      */
     _editType : BehaviorSubject<string> =
         new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
-    _setEditType(val : string) { 
+    public setEditType(val : string) { 
         this._editType.next(val); 
     }
     public watchEditType(subscriber) {
@@ -103,14 +106,14 @@ export class EditStatusService {
      */
     get hasError() : boolean { return this._error; }
     private _error : boolean = false;
-    _setError(val : boolean) { this._error = val; }
+    public setError(val : boolean) { this._error = val; }
 
     /**
      * Behavior subject to remotely start the edit function. This is used when user login
      * and the page was redirected to current page with parameter 'editmode' set to true.
      */
     private _remoteStart : BehaviorSubject<object> = new BehaviorSubject<object>({resID: "", nologin: false});
-    _watchRemoteStart(subscriber) {
+     public watchRemoteStart(subscriber) {
         this._remoteStart.subscribe(subscriber);
     }
 
@@ -119,7 +122,7 @@ export class EditStatusService {
      */
     get userID() : string { return this._userid; }
     private _userid : string = null;
-    _setUserID(id : string) { this._userid = id; }
+    public setUserID(id : string) { this._userid = id; }
     
     /**
      * a flag indicating whether the current user has been authenticated.
@@ -131,7 +134,7 @@ export class EditStatusService {
      */
     get authorized() : boolean { return this._authzd; }
     private _authzd : boolean = false;
-    _setAuthorized(val : boolean) { this._authzd = val; }
+    public setAuthorized(val : boolean) { this._authzd = val; }
 
 
     /**

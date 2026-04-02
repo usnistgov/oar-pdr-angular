@@ -125,3 +125,7 @@ export * from './lib/landing/revision-details/revision-details.component';
 
 export * from './lib/landing/people/people.component';
 export * from './lib/landing/landingpage.service';
+
+export * from './lib/shared/spinner/spinner.component';
+export * from './lib/shared/spinner/spinner.service';
+export * from './lib/shared/spinner/spinner-interceptor';

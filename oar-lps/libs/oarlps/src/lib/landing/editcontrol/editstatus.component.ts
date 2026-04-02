@@ -9,6 +9,10 @@ import { LandingpageService } from '../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { SpinnerComponent } from '../../shared/spinner/spinner.component';
+import { SpinnerInterceptor } from '../../shared/spinner/spinner-interceptor';
+import { SpinnerService } from '../../shared/spinner/spinner.service';
 
 /**
  * A panel inside the EditControlComponent that displays information about the status of 
@@ -26,6 +30,10 @@ import { DatePipe } from '@angular/common';
     imports: [
         CommonModule,
         FormsModule,
+        SpinnerComponent
+    ],
+    providers: [
+        // { provide: HTTP_INTERCEPTORS, useClass: SpinnerInterceptor, multi: true },
     ],
     templateUrl: 'editstatus.component.html',
     styleUrls: ['editstatus.component.css']
@@ -42,6 +50,8 @@ export class EditStatusComponent implements OnInit {
     contentStatusColer: string = "var(--nist-green-default);"
     resourceType: string = "resource";
 
+    loading: boolean = false;
+
     @Input() mdrec: NerdmRes;
     @Input() forceDisplay: boolean = false;  // if true, display the message even if there is no update details. This is used to display a message when the record is in outside-midas mode and there is no update details.
 
@@ -57,6 +67,7 @@ export class EditStatusComponent implements OnInit {
         public globalsvc: GlobalService,
         private cdr: ChangeDetectorRef,
         private datePipe: DatePipe,
+        public spinner: SpinnerService,
         public lpService: LandingpageService) {
 
         effect(() => {
@@ -107,6 +118,10 @@ export class EditStatusComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.spinner.watchLoading((loading) => {
+            this.loading = loading;
+        });
+        
         if(this.mdrec)
             this.setContentStatusColor(this.mdrec);
     }

@@ -8,6 +8,11 @@
     </span>
 
     <span class="badge">
-        {{action}}
+        @if(loading){
+            <app-spinner [local]="true"></app-spinner>
+        }
+        @else{
+            {{action}}
+        }
     </span>
 </div>

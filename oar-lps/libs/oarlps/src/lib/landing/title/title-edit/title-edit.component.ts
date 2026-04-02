@@ -58,6 +58,7 @@ export class TitleEditComponent {
                 private notificationService: NotificationService) 
     {
         effect(() => {
+            console.log("isEditMode", this.edstatsvc.isEditMode());
             if(this.edstatsvc.isEditMode()){
                 this.chref.detectChanges();
             }

@@ -379,8 +379,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-      this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
-      this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
+        this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
+        this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
         this.helpWidthRatio = this.helpWidth / window.innerWidth;
 
         this.landingPageURL = this.cfg.get('PDRAPIs.mdService','/od/id/');
@@ -416,8 +416,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 // Use parameter "editEnabled". Need to decide the edit mode when backend is ready.
                 // For now, always go to edit mode.
                 // let param = queryParams.get("editmode");
-                    let param = queryParams.get("editenabled");
+                let param = queryParams.get("editenabled");
+                if(param)
                     this.paramEditEnabled = param.toLocaleLowerCase() == 'true';
+                else
+                    this.paramEditEnabled = false;
 
             });
 
@@ -427,60 +430,62 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             if(this.authsvc.isAuthenticated) {
                 this.globalService.setAuthenticated(true);
                 this.mdupdsvc.startEditing(this.reqId).subscribe({
-                next: (success) => {
-                    this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
+                    next: (success) => {
+                        this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
-                    if(this.inBrowser){
-                        if(this.cfg_editEnabled){
-                            this.metricsData.hasCurrentMetrics = false;
-                            this.showMetrics = true;
-                        }else{
-                            if(this.theme == Themes.DEFAULT_THEME){
-                                this.getMetrics();
+                        if(this.inBrowser){
+                            if(this.cfg_editEnabled){
+                                this.metricsData.hasCurrentMetrics = false;
+                                this.showMetrics = true;
+                            }else{
+                                if(this.theme == Themes.DEFAULT_THEME){
+                                    this.getMetrics();
+                                }
+
+                            }
+                        }
+
+                        // proceed with rendering of the component
+                        this.useMetadata();
+
+                        let showError: boolean;
+                        // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                        // in editing mode.  This is done in concert with the authentication process that can involve
+                        // redirection to an authentication server; on successful authentication, the server can
+                        // redirect the browser back to this landing page with editing turned on.
+                        if (this.inBrowser) {
+                            this.edstatsvc.setShowLPContent(true);
+
+                                if (this.editRequested) {
+                                    showError = false;
+                                    // Need to pass reqID (resID) because the resID in editControlComponent
+                                    // has not been set yet and the startEditing function relies on it.
+                                    this.edstatsvc.startEditing(this.reqId);
+                                }
+                                else
+                                    showError = true;
+                            }
+                            //Display error if any
+                            if(showError) {
+
                             }
 
-                        }
+                            this.mdupdsvc.loadDBIOrecord().subscribe({
+                                next: (dbio) => {
+                                    // console.log("dbio", dbio)
+                                },
+                                error: (err) => {
+                                    console.error(err);
+                                }
+                            });
+
+                    },
+                    error: (err) => {
+                        this.globalService.setAuthorized(false);
+                        console.log("Load error", err);
+                        this.loadingMessage = "Failed to load data for editing. " + err.message;
                     }
-
-                    // proceed with rendering of the component
-                    this.useMetadata();
-
-                    let showError: boolean;
-                    // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                    // in editing mode.  This is done in concert with the authentication process that can involve
-                    // redirection to an authentication server; on successful authentication, the server can
-                    // redirect the browser back to this landing page with editing turned on.
-                    if (this.inBrowser) {
-                        this.edstatsvc.setShowLPContent(true);
-
-                            if (this.editRequested) {
-                                showError = false;
-                                // Need to pass reqID (resID) because the resID in editControlComponent
-                                // has not been set yet and the startEditing function relies on it.
-                                this.edstatsvc.startEditing(this.reqId);
-                            }
-                            else
-                                showError = true;
-                        }
-                        //Display error if any
-                        if(showError) {
-
-                        }
-
-                        this.mdupdsvc.loadDBIOrecord().subscribe({
-                            next: (dbio) => {
-                                // console.log("dbio", dbio)
-                            },
-                            error: (err) => {
-                                console.error(err);
-                            }
-                        });
-
-                },
-                error: (err) => {
-                    this.globalService.setAuthorized(false);
-                    console.log("Load error", err);
-                }})
+                })
             }else{
                 //Not authenticated:
                 this.globalService.setAuthenticated(false);
@@ -492,12 +497,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     displayOnly() {
-      this._showContent = false;
-      this.editRequested = false;
-      this.loadPublicData();
-      this.isPublicSite = true;
-      this.edstatsvc.setShowLPContent(true);
-      this._showContent = true;
+        this._showContent = false;
+        this.editRequested = false;
+        this.loadPublicData();
+        this.isPublicSite = true;
+        this.edstatsvc.setShowLPContent(true);
+        this._showContent = true;
     }
 
     /**
@@ -563,7 +568,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
               if (metadataError == "not-found") {
                   if (this.editRequested) {
                       console.log("ID not found...");
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                      this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                       this.setMessage();
                       this.displaySpecialMessage = true;
                   }
@@ -583,8 +588,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
           }
           else {
               metadataError = "int-error";
-              // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-              this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+              //   this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+              this.message = "Public data not available for this record.";
+              this.displaySpecialMessage = true;
           }
       });
     }
@@ -895,22 +901,22 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 if (result) {
                     // Check revision mode
                     if (this.mdupdsvc.published) {
-                        this.edstatsvc._setEditType(this.editTypes.REVISE);
+                        this.edstatsvc.setEditType(this.editTypes.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else if (this.mdupdsvc.submitted) {
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else {
                         this.editRequested = true;
                         // this.isEditMode = true;
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
-                        this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                        this.edstatsvc._setEditType(this.editTypes.NORMAL);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
+                        // this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
+                        this.edstatsvc.setEditType(this.editTypes.NORMAL);
                     }
                 }
                 else {
                     this.editRequested = false;
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     // this._showContent = true;
                     // this.edstatsvc.setShowLPContent(true);
                 }
@@ -920,10 +926,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             });
         }else{
             this.editRequested = false;
-            this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+            this.edstatsvc.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
             this.edstatsvc.setShowLPContent(true);
             this._showContent = true;
             this.globalService.setAuthorized(false);
+            this.showData();
         }
 
         //For fakebackend use

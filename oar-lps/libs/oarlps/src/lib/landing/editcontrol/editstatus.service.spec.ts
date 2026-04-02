@@ -43,10 +43,10 @@ describe('EditStatusService', () => {
     });
 
     it('setable', () => {
-        svc._setLastUpdated(updateDetails);
-        svc._setEditMode(EDIT_MODES.EDIT_MODE);
-        svc._setUserID("Hank");
-        svc._setAuthorized(false);
+        svc.setLastUpdated(updateDetails);
+        svc.setEditMode(EDIT_MODES.EDIT_MODE);
+        svc.setUserID("Hank");
+        svc.setAuthorized(false);
 
         expect(svc.lastUpdated._updateDate).toEqual("today");
         expect(svc.lastUpdated.userAttributes).toEqual(userAttributes);
@@ -57,7 +57,7 @@ describe('EditStatusService', () => {
 
     it('watchable remote start', () => {
         let resID = "";
-        svc._watchRemoteStart((ev) => {
+        svc.watchRemoteStart((ev) => {
             resID = ev.resID;
         });
         expect(resID).toEqual("");
