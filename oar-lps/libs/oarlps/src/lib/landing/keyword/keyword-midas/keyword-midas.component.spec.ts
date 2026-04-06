@@ -14,6 +14,7 @@ import { DAPService, LocalDAPService, createDAPService } from '../../../nerdm/da
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('KeywordMidasComponent', () => {
     let component: KeywordMidasComponent;
@@ -28,7 +29,7 @@ describe('KeywordMidasComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 KeywordMidasComponent,
-                FormsModule, HttpClientTestingModule, RouterTestingModule, ToastrModule.forRoot()
+                FormsModule, HttpClientTestingModule, RouterTestingModule, ToastrModule.forRoot(), FontAwesomeTestingModule
             ],
             declarations: [],
             providers: [

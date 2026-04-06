@@ -3,6 +3,7 @@ import { CollectionService } from '../../../shared/collection-service/collection
 import { CitationPopupComponent } from './citation-popup.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -12,8 +13,9 @@ describe('CitationPopupComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
+        imports: [
                 CitationPopupComponent,
+                FontAwesomeTestingModule,
                 NoopAnimationsModule],
             providers: [
                 NgbActiveModal,

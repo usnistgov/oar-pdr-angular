@@ -15,6 +15,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('AccesspageListComponent', () => {
     let component: AccesspageListComponent;
@@ -30,7 +31,7 @@ describe('AccesspageListComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
         declarations: [ ],
-        imports: [AccesspageListComponent, HttpClientTestingModule, NoopAnimationsModule, ToastrModule.forRoot() ],
+        imports: [AccesspageListComponent, HttpClientTestingModule, NoopAnimationsModule, ToastrModule.forRoot(), FontAwesomeTestingModule ],
         providers: [
             UserMessageService, 
             HttpHandler,

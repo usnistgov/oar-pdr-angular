@@ -13,6 +13,13 @@ import { FormsModule } from '@angular/forms';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { AccesspagePubComponent } from '../accesspage-pub/accesspage-pub.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'accesspage-midas',
@@ -24,7 +31,8 @@ import { TooltipModule } from 'primeng/tooltip';
         CollapseModule,
         AccesspageListComponent,
         AccesspagePubComponent,
-        TooltipModule
+        TooltipModule,
+        FontAwesomeModule
     ],
     templateUrl: './accesspage-midas.component.html',
     styleUrls: ['./accesspage-midas.component.scss', '../../landing.component.scss'],
@@ -59,9 +67,14 @@ export class AccesspageMidasComponent {
     childEditMode: string = MODE.NORMAL;
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // undoIcon = iconClass.UNDO;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
@@ -71,9 +84,16 @@ export class AccesspageMidasComponent {
 
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
-                public lpService: LandingpageService,
+        public lpService: LandingpageService,
+                public iconLibrary: FaIconLibrary,
                 private chref: ChangeDetectorRef) { 
 
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );             
     }
 
     ngOnInit(): void {

@@ -14,7 +14,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -28,9 +28,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FrameModule } from '../../../frame/frame.module';
-import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleInfo, faRefresh, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 declare var _initAutoTracker: Function;
 
@@ -47,7 +48,8 @@ declare var _initAutoTracker: Function;
         ButtonModule, 
         TooltipModule, 
         NgbModule,
-        DatafilesPubComponent
+        DatafilesPubComponent,
+        FontAwesomeModule
     ],
     templateUrl: './datafiles-midas.component.html',
     styleUrls: [
@@ -106,6 +108,11 @@ export class DatafilesMidasComponent {
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
         
+    //icon class names
+    faCircleInfo = faCircleInfo;
+    faRefresh = faRefresh;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;
+    
     constructor(private cfg: AppConfig,
                 public editstatsvc: EditStatusService,
                 public breakpointObserver: BreakpointObserver,
@@ -303,4 +310,22 @@ export class DatafilesMidasComponent {
     setDownloadStatus(downloadStatus){
         this.dlStatus.emit(downloadStatus);
     }    
+
+    /**
+     * Button style
+     * @returns 
+     */
+    btnStyle() {
+        // let color = this.allCollections[this.collection].colorPalette;
+
+        return {
+            '--button-text-color': 'white',
+            '--button-color': 'var(--nist-green-default)',
+            '--hover-color': 'var(--nist-green-hover)',
+            '--disable-color': 'var(--disabled-grey)',
+            '--disable-text-color': 'var(--disabled-grey-text)',
+            'margin-bottom': '.5em',
+            'width': '200px'
+        };
+    }         
 }

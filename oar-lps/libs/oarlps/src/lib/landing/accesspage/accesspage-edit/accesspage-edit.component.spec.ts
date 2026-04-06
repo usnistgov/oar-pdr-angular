@@ -13,6 +13,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 
 describe('SingleApageComponent', () => {
@@ -30,7 +31,7 @@ describe('SingleApageComponent', () => {
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
             declarations: [ ],
-            imports: [ HttpClientTestingModule, ToastrModule.forRoot(), AccesspageEditComponent ],
+            imports: [ HttpClientTestingModule, ToastrModule.forRoot(), AccesspageEditComponent, FontAwesomeTestingModule ],
             providers: [
                 UserMessageService, 
                 HttpHandler,

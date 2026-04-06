@@ -18,7 +18,8 @@ import {
     Collections,
     GlobalService,
     ReviewResponse,
-    SectionHelp
+    SectionHelp,
+    iconClass
 } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -32,7 +33,23 @@ import { AuthenticationService, Credentials } from 'oarng';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
-  
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faTimes,
+    faCircleInfo,
+    faDownload,
+    faCircleArrowUp,
+    faEye,
+    faTrashCan,
+    faArrowUpRightFromSquare
+} from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-regular-svg-icons';
+
+
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
  * landing page.  Features include:
@@ -55,7 +72,8 @@ import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/co
         NgSelectModule, 
         FormsModule,
         EditStatusComponent,
-        SubmitConfirmComponent
+        SubmitConfirmComponent,
+        FontAwesomeModule
     ],
     templateUrl: './editcontrol.component.html',
     styleUrls: ['./editcontrol.component.css']
@@ -90,6 +108,34 @@ export class EditControlComponent implements OnInit, OnChanges {
     revisionStarted: boolean = false;
     editTypes = LandingConstants.editTypes;
     readonly dialog = inject(MatDialog);
+    
+    //icon class
+    editIcon = iconClass.EDIT;
+    closeIcon = iconClass.CLOSE;
+    saveIcon = iconClass.SAVE;
+    cancelIcon = iconClass.CANCEL;
+    undoIcon = iconClass.UNDO;    
+    timesIcon = iconClass.TIMES;
+    circleInfoIcon = iconClass.CIRCLE_INFO;
+    circleIcon = iconClass.CIRCLE;
+    downloadIcon = iconClass.DOWNLOAD;
+    circleArrowUpIcon = iconClass.CIRCLE_ARROW_UP;
+    deleteIcon = iconClass.DELETE;
+    eyeIcon = iconClass.EYE;
+    externalLinkIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faTimes = faTimes;
+    faCircleInfo = faCircleInfo;
+    faDownload = faDownload;
+    faCircleArrowUp = faCircleArrowUp;
+    faEye = faEye;
+    faTrashCan = faTrashCan;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;
+    faCircle = faCircle;
     
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
@@ -138,8 +184,24 @@ export class EditControlComponent implements OnInit, OnChanges {
                         private modalService: NgbModal,
                         public globalService: GlobalService,
                         public collectionService: CollectionService,
-                        private msgsvc: UserMessageService) 
-    {
+                        public iconLibrary: FaIconLibrary,
+                        private msgsvc: UserMessageService) {
+
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faTimes,
+            faCircleInfo,
+            faCircle,
+            faDownload,
+            faCircleArrowUp,
+            faEye,
+            faTrashCan,
+            faArrowUpRightFromSquare
+        );
+
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
         });

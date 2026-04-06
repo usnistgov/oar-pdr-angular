@@ -12,6 +12,13 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
 import { RefPubComponent } from '../ref-pub/ref-pub.component';
 import { ButtonModule } from 'primeng/button';				
 import { TooltipModule } from 'primeng/tooltip';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'ref-midas',
@@ -22,7 +29,8 @@ import { TooltipModule } from 'primeng/tooltip';
         ButtonModule,
         TooltipModule,
         ConfirmationDialogComponent,
-        RefPubComponent
+        RefPubComponent,
+        FontAwesomeModule
     ],
     templateUrl: './ref-midas.component.html',
     styleUrls: ['../../landing.component.scss', './ref-midas.component.scss'],
@@ -58,6 +66,11 @@ export class RefMidasComponent {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
 
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
@@ -68,9 +81,16 @@ export class RefMidasComponent {
 
     constructor(public mdupdsvc : MetadataUpdateService,        
         private modalService: NgbModal,       
-        private chref: ChangeDetectorRef,        
+        private chref: ChangeDetectorRef,  
+        public iconLibrary: FaIconLibrary,
         public lpService: LandingpageService) { 
 
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo
+        );   
     }
 
     ngOnInit(): void {

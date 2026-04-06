@@ -25,36 +25,46 @@
 
                         <div class="indent-content"
                              *ngIf="!apage['@type'].includes('nrdp:RestrictedAccessPage'); else RestrictedAccessPage">
-                            <i class="fas fa-external-link-alt"> 
-                                <span style="margin-left:0em;">
-                                    <span *ngIf="apage['description']; else noAccessTitle">
-                                        <a href="{{apage['accessURL']}}" 
-                                           title="{{apage['description']}}" 
-                                           (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                           'Resource title: ' + record.title,
-                                                                           apage['accessURL'])">
-                                            &nbsp;&nbsp;{{apage['title']}}
-                                        </a>
-                                    </span>
-                                    <ng-template #noAccessTitle>
-                                        <a href="{{apage['accessURL']}}" 
-                                           (click)="gaService.gaTrackEvent('homepage', $event, 
-                                                                           'Resource title: ' + record.title,
-                                                                           apage['accessURL'])">
-                                            &nbsp;&nbsp;{{apage['title']}}
-                                        </a>
-                                    </ng-template>
+                            <!-- <i class="fas fa-external-link-alt">  -->
+                            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+
+                            <span style="margin-left:0em;">
+                                <span *ngIf="apage['description']; else noAccessTitle">
+                                    <a href="{{apage['accessURL']}}" 
+                                        title="{{apage['description']}}" 
+                                        (click)="gaService.gaTrackEvent('homepage', $event, 
+                                                                        'Resource title: ' + record.title,
+                                                                        apage['accessURL'])">
+                                        &nbsp;&nbsp;{{apage['title']}}
+                                    </a>
                                 </span>
-                            </i>
+                                <ng-template #noAccessTitle>
+                                    <a href="{{apage['accessURL']}}" 
+                                        (click)="gaService.gaTrackEvent('homepage', $event, 
+                                                                        'Resource title: ' + record.title,
+                                                                        apage['accessURL'])">
+                                        &nbsp;&nbsp;{{apage['title']}}
+                                    </a>
+                                </ng-template>
+                            </span>
+                            
                             <div *ngIf="apage['description']">
                                 <div style="cursor: pointer;color: #1471AE;" 
                                      (click)="apage[showDesc] = !apage[showDesc];chref.detectChanges()">
                                      About this link
-                                     <i class="fas fa-caret-right"
-                                        *ngIf="!apage[showDesc]"></i>
+                                     <!-- <i class="fas fa-caret-right"
+                                        *ngIf="!apage[showDesc]"></i> -->
+                                    <fa-icon 
+                                        *ngIf="caretRightIcon && caretDownIcon" 
+                                        [class.amplified]="isMouseOver" 
+                                        [icon]="['fas', iconName(apage)]"
+                                        class="amplifiable" 
+                                        (mouseover)="isMouseOver = true" 
+                                        (mouseleave)="isMouseOver = false">
+                                    </fa-icon>
 
-                                     <i class="fas fa-caret-down"  
-                                        *ngIf="apage[showDesc]"></i> 
+                                     <!-- <i class="fas fa-caret-down"  
+                                        *ngIf="apage[showDesc]"></i>  -->
                                 </div>
                                 <div class="description" 
                                      *ngIf="apage[showDesc]" 
@@ -71,7 +81,11 @@
                                         title="{{apage['title']}}"
                                         (click)="googleAnalytics(apage['accessURL'], 
                                         $event, 'Download Data')">
-                                        <i class="fas fa-external-link-alt" style="padding-right: 3px"></i>
+                                        <!-- <i class="fas fa-external-link-alt" style="padding-right: 3px"></i> -->
+                                        <fa-icon 
+                                            [icon]="faArrowUpRightFromSquare" 
+                                            style="padding-right: 3px;">
+                                        </fa-icon>
                                         Download Data
                                     </div>
                                 </a>
@@ -81,12 +95,20 @@
                                          (click)="apage[showDesc] = !apage[showDesc];chref.detectChanges()">
                                          
                                         About downloading restricted public data
-                                        <i class="fas fa-caret-right" 
+                                        <!-- <i class="fas fa-caret-right" 
                                             *ngIf="!apage[showDesc]">
                                         </i>
                                         <i class="fas fa-caret-down" 
                                             *ngIf="apage[showDesc]">
-                                        </i> 
+                                        </i>  -->
+                                        <fa-icon 
+                                            *ngIf="caretRightIcon && caretDownIcon" 
+                                            [class.amplified]="isMouseOver" 
+                                            [icon]="['fas', iconName(apage)]"
+                                            class="amplifiable" 
+                                            (mouseover)="isMouseOver = true" 
+                                            (mouseleave)="isMouseOver = false">
+                                        </fa-icon>
                                     </div>
                                     <div class="description" 
                                          *ngIf="apage[showDesc]" 

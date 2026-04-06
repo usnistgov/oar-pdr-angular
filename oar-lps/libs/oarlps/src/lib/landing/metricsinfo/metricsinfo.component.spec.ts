@@ -4,6 +4,7 @@ import { TransferState } from '@angular/core';
 import { MetricsinfoComponent } from './metricsinfo.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import * as env from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('MetricsinfoComponent', () => {
     let component: MetricsinfoComponent;
@@ -17,7 +18,7 @@ describe('MetricsinfoComponent', () => {
         cfg.loadConfig(env.config);
             
         TestBed.configureTestingModule({
-        imports: [HttpClientTestingModule, MetricsinfoComponent],
+        imports: [HttpClientTestingModule, MetricsinfoComponent, FontAwesomeTestingModule],
         providers: [
             { provide: AppConfig, useValue: cfg }
         ]

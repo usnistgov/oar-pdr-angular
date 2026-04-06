@@ -2,14 +2,26 @@
     <div class="form-steps-container">
             <ng-container *ngFor="let stepIndex of stepOrder; let i = index;">
                 <div (click)="onStepClick(stepIndex)" [ngClass]="getStepClass(stepIndex)" *ngIf="getStep(stepIndex).active" class="step-bubble">
-                    <i *ngIf="currentStep?.stepIndex === stepIndex" style="width: 150px; position:relative;" class="faa faa-cog faa-stack-2x large_icon"
-                    aria-hidden="true"></i>
+                    <fa-icon 
+                        *ngIf="currentStep?.stepIndex === stepIndex" 
+                        [icon]="faWrench"
+                        class="fa-stack-1x" 
+                        style="scale: 1.6; width: 100px; position:relative; margin-top: -7px;">
+                    </fa-icon>
 
-                    <i *ngIf="getStep(stepIndex).isComplete && currentStep?.stepIndex != stepIndex" style="width: 100px; position:relative" class="faa faa-check faa-stack-2x"
-                    aria-hidden="true"></i>
-
-                    <i *ngIf="currentStep?.stepIndex != stepIndex && !getStep(stepIndex).isComplete" style="width: 100px; position:relative" class="faa faa-cog faa-stack-2x"
-                    aria-hidden="true"></i>
+                    <fa-icon 
+                        *ngIf="getStep(stepIndex).isComplete && currentStep?.stepIndex != stepIndex" 
+                        [icon]="faCheck"
+                        class="fa-stack-1x" 
+                        style="scale: 2; width: 100px; position:relative; margin-top: -6px;">
+                    </fa-icon>
+                    
+                    <fa-icon 
+                        *ngIf="currentStep?.stepIndex != stepIndex && !getStep(stepIndex).isComplete" 
+                        [icon]="faGear" 
+                        class="fa-stack-1x" 
+                        style="scale: 2; width: 100px; position:relative; margin-top: -6px;">
+                    </fa-icon>
                 </div>
                 <div *ngIf="i < steps.length - 1 && getStep(stepIndex).active" class="step-divider"></div>
             </ng-container>

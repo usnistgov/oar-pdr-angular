@@ -237,6 +237,7 @@ a {
     width:160px;
     color:white;
     padding-right: 1em;
+    border-radius: 5px;
 }
 
 .top-banner {
@@ -405,6 +406,7 @@ a:focus {
 }
 
 .amplified {
+    display: inline-block;
     transform: scale(3);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }

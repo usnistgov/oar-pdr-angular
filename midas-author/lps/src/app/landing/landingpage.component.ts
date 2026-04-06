@@ -124,7 +124,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationDialogWith: number = 550; // Default width
     recordLevelMetrics : RecordLevelMetrics;
 
-    loadingMessage = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    loadingMessage = 'Loading...';
 
     dataCartStatus: DataCartStatus;
     fileLevelMetrics: any;
@@ -379,8 +379,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-      this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
-      this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
+        this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
+        this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
         this.helpWidthRatio = this.helpWidth / window.innerWidth;
 
         this.landingPageURL = this.cfg.get('PDRAPIs.mdService','/od/id/');

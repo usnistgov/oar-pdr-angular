@@ -5,7 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     moveItemInArray,
@@ -20,6 +20,8 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-ref-list',
@@ -33,7 +35,8 @@ import { TooltipModule } from 'primeng/tooltip';
         TextEditComponent,
         RefEditComponent,
         ConfirmationDialogComponent,
-        DragDropModule
+        DragDropModule,
+        FontAwesomeModule
     ],
     templateUrl: './ref-list.component.html',
     styleUrls: ['../../landing.component.scss', '../references.component.css', './ref-list.component.css'],
@@ -76,6 +79,10 @@ export class RefListComponent implements OnInit {
         dropIndex: number;
     };
 
+    //icon class names
+    // addIcon = iconClass.ADD;    
+    faPlus = faPlus;
+    
     // passed in by the parent component:
     @Input() nerdmRecord: NerdmRes = null;
     @Input() inBrowser: boolean = false;
@@ -86,8 +93,10 @@ export class RefListComponent implements OnInit {
         private modalService: NgbModal,  
         private notificationService: NotificationService,
         private chref: ChangeDetectorRef,  
+        public iconLibrary: FaIconLibrary,
         public lpService: LandingpageService) { 
 
+        // iconLibrary.addIcons( faPlus); 
     }
 
     ngOnInit(): void {

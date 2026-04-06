@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { DataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-associated-papers',
@@ -12,6 +13,8 @@ export class AssociatedPapersComponent implements OnInit {
     lastStep: StepModel;
     thisStep: StepModel;
 
+    sanitizedHtml: SafeHtml;
+
     @Input() dataModel!: DataModel;
     @Input() steps: StepModel[] =[];
     @Input() helpText: any = {};
@@ -19,11 +22,15 @@ export class AssociatedPapersComponent implements OnInit {
 
     constructor(
         private chref: ChangeDetectorRef,
+        private sanitizer: DomSanitizer,
         private stepService: StepService) { }
 
     ngOnInit(): void {
         this.thisStep = this.stepService.getStep("Associated Papers");
         this.lastStep = this.stepService.getLastStep();
+
+        let helpContent = this.stepService.iconHandler(this.helpText['general']);
+        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(helpContent);
     }
 
     ngAfterContentInit() {

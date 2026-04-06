@@ -2,16 +2,22 @@ import { Component, EventEmitter, inject, Inject, Input, OnInit, Output } from '
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';  
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../globals/globals';
 
 @Component({
   selector: 'app-confirmation-dialog',
   standalone: true,
-  imports: [ NgbModule, CommonModule ],
+  imports: [ NgbModule, CommonModule, FontAwesomeModule ],
   templateUrl: './confirmation-dialog.component.html',
   styleUrls: ['./confirmation-dialog.component.css']
 })
 export class ConfirmationDialogComponent implements OnInit {
    
+    // warningIcon = iconClass.WARNING;
+    faTriangleExclamation = faTriangleExclamation;
+
     @Input() public title: string;
     @Input() public message: string;
     @Input() public btnOkText: string;
@@ -20,7 +26,14 @@ export class ConfirmationDialogComponent implements OnInit {
     @Input() public showCancelButton: boolean;
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
-    constructor(@Inject(NgbActiveModal) public activeModal: NgbActiveModal ) { }
+    constructor(
+        @Inject(NgbActiveModal) public activeModal: NgbActiveModal,
+        public iconLibrary: FaIconLibrary,) { 
+        
+        // iconLibrary.addIcons(
+        //     faTriangleExclamation
+        // );
+    }
 
     ngOnInit() {
     }

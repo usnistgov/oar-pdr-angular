@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 
 import { DoneComponent } from './done.component';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('DoneComponent', () => {
   let component: DoneComponent;
@@ -8,7 +9,8 @@ describe('DoneComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DoneComponent ]
+        declarations: [DoneComponent],
+        imports: [FontAwesomeTestingModule] // Include the testing module in imports
     })
     .compileComponents();
   }));

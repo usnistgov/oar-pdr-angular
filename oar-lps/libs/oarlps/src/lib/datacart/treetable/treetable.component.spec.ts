@@ -10,8 +10,25 @@ import { TestDataService } from '../../shared/testdata-service/testDataService';
 import { TreeTableModule } from 'primeng/treetable';
 import { AppConfig } from '../../config/config';
 import * as env from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('CartTreeNode', () => {
+    beforeEach(waitForAsync(() => {
+        TestBed.configureTestingModule({
+            imports: [FontAwesomeTestingModule],
+            providers: [
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
+                }
+            ]
+        })
+        .compileComponents();
+    }));
+
     it('constructor', () => {
         let node = new CartTreeNode();
         expect(node.children).toEqual([]);
@@ -193,17 +210,24 @@ describe('TreetableComponent', () => {
         dc.save();
         
         TestBed.configureTestingModule({
-        declarations: [ TreetableComponent ],
-        schemas: [NO_ERRORS_SCHEMA],
-        imports: [
-            TreeTableModule,
-            HttpClientTestingModule],
-        providers: [
-            CartService,
-            DownloadService,
-            TestDataService,
-            GoogleAnalyticsService,
-            { provide: AppConfig, useValue: cfg }]
+            declarations: [ TreetableComponent ],
+            schemas: [NO_ERRORS_SCHEMA],
+            imports: [
+                TreeTableModule,
+                HttpClientTestingModule],
+            providers: [
+                CartService,
+                DownloadService,
+                TestDataService,
+                GoogleAnalyticsService,
+                { provide: AppConfig, useValue: cfg },
+                // {
+                //     provide: FaTestingConfig,
+                //     useValue: {
+                //         circleIcon: 'undo'
+                //     }
+                // }
+            ]
         })
         .compileComponents();
     }));

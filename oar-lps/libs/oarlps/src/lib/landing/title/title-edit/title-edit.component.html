@@ -41,32 +41,53 @@
                             class="edit_button" 
                             type="button"
                             (click)="startEditing()" 
-                            pTooltip="Edit title" 
-                            tooltipPosition="top" 
                             aria-label="Edit title" 
+                            ngbTooltip="Edit title"
                             style="cursor: pointer">
-                            <i [class]="editIcon"></i>
+
+                            <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                         </button> 
 
                         @if( updated ) {
                             <!-- Restore button, restore original value -->
-                            <button class="edit_button" type="button" [disabled]="!updated" 
-                                (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original title">
-                                <i [class]="undoIcon" data-toggle="tooltip" title="Undo title"></i>
+                            <button 
+                                class="edit_button" 
+                                type="button" 
+                                [disabled]="!updated" 
+                                (click)="restoreOriginal()" 
+                                aria-label="Restore button" 
+                                ngbTooltip="Restore original title">
+
+                                <fa-icon [icon]="faUndo"></fa-icon>
                             </button> 
                         }
                     }
                     @else {
                         <!-- Save button -->
-                        <button class="edit_button" type="button" (click)="onSave()"
-                        aria-label="save button" ngbTooltip="Save changes">
-                            <i class="icon_enabled" [class]="saveIcon"></i>
+                        <button 
+                            class="edit_button" 
+                            type="button" (click)="onSave()"
+                            aria-label="save button" 
+                            ngbTooltip="Save changes">
+
+                            <fa-icon 
+                                class="icon_enabled" 
+                                [icon]="faSave">
+                            </fa-icon>
                         </button>
 
                         <!-- Cancel editing button: cancel current changes -->
-                        <button class="edit_button" type="button"
-                        (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                            <i [class]="cancelIcon" data-toggle="tooltip" title="Undo current changes"></i>
+                        <button 
+                            class="edit_button" 
+                            type="button"
+                            (click)="cancelEditing()" 
+                            aria-label="undo button" 
+                            ngbTooltip="Cancel edit">
+                            <fa-icon 
+                                [icon]="faUndo" 
+                                data-toggle="tooltip" 
+                                title="Cancel edit">
+                            </fa-icon>
                         </button>   
                     }
                 </div>

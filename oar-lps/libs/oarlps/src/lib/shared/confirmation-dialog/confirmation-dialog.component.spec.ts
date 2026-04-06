@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('ConfirmationDialogComponent', () => {
   let component: ConfirmationDialogComponent;
@@ -8,7 +9,7 @@ describe('ConfirmationDialogComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ ConfirmationDialogComponent ],
+      imports: [ ConfirmationDialogComponent, FontAwesomeTestingModule ],
       providers: [NgbActiveModal]
     })
     .compileComponents();

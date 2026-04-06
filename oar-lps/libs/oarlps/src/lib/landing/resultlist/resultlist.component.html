@@ -33,7 +33,13 @@
             <!-- Search text -->
             <div class="td" style="width: auto;padding-right: 5px;">
                 <span class="p-input-icon-right search-wrapper" style="width: 100%;">
-                    <i class="pi pi-search" style="top: 25px;"></i>
+                    <!-- <i class="pi pi-search" style="top: 25px;"></i> -->
+
+                    <fa-icon 
+                        [icon]="faMagnifyingGlass" 
+                        style="top: 25px;">
+                    </fa-icon>
+
                     <label for="freeTextSearch" class="sr-only">Free Text Search</label>
                     <input id="freeTextSearch" type="text" pInputText [(ngModel)]="searchPhases"
                         placeholder="Search for" (input)="filterResults()"
@@ -62,6 +68,13 @@
     </div>
 
     <div class="spinner" *ngIf="!searchResults">
-        <i class="faa faa-spinner faa-spin faa-stack-2x" style="color:#1E6BA1;" aria-hidden="true"></i>
+        <!-- <i class="faa faa-spinner faa-spin faa-stack-2x" style="color:#1E6BA1;" aria-hidden="true"></i> -->
+
+        <fa-icon 
+            [icon]="faSpinner" 
+            [animation]="'spin'" 
+            style="color:#1E6BA1;" 
+            aria-hidden="true">
+        </fa-icon>
     </div>
 </div>

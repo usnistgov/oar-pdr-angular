@@ -4,11 +4,15 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { ButtonModule } from 'primeng/button';
 import { AppConfig } from '../config/config';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faDownload, faCartPlus, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faCircle } from '@fortawesome/free-regular-svg-icons';
+import { iconClass } from '../shared/globals/globals';
 
 @Component({
     selector: 'app-bulk-download',
     standalone: true,
-    imports: [CommonModule],
+    imports: [ CommonModule, FontAwesomeModule ],
     templateUrl: './bulk-download.component.html',
     styleUrls: ['./bulk-download.component.css'],
     animations: [
@@ -41,6 +45,17 @@ export class BulkDownloadComponent implements OnInit {
     pdrbase: string;
     downloadscriptCopied: boolean = false;
 
+    //icon class names
+    circleIcon = iconClass.CIRCLE;
+    downloadIcon = iconClass.DOWNLOAD;
+    cartPlusIcon = iconClass.CART_PLUS;
+    copyIcon = iconClass.COPY;
+
+    faDownload = faDownload;
+    faCartPlus = faCartPlus;
+    faCopy = faCopy;
+    faCircle = faCircle;
+
     @ViewChild('downloadall') downloadAll: ElementRef;
     @ViewChild('rclone') rclone: ElementRef;
     @ViewChild('pyscript') pyscript: ElementRef;
@@ -48,10 +63,19 @@ export class BulkDownloadComponent implements OnInit {
     @ViewChild('downloadAPI') downloadAPI: ElementRef;
     
 
-    constructor(private route: ActivatedRoute,
-                @Inject(PLATFORM_ID) private platformId: Object,
-                private cfg : AppConfig)
-    {
+    constructor(
+        private route: ActivatedRoute,
+        public iconLibrary: FaIconLibrary,
+        @Inject(PLATFORM_ID) private platformId: Object,
+        private cfg : AppConfig){
+
+        iconLibrary.addIcons(
+            faCircle,
+            faDownload,
+            faCartPlus,
+            faCopy
+        );  
+
         this.inBrowser = isPlatformBrowser(platformId);
         this.pdrbase = cfg.get<string>("links.portalBase", "/");
         if (! this.pdrbase.endsWith('/'))
@@ -164,4 +188,16 @@ export class BulkDownloadComponent implements OnInit {
             } 
         } 
     }
+
+    btnStyle() {
+        // let color = this.allCollections[this.collection].colorPalette;
+
+        return {
+            '--button-text-color': 'white',
+            '--button-color': 'var(--science-theme-background-default)',
+            '--hover-color': 'var(--science-theme-background-hover)',
+            '--disable-color': 'var(--disabled-grey)',
+            '--disable-text-color': 'var(--disabled-grey-text)'
+        };
+    }    
 }

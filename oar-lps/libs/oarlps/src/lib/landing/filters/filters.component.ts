@@ -10,17 +10,9 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
 import { Collections, Collection, CollectionThemes, FilterTreeNode, GlobalService, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { CommonModule } from '@angular/common';
-import { TreeModule } from 'primeng/tree';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { FormsModule } from '@angular/forms';
-import { TaxonomyModule } from '../taxonomy/taxonomy.module';
-import { ButtonModule } from 'primeng/button';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CheckboxRequiredValidator } from '@angular/forms';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faSpinner, faAnglesDown, faAnglesLeft, faAnglesRight, faAnglesUp, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../shared/globals/globals';
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -146,6 +138,21 @@ export class FiltersComponent implements OnInit {
 
     globalsvc = inject(GlobalService);
 
+    //icon class names
+    spinnerIcon = iconClass.SPINNER;
+    anglesUpIcon = iconClass.ANGLES_UP;
+    anglesDownIcon = iconClass.ANGLES_DOWN;
+    anglesLeftIcon = iconClass.ANGLES_LEFT;
+    anglesRightIcon = iconClass.ANGLES_RIGHT;
+    closeIcon = iconClass.CLOSE;
+
+    faSpinner = faSpinner;
+    faAnglesDown = faAnglesDown;
+    faAnglesLeft = faAnglesLeft;
+    faAnglesRight = faAnglesRight;
+    faAnglesUp = faAnglesUp;
+    faXmark = faXmark;
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
@@ -165,8 +172,11 @@ export class FiltersComponent implements OnInit {
         public searchService: SearchService,
         public collectionService: CollectionService,
         private chref: ChangeDetectorRef,
-        private cfg: AppConfig
-    ) { 
+        public iconLibrary: FaIconLibrary,
+        private cfg: AppConfig) { 
+        
+        iconLibrary.addIcons(faSpinner, faAnglesDown, faAnglesLeft, faAnglesRight, faAnglesUp, faXmark);
+
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
             // Set colors
@@ -704,15 +714,15 @@ export class FiltersComponent implements OnInit {
     getFilterImgClass(){
         if(this.isActive){
             if(this.mobileMode){
-               return "faa faa-angle-double-up"; 
+               return "angles-up"; 
             }else{
-                return "faa faa-angle-double-left";
+                return "angles-left";
             }
         }else{
             if(this.mobileMode){
-                return "faa faa-angle-double-down";
+                return "angles-down";
             }else{
-                return "faa faa-angle-double-right";
+                return "angles-right";
             }
         }
     }

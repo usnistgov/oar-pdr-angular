@@ -3,6 +3,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Author } from '../author';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faCaretDown,
+    faCaretRight
+} from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../../shared/globals/globals';
 
 @Component({
     selector: 'author-pub',
@@ -10,7 +16,8 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
     imports: [
         CommonModule,
         CollapseModule,
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './author-pub.component.html',
     styleUrls: ['./author-pub.component.scss', '../../landing.component.scss']
@@ -19,11 +26,21 @@ export class AuthorPubComponent {
     authors: Author[] = [];
     overflowStyle: string = 'hidden';
 
+    //icon class names
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+
     @Input() record: any[];
     @Input() fieldName: string;
     @Input() isScienceTheme: boolean = false;
 
-    constructor() { }
+    constructor(public iconLibrary: FaIconLibrary,) { 
+
+        iconLibrary.addIcons(
+            faCaretDown,
+            faCaretRight
+        );  
+    }
 
     ngOnInit() {
         this.getAuthors();

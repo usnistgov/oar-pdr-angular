@@ -34,10 +34,15 @@
             <!-- div to keep track of the menu button position -->
             <div #stickyButton></div>
 
-            <button #menubtn *ngIf="!hideToolMenu && md !== null && inBrowser && mobileMode"
-                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" type="button" pButton
-                icon="faa faa-list" class="ui-button ui-button-icon-only"
+            <button 
+                #menubtn 
+                *ngIf="!hideToolMenu && md !== null && inBrowser && mobileMode"
+                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" 
+                type="button" 
+                class="btn-labeled menu-button"
                 (click)="toggleMenu($event)">
+
+                <fa-icon [icon]="faList"></fa-icon>
             </button>
 
             <app-menu
@@ -142,7 +147,7 @@
 
 <!-- Show spinner -->
 <div *ngIf="!_showContent">
-    <pdr-done [message]="loadingMessage"></pdr-done>
+    <pdr-done [message]="loadingMessage" [showSpinner]="true"></pdr-done>
 </div>
 
 <!-- Display done page -->

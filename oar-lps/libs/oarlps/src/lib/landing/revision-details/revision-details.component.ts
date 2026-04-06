@@ -4,7 +4,8 @@ import {
     ReviewResponse,
     RevisionTypes,
     RevisionDetails,
-    SubmissionData
+    SubmissionData,
+    iconClass
 } from '../../shared/globals/globals';
 import { CheckboxModule } from 'primeng/checkbox';
 // import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +17,12 @@ import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
 import { MdsCheckboxComponent } from '../../shared/mds-checkbox/mds-checkbox.component';
 // import { MatInputModule } from '@angular/material/input';
 // import { MatSelectModule } from '@angular/material/select';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faCircleQuestion,
+    faCircle,
+    faArrowUpRightFromSquare
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'revision-details',
@@ -25,7 +32,8 @@ import { MdsCheckboxComponent } from '../../shared/mds-checkbox/mds-checkbox.com
         FormsModule,
         TextFieldModule,
         CheckboxModule,
-        MdsCheckboxComponent
+        MdsCheckboxComponent,
+        FontAwesomeModule
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './revision-details.component.html',
@@ -38,12 +46,29 @@ export class RevisionDetailsComponent {
     revisionType: string;
     policyPageLink: string = "";
 
+    //icon class
+    // circleQuestionIcon = iconClass.CIRCLE_QUESTION;
+    // circleIcon = iconClass.CIRCLE;
+    // arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+
+    faCircleQuestion = faCircleQuestion;
+    faCircle = faCircle;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;
+
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
     @Input() submissionData: SubmissionData;
     @Output() changedData: EventEmitter<SubmissionData> = new EventEmitter();
     @Output() command: EventEmitter<any> = new EventEmitter();
         
+    constructor(public iconLibrary: FaIconLibrary, public cdRef: ChangeDetectorRef) { 
+        // iconLibrary.addIcons(
+        //     faCircleQuestion,
+        //     faCircle,
+        //     faArrowUpRightFromSquare
+        // );
+    }
+
     ngOnInit(): void {
         this.allRevisionTypes = this.revisionTypes.getAllTypes();
     }

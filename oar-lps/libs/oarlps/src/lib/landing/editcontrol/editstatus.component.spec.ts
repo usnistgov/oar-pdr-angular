@@ -14,6 +14,7 @@ import { Credentials, UserAttributes } from 'oarng';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
 import * as env from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('EditStatusComponent', () => {
     let component : EditStatusComponent;
@@ -36,7 +37,7 @@ describe('EditStatusComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ CommonModule, EditStatusComponent ],
+            imports: [ CommonModule, EditStatusComponent, FontAwesomeTestingModule ],
             declarations: [  ],
             providers: [
                     UserMessageService, 

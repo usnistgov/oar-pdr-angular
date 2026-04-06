@@ -8,7 +8,12 @@
             <b>Files </b>
         </div>
         <p>
-            <i class="fas fa-spinner fa-spin"></i> Loading file list...
+            <!-- <i class="fas fa-spinner fa-spin"></i>  -->
+            <fa-icon 
+                [icon]="faSpinner"
+                [animation]="'spin'">
+            </fa-icon>
+            Loading file list...
         </p>
     </div>
 
@@ -16,47 +21,115 @@
         <div class="flex-container" style="margin-top: 2em;">
             <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
             @if(!isPublicSite) {
-                <div style="flex: 0 0 130px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
+                <div style="flex: 0 0 110px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
                     <span><b id="filelist-heading">Files</b></span>
-                    <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all"
+                    <!-- <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all"
                         ngbTooltip="Download all disabled in edit mode">
-                        <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
-                        <i class="fas fa-download fa-stack-1x fa-xs" aria-hidden="true"></i>
+                    </span> -->
+
+                    <!-- Download icon in MIDAS side -->
+                    <span class="fa-stack grey-color" size="2x" style="margin: -5px -22px 0 10px" aria-label="Download all"
+                        ngbTooltip="Download all disabled in edit mode">
+                        <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
+                        <fa-icon [icon]="faDownload" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
                     </span>
-                    <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;"
+
+                    <!-- Add all to cart icon in MIDAS side -->
+                    <span class="fa-stack grey-color" size="2x" style="margin: -5px -2em 0px 10px" aria-label="Add all to data cart"
+                        ngbTooltip="Add all to data cart disabled in edit mode">
+                        <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
+                        <fa-icon [icon]="faCartPlus" class="fa-stack-1x small" style="top: 7px;left: -2px;"></fa-icon>
+                    </span>
+                    <!-- <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;"
                         aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
-                        <i class="far fa-circle fa-stack-1x fa-lg"></i>
-                        <i class="fas fa-cart-plus fa-stack-1x fa-xs"></i>
-                    </span>
-                    <span class="w3-badge badge-notify grey-background-color" style="margin-left:-3em;">{{cartLength}}</span>
+                    </span> -->
+                    <span class="w3-badge badge-notify" style="background-color:rgb(107, 107, 107);">{{cartLength}}</span>
                 </div>
             }
             @else {
                 <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
                     <span><b id="filelist-heading">Files </b> </span>
-                    <a class="fa-stack fa-lg icon-download" style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all"
+                    <!-- <a class="fa-stack fa-lg icon-download" style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all" -->
+
+                    <!-- Download icon in public side -->
+                    <a style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all"
                         [ngbTooltip]="downloadAllTooltip" [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
-                        <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                        <!-- <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                         <i *ngIf="!isAddingToDownloadAllCart; else show_spinner1" class="fas fa-download fa-stack-1x fa-xs"
                             aria-hidden="true"></i>
                         <ng-template #show_spinner1><i class="fas fa-spinner fa-spin fa-stack-1x spinner fa-xs"
-                                aria-hidden="true"></i></ng-template>
+                                aria-hidden="true"></i></ng-template> -->
+
+                        <span class="fa-stack" size="2x" style="margin: -5px -22px 0 10px" aria-label="Download all"
+                            ngbTooltip="Download all">
+                            <fa-icon 
+                                [icon]="faCircle" 
+                                class="fa-stack-2x" 
+                                style="scale: 1.5;right: 20px;top: 8px;">
+                            </fa-icon>
+                            <fa-icon 
+                                *ngIf="!isAddingToDownloadAllCart; else show_spinner1" 
+                                [icon]="faDownload" 
+                                class="fa-stack-1x small" 
+                                style="top: 6px;">
+                            </fa-icon>
+                            <ng-template #show_spinner1>
+                                <fa-icon 
+                                    [icon]="faSpinner" 
+                                    class="fa-stack-1x small" 
+                                    style="top: 6px;" 
+                                    [animation]="'spin'"
+                                    aria-hidden="true">
+                                </fa-icon>
+                            </ng-template>
+                        </span>
                     </a>
                     <a id="routeToDatacart" target="_blank" [routerLink]="['/datacart', 'popup']" style="display:none"></a>
-                    <span class="fa-stack fa-lg icon-cart" style="width: 30px;" (click)="toggleAllFilesInGlobalCart(files)" [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',
-                                            'margin-right': '0em'}" [aria-label]="cartProcessTooltip"
+
+                    <!-- Add all to cart icon in public side -->
+                    <span 
+                        class="icon-cart"
+                        style="width: 30px;" 
+                        (click)="toggleAllFilesInGlobalCart(files)" 
+                        [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',}" 
+                        [aria-label]="cartProcessTooltip"
                         [ngbTooltip]="cartProcessTooltip">
-                        <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
+                        <!-- <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                         <i *ngIf="!isTogglingAllInGlobalCart; else show_spinner" class="fas fa-cart-plus fa-stack-1x fa-xs"
                             aria-hidden="true"></i>
                         <ng-template #show_spinner><i class="fas fa-spinner fa-spin fa-stack-1x spinner"
-                                aria-hidden="true"></i></ng-template>
-                        <span class="w3-badge badge-notify" style="margin-right:0em;">{{cartLength}}</span>
+                                aria-hidden="true"></i></ng-template> -->
+
+                        <span class="fa-stack" size="2x" style="margin: 8px -2em 0px 10px" aria-label="Add all to cart"
+                            ngbTooltip="Add all to cart">
+                            <fa-icon 
+                                [icon]="faCircle" 
+                                class="fa-stack-2x" 
+                                style="scale: 1.5;right: 20px;top: 8px;">
+                            </fa-icon>
+                            <fa-icon 
+                                *ngIf="!isTogglingAllInGlobalCart; else show_spinner1" 
+                                [icon]="faCartPlus"
+                                class="fa-stack-1x small" 
+                                style="top: 8px; left: -2px;">
+                            </fa-icon>
+                            <ng-template #show_spinner1>
+                                <fa-icon 
+                                    [icon]="faSpinner" 
+                                    class="fa-stack-1x small" 
+                                    style="top: 8px; left: -2px;" 
+                                    [animation]="'spin'"
+                                    aria-hidden="true">
+                                </fa-icon>
+                            </ng-template>
+                        </span>
+
+                        <span class="w3-badge badge-notify">{{cartLength}}</span>
                     </span>
                 </div>
             }
 
-            <div style="flex-grow: 8; text-align: left; padding-top: 0.5em;">
+            <div style="flex-grow: 8; text-align: left; padding-top: 5px;">
                 <span class="grey-color">Click on the file/row in the table below to view more
                     details.</span>
             </div>
@@ -70,10 +143,18 @@
                     {{ fileCount }}
             
                     <!-- Info button -->
-                    <i *ngIf="largeDataset" 
+                    <fa-icon 
+                        *ngIf="largeDataset" 
+                        [icon]="faCircleInfo" 
+                        data-toggle="tooltip" 
+                        title="Large dataset"
+                        style="margin-left: 10px;" >
+                    </fa-icon>
+
+                    <!-- <i *ngIf="largeDataset" 
                         class="faa faa-info-circle" 
                         title="Large dataset" 
-                        style="margin-left: 10px;"></i>
+                        style="margin-left: 10px;"></i> -->
                 </span>
             </div>
         </div>
@@ -83,7 +164,8 @@
             *ngIf="largeDataset">
             This dataset is very large. So we have built a special area for accessing it. See our
             <a href="{{bulkDownloadURL}}" target="_blank">
-                <i class="faa faa-hand-o-right"></i>
+                <!-- <i class="faa faa-hand-o-right"></i> -->
+                <fa-icon [icon]="faHandPointRight" size="sm"></fa-icon>
                 <span style="text-decoration: underline; margin-left: 5px;">dedicated page</span>
             </a>
             for downloaing large data.
@@ -98,7 +180,15 @@
             [globalFilterFields]="['name']">
             <ng-template pTemplate="caption">
                 <div style="text-align: right; height: 20px;margin-bottom: 10px;padding-top: 0px;border-color: 1px solid red;">
-                    <i class="pi pi-search" style="margin:4px 4px 0 0" aria-label="Search on file or folder name"></i>
+                    <!-- <i class="pi pi-search" style="margin:4px 4px 0 0" aria-label="Search on file or folder name"></i> -->
+                    <fa-icon 
+                        [icon]="faMagnifyingGlass" 
+                        size="sm" 
+                        data-toggle="tooltip" 
+                        title="Search on file or folder name"
+                        style="margin:4px 4px 0 0" 
+                        aria-label="Search on file or folder name">
+                    </fa-icon>
                     <input type="text" pInputText size="50" placeholder="Search on file or folder name ..."
                         [(ngModel)]="searchText" (input)="toogleTree(true);tt.filterGlobal($event.target.value, 'contains')"
                         style="height: 20px;margin: 0 0px 20px 0;width: 60%;background-color: #f0f0f0;">
@@ -115,12 +205,28 @@
                         <span *ngIf="col.header == 'Name'">
                             <span (click)="toogleTree(!isExpanded);tt.filterGlobal(searchText, 'contains')"
                                 style="padding-right:0.5em;">
-                                <i *ngIf="!isExpanded" class="faa faa-arrow-circle-down faa-1x icon-white"
+                                <fa-icon 
+                                    *ngIf="!isExpanded" 
+                                    [icon]="faCircleArrowDown" 
+                                    size="sm" 
+                                    data-toggle="tooltip" 
+                                    title="Expand All">
+                                </fa-icon>
+
+                                <fa-icon 
+                                    *ngIf="isExpanded" 
+                                    [icon]="faCircleArrowUp" 
+                                    size="sm"
+                                    data-toggle="tooltip" 
+                                    title="Collapse All">
+                                </fa-icon>
+
+                                <!-- <i *ngIf="!isExpanded" class="faa faa-arrow-circle-down faa-1x icon-white"
                                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
                                     title="Expand All"></i>
                                 <i *ngIf="isExpanded" class="faa faa-arrow-circle-up faa-1x icon-white"
                                     style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                    title="Collapse All"></i>
+                                    title="Collapse All"></i> -->
                             </span>
                         </span>
                         {{col.header}}
@@ -135,7 +241,17 @@
                         <span data-toggle="tooltip" title="Click for more details">
                             <b>{{rowData.name}}</b> </span>
                         <span style="margin-left: .5em;" *ngIf="isLeaf(rowData)">
-                            <i [ngClass]='fileDetailsDisplayClass(rowData)'></i></span>
+                            <fa-icon 
+                                *ngIf="caretRightIcon && caretDownIcon" 
+                                [icon]="['fas', fileDetailsDisplayClass(rowData)]" 
+                                [class.amplified]="rowData.isMouseOver"
+                                class="amplifiable"
+                                (mouseover)="rowData.isMouseOver = true" 
+                                (mouseleave)="rowData.isMouseOver = false"                                
+                                size="sm">
+                            </fa-icon>
+                            <!-- <i [ngClass]='fileDetailsDisplayClass(rowData)'></i> -->
+                        </span>
                         <span *ngIf="showZipFilesNames" class="zip-file">{{rowData.zipFile || ''}}</span>
                     </td>
                     <td [ngStyle]="typeStyle()">{{mediaTypeLookup(rowData)}}</td>
@@ -149,8 +265,15 @@
                                         href='{{rowData.comp.downloadURL}}' target='_blank' download="download"
                                         data-toggle="tooltip" title="Direct download" rel="noopener"
                                         (click)="setFileDownloaded(rowData)">
-                                        <i class="faa faa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
-                                            aria-hidden="true"></i>
+                                        <!-- <i class="faa faa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
+                                            aria-hidden="true"></i> -->
+
+                                        <fa-icon 
+                                            [icon]="faDownload" 
+                                            size="sm"
+                                            [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
+                                            aria-hidden="true">
+                                        </fa-icon>
                                         <span class="sr-only">Hidden text for 508 compliance</span>
                                     </a>
                                     <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
@@ -160,9 +283,19 @@
 
                                 <ng-template #display_lock>
                                     <!-- Display lock if this is not a folder -->
-                                    <i *ngIf="isLeaf(rowData) && displayMode == 'restrict'; else space_holder" class="faa faa-lock blue-cart" style="margin-left: 10px;"
+                                    <!-- <i *ngIf="isLeaf(rowData) && displayMode == 'restrict'; else space_holder" class="faa faa-lock blue-cart" style="margin-left: 10px;"
                                         (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')" aria-hidden="true"
-                                        data-toggle="tooltip" title="Request access"></i>
+                                        data-toggle="tooltip" title="Request access"></i> -->
+
+                                    <fa-icon 
+                                        *ngIf="isLeaf(rowData) && displayMode == 'restrict'; else space_holder" 
+                                        [icon]="faLock" 
+                                        size="sm" 
+                                        (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')" 
+                                        aria-hidden="true"
+                                        data-toggle="tooltip" 
+                                        title="Request access">
+                                    </fa-icon>
                                     <ng-template #space_holder>
                                         <div style="padding-right: 1em;">&nbsp;&nbsp;</div>
                                     </ng-template>
@@ -172,7 +305,14 @@
                                 <div *ngIf="fileManagerUrl;else space_holder">
                                     <a href='{{fileManagerUrl}}' target='_blank' aria-label="Access file in File Manager"
                                         ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(rowData)">
-                                        <i class="fas fa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i>
+                                        <!-- <i class="fas fa-download" [ngStyle]="{'color':getDownloadBtnColor(rowData)}" aria-hidden="true"></i> -->
+
+                                        <fa-icon 
+                                            [icon]="faDownload" 
+                                            [ngStyle]="{'color':getDownloadBtnColor(rowData)}"
+                                            size="sm" 
+                                            aria-hidden="true">
+                                        </fa-icon>
                                         <span class="sr-only">Hidden text for 508 compliance</span>
                                     </a>
                                     <p-progressSpinner *ngIf="rowData.downloadStatus == 'downloading'"
@@ -187,24 +327,51 @@
                             <div class="indent-content" *ngIf="displayMode != 'restrict'; else RestrictedAccessPage">
                                 <div style="padding-left:10px;" *ngIf="rowData.isInCart;else not_in_cart"
                                     (click)="removeFromGlobalCart(rowData)">
-                                    <i class="faa faa-cart-plus green-cart" aria-hidden="true" data-toggle="tooltip"
-                                        title="Remove from cart"></i>
+                                    <!-- <i class="faa faa-cart-plus green-cart" aria-hidden="true" data-toggle="tooltip"
+                                        title="Remove from cart"></i> -->
+
+                                    <fa-icon 
+                                        [icon]="faCartPlus" 
+                                        class="green-cart"
+                                        size="sm" 
+                                        aria-hidden="true"
+                                        data-toggle="tooltip" 
+                                        title="Remove from cart">
+                                    </fa-icon>
                                 </div>
                                 <div *ngIf="rowData.isInCart" style="margin-left: 0.5em;font-size: 0.5em">
                                     Added
                                 </div>
                                 <ng-template #not_in_cart>
                                     <div style="padding-left:10px;" (click)="addToGlobalCart(rowData)">
-                                        <i class="faa faa-cart-plus blue-cart" aria-hidden="true" data-toggle="tooltip"
-                                            title="Add to cart"></i>
+                                        <!-- <i class="faa faa-cart-plus blue-cart" aria-hidden="true" data-toggle="tooltip"
+                                            title="Add to cart"></i> -->
+
+                                        <fa-icon 
+                                            [icon]="faCartPlus" 
+                                            class="blue-cart" 
+                                            size="sm" 
+                                            aria-hidden="true"
+                                            data-toggle="tooltip" 
+                                            title="Add to cart">
+                                        </fa-icon>
                                     </div>
                                 </ng-template>
                             </div>
                             <ng-template #RestrictedAccessPage>
                                 <a *ngIf="!rowData.comp.downloadURL && rapWithAccessUrl" href={{accessURL}} target="_blank">
-                                    <i class="faa faa-lock blue-cart"
+                                    <!-- <i class="faa faa-lock blue-cart"
                                         (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')"
-                                        aria-hidden="true" data-toggle="tooltip" title="Request access"></i>
+                                        aria-hidden="true" data-toggle="tooltip" title="Request access"></i> -->
+
+                                    <fa-icon 
+                                        [icon]="faLock" 
+                                        size="sm" 
+                                        (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')"
+                                        aria-hidden="true"
+                                        data-toggle="tooltip" 
+                                        title="Request access">
+                                    </fa-icon>
                                 </a>
                             </ng-template>
                         </div>
@@ -228,11 +395,19 @@
                                     {{rowData.comp.checksum.hash}}
                                 </span>
                                 <span id="hash-copy" (click)="copyToClipboard(rowData.comp.checksum.hash)"
-                                    data-toggle="tooltip" title="Copy to clipboard"><i
-                                        class="faa faa-clone"></i></span><span [@enterAnimation] *ngIf="hashCopied"
-                                    class="badge" style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Hash
-                                    copied
-                                    to clipboard</span>
+                                    data-toggle="tooltip" title="Copy to clipboard">
+                                    <!-- <i
+                                        class="faa faa-clone"></i> -->
+
+                                    <fa-icon [icon]="faCopy" size="sm"></fa-icon>
+                                    </span>
+                                    <span 
+                                        [@enterAnimation] 
+                                        *ngIf="hashCopied"
+                                        class="badge" 
+                                        style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+                                        Hash copied to clipboard
+                                    </span>
                             </div>
                             <div *ngIf="rowData.comp.filepath">
                                 <b>File path</b>: {{rowData.comp.filepath}}

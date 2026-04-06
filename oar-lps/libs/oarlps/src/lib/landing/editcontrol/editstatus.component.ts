@@ -9,6 +9,9 @@ import { LandingpageService } from '../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DatePipe } from '@angular/common';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../shared/globals/globals';
 
 /**
  * A panel inside the EditControlComponent that displays information about the status of 
@@ -26,6 +29,7 @@ import { DatePipe } from '@angular/common';
     imports: [
         CommonModule,
         FormsModule,
+        FontAwesomeModule
     ],
     templateUrl: 'editstatus.component.html',
     styleUrls: ['editstatus.component.css']
@@ -42,6 +46,10 @@ export class EditStatusComponent implements OnInit {
     contentStatusColer: string = "var(--nist-green-default);"
     resourceType: string = "resource";
 
+    //icon class names
+    // spinnerIcon = iconClass.SPINNER;
+    faSpinner = faSpinner;
+
     @Input() mdrec: NerdmRes;
     @Input() forceDisplay: boolean = false;  // if true, display the message even if there is no update details. This is used to display a message when the record is in outside-midas mode and there is no update details.
 
@@ -57,8 +65,11 @@ export class EditStatusComponent implements OnInit {
         public globalsvc: GlobalService,
         private cdr: ChangeDetectorRef,
         private datePipe: DatePipe,
+        public iconLibrary: FaIconLibrary,
         public lpService: LandingpageService) {
 
+        // iconLibrary.addIcons(faSpinner);
+        
         effect(() => {
             this.message = this.globalsvc.message();
             this.showMessage(this.message);

@@ -26,7 +26,13 @@
             <span id="copy-to-clipboard" 
                 (click)="copyToClipboard(citetext)" data-toggle="tooltip"
                 title="Copy to clipboard">
-                <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i>
+                <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
+
+                <fa-icon 
+                    [icon]="faCopy" 
+                    style="color: rgb(1, 90, 255);cursor: pointer;"
+                    data-toggle="tooltip" title="Copy to clipboard">
+                </fa-icon>
             </span>
             <span [@enterAnimation] *ngIf="textCopied" class="badge"
                 style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
@@ -47,7 +53,12 @@
             type="button" 
             [ngStyle]="btnStyle()"
             (click)="close()">
-            <i class="faa faa-times faa-1x icon-white" pButtonIcon style="padding-right: .5em;"></i>
+            <!-- <i class="faa faa-times faa-1x icon-white" pButtonIcon style="padding-right: .5em;"></i> -->
+
+            <fa-icon 
+                [icon]="faXmark" 
+                style="padding-right: .5em;">
+            </fa-icon>
             <span pButtonLabel style="text-align: center;">Close</span>
         </button>
     </div>

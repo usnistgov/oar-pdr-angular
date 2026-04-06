@@ -25,6 +25,8 @@ import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps'
 import { Themes, ThemesPrefs, Collections, CollectionService } from 'oarlps';
 import { HttpClient } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faList } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -56,7 +58,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         NoidComponent,
         SidebarComponent,
         MenuComponent,
-        FrameModule
+        FrameModule,
+        FontAwesomeModule
     ],
     providers: [
         Title, NgbActiveModal
@@ -119,7 +122,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationDialogWith: number = 550; // Default width
     recordLevelMetrics : RecordLevelMetrics;
 
-    loadingMessage = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    loadingMessage = 'Loading...';
 
     dataCartStatus: DataCartStatus;
     fileLevelMetrics: any;
@@ -193,7 +196,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     landingPageURL: string;
     landingPageServiceStr: string;
 
-
+    //Icons
+    faList = faList;
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
         event.stopPropagation();

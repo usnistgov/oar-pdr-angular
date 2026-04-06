@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input, inject } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
-import { LandingConstants, GlobalService } from '../../shared/globals/globals';
+import { LandingConstants, GlobalService, iconClass } from '../../shared/globals/globals';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
@@ -8,6 +8,12 @@ import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../collapseDirective/collapse.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faCaretDown,
+    faCaretRight,
+    faCircleInfo
+} from '@fortawesome/free-solid-svg-icons';
 
 interface reference {
     refType?: string,
@@ -31,7 +37,8 @@ interface reference {
     imports: [
         CommonModule,
         CollapseModule,
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './version.component.html',
     styleUrls: [ '../landing.component.scss' ]
@@ -44,9 +51,17 @@ export class VersionComponent implements OnChanges {
     editMode: string;
     fieldName = SectionPrefs.getFieldName(Sections.VERSION);
     expandButtonAlterText: string = "Open version history";
-    expandIconClass: string = "faa-caret-right";
+
     globalsvc = inject(GlobalService);
     majorVersion: string = "";
+
+    //icon class names
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+    circleInfoIcon = iconClass.CIRCLE_INFO;
+
+    expandIconClass: string = "";
+    isMouseOver: boolean = false;
 
     @Input() record: NerdmRes = null;
     @Input() landingPageServiceStr: string;
@@ -58,9 +73,18 @@ export class VersionComponent implements OnChanges {
      */
     constructor(public editstatsvc: EditStatusService,
                 public gaService: GoogleAnalyticsService,
-                public lpService: LandingpageService) { }
+                public iconLibrary: FaIconLibrary,
+                public lpService: LandingpageService) { 
+        
+        iconLibrary.addIcons(
+            faCaretDown,
+            faCaretRight,
+            faCircleInfo
+        );
+   }
 
     ngOnInit(): void {
+        this.expandIconClass = this.caretRightIcon;
         // Watch current edit mode set by edit controls
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
@@ -82,7 +106,7 @@ export class VersionComponent implements OnChanges {
      */
     expandHistory() {
         this.visibleHistory = !this.visibleHistory;
-        this.expandIconClass = this.visibleHistory? "faa-caret-down" : "faa-caret-right";
+        this.expandIconClass = this.visibleHistory? this.caretDownIcon : this.caretRightIcon;
         this.expandButtonAlterText = this.visibleHistory? "Close version history" : "Open version history";
     }
 
