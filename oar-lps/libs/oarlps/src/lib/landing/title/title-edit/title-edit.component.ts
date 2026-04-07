@@ -75,7 +75,6 @@ export class TitleEditComponent {
 
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
-
         // this.lpService.watchEditing((sectionMode: SectionMode) => {
 
         // effect(() => {
@@ -150,7 +149,8 @@ export class TitleEditComponent {
                     // this.mdupdsvc.validate().subscribe(response => {
                     //     this.lpService.setSubmitResponse(response as SubmitResponse);
                     // })
-                }else{
+                } else {
+                    // Error was handled in metadata update service, just log here for debugging purpose.
                     let msg = "Title update failed.";
                     console.error(msg);
                 }
@@ -171,7 +171,8 @@ export class TitleEditComponent {
             if (success){
                 this.setMode(MODE.NORMAL);
                 this.notificationService.showSuccessWithTimeout("Reverted changes to title.", "", 3000);
-            }else{
+            } else {
+                // Error was handled in metadata update service, just log here for debugging purpose.
                 let msg = "Failed to undo title metadata";
                 console.error(msg);
             }

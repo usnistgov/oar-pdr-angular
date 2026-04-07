@@ -40,7 +40,7 @@ describe('KeywordMidasComponent', () => {
                 { provide: DAPService, useFactory: createDAPService, 
                     deps: [ environment, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
+                    edstatsvc, dapsvc, null, null)
                 } 
             ]
         })

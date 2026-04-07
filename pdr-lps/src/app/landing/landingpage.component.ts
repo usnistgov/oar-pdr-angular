@@ -381,8 +381,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             if(this.inBrowser)
                 this._showContent = true;
                 
-            if (metadataError == "not-found") {
-                this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
+                if (metadataError == "not-found") {
+                this.globalService.error("The record with ID '" + this.reqId + "' was not found. Please check the ID and try again.");
             }
         },
         (err) => {
@@ -390,12 +390,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.globalService.setShowLPContent(true);
             if (err instanceof IDNotFound) {
                 metadataError = "not-found";
-                this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
+                this.globalService.error("The record with ID '" + this.reqId + "' was not found. Please check the ID and try again. " + err.message);
             }
             else {
                 metadataError = "int-error";
-                // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-                this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
+                this.globalService.error("An internal error occurred while retrieving the record with ID '" + this.reqId + "'. Please try again later. " + err.message);
             }
         });
     }
@@ -419,6 +418,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             },
             (err) => {
                 console.error("Failed to retrieve dataset metrics: ", err);
+                this.globalService.error("Failed to retrieve dataset metrics. Please try again later. " + err.message); 
                 this.metricsData.hasCurrentMetrics = false;
                 this.showMetrics = true;
                 this.metricsData.dataReady = true;

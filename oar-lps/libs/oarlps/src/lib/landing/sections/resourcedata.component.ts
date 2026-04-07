@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';

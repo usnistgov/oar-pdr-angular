@@ -2,10 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm.component';
 import { MetadataUpdateService } from '../metadataupdate.service';
-import { UserMessageService } from '../../../frame/usermessage.service';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { ToastrService } from 'ngx-toastr';
 
 describe('SubmitConfirmComponent', () => {
     let component: SubmitConfirmComponent;
@@ -17,10 +18,9 @@ describe('SubmitConfirmComponent', () => {
         await TestBed.configureTestingModule({
             imports: [ SubmitConfirmComponent, BrowserAnimationsModule ],
             providers: [ 
-                UserMessageService, 
                 NgbActiveModal, 
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                                        new UserMessageService(), edstatsvc, dapsvc, null)
+                                        edstatsvc, dapsvc, null, null)
                                     }
             ]
         })

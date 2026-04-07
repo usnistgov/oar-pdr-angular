@@ -40,7 +40,7 @@ describe('VisithomeMidasComponent', () => {
             { provide: DAPService, useFactory: createDAPService, 
                 deps: [ env, HttpClient, AppConfig ] },
             { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                new UserMessageService(), edstatsvc, dapsvc, null)
+                edstatsvc, dapsvc, null, null)
             },
             GoogleAnalyticsService,
         ]

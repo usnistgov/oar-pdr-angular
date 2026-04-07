@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { Reference } from '../reference';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { HttpClient } from "@angular/common/http";
@@ -12,8 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { AppConfig } from '../../../config/config';
 import { AuthenticationService } from 'oarng';
-import { iconClass } from '../../../shared/globals/globals';
-import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg-bar.component';
+import { iconClass, Message, GlobalService } from '../../../shared/globals/globals';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -25,8 +24,7 @@ import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg
         TooltipModule,
         TextEditComponent,
         NgbModule,
-        RefAuthorComponent,
-        SingleMsgBarComponent
+        RefAuthorComponent
     ],
     templateUrl: './ref-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ref-edit.component.css'],
@@ -64,8 +62,9 @@ export class RefEditComponent implements OnInit {
     doiEndpoint: string = "";
     doiLoaded: boolean = false;
     authToken: string = "";
-    errMessage: string
 
+    globalsvc = inject(GlobalService);
+    
     @Input() currentRef: Reference = {} as Reference;
     @Input() editMode: string = "edit";
     @Input() forceReset: boolean = false;
@@ -176,7 +175,7 @@ export class RefEditComponent implements OnInit {
         this.httpClient.get(url, {headers: hdrs}).subscribe(
             data => {
                 if (data["pdr:comment"] && data["pdr:comment"] == "DOI does not exist yet") {
-                    this.errMessage = "DOI not found: " + this.ref.doi;
+                    this.globalsvc.error("DOI not found: " + this.ref.doi, this.fieldName);
                     
                     // Show "Reference data interface" 
                     this.citationLocked = false;
@@ -195,29 +194,29 @@ export class RefEditComponent implements OnInit {
             err => { 
                 let msg = err.message || err.statusText;
                 if (err.status) {
-                    if (err.status == 404) 
-                        this.errMessage = "DOI not found: " + this.ref.doi;
-                    if (err.status == 401) 
-                        this.errMessage = "Unauthorized access. Please login again.";
-                    if (err.status > 500) 
-                        this.errMessage = "Server error occurred when retrieving DOI data: " + this.ref.doi;
-                    else 
-                        this.errMessage = "Unexpected resolver response: " + err.message +" (" +
-                                                  err.status + ")";
+                    if (err.status == 404) {
+                        this.globalsvc.error("DOI not found: " + this.ref.doi, this.fieldName);
+                    }
+                    if (err.status == 401) {
+                        this.globalsvc.error("Unauthorized access. Please login again.", this.fieldName);
+                    }
+                    if (err.status > 500) {
+                        this.globalsvc.error("Server error occurred when retrieving DOI data: " + this.ref.doi, this.fieldName);
+                    } else {
+                        this.globalsvc.error("Unexpected resolver response: " + err.message + " (" +
+                            err.status + ")", this.fieldName);
+                    }
                 }
-                else if (err.status == 0) 
-                    this.errMessage = "Unexpected communication error: " + err.message + ".";
-                else
-                    this.errMessage = "Unexected error during retrieval from URL (" + 
-                        url + "): " + err.toString();
-                
+                else if (err.status == 0) {
+                    this.globalsvc.error("Unexpected communication error: " + err.message + ".", this.fieldName);
+                } else {
+                    this.globalsvc.error("Unexected error during retrieval from URL (" +
+                        url + "): " + err.toString(), this.fieldName);
+                }
+
                 console.warn(err.message + " DOI:" + this.ref.doi);
             }
         );
-    }
-
-    clearMessage() {
-        this.errMessage = "";
     }
 
     /**

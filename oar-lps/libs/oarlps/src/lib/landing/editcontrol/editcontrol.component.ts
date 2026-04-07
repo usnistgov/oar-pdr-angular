@@ -1,6 +1,5 @@
 import { Component, OnInit, OnChanges, ViewChild, Input, HostListener, ChangeDetectorRef, inject, Inject } from '@angular/core';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { MessageBarComponent } from '../../frame/messagebar.component';
 import { EditStatusComponent } from './editstatus.component';
 import { MetadataUpdateService } from './metadataupdate.service';
@@ -33,6 +32,7 @@ import { AuthenticationService, Credentials } from 'oarng';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { NotificationService } from '../../shared/notification-service/notification.service';
   
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -126,7 +126,7 @@ export class EditControlComponent implements OnInit, OnChanges {
      *                           metadata).
      * @param confirmDialogSvc   a ConfirmationDialogService for displaying pop-up confirmation windows 
      *                           (provided by local injector)
-     * @param msgsvc             a UserMessageService used to receive messages for display in the error 
+     * @param globalService      a GlobalService used to receive messages for display in the error 
      *                           message bar
      */
     public constructor( private mdupdsvc: MetadataUpdateService,
@@ -139,13 +139,13 @@ export class EditControlComponent implements OnInit, OnChanges {
                         private modalService: NgbModal,
                         public globalService: GlobalService,
                         public collectionService: CollectionService,
-                        private msgsvc: UserMessageService) 
+                        private notificationService: NotificationService) 
     {
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
         });
 
-        this.globalService.watchMessage((message) => {
+        this.globalService.watchInfo((message) => {
             this.message = message;
             //Display message for 3 seconds
             setTimeout(() => {
@@ -605,7 +605,9 @@ export class EditControlComponent implements OnInit, OnChanges {
                 this.edstatsvc.setShowLPContent(true);
             },
             (err) => {
-                console.error("Failed to start editing "+this.resID+": "+err.message);
+                let msg = "Failed to start editing " + this.resID + ": " + err.message;
+                console.error(msg);
+                this.globalService.error(msg);
                 this.statusbar.showMessage("Failure loading for editing: "+err.message, true);
                 this.edstatsvc.setShowLPContent(true);
             }

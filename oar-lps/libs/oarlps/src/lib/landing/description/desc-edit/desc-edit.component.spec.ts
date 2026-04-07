@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { DescEditComponent } from './desc-edit.component';
-import { UserMessageService } from '../../../frame/usermessage.service';
 import { AppConfig } from '../../../config/config';
 import * as env from '../../../../environments/environment';
 import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
@@ -23,7 +22,6 @@ describe('DescEditComponent', () => {
         TestBed.configureTestingModule({
             imports: [DescEditComponent],
             providers: [ 
-                UserMessageService, 
                 HttpHandler,
                 DatePipe,
                 { provide: AppConfig, useValue: cfg },
@@ -31,7 +29,7 @@ describe('DescEditComponent', () => {
                 { provide: DAPService, useFactory: createDAPService, 
                     deps: [ env, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
+                    edstatsvc, dapsvc, null, null)
                 },
             ]
         }).compileComponents();

@@ -5,7 +5,16 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import {
+    SectionMode,
+    SectionHelp,
+    MODE,
+    Sections,
+    SectionPrefs,
+    GlobalService,
+    iconClass,
+    Message
+} from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     moveItemInArray,
@@ -57,9 +66,6 @@ export class RefListComponent implements OnInit {
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
     record: NerdmRes = {} as NerdmRes;
-
-    // For error message display
-    errMessage: string
 
     // For warning pop up
     modalRef: any;
@@ -288,9 +294,7 @@ export class RefListComponent implements OnInit {
                         this.chref.detectChanges();
                         resolve(true);
                     }else{
-                        let msg = "References update failed";
-                        console.error(msg);
-                        this.errMessage = msg;
+                        //Error was handled in metadata service.
                         resolve(false);
                     }
                 });
@@ -303,10 +307,8 @@ export class RefListComponent implements OnInit {
                             this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
                             this.chref.detectChanges();
                             resolve(true);
-                        }else{
-                            let msg = "References update failed";
-                            console.error(msg);
-                            this.errMessage = msg;
+                        } else {
+                            //Error was handled in metadata service.
                             resolve(false);
                         }
                     });
@@ -343,9 +345,7 @@ export class RefListComponent implements OnInit {
                         this.chref.detectChanges();
                         this.toastrService.success("Reference added successfully.");
                     }else{
-                        let msg = "Failed to add reference";
-                        console.error(msg);
-                        this.errMessage = msg;
+                        //Error was handled in metadata service.
                         return;
                     }
                 });
@@ -386,9 +386,7 @@ export class RefListComponent implements OnInit {
                     this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
                     this.setMode(MODE.LIST);
                 }else{
-                    let msg = "Failed to undo " + this.fieldName + " metadata"
-                    console.error(msg);
-                    this.errMessage = msg;
+                    //Error was handled in metadata service.
                     return;
                 }
             });
@@ -491,11 +489,8 @@ export class RefListComponent implements OnInit {
                         this.currentRefIndex = 0;
                         this.currentRef = this.record[this.fieldName][this.currentRefIndex];
                         this.forceReset = true; // Force reference editor to reset data
-                    } else {
-                        let msg = "Failed to restore reference";
-                        console.error(msg);
-                        this.errMessage = msg;
-                    }
+                    } 
+                    //Error was handled in metadata service.
                 })
 
                 break;
@@ -539,9 +534,7 @@ export class RefListComponent implements OnInit {
 
                         this.editmodeOutput.next(this.editMode); 
                     }else{
-                        let msg = "Update failed";
-                        console.error(msg);
-                        this.errMessage = msg;
+                        //error was handled in metadata service, stay on current reference and do not switch to the selected reference.
                     }
                 })
             }else{

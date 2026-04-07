@@ -1,10 +1,9 @@
 import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
-import { MODE, iconClass, SectionPrefs, Sections } from '../../../shared/globals/globals';
+import { MODE, iconClass, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { TreeNode } from 'primeng/api';
 import { TaxonomyListService } from '../../../shared/taxonomy-list';
-import { UserMessageService } from '../../../frame/usermessage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { CommonModule } from '@angular/common';
@@ -64,7 +63,7 @@ export class TopicEditComponent implements OnInit {
 
     constructor(public mdupdsvc: MetadataUpdateService,
                 private taxonomyListService: TaxonomyListService,
-                private msgsvc: UserMessageService) { }
+                public globalsvc: GlobalService ) { }
 
     ngOnInit(): void {
         //Clone this.nistTaxonomyTopics
@@ -83,8 +82,8 @@ export class TopicEditComponent implements OnInit {
     
         }, (err) => {
             console.error("Failed to load taxonomy terms from server: "+err.message);
-            this.msgsvc.warn("Failed to load taxonomy terms; you may have problems editing the "+
-                            "topics assigned to this record.");
+            this.globalsvc.warn("Failed to load taxonomy terms; you may have problems editing the "+
+                            "topics assigned to this record. " + err.message);
         });
     }
 

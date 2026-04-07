@@ -5,7 +5,7 @@ import { StepService } from './services/step.service';
 import { Subscription } from 'rxjs';
 import { WizardService } from './services/wizard.service';
 import { AppConfig } from 'oarlps';
-import { UserMessageService } from 'oarlps';
+import { GlobalService } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 import { CollectionDataModel } from './models/data.model';
 import questionhelp from '../../assets/site-constants/question-help.json';
@@ -63,7 +63,7 @@ export class StepWizardComponent implements OnInit {
     public helpContentAll:{} = questionhelp;
 
     constructor(private stepService: StepService,
-                private msgsvc: UserMessageService,
+                private globalsvc: GlobalService,
                 private cdr: ChangeDetectorRef,
                 private wizardService: WizardService,
                 private configSvc: AppConfig,
@@ -235,12 +235,12 @@ export class StepWizardComponent implements OnInit {
                 if (err.type == 'user')
                 {
                     console.error("Failed to retrieve draft metadata changes: user error:" + err.message);
-                    this.msgsvc.error(err.message);
+                    this.globalsvc.error(err.message);
                 }
                 else
                 {
                     console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
-                    this.msgsvc.syserror(err.message);
+                    this.globalsvc.syserror(err.message);
                 }
             }
         });

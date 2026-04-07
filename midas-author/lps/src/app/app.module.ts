@@ -12,8 +12,9 @@ import { environment } from '../environments/environment-impl';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
-import { OARLPSModule, ConfigModule, EditControlModule, UserMessageService, ConfirmationDialogService,
-         GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
+import { OARLPSModule, ConfigModule, EditControlModule, ConfirmationDialogService,
+    GoogleAnalyticsService, AppErrorHandler, LandingAboutComponent,
+    MetadataUpdateService
 } from 'oarlps';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -42,7 +43,7 @@ enableProdMode();
     ],
     imports: [
         OARLPSModule,
-        ErrorsModule,
+        // ErrorsModule,
         AppRoutingModule,
         LandingAboutComponent,
         ConfigModule,
@@ -66,7 +67,7 @@ enableProdMode();
         },
         GoogleAnalyticsService,
         DatePipe,
-        UserMessageService,
+        MetadataUpdateService,
         NgbActiveModal,
         ConfirmationDialogService
     ],

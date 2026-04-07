@@ -12,7 +12,7 @@ import { LandingPageComponent } from './landing/landingpage.component';
 import { LandingAboutModule, SharedModule, DatacartModule, DirectivesModule, 
          MetricsModule, OARLPSModule, NerdmModule, ConfigModule, 
          BrowserMetadataTransferModule} from 'oarlps';
-import { GoogleAnalyticsService, UserMessageService, ConfirmationDialogService } from 'oarlps';
+import { GoogleAnalyticsService, ConfirmationDialogService } from 'oarlps';
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
 import { HeaderPubComponent, FooterComponent } from 'oarng';
 
@@ -55,7 +55,6 @@ enableProdMode();
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         GoogleAnalyticsService,
-        UserMessageService,
         ConfirmationDialogService,
         DatePipe
     ],

@@ -1,6 +1,6 @@
 import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
-import { Themes } from '../../../shared/globals/globals';
+import { Message, Themes } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { ToastrService } from 'ngx-toastr';
@@ -64,7 +64,7 @@ export class AccesspageListComponent implements OnInit {
     editMode: string = MODE.NORMAL; 
     forceReset: boolean = false;
     globalsvc = inject(GlobalService);
-
+    
     //icon class names
     addIcon = iconClass.ADD;
 
@@ -81,7 +81,6 @@ export class AccesspageListComponent implements OnInit {
     @Input() fieldName: string;
     @Input() mdupdsvc : MetadataUpdateService;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
-    errMessage: string;
 
     constructor(
                 private toastrService: ToastrService,
@@ -218,8 +217,8 @@ export class AccesspageListComponent implements OnInit {
                         this.setCurrentPage(index);
                         this.setMode(MODE.LIST);
                     }else{
-                        let msg = "Update failed";
-                        console.error(msg);
+                        this.globalsvc.error("Update failed", this.fieldName);
+                        console.error("Update failed");
                     }
                 })
             }else{
@@ -257,7 +256,8 @@ export class AccesspageListComponent implements OnInit {
                         this.setMode(MODE.LIST);
                         this.forceReset = true; // Force accesspage editor to reset data
                     } else {
-                        let msg = "Failed to restore access pages"
+                        let msg = "Failed to restore access pages";
+                        this.globalsvc.error(msg, this.fieldName);
                         console.error(msg);
                     }
                 })
@@ -279,8 +279,9 @@ export class AccesspageListComponent implements OnInit {
         this.updateMatadata().then((success) => {
             if(success){
                 this.setMode(MODE.LIST);
-            }else{
-                console.error("Update failed.")
+            } else {
+                //Error was hanled by metadata update service, just set error message here for consistency and log the error.
+                console.error("Update failed.");
             }
         });
 
@@ -354,6 +355,8 @@ export class AccesspageListComponent implements OnInit {
      * Save current access page
      */
     saveCurApage(refreshHelp: boolean = true, editmode: string = MODE.LIST) {
+        this.lpService.setCurrentSection("");
+
         let postMessage = {};
         // this.record[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
         
@@ -421,6 +424,10 @@ export class AccesspageListComponent implements OnInit {
                     }else{
                         let msg = "Access page update failed.";
                         console.error(msg);
+
+                        //Scroll to top to make sure user can see the error message
+                        // this.globalsvc.scrollToTop();
+
                         resolve(false);
                     }
                 });

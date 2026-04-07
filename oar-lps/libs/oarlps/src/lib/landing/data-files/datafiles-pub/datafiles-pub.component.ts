@@ -12,7 +12,6 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
-import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TreeTableModule } from 'primeng/treetable';
@@ -198,7 +197,6 @@ export class DatafilesPubComponent {
     constructor(private cartService: CartService,
                 public breakpointObserver: BreakpointObserver,
                 public lpService: LandingpageService, 
-                private msgsvc: UserMessageService,
                 private chref: ChangeDetectorRef,
                 private modalService: NgbModal,
                 public edstatsvc: EditStatusService,
@@ -822,7 +820,7 @@ export class DatafilesPubComponent {
                   selected: boolean =false, dosave: boolean =true) : DataCartItem
     {
         if (cart && file.filepath && file.downloadURL) {
-            let added: DataCartItem = cart.addFile(this.ediid, file, selected, dosave, this.msgsvc);
+            let added: DataCartItem = cart.addFile(this.ediid, file, selected, dosave);
             added['resTitle'] = this.record['title'];
             return added;
         }

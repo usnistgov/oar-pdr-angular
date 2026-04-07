@@ -4,7 +4,16 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
+import {
+    SectionMode,
+    SectionHelp,
+    MODE,
+    SectionPrefs,
+    Sections,
+    GlobalService,
+    iconClass,
+    Message
+} from '../../../shared/globals/globals';
 import { Reference } from '../reference';
 import { RefListComponent } from '../ref-list/ref-list.component';
 import { CommonModule } from '@angular/common';
@@ -12,6 +21,7 @@ import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog
 import { RefPubComponent } from '../ref-pub/ref-pub.component';
 import { ButtonModule } from 'primeng/button';				
 import { TooltipModule } from 'primeng/tooltip';
+import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg-bar.component';
 
 @Component({
     selector: 'ref-midas',
@@ -22,7 +32,8 @@ import { TooltipModule } from 'primeng/tooltip';
         ButtonModule,
         TooltipModule,
         ConfirmationDialogComponent,
-        RefPubComponent
+        RefPubComponent,
+        SingleMsgBarComponent
     ],
     templateUrl: './ref-midas.component.html',
     styleUrls: ['../../landing.component.scss', './ref-midas.component.scss'],
@@ -349,4 +360,5 @@ export class RefMidasComponent {
             return 1;
         } 
     }           
+
 }

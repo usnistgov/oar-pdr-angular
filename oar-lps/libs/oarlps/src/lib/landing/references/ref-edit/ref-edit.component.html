@@ -1,11 +1,4 @@
 <div class="editable_container" style="width: 100%;" >
-    <div *ngIf="errMessage">
-        <lib-single-msg-bar 
-            [message]="errMessage"
-            (command_out)="clearMessage()"
-        >
-        </lib-single-msg-bar>
-    </div>
     <div class="editable_field" style="width: calc(100% - 100px);" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, ref.dataChanged, ref['@id'])">
         <div style="width: 100%; padding: 0px 20px 20px 20px;">
             <!-- Controls -->

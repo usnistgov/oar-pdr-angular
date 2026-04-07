@@ -1,18 +1,19 @@
 import { Component, SimpleChanges, Input, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
-import { Themes } from '../../../shared/globals/globals';
+import { Message, Themes } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { AccesspageListComponent } from '../accesspage-list/accesspage-list.component';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { AccesspagePubComponent } from '../accesspage-pub/accesspage-pub.component';
 import { TooltipModule } from 'primeng/tooltip';
+import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg-bar.component';
 
 @Component({
     selector: 'accesspage-midas',
@@ -24,7 +25,8 @@ import { TooltipModule } from 'primeng/tooltip';
         CollapseModule,
         AccesspageListComponent,
         AccesspagePubComponent,
-        TooltipModule
+        TooltipModule,
+        SingleMsgBarComponent
     ],
     templateUrl: './accesspage-midas.component.html',
     styleUrls: ['./accesspage-midas.component.scss', '../../landing.component.scss'],
@@ -54,9 +56,10 @@ export class AccesspageMidasComponent {
     orig_aPages: NerdmComp[] = null; // Keep a copy of original access pages for undo purpose
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
-    globalsvc = inject(GlobalService);
+    
     isPublicSite: boolean = false;
     childEditMode: string = MODE.NORMAL;
+    errMessage: string = '';
 
     //icon class names
     editIcon = iconClass.EDIT;
@@ -72,8 +75,14 @@ export class AccesspageMidasComponent {
     constructor(public mdupdsvc : MetadataUpdateService,
                 private notificationService: NotificationService,
                 public lpService: LandingpageService,
+                public globalsvc: GlobalService,
                 private chref: ChangeDetectorRef) { 
 
+        this.globalsvc.watchMessage1((errMessage: Message) => {
+            if(errMessage.section == this.fieldName) {
+                this.errMessage = errMessage.text;
+            }
+        })
     }
 
     ngOnInit(): void {
@@ -328,12 +337,21 @@ export class AccesspageMidasComponent {
                     this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
                 }else{
                     let msg = "Failed to undo " + this.fieldName + " metadata";
+                    // this.errMessage = msg;  
+                    //Error was hanled by metadata update service, so just log it here
                     console.error(msg);
+
+                    //Scroll to top to make sure user can see the error message
+                    this.lpService.setCurrentSection("");
+                    
                     return;
                 }
             });
         }
     }    
+    platformId(platformId: any) {
+        throw new Error('Method not implemented.');
+    }
 
     /**
      * Return the opacity of dragdrop icon to indicate enable/disable status

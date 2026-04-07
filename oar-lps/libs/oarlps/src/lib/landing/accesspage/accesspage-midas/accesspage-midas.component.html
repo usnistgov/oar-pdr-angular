@@ -1,3 +1,9 @@
+<!-- Display error message if any-->
+<!-- <div *ngIf="errMessage" style="margin-bottom: 10px;">
+    <lib-single-msg-bar [message]="errMessage" (command_out)="clearMessage()">
+    </lib-single-msg-bar>
+</div> -->
+
 <accesspage-pub [record]="record" [theme]="theme" [isPublicSite]="isPublicSite">
     <div class="message" style="margin-right: 10px;">
         @if(isEditMode) {

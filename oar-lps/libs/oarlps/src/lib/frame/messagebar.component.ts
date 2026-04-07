@@ -1,6 +1,6 @@
-import { Component, Optional, Input } from '@angular/core';
-import { UserMessageService, Message } from './usermessage.service';
+import { Component, Optional, Input, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { GlobalService, Message } from '../shared/globals/globals';
 
 /**
  * A Component that can receive and display messages.
@@ -22,14 +22,17 @@ export class MessageBarComponent {
 
     @Input() defSysErrorPrefix : string = "There was an internal hiccup.";
     // bgcolor : string = "#FCF9CD";
-    // public constructor(@Optional() private svc : UserMessageService) {
-    public constructor(svc : UserMessageService) {
+    public constructor(
+            svc: GlobalService,
+            private chref: ChangeDetectorRef) {
+        
         if (svc) {
-            svc.subscribe({
-                next: (msg) => {
-                    this.messages.push(msg)  // msg: an object with type, message
+            svc.watchMessage1((msg: Message) => {
+                if (msg.text) {   
+                    this.messages.push(msg);  // msg: an object with type, message
+                    // this.chref.detectChanges();
                 }
-            });
+            })
         }
     }
 

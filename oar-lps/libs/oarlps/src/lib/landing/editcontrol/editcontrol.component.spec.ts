@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { AuthService, MockAuthService } from './auth.service';
 import { EditControlComponent } from './editcontrol.component';
@@ -14,6 +13,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { AuthenticationService, MockAuthenticationService } from 'oarng';
+import { ToastrModule } from 'ngx-toastr';
 
 describe('EditControlComponent', () => {
     let component : EditControlComponent;
@@ -27,10 +27,9 @@ describe('EditControlComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ HttpClientTestingModule ],
+            imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
             declarations: [  ],
             providers: [
-                    UserMessageService, 
                     {provide: AuthenticationService, useValue: new MockAuthenticationService(null)},
                     HttpHandler,
                     DatePipe,
@@ -39,7 +38,7 @@ describe('EditControlComponent', () => {
                     { provide: DAPService, useFactory: createDAPService, 
                         deps: [ env, HttpClient, AppConfig ] },
                     { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                        new UserMessageService(), edstatsvc, dapsvc, null)
+                        edstatsvc, dapsvc, null, null)
                     }
             ]
         }).compileComponents();

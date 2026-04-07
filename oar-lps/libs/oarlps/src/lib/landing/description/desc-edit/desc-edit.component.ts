@@ -37,7 +37,6 @@ export class DescEditComponent {
     resource: string = "resource";
     placeholder: string = "Please add description here.";
     maxWidth: number = 1000;
-    globalsvc = inject(GlobalService);
     
     //icon class names
     editIcon = iconClass.EDIT;
@@ -52,6 +51,7 @@ export class DescEditComponent {
                 public edstatsvc: EditStatusService,      
                 private ngbModal: NgbModal,
                 private chref: ChangeDetectorRef,
+                public globalsvc: GlobalService,
                 public lpService: LandingpageService){
                     
                 this.globalsvc.watchLpsLeftWidth(width => {
