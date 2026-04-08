@@ -30,8 +30,8 @@ function dapSetupFactory(
         console.log("No router available to reroute on error. ("+e.message+")");
     }
     
-    if(document.location.href.includes('/int-error')) {
-        console.log("Already on internal error page, skipping DAP setup.");
+    if(document.location.href.includes('/int-error') || document.location.href.includes('not-found')) {
+        console.log("Already on error page, skipping DAP setup.");
         return () => Promise.resolve();
     }
 
