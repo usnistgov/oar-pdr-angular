@@ -12,6 +12,23 @@ import { EditStatusService } from '../landing/editcontrol/editstatus.service';
 import { RevisionDetailsComponent } from '../landing/revision-details/revision-details.component';
 import revisionhelp from '../../assets/site-constants/revision-help.json';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { icon, library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faPlus,
+    faTrashCan,
+    faRecycle,
+    faCircleQuestion,
+    faCaretDown,
+    faCaretRight,
+    faCircleXmark
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faPencil, faXmark, faSave, faUndo, faPlus, faTrashCan, faRecycle, faCircleQuestion, faCaretDown, faCaretRight);
 
 @Component({
     selector: 'app-sidebar',
@@ -19,7 +36,8 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     imports: [
         CommonModule,
         SuggestionsComponent,
-        RevisionDetailsComponent
+        RevisionDetailsComponent,
+        FontAwesomeModule
     ],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css', '../landing/landing.component.scss'],
@@ -112,14 +130,19 @@ export class SidebarComponent implements OnInit {
     isMouseOverNextSteps = false;
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
-    addIcon = iconClass.ADD;
-    delIcon = iconClass.DELETE;
-    resetIcon = iconClass.RESET;
+    editIcon: string = "";
+    closeIcon: string = "";
+    saveIcon: string = "";
+    cancelIcon: string = "";
+    undoIcon: string = "";
+    addIcon: string = "";
+    delIcon: string = "";
+    resetIcon: string = "";
+
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+    circleQuestionIcon = iconClass.CIRCLE_QUESTION;
+    circleXmarkIcon = iconClass.CIRCLE_XMARK;
 
     sanitizedHtml: SafeHtml;
 
@@ -139,23 +162,38 @@ export class SidebarComponent implements OnInit {
         public globalService: GlobalService,
         @Self() private element: ElementRef,
         private sanitizer: DomSanitizer,
+        public iconLibrary: FaIconLibrary,
         public sidebarService: SidebarService) { 
         
-            this.edstatsvc.watchEditType((editType) => {
-                this._editType = editType;
-                this.showGeneralHelp = this._editType != this.EDIT_TYPES.REVISE;
-                this.showNextSteps = this.showGeneralHelp;
-
-                //When general help expanded, it will only be controlled manually
-                if (this.showGeneralHelp) {
-                    this.ignoreRevisionType = true;                
-                }
-            })
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faPlus,
+            faTrashCan,
+            faRecycle,
+            faCircleQuestion,
+            faCaretDown,
+            faCaretRight,
+            faCircleXmark
+        );  
         
-            this.globalService.watchSubmissionData(
-                (data) => {
-                    this.submissionData = new SubmissionData(data);
-            })
+        this.edstatsvc.watchEditType((editType) => {
+            this._editType = editType;
+            this.showGeneralHelp = this._editType != this.EDIT_TYPES.REVISE;
+            this.showNextSteps = this.showGeneralHelp;
+
+            //When general help expanded, it will only be controlled manually
+            if (this.showGeneralHelp) {
+                this.ignoreRevisionType = true;                
+            }
+        })
+    
+        this.globalService.watchSubmissionData(
+            (data) => {
+                this.submissionData = new SubmissionData(data);
+        })
     }
 
     get maxHeight(): number {
@@ -163,6 +201,15 @@ export class SidebarComponent implements OnInit {
     }
     
     ngOnInit(): void {
+        this.editIcon = icon({ iconName: 'pencil', prefix: 'fas' }).html.join('');
+        this.saveIcon = icon({ iconName: 'save', prefix: 'fas' }).html.join('');
+        this.closeIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
+        this.cancelIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
+        this.undoIcon = icon({ iconName: 'undo', prefix: 'fas' }).html.join('');
+        this.addIcon = icon({ iconName: 'plus', prefix: 'fas' }).html.join('');
+        this.delIcon = icon({ iconName: 'trash-can', prefix: 'fas' }).html.join('');
+        this.resetIcon = icon({ iconName: 'recycle', prefix: 'fas' }).html.join('');
+
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
 
         //Will be removed later
@@ -181,6 +228,8 @@ export class SidebarComponent implements OnInit {
             this.suggestions = suggestions as ReviewResponse;
             this.chref.detectChanges();
         })
+
+
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -276,14 +325,29 @@ export class SidebarComponent implements OnInit {
             this.title = SectionPrefs.getDispName(sectionHelp.section);
 
         // Replace all icon names with real icon ones so innerHtml will display
-        this.helpContent = this.helpContent.replaceAll("editIcon", this.editIcon);
-        this.helpContent = this.helpContent.replaceAll("closeIcon", this.closeIcon);
-        this.helpContent = this.helpContent.replaceAll("saveIcon", this.saveIcon);
-        this.helpContent = this.helpContent.replaceAll("cancelIcon", this.cancelIcon);
-        this.helpContent = this.helpContent.replaceAll("undoIcon", this.undoIcon);
-        this.helpContent = this.helpContent.replaceAll("addIcon", this.addIcon);
-        this.helpContent = this.helpContent.replaceAll("delIcon", this.delIcon);
-        this.helpContent = this.helpContent.replaceAll("resetIcon", this.resetIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='editIcon'></i>", this.editIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-pencil'></i>", this.editIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='closeIcon'></i>", this.closeIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-times'></i>", this.closeIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='saveIcon'></i>", this.saveIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-check'></i>", this.saveIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='cancelIcon'></i>", this.cancelIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-times'></i>", this.cancelIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='undoIcon'></i>", this.undoIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-undo'></i>", this.undoIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='addIcon'></i>", this.addIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-plus'></i>", this.addIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='delIcon'></i>", this.delIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-trash-alt'></i>", this.delIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='resetIcon'></i>", this.resetIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-recycle'></i>", this.resetIcon);
 
         this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.helpContent);
         this.chref.detectChanges();

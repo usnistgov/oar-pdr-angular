@@ -27,31 +27,30 @@
     <!-- Edit button -->
     <button *ngIf="!isEditing" class="edit_button" type="button" (click)="startEditing()" 
         aria-label="edit button" ngbTooltip="Edit description">
-        <i [class]="editIcon" data-toggle="tooltip" title="Edit description"></i>
+        <fa-icon [icon]="faPencil" size="sm"  data-toggle="tooltip" title="Edit description"></fa-icon>
     </button>
 
     <!-- Hide button - hide edit block -->
     <button class="edit_button" *ngIf="isEditing && !dataChanged" type="button" 
         (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
-        <i [class]="closeIcon"></i>
+        <fa-icon [icon]="faXmark"></fa-icon>
     </button> 
 
     <!-- Save button -->
     <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing && dataChanged"
     aria-label="save button" ngbTooltip="Save changes">
-        <i class="icon_enabled" [class]="saveIcon" data-toggle="tooltip" title="Save description"></i>
+        <fa-icon [icon]="faSave" data-toggle="tooltip" title="Save description"></fa-icon>
     </button>
 
     <!-- Cancel editing button -->
     <button class="edit_button" type="button" *ngIf="isEditing && dataChanged"
     (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-        <i [class]="cancelIcon" data-toggle="tooltip" title="Cancel editing"></i>
+        <fa-icon [icon]="faXmark" data-toggle="tooltip" title="Cancel editing"></fa-icon>
     </button>
 
     <!-- Undo button: restore original value -->
     <button class="edit_button" type="button" *ngIf="!isEditing && updated"
         (click)="undoEditing()" aria-label="undo button" ngbTooltip="Restore original description">
-        <i [class]="undoIcon"
-            data-toggle="tooltip" title="Undo keyword changes"></i>
+        <fa-icon [icon]="faUndo" data-toggle="tooltip" title="Undo description changes"></fa-icon>
     </button>                
 </div>

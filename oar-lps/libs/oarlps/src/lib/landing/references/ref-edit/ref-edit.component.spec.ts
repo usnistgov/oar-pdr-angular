@@ -14,6 +14,8 @@ import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/da
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { AuthenticationService } from 'oarng';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 
 describe('SingleRefComponent', () => {
@@ -33,7 +35,8 @@ describe('SingleRefComponent', () => {
                 RefEditComponent,
                 HttpClientTestingModule, 
                 NoopAnimationsModule, 
-                ToastrModule.forRoot() ],
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule ],
             providers: [ 
                 UserMessageService, 
                 HttpHandler,
@@ -46,6 +49,12 @@ describe('SingleRefComponent', () => {
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
                     edstatsvc, dapsvc, null, null)
                 },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
+                }                
             ]
         })
         .compileComponents();

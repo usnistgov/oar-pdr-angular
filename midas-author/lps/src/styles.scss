@@ -43,6 +43,7 @@
     background-color: var(--button-color);
     border-color: var(--button-color);
     border-radius: 5px;
+    border-width: 0px;
     cursor: pointer;
     text-align: center;
     margin: auto;
@@ -235,6 +236,9 @@ a {
 .linked-text {
     cursor: pointer;
     color:var(--nist-blue-default);
+}
+
+.indented {
     margin-left: 1em;
 }
 
@@ -349,4 +353,14 @@ a:focus {
 .toast-message {
     font-size: 14px !important;
     /* Adjust the size as needed */
+}
+
+.amplifiable {
+    transition: transform 0.2s ease-in-out;
+}
+
+.amplified {
+    display: inline-block;
+    transform: scale(3);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }

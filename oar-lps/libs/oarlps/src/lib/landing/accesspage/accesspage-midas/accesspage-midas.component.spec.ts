@@ -14,6 +14,8 @@ import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/da
 import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('AccesspageMidasComponent', () => {
     let component: AccesspageMidasComponent;
@@ -32,7 +34,8 @@ describe('AccesspageMidasComponent', () => {
             imports: [
                 AccesspageMidasComponent, 
                 BrowserAnimationsModule,
-                ToastrModule.forRoot()],
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule],
             providers: [
                 GoogleAnalyticsService,
                 UserMessageService, 
@@ -44,7 +47,13 @@ describe('AccesspageMidasComponent', () => {
                     deps: [ environment, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
                     edstatsvc, dapsvc, null, null)
-                } 
+                },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
+                }                
             ]
         })
         .compileComponents();

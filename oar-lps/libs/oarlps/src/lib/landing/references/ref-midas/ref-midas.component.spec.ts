@@ -15,6 +15,8 @@ import { NerdmRes, NerdmComp } from '../../../nerdm/nerdm';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('RefMidasComponent', () => {
     let cfg: AppConfig = new AppConfig(null);
@@ -28,19 +30,25 @@ describe('RefMidasComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [ RefListComponent ],
+            imports: [ RefListComponent, FontAwesomeTestingModule ],
             providers: [ 
-                    UserMessageService, 
-                    HttpHandler,
-                    DatePipe,
-                    { provide: AppConfig, useValue: cfg },
-                    { provide: AuthService, useValue: authsvc },
-                    { provide: DAPService, useFactory: createDAPService, 
-                        deps: [ env, HttpClient, AppConfig ] },
-                    { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                        edstatsvc, dapsvc, null, null)
+                UserMessageService, 
+                HttpHandler,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+                { provide: DAPService, useFactory: createDAPService, 
+                    deps: [ env, HttpClient, AppConfig ] },
+                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
+                    edstatsvc, dapsvc, null, null)
+                },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
                     }
-                ]
+                }
+            ]
         })
         .compileComponents();
 

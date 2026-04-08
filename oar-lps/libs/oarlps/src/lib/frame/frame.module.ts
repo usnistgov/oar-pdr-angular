@@ -6,6 +6,8 @@ import { FootbarComponent } from "./footbar.component";
 import { MessageBarComponent } from "./messagebar.component";
 import { IEnvironment } from '../../environments/ienvironment';
 import { environment } from '../../environments/environment-impl';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+
 /**
  * A module that provides components that make up the "frame" of the landing 
  * page--namely, the header and the footer.
@@ -21,7 +23,8 @@ import { environment } from '../../environments/environment-impl';
     ],
     imports: [
         CommonModule,       // provides template directives
-        RouterModule        // allow use of [routerLink]
+        RouterModule,        // allow use of [routerLink]
+        FontAwesomeModule
     ],
     exports: [ HeadbarComponent, FootbarComponent, MessageBarComponent ]
 })

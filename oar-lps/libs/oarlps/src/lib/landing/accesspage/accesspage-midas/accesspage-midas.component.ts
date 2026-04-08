@@ -14,6 +14,13 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { AccesspagePubComponent } from '../accesspage-pub/accesspage-pub.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg-bar.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'accesspage-midas',
@@ -26,7 +33,8 @@ import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg
         AccesspageListComponent,
         AccesspagePubComponent,
         TooltipModule,
-        SingleMsgBarComponent
+        SingleMsgBarComponent,
+        FontAwesomeModule
     ],
     templateUrl: './accesspage-midas.component.html',
     styleUrls: ['./accesspage-midas.component.scss', '../../landing.component.scss'],
@@ -62,9 +70,14 @@ export class AccesspageMidasComponent {
     errMessage: string = '';
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // undoIcon = iconClass.UNDO;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
 
     @Input() record: NerdmRes = null;
     @Input() theme: string;
@@ -334,7 +347,7 @@ export class AccesspageMidasComponent {
                     // });
 
                     this.setMode(MODE.NORMAL);
-                    this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to access page.", "", 3000);
                 }else{
                     let msg = "Failed to undo " + this.fieldName + " metadata";
                     // this.errMessage = msg;  

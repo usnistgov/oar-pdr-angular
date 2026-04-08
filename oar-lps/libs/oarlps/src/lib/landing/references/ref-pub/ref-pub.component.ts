@@ -2,12 +2,15 @@ import { Component, Input, SimpleChanges, ChangeDetectorRef } from '@angular/cor
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { Reference } from '../reference';
 import { CommonModule } from '@angular/common';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../../shared/globals/globals';
 
 @Component({
   selector: 'ref-pub',
   standalone: true,
   imports: [
-    CommonModule
+    CommonModule, FontAwesomeModule
   ],
   templateUrl: './ref-pub.component.html',
   styleUrls: ['../../landing.component.scss', './ref-pub.component.scss']
@@ -18,11 +21,20 @@ export class RefPubComponent {
     currentRef: Reference = {} as Reference;
     currentRefIndex: number = 0;
 
+    //Icon name
+    // arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;  
+
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
 
-    constructor(      
+    constructor(    
+        public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef) { 
+        
+        // iconLibrary.addIcons(
+        //     faArrowUpRightFromSquare
+        // );
     }
 
     ngOnInit(): void {

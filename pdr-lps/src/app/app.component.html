@@ -2,15 +2,17 @@
         [appVersion]="appVersion"
         titleLn1="PUBLIC"
         titleLn2="DATA REPOSITORY"
-        [homeButtonLink]=""
-    >
+        [homeButtonLink]="homeButtonLink">
     <div class="custom-navbar">
         <a href="/pdr/about" target="_blank"><b style="color: white !important;">About</b></a> |
         <a href="{{contactLink}}" target="_blank" style="color: white !important;"><b>Help</b></a> |
         <a href="{{searchLink}}" target="_blank" style="color: white !important;"><b>Search</b></a> |
-        <a href="/datacart/global_datacart" target="_blank" style="color: white !important;"><b>Cart</b><i
-            class="faa faa-shopping-cart faa-1x"></i><span
-            class="w3-badge badge-notify">{{cartLength}}</span></a>
+        <a href="/datacart/global_datacart" 
+            target="_blank" 
+            style="color: white !important;">
+            <span style="margin-right: 5px;"><b>Cart</b></span>
+            <fa-icon [icon]="faCartShopping"></fa-icon>
+            <span class="w3-badge badge-notify">{{cartLength}}</span></a>
     </div>
 </app-header-pub>
 

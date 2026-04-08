@@ -1,11 +1,10 @@
-
 <!-- Go To menu-->
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of gotoMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
             [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
-            <i [class]="menuitem.icon"></i>
+            <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" size="xs"></fa-icon>
             {{menuitem.title}}
         </td>
     </tr>
@@ -25,7 +24,7 @@
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
             [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
-            <i [class]="menuitem.icon"></i>
+            <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" size="xs"></fa-icon>
             {{menuitem.title}}
         </td>
     </tr>
@@ -33,7 +32,7 @@
         <td class="menu-item menu-body" scope="row" 
             [ngStyle]="menuStyle(false)">
             <a href="{{bulkDownloadURL}}" target="_blank">
-                <i class="faa faa-download"></i>
+                <fa-icon [icon]="['fas', downloadIcon]" size="xs"></fa-icon>
                 Bulk Download
             </a>
         </td>
@@ -46,7 +45,7 @@
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
             [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
-            <i [class]="menuitem.icon"></i>
+            <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" size="xs"></fa-icon>
             {{menuitem.title}}
         </td>
     </tr>

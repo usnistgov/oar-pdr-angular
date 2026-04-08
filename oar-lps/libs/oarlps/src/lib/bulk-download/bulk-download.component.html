@@ -4,7 +4,9 @@
         <div class="bodyTextSize">
             <p>
                 The NIST Public Data Repository allows users to download a single data file from a dataset by clicking 
-                on the download icon (<span class="faa faa-download" style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"></span>) to the right of file's name in the file listing; 
+                on the download icon (
+                <fa-icon [icon]="faDownload" style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"></fa-icon>
+                ) to the right of file's name in the file listing; 
                 however, more often you will want to download many files from the dataset.  
             </p>
             <p>
@@ -12,11 +14,11 @@
             </p>
 
             <ul>
-            <li> <span class="linked-text" (click)="goToSection('downloadAll')">Downloading all files with the Data Cart (for fewer than 300 files)</span> </li>
-            <li> <span class="linked-text" (click)="goToSection('addToCart')">Downloading a subset of files with the Data Cart </span></li>
-            <li> <span class="linked-text" (click)="goToSection('rclone')">Download data using the rclone tool <sup style="color: red;">*</sup> </span></li>
-            <li> <span class="linked-text" (click)="goToSection('pyscript')">Download data using the Python script, pdrdownload.py <sup style="color: red;">*</sup> </span></li>
-            <li> <span class="linked-text" (click)="goToSection('downloadAPI')">Programmatic access to NIST data products </span></li>
+            <li> <span class="linked-text indented" (click)="goToSection('downloadAll')">Downloading all files with the Data Cart (for fewer than 300 files)</span> </li>
+            <li> <span class="linked-text indented" (click)="goToSection('addToCart')">Downloading a subset of files with the Data Cart </span></li>
+            <li> <span class="linked-text indented" (click)="goToSection('rclone')">Download data using the rclone tool <sup style="color: red;">*</sup> </span></li>
+            <li> <span class="linked-text indented" (click)="goToSection('pyscript')">Download data using the Python script, pdrdownload.py <sup style="color: red;">*</sup> </span></li>
+            <li> <span class="linked-text indented" (click)="goToSection('downloadAPI')">Programmatic access to NIST data products </span></li>
             </ul>
 
             <p>
@@ -35,8 +37,18 @@
                 For smaller datasets, all the files can be easily downloaded through the browser using the PDR Data
                 Cart. On the dataset's home page, just click on the "Download-All" icon
                 ( 
-                <span style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"> <i class="faa faa-download" aria-hidden="true"></i>
+                <!-- <span style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"> 
+                    <i class="faa faa-download" aria-hidden="true"></i>
                     <i class="faa faa-circle-thin" aria-hidden="true" style="scale: 1.7;margin-left: -17px;"></i>
+                </span> -->
+                <!-- Download icon -->
+                <span class="fa-stack" size="2x" style="margin: -5px -22px 0 10px">
+                    <fa-icon [icon]="faCircle" class="fa-stack-2x"
+                        style="scale: 1.5;right: 23px;top: 8px;">
+                    </fa-icon>
+                    <fa-icon [icon]="faDownload"
+                        class="fa-stack-1x small" style="top: 6px;">
+                    </fa-icon>
                 </span>
                 ) above and to the left of the file listing.
                 This will open a Data Cart (in a separate tab) with all of files from the dataset in it.  You
@@ -55,9 +67,21 @@
                 (<span class="faa faa-cart-plus green-cart" style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"></span>) on the right side of
                 the file listing.  Alternatively, add all the files from a dataset to your cart by clicking the
                 "Add-all-to-Cart" icon
-                (<span style="color: '#1E6BA1';padding-left: 5px;padding-right: 8px;"> <i class="faa faa-cart-plus" aria-hidden="true"></i>
-                <i class="faa faa-circle-thin" aria-hidden="true" style="scale: 1.7;margin-left: -17px;"></i>
-                </span>) above and to the left of the file listing.  
+                <!-- (<span style="color: '#1E6BA1';padding-left: 5px;padding-right: 8px;"> 
+                    <i class="faa faa-cart-plus" aria-hidden="true"></i>
+                    <i class="faa faa-circle-thin" aria-hidden="true" style="scale: 1.7;margin-left: -17px;"></i>
+                </span>)  -->
+                <!-- Add to cart icon -->
+                (<span class="fa-stack" size="2x" style="margin: -4px -1em 0px 15px" aria-label="Add all to cart"
+                    ngbTooltip="Add all to cart">
+                    <fa-icon [icon]="faCircle" class="fa-stack-2x"
+                        style="scale: 1.5;right: 20px;top: 8px;">
+                    </fa-icon>
+                    <fa-icon [icon]="faCartPlus"
+                        class="fa-stack-1x small" style="top: 8px; left: -2px;">
+                    </fa-icon>
+                </span>)
+                above and to the left of the file listing.  
             </p>
             <p>
                 After adding the files of interest, you can open up your view of the Cart by clicking either the
@@ -74,14 +98,22 @@
             <p class="smlabelStyle">Downloading large datasets using the rclone tool</p>
             <p style="margin-left: 2em;">
 
-            <a href="https://rclone.org/install/"
-                target="_blank"
-                rel="noopener"
-                pButton
-                label="Download rclone"
-                class="anchor-button p-button">
-                <i class="faa faa-download download-icon" aria-hidden="true"></i>
-                Install rclone
+            <a href="https://rclone.org/install/">
+                <button
+                    type="button" 
+                    class="oar-button"
+                    [ngStyle]="btnStyle()"
+                    target="_blank"
+                    rel="noopener">
+                    <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
+
+                    <fa-icon 
+                        [icon]="faDownload" 
+                        size="sm" 
+                        class="download-icon">
+                    </fa-icon>
+                    Install rclone
+                </button>
             </a>
 
             <p>
@@ -113,7 +145,13 @@
                     (click)="copyToClipboard(rcloneCommand, 'rclone')" 
                     data-toggle="tooltip" 
                     title="Copy to clipboard">
-                    <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i>
+                    <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
+
+                    <fa-icon 
+                        [icon]="faCopy" 
+                        size="sm" 
+                        class="clone-icon">
+                    </fa-icon>
                 </span>
                 <span 
                     [@enterAnimation]
@@ -133,14 +171,22 @@
             <p class="smlabelStyle">Downloading large datasets using the Python script, pdrdownload.py</p>
             <p style="margin-left: 2em;">
 
-            <a href="{{pdrbase}}od/tools/pdrdownload.py"
-                target="_blank"
-                rel="noopener"
-                pButton
-                label="Download pdrdownload.py"
-                class="anchor-button p-button">
-                <i class="faa faa-download download-icon" aria-hidden="true"></i>
-                Download pdrdownload.py
+            <a href="{{pdrbase}}od/tools/pdrdownload.py">
+                <button
+                    type="button" 
+                    class="oar-button"
+                    [ngStyle]="btnStyle()"
+                    target="_blank"
+                    rel="noopener">
+                    <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
+
+                    <fa-icon 
+                        [icon]="faDownload" 
+                        size="sm" 
+                        class="download-icon">
+                    </fa-icon>
+                    Download pdrdownload.py
+                </button>
             </a>
 
             <code style="padding-left: 1em;">This script requires Python 3.8 or higher</code>
@@ -174,7 +220,13 @@
                     (click)="copyToClipboard(previewCommand, 'preview')" 
                     data-toggle="tooltip" 
                     title="Copy to clipboard">
-                    <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i>
+                    <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
+
+                    <fa-icon 
+                        [icon]="faCopy" 
+                        size="sm" 
+                        class="clone-icon">
+                    </fa-icon>
                 </span>
                 <span 
                     [@enterAnimation]
@@ -206,7 +258,13 @@
                     (click)="copyToClipboard(startDownloadCommand, 'startDownload')" 
                     data-toggle="tooltip" 
                     title="Copy to clipboard">
-                    <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i>
+                    <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
+
+                    <fa-icon 
+                        [icon]="faCopy" 
+                        size="sm" 
+                        class="clone-icon">
+                    </fa-icon>
                 </span>
                 <span 
                     [@enterAnimation]
@@ -234,7 +292,13 @@
                     (click)="copyToClipboard(helpCommand, 'help')" 
                     data-toggle="tooltip" 
                     title="Copy to clipboard">
-                    <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i>
+                    <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
+
+                    <fa-icon 
+                        [icon]="faCopy" 
+                        size="sm" 
+                        class="clone-icon">
+                    </fa-icon>
                 </span>
                 <span 
                     [@enterAnimation]

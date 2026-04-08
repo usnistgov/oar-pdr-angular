@@ -1,6 +1,23 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { StepModel } from '../models/step.model';
+import { icon, library } from '@fortawesome/fontawesome-svg-core';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faPlus,
+    faTrashCan,
+    faRecycle,
+    faCircleQuestion,
+    faCaretDown,
+    faCaretRight,
+    faCircleXmark
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faPencil, faXmark, faSave, faUndo, faPlus, faTrashCan, faRecycle, faCircleQuestion, faCaretDown, faCaretRight);
+
 
 // When adding new steps, append it to the end. Do not change the existing step data
 // If you need to change the order of the steps, change STEP_ORDER.
@@ -26,7 +43,17 @@ export class StepService {
     currentStep$: BehaviorSubject<StepModel> = new BehaviorSubject<StepModel>(STEPS[1]);
     stepOrder$: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(STEP_ORDER);
 
-    constructor() { 
+    //icon class names
+    editIcon: string = "";
+    closeIcon: string = "";
+    saveIcon: string = "";
+    cancelIcon: string = "";
+    undoIcon: string = "";
+    addIcon: string = "";
+    delIcon: string = "";
+    resetIcon: string = "";
+
+    constructor() {
         this.currentStep$.next(this.steps$.value[0]);
     }
 
@@ -71,7 +98,7 @@ export class StepService {
      * Set the steps. Then update all the status.
      * @param steps 
      */
-    setSteps(steps:StepModel[]): void {
+    setSteps(steps: StepModel[]): void {
         this.steps$.next(steps);
 
         this.getLastStep().canGoNext = this.allDone();
@@ -86,13 +113,13 @@ export class StepService {
         let stepOrderIndex = STEP_ORDER.indexOf(index) - 1;
 
         //Get next index from stepOrder array
-        while(stepOrderIndex >= 0) {
+        while (stepOrderIndex >= 0) {
             prevStep = this.steps$.value.find(i => i.stepIndex == STEP_ORDER[stepOrderIndex]);
 
-            if(prevStep.active){
+            if (prevStep.active) {
                 this.currentStep$.next(prevStep);
                 break;
-            }else{
+            } else {
                 stepOrderIndex--;
             }
         }
@@ -107,19 +134,19 @@ export class StepService {
         let stepOrderIndex = STEP_ORDER.indexOf(index) + 1;
 
         //Get next index from stepOrder array
-        while(stepOrderIndex < STEP_ORDER.length) {
+        while (stepOrderIndex < STEP_ORDER.length) {
             nextStep = this.steps$.value.find(i => i.stepIndex == STEP_ORDER[stepOrderIndex]);
-            if(nextStep.active){
+            if (nextStep.active) {
                 this.currentStep$.next(nextStep);
                 break;
-            }else{
+            } else {
                 stepOrderIndex++;
             }
         }
     }
 
     isLastStep(): boolean {
-        return this.currentStep$.value.stepIndex === STEP_ORDER[STEP_ORDER.length-1];
+        return this.currentStep$.value.stepIndex === STEP_ORDER[STEP_ORDER.length - 1];
     }
 
     isFirstStep(): boolean {
@@ -130,16 +157,16 @@ export class StepService {
      * Determine if all steps are completed
      * @returns completion status
      */
-    allDone():boolean {
+    allDone(): boolean {
         let allDone = true;
 
-        for(let i=0; i<this.steps$.value.length; i++) {
-            if(this.steps$.value[i] == undefined) {
+        for (let i = 0; i < this.steps$.value.length; i++) {
+            if (this.steps$.value[i] == undefined) {
                 allDone = false;
                 break;
-            }else if(this.steps$.value[i].active) {
+            } else if (this.steps$.value[i].active) {
                 allDone = allDone && this.steps$.value[i].isComplete;
-                if(!allDone) break;
+                if (!allDone) break;
             }
         }
 
@@ -149,10 +176,36 @@ export class StepService {
     toggleCollection(active: boolean) {
         let collectionStep = this.steps$.value.find(i => i.title == "Collection");
 
-        if(collectionStep) {
+        if (collectionStep) {
             collectionStep.active = active;
         }
 
         this.getLastStep().canGoNext = this.allDone();
+    }
+
+    iconHandler(helpContent: string): string {
+        if (!helpContent) return helpContent;
+        
+        this.editIcon = icon({ iconName: 'pencil', prefix: 'fas' }).html.join('');
+        this.saveIcon = icon({ iconName: 'save', prefix: 'fas' }).html.join('');
+        this.closeIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
+        this.cancelIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
+        this.undoIcon = icon({ iconName: 'undo', prefix: 'fas' }).html.join('');
+        this.addIcon = icon({ iconName: 'plus', prefix: 'fas' }).html.join('');
+        this.delIcon = icon({ iconName: 'trash-can', prefix: 'fas' }).html.join('');
+        this.resetIcon = icon({ iconName: 'recycle', prefix: 'fas' }).html.join('');
+
+
+       // Replace all icon names with real icon ones so innerHtml will display
+        helpContent = helpContent.replaceAll("<i class='editIcon'></i>", this.editIcon);
+        helpContent = helpContent.replaceAll("<i class='fas fa-pencil'></i>", this.editIcon);
+
+        helpContent = helpContent.replaceAll("<i class='closeIcon'></i>", this.closeIcon);
+        helpContent = helpContent.replaceAll("<i class='fas fa-times'></i>", this.closeIcon);
+
+        helpContent = helpContent.replaceAll("<i class='saveIcon'></i>", this.saveIcon);
+        helpContent = helpContent.replaceAll("<i class='fas fa-check'></i>", this.saveIcon);
+
+        return helpContent;
     }
 }

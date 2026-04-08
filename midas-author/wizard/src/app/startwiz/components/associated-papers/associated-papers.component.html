@@ -15,7 +15,7 @@
                             value="stand-alone"
                             [(ngModel)]="dataModel.assocPageType"
                             (change)="onAssocPaperTypeChange()">
-                        No, this will be a stand-alone publication
+                        No, <i>this will be a stand-alone publication</i>
                     </label>
                 </div>
                 <div class="radio">
@@ -27,7 +27,7 @@
                             value="supplement"
                             [(ngModel)]="dataModel.assocPageType"
                             (change)="onAssocPaperTypeChange()">
-                        Yes, this {{dataModel.resourceType}} publication corresponds directly with the article.
+                        Yes, <i>the article will directly describe the {{dataModel.resourceType}} in this publication.</i>
                     </label>
                 </div>
                 <div class="radio">
@@ -38,7 +38,7 @@
                             value="loosely-related"
                             [(ngModel)]="dataModel.assocPageType"
                             (change)="onAssocPaperTypeChange()">
-                        Yes, but the article is only loosely related this publication.
+                        Yes, <i>but the article is only loosely related this publication.</i>
                     </label>
                 </div>
             </div>

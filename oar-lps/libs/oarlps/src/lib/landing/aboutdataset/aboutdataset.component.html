@@ -30,8 +30,24 @@
 <!-- Citation info -->
 <div style="margin: 1em 0em;" id="cite">
     <div><b style="margin-right: 10px;">Cite this {{resourceType.toLowerCase()}}</b>
-        <span id="copy-to-clipboard" (click)="copyToClipboard(citetext)" data-toggle="tooltip" title="Copy to clipboard"><i class="faa faa-clone"></i></span><span [@enterAnimation] *ngIf="citeCopied" class="badge"
-        style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">Citation copied to clipboard</span>
+        <span 
+            id="copy-to-clipboard" 
+            (click)="copyToClipboard(citetext)" 
+            data-toggle="tooltip" 
+            title="Copy to clipboard">
+            
+            <!-- <i class="faa faa-clone"></i> -->
+            <fa-icon [icon]="faCopy" size="sm"></fa-icon>
+        </span>
+        
+        <span 
+            [@enterAnimation] 
+            *ngIf="citeCopied" 
+            class="badge"
+            style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+            
+            Citation copied to clipboard
+        </span>
     </div>
     <span [ngClass]="{'highlight': citeCopied}" [@enterAnimation]>
         {{citetext}}
@@ -42,7 +58,19 @@
 <div style="margin: 0em 0em .5em 0em;" id="metadata">
     <div><b>Repository Metadata</b></div>
     Machine-readable descriptions of this {{resourceType.toLowerCase()}} are available in the following formats:
-    <div (click)="toggleJsonViewer()" class="linked-text"><i class="faa faa-caret-right" *ngIf="!showJsonViewer"></i><i class="faa faa-caret-down" *ngIf="showJsonViewer"></i> NERDm</div>
+    <div 
+        (click)="toggleJsonViewer()" 
+        class="linked-text indented">
+        <fa-icon 
+            *ngIf="caretRightIcon && caretDownIcon" 
+            [icon]="['fas', showJsonClass()]" 
+            size="sm" 
+            data-toggle="tooltip" 
+            [title]="jsonViewerTooltip()"></fa-icon>
+        <!-- <i class="faa faa-caret-right" *ngIf="!showJsonViewer"></i>
+        <i class="faa faa-caret-down" *ngIf="showJsonViewer"></i>  -->
+        NERDm
+    </div>
 </div>
 <div *ngIf="showJsonViewer" style="margin: 0 0 .5em 1em;">
     <a href="{{nerdmDocUrl}}" target="_blank">
@@ -56,7 +84,21 @@
         <!-- JSON export button (right alignment) -->
         <div >
             <a [href]='getDownloadURL()'>
-                <span class="json-export-btn nist-blue-bc" (click)="onjson()"><i class="faa faa-file-code-o" style="margin-right: 10px;"></i>Export</span></a>
+                <span 
+                    class="json-export-btn nist-blue-bc" 
+                    (click)="onjson()">
+                    <fa-icon 
+                        [icon]="faFileCode" 
+                        size="sm" 
+                        data-toggle="tooltip" 
+                        title="Download Json file" 
+                        style="margin-right: 10px;">
+                    </fa-icon>
+                    <!-- <i class="faa faa-file-code-o" style="margin-right: 10px;"></i> -->
+                    
+                    Export
+                </span>
+            </a>
         </div>
 
         <!-- JSON tree navigate buttons (left alignment) -->
@@ -96,7 +138,16 @@
         Total number of bytes delivered from this dataset: {{totalDownloadSize}}<br>
 
         <div style="margin-left: 1em;color:#1471AE;">
-            <a href="{{metricsData.url}}" target="_blank"><i class="faa faa-bar-chart" style="margin-right: 5px;"></i>See more details...</a>
+            <a href="{{metricsData.url}}" target="_blank">
+                <!-- <i class="faa faa-bar-chart" style="margin-right: 5px;"></i> -->
+                <fa-icon 
+                    [icon]="faChartBar" 
+                    size="sm" 
+                    data-toggle="tooltip" 
+                    title="View metrics"></fa-icon>
+
+                See more details...
+            </a>
         </div>
     </div>
     <ng-template #noMetrics>

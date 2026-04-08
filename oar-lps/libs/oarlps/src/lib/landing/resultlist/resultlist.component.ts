@@ -4,8 +4,10 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { Collections, ColorScheme, GlobalService } from '../../shared/globals/globals';
+import { Collections, ColorScheme, GlobalService, iconClass } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-resultlist',
@@ -71,6 +73,13 @@ export class ResultlistComponent implements OnInit {
 
     globalsvc = inject(GlobalService);
 
+    //icon class names
+    // spinnerIcon = iconClass.SPINNER;
+    // searchIcon = iconClass.SEARCH;    
+
+    faMagnifyingGlass = faMagnifyingGlass;
+    faSpinner = faSpinner;
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
@@ -80,22 +89,26 @@ export class ResultlistComponent implements OnInit {
     @Input() collection: string = Collections.FORENSICS;
     @Input() taxonomyURI: any = {};
 
-    constructor(private searchService: SearchService, 
+    constructor(
+        private searchService: SearchService, 
         private cfg: AppConfig,
         public globalService: GlobalService,
+        public iconLibrary: FaIconLibrary,
         public gaService: GoogleAnalyticsService) { 
 
-            this.searchService.watchClearAll((clearAll: boolean) => {
-                if(clearAll) {
-                    this.searchPhases = "";
-                    this.filterResults();
-                }
-            });
-        
-            this.globalService.watchColorPalette((colorPalette) => {
-                this.colorScheme = colorPalette;
-            })
-        }
+        // iconLibrary.addIcons(faMagnifyingGlass, faSpinner);
+
+        this.searchService.watchClearAll((clearAll: boolean) => {
+            if(clearAll) {
+                this.searchPhases = "";
+                this.filterResults();
+            }
+        });
+    
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        })
+    }
 
     ngOnInit(): void {
         this.PDRAPIURL = this.cfg.get('links.pdrIDResolver', '/od/id/');

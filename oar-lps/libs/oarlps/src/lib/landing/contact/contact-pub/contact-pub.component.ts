@@ -5,8 +5,13 @@ import { Contact } from '../contact';
 import { LandingpageService } from '../../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
-import { Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
+import { Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faCaretDown,
+    faCaretRight
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'contact-pub',
@@ -14,7 +19,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     imports: [
         CommonModule, 
         CollapseModule, 
-        NgbModule 
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './contact-pub.component.html',
     styleUrls: ['./contact-pub.component.scss', '../../landing.component.scss']
@@ -25,16 +31,29 @@ export class ContactPubComponent {
     overflowStyle: string = 'hidden';
     isMouseOver: boolean = false;
     
+    //icon class names
+    // caretRightIcon = iconClass.CARET_RIGHT;
+    // caretDownIcon = iconClass.CARET_DOWN;
+
+    faCaretDown = faCaretDown;
+    faCaretRight = faCaretRight;
+
     @Input() record: any[];
     @Input() isPublicSite: boolean = true;
     
     constructor(
-                public globalsvc: GlobalService,
-                public lpService: LandingpageService, 
-                private chref: ChangeDetectorRef,
-                private notificationService: NotificationService,
-                private contactService : ContactService)
-    {    }
+        public globalsvc: GlobalService,
+        public lpService: LandingpageService, 
+        private chref: ChangeDetectorRef,
+        private notificationService: NotificationService,
+        public iconLibrary: FaIconLibrary,
+        private contactService: ContactService) {
+        
+        // iconLibrary.addIcons(
+        //     faCaretDown,
+        //     faCaretRight
+        // );  
+    }
 
     email(hasEmail)
     {

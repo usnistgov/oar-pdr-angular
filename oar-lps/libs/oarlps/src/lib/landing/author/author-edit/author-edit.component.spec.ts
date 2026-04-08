@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { AuthorEditComponent } from './author-edit.component';
 import { StaffDirectoryService, StaffDirModule, AuthenticationService } from 'oarng';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-// import { Configuration, CONFIG_URL } from '../config/config.model';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+
 
 describe('AuthorEditComponent', () => {
   let component: AuthorEditComponent;
@@ -14,7 +15,7 @@ describe('AuthorEditComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [AuthorEditComponent, HttpClientTestingModule, StaffDirModule],
+      imports: [AuthorEditComponent, HttpClientTestingModule, StaffDirModule, FontAwesomeTestingModule],
       providers: [ AuthenticationService ]
     }).compileComponents();
 

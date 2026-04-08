@@ -16,6 +16,7 @@ import { env } from '../../../../environments/environment';
 import { HttpClient, HttpHandler, HttpRequest } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('ContactMidasComponent', () => {
     let component: ContactMidasComponent;
@@ -36,6 +37,7 @@ describe('ContactMidasComponent', () => {
                 FormsModule, 
                 RouterTestingModule, 
                 ContactMidasComponent,
+                FontAwesomeTestingModule,
                 ToastrModule.forRoot()],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [

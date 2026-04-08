@@ -1,6 +1,9 @@
 import { Component, Optional, Input, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GlobalService, Message } from '../shared/globals/globals';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../shared/globals/globals';
 
 /**
  * A Component that can receive and display messages.
@@ -20,11 +23,16 @@ export class MessageBarComponent {
     private nextid = 0;
     messages : Message[] = [];
 
+    //icon class names
+    // cancleIcon = iconClass.CANCEL;
+    faXmark = faXmark;
+
     @Input() defSysErrorPrefix : string = "There was an internal hiccup.";
     // bgcolor : string = "#FCF9CD";
     public constructor(
-            svc: GlobalService,
-            private chref: ChangeDetectorRef) {
+        svc: GlobalService,
+        public iconLibrary: FaIconLibrary,
+        private chref: ChangeDetectorRef) {
         
         if (svc) {
             svc.watchMessage1((msg: Message) => {

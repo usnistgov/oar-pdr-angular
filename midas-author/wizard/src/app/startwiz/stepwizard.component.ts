@@ -9,6 +9,14 @@ import { GlobalService } from 'oarlps';
 import { AuthenticationService, Credentials, ConfigurationService } from 'oarng';
 import { CollectionDataModel } from './models/data.model';
 import questionhelp from '../../assets/site-constants/question-help.json';
+import {
+    faArrowLeft,
+    faArrowRight,
+    faSpinner,
+    faExclamationTriangle,
+    faCircleArrowUp,
+    faTimes
+} from '@fortawesome/free-solid-svg-icons';
 
 export class AuthStatus {
     static readonly AUTHORIZED = 'Authorized';
@@ -45,7 +53,7 @@ export class StepWizardComponent implements OnInit {
     onSoftware: boolean = false;
     bodyHeight: number = 550;
     private PDRAPI: string;
-    nextBtnIcon: string = "faa faa-long-arrow-right icon-white";
+    nextBtnIcon: string = "arrow-right";
     nextBtnText: string = "Next";
 
     authStatus: string = AuthStatus.AUTHORIZING;
@@ -59,6 +67,14 @@ export class StepWizardComponent implements OnInit {
     marginLeft = 120;
 
     collectionData: CollectionDataModel[] = [];
+
+    //Icons
+    faArrowLeft = faArrowLeft;
+    faArrowRight = faArrowRight;
+    faSpinner = faSpinner;
+    faExclamationTriangle = faExclamationTriangle;
+    circleArrowUpIcon = faCircleArrowUp.iconName;
+    faTimes = faTimes;
 
     public helpContentAll:{} = questionhelp;
 
@@ -163,7 +179,7 @@ export class StepWizardComponent implements OnInit {
             this.showButtonLabel();
         } else {
             this.onSubmit();
-            this.nextBtnIcon = "faa faa-spinner faa-spin icon-white";
+            this.nextBtnIcon = "spinner";
         }
     }
 
@@ -184,7 +200,7 @@ export class StepWizardComponent implements OnInit {
     }
 
     showButtonLabel() {
-        this.nextBtnIcon = "faa faa-long-arrow-right icon-white";
+        this.nextBtnIcon = "arrow-right";
 
         if(this.stepService.isLastStep()){
             this.nextBtnText = 'Finish';
@@ -219,7 +235,7 @@ export class StepWizardComponent implements OnInit {
             next: (obj) => {
                 id = obj['id'];
                 //Reset submit nutton icon
-                this.nextBtnIcon = "faa faa-long-arrow-right icon-white";
+                this.nextBtnIcon = "arrow-right";
 
                 // Submit the request, get the id from server response then launch the landing page
                 let url = this.PDRAPI + id + '?editEnabled=true';
@@ -229,7 +245,7 @@ export class StepWizardComponent implements OnInit {
             error: (err) => {
                 console.error("err", err);
                 this.hasError = true;
-                this.nextBtnIcon = "faa faa-exclamation-triangle icon-orange";
+                this.nextBtnIcon = "exclamation-triangle";
 
                 // err will be a subtype of CustomizationError
                 if (err.type == 'user')

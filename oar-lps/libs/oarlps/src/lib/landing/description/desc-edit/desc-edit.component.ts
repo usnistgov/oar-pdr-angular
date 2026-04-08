@@ -8,6 +8,14 @@ import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'desc-edit',
@@ -17,7 +25,8 @@ import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-
         FormsModule, 
         ToolbarModule,
         TextareaAutoresizeModule,
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './desc-edit.component.html',
     styleUrls: ['../../landing.component.scss', './desc-edit.component.css']
@@ -39,11 +48,16 @@ export class DescEditComponent {
     maxWidth: number = 1000;
     
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
 
     @ViewChild('desc') descElement: ElementRef;
     
@@ -52,31 +66,39 @@ export class DescEditComponent {
                 private ngbModal: NgbModal,
                 private chref: ChangeDetectorRef,
                 public globalsvc: GlobalService,
+                private notificationService: NotificationService,
                 public lpService: LandingpageService){
-                    
-                this.globalsvc.watchLpsLeftWidth(width => {
-                    this.onResize(width + 20);
-                })
+       
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );        
+        
+        this.globalsvc.watchLpsLeftWidth(width => {
+            this.onResize(width + 20);
+        })
 
-                effect(()=>{
-                    let sectionMode = this.globalsvc.sectionMode()
+        effect(()=>{
+            let sectionMode = this.globalsvc.sectionMode()
 
-                    if( sectionMode ) {
-                        if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                            if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-                                if(this.isEditing){
-                                    this.onSave(false); // Do not refresh help text 
-                                }else{
-                                    this.setMode(MODE.NORMAL, false);
-                                }
-                            }
-                        }else { // Request from side bar, if not edit mode, start editing
-                            if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
-                                this.startEditing();
-                            }
+            if( sectionMode ) {
+                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
+                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
+                        if(this.isEditing){
+                            this.onSave(false); // Do not refresh help text 
+                        }else{
+                            this.setMode(MODE.NORMAL, false);
                         }
                     }
-                })
+                }else { // Request from side bar, if not edit mode, start editing
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
+                        this.startEditing();
+                    }
+                }
+            }
+        })
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
@@ -211,6 +233,7 @@ export class DescEditComponent {
                 if (updateSuccess){
                     this.setBackground(this.description);
                     this.setMode(MODE.NORMAL, refreshHelp);
+                    this.notificationService.showSuccessWithTimeout("Description updated.", "", 3000);
                     this.isEditing = false;
                 }else{
                     let msg = "Description update failued";
@@ -281,6 +304,7 @@ export class DescEditComponent {
             if (success){
                 this.setMode(MODE.NORMAL);
                 this.setBackground(this.description);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to description.", "", 3000);
             }else{
                 let msg = "Failed to undo description metadata";
                 console.error(msg);

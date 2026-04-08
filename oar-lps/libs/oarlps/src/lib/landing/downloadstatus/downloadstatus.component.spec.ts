@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing'
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap' ; 
 import { DownloadstatusComponent } from './downloadstatus.component';
 import { DataCartStatus, DataCartStatusLookup, DataCartStatusItem, DataCartStatusData, stringifyCart, parseCartStatus } from '../../datacart/cartstatus';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 let fakecoll: DataCartStatusLookup = { "goob/gurn": { itemId: "gurn", displayName: "gurnDisplay", isInUse:true, downloadPercentage: 10 }};
 
@@ -14,7 +15,8 @@ describe('DownloadstatusComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ DownloadstatusComponent ],
       imports: [
-        NgbModule
+        NgbModule,
+        FontAwesomeTestingModule
       ]
     })
     .compileComponents();

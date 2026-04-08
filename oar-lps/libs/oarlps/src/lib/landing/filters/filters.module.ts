@@ -17,6 +17,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { TaxonomyModule } from '../taxonomy/taxonomy.module';
 import { ButtonModule } from 'primeng/button';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [FiltersComponent],
@@ -36,7 +37,8 @@ import { ButtonModule } from 'primeng/button';
     MultiSelectModule,
     FormsModule,
     TaxonomyModule,
-    ButtonModule
+    ButtonModule,
+    FontAwesomeModule
   ],
   exports: [
     FiltersComponent

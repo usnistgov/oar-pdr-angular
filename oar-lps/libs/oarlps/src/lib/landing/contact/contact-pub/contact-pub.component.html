@@ -11,14 +11,25 @@
                 <span *ngIf="!hasEmail" style="white-space: nowrap">{{currentContact.fn}}</span>
             </strong>.
 
-            <i class="fas expand-btn amplifiable"
-               [class.amplified]="isMouseOver"
-               (mouseover)="isMouseOver = true"
-               (mouseleave)="isMouseOver = false"
-               [ngClass]="{'fa-caret-right': !clickContact, 'fa-caret-down': clickContact}"
-               aria-hidden="true"
-               (click)="closeContent = !closeContent; clickContact=expandContact();">
-            </i>
+            <fa-icon 
+                *ngIf="!clickContact" 
+                [class.amplified]="isMouseOver"
+                [icon]="faCaretRight"
+                class="amplifiable"
+                (mouseover)="isMouseOver = true"
+                (mouseleave)="isMouseOver = false"
+                (click)="closeContent = !closeContent; clickContact=expandContact();">
+            </fa-icon>
+
+            <fa-icon 
+                *ngIf="clickContact" 
+                [class.amplified]="isMouseOver"
+                [icon]="faCaretDown" 
+                class="amplifiable"
+                (mouseover)="isMouseOver = true" 
+                (mouseleave)="isMouseOver = false"
+                (click)="closeContent = !closeContent; clickContact=expandContact();">
+            </fa-icon>
 
             <div [collapse]="!closeContent" class="card card-body bg-faded" style="width: fit-content;">
                 <span class="" *ngIf="currentContact.fn">

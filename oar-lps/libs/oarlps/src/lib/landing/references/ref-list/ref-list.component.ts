@@ -29,7 +29,8 @@ import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { ToastrService } from 'ngx-toastr';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-ref-list',
@@ -43,7 +44,8 @@ import { ToastrService } from 'ngx-toastr';
         TextEditComponent,
         RefEditComponent,
         ConfirmationDialogComponent,
-        DragDropModule
+        DragDropModule,
+        FontAwesomeModule
     ],
     templateUrl: './ref-list.component.html',
     styleUrls: ['../../landing.component.scss', '../references.component.css', './ref-list.component.css'],
@@ -83,6 +85,10 @@ export class RefListComponent implements OnInit {
         dropIndex: number;
     };
 
+    //icon class names
+    // addIcon = iconClass.ADD;    
+    faPlus = faPlus;
+    
     // passed in by the parent component:
     @Input() nerdmRecord: NerdmRes = null;
     @Input() inBrowser: boolean = false;
@@ -93,9 +99,10 @@ export class RefListComponent implements OnInit {
         private modalService: NgbModal,  
         private notificationService: NotificationService,
         private chref: ChangeDetectorRef,  
-        public lpService: LandingpageService,
-        private toastrService: ToastrService) { 
+        public iconLibrary: FaIconLibrary,
+        public lpService: LandingpageService) { 
 
+        // iconLibrary.addIcons( faPlus); 
     }
 
     ngOnInit(): void {
@@ -286,9 +293,9 @@ export class RefListComponent implements OnInit {
                     if (updateSuccess) {
                         if(this.isAdding){
                             ref["isNew"] = false;
-                            this.toastrService.success("Reference added successfully.");
+                            this.notificationService.showSuccessWithTimeout("Successfully added reference.", "", 3000);
                         } else {
-                            this.toastrService.success("Reference updated successfully.");  
+                            this.notificationService.showSuccessWithTimeout("Successfully updated reference.", "", 3000);
                         }
                         ref.dataChanged = false;
                         this.chref.detectChanges();
@@ -304,7 +311,7 @@ export class RefListComponent implements OnInit {
                     updmd[this.fieldName] = this.record[this.fieldName];
                     this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
                         if (updateSuccess){
-                            this.notificationService.showSuccessWithTimeout("References updated.", "", 3000);
+                            this.notificationService.showSuccessWithTimeout("Successfully updated reference.", "", 3000);
                             this.chref.detectChanges();
                             resolve(true);
                         } else {
@@ -343,7 +350,7 @@ export class RefListComponent implements OnInit {
                     if (rec){
                         this.currentRef.dataChanged = false;
                         this.chref.detectChanges();
-                        this.toastrService.success("Reference added successfully.");
+                        this.notificationService.showSuccessWithTimeout("Successfully added reference.", "", 3000);
                     }else{
                         //Error was handled in metadata service.
                         return;
@@ -383,7 +390,7 @@ export class RefListComponent implements OnInit {
                     }
             
                     this.orderChanged = false;
-                    this.notificationService.showSuccessWithTimeout("Reverted changes to " + this.fieldName + ".", "", 3000);
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to reference.", "", 3000);
                     this.setMode(MODE.LIST);
                 }else{
                     //Error was handled in metadata service.

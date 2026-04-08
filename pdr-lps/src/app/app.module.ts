@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, enableProdMode, ErrorHandler } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, enableProdMode, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule, DatePipe } from '@angular/common';
@@ -12,11 +12,18 @@ import { LandingPageComponent } from './landing/landingpage.component';
 import { LandingAboutModule, SharedModule, DatacartModule, DirectivesModule, 
          MetricsModule, OARLPSModule, NerdmModule, ConfigModule, 
          BrowserMetadataTransferModule} from 'oarlps';
-import { GoogleAnalyticsService, ConfirmationDialogService } from 'oarlps';
+import { GoogleAnalyticsService, CollectionService, ConfirmationDialogService } from 'oarlps';
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
 import { HeaderPubComponent, FooterComponent } from 'oarng';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 enableProdMode();
+
+// export function initializeApp(collectionService: CollectionService) {
+//   return async () => {
+//     await collectionService.loadLocalData()
+//   };
+// }
 
 /**
  * The Landing Page Service Application
@@ -48,15 +55,23 @@ enableProdMode();
         HeaderPubComponent,
         LandingPageComponent,
         FooterComponent,
-        BrowserMetadataTransferModule
+        BrowserMetadataTransferModule,
+        FontAwesomeModule
     ],
     exports: [],
     providers: [
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         GoogleAnalyticsService,
+        CollectionService,
         ConfirmationDialogService,
         DatePipe
+        // {
+        //     provide: APP_INITIALIZER,
+        //     useFactory: initializeApp,
+        //     deps: [CollectionService],
+        //     multi: true
+        // }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

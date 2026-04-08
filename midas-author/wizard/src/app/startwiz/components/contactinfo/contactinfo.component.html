@@ -4,15 +4,15 @@
             <p>Will you be the primary public contact for this record?</p>
             <div class="radio-group">
                 <div class="radio">
-                    <label title="Yes, I will be the primary public contact.">
+                    <label title="Yes">
                         <input type="radio" required name="creatorIsContact" [value]="true" (change)="toggleContactName($event)" [(ngModel)]="dataModel.creatorIsContact">
-                        Yes
+                        Yes, <i>use my name and email as the primary contact.</i>
                     </label>
                 </div>
                 <div class="radio">
-                    <label title="No, another NIST staff person will be the primary public contact.">
+                    <label title="No">
                         <input type="radio" required name="creatorIsContact" [value]="false" (change)="toggleContactName($event)" [(ngModel)]="dataModel.creatorIsContact">
-                        No
+                        No, <i>another NIST staff person or group email will serve as the primary contact point.</i>
                     </label>
                 </div>
             </div>
@@ -52,6 +52,6 @@
         </div>
 
         <span class="sidebar-title">{{helpText["label"]}}</span>
-        <div class="sidebar-content" [innerHTML]="helpText['general']"></div>
+        <div class="sidebar-content" [innerHTML]="sanitizedHtml"></div>
     </oar-pushing-sidebar>
 </div>

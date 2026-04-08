@@ -523,12 +523,20 @@ export interface RevisionDetails {
     majorChanges: boolean
 }
 
+export interface Reviewers {
+    nistId: string;
+    firstName: string;
+    lastName: string;
+    eMail: string;
+}
+
 export class SubmissionData {
     goSubmit: boolean;
     isRevision: boolean;
     revisionIDs: number[];
     submissionNotes: string;
     revisionPurpose: string;
+    reviewers: Reviewers[];
 
     constructor(data: SubmissionData = null) {
         if (!data) {
@@ -537,12 +545,14 @@ export class SubmissionData {
             this.revisionIDs = [];
             this.submissionNotes = "";
             this.revisionPurpose = "";
+            this.reviewers = [];
         } else {
             this.goSubmit = data.goSubmit;
             this.isRevision = data.isRevision;
             this.revisionIDs = data.revisionIDs;
             this.submissionNotes = data.submissionNotes;
             this.revisionPurpose = data.revisionPurpose;
+            this.reviewers = data.reviewers;
         }
     }
 
@@ -674,15 +684,21 @@ export class Collections {
 export class CollectionDisplay {
     static readonly DEFAULT = 'NIST';
     static readonly FORENSICS = 'Forensics';
-    static readonly SEMICONDUCTORS = 'CHIPS Metrology Data';
+    static readonly SEMICONDUCTORS = 'CHIPS METIS Data';
     static readonly AM = 'Additive Manufacturing';
 }
 
 export class Collection {
+    id: string;
+    tag: string;
     bannerUrl: string;
     taxonomyURI: string;
-    color: ColorScheme;
+    colorPalette: ColorScheme;
+    displayOrder: number;
+    displayName: string;
+    value: string;
     theme: CollectionThemes;
+    taxonomyFileName: string;
 }
 
 export interface ColorScheme {
@@ -702,6 +718,13 @@ export interface CollectionThemes {
     collectionThemesTree: FilterTreeNode[];
     collectionShowMoreLink: boolean;
     collectionSelectedThemesNode: any[];
+}
+
+export interface Topic {
+    id: number;
+    tag: string;
+    scheme: string;
+    '@type': string;
 }
 
 /**
@@ -940,13 +963,49 @@ export class FilterTreeNode implements TreeNode {
 
 //For display purpose
 export class iconClass {
-    static readonly EDIT = 'fas fa-pencil fa-sm';
-    static readonly CLOSE = 'fas fa-times';
-    static readonly SAVE = 'pi pi-save';
-    static readonly SUBMIT = 'pi pi-check-square';
-    static readonly CANCEL = 'fas fa-undo fa-sm';
-    static readonly UNDO = 'fas fa-undo fa-sm';
-    static readonly ADD = 'fas fa-plus faa-lg';
-    static readonly DELETE = 'fas fa-trash-alt';
-    static readonly RESET = 'faa faa-recycle';
+    static readonly EDIT = 'pencil';
+    static readonly CLOSE = 'xmark';
+    static readonly SAVE = 'save';
+    static readonly SUBMIT = 'square-check';
+    static readonly CANCEL = 'undo';
+    static readonly UNDO = 'undo';
+    static readonly ADD = 'plus';
+    static readonly DELETE = 'trash-can';
+    static readonly DELETE2 = 'trash';
+    static readonly RESET = 'recycle';
+    static readonly CLOSE_CIRCLE = 'circle-xmark'; 
+    static readonly ARROW_CIRCLE_RIGHT = "arrow-circle-right";
+    static readonly ANGLES_UP = "angles-up";
+    static readonly ANGLES_RIGHT = "angles-right";
+    static readonly ANGLES_DOWN = "angles-down";
+    static readonly ANGLES_LEFT = "angles-left";
+    static readonly ARROW_UP_RIGHT_FROM_SQUARE = "arrow-up-right-from-square";
+    static readonly CART_PLUS = "cart-plus";
+    static readonly DOWNLOAD = "download";    
+    static readonly SPINNER = "spinner"; 
+    static readonly CHART_BAR = "chart-bar"; 
+    static readonly LOCK = "lock"; 
+    static readonly UNLOCK = "unlock"; 
+    static readonly CARET_RIGHT = "caret-right";
+    static readonly CARET_DOWN = "caret-down";
+    static readonly ERASER = "eraser";
+    static readonly CIRCLE_INFO = "circle-info";
+    static readonly CIRCLE = "circle";
+    static readonly SEARCH = "magnifying-glass";
+    static readonly CIRCLE_ARROW_UP = "circle-arrow-up";
+    static readonly CIRCLE_ARROW_DOWN = "circle-arrow-down";
+    static readonly COPY = "copy";
+    static readonly HAND_POINT_RIGHT = "hand-point-right";
+    static readonly FILE_CODE = "file-code";
+    static readonly CIRCLE_QUESTION = "circle-question";
+    static readonly CIRCLE_XMARK = "circle-xmark";
+    static readonly TIMES = "times";
+    static readonly EYE = "eye";
+    static readonly EYE_SLASH = "eye-slash";
+    static readonly CHECK = 'check';
+    static readonly WARNING = 'triangle-exclamation';
+    static readonly FILE_DOWNLOAD = 'file-arrow-down';
+    static readonly CLOUD_DOWNLOAD = 'cloud-download';
+    static readonly REPEAT = 'repeat';
+    static readonly GLOBE = 'globe';
 }

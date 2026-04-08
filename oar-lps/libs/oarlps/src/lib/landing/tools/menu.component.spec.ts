@@ -5,6 +5,8 @@ import { TransferState } from '@angular/core';
 import { config, testdata } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('MenuComponent', () => {
   let component: MenuComponent;
@@ -18,11 +20,22 @@ describe('MenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ MenuComponent, HttpClientTestingModule ],
+      imports: [ MenuComponent, HttpClientTestingModule, FontAwesomeTestingModule ],
       providers: [
         HttpClient,
         HttpTestingController,
-        { provide: AppConfig,  useValue: cfg }
+        { provide: AppConfig, useValue: cfg },
+        {
+            provide: FaTestingConfig,
+            useValue: {
+                arrowCircleRightIcon: 'undo',
+                anglesRightIcon: 'undo',
+                arrowUpRightFromSquareIcon: 'undo',
+                cartPlusIcon: 'undo',
+                downloadIcon: 'undo'
+            }
+        }        
+
     ]
     })
     .compileComponents();

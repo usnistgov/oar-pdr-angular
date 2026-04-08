@@ -1,14 +1,25 @@
 <div class="title space1">
     Check all of the types of changes you made as part of this revision:
-    <i class="faa faa-question-circle btn-help" (click)="getHelp()" aria-hidden="true"></i>
-    <!-- <mat-icon 
+    <!-- <i class="faa faa-question-circle btn-help" (click)="getHelp()" aria-hidden="true"></i> -->
+
+    <fa-icon 
+        [icon]="faCircleQuestion" 
+        size="sm"
         class="btn-help"
-        (click)="getHelp()">help_outline</mat-icon> -->
+        (click)="getHelp()" 
+        aria-hidden="true">
+    </fa-icon>
 </div>
 
 <!-- Checkboxes -->
 <div class="space1">
-    <i class="faa faa-circle dot"></i>
+    <!-- <i class="faa faa-circle dot"></i> -->
+
+    <fa-icon 
+        [icon]="faCircle" 
+        size="sm" class="dot">
+    </fa-icon>
+
     <b>Minor changes</b>
     <div *ngFor="let type of allRevisionTypes; let i=index">
         <mds-checkbox *ngIf="!type.majorChanges" class="listitem" [checked]="checked(type.id)" (click)="toggle(type.id)"
@@ -16,7 +27,14 @@
         </mds-checkbox>
     </div>
 
-    <i class="faa faa-circle dot"></i>
+    <!-- <i class="faa faa-circle dot"></i> -->
+
+    <fa-icon 
+        [icon]="faCircle" 
+        size="sm" 
+        class="dot">
+    </fa-icon>
+
     <b>Major changes</b>
     <div style="font-style: italic;margin-left: 20px;">These require full review</div>
     <div *ngFor="let type of allRevisionTypes; let i=index">
@@ -32,7 +50,13 @@
 
 <div class="space1">
     <i class="pi pi-arrow-up-right" style="margin-right: .5em;"></i>
-        <a [href]="policyPageLink">For more infomation, ...</a> 
+    <fa-icon 
+        [icon]="faArrowUpRightFromSquare" 
+        style="margin-right: .5em;"
+        size="sm">
+    </fa-icon>
+
+    <a [href]="policyPageLink">For more infomation, ...</a> 
 </div>
 
 <!-- Purpose of the revision -->

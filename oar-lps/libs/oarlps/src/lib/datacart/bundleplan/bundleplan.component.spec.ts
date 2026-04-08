@@ -10,6 +10,9 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config';
 import { TransferState } from '@angular/core';
 import * as env from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
+
 
 describe('BundleplanComponent', () => {
     let component: BundleplanComponent;
@@ -21,18 +24,34 @@ describe('BundleplanComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-        declarations: [ BundleplanComponent ],
-        schemas: [NO_ERRORS_SCHEMA],
-        imports: [
-            HttpClientTestingModule,
-            NgbModule
-        ],
-        providers: [
-            CartService,
-            DownloadService,
-            TestDataService,
-            GoogleAnalyticsService,
-            { provide: AppConfig, useValue: cfg }]
+            declarations: [ BundleplanComponent ],
+            schemas: [NO_ERRORS_SCHEMA],
+            imports: [
+                HttpClientTestingModule,
+                FontAwesomeTestingModule,
+                NgbModule
+            ],
+            providers: [
+                CartService,
+                DownloadService,
+                TestDataService,
+                GoogleAnalyticsService,
+                { provide: AppConfig, useValue: cfg },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleUpIcon: 'undo',
+                        circleDownIcon: 'undo',
+                        spinnerIcon: 'undo',
+                        cloudDownloadIcon: 'undo',
+                        downloadIcon: 'undo',
+                        cancelIcon: 'undo',
+                        warningIcon: 'undo',
+                        repeatIcon: 'undo',
+                        undoIcon: 'undo'
+                }
+            }
+            ]
         })
         .compileComponents();
     }));

@@ -12,7 +12,20 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { AppConfig } from '../../../config/config';
 import { AuthenticationService } from 'oarng';
-import { iconClass, Message, GlobalService } from '../../../shared/globals/globals';
+import { iconClass, GlobalService } from '../../../shared/globals/globals';
+import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg-bar.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faTrashCan,
+    faCaretDown,
+    faCaretRight,
+    faLock,
+    faUnlock
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -24,7 +37,9 @@ import { iconClass, Message, GlobalService } from '../../../shared/globals/globa
         TooltipModule,
         TextEditComponent,
         NgbModule,
-        RefAuthorComponent
+        RefAuthorComponent,
+        SingleMsgBarComponent,
+        FontAwesomeModule
     ],
     templateUrl: './ref-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ref-edit.component.css'],
@@ -59,6 +74,21 @@ export class RefEditComponent implements OnInit {
     cancelIcon = iconClass.CANCEL;
     undoIcon = iconClass.UNDO;
     deleteIcon = iconClass.DELETE;
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+    lockIcon = iconClass.LOCK;
+    unlockIcon = iconClass.UNLOCK;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faTrashCan = faTrashCan;
+    faCaretDown = faCaretDown;
+    faCaretRight = faCaretRight;
+    faLock = faLock;
+    faUnlock = faUnlock;
+
     doiEndpoint: string = "";
     doiLoaded: boolean = false;
     authToken: string = "";
@@ -76,15 +106,29 @@ export class RefEditComponent implements OnInit {
         private chref: ChangeDetectorRef,  
         private cfg: AppConfig,
         public authsvc: AuthenticationService,
+        public iconLibrary: FaIconLibrary,
         public mdupdsvc: MetadataUpdateService) { 
-            this.doiEndpoint = cfg.get<string>("dapEditing.doiEndpoint", "/midas/doi/2nerdm/ref/");
         
-            this.authsvc.getCredentials().subscribe(
-                (creds) => {
-                    this.authToken = creds.token;
-                }
-            )
-        }
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faTrashCan,
+            faCaretDown,
+            faCaretRight,
+            faLock,
+            faUnlock
+        );   
+
+        this.doiEndpoint = cfg.get<string>("dapEditing.doiEndpoint", "/midas/doi/2nerdm/ref/");
+    
+        this.authsvc.getCredentials().subscribe(
+            (creds) => {
+                this.authToken = creds.token;
+            }
+        )
+    }
 
     ngOnInit(): void {
         if(this.isEditing) this.showAllFields = true;
@@ -264,9 +308,17 @@ export class RefEditComponent implements OnInit {
      */
     citationLockClass() {
         if(this.citationLocked) {
-            return "faa faa-lock";
+            return this.lockIcon;
         }else{
-            return "faa faa-unlock";
+            return this.unlockIcon;
+        }
+    }
+
+    expandIconClass() {
+        if(this.editBlockStatus == "collapsed") {
+            return this.caretRightIcon;
+        }else{
+            return this.caretDownIcon;
         }
     }
 

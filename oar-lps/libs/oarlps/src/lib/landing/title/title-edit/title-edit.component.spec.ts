@@ -15,6 +15,7 @@ import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { CommonModule } from '@angular/common';
 import { LandingConstants } from '../../../shared/globals/globals';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('TitleEditComponent', () => {
     let component: TitleEditComponent;
@@ -29,7 +30,7 @@ describe('TitleEditComponent', () => {
     
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [CommonModule, FormsModule, ToastrModule.forRoot()],
+            imports: [CommonModule, FormsModule, ToastrModule.forRoot(), FontAwesomeTestingModule],
             providers: [
                 UserMessageService, 
                 HttpHandler,

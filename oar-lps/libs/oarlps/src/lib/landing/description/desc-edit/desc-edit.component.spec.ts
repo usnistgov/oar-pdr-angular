@@ -8,6 +8,8 @@ import { DatePipe } from '@angular/common';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
+import { ToastrModule } from 'ngx-toastr';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('DescEditComponent', () => {
     let component: DescEditComponent;
@@ -20,7 +22,7 @@ describe('DescEditComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [DescEditComponent],
+            imports: [DescEditComponent, ToastrModule.forRoot(), FontAwesomeTestingModule],
             providers: [ 
                 HttpHandler,
                 DatePipe,

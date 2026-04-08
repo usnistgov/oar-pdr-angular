@@ -13,6 +13,7 @@ import { Credentials, UserAttributes } from 'oarng';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../nerdm/dap.service';
 import * as env from '../../../environments/environment';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('EditStatusComponent', () => {
     let component : EditStatusComponent;
@@ -35,7 +36,7 @@ describe('EditStatusComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ CommonModule, EditStatusComponent ],
+            imports: [ CommonModule, EditStatusComponent, FontAwesomeTestingModule ],
             declarations: [  ],
             providers: [
                     HttpHandler,
@@ -53,7 +54,7 @@ describe('EditStatusComponent', () => {
         fixture = TestBed.createComponent(EditStatusComponent);
         component = fixture.componentInstance;
         component._editmode = EDIT_MODES.EDIT_MODE;
-        component.showMsg = true;
+        component.forceDisplay = false;
     }
     let dapsvc : DAPService = new LocalDAPService();
     let edstatsvc = new EditStatusService();
@@ -76,11 +77,12 @@ describe('EditStatusComponent', () => {
 
         let bardiv = cmpel.querySelector(".ec-status-bar");
         expect(bardiv).not.toBeNull();
-        expect(bardiv.childElementCount).toBe(1);
+        expect(bardiv.childElementCount).toBe(2);
         expect(bardiv.firstElementChild.tagName).toEqual("SPAN");
     });
 
     it('showMessage()', () => {
+        component._editmode = EDIT_MODES.EDIT_MODE;
         component.showMessage("Okay, Boomer.", false, "sicklyGreen");
         expect(component.message).toBe("Okay, Boomer.");
         expect(component.messageColor).toBe("sicklyGreen");
@@ -90,7 +92,7 @@ describe('EditStatusComponent', () => {
         let cmpel = fixture.nativeElement;
         let bardiv = cmpel.querySelector(".ec-status-bar");
         expect(bardiv).not.toBeNull();
-        expect(bardiv.lastElementChild.innerHTML).toContain("Okay, Boomer.");
+        expect(bardiv.firstElementChild.innerHTML).toContain("Okay, Boomer.");
 
         component.showMessage("Wait...", true, "blue");
         expect(component.message).toBe("Wait...");
@@ -98,7 +100,7 @@ describe('EditStatusComponent', () => {
         expect(component.isProcessing).toBeTruthy();
         fixture.detectChanges();
 
-        expect(bardiv.lastElementChild.innerHTML).toContain("Wait...");
+        expect(bardiv.firstElementChild.innerHTML).toContain("Wait...");
     });
 
     it('showLastUpdate()', () => {

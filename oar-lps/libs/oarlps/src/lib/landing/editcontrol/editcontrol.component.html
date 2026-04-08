@@ -4,16 +4,44 @@
     <div class="current-mode">
         <div *ngIf="screenWidth > screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE">
             <span *ngIf="message" style="margin-left: 1em;margin-right: 1em;font-size:12px">{{message}}</span>
-            <span *ngIf="message" style="border: 1px solid white; color: white;cursor: pointer;" (click)="message=''"><i class="fas fa-times"></i></span>
+            <span 
+                *ngIf="message" 
+                style="border: 1px solid white; color: white;cursor: pointer;" 
+                (click)="message=''">
+                <!-- <i class="fas fa-times"></i> -->
+                <fa-icon [icon]="faTimes"></fa-icon>
+            </span>
             {{currentMode}}
             <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" class="splitter1"> | </span>
-            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" id="submitted">{{mdupdsvc.recStatus.state}}</span>
+            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" id="submitted">
+                {{mdupdsvc.recStatus.state}}
+                <!-- <i class="fas fa-info-circle" id="ec-info-btn-sm" (click)="toogleMessage()" data-toggle="tooltip"
+                    title="Show message"></i> -->
+
+                <fa-icon 
+                    id="ec-info-btn-sm" 
+                    [icon]="faCircleInfo" 
+                    (click)="toogleMessage()"
+                    data-toggle="tooltip" 
+                    title="Show message">
+                </fa-icon>
+    
+            </span>
         </div>
 
         <div *ngIf="screenWidth <= screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE" style="color: white; float: left; margin: 0.5em .5em 0em 1em; font-size: 15px;" [ngbTooltip]="editModeTooltip">
-            <span class="fa-stack" style="margin-right:-1em;color: white;">
+            <!-- <span class="fa-stack" style="margin-right:-1em;color: white;">
                 <i class="far fa-circle fa-stack-2x"></i>
                 <i class="fas fa-stack-1x fa-xs" [ngClass]="editModeIconClass"></i>
+            </span> -->
+
+            <span 
+                class="fa-stack" 
+                size="2x" 
+                style="margin-right:-1em;color: white;">
+
+                <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 0.8;"></fa-icon>
+                <fa-icon [icon]="faDownload" class="fa-stack-1x small"></fa-icon>
             </span>
         </div>
     </div>
@@ -36,12 +64,20 @@
             </ng-option>
         </ng-select> -->
 
-        <i class="fas fa-info-circle" id="ec-info-btn" (click)="showEditControlHelpPopup($event,op3)" data-toggle="tooltip"
-            title="Show edit control help"></i>
+        <!-- <i class="fas fa-info-circle" id="ec-info-btn" (click)="showEditControlHelpPopup($event,op3)" data-toggle="tooltip"
+            title="Show edit control help"></i> -->
+
+        <fa-icon 
+            id="ec-info-btn"
+            [icon]="faCircleInfo" 
+            (click)="showEditControlHelpPopup($event,op3)"
+            data-toggle="tooltip" 
+            title="Show edit control help">
+        </fa-icon>
+    
 
         <!-- Submit for review button -->
         <button 
-            pButton 
             type="button" 
             *ngIf="screenWidth > screenSizeBreakPoint && !mobileMode" 
             pTooltip="Submit for Review" 
@@ -51,12 +87,16 @@
             (click)="submitReview()"  
             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit" 
             label="Submit for Review" 
-            icon="fas fa-arrow-circle-up faa-1x icon-white" 
             iconPos="left">
+
+            <fa-icon [icon]="faCircleArrowUp"></fa-icon> Submit for Review
         </button>
 
+        <!-- <button class="btn" id="ec-review-btn" type="button">
+            <fa-icon [icon]="['fas', circleArrowUpIcon]"></fa-icon> Submit for Review
+        </button> -->
+
         <button 
-            pButton
             type="button"
              *ngIf="screenWidth <= screenSizeBreakPoint && !mobileMode" 
              pTooltip="Submit for Review" 
@@ -66,12 +106,17 @@
              (click)="openDialog_mat()" 
              [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit" 
              label="Submit" 
-             icon="fas fa-arrow-circle-up faa-1x icon-white"  
              iconPos="left">
+
+            <fa-icon [icon]="faCircleArrowUp"></fa-icon>
+            Submit
+            <!-- <ng-template pTemplate="content">
+                <fa-icon *ngIf="circleArrowUpIcon" [icon]="['fas', circleArrowUpIcon]"></fa-icon>
+                <span>Submit</span>
+            </ng-template> -->
         </button>
 
         <button 
-            pButton 
             type="button"
             *ngIf="mobileMode" 
             pTooltip="Submit for Review" 
@@ -79,19 +124,40 @@
             class="btn btn-labeled" 
             id="ec-review-btn-mo" 
             (click)="openDialog()" 
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit" 
-            icon="fas fa-arrow-circle-up faa-1x icon-white">
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
+
+            <fa-icon [icon]="faCircleArrowUp"></fa-icon>
+            <!-- <ng-template pTemplate="content">
+                <fa-icon *ngIf="circleArrowUpIcon" [icon]="['fas', circleArrowUpIcon]"></fa-icon>
+            </ng-template> -->
         </button>
 
         <!-- Discard button -->
-        <button pButton *ngIf="!mobileMode" type="button" pTooltip="Discard" tooltipPosition="bottom" class="btn btn-labeled"
-            id="ec-discard-btn" (click)="confirmDiscardEdits()" [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
-            label="Discard" icon="fas fa-trash-alt faa-1x icon-white" iconPos="left">
+        <button 
+            *ngIf="!mobileMode" 
+            type="button" 
+            pTooltip="Discard" 
+            tooltipPosition="bottom" 
+            class="btn btn-labeled"
+            id="ec-discard-btn" 
+            (click)="confirmDiscardEdits()" 
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
+
+            <fa-icon [icon]="faTrashCan"></fa-icon>
+            Discard
         </button>
         
-        <button pButton *ngIf="mobileMode" type="button" pTooltip="Discard" tooltipPosition="bottom" class="btn btn-labeled"
-            id="ec-discard-btn-sm" (click)="confirmDiscardEdits()" [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
-            icon="fas fa-trash-alt faa-1x icon-white">
+        <button 
+            *ngIf="mobileMode" 
+            type="button" 
+            pTooltip="Discard" 
+            tooltipPosition="bottom" 
+            class="btn btn-labeled"
+            id="ec-discard-btn-sm" 
+            (click)="confirmDiscardEdits()" 
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
+
+            <fa-icon [icon]="faTrashCan"></fa-icon>
         </button>
 
         <!-- 
@@ -101,53 +167,112 @@
                 - Otherwise, the label is "Edit".
             -  If editing is on, the "Preview" button will show in its place
         -->
-        <button pButton type="button" pTooltip="Edit" tooltipPosition="bottom" *ngIf="!mobileMode && isPreviewMode"
-            type="button" class="btn btn-labeled ec-edit-btn" (click)="onEdit()" id="ec-edit-btn" [label]="editBtnLabel"
-            icon="fas fa-pencil faa-1x icon-white" iconPos="left" [disabled]="!editEnable">
+        <button 
+            type="button" 
+            pTooltip="Edit" 
+            tooltipPosition="bottom" 
+            *ngIf="!mobileMode && isPreviewMode"
+            type="button" 
+            class="btn btn-labeled ec-edit-btn" 
+            (click)="onEdit()" 
+            id="ec-edit-btn" 
+            [disabled]="!editEnable">
+
+            <fa-icon [icon]="faPencil"></fa-icon>
+            {{editBtnLabel}}
         </button>
         
-        <button pButton type="button" pTooltip="Edit" tooltipPosition="bottom" *ngIf="mobileMode && isPreviewMode" type="button"
-            class="btn btn-labeled ec-edit-btn" (click)="onEdit()" id="ec-edit-btn-sm"
-            icon="fas fa-pencil faa-1x icon-white" [disabled]="!editEnable">
+        <button 
+            type="button" 
+            pTooltip="Edit" 
+            tooltipPosition="bottom" 
+            *ngIf="mobileMode && isPreviewMode" 
+            type="button"
+            class="btn btn-labeled ec-edit-btn" 
+            (click)="onEdit()" 
+            id="ec-edit-btn-sm"
+            [disabled]="!editEnable">
+
+            <fa-icon [icon]="faPencil"></fa-icon>
         </button>
 
         <!-- Preview button -->
         <!-- Normal mode -->
-        <button pButton type="button" pTooltip="Preview" tooltipPosition="bottom" *ngIf="!mobileMode && isEditMode"
-            type="button" class="btn btn-labeled" (click)="preview()" id="ec-preview-btn" label="Preview"
-            icon="fas fa-eye faa-1x icon-white" iconPos="left" [disabled]="!readyEdit">
+        <button 
+            type="button" 
+            pTooltip="Preview" 
+            tooltipPosition="bottom" 
+            *ngIf="!mobileMode && isEditMode"
+            type="button" 
+            class="btn btn-labeled" 
+            (click)="preview()" 
+            id="ec-preview-btn" 
+            [disabled]="!readyEdit">
+
+            <fa-icon [icon]="faEye"></fa-icon>Preview
         </button>
         
         <!-- mobile mode -->
-        <button pButton type="button" pTooltip="Preview" tooltipPosition="bottom" *ngIf="mobileMode && isEditMode" type="button"
-            class="btn btn-labeled" (click)="preview()" id="ec-preview-btn-mo" icon="fas fa-eye faa-1x icon-white"
+        <button 
+            type="button" 
+            pTooltip="Preview" 
+            tooltipPosition="bottom" 
+            *ngIf="mobileMode && isEditMode" 
+            class="btn btn-labeled" 
+            (click)="preview()" 
+            id="ec-preview-btn-mo" 
             [disabled]="!readyEdit">
+
+            <fa-icon [icon]="faEye"></fa-icon>
         </button>
 
         <!-- Manage Files button -->
-        <button pButton *ngIf="screenWidth > screenSizeBreakPoint && !mobileMode" [pTooltip]="fileManagerTooltip"
-            tooltipPosition="bottom" type="button" class="btn btn-labeled light-blue-btn" id="ec-files-btn"
-            [ngClass]="screenWidth > screenSizeBreakPoint? 'ec-files-btn' : 'ec-files-btn-sm'" label="Manage Files"
-            icon="fas fa-external-link-alt faa-1x icon-white" iconPos="left" (click)="openFileManager()"
+        <button 
+            *ngIf="screenWidth > screenSizeBreakPoint && !mobileMode" 
+            [pTooltip]="fileManagerTooltip"
+            tooltipPosition="bottom" 
+            type="button" 
+            class="btn btn-labeled" 
+            id="ec-files-btn"
+            [ngClass]="screenWidth > screenSizeBreakPoint? 'ec-files-btn' : 'ec-files-btn-sm'" 
+            (click)="openFileManager()"
             [disabled]="!readyEdit">
+
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Manage Files
         </button>
 
-        <button pButton *ngIf="screenWidth <= screenSizeBreakPoint && !mobileMode" [pTooltip]="fileManagerTooltip"
-            tooltipPosition="bottom" type="button" class="btn btn-labeled light-blue-btn" id="ec-files-btn-sm" label="Files"
-            icon="fas fa-external-link-alt faa-1x icon-white" iconPos="left" (click)="openFileManager()"
+        <button 
+            *ngIf="screenWidth <= screenSizeBreakPoint && !mobileMode" 
+            [pTooltip]="fileManagerTooltip"
+            tooltipPosition="bottom" 
+            type="button" 
+            class="btn btn-labeled" 
+            id="ec-files-btn-sm" 
+            (click)="openFileManager()"
             [disabled]="!readyEdit">
+
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Files
         </button>
 
-        <button pButton *ngIf="mobileMode" [pTooltip]="fileManagerTooltip" tooltipPosition="bottom" type="button"
-            class="btn btn-labeled light-blue-btn" id="ec-files-btn-mo" icon="fas fa-external-link-alt faa-1x icon-white"
-            (click)="openFileManager()" [disabled]="!readyEdit">
+        <button 
+            *ngIf="mobileMode" 
+            [pTooltip]="fileManagerTooltip" 
+            tooltipPosition="bottom" 
+            type="button"
+            class="btn btn-labeled" 
+            id="ec-files-btn-mo" 
+            icon="fas fa-external-link-alt faa-1x icon-white"
+            (click)="openFileManager()" 
+            [disabled]="!readyEdit">
+
+            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
         </button>
     </div>
 </div>
 
 <!-- status message bar -->
  <div id="statusbar">
-    <pdr-edit-status [(mdrec)]="mdrec"></pdr-edit-status>
+    <pdr-edit-status [(mdrec)]="mdrec" [forceDisplay]="forceDisplay"></pdr-edit-status>
  </div>
 
 
@@ -158,23 +283,38 @@
 <p-overlayPanel class="fileDialog" #op3 [dismissable]="true" [showCloseIcon]="true"
 [style]="{'display':'inline-block','position':'related','left':'20%','right':'5%','max-width':'800px'}" appendToBody=true>
     <div class="overlay-title">
-        About the Control Buttons
+        About the Edit Mode Buttons
     </div>
 
-    <div style="margin-bottom: .5em;">The three large buttons on the upper right of the page allow you to control your session:</div>
+    <div style="margin-bottom: .5em;">The buttons above allow you to control your session:</div>
     <table class="table">
         <tbody>
             <tr>
+                <th scope="row">Manage Files</th>
+                <td> Opens the File Manager where you can upload and organize files that are part of this publication.  The File Manager will appear in a separate tab in your browser.</td>
+            </tr>
+        <tbody>
+            <tr>
                 <th scope="row">Preview</th>
-                <td>Shows you how the page will look to visitors (removes edit controls). Use the “Edit” button to return to the editing page from the preview page.</td>
+                <td> Switches to Preview Mode to show you how the page will look to the public after publication. The editing controls and buttons will be hidden.  When in preview mode, this button will change to "Edit"; click it again to return to Edit Mode.</td>
             </tr>
             <tr>
                 <th scope="row">Discard</th>
-                <td>	Discards any changes that have been made to the landing page. Use this button to abandon any changes you have made. You will have the opportunity to continue editing using the initial contents of the landing page.</td>
+                <td> Discards all changes that have been made to this page in the current session (since it was opened).  Use this button to abandon any changes you have made. You will have the opportunity to continue editing using the initial contents of the page.</td>
             </tr>
             <tr>
-                <th scope="row">Finish</th>
-                <td>Finish your editing session. Carefully follow the instructions which will appear on the screen. You will be instructed to return to the MIDAS system and accept or reject the new landing page.</td>
+                <th scope="row">Submit for Review</th>
+                <td> Click this button when all edits are complete and you 
+                     are ready to submit it for publication.  Your draft will 
+                     be analyzed for any missing data or recommended improvements
+                     that can be made; these will appear in a pop-up window
+                     where you can either confirm the submission or return to
+                     editing.  (If any missing data is required, you will
+                     not be able to proceed with the submission.)  Proceeding
+                     with the submission will usually send the draft through
+                     the NPS review process; however, if only minor changes
+                     are indicated, NPS review is not required and the draft
+                     will be submitted directly for publication.  </td>
             </tr>
         </tbody>
     </table>

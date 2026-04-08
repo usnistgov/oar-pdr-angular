@@ -1,0 +1,223 @@
+<div class="wrapper">
+    <div class="bar" style="color: white !important;">
+        Submit Confirmation
+    </div>
+    
+    <div class="content">
+        <div id="suggestions" >
+            @if(showHelp){
+                <!-- <i class="faa faa-times-circle btn-hide-help" (click)="processCommand('getHelp')" aria-hidden="true"></i> -->
+                <fa-icon 
+                    [icon]="faCircleXmark" 
+                    class="btn-icon"
+                    (click)="processCommand('getHelp')" 
+                    aria-hidden="true"></fa-icon>
+            }
+            <div [@slideToggle]="showHelp ? 'visible' : 'hidden'" class="sliding-div"
+                [ngStyle]="{'max-height':maxHeight + 'px'}">
+                <p [innerHTML]="revisionHelp['htmlcontent']"></p>
+                <!-- This is a placeholder for revision description.
+    
+                <table>
+                    <thead>
+                        <tr>
+                            <th>No.</th>
+                            <th>Situation</th>
+                            <th>Examples</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of dataSource; let i = index">
+                            <td>{{ i }}</td>
+                            <td>{{ data.position }}</td>
+                            <td>{{ data.situation }}</td>
+                        </tr>
+                    </tbody>          
+                </table> -->
+            </div>
+    
+            <div *ngIf="showSuggestion" class="statement">
+                <div class="statement">
+                    @if(hasRequiredItems) {
+                        We have reviewed your draft. There are required items to be finished. Please go back and re-edit:
+                    } @else if(hasWarnItems) {
+                        We have reviewed your draft and found some warnings to consider. To address the warnings, selelct "Back to Edit". To
+                        ignore warnings and continue with submission, choose "Proceed with Submission".
+                    } @else {
+                        We have reviewed your draft and found no required items or warnings. 
+                    }
+                </div>
+    
+                <div class="suggestion-details">
+                    <div *ngIf="hasRequiredItems" class="suggestion-req suggestion-item">
+                        <suggestions suggestionLabel="The following items are required" [suggestions]="suggestions['req']"
+                            showSug="true" textOnly="true" (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+    
+                    <div *ngIf="hasWarnItems" class="suggestion-item">
+                        <suggestions suggestionLabel="Warning" [suggestions]="suggestions['warn']" showSug="true"
+                            textOnly="true" (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div>
+    
+                    <!-- <div *ngIf="hasRecommendedItems">
+                        <suggestions suggestionLabel="The following items are recommended"
+                            [suggestions]="suggestions['rec']" showSug="true" textOnly="true"
+                            (gotoSectionName)="gotoSection($event)">
+                        </suggestions>
+                    </div> -->
+                </div>
+    
+                <div style="font-weight: bold; margin: .5em 0em;">Notes to reviewers:</div>
+                <textarea 
+                    cdkTextareaAutosize 
+                    cdkAutosizeMinRows="2" 
+                    cdkAutosizeMaxRows="5" 
+                    [(ngModel)]="submissionData.submissionNotes"
+                    (change)="onTextChange($event)"
+                    placeholder="Enter Submission Notes Here:"
+                    class="textbox">
+                </textarea>
+            </div>
+
+            <!-- Reviewers -->
+            <div>
+                <div 
+                    class="editable_field linked-text statement" 
+                    (click)="toggleReviewersWidget()">
+
+                    {{reviewerPrompt}}
+
+                </div>
+
+                <!-- Control buttons -->
+                <div class="editable_field" style="white-space: nowrap;">
+                    @if(!showReviewersWidget) {
+                        <!-- Edit button -->
+                        <button 
+                            class="edit_button" 
+                            type="button" 
+                            (click)="toggleReviewersWidget()" 
+                            aria-label="Edit reviewers"
+                            ngbTooltip="Edit reviewers">
+
+                            <!-- <i [class]="editIcon"></i> -->
+                            <fa-icon [icon]="faPencil" class="btn-icon" size="sm"></fa-icon>
+                        </button>
+                    }
+
+                    @if(showReviewersWidget) {
+                        <!-- Close edit block -->
+                        <button 
+                            class="edit_button" 
+                            type="button" 
+                            (click)="toggleReviewersWidget()" 
+                            aria-label="Close edit block"
+                            ngbTooltip="Close edit block">
+
+                            <!-- <i [class]="closeIcon"></i> -->
+                            <fa-icon [icon]="faXmark" class="btn-icon"></fa-icon>
+                        </button>
+                    }
+                </div>
+
+                @if(showReviewersWidget) {
+                    <table>
+                        <tr>
+                            <td align="right" width="20%">
+                                <span style="margin: 0em .5em;" ngbTooltip="People lookup">
+                                    NIST People Lookup:</span>
+                            </td>
+                            <td>
+                                <div style="width: 100%; padding-right: 1em;">
+                                    <input #name 
+                                        class="autocomplete-input" 
+                                        type="text" 
+                                        pInputText 
+                                        [placeholder]="placeHolderText"
+                                        name="peopleSearch" 
+                                        [(ngModel)]="query"
+                                        (input)="set_suggestions($event)"
+                                        (focus)="set_suggestions($event)"
+                                        (blur)="hideDropdown()">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <ul class="autocomplete-dropdown" 
+                        *ngIf="showDropdown" 
+                        [ngClass]="{ 'scrollable': enableScroll }">
+
+                        <li 
+                            *ngFor="let suggestion of peopleSuggestions"
+                            (mousedown)="getFullRecord(suggestion); $event.preventDefault()">
+                            {{ suggestion.display }}
+                        </li>
+                    </ul>
+                }
+
+                <!-- Display reviewers if any -->
+                <div *ngIf="submissionData && submissionData.reviewers && submissionData.reviewers.length > 0" class="current-reviewers">
+                    <span 
+                        class="reviewers" 
+                        *ngFor="let reviewer of submissionData.reviewers; let i =index">
+                        <span style="display: inline-block;white-space: nowrap">{{reviewer.firstName}} {{reviewer.lastName}}</span>
+                        <span *ngIf="showReviewersWidget" style="margin-left: 5px;">
+                            <!-- <i [class]="closeCircleIcon" 
+                                aria-label="Delete reviewer"
+                                (click)="removeReviewer(i)">
+                            </i> -->
+                            <fa-icon 
+                                [icon]="faCircleXmark" 
+                                class="btn-icon"
+                                aria-label="Delete reviewer"
+                                (click)="removeReviewer(i)"></fa-icon>
+                        </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    
+        @if(submissionData.isRevision) {
+            <div class="revision">
+                <revision-details 
+                    [submissionData]="submissionData" 
+                    (changedData)="updateSubmissionData($event)"
+                    (command)="processCommand($event)">
+                </revision-details>
+            </div>
+        }
+    </div>
+    
+    
+    <hr>
+    <div class="control-buttons">
+        <!-- Back to Edit button -->
+        <button 
+            type="button" 
+            pTooltip="Back to Edit" 
+            tooltipPosition="bottom" 
+            class="btn btn-cancel"
+            (click)="cancelSubmit()">
+
+            <fa-icon [icon]="faPencil" class="btn-icon" size="sm"></fa-icon>
+            Back to Edit
+        </button>
+
+        <!-- Continue Submit button -->
+        <button 
+            type="button"
+            pTooltip="Proceed with Submission" 
+            tooltipPosition="bottom" 
+            class="btn btn-submit" 
+            (click)="continueSubmit()" 
+            [disabled]="hasRequiredItems">
+
+            <fa-icon [icon]="faCircleArrowUp" class="btn-icon"></fa-icon>
+            Proceed with Submission
+        </button>
+    </div>
+</div>
+

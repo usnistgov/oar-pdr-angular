@@ -46,11 +46,23 @@
     <div class="control-buttons">
         <!-- Buttons are arranged from right to left -->
             <!-- Cancel button -->
-            <button pButton class="btn btn-labeled" id="btn-cancel" (click)="CancelDownload()"
-            label="Cancel Download" icon="fas fa-times faa-1x icon-white" iconPos="left"></button>
+            <button 
+                class="btn-labeled" 
+                id="btn-cancel" 
+                (click)="CancelDownload()">
+
+                <fa-icon [icon]="faXmark"></fa-icon>
+                Cancel Download
+            </button>
 
             <!-- Continue Download button -->
-            <button pButton class="btn btn-labeled" id="btn-download" (click)="ContinueDownload()"
-            label="Start Download" icon="fas fa-cloud-download-alt faa-1x icon-white" iconPos="left"></button>
+            <button 
+                class="btn-labeled" 
+                id="btn-download" 
+                (click)="ContinueDownload()">
+
+                <fa-icon [icon]="faDownload"></fa-icon>
+                Start Download
+            </button>
     </div>
 </div>

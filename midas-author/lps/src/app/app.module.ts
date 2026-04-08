@@ -1,4 +1,4 @@
-import { NgModule }    from '@angular/core';
+import { APP_INITIALIZER, NgModule }    from '@angular/core';
 import {
     CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
 } from '@angular/core';
@@ -12,7 +12,7 @@ import { environment } from '../environments/environment-impl';
 import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
-import { OARLPSModule, ConfigModule, EditControlModule, ConfirmationDialogService,
+import { OARLPSModule, ConfigModule, EditControlModule, CollectionService, ConfirmationDialogService,
     GoogleAnalyticsService, AppErrorHandler, LandingAboutComponent,
     MetadataUpdateService
 } from 'oarlps';
@@ -31,6 +31,12 @@ export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
       return super.parse(url.toLowerCase());
   }
 }
+
+// export function initializeApp(collectionService: CollectionService) {
+//   return async () => {
+//     await collectionService.loadLocalData()
+//   };
+// }
 
 enableProdMode();
 
@@ -68,8 +74,15 @@ enableProdMode();
         GoogleAnalyticsService,
         DatePipe,
         MetadataUpdateService,
+        CollectionService,
         NgbActiveModal,
         ConfirmationDialogService
+        // {
+        //     provide: APP_INITIALIZER,
+        //     useFactory: initializeApp,
+        //     deps: [CollectionService],
+        //     multi: true
+        // }
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })

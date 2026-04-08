@@ -36,7 +36,6 @@
                             "../../node_modules/primeicons/primeicons.css",
                             "../../node_modules/primeflex/primeflex.css",
                             "../../node_modules/primeng/resources/themes/saga-blue/theme.css",
-                            "../../node_modules/oarng/src/assets/styles/font-awesome/css/font-awesome.min.css",
                             "../../node_modules/ngx-toastr/toastr.css",
                             "src/styles.css"
                         ],
@@ -49,8 +48,8 @@
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "3.2mb",
-                                    "maximumError": "3.5mb"
+                                    "maximumWarning": "3.7mb",
+                                    "maximumError": "4mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",

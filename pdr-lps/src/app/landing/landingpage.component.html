@@ -11,7 +11,7 @@
 <div class="landingcard">
     <div *ngIf="!displaySpecialMessage && _showContent">
         <div *ngIf="md === null" style="width: 100%; text-align: center;">
-            <b><i class="fas fa-spinner fa-spin fa-lg"></i> Landing page is loading...</b>
+            <b><fa-icon [icon]="faSpinner" [animation]="'spin'" [size]="lg"></fa-icon> Landing page is loading...</b>
         </div>
 
         <!-- Menu button and the popup menu (mobile mode only) -->
@@ -19,10 +19,15 @@
             <!-- div to keep track of the menu button position -->
             <div #stickyButton></div>
 
-            <button #menubtn *ngIf="!hideToolMenu && md !== null && inBrowser && mobileMode"
-                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" type="button" pButton
-                icon="faa faa-list" class="ui-button ui-button-icon-only"
+            <button 
+                #menubtn 
+                *ngIf="!hideToolMenu && md !== null && inBrowser && mobileMode"
+                [ngClass]="windowScrolled ? 'sticky-button' : 'rightmenu-button'" 
+                type="button"
+                class="btn-labeled menu-button"
                 (click)="toggleMenu($event)">
+
+                <fa-icon [icon]="faList"></fa-icon>
             </button>
 
             <app-menu
@@ -97,7 +102,7 @@
   
 <!-- Show spinner -->
 <div *ngIf="!_showContent">
-    <pdr-done [message]="loadingMessage"></pdr-done>
+    <pdr-done [message]="loadingMessage" [showSpinner]="true"></pdr-done>
 </div>
 
 <!-- Display done page -->

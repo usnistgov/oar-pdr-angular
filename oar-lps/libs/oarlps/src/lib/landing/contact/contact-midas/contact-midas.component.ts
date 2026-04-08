@@ -13,6 +13,14 @@ import { PeopleComponent } from '../../people/people.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { ContactPubComponent } from '../contact-pub/contact-pub.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faTrashCan
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'contact-midas',
@@ -23,7 +31,8 @@ import { ContactPubComponent } from '../contact-pub/contact-pub.component';
         ContactEditComponent, 
         ContactPubComponent,
         PeopleComponent, 
-        NgbModule 
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './contact-midas.component.html',
     styleUrls: ['./contact-midas.component.scss', '../../landing.component.scss'],
@@ -53,11 +62,17 @@ export class ContactMidasComponent {
     globalsvc = inject(GlobalService);
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faTrashCan = faTrashCan
 
     @Input() record: any[];
     @Input() inBrowser: boolean;   // false if running server-side
@@ -69,9 +84,16 @@ export class ContactMidasComponent {
                 public edstatsvc: EditStatusService,
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
-                private notificationService: NotificationService)
-    {
+                public iconLibrary: FaIconLibrary,
+                private notificationService: NotificationService){
 
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo,
+        //     faTrashCan
+        // );    
     }
 
     /**
@@ -339,7 +361,7 @@ export class ContactMidasComponent {
             if (updateSuccess){
                 this.setMode(MODE.NORMAL, refreshHelp);
                 this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout("Title updated.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Contact updated.", "", 3000);
             }else{
                 let msg = "Contact update failed.";
                 console.error(msg);
@@ -377,7 +399,7 @@ export class ContactMidasComponent {
             if (success){
                 this.setMode();
                 this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
+                this.notificationService.showSuccessWithTimeout("Reverted changes to contacts.", "", 3000);
             }else{
                 let msg = "Failed to restore original value."
                 console.error(msg);

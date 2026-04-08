@@ -4,7 +4,22 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FormsModule } from '@angular/forms';
 import { iconClass } from '../shared/globals/globals';
-
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faTimes,
+    faCircleInfo,
+    faDownload,
+    faCircleArrowUp,
+    faEye,
+    faTrashCan,
+    faArrowUpRightFromSquare,
+    faCheck,
+    faSquareCheck
+} from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'lib-text-edit',
     standalone: true,
@@ -12,7 +27,8 @@ import { iconClass } from '../shared/globals/globals';
         ButtonModule,
         TooltipModule,
         CommonModule,
-        FormsModule
+        FormsModule,
+        FontAwesomeModule
     ],
     templateUrl: './text-edit.component.html',
     styleUrls: ['../landing/landing.component.scss', './text-edit.component.css']
@@ -32,6 +48,7 @@ export class TextEditComponent implements OnInit {
     undoIcon = iconClass.UNDO;
     deleteIcon = iconClass.DELETE;
     submitIcon = iconClass.SUBMIT;
+    checkIcon = iconClass.CHECK;
 
     @Input() textField: string = "";
     @Input() dragDropIcon: boolean = false;
@@ -39,7 +56,7 @@ export class TextEditComponent implements OnInit {
     @Input() editOnlyButton: boolean = false; // Default button
     @Input() deleteButton: boolean = true; // Default button
     @Input() customButton: boolean = false; 
-    @Input() custBtnIcon: string = "fas fa-pencil fa-sm";
+    @Input() custBtnIcon: string = "pencil";
     @Input() custBtnFunc: string = "add()";
     @Input() custBtnTooltip: string = "Save changes";
     @Input() plusButton: boolean = false; // If this is true, no edit/remove/undo button
@@ -57,7 +74,25 @@ export class TextEditComponent implements OnInit {
     //Output actions: "Delete", "Cancel", "Save", etc.
     @Output() command_out = new EventEmitter<any>();
 
-    constructor(private chref: ChangeDetectorRef) { 
+    constructor(
+        public iconLibrary: FaIconLibrary,
+        private chref: ChangeDetectorRef) { 
+        
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faTimes,
+            faCircleInfo,
+            faDownload,
+            faCircleArrowUp,
+            faEye,
+            faTrashCan,
+            faArrowUpRightFromSquare,
+            faCheck,
+            faSquareCheck
+        );
     }
 
     ngOnInit(): void {
@@ -89,12 +124,9 @@ export class TextEditComponent implements OnInit {
 
         this.controlBoxWidth = buttonCount * 29 + "px !important";
         if(this.dragDropIcon) buttonCount += 1;
-        // this.editboxWidth = "calc(100% - " + buttonCount*30 + "px)"; //Reserve space for icon buttons
 
         this.prevVal = this.textField;
         this.currentVal = this.textField;
-
-        console.log("custBtnIcon", this.custBtnIcon);
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -207,9 +239,9 @@ export class TextEditComponent implements OnInit {
      */
     getEditIconClass() {
         if(this.editing){
-            return "faa faa-check";
+            return "check";
         }else{
-            return "fas fa-pencil";
+            return "pencil";
         }
     }
 
@@ -219,9 +251,9 @@ export class TextEditComponent implements OnInit {
      */
     getEditOnlyIconClass() {
         if(this.editing || this.disableControl){
-            return "fas fa-pencil icon_disabled";
+            return "icon_disabled";
         }else{
-            return "fas fa-pencil icon_enabled";
+            return "icon_enabled";
         }
     }
 

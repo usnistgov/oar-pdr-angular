@@ -26,7 +26,7 @@
                         ngbTooltip="Edit contact" 
                         style="cursor: pointer">
 
-                        <i [class]="editIcon"></i>
+                        <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                     </button> 
 
                     @if(updated) {
@@ -36,10 +36,11 @@
                             type="button"
                             (click)="restoreOriginal()">
 
-                            <i [class]="undoIcon"
-                               aria-label="Restore original" 
-                               ngbTooltip="Restore original">
-                            </i>
+                            <fa-icon 
+                                [icon]="faUndo" 
+                                aria-label="Restore original" 
+                                ngbTooltip="Restore original">
+                            </fa-icon>
                         </button>  
                     }
                 }
@@ -54,7 +55,11 @@
                         aria-label="close button" 
                         ngbTooltip="Close edit block">
 
-                        <i [class]="closeIcon"></i>
+                        <fa-icon 
+                            [icon]="faXmark" 
+                            aria-label="Close edit block" 
+                            ngbTooltip="Close edit block">
+                        </fa-icon>
                     </button>  
                 }
             </div>
@@ -87,7 +92,11 @@
                         [disabled]="!currentContact.dataChanged || !currentContact.fn" 
                         ngbTooltip="Save contact">
 
-                        <i [class]="saveIcon"></i>
+                        <fa-icon 
+                            [icon]="faSave" 
+                            aria-label="Save button" 
+                            ngbTooltip="Save current changes">
+                        </fa-icon>
                     </button>
             
                     <!-- Undo button -->
@@ -99,7 +108,11 @@
                         aria-label="undo button" 
                         ngbTooltip="Undo current changes">
 
-                        <i [class]="undoIcon"></i>
+                        <fa-icon 
+                            [icon]="faUndo" 
+                            aria-label="undo button" 
+                            ngbTooltip="Undo current changes">
+                        </fa-icon>
                     </button>
                 </td>          
             </tr>
