@@ -1,7 +1,7 @@
 <div style="display: table;">
     <div class="editable_container">
-        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || edstatsvc.isEditMode()">
-            <div class="editable_field" *ngIf="edstatsvc.isEditMode()" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || isEditMode">
+            <div class="editable_field" *ngIf="isEditMode" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
                 @if(isScienceTheme){
                     Facilitators:
                 }
@@ -29,19 +29,6 @@
                     tooltipPosition="top" 
                     style="cursor: pointer">
                     <fa-icon [icon]="faPencil" size="sm" [style.opacity]="iconOpacity()"></fa-icon>
-                </button> 
-
-                <!-- Hide button - hide edit block -->
-                <button 
-                    class="edit_button" 
-                    *ngIf="isEditing" 
-                    [disabled]="childIsEditing || childIsAdding" 
-                    type="button" 
-                    (click)="hideEditBlock()" 
-                    aria-label="Hide edit block" 
-                    pTooltip="Hide edit block"
-                    tooltipPosition="top" >                     
-                    <fa-icon [icon]="faXmark" [style.opacity]="iconOpacity()"></fa-icon>
                 </button> 
 
                 <!-- Undo all changes button -->

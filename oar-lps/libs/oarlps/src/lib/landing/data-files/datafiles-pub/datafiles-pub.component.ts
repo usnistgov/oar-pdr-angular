@@ -322,7 +322,16 @@ export class DatafilesPubComponent {
     }
 
     get displayDataSection() {
-        return this.displayMode != 'restrict_preview' && (this.isPublicSite && this.files.length > 0 || !this.isPublicSite);
+        let ret: boolean = false;
+
+        if (this.isPublicSite) {
+            ret = this.displayMode != 'restrict_preview';
+        } else {
+            ret = this.files.length > 0;
+        }
+
+        return ret;
+        // return this.displayMode != 'restrict_preview' && (this.isPublicSite && this.files.length > 0 || !this.isPublicSite);
     }
 
     /**

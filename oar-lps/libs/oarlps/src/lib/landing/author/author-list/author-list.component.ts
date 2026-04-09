@@ -26,6 +26,7 @@ import {
     faUndo,
     faPlus
 } from '@fortawesome/free-solid-svg-icons';
+import { stringify } from 'querystring';
 
 @Component({
     selector: 'lib-author-list',
@@ -432,7 +433,12 @@ export class AuthorListComponent implements OnInit {
         // Back to add mode
         // this.editMode = MODE.NORMAL;
         // this.refreshHelpText(MODE.ADD);
-        this.setMode(MODE.LIST, true)
+        this.setMode(MODE.LIST, true);
+
+        //If no more field was edited, hide the edit block
+        if (!this.record[this.fieldName]) {
+            this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
+        }
     }
 
 
@@ -440,8 +446,20 @@ export class AuthorListComponent implements OnInit {
      * Hide the edit block
      */
     hideEditBlock() {
-        if(this.record){
-            this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
+        if (this.record) {
+            //If is add mode but no data entered, remove the record to avoid confusion
+            if (this.isAdding && !this.currentAuthor.dataChanged) {
+                if (this.record[this.fieldName].length > 1) {
+                    this.record[this.fieldName].pop();
+                } else {
+                    delete this.record[this.fieldName];
+                }
+            }
+
+            this.setMode(MODE.LIST, true);
+            if (!this.record[this.fieldName]) {
+                this.hideListBlock(); 
+            } 
         }
 
     }
@@ -724,5 +742,59 @@ export class AuthorListComponent implements OnInit {
 
         this.currentAuthorIndex = event.currentIndex;
         this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+    }
+
+    /**
+     * There are diferent type of buttons whose styling will be different based on the edit mode and data change status. This function will return the opacity of the button icon based on those factors. If in edit/add mode but no data changed, display enabled icon. Otherwise, display disabled icon.
+     * Type 1: disabled when data changed. Such as close button.
+     * Type 2: enabled when data changed. Such as save button and undo button.
+     * @param type The type of the button
+    * @returns opacity
+     */
+    iconClass(type: string) {
+        let Returnclass: string ="icon_disabled";
+
+        switch (type) {
+            case 'close':
+                if (this.currentAuthor && !this.currentAuthor.dataChanged) {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'save':
+                if (this.currentAuthor && this.currentAuthor.dataChanged) {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;
+            case 'undo':
+                if (this.currentAuthor && this.currentAuthor.dataChanged) {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;
+            case 'hideList':
+                if (!this.isEditing && !this.isAdding) {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;     
+            case 'add':
+                if (!this.isEditing && !this.isAdding) {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;           
+            default:
+                break;
+        }
+
+        return Returnclass;
+    }      
+
+    hideListBlock() {
+        if(!this.isEditing && !this.isAdding) {
+            this.dataChanged.next({ "authors": this.record[this.fieldName], "action": "hideEditBlock" });
+        }
     }
 }

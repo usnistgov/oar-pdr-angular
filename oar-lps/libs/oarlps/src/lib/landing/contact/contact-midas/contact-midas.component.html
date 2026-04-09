@@ -1,8 +1,8 @@
 <div class="contact-rapper">
     <div class="editable_container">
         <!-- Display required field indicator -->
-        <div class="editable_field" *ngIf="edstatsvc.isEditMode()">
-            <span *ngIf="edstatsvc.isEditMode()" class="red-star">
+        <div class="editable_field" *ngIf="isEditMode">
+            <span *ngIf="isEditMode" class="red-star">
                 *
             </span>
         </div>
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Control buttons -->
-        @if(edstatsvc.isEditMode()){
+        @if(isEditMode){
             <div class="editable_field" style="white-space: nowrap;">
                 @if(!isEditing) {
                     <!-- Edit button -->
@@ -46,7 +46,7 @@
                 }
                 @else{
                     <!-- Close button -->
-                    <button 
+                    <!-- <button 
                         class="edit_button" 
                         *ngIf="isEditing" 
                         type="button" 
@@ -60,7 +60,7 @@
                             aria-label="Close edit block" 
                             ngbTooltip="Close edit block">
                         </fa-icon>
-                    </button>  
+                    </button>   -->
                 }
             </div>
         }
@@ -85,15 +85,17 @@
                     <!-- Save button -->
                     <button 
                         class="edit_button" 
-                        *ngIf="edstatsvc.isEditMode()" 
+                        *ngIf="isEditMode" 
                         type="button" 
                         (click)="saveCurrentContact()" 
+                        [class]="iconClass('save')"
                         aria-label="edit button" 
                         [disabled]="!currentContact.dataChanged || !currentContact.fn" 
                         ngbTooltip="Save contact">
 
                         <fa-icon 
                             [icon]="faSave" 
+                            [class]="iconClass('save')"
                             aria-label="Save button" 
                             ngbTooltip="Save current changes">
                         </fa-icon>
@@ -102,7 +104,7 @@
                     <!-- Undo button -->
                     <button 
                         class="edit_button" 
-                        *ngIf="edstatsvc.isEditMode() && dataChanged" 
+                        *ngIf="isEditMode && dataChanged" 
                         type="button"
                         (click)="undoCurContactChanges()" 
                         aria-label="undo button" 
@@ -110,8 +112,27 @@
 
                         <fa-icon 
                             [icon]="faUndo" 
+                            [class]="iconClass('undo')"
                             aria-label="undo button" 
                             ngbTooltip="Undo current changes">
+                        </fa-icon>
+                    </button>
+
+                    <!-- Close button -->
+                    <button 
+                        class="edit_button" 
+                        *ngIf="isEditing" 
+                        type="button" 
+                        [disabled]="isEditMode && dataChanged"
+                        (click)="closeEditBlock()" 
+                        aria-label="close button" 
+                        ngbTooltip="Close edit block">
+                    
+                        <fa-icon 
+                            [icon]="faXmark" 
+                            [class]="iconClass('close')"
+                            aria-label="Close edit block" 
+                            ngbTooltip="Close edit block">
                         </fa-icon>
                     </button>
                 </td>          

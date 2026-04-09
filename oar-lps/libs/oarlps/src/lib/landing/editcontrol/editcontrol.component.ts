@@ -512,7 +512,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         this._editMode = editmode;
         //broadcast the editmode
         this.edstatsvc.editMode.set(editmode);
-        this.edstatsvc._setEditMode(editmode);
+        this.edstatsvc.setEditMode(editmode);
         this.chref.detectChanges();
     }
 
@@ -841,7 +841,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     }else{
                       subscriber.next(false);
                       this.edstatsvc._setAuthorized(false);
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                      this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                     }
                     
                     subscriber.complete();
@@ -855,7 +855,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     subscriber.next(false);
                     subscriber.complete();
                     this.edstatsvc._setAuthorized(false);
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                 }
             );
         });

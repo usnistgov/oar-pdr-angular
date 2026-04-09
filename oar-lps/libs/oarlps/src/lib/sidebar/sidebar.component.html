@@ -50,7 +50,7 @@
                         *ngIf="!clickContact && caretRightIcon" 
                         [class.amplified]="isMouseOverGeneralHeader" 
                         [icon]="['fas', showGeneralHelp? caretDownIcon : caretRightIcon]"
-                        class="amplifiable" 
+                        class="amplifiable expand-btn" 
                         (mouseover)="isMouseOverGeneralHeader = true" 
                         (mouseleave)="isMouseOverGeneralHeader = false">
                     </fa-icon>
@@ -79,7 +79,7 @@
                         *ngIf="!clickContact && caretRightIcon" 
                         [class.amplified]="isMouseOverNextSteps"
                         [icon]="['fas', showNextSteps? caretDownIcon : caretRightIcon]" 
-                        class="amplifiable"
+                        class="amplifiable expand-btn"
                         (mouseover)="isMouseOverNextSteps = true" 
                         (mouseleave)="isMouseOverNextSteps = false">
                     </fa-icon>

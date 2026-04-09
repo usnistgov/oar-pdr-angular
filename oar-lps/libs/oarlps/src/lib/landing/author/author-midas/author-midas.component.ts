@@ -125,7 +125,7 @@ export class AuthorMidasComponent {
             if( sectionMode ) {
                 if(sectionMode.sender == SectionPrefs.getFieldName(Sections.SIDEBAR)) {
                      // Request from side bar, if not edit mode, start editing
-                    if( !this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
                         this.startEditing();
                     }
                 }else{
@@ -290,6 +290,7 @@ export class AuthorMidasComponent {
      */
     hideEditBlock() {
         this.isEditing = false;
+        this.childEditMode = MODE.NORMAL;
         this.overflowStyle = 'hidden';
         this.editBlockStatus = 'collapsed';
         this.chref.detectChanges();

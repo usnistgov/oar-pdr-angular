@@ -109,13 +109,16 @@ export class ResourceDataComponent implements OnChanges {
             this.maxWidth = width + 20;
         });
 
-        effect(() => {
-            this.isEditMode = this.edstatsvc.isEditMode();
-        })
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        });
+        // effect(() => {
+        //     this.isEditMode = this.edstatsvc.isEditMode();
+        // })
     }
 
     ngOnInit(): void {
-        this.isEditMode = this.edstatsvc.isEditMode();
+        // this.isEditMode = this.edstatsvc.isEditMode();
         this.recordType = (new NERDResource(this.record)).resourceLabel();
 
         this.colorScheme = {

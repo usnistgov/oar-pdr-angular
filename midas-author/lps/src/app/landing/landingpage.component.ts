@@ -309,10 +309,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             });
         }
 
-        effect(() => {
-          // Triggered by isEditMode()
-          this.edstatsvc.isEditMode();
-        })
+        // effect(() => {
+        //   // Triggered by isEditMode()
+        //   this.edstatsvc.isEditMode();
+        // })
     }
 
     get showSplitter() {
@@ -568,7 +568,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     if (this.editRequested) {
                         console.log("ID not found...");
                         this.globalService.error("The record with ID '" + this.reqId + "' was not found. You may have been trying to access a draft record that has not been created yet.");
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                         this.setMessage();
                         this.displaySpecialMessage = true;
                     }
@@ -900,20 +900,19 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     if (this.mdupdsvc.published) {
                         this.edstatsvc._setEditType(this.editTypes.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else if (this.mdupdsvc.submitted) {
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else {
                         this.editRequested = true;
                         // this.isEditMode = true;
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
                         this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
                         this.edstatsvc._setEditType(this.editTypes.NORMAL);
                     }
-                }
-                else {
+                }else { // Not authorized to edit. Set to view only mode.
                     this.editRequested = false;
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
                     // this._showContent = true;
                     // this.edstatsvc.setShowLPContent(true);
                 }
@@ -923,7 +922,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             });
         }else{
             this.editRequested = false;
-            this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+            this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
             this.edstatsvc.setShowLPContent(true);
             this._showContent = true;
             this.globalService.setAuthorized(false);
