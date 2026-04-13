@@ -57,18 +57,42 @@
             [disabled]="noURL || !accessPage || !accessPage?.dataChanged" 
             pTooltip="Save current changes"
             tooltipPosition="top" >
-            <fa-icon [icon]="faSave"></fa-icon>
+            <fa-icon 
+                [icon]="faSave"
+                [class]="iconClass('save')">
+            </fa-icon>
         </button>
 
         <!-- Cancel button -->
         <button
+            *ngIf="accessPage && accessPage.dataChanged"
             class="edit_button" 
             type="button"
             (click)="commandOut('undoCurrentChanges')" 
             aria-label="undo button" 
             pTooltip="Undo current changes"
             tooltipPosition="top">
-            <fa-icon [icon]="faXmark"></fa-icon>
+
+            <fa-icon 
+                [icon]="faUndo">
+            </fa-icon>
+        </button>
+
+        <!-- Close button - close edit block -->
+        <button 
+            class="edit_button" 
+            type="button" 
+            [disabled]='accessPage && accessPage.dataChanged' 
+            (click)="close()"
+            aria-label="Close edit block" 
+            pTooltip="Close edit block" 
+            tooltipPosition="top">
+        
+            <fa-icon 
+                [icon]="faXmark" 
+                size="sm" 
+                [class]="iconClass('close')">
+            </fa-icon>
         </button>
     </div>
 </div>

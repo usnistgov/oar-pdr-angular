@@ -215,20 +215,6 @@ export class AccesspageMidasComponent {
     }
 
     /**
-     * Determine icon class of edit button
-     * If edit mode is normal, display edit icon.
-     * Otherwise display check icon.
-     * @returns edit button icon class
-     */   
-    editIconClass() {
-        if(!this.isEditing){
-            return "fas fa-pencil icon_enabled";
-        }else{
-            return "fas fa-pencil icon_disabled";
-        }
-    }
-
-    /**
      * Open list block for editing
      */
     openListBlock() {
@@ -365,18 +351,6 @@ export class AccesspageMidasComponent {
     platformId(platformId: any) {
         throw new Error('Method not implemented.');
     }
-
-    /**
-     * Return the opacity of dragdrop icon to indicate enable/disable status
-     * @returns opacity
-     */
-    iconOpacity() {
-        if (this.childIsEditing || this.childIsAdding){
-            return 0.3;
-        }else{
-            return 1;
-        } 
-    }       
 
     /**
      * Update the edit status of child component 

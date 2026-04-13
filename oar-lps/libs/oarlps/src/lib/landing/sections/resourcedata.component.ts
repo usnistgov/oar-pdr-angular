@@ -210,11 +210,7 @@ export class ResourceDataComponent implements OnChanges {
         if (this.isPublicSite) {
             show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
         } else {
-            if (this.isEditMode) {
-                show = true;
-            } else {
-                show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
-            }
+            show = true;
         }
 
         return show;

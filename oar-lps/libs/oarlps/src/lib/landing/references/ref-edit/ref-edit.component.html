@@ -192,7 +192,7 @@
                         <textarea [(ngModel)]='ref.citation' rows="4" (input)="onChange(false) " style="width: 100%" [disabled]="!citationLocked">                             
                         </textarea>
                     </td>
-                    <td style="width: 30px !important;vertical-align: top;">
+                    <td style="width: 60px !important;vertical-align: top;">
                         <button 
                             class="edit_button" 
                             type="button"
@@ -259,11 +259,16 @@
             pTooltip="Save current changes"
             tooltipPosition="top" >
             <!-- <i [class]="saveIcon"></i> -->
-            <fa-icon [icon]="faSave" size="sm"></fa-icon>
+            <fa-icon 
+                [icon]="faSave" 
+                size="sm"
+                [class]="iconClass('save')">
+            </fa-icon>
         </button>
 
         <!-- Cancel button -->
         <button 
+            *ngIf="ref.dataChanged"
             class="edit_button" 
             type="button"
             (click)="commandOut('undoCurrentChanges');reset()" 
@@ -271,7 +276,27 @@
             pTooltip="Undo current changes"
             tooltipPosition="top" >
             <!-- <i [class]="cancelIcon"></i> -->
-            <fa-icon [icon]="faUndo" size="sm"></fa-icon>
+            <fa-icon 
+                [icon]="faUndo" 
+                size="sm">
+            </fa-icon>
+        </button>
+
+        <!-- Close button -->
+        <button 
+            [disabled]="ref.dataChanged" 
+            class="edit_button" 
+            type="button" 
+            (click)="commandOut('undoCurrentChanges');reset()"
+            aria-label="undo button" 
+            pTooltip="Undo current changes" 
+            tooltipPosition="top">
+
+            <fa-icon 
+                [icon]="faXmark" 
+                size="sm"
+                [class]="iconClass('close')">
+            </fa-icon>
         </button>
     </div>
 </div>

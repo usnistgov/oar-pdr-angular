@@ -154,8 +154,8 @@ export class RefMidasComponent {
      */
     onRefChange(dataChanged: any) {
         switch(dataChanged.action) {
-            case 'hideEditBlock':
-                this.setMode(MODE.NORMAL);
+            case 'hideListBlock':
+                this.hideListBlock();
                 break;
             case 'dataChanged':
                 this.dataChanged = true;
@@ -176,7 +176,7 @@ export class RefMidasComponent {
     /**
      * Hide edit block
      */
-    hideEditBlock() {
+    hideListBlock() {
         this.setMode(MODE.NORMAL);
     }
 
@@ -286,6 +286,7 @@ export class RefMidasComponent {
             default: // normal
                 // Collapse the edit block
                 this.editBlockExpanded = false;
+                this.loadEditRefBlock = false;
                 this.setOverflowStyle();
 
                 // Update help text
@@ -366,7 +367,7 @@ export class RefMidasComponent {
         });
 
         this.orderChanged = false; 
-        this.hideEditBlock();
+        this.hideListBlock();
     }   
 
    /**

@@ -50,9 +50,11 @@
 
 <!-- Lazy loading in edit mode. Never get loaded in public mode -->
 
-@if(isEditing) {
+<!-- @if(isEditing) { -->
     <!-- Author editor -->
-    <div [@editExpand]="editBlockStatus" 
+    <div 
+        *ngIf="isEditing"
+        [@editExpand]="editBlockStatus" 
         style = "width: 100%;" 
         [style.overflow] = "overflowStyle">
         <lib-author-list #authorlist 
@@ -63,4 +65,4 @@
             (editmodeOutput)="setChildEditMode($event)">
         </lib-author-list>
     </div>
-}
+<!-- } -->

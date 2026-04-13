@@ -54,10 +54,30 @@
                     type="button" 
                     (click)="onAdd()" 
                     aria-label="add button" 
-                    *ngIf="!isEditing && !isAdding" 
+                    [disabled]='isEditing || isAdding'
                     pTooltip="Add access page"
                     tooltipPosition="top">
-                    <fa-icon [icon]="faPlus"></fa-icon>
+                    <fa-icon 
+                        [icon]="faPlus"
+                        [class]="iconClass('add')">
+                    </fa-icon>
+                </button>
+
+                <!-- Hide button - hide edit block -->
+                <button 
+                    class="edit_button" 
+                    type="button" 
+                    [disabled]='isEditing || isAdding' 
+                    (click)="setMode()"
+                    aria-label="Hide edit block" 
+                    pTooltip="Hide edit block" 
+                    tooltipPosition="top">
+
+                    <fa-icon 
+                        [icon]="faXmark" 
+                        size="sm"
+                        [class]="iconClass('hideList')">
+                    </fa-icon>
                 </button>
             </div>
         </div>

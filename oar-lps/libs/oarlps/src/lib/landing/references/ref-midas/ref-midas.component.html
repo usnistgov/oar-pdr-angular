@@ -3,20 +3,20 @@
     <div class="editable_container">
         <!-- <ng-template #hasReferences> -->
         <div class="editable_field" style="max-width: calc(100% - 70px); margin-right: 5px;">
-            <div *ngIf="isEditMode && (!record['references'] || record['references'].length == 0)"  [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" style="margin-bottom: 10px; padding-left: 10px;">
-                Add references to papers and other datasets.
+            <div 
+                *ngIf="isEditMode"  
+                [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" 
+                style="margin-bottom: 10px; padding-left: 10px;">
+
+                <div *ngIf="!record['references'] || record['references'].length==0; else hasReferences">
+                    Add references to papers and other datasets.
+                </div>
+                <ng-template #hasReferences>
+                    Edit references:
+                </ng-template>
             </div>
 
             <ref-pub [record]="record" ></ref-pub>
-            <!-- <div [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" *ngFor="let ref of record['references']" style="padding-left: 10px; padding-top: 5px;min-height: 1.65em;">
-                <span *ngIf="ref.location; else noreflink">
-                    <span class="fas fa-external-link-alt">&nbsp;</span>
-                    <a href={{ref.location}} target="blank">{{ ref['location'] }}</a>
-                </span>
-                <ng-template #noreflink>
-                    <span >{{ ref['citation'] }}</span>
-                </ng-template>
-            </div> -->
         </div>        
         <!-- </ng-template> -->
         
@@ -24,7 +24,7 @@
         <div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap;width: 1.65em;">
             <button 
                 class="edit_button" 
-                *ngIf="isNormal" 
+                *ngIf="!childIsEditing && !childIsAdding && !isListing" 
                 type="button" 
                 (click)="startEditing()" 
                 aria-label="Edit reference"
@@ -32,19 +32,6 @@
                 tooltipPosition="top" 
                 style="cursor: pointer">
                 <fa-icon [icon]="faPencil" size="sm"></fa-icon>
-            </button> 
-
-            <!-- Hide button - hide edit block -->
-            <button 
-                class="edit_button" 
-                *ngIf="!isNormal" 
-                [disabled]="childIsEditing || childIsAdding" 
-                type="button" 
-                (click)="hideEditBlock()" 
-                aria-label="Hide edit block"
-                pTooltip="Hide edit block"
-                tooltipPosition="top" >
-                <fa-icon [icon]="faXmark" size="sm"></fa-icon>
             </button> 
 
             <!-- Undo all changes button -->
@@ -74,7 +61,12 @@
 -->
 @if (loadEditRefBlock) {
     <div style="width: 100%;" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
-        <lib-ref-list #reflist [nerdmRecord]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
+        <lib-ref-list 
+            #reflist [nerdmRecord]="record" 
+            [inBrowser]="inBrowser" 
+            [loadEditRefBlock]="loadEditRefBlock"
+            (dataCommand)="onRefChange($event)" 
+            (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
     </div>
 }
 

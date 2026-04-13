@@ -396,26 +396,6 @@ export class AuthorListComponent implements OnInit {
         })
     }
 
-    /*
-     *  Undo editing. If no more field was edited, delete the record in staging area.
-     */
-    undoAllChanges() {
-        this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
-                this.setMode(MODE.NORMAL, true);
-                this.orderChanged = false;
-                this.forceReset = true;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to authors.", "", 3000);
-                // this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
-                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
-            }else{
-                let msg = "Failed to undo author's metadata";
-                console.error(msg);   
-            }
-                
-        });
-    }
-
     undoCurAuthorChanges() {
         if(this.isAdding) {
             // this.removeAuthor(this.currentAuthorIndex);

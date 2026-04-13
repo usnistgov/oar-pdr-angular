@@ -1,6 +1,6 @@
 <div class="references">
     <div class="editable_container"  style="width: 100%;">
-        <div class="editable_field" style="width: calc(100% - 35px);">
+        <div class="editable_field" style="width: calc(100% - 70px);">
             <!-- Drag and drop reference list-->
             <div class="reference-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                 <div *ngIf="record['references'] && record['references'].length > 0; else noReference" #dropListContainer class="example-container" cdkDropListGroup>
@@ -52,8 +52,29 @@
                 [disabled]="isEditing || isAdding" 
                 pTooltip="Add references"
                 tooltipPosition="top" >
-                <!-- <i [class]="addIconClass()"></i> -->
-                <fa-icon [icon]="faPlus" size="sm"></fa-icon>
+
+                <fa-icon 
+                    [icon]="faPlus" 
+                    size="sm"
+                    [class]="iconClass('add')">
+                </fa-icon>
+            </button>
+
+            <!-- Hide button - hide edit block -->
+            <button 
+                class="edit_button" 
+                [disabled]="isEditing || isAdding" 
+                type="button"
+                (click)="hideListBlock()" 
+                aria-label="Hide edit block" 
+                pTooltip="Hide edit block" 
+                tooltipPosition="top">
+
+                <fa-icon 
+                    [icon]="faXmark" 
+                    size="sm"
+                    [class]="iconClass('hideList')">
+                </fa-icon>
             </button>
         </div>
     </div>

@@ -208,7 +208,7 @@ export class MetadataUpdateService {
         );
     }
 
-    isAuthorized(ediid: string) : Observable<any>  {
+    isAuthorized(ediid: string): Observable<any> {
         return this.dapsvc.isAuthorized(ediid);
     }
 

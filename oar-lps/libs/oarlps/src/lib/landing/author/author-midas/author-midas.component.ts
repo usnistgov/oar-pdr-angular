@@ -54,6 +54,7 @@ export class AuthorMidasComponent {
     orderChanged: boolean = false;
     globalsvc = inject(GlobalService);
     editingStarted: boolean = false; // Signal child component editing started
+    forceReset: boolean =  false; // Force reset child component when undo changes, this is needed when author order changed but no field data changed, so the dataChanged signal will not be triggered.
 
     //icon class names
     // editIcon = iconClass.EDIT;
@@ -313,11 +314,20 @@ export class AuthorMidasComponent {
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoAllChanges() {
-        this.authorList.undoAllChanges();
-        this.setMode(MODE.NORMAL, true);
-        this.orderChanged = false;
-        this.hideEditBlock();
-    }   
+        this.mdupdsvc.undo(this.fieldName).then((success) => {
+            if (success){
+                this.setMode(MODE.NORMAL, true);
+                this.forceReset = true;
+                this.notificationService.showSuccessWithTimeout("Reverted changes to authors.", "", 3000);
+                this.hideEditBlock();
+
+            } else {
+                let msg = "Failed to undo author's metadata";
+                console.error(msg);   
+            }
+                
+        });
+    }
 
     /**
      * Return the opacity of dragdrop icon to indicate enable/disable status

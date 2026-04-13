@@ -30,7 +30,7 @@ import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-ref-list',
@@ -88,10 +88,12 @@ export class RefListComponent implements OnInit {
     //icon class names
     // addIcon = iconClass.ADD;    
     faPlus = faPlus;
+    faXmark = faXmark;
     
     // passed in by the parent component:
     @Input() nerdmRecord: NerdmRes = null;
     @Input() inBrowser: boolean = false;
+    @Input() loadEditRefBlock: boolean = false;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
@@ -130,6 +132,14 @@ export class RefListComponent implements OnInit {
     ngOnChanges(ch : SimpleChanges) {
         if (ch.nerdmRecord){
             this.resetOriginalValue();
+        }
+
+        if (ch.loadEditRefBlock) {
+            this.loadEditRefBlock = ch.loadEditRefBlock.currentValue;
+
+            if (this.loadEditRefBlock && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                this.onAdd();
+            }            
         }
 
         this.chref.detectChanges();
@@ -692,4 +702,44 @@ export class RefListComponent implements OnInit {
             }, (reason) => {
         });
     }    
+
+    /**
+     * Add/close button disabled when in edit/add mode. 
+     * @param button The type of the button
+     * @returns icon class name for the button
+     */
+    iconClass(button: string) {
+        let Returnclass: string ="icon_disabled";
+
+        switch (button) {
+            case 'hideList':
+                if (this.isEditing || this.isAdding) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'add':
+                if (this.isEditing || this.isAdding) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;
+            default:
+                break;
+        }
+
+        return Returnclass;
+    }       
+    
+    hideListBlock() {
+        this.setMode(MODE.NORMAL);
+
+        if(this.record)
+            this.dataCommand.next({"data": this.record[this.fieldName], "action": "hideListBlock"});
+    }
+
 }

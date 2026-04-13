@@ -23,25 +23,29 @@ import {
 
 export class menuItem {
     title: string;
+    color: string
     backgroundColor: string;
     isHeader: boolean;
     sectionName: string;
     icon: any;
     url: string;
 
-    constructor(title: string, 
-                sectionName: string = "",
-                url: string,
-                backgroundColor: string = "white", 
-                isHeader: boolean = false,
-                icon: any = null)
-    {
+    constructor(
+        title: string, 
+        sectionName: string = "",
+        url: string,
+        backgroundColor: string = "white", 
+        isHeader: boolean = false,
+        icon: any = null,
+        color: string = "black") {
+        
         this.title = title;
         this.sectionName = sectionName;
         this.url = url;
         this.backgroundColor = backgroundColor;
         this.isHeader = isHeader;
-        this.icon = icon;       
+        this.icon = icon;   
+        this.color = color;
     }
 } 
 
@@ -66,6 +70,7 @@ export class MenuComponent implements OnInit {
     gotoMenu: menuItem[] = [] as menuItem[];
     useMenu: menuItem[] = [] as menuItem[];
     findMenu: menuItem[] = [] as menuItem[];
+    bulkDownloadMenu: menuItem = {} as menuItem;
     public CART_CONSTANTS: any = CartConstants.cartConst;
     globalCartUrl: string = "/datacart/" + this.CART_CONSTANTS.GLOBAL_CART_NAME;
     recordType: string = "";
@@ -97,6 +102,8 @@ export class MenuComponent implements OnInit {
     // flag if metrics is ready to display
     @Input() showMetrics: boolean = false;
     
+    @Input() isPublicSite: boolean = true; 
+
     // @Input() citetext: string;
 
     @Output() scroll = new EventEmitter<string>();
@@ -164,7 +171,14 @@ export class MenuComponent implements OnInit {
         this.useMenu.push(new menuItem("Citation", "citation", "", this.lighterColor, false, this.anglesRightIcon));
         this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, this.anglesRightIcon));
         this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, this.arrowUpRightFromSquareIcon));
-        this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, this.cartPlusIcon));
+
+        if (this.isPublicSite) {
+            this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, this.cartPlusIcon));
+            this.bulkDownloadMenu = new menuItem("Bulk Download", "", this.bulkDownloadURL, this.lighterColor, false, this.downloadIcon);
+        } else {
+            this.useMenu.push(new menuItem("Data Cart", "", "", this.lighterColor, false, this.cartPlusIcon, "grey"));
+            this.bulkDownloadMenu = new menuItem("Bulk Download", "", "", this.lighterColor, false, this.downloadIcon, "grey");
+        }
 
         let searchbase = this.cfg.get("links.pdrSearch","/sdp/");
         if (searchbase.slice(-1) != '/') searchbase += "/";
@@ -315,17 +329,23 @@ export class MenuComponent implements OnInit {
         window.open(this.bulkDownloadURL, "_blank");  
     }
 
-    menuStyle(header: boolean) {
+    menuStyle(menuitem: menuItem) {
+        let header = menuitem.isHeader;
         let defaultColor = this.colorScheme.defaultVar;
+        let fontColor = "black";
 
         if (!header) {
             defaultColor = this.colorScheme.lighterVar;
+            if (!this.isPublicSite && menuitem) {
+                fontColor = menuitem.color ? menuitem.color : "black";
+            }
         }
 
         return {
             '--background-default': defaultColor,
             '--background-lighter': this.colorScheme.lighterVar,
-            '--background-hover': this.colorScheme.hoverVar
+            '--background-hover': this.colorScheme.hoverVar,
+            '--font-color': fontColor
         };
     }
 }

@@ -322,6 +322,10 @@ export class EditControlComponent implements OnInit, OnChanges {
         return this._editMode == this.EDIT_MODES.PREVIEW_MODE;
     }
 
+    get isViewonlyMode() {
+        return this._editMode == this.EDIT_MODES.VIEWONLY_MODE;
+    }    
+
     get isDoneMode() {
         return this._editMode == this.EDIT_MODES.DONE_MODE;
     }
@@ -388,6 +392,10 @@ export class EditControlComponent implements OnInit, OnChanges {
                 returnString = "DONE";
                 break; 
             } 
+            case this.EDIT_MODES.VIEWONLY_MODE: { 
+                returnString = "PREVIEW MODE";
+                break; 
+            }                 
             default: { 
                 break; 
             } 
