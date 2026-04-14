@@ -41,6 +41,7 @@ export class SectionTitleComponent {
 
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
+            this.updateSectionHeaderBackground();
         })
     }
 
@@ -51,8 +52,11 @@ export class SectionTitleComponent {
         let width = this.globalService.getTextWidth(this.sectionTitle)
         this.sectionWidth = width;
 
-        if(this.inBrowser && this.colorScheme)
-            this.d3Service.drawSectionHeaderBackground(this.svg, this.sectionTitle, this.sectionWidth, this.colorScheme.defaultVar, width, "#"+this.sectionTag);    
+        this.updateSectionHeaderBackground();
     }
 
+    updateSectionHeaderBackground(){
+        if(this.inBrowser && this.colorScheme)
+            this.d3Service.drawSectionHeaderBackground(this.svg, this.sectionTitle, this.sectionWidth, this.colorScheme.defaultVar, this.sectionWidth, "#"+this.sectionTag);    
+    }
 }
