@@ -173,10 +173,23 @@
 
         <!-- Display tree table -->
         <!-- Available match modes are "startsWith", "contains", "endsWith", "equals", "notEquals", "in", "lt", "lte", "gt" and "gte" -->
-        <p-treeTable #tt class="data-table" *ngIf="visible" [value]="files" [columns]="cols" selectionMode="single"
-            (onNodeExpand)="treeTableToggled($event)" (onNodeCollapse)="treeTableToggled($event)" [resizableColumns]="true"
-            dataKey="key" sortField="name" styleClass="p-treetable-sm" [scrollable]="virtualScroll"
-            [scrollHeight]="treeTableHeight + 'px'" [virtualScroll]="virtualScroll" [virtualScrollItemSize]="57"
+        <p-treeTable 
+            #tt 
+            class="data-table" 
+            *ngIf="visible" 
+            [value]="files" 
+            [columns]="cols" 
+            selectionMode="single"
+            (onNodeExpand)="treeTableToggled($event)" 
+            (onNodeCollapse)="treeTableToggled($event)" 
+            [resizableColumns]="true"
+            dataKey="key" 
+            sortField="name" 
+            styleClass="p-treetable-sm" 
+            [scrollable]="virtualScroll"
+            [scrollHeight]="treeTableHeight + 'px'" 
+            [virtualScroll]="virtualScroll" 
+            [virtualScrollItemSize]="57"
             [globalFilterFields]="['name']">
             <ng-template pTemplate="caption">
                 <div style="text-align: right; height: 20px;margin-bottom: 10px;padding-top: 0px;border-color: 1px solid red;">
@@ -238,6 +251,7 @@
                     <td [ngStyle]="titleStyle(rowData)" (click)="openDetails(rowData)">
                         <p-treeTableToggler [rowNode]="rowNode" data-toggle="tooltip" title="Expand/Collapse">
                         </p-treeTableToggler>
+
                         <span data-toggle="tooltip" title="Click for more details">
                             <b>{{rowData.name}}</b> </span>
                         <span style="margin-left: .5em;" *ngIf="isLeaf(rowData)">
@@ -430,6 +444,11 @@
                         </div>
                     </td>
                 </tr>
+            </ng-template>
+
+            <!-- 👇 Custom toogler icons -->
+            <ng-template pTemplate="togglericon" let-open>
+                <fa-icon [icon]="open ? faChevronDown : faChevronRight"></fa-icon>
             </ng-template>
         </p-treeTable>
     

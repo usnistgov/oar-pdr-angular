@@ -25,7 +25,7 @@
             "lightVar": "var(--chips-background-light)",
             "lighterVar": "var(--chips-background-lighter)",
             "darkVar": "var(--chips-background-dark)",
-            "hoverVar": "#84b4db"        
+            "hoverVar": "var(--chips-background-hover)"       
     },
     "RosyFlamingo": {
             "defaultVar": "var(--background-orange-default)",
