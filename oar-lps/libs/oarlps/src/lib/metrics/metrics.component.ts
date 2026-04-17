@@ -28,7 +28,9 @@ import {
     faCircleArrowUp,
     faChartBar,
     faDownload,
-    faFileArrowDown
+    faFileArrowDown,
+    faChevronRight,
+    faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
 import { iconClass } from '../shared/globals/globals';
 
@@ -119,6 +121,8 @@ export class MetricsComponent implements OnInit {
     faChartBar = faChartBar;
     faDownload = faDownload;
     faFileArrowDown = faFileArrowDown
+    faChevronRight = faChevronRight;
+    faChevronDown = faChevronDown;
 
     isMouseOver: boolean = false;
 
