@@ -120,8 +120,8 @@ export class CollectionService {
         }
     }
 
-    public loadColorPalettesFromJson(): Observable<any> {
-        return this.http.get('./assets/collection/color-palettes.json');
+    public loadColorPalettesFromJson(pdrHome: string = './'): Observable<any> {
+        return this.http.get(`${pdrHome}assets/collection/color-palettes.json`);
     }
 
 }

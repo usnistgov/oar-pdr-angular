@@ -195,6 +195,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     showStickMenu: boolean = false;
     landingPageURL: string;
     landingPageServiceStr: string;
+    pdrHomeURL: string | null | undefined = null;
 
     //Icons
     faList = faList;
@@ -247,6 +248,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.inBrowser = isPlatformBrowser(platformId);
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+        this.pdrHomeURL = this.cfg.get("links.pdrHome", "/");
 
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
@@ -283,7 +285,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let cp: any;
         let colorPalettes: any;
 
-        this.collectionService.loadColorPalettesFromJson().subscribe({
+        this.collectionService.loadColorPalettesFromJson(this.pdrHomeURL).subscribe({
             next: (data) => {
                 colorPalettes = data;
 
