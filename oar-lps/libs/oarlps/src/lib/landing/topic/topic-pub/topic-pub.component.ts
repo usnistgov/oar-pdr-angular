@@ -61,9 +61,8 @@ export class TopicPubComponent implements AfterContentInit {
             if(this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
             this.record['isPartOf'].length > 0) {
                 for (let c of this.record['isPartOf']) {
-                    let colDisplay = CollectionDisplay[collection.toUpperCase()] ? CollectionDisplay[collection.toUpperCase()] : "";    
-                    if (colDisplay != "") {
-                        return (c.title.toLowerCase().indexOf(colDisplay.toLowerCase()) > -1)
+                    if (c['@id'] && c['@id'].split('/').pop() == this.allCollections[collection].id) {
+                        return true;
                     } else {
                         return false;
                     }
