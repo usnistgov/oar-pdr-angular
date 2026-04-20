@@ -344,7 +344,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
         this.loadBannerUrl();
-        this.loadColorPalette();   
         
         if(this.inBrowser){
             this.cartChangeHandler = this.cartChanged.bind(this);
@@ -352,8 +351,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
         this.metricsData = new MetricsData();
 
-        // Clean up cart status storage
         if(this.inBrowser){
+            this.loadColorPalette();   
+
+            // Clean up cart status storage
             this.dataCartStatus = DataCartStatus.openCartStatus();
             this.dataCartStatus.cleanUpStatusStorage();
         }
