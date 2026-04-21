@@ -3,7 +3,7 @@
 <div id="filelisting" *ngIf="displayDataSection" [ngClass]="displayMode == 'restrict' ? 'restrict-public' : ''">
     <div *ngIf="displayMode == 'restrict'">Note:  This dataset is designated as restricted public data; this file list will not be shown in the public version of this page.</div>
 
-    <div *ngIf="!inBrowser">
+    <div *ngIf="!inBrowser" style="height: 35px;">
         <div>
             <b>Files </b>
         </div>
@@ -21,21 +21,21 @@
         <div class="flex-container" style="margin-top: 2em;">
             <!-- 'Download all' and 'Add all to cart' buttons disabled if this is internal landing page -->
             @if(!isPublicSite) {
-                <div style="flex: 0 0 110px; text-align: left; margin-bottom: -.5em;padding-bottom: 0em;">
+                <div style="flex: 0 0 110px; text-align: left; margin-bottom: opx;margin-top: 5px;height: 35px;">
                     <span><b id="filelist-heading">Files</b></span>
                     <!-- <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all"
                         ngbTooltip="Download all disabled in edit mode">
                     </span> -->
 
                     <!-- Download icon in MIDAS side -->
-                    <span class="fa-stack grey-color" size="2x" style="margin: -5px -22px 0 10px" aria-label="Download all"
+                    <span class="fa-stack grey-color" size="2x" style="margin: 0px -22px 0 10px" aria-label="Download all"
                         ngbTooltip="Download all disabled in edit mode">
                         <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
                         <fa-icon [icon]="faDownload" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
                     </span>
 
                     <!-- Add all to cart icon in MIDAS side -->
-                    <span class="fa-stack grey-color" size="2x" style="margin: -5px -2em 0px 10px" aria-label="Add all to data cart"
+                    <span class="fa-stack grey-color" size="2x" style="margin: 0px -2em 0px 10px" aria-label="Add all to data cart"
                         ngbTooltip="Add all to data cart disabled in edit mode">
                         <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
                         <fa-icon [icon]="faCartPlus" class="fa-stack-1x small" style="top: 7px;left: -2px;"></fa-icon>
@@ -47,7 +47,7 @@
                 </div>
             }
             @else {
-                <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;">
+                <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;height: 35px;">
                     <span><b id="filelist-heading">Files </b> </span>
                     <!-- <a class="fa-stack fa-lg icon-download" style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all" -->
 
@@ -134,6 +134,24 @@
                     details.</span>
             </div>
 
+            <div class="search-wrapper">
+                <fa-icon 
+                    [icon]="faMagnifyingGlass" 
+                    size="sm" 
+                    data-toggle="tooltip" 
+                    title="Search on file or folder name"
+                    aria-label="Search on file or folder name">
+                </fa-icon>
+
+                <input 
+                    type="text" 
+                    pInputText 
+                    size="50" 
+                    placeholder="Search on file or folder name ..." 
+                    [(ngModel)]="searchText"
+                    (input)="toogleTree(true);filterTreeTable($event.target.value)">
+            </div>
+
             <div class="grey-color" style="flex-grow: 2; text-align: right;padding-top: 13px;">
                 Total No. files:
                 <span 
@@ -192,8 +210,7 @@
             [virtualScrollItemSize]="57"
             [globalFilterFields]="['name']">
             <ng-template pTemplate="caption">
-                <div style="text-align: right; height: 20px;margin-bottom: 10px;padding-top: 0px;border-color: 1px solid red;">
-                    <!-- <i class="pi pi-search" style="margin:4px 4px 0 0" aria-label="Search on file or folder name"></i> -->
+                <!-- <div class="search-wrapper">
                     <fa-icon 
                         [icon]="faMagnifyingGlass" 
                         size="sm" 
@@ -205,11 +222,7 @@
                     <input type="text" pInputText size="50" placeholder="Search on file or folder name ..."
                         [(ngModel)]="searchText" (input)="toogleTree(true);tt.filterGlobal($event.target.value, 'contains')"
                         style="height: 20px;margin: 0 0px 20px 0;width: 60%;background-color: #f0f0f0;">
-                    <!-- <button pButton type="submit" class="p-button-sm btn-labeled" id="btn-reset"
-                        (click)="searchText='';tt.filterGlobal('', 'contains')" label="Reset"
-                        [ngStyle]="{'margin-top':'0px','width':'max-content','height': '26px', 'background-color':'var(--nist-blue-default)', 'color': 'white'}">
-                    </button> -->
-                </div>
+                </div> -->
             </ng-template>
             <ng-template pTemplate="header" let-columns>
                 <tr>

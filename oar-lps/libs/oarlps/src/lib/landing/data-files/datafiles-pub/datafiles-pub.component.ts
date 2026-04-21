@@ -16,6 +16,7 @@ import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TreeTableModule } from 'primeng/treetable';
+import { TreeTable } from 'primeng/treetable';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { BadgeModule } from 'primeng/badge';
@@ -243,7 +244,8 @@ export class DatafilesPubComponent {
     faChevronRight = faChevronRight;
     faChevronDown = faChevronDown;
     
-    @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
+    // @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
+    @ViewChild('tt') treeTable!: TreeTable; 
     
     constructor(private cartService: CartService,
                 public breakpointObserver: BreakpointObserver,
@@ -1185,4 +1187,7 @@ export class DatafilesPubComponent {
         this.gaService.gaTrackEvent('homepage', event, title, url);
     }      
 
+    filterTreeTable(filterText: string) {
+        this.treeTable.filterGlobal(filterText, 'contains')
+    }
 }
