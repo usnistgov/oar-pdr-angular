@@ -46,5 +46,9 @@
     "fs": false,
     "proc": false,
     "process": false
-  }
+  },
+  "sideEffects": [
+    "*.css",
+    "*.scss"
+  ]
 }
