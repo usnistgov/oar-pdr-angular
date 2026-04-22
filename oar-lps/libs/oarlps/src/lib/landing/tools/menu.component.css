@@ -39,3 +39,7 @@ a:visited,
 a:focus {
     color: black !important ;
 }
+
+fa-icon {
+    margin-right: 3px;
+}

@@ -40,7 +40,9 @@ import {
     faCaretRight,
     faLock,
     faCopy,
-    faHandPointRight
+    faHandPointRight,
+    faChevronRight,
+    faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 
@@ -237,6 +239,8 @@ export class DatafilesPubComponent {
     faCopy = faCopy;
     faHandPointRight = faHandPointRight;
     faCircle = faCircle;
+    faChevronRight = faChevronRight;
+    faChevronDown = faChevronDown;
     
     @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
     
@@ -264,7 +268,9 @@ export class DatafilesPubComponent {
             faCaretRight,
             faLock,
             faCopy,
-            faHandPointRight
+            faHandPointRight,
+            faChevronRight,
+            faChevronDown
         );  
 
         this.cols = [

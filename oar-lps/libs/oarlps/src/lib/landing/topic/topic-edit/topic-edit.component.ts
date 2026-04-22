@@ -20,7 +20,9 @@ import {
     faSave,
     faUndo,
     faTrashCan,
-    faRecycle
+    faRecycle,
+    faChevronDown,
+    faChevronRight
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ROW_COLOR = '#1E6BA1';
@@ -67,6 +69,8 @@ export class TopicEditComponent implements OnInit {
     faUndo = faUndo;
     faTrashCan = faTrashCan;
     faRecycle = faRecycle;
+    faChevronDown = faChevronDown;
+    faChevronRight = faChevronRight;
 
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean;

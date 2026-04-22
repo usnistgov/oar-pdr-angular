@@ -172,6 +172,11 @@
                     </td>
                 </tr>
             </ng-template>
+
+            <!-- 👇 Custom toogler icons -->
+            <ng-template pTemplate="togglericon" let-open>
+                <fa-icon [icon]="open ? faChevronDown : faChevronRight"></fa-icon>
+            </ng-template>
         </p-treeTable>
     </div>
 </div>

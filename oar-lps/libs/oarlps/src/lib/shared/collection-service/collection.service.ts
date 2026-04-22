@@ -120,8 +120,14 @@ export class CollectionService {
         }
     }
 
-    public loadColorPalettesFromJson(): Observable<any> {
-        return this.http.get('./assets/collection/color-palettes.json');
+    /**
+     * Load color palettes from json file.
+     * @param pdrHome Url prefix for pdr home, default to './' which means the same domain and path as the current page. 
+     * In production, odrHome should be https://data.nist.gov/pdr/.
+     * @returns color-palettes.json data as an Observable
+     */
+    public loadColorPalettesFromJson(pdrHome: string = './'): Observable<any> {
+        return this.http.get(`${pdrHome}assets/collection/color-palettes.json`);
     }
 
 }
