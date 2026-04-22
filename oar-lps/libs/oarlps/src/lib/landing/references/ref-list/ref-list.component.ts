@@ -43,7 +43,6 @@ import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
         CollapseModule,
         TextEditComponent,
         RefEditComponent,
-        ConfirmationDialogComponent,
         DragDropModule,
         FontAwesomeModule
     ],
@@ -63,8 +62,6 @@ export class RefListComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     placeholder: string = "Enter reference data below";
     orderChanged: boolean = false;
-    currentRef: Reference = {} as Reference;
-    currentRefIndex: number = 0;
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
     record: NerdmRes = {} as NerdmRes;
@@ -94,6 +91,8 @@ export class RefListComponent implements OnInit {
     @Input() nerdmRecord: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() loadEditRefBlock: boolean = false;
+    @Input() currentRef: Reference = {} as Reference;
+    @Input() currentRefIndex: number = 0;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
@@ -677,31 +676,6 @@ export class RefListComponent implements OnInit {
         if(this.record)
             this.dataCommand.next({"data": this.record[this.fieldName], "action": "hideEditBlock"});
     }
-
-    /**
-     * Undo all changes
-     */
-    undoAllChangesConfirmation(){
-        var message = 'This will undo all reference changes.';
-
-        this.modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true });
-        this.modalRef.componentInstance.title = 'Please confirm';
-        this.modalRef.componentInstance.btnOkText = 'Confirm';
-        this.modalRef.componentInstance.btnCancelText = 'Cancel';
-        this.modalRef.componentInstance.message = message;
-        this.modalRef.componentInstance.showWarningIcon = true;
-        this.modalRef.componentInstance.showCancelButton = true;
-        
-        this.modalRef.result.then(
-            (result) => {
-                if ( result ) {
-                    this.undoChanges();
-                }else{
-                    console.log("User changed mind.");
-                }
-            }, (reason) => {
-        });
-    }    
 
     /**
      * Add/close button disabled when in edit/add mode. 

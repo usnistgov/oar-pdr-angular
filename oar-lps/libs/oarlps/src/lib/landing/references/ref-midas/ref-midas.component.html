@@ -12,11 +12,9 @@
                     Add references to papers and other datasets.
                 </div>
                 <ng-template #hasReferences>
-                    Edit references:
+                    <ref-pub [record]="record"></ref-pub>
                 </ng-template>
             </div>
-
-            <ref-pub [record]="record" ></ref-pub>
         </div>        
         <!-- </ng-template> -->
         
@@ -65,6 +63,8 @@
             #reflist [nerdmRecord]="record" 
             [inBrowser]="inBrowser" 
             [loadEditRefBlock]="loadEditRefBlock"
+            [currentRef]="currentRef"
+            [currentRefIndex]="currentRefIndex"
             (dataCommand)="onRefChange($event)" 
             (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
     </div>

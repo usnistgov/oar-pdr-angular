@@ -29,6 +29,8 @@ import {
     faSave,
     faUndo
 } from '@fortawesome/free-solid-svg-icons';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'ref-midas',
@@ -38,6 +40,7 @@ import {
         RefListComponent,
         ButtonModule,
         TooltipModule,
+        FormsModule,
         ConfirmationDialogComponent,
         RefPubComponent,
         SingleMsgBarComponent,
@@ -94,6 +97,7 @@ export class RefMidasComponent {
         private modalService: NgbModal,       
         private chref: ChangeDetectorRef,  
         public iconLibrary: FaIconLibrary,
+        private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
         iconLibrary.addIcons(
@@ -186,6 +190,18 @@ export class RefMidasComponent {
     get childIsEditing() { return this.childEditMode==MODE.EDIT }
     get childIsAdding() { return this.childEditMode==MODE.ADD }
     
+    get dataChangedAndUpdated() {
+        let changed: boolean = false;
+
+        if(this.record && this.record[this.fieldName]) {
+            for(let i=0; i < this.record[this.fieldName].length; i++) {
+                changed = changed || this.mdupdsvc.fieldUpdated(this.fieldName, this.record['references'][i]['@id']);
+            }
+        }
+        
+        return changed || this.orderChanged;        
+    }
+
     @ViewChild('reflist') refList: RefListComponent;
 
     /**
@@ -359,7 +375,7 @@ export class RefMidasComponent {
         this.modalRef.result.then(
             (result) => {
                 if ( result ) {
-                    this.refList.undoChanges();
+                    this.undoChanges();
                 }else{
                     console.log("User changed mind.");
                 }
@@ -369,6 +385,42 @@ export class RefMidasComponent {
         this.orderChanged = false; 
         this.hideListBlock();
     }   
+
+   /*
+     *  Undo editing. If no more field was edited, delete the record in staging area.
+     */
+    undoChanges() {
+        if(this.dataChangedAndUpdated){
+            this.mdupdsvc.undo(this.fieldName).then((success) => {
+                if (success){
+                    if(this.orig_record && this.orig_record.references && this.record.references && this.record.references.length > 0){
+                        this.record.references = JSON.parse(JSON.stringify(this.orig_record.references));
+            
+                        this.record.references.forEach((ref) => {
+                            ref.dataChanged = false;
+                        });
+
+                        this.currentRefIndex = 0;
+                        this.currentRef = this.record.references[this.currentRefIndex];
+                    } else {   
+                        if (this.record.references) {
+                            delete this.record.references;
+                        }
+                        this.currentRefIndex = 0;
+                        this.currentRef = null;
+                    }
+            
+                    this.orderChanged = false;
+                    this.notificationService.showSuccessWithTimeout("Reverted changes to reference.", "", 3000);
+                    this.setMode(MODE.NORMAL);
+                }else{
+                    //Error was handled in metadata service.
+                    return;
+                }
+            });
+        }
+    }
+
 
    /**
      * Return the opacity of dragdrop icon to indicate enable/disable status

@@ -7,7 +7,12 @@
 <accesspage-pub [record]="record" [theme]="theme" [isPublicSite]="isPublicSite">
     <div class="message" style="margin-right: 10px;">
         @if(isEditMode) {
-            Add links to relevant websites including software repositories.
+            <span *ngIf="accessPages.length === 0; else editAccessPage">
+                Add links to relevant websites including software repositories.
+            </span>
+            <ng-template #editAccessPage>
+                 Edit links to relevant websites including software repositories.
+            </ng-template>
         }
     </div>
 
