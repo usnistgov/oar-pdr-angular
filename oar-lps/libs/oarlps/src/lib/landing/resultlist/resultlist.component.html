@@ -33,17 +33,14 @@
             <!-- Search text -->
             <div class="td" style="width: auto;padding-right: 5px;">
                 <span class="p-input-icon-right search-wrapper" style="width: 100%;">
-                    <!-- <i class="pi pi-search" style="top: 25px;"></i> -->
-
                     <fa-icon 
                         [icon]="faMagnifyingGlass" 
-                        style="top: 25px;">
+                        style="top: 23px;">
                     </fa-icon>
 
                     <label for="freeTextSearch" class="sr-only">Free Text Search</label>
                     <input id="freeTextSearch" type="text" pInputText [(ngModel)]="searchPhases"
-                        placeholder="Search for" (input)="filterResults()"
-                        [style]="{'text-align': 'left', 'height':'30px','width': '100%','padding-bottom':'0px','padding-top':'0px','margin-bottom':'0px','border-radius':'3px'}">
+                        placeholder="Search for" (input)="filterResults()">
                 </span>
             </div>
         </div>
