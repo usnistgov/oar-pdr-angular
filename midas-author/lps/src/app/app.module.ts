@@ -13,7 +13,8 @@ import { StaffDirModule } from 'oarng';
 import { DefaultUrlSerializer, UrlTree, UrlSerializer } from '@angular/router';
 import { FooterComponent, HeaderComponent, HeaderPubComponent } from 'oarng';
 import { OARLPSModule, ConfigModule, EditControlModule, CollectionService, ConfirmationDialogService,
-         GoogleAnalyticsService, ErrorsModule, AppErrorHandler, LandingAboutComponent
+    GoogleAnalyticsService, AppErrorHandler, LandingAboutComponent,
+    MetadataUpdateService
 } from 'oarlps';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -48,7 +49,7 @@ enableProdMode();
     ],
     imports: [
         OARLPSModule,
-        ErrorsModule,
+        // ErrorsModule,
         AppRoutingModule,
         LandingAboutComponent,
         ConfigModule,
@@ -72,6 +73,7 @@ enableProdMode();
         },
         GoogleAnalyticsService,
         DatePipe,
+        MetadataUpdateService,
         CollectionService,
         NgbActiveModal,
         ConfirmationDialogService

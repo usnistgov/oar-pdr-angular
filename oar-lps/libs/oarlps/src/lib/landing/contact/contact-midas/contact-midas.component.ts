@@ -50,6 +50,7 @@ export class ContactMidasComponent {
     fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
     editMode: string = MODE.NORMAL; 
     isPublicSite: boolean = false;
+    isEditMode: boolean = false;
 
     tempInput: any = {};
 
@@ -128,12 +129,16 @@ export class ContactMidasComponent {
                         this.hideEditBlock(false);
                     }
                 }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                    if(!this.isEditing && sectionMode.section == this.fieldName) {
                         this.startEditing();
                     }
                 }
             }
         })
+
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -180,7 +185,7 @@ export class ContactMidasComponent {
      * @returns the background color of the whole record
      */
     get getRecordBackgroundColor() {
-        if(this.edstatsvc.isEditMode()){
+        if(this.isEditMode){
             this.backgroundColor = 'var(--editable)';
             
             if(this.mdupdsvc.fieldUpdated(this.fieldName)){
@@ -412,4 +417,41 @@ export class ContactMidasComponent {
         this.clickContact = !this.clickContact;
         return this.clickContact;
     }
+
+   /**
+         * There are diferent type of buttons whose styling will be different based on the edit mode and data change status. This function will return the opacity of the button icon based on those factors. If in edit/add mode but no data changed, display enabled icon. Otherwise, display disabled icon.
+         * Type 1: disabled when data changed. Such as close button.
+         * Type 2: enabled when data changed. Such as save button and undo button.
+         * @param type The type of the button
+        * @returns opacity
+        */
+    iconClass(type: string) {
+        let Returnclass: string ="icon_disabled";
+
+        switch (type) {
+            case 'close':
+                if (!this.dataChanged) {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'undo':
+                if (this.dataChanged) {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;
+
+            case 'save':
+                if (this.currentContact.dataChanged && this.currentContact.fn) {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;            
+            default:
+                break;
+        }
+
+        return Returnclass;
+    }         
 }

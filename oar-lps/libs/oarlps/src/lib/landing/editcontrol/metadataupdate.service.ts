@@ -1,20 +1,19 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable, EventEmitter, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { UniqueSelectionDispatcher } from '@angular/cdk/collections';
-import { UserMessageService } from '../../frame/usermessage.service';
-import { CustomizationService } from './customization.service';
 import { NerdmRes, NerdmComp } from '../../nerdm/nerdm';
 import { DAPService, DAPUpdateService, MIDASDAPUpdateService } from '../../nerdm/dap.service';
 import * as daperrs from '../../errors/error';
 import { Observable, map, switchMap, tap, of, catchError, throwError, Subscriber } from 'rxjs';
 import { UpdateDetails, DBIOrecord } from './interfaces';
 import { AuthService } from './auth.service';
-import { LandingConstants } from '../../shared/globals/globals';
+import { GlobalService, LandingConstants } from '../../shared/globals/globals';
 import { EditStatusService } from './editstatus.service';
 import { AnyObj, AuthenticationService, Credentials, StaffDirectoryService } from 'oarng';
 import { LandingpageService } from '../landingpage.service';
 import { ReviewResponse } from '../../shared/globals/globals';
+import { NotificationService } from '../../shared/notification-service/notification.service';
 
 /**
  * a service that receives updates to the resource metadata from update widgets.
@@ -27,7 +26,7 @@ import { ReviewResponse } from '../../shared/globals/globals';
  * then forward the changes to the CustomizationService and forward the full, updated 
  * record to the controller object.
  *
- * This class also works with a UserMessageService to alert the user with messages when 
+ * This class also works with a GlobalService to alert the user with messages when 
  * things go wrong.  
  */
 // @Injectable()
@@ -89,7 +88,8 @@ export class MetadataUpdateService {
         return this._fileManagerUrl.subscribe(subscriber);
     }
 
-
+    // globalsvc = inject(GlobalService);
+    
     /**
      * any Observable that will send out the date of the last update each time the metadata
      * is updated via this service.  If the date is an empty string, there are no updates 
@@ -114,10 +114,11 @@ export class MetadataUpdateService {
      * @param dapsvc   the CustomizationService to use to send updates to the 
      *                  server.  
      */
-    constructor(private msgsvc: UserMessageService,
-                private edstatsvc: EditStatusService,
+    constructor(private edstatsvc: EditStatusService,
                 protected dapsvc: DAPService,
                 private datePipe: DatePipe,
+                private notificationService: NotificationService,
+                public globalsvc?: GlobalService,
                 protected authsvc?: AuthenticationService,
                 protected staffsvc?: StaffDirectoryService,
                 public lpService?: LandingpageService ) 
@@ -135,7 +136,8 @@ export class MetadataUpdateService {
                     this._lastUpdate.userAttributes = this.creds.userAttributes;
                 },
                 (err) => {
-                    console.warn("Failed to get credentials from authentication service: "+err.toString());
+                    let msg = "Failed to get credentials from authentication service. Edit functionality will not work. " + err.toString();
+                    this.showError(msg);
                 }
             );
         }
@@ -168,7 +170,7 @@ export class MetadataUpdateService {
      *         this record
      * @throws Error   if a problem occurred while opening up the record
      */
-    public startEditing(recid: string) : Observable<boolean> {
+    public startEditing(recid: string): Observable<boolean> {
         return this.dapsvc.edit(recid).pipe(
             tap((recsvc) => {
                 if (! recsvc.canEdit())
@@ -206,7 +208,7 @@ export class MetadataUpdateService {
         );
     }
 
-    isAuthorized(ediid: string) : Observable<any>  {
+    isAuthorized(ediid: string): Observable<any> {
         return this.dapsvc.isAuthorized(ediid);
     }
 
@@ -224,7 +226,8 @@ export class MetadataUpdateService {
                 return true;
             }),
             catchError((err) => {
-                console.error("Failed to reset DAP data: "+err.message);
+                let msg = "Failed to reset DAP data: " + err.message;
+                this.showError(msg, "Failed to reset DAP data.");
                 return of(false);
             })
         );
@@ -268,7 +271,8 @@ export class MetadataUpdateService {
         if(!subsetnameAPI) subsetnameAPI = fieldName;
   
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to update without authorization!  Ignoring update.");
+            let msg = "Attempted to update without authorization! Ignoring update.";
+            this.showError(msg);        
             return new Promise<boolean>((resolve, reject) => {
                 resolve(false);
             });
@@ -350,8 +354,9 @@ export class MetadataUpdateService {
                 return true;
             }),
             catchError((err) => {
-                console.error("Failed to save metadata changes: " + err.message)
-                this.msgsvc.error("Warning: there was a problem while updating " + subsetname);
+                let msg = "Failed to save metadata changes to " + subsetname + ": " + err.message;
+                this.showError(msg, "Failed to save metadata"); 
+
                 return of(null);
             })
         ).toPromise();
@@ -378,8 +383,8 @@ export class MetadataUpdateService {
                 return true;
             }),
             catchError((err) => {
-                console.error("Failed to delete " + subsetname + ": " + err.message);
-                this.msgsvc.error("Warning: there was a problem while deleting " + subsetname);
+                this.showError("Failed to delete " + subsetname + ": " + err.message, "Failed to delete " + subsetname); 
+
                 return of(null);
             })
         ).toPromise();        
@@ -440,8 +445,8 @@ export class MetadataUpdateService {
                 this.mdres.next(JSON.parse(JSON.stringify(this.currentRec)) as NerdmRes);
             }),
             catchError((err) => {
-                console.error("Failed to add to "+subsetname+": " + err.message)
-                this.msgsvc.error("Warning: there was a problem while adding to " + subsetname);
+                this.showError("Failed to add to "+subsetname+": " + err.message, "Failed to add to "+subsetname);
+                this.globalsvc.syserror("Failed to add to "+subsetname+": " + err.message);
                 return of(null);
             })
         );
@@ -533,9 +538,11 @@ export class MetadataUpdateService {
                 map((res) => { return true; }),
                 catchError((err) => {
                     console.error("Failed to undo metadata changes: " + err.message);
-                    this.msgsvc.syserror(err.message,
+                    this.globalsvc.syserror(err.message,
                                             "There was a problem while undoing changes to the " +
-                                            subsetname + ". ");
+                        subsetname + ". ");
+                    //Scroll to top to make sure user can see the error message
+                    this.lpService.setCurrentSection("");
                     return of(false);
 
                 })
@@ -654,8 +661,10 @@ export class MetadataUpdateService {
         : Observable<Object>
     {
         if (!this.dapUpdtSvc) {
-        console.error("Attempted to update without authorization!  Ignoring update.");
-        return of({});
+            let msg = "Attempted to update without authorization!  Ignoring update.";
+            this.showError(msg);
+
+            return of({});
         }
 
         let obs = null;
@@ -670,8 +679,9 @@ export class MetadataUpdateService {
             }),
             catchError((err) => {
                 // console.error("err", err);
-                console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
-                this.msgsvc.syserror(err.message);
+                let msg = "Failed to retrieve " + subsetname + ": " + err.message;
+                this.showError(msg, "Failed to retrieve " + subsetname);
+
                 return of(null);
             })
         );
@@ -685,7 +695,9 @@ export class MetadataUpdateService {
      */
     public loadDraft(dataOnly: boolean = false, onSuccess?: () => void): Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to update without authorization!  Ignoring update.");
+            let msg = "Attempted to update without authorization!  Ignoring update.";
+            this.showError(msg);
+
             return of({});
         }
         return this.dapUpdtSvc.getData().pipe(
@@ -710,16 +722,12 @@ export class MetadataUpdateService {
                 if (onSuccess) onSuccess();
             }),
             catchError((err) => {
-                console.error("err", err);
+                this.showError("Failed to retrieve draft metadata changes: " + err.message, "Failed to retrieve draft metadata changes.");
                 this.edstatsvc.setShowLPContent(true);
-                  
+
                 if (err instanceof daperrs.IDNotFound) {
                     this.resetMetadata();
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
-                }
-                else {
-                    console.error("Failed to retrieve draft metadata changes: server error:" + err.message);
-                    this.msgsvc.syserror(err.message);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                 }
                 return of(null);
             })
@@ -733,7 +741,9 @@ export class MetadataUpdateService {
      */
     public loadDBIOrecord(onSuccess?: () => void): Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to update without authorization!  Ignoring update.");
+            let msg = "Attempted to update without authorization!  Ignoring update.";
+            this.showError(msg, "Failed to retrieve DBIO record.");
+
             return of({});
         }
         return this.dapsvc.getRec(this.dapUpdtSvc.recid).pipe(
@@ -746,16 +756,10 @@ export class MetadataUpdateService {
                 if (onSuccess) onSuccess();
             }),
             catchError((err) => {
-                console.error("err", err);
+                let msg = "Failed to retrieve DBIO record: " + err.message;
+                this.showError(msg, "Failed to retrieve DBIO record.");
                 this.edstatsvc.setShowLPContent(true);
-                  
-                if (err instanceof daperrs.IDNotFound) {
-                    this.msgsvc.error(err.message);
-                }
-                else {
-                    console.error("Failed to retrieve DBIO record: server error:" + err.message);
-                    this.msgsvc.syserror(err.message);
-                }
+
                 return of(null);
             }));
     }
@@ -835,7 +839,9 @@ export class MetadataUpdateService {
      */
     public syncDataFiles() : Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to update without authorization!  Ignoring update.");
+            let msg = "Attempted to update without authorization!  Ignoring update.";
+            this.showError(msg, "Attempted to update without authorization!");
+
             return of({});
         }
         return this.dapUpdtSvc.syncFiles();
@@ -846,7 +852,9 @@ export class MetadataUpdateService {
      */
     public loadDataFiles(onSuccess?: () => void): Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to update without authorization!  Ignoring update.");
+            let msg = "Attempted to update without authorization!  Ignoring update.";
+            this.showError(msg, "Attempted to update without authorization!");
+
             return of({});
         }
         return this.dapUpdtSvc.getDataSubset("pdr:f").pipe(
@@ -854,15 +862,9 @@ export class MetadataUpdateService {
                 if (onSuccess) onSuccess();
             }),
             catchError((err) => {
-                console.error("err", err);
+                let msg = "Failed to retrieve data files: " + err.message;
+                this.showError(msg, "Failed to retrieve data files.");
 
-                if (err instanceof daperrs.IDNotFound) {
-                    this.msgsvc.error(err.message);
-                }
-                else {
-                    console.error("Failed to retrieve data files: server error:" + err.message);
-                    this.msgsvc.syserror(err.message);
-                }
                 return of(null);
             }));
     }   
@@ -872,7 +874,9 @@ export class MetadataUpdateService {
      */
     public loadMetaData(): Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to update without authorization!  Ignoring update.");
+            let msg = "Attempted to update without authorization!  Ignoring update.";
+            this.showError(msg, "Attempted to update without authorization!");
+
             return of({});
         }
         return of(this.dapUpdtSvc.getMeta());
@@ -883,7 +887,9 @@ export class MetadataUpdateService {
      */
     public validate(): Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to validate without authorization!  Ignoring validate.");
+            let msg = "Attempted to validate without authorization!  Ignoring validate.";
+            this.showError(msg, "Attempted to validate without authorization!");
+
             return of({});
         }
         return this.dapUpdtSvc.review().pipe(
@@ -891,9 +897,8 @@ export class MetadataUpdateService {
                 this.suggestions = suggestions as ReviewResponse;
             }),
             catchError((err) => {
-                console.error("err", err);
-                console.error("Failed to validate: server error:" + err.message);
-                this.msgsvc.syserror(err.message);
+                this.showError("Failed to validate: server error:" + err.message, "Failed to validate.");
+
                 return of(null);
             }));
     }      
@@ -920,7 +925,9 @@ export class MetadataUpdateService {
 
     public submit(action: string = "submit", option: any = null): Observable<Object> {
         if (!this.dapUpdtSvc) {
-            console.error("Attempted to finalize without authorization!  Ignoring finalize.");
+            let msg = "Attempted to submit without authorization! Ignoring submit.";
+            this.showError(msg, "Attempted to submit without authorization!");
+
             return of({});
         }
         return this.dapUpdtSvc.submit(action, option).pipe(
@@ -928,10 +935,9 @@ export class MetadataUpdateService {
                 //Do nothing to the return message for now. Just proceed.
             }),
             catchError((err) => {
-                console.error("err", err);
-                console.error("Failed to submit: server error:" + err.message);
-                this.msgsvc.syserror(err.message);
-                return of({"error": err.message});
+                this.showError("Failed to submit: server error:" + err.message, "Failed to submit.");
+
+                return of({ "error": err.message });
             })); 
     }
 
@@ -949,6 +955,15 @@ export class MetadataUpdateService {
 
     public getSuggestions(): ReviewResponse {
         return this.suggestions;
+    }
+
+    /**
+     * Show an error message to the user and log it to the console
+     * @param msg Error message
+     */
+    showError(msg: string, notificationMsg: string = "Failed to save metadata changes.") {
+        this.globalsvc.error(msg);
+        console.error(msg);
     }
 
     /*
@@ -976,12 +991,12 @@ export class MetadataUpdateService {
                     if (err.type == 'user') 
                     {
                         console.error("Failed to validate: user error:" + err.message);
-                        this.msgsvc.error(err.message);
+                        this.globalsvc.error(err.message);
                     }
                     else 
                     {
                         console.error("Failed to validate: server error:" + err.message);
-                        this.msgsvc.syserror(err.message);
+                        this.globalsvc.syserror(err.message);
                     }
                   }
 

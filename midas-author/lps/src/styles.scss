@@ -395,3 +395,13 @@ a:focus {
     transform: scale(3);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
+
+.icon_enabled {
+    color: var(--nist-blue-default);
+    font-size: 1em;
+}
+
+.icon_disabled {
+    color: rgb(200, 200, 200);
+    font-size: 1em;
+}

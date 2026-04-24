@@ -20,6 +20,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { BadgeModule } from 'primeng/badge';
 import { TreetableComponent } from './treetable/treetable.component';
 import { LeaveWhileDownloadingGuard } from './leave.guard';
+import { FrameModule } from '../frame/frame.module';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
@@ -32,7 +33,7 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
     imports: [
         CommonModule, SharedModule, ProgressSpinnerModule, NgbModule, TreeModule, FieldsetModule,
         DialogModule, OverlayPanelModule, TreeTableModule, ButtonModule, TooltipModule, BadgeModule,
-        FontAwesomeModule
+        FontAwesomeModule, FrameModule
     ],
     exports: [
         DatacartComponent

@@ -4,7 +4,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { EditStatusComponent } from './editstatus.component';
 import { EditStatusService } from './editstatus.service';
 import { MetadataUpdateService } from './metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../editcontrol/auth.service';
 import { UpdateDetails } from './interfaces';
 import { LandingConstants } from '../../shared/globals/globals';
@@ -40,7 +39,6 @@ describe('EditStatusComponent', () => {
             imports: [ CommonModule, EditStatusComponent, FontAwesomeTestingModule ],
             declarations: [  ],
             providers: [
-                    UserMessageService, 
                     HttpHandler,
                     DatePipe,
                     { provide: AppConfig, useValue: cfg },
@@ -48,7 +46,7 @@ describe('EditStatusComponent', () => {
                     { provide: DAPService, useFactory: createDAPService, 
                         deps: [ env, HttpClient, AppConfig ] },
                     { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                        new UserMessageService(), edstatsvc, dapsvc, null)
+                        edstatsvc, dapsvc, null, null)
                     }
             ]
         }).compileComponents();

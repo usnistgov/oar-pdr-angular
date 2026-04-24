@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { FacilitatorsComponent } from './facilitators.component';
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { config, testdata } from '../../../environments/environment';
 import { AppConfig } from '../../config/config';
 import { LandingpageService } from '../landingpage.service';
@@ -29,7 +28,6 @@ describe('FacilitatorsComponent', () => {
             providers: [
                 LandingpageService,
                 EditStatusService,
-                UserMessageService, 
                 HttpHandler,
                 DatePipe,
                 { provide: AppConfig, useValue: cfg },
@@ -37,7 +35,7 @@ describe('FacilitatorsComponent', () => {
                 { provide: DAPService, useFactory: createDAPService, 
                     deps: [ env, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
+                    edstatsvc, dapsvc, null, null)
                 }
             ]
         })

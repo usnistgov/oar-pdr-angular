@@ -56,6 +56,7 @@ export class VisithomeMidasComponent {
     globalsvc = inject(GlobalService);
     editStarted: boolean = false;
     isPublicSite: boolean = false;
+    isEditMode: boolean = false;
 
     //icon class names
     // editIcon = iconClass.EDIT;
@@ -85,13 +86,17 @@ export class VisithomeMidasComponent {
         //     faUndo
         // );
 
-        effect(() => {
-            // When edit mode changed, refresh the screen
-            // Need to tell effect which signal trigger this function
-            const term = this.edstatsvc.isEditMode(); 
-            // Then refresh the screen
-            this.chref.detectChanges();
-        });
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        }); 
+
+        // effect(() => {
+        //     // When edit mode changed, refresh the screen
+        //     // Need to tell effect which signal trigger this function
+        //     const term = this.edstatsvc.isEditMode(); 
+        //     // Then refresh the screen
+        //     this.chref.detectChanges();
+        // });
     }
 
     ngOnInit(): void {
@@ -107,7 +112,7 @@ export class VisithomeMidasComponent {
                         this.setMode(MODE.NORMAL,false);
                     }
                 }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
                         this.startEditing();
                     }
                 }

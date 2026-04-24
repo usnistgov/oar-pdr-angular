@@ -11,7 +11,7 @@
                 </Visithome-pub>
             </div>    
 
-            @if(edstatsvc.isEditMode() && !inViewMode) {
+            @if(isEditMode && !inViewMode) {
                 <div class="editable_field" style="margin-left: 5px; margin-top: 2px;">
                     @if(!isEditing) {
                         <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">

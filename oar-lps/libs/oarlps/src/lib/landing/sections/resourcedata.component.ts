@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { SearchresultModule } from '../searchresult/searchresult.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
@@ -110,13 +109,16 @@ export class ResourceDataComponent implements OnChanges {
             this.maxWidth = width + 20;
         });
 
-        effect(() => {
-            this.isEditMode = this.edstatsvc.isEditMode();
-        })
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        });
+        // effect(() => {
+        //     this.isEditMode = this.edstatsvc.isEditMode();
+        // })
     }
 
     ngOnInit(): void {
-        this.isEditMode = this.edstatsvc.isEditMode();
+        // this.isEditMode = this.edstatsvc.isEditMode();
         this.recordType = (new NERDResource(this.record)).resourceLabel();
 
         this.colorScheme = {
@@ -208,11 +210,7 @@ export class ResourceDataComponent implements OnChanges {
         if (this.isPublicSite) {
             show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
         } else {
-            if (this.isEditMode) {
-                show = true;
-            } else {
-                show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
-            }
+            show = true;
         }
 
         return show;

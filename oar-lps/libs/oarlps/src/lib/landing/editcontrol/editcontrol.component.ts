@@ -1,6 +1,5 @@
 import { Component, OnInit, OnChanges, ViewChild, Input, HostListener, ChangeDetectorRef, inject, Inject } from '@angular/core';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { MessageBarComponent } from '../../frame/messagebar.component';
 import { EditStatusComponent } from './editstatus.component';
 import { MetadataUpdateService } from './metadataupdate.service';
@@ -33,6 +32,8 @@ import { AuthenticationService, Credentials } from 'oarng';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { NotificationService } from '../../shared/notification-service/notification.service';
+  
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
     faPencil,
@@ -171,7 +172,7 @@ export class EditControlComponent implements OnInit, OnChanges {
      *                           metadata).
      * @param confirmDialogSvc   a ConfirmationDialogService for displaying pop-up confirmation windows 
      *                           (provided by local injector)
-     * @param msgsvc             a UserMessageService used to receive messages for display in the error 
+     * @param globalService      a GlobalService used to receive messages for display in the error 
      *                           message bar
      */
     public constructor( private mdupdsvc: MetadataUpdateService,
@@ -184,8 +185,8 @@ export class EditControlComponent implements OnInit, OnChanges {
                         private modalService: NgbModal,
                         public globalService: GlobalService,
                         public collectionService: CollectionService,
-                        public iconLibrary: FaIconLibrary,
-                        private msgsvc: UserMessageService) {
+                        private notificationService: NotificationService,
+                        public iconLibrary: FaIconLibrary) {
 
         iconLibrary.addIcons(
             faPencil,
@@ -206,7 +207,7 @@ export class EditControlComponent implements OnInit, OnChanges {
             this.collection = collection;
         });
 
-        this.globalService.watchMessage((message) => {
+        this.globalService.watchInfo((message) => {
             this.message = message;
             //Display message for 3 seconds
             setTimeout(() => {
@@ -321,6 +322,10 @@ export class EditControlComponent implements OnInit, OnChanges {
         return this._editMode == this.EDIT_MODES.PREVIEW_MODE;
     }
 
+    get isViewonlyMode() {
+        return this._editMode == this.EDIT_MODES.VIEWONLY_MODE;
+    }    
+
     get isDoneMode() {
         return this._editMode == this.EDIT_MODES.DONE_MODE;
     }
@@ -387,6 +392,10 @@ export class EditControlComponent implements OnInit, OnChanges {
                 returnString = "DONE";
                 break; 
             } 
+            case this.EDIT_MODES.VIEWONLY_MODE: { 
+                returnString = "PREVIEW MODE";
+                break; 
+            }                 
             default: { 
                 break; 
             } 
@@ -511,7 +520,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         this._editMode = editmode;
         //broadcast the editmode
         this.edstatsvc.editMode.set(editmode);
-        this.edstatsvc._setEditMode(editmode);
+        this.edstatsvc.setEditMode(editmode);
         this.chref.detectChanges();
     }
 
@@ -651,7 +660,9 @@ export class EditControlComponent implements OnInit, OnChanges {
                 this.edstatsvc.setShowLPContent(true);
             },
             (err) => {
-                console.error("Failed to start editing "+this.resID+": "+err.message);
+                let msg = "Failed to start editing " + this.resID + ": " + err.message;
+                console.error(msg);
+                this.globalService.error(msg);
                 this.statusbar.showMessage("Failure loading for editing: "+err.message, true);
                 this.edstatsvc.setShowLPContent(true);
             }
@@ -838,7 +849,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     }else{
                       subscriber.next(false);
                       this.edstatsvc._setAuthorized(false);
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                      this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                     }
                     
                     subscriber.complete();
@@ -852,7 +863,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     subscriber.next(false);
                     subscriber.complete();
                     this.edstatsvc._setAuthorized(false);
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                 }
             );
         });
