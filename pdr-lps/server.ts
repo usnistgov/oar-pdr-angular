@@ -1,6 +1,6 @@
 import "zone.js";
 import { ngExpressEngine } from "@nguniversal/express-engine";
-import * as express from "express";
+import express from "express";
 import { createServer } from "http"; // --- fix: use raw HTTP server so we can attach 'error' before listen ---
 import { join } from "path";
 import { AppServerModule } from "./src/main.server";
