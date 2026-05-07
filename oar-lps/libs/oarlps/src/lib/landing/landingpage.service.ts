@@ -79,13 +79,13 @@ export class LandingpageService {
     }  
 
     // Set message to display
-    _msg: BehaviorSubject<string> = new BehaviorSubject<string>("resource");
-    setMessage(msg: string){
-        this._msg.next(msg);
-    }
-    public watchMessage(subscriber) {
-        this._msg.subscribe(subscriber);
-    }      
+    // _msg: BehaviorSubject<string> = new BehaviorSubject<string>("resource");
+    // setMessage(msg: string){
+    //     this._msg.next(msg);
+    // }
+    // public watchMessage(subscriber) {
+    //     this._msg.subscribe(subscriber);
+    // }      
 
     /**
      * Check if all required fields are filled

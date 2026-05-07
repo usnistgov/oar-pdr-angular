@@ -1,6 +1,6 @@
 <!-- <div style="width: 100%;"> -->
     <div class="editable_container" style="width: 100%;">
-        <div class="editable_field" style="width: calc(100% - 30px); min-height: 1.65em;" [style.background-color]="getRecordBackgroundColor()">
+        <div class="editable_field" style="width: calc(100% - 60px); min-height: 1.65em;" [style.background-color]="getRecordBackgroundColor()">
             <div class="edit_box" >
                 <!-- Existing authors -->
                 <div #dropListContainer class="example-container" cdkDropListGroup>
@@ -48,18 +48,29 @@
                 [disabled]="isEditing || isAdding" 
                 pTooltip="Add author"
                 tooltipPosition="top" >
-                <fa-icon [icon]="faPlus" [class]="addIconClass()"></fa-icon>
+                <fa-icon [icon]="faPlus" [class]="iconClass('add')"></fa-icon>
+            </button>
+
+            <!-- Hide button - hide list block -->
+            <button 
+                class="edit_button" 
+                [disabled]="isEditing || isAdding" 
+                type="button"
+                (click)="hideListBlock()" 
+                aria-label="Hide list block" 
+                pTooltip="Hide list block" 
+                tooltipPosition="top">
+                <fa-icon [icon]="faXmark" [class]="iconClass('hideList')"></fa-icon>
             </button>
         </div>
     </div>
 <!-- </div> -->
-
 <!-- This is editing area. Will open up in add or edit mode -->
 <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus">  
     <table style="width: 100%;">
         <tr style="width: 100%;">
             <!-- Text edit area -->
-            <td class="edit-block" style="width: calc(100%-60px);">
+            <td class="edit-block" style="width: calc(100%-90px);">
                 <lib-author-edit 
                     [author]="currentAuthor" 
                     [fieldName]="fieldName"
@@ -80,13 +91,29 @@
                             aria-label="edit button" 
                             [disabled]="!currentAuthor || !currentAuthor.dataChanged" 
                             ngbTooltip="Save authors">
-                        <fa-icon [icon]="faSave"></fa-icon>
+                        <fa-icon [icon]="faSave" [class]="iconClass('save')"></fa-icon>
                     </button>
 
                     <!-- Cancel button -->
-                    <button class="edit_button" type="button"
-                        (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
-                        <fa-icon [icon]="faUndo"></fa-icon>
+                    <button 
+                        class="edit_button" 
+                        type="button"
+                        (click)="undoCurAuthorChanges()" 
+                        aria-label="undo button" 
+                        ngbTooltip="Undo current changes">
+                        <fa-icon [icon]="faUndo" [class]="iconClass('undo')"></fa-icon>
+                    </button>
+
+                    <!-- Hide button - hide edit block -->
+                    <button 
+                        class="edit_button" 
+                        type="button"
+                        (click)="hideEditBlock()" 
+                        [disabled]="currentAuthor && currentAuthor.dataChanged" 
+                        aria-label="Hide edit block" 
+                        pTooltip="Hide edit block" 
+                        tooltipPosition="top">
+                        <fa-icon [icon]="faXmark" [class]="iconClass('close')"></fa-icon>
                     </button>
                 </div>
             </td>

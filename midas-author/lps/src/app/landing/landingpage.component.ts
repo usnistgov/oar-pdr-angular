@@ -309,10 +309,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             });
         }
 
-        effect(() => {
-          // Triggered by isEditMode()
-          this.edstatsvc.isEditMode();
-        })
+        // effect(() => {
+        //   // Triggered by isEditMode()
+        //   this.edstatsvc.isEditMode();
+        // })
     }
 
     get showSplitter() {
@@ -472,6 +472,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                 // console.log("dbio", dbio)
                             },
                             error: (err) => {
+                                this.globalService.error('Failed to load DBIO record.' + err.message);
                                 console.error(err);
                             }
                         });
@@ -479,11 +480,14 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 },
                 error: (err) => {
                     this.globalService.setAuthorized(false);
+                    this.globalService.error('Failed to load metadata.' + err.message);
                     console.log("Load error", err);
                 }})
             }else{
                 //Not authenticated:
                 this.globalService.setAuthenticated(false);
+                this.globalService.error('User is not authenticated.');
+
                 this.displayOnly();
             }
         }else{
@@ -505,88 +509,87 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * to edit the draft data.
      */
     loadPublicData() {
-      let metadataError = "";
-      var showError: boolean = true;
+        let metadataError = "";
+        var showError: boolean = true;
 
-      this.nerdmReserv.getResource(this.reqId).subscribe(
-        (data) => {
-          // successful metadata request
-          this.md = data;
+        this.nerdmReserv.getResource(this.reqId).subscribe(
+            (data) => {
+            // successful metadata request
+            this.md = data;
 
-          if (!this.md) {
-              // id not found; reroute
-              console.error("No data found for ID=" + this.reqId);
-              metadataError = "not-found";
-          }
-          else{
-              this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
+            if (!this.md) {
+                // id not found; reroute
+                console.error("No data found for ID=" + this.reqId);
+                metadataError = "not-found";
+            }
+            else{
+                this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
-              if(this.inBrowser){
-                  if(this.cfg_editEnabled){
-                      this.metricsData.hasCurrentMetrics = false;
-                      this.showMetrics = true;
-                  }else{
-                      if(this.theme == Themes.DEFAULT_THEME)
-                          this.getMetrics();
-                  }
-              }
+                if(this.inBrowser){
+                    if(this.cfg_editEnabled){
+                        this.metricsData.hasCurrentMetrics = false;
+                        this.showMetrics = true;
+                    }else{
+                        if(this.theme == Themes.DEFAULT_THEME)
+                            this.getMetrics();
+                    }
+                }
 
-              // proceed with rendering of the component
-              this.useMetadata();
+                // proceed with rendering of the component
+                this.useMetadata();
 
-              // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-              // in editing mode.  This is done in concert with the authentication process that can involve
-              // redirection to an authentication server; on successful authentication, the server can
-              // redirect the browser back to this landing page with editing turned on.
-              if (this.inBrowser) {
-                  // Display content after 15sec no matter what
-                  setTimeout(() => {
-                      this.edstatsvc.setShowLPContent(true);
-                      // this._showContent = true;
-                  }, 1000);
+                // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                // in editing mode.  This is done in concert with the authentication process that can involve
+                // redirection to an authentication server; on successful authentication, the server can
+                // redirect the browser back to this landing page with editing turned on.
+                if (this.inBrowser) {
+                    // Display content after 15sec no matter what
+                    setTimeout(() => {
+                        this.edstatsvc.setShowLPContent(true);
+                        // this._showContent = true;
+                    }, 1000);
 
-                  if (this.editRequested) {
-                      showError = false;
-                      // console.log("Returning from authentication redirection (editmode="+
-                      //             this.editRequested+")");
+                    if (this.editRequested) {
+                        showError = false;
+                        // console.log("Returning from authentication redirection (editmode="+
+                        //             this.editRequested+")");
 
-                      // Need to pass reqID (resID) because the resID in editControlComponent
-                      // has not been set yet and the startEditing function relies on it.
-                      this.edstatsvc.startEditing(this.reqId);
-                  }
-                  else
-                      showError = true;
-              }
-          }
+                        // Need to pass reqID (resID) because the resID in editControlComponent
+                        // has not been set yet and the startEditing function relies on it.
+                        this.edstatsvc.startEditing(this.reqId);
+                    }
+                    else
+                        showError = true;
+                }
+            }
 
-          if (showError) {
-              if (metadataError == "not-found") {
-                  if (this.editRequested) {
-                      console.log("ID not found...");
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
-                      this.setMessage();
-                      this.displaySpecialMessage = true;
-                  }
-                  else {
-                      this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-                  }
-              }
-          }
-      },
-      (err) => {
-          console.error("Failed to retrieve metadata: ", err);
-          this.edstatsvc.setShowLPContent(true);
-          this._showContent = true;
-          if (err instanceof IDNotFound) {
-              metadataError = "not-found";
-              this.router.navigateByUrl("not-found/" + this.reqId, { skipLocationChange: true });
-          }
-          else {
-              metadataError = "int-error";
-              // this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-              this.router.navigateByUrl("int-error/" + this.reqId, { skipLocationChange: true });
-          }
-      });
+            if (showError) {
+                if (metadataError == "not-found") {
+                    if (this.editRequested) {
+                        console.log("ID not found...");
+                        this.globalService.error("The record with ID '" + this.reqId + "' was not found. You may have been trying to access a draft record that has not been created yet.");
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                        this.setMessage();
+                        this.displaySpecialMessage = true;
+                    }
+                    else {
+                        this.globalService.error("The record with ID '" + this.reqId + "' was not found. Please check the ID and try again.");
+                    }
+                }
+            }
+        },
+        (err) => {
+            console.error("Failed to retrieve metadata: ", err);
+            this.edstatsvc.setShowLPContent(true);
+            this._showContent = true;
+            if (err instanceof IDNotFound) {
+                this.globalService.error("The record with ID '" + this.reqId + "' was not found. Please check the ID and try again.");
+            } else {
+                let msg = "An error occurred while retrieving the record with ID '" + this.reqId + "'. " + err.message;
+                this.globalService.syserror(msg);
+                console.error(msg);
+            }
+        });
     }
 
     /**
@@ -897,20 +900,19 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     if (this.mdupdsvc.published) {
                         this.edstatsvc._setEditType(this.editTypes.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else if (this.mdupdsvc.submitted) {
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
                     } else {
                         this.editRequested = true;
                         // this.isEditMode = true;
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
                         this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
                         this.edstatsvc._setEditType(this.editTypes.NORMAL);
                     }
-                }
-                else {
+                }else { // Not authorized to edit. Set to view only mode.
                     this.editRequested = false;
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
                     // this._showContent = true;
                     // this.edstatsvc.setShowLPContent(true);
                 }
@@ -920,7 +922,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             });
         }else{
             this.editRequested = false;
-            this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+            this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
             this.edstatsvc.setShowLPContent(true);
             this._showContent = true;
             this.globalService.setAuthorized(false);

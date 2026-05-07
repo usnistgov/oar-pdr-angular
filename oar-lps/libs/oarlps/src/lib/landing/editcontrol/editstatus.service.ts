@@ -18,10 +18,6 @@ export class EditStatusService {
     public EDIT_MODES: any = LandingConstants.editModes;
     public editMode = signal("");
 
-    isEditMode: Signal<boolean> = computed(() => {
-        return (this.editMode() == this.EDIT_MODES.EDIT_MODE)
-    });
-
     /**
      * construct the service
      */
@@ -43,7 +39,7 @@ export class EditStatusService {
      */
     _editMode : BehaviorSubject<string> =
         new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
-    _setEditMode(val : string) { 
+    public setEditMode(val : string) { 
         this._editMode.next(val); 
         this._isEditMode.next(val == this.EDIT_MODES.EDIT_MODE);
     }

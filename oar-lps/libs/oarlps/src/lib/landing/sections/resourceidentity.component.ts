@@ -105,10 +105,13 @@ export class ResourceIdentityComponent implements OnChanges {
             this.onResize(width + 20);
         })
 
-        effect(() => {
-            this.isEditMode = this.editstatsvc.isEditMode();
-            // this.chref.detectChanges();
-        })
+        this.editstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        });
+        // effect(() => {
+        //     this.isEditMode = this.editstatsvc.isEditMode();
+        //     // this.chref.detectChanges();
+        // })
     }
 
     ngOnInit(): void {

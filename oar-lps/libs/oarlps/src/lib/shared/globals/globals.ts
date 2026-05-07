@@ -1,7 +1,15 @@
 import { Inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SelectItem, TreeNode } from 'primeng/api';
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT, isPlatformBrowser, ViewportScroller } from '@angular/common';
+
+export interface Message {
+    type: string;
+    text: string;
+    id  ?: any;
+    section?: string;
+    prefix?: string;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +21,9 @@ export class GlobalService {
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
     public fakeBackendAlerted = signal<boolean>(false);
 
-    constructor(@Inject(DOCUMENT) private document: Document,) { }
+    constructor(
+        @Inject(DOCUMENT) private document: Document,
+        private viewportScroller: ViewportScroller) { }
 
     /**
      * Current color palette.  
@@ -56,13 +66,13 @@ export class GlobalService {
     /**
      * Set/get message to display 
      */
-    _message : BehaviorSubject<string> =
+    _info : BehaviorSubject<string> =
         new BehaviorSubject<string>("");
-    public setMessage(val : string) { 
-        this._message.next(val); 
+    public Info(val : string) { 
+        this._info.next(val); 
     }
-    public watchMessage(subscriber) {
-        this._message.subscribe(subscriber);
+    public watchInfo(subscriber) {
+        this._info.subscribe(subscriber);
     }  
 
     /**
@@ -133,6 +143,123 @@ export class GlobalService {
         this._submissionData.subscribe(subscriber);
     }
     
+    /**
+     * Set/get message for error handling. This is used to display error message in a consistent way across the app. 
+     */
+    private _message: BehaviorSubject<Message> = new BehaviorSubject<Message>({} as Message);
+    public setMessage1(val: Message){
+        this._message.next(val);
+    }
+    public watchMessage1(subscriber) {
+        this._message.subscribe(subscriber);
+    }
+
+    /**
+     * Provide some brief instruction.  This is intended for prompts to the user 
+     * advising some action or choice of actions.
+     * @param message   The instruction message to display
+     * @param section   The section to which the instruction applies. If empty, the instruction is general and applies to the whole record.
+     */
+    public instruct(message : string, section ?: string) : void {
+        this._message.next(
+            {
+                type: "instruction",
+                text: message,
+                section: section
+            }
+        );
+    }
+
+    /**
+     * Provide a confirmation or report of a successful action.  This is intended 
+     * to assure the user that a user action was successful.
+     */
+    public celebrate(message : string, section ?: string) : void {
+        this._message.next(
+            {
+                type: "celebration",
+                text: message,
+                section: section
+            }
+        );
+    }
+
+    /**
+     * Display a warning.  This is to alert the user about issues that they may 
+     * want to remedy.
+     */
+    public warn(message : string, section ?: string) : void {
+        this._message.next(
+            {
+                type: "warning",
+                text: message,
+                section: section
+            });
+    }
+
+    /*
+     * Provide some helpful information without concern or worry.  
+     */
+    public inform(message : string, section ?: string) : void {
+        this._message.next(
+            {
+                type: "information",
+                text: message,
+                section: section
+            });
+    }
+
+    /*
+     * Provide a suggestion.  
+     */
+    public tip(message : string, section ?: string) : void {
+        this._message.next(
+            {
+                type: "tip",
+                text: message,
+                section: section
+            });
+    }
+
+    /*
+     * Report a (user) error.  Use this to inform the user of error conditions due to 
+     * incorrect user action
+     */
+    public error(message : string, section ?: string) : void {
+        this._message.next(
+            {
+                type: "error",
+                text: message,
+                section: section
+            });
+        
+        // let title = section ? "Error in " + section : "Error";
+        // this.notificationService.showHTMLMessage(message, title);
+    }
+
+    /**
+     * Report a system error.  Use this to inform the user of error conditions due to 
+     * unexpected conditions that are not the fault of the user.  
+     * 
+     * @param mesage   A technical (perhaps non-user oriented) explanation of the error
+     * @param prefix   An optional, extra explanation that is expected to be more user-oriented.
+     */
+    public syserror(message : string, prefix ?: string) : void {
+        let out: Message = {
+            type: "syserror",
+            text: message
+        };
+        if (prefix)
+            out['prefix'] = prefix
+        this._message.next(out);
+
+        // let title = prefix ? "Error in " + prefix : "Error";
+        // this.notificationService.showHTMLMessage(message, title);
+    }
+
+    platformId(platformId: any) {
+        throw new Error('Method not implemented.');
+    }
 
     getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
         let text = this.document.createElement("span"); 

@@ -4,7 +4,6 @@ import { RouterModule } from '@angular/router';
 import { HeadbarComponent } from "./headbar.component";
 import { FootbarComponent } from "./footbar.component";
 import { MessageBarComponent } from "./messagebar.component";
-import { UserMessageService } from './usermessage.service';
 import { IEnvironment } from '../../environments/ienvironment';
 import { environment } from '../../environments/environment-impl';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -20,7 +19,7 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
         MessageBarComponent
     ],
     providers: [
-        UserMessageService
+
     ],
     imports: [
         CommonModule,       // provides template directives
@@ -34,12 +33,12 @@ export class FrameModule {
         return {
           ngModule: FrameModule,
           providers: [
-            // UserMessageService
+
           ]
         };
     }
 }
 
 export {
-    HeadbarComponent, FootbarComponent, MessageBarComponent, UserMessageService
+    HeadbarComponent, FootbarComponent, MessageBarComponent
 }
