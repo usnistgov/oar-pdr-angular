@@ -73,12 +73,20 @@
   background: linear-gradient(135deg, var(--pending-color) 0%, var(--accent-color) 100%);
 }
 
+.status-bar.status-processing {
+  background: linear-gradient(135deg, #0f766e 0%, #0369a1 100%);
+}
+
 .status-bar.status-approved {
   background: linear-gradient(135deg, var(--success-color) 0%, var(--success-light) 100%);
 }
 
 .status-bar.status-declined {
   background: linear-gradient(135deg, var(--danger-color) 0%, var(--danger-light) 100%);
+}
+
+.status-bar.status-failed {
+  background: linear-gradient(135deg, #b45309 0%, #b91c1c 100%);
 }
 
 .status-left {
@@ -265,6 +273,16 @@
   color: #3b82f6;
 }
 
+.action-notice.notice-processing {
+  background: linear-gradient(135deg, #ecfeff 0%, #dbeafe 100%);
+  border: 1px solid #67e8f9;
+  color: #155e75;
+}
+
+.action-notice.notice-processing mat-icon {
+  color: #0891b2;
+}
+
 .action-notice.notice-approved {
   background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
   border: 1px solid #fde68a;
@@ -283,6 +301,16 @@
 
 .action-notice.notice-declined mat-icon {
   color: var(--success-color);
+}
+
+.action-notice.notice-failed {
+  background: linear-gradient(135deg, #fff7ed 0%, #fee2e2 100%);
+  border: 1px solid #fdba74;
+  color: #9a3412;
+}
+
+.action-notice.notice-failed mat-icon {
+  color: #ea580c;
 }
 
 .action-notice mat-icon {
@@ -744,6 +772,16 @@
   color: #60a5fa;
 }
 
+:host-context(body.dark-mode) .action-notice.notice-processing {
+  background: linear-gradient(135deg, #164e63 0%, #0f172a 100%);
+  border-color: #0891b2;
+  color: #a5f3fc;
+}
+
+:host-context(body.dark-mode) .action-notice.notice-processing mat-icon {
+  color: #22d3ee;
+}
+
 :host-context(body.dark-mode) .action-notice.notice-approved {
   background: linear-gradient(135deg, #422006 0%, #451a03 100%);
   border-color: #854d0e;
@@ -762,6 +800,16 @@
 
 :host-context(body.dark-mode) .action-notice.notice-declined mat-icon {
   color: #34d399;
+}
+
+:host-context(body.dark-mode) .action-notice.notice-failed {
+  background: linear-gradient(135deg, #431407 0%, #450a0a 100%);
+  border-color: #c2410c;
+  color: #fed7aa;
+}
+
+:host-context(body.dark-mode) .action-notice.notice-failed mat-icon {
+  color: #fb923c;
 }
 
 :host-context(body.dark-mode) .decline-btn {

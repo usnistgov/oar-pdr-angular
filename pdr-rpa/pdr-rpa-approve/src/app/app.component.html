@@ -13,23 +13,23 @@
 
     <!-- Compact Status Bar -->
     <div class="status-bar" *ngIf="loaded && !recordNotFound"
-         [class.status-pending]="status.toLowerCase().includes('pending')"
-         [class.status-approved]="status.toLowerCase().includes('approved')"
-         [class.status-declined]="status.toLowerCase().includes('declined')">
+         [class.status-pending]="isPendingReview()"
+         [class.status-processing]="isApprovalProcessing()"
+         [class.status-approved]="isApproved()"
+         [class.status-declined]="isDeclined()"
+         [class.status-failed]="isApprovalFailed()">
       <div class="status-left">
         <mat-icon class="status-icon">
-          {{ status.toLowerCase().includes('pending') ? 'hourglass_empty' :
-             status.toLowerCase().includes('approved') ? 'check_circle' : 'cancel' }}
+          {{ statusIcon }}
         </mat-icon>
         <div class="status-text">
           <span class="status-label">
-            {{ status.toLowerCase().includes('pending') ? 'Pending Approval' :
-               status.toLowerCase().includes('approved') ? 'Approved' : 'Declined' }}
+            {{ statusLabel }}
           </span>
           <span class="case-num">Case: {{ record?.caseNum }}</span>
         </div>
       </div>
-      <div class="status-right" *ngIf="!status.toLowerCase().includes('pending')">
+      <div class="status-right" *ngIf="!isPendingReview()">
         <span class="status-meta">{{ statusDate | date:'mediumDate' }} by {{ smeEmail }}</span>
       </div>
     </div>
@@ -98,31 +98,39 @@
 
       <!-- Action Notice & Buttons Row -->
       <div class="action-row">
-        <div class="action-notice" [class.notice-pending]="status.toLowerCase().includes('pending')"
-             [class.notice-approved]="status.toLowerCase().includes('approved')"
-             [class.notice-declined]="status.toLowerCase().includes('declined')">
-          <mat-icon>{{ status.toLowerCase().includes('pending') ? 'info' : 'warning' }}</mat-icon>
-          <span *ngIf="status.toLowerCase().includes('pending')">
+        <div class="action-notice" [class.notice-pending]="isPendingReview()"
+             [class.notice-processing]="isApprovalProcessing()"
+             [class.notice-approved]="isApproved()"
+             [class.notice-declined]="isDeclined()"
+             [class.notice-failed]="isApprovalFailed()">
+          <mat-icon>{{ isPendingReview() || isApprovalProcessing() ? 'info' : 'warning' }}</mat-icon>
+          <span *ngIf="isPendingReview()">
             Review and take action on this request.
           </span>
-          <span *ngIf="status.toLowerCase().includes('approved')">
+          <span *ngIf="isApprovalProcessing()">
+            Approval was submitted. Dataset caching and user notification are still running.
+          </span>
+          <span *ngIf="isApproved()">
             Click <strong>Decline</strong> to revoke access.
           </span>
-          <span *ngIf="status.toLowerCase().includes('declined')">
+          <span *ngIf="isDeclined()">
             Click <strong>Approve</strong> to grant access.
+          </span>
+          <span *ngIf="isApprovalFailed()">
+            Processing failed. Retry approval after checking the request details, or decline the request.
           </span>
         </div>
 
         <div class="action-buttons">
           <button mat-raised-button class="approve-btn"
-                  *ngIf="status.toLowerCase().includes('pending') || status.toLowerCase().includes('declined')"
+                  *ngIf="isPendingReview() || isDeclined() || isApprovalFailed()"
                   (click)="onApprove()"
                   [disabled]="displayProgressSpinner">
             <mat-icon>check_circle</mat-icon>
             Approve
           </button>
           <button mat-raised-button class="decline-btn"
-                  *ngIf="status.toLowerCase().includes('pending') || status.toLowerCase().includes('approved')"
+                  *ngIf="isPendingReview() || isApproved() || isApprovalFailed()"
                   (click)="onDecline()"
                   [disabled]="displayProgressSpinner">
             <mat-icon>cancel</mat-icon>

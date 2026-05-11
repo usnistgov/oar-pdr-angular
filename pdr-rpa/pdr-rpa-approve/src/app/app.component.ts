@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { trigger, style, transition, animate } from '@angular/animations';
 
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Record } from './model/record';
 import { RPAService } from './service/rpa.service';
 import { AuthenticationService, Credentials } from 'oarng';
-import { catchError, pluck, switchMap, map, tap, delay } from 'rxjs/operators';
-import { Observable, EMPTY, throwError, of } from 'rxjs';
+import { catchError, pluck, switchMap, map, tap, takeWhile } from 'rxjs/operators';
+import { Observable, EMPTY, Subscription, timer } from 'rxjs';
 import { environment } from '../environments/environment';
 
 /**
@@ -50,7 +50,7 @@ class ClientError extends Error {
     ])
   ]
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   recordId: string;
   status: string;
   statusDate: string = "";
@@ -65,6 +65,9 @@ export class AppComponent implements OnInit {
   recordDescription: RecordDescription;
   _creds: Credentials;
   isDarkMode: boolean = false;
+  private pollingSubscription?: Subscription;
+  private readonly pollIntervalMs = 5000;
+  private readonly maxPollAttempts = 60;
 
   // Toast notification state
   toastVisible: boolean = false;
@@ -121,10 +124,7 @@ export class AppComponent implements OnInit {
 
       // Update the component state with the retrieved record
       tap(record => {
-        this.record = record as Record;
-        this.parseApprovalStatus(this.record);
-        this.parseDescription(this.record.userInfo.description);
-        this.loaded = true;
+        this.applyRecord(record as Record);
       }),
 
       // Catch and log any errors that occur
@@ -157,6 +157,10 @@ export class AppComponent implements OnInit {
         return EMPTY;
       })
     ).subscribe();
+  }
+
+  ngOnDestroy(): void {
+    this.stopStatusPolling();
   }
 
   /**
@@ -208,17 +212,18 @@ export class AppComponent implements OnInit {
         this.mockRecord.userInfo.approvalStatus = 'Approved_2024-01-15T10:30:00.000Z_sme@nist.gov';
       } else if (status === 'declined') {
         this.mockRecord.userInfo.approvalStatus = 'Declined_2024-01-15T14:45:00.000Z_sme@nist.gov';
+      } else if (status === 'processing') {
+        this.mockRecord.userInfo.approvalStatus = 'ApprovalPending_2024-01-15T10:30:00.000Z_sme@nist.gov';
+      } else if (status === 'failed') {
+        this.mockRecord.userInfo.approvalStatus = 'ApprovalFailed_2024-01-15T10:30:00.000Z_sme@nist.gov';
       } else {
         this.mockRecord.userInfo.approvalStatus = 'Pending';
       }
 
       // Simulate network delay
       setTimeout(() => {
-        this.record = this.mockRecord;
-        this.parseApprovalStatus(this.record);
-        this.parseDescription(this.record.userInfo.description);
+        this.applyRecord(this.mockRecord);
         this.displayProgressSpinner = false;
-        this.loaded = true;
         if (environment.debug) console.log('[Simulation] Loaded mock record:', this.record);
       }, 800);
     });
@@ -337,6 +342,7 @@ export class AppComponent implements OnInit {
     } else if (statusParts.length === 3 || statusParts.length === 4) {
       this.statusDate = statusParts[1];
       this.smeEmail = statusParts[2];
+      this.randomId = "";
       if (statusParts.length === 4) {
         this.randomId = statusParts[3];
       }
@@ -344,6 +350,87 @@ export class AppComponent implements OnInit {
       // Handle unexpected format
       throw new ClientError("Unexpected approval status format");
     }
+  }
+
+  applyRecord(record: Record): void {
+    this.record = record;
+    this.parseApprovalStatus(this.record);
+    this.parseDescription(this.record.userInfo.description);
+    this.loaded = true;
+  }
+
+  applyApprovalStatus(approvalStatus: string): void {
+    if (this.record?.userInfo) {
+      this.record.userInfo.approvalStatus = approvalStatus;
+      this.parseApprovalStatus(this.record);
+    } else {
+      this.status = approvalStatus.split("_")[0];
+    }
+  }
+
+  isPendingReview(): boolean {
+    return this.status?.toLowerCase() === 'pending';
+  }
+
+  isApprovalProcessing(): boolean {
+    return this.status?.toLowerCase() === 'approvalpending';
+  }
+
+  isApprovalFailed(): boolean {
+    return this.status?.toLowerCase() === 'approvalfailed';
+  }
+
+  isApproved(): boolean {
+    return this.status?.toLowerCase() === 'approved';
+  }
+
+  isDeclined(): boolean {
+    return this.status?.toLowerCase() === 'declined';
+  }
+
+  get statusLabel(): string {
+    if (this.isPendingReview()) return 'Pending Approval';
+    if (this.isApprovalProcessing()) return 'Processing Approval';
+    if (this.isApprovalFailed()) return 'Approval Failed';
+    if (this.isApproved()) return 'Approved';
+    if (this.isDeclined()) return 'Declined';
+    return this.status || 'Unknown';
+  }
+
+  get statusIcon(): string {
+    if (this.isApprovalProcessing()) return 'sync';
+    if (this.isApprovalFailed()) return 'error';
+    if (this.isPendingReview()) return 'hourglass_empty';
+    if (this.isApproved()) return 'check_circle';
+    return 'cancel';
+  }
+
+  private stopStatusPolling(): void {
+    if (this.pollingSubscription) {
+      this.pollingSubscription.unsubscribe();
+      this.pollingSubscription = undefined;
+    }
+  }
+
+  private startStatusPolling(): void {
+    this.stopStatusPolling();
+    this.pollingSubscription = timer(this.pollIntervalMs, this.pollIntervalMs).pipe(
+      switchMap(() => this.rpaService.getRecord(this.recordId, this._creds)),
+      pluck('record'),
+      tap(record => this.applyRecord(record as Record)),
+      takeWhile((_, index) => this.isApprovalProcessing() && index < this.maxPollAttempts - 1, true),
+      catchError(error => {
+        if (environment.debug) console.error(`[${this.constructor.name}] Error polling approval status:`, error);
+        this.showToast('Approval was submitted, but the latest processing status could not be loaded.', 'error');
+        return EMPTY;
+      })
+    ).subscribe({
+      complete: () => {
+        if (this.isApprovalProcessing()) {
+          this.showToast('Approval is still processing. Refresh this page later for the final status.', 'info');
+        }
+      }
+    });
   }
 
   /**
@@ -373,16 +460,16 @@ export class AppComponent implements OnInit {
   */
   onApprove(): void {
     // Display loading spinner
+    this.stopStatusPolling();
     this.displayProgressSpinner = true;
 
     // Simulation mode
     if (environment.simulateData) {
       setTimeout(() => {
         if (environment.debug) console.log('[Simulation] Request approved');
-        this.showToast('This request was approved successfully!', 'success');
+        this.showToast('Approval processing has started.', 'info');
         this.displayProgressSpinner = false;
-        // Update status locally to show approved state
-        this.status = 'Approved';
+        this.status = 'ApprovalPending';
         this.statusDate = new Date().toISOString();
         this.smeEmail = 'sme@nist.gov';
       }, 1000);
@@ -392,19 +479,23 @@ export class AppComponent implements OnInit {
     // Send HTTP request to approve the user request
     this.rpaService.approveRequest(this.recordId, this._creds).pipe(
       catchError(error => {
-        if (environment.debug) console.error(`[${this.constructor.name}] Error approving request:`, error());
+        if (environment.debug) console.error(`[${this.constructor.name}] Error approving request:`, error);
         this.showToast('There was an error approving this request.', 'error');
         this.displayProgressSpinner = false;
-        return throwError(error); // re-throw the error to be caught by the subscribing function
+        return EMPTY;
       })
     )
       .subscribe(
         data => {
-          if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was approved by SME!`);
-          this.showToast('This request was approved successfully!', 'success');
-          setTimeout(() => {
-            location.reload();
-          }, 3000); // dismiss success message after few seconds
+          if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was submitted for approval processing.`);
+          this.applyApprovalStatus(data.approvalStatus);
+          this.displayProgressSpinner = false;
+          if (this.isApprovalProcessing()) {
+            this.showToast('Approval processing has started. The user will be notified when the data is ready.', 'info');
+            this.startStatusPolling();
+          } else {
+            this.showToast('This request was approved successfully!', 'success');
+          }
         }
       );
   }
@@ -416,6 +507,7 @@ export class AppComponent implements OnInit {
   */
   onDecline(): void {
     // Display loading spinner
+    this.stopStatusPolling();
     this.displayProgressSpinner = true;
 
     // Simulation mode
@@ -436,21 +528,18 @@ export class AppComponent implements OnInit {
     this.rpaService.declineRequest(this.recordId, this._creds)
       .pipe(
         catchError(error => {
-          if (environment.debug) console.error(`[${this.constructor.name}] Error declining request:`, error());
+          if (environment.debug) console.error(`[${this.constructor.name}] Error declining request:`, error);
           this.showToast('There was an error declining this request.', 'error');
           this.displayProgressSpinner = false;
-          return throwError(error); // re-throw the error to be caught by the subscribing function
+          return EMPTY;
         })
       )
       .subscribe(
         data => {
           if (environment.debug) console.log(`[${this.constructor.name}] Request for ${this.recordId} was declined by SME!`);
-
+          this.applyApprovalStatus(data.approvalStatus);
+          this.displayProgressSpinner = false;
           this.showToast('This request was declined successfully!', 'success');
-          setTimeout(() => {
-            location.reload();
-          }, 3000); // dismiss success message after few seconds
-
         }
       );
   }
