@@ -32,14 +32,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "../node_modules/primeng/resources/primeng.css",
-              "../node_modules/primeicons/primeicons.css",
-              "../node_modules/primeflex/primeflex.css",
-              "../node_modules/primeng/resources/themes/saga-blue/theme.css",
-              "../node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles/main.css",
               "src/app/content/modal.less",
-              "../node_modules/ngx-toastr/toastr.css",
               "../node_modules/@ng-select/ng-select/themes/default.theme.css"
             ],
             "vendorChunk": true,

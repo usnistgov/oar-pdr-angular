@@ -36,7 +36,8 @@ import {
     faDownload,
     faCheck,
     faChevronRight,
-    faChevronDown
+    faChevronDown,
+    faSpinner
 } from '@fortawesome/free-solid-svg-icons';
 import { iconClass } from '../../shared/globals/globals';
 
@@ -286,6 +287,7 @@ export class TreetableComponent implements OnInit, AfterViewInit {
     faCheck = faCheck;
     faChevronRight = faChevronRight;
     faChevronDown = faChevronDown;
+    faSpinner = faSpinner;
 
     isMouseOver: boolean = false;
 

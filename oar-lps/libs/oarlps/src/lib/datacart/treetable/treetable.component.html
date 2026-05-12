@@ -139,11 +139,9 @@
                     <td [ngStyle]="bodyStyle(statusWidth)">
                         <div id="downloadstatus" *ngIf="rowData.cartItem" style="display:inline;"
                             [ngStyle]="{'color':getDownloadStatusColor(rowData.cartItem.downloadStatus)}">
-                            <!-- <i [class]="getIconClass(rowData.cartItem.downloadStatus)" style="margin-right: .5em;"
-                                aria-hidden="true" data-toggle="tooltip" title="{{rowData.cartItem.downloadStatus}}"></i> -->
 
                             <fa-icon 
-                                *ngIf="getIconClass(rowData.cartItem.downloadStatus)"
+                                *ngIf="getIconClass(rowData.cartItem.downloadStatus) && rowData.cartItem.downloadStatus != 'downloading'"
                                 [icon]="['fas', getIconClass(rowData.cartItem.downloadStatus)]" 
                                 style="margin-right: .5em;"
                                 aria-hidden="true"
@@ -152,8 +150,13 @@
                                 title="{{rowData.cartItem.downloadStatus}}">
                             </fa-icon>
 
-                            <p-progressSpinner *ngIf="rowData.cartItem.downloadStatus == 'downloading'"
-                                [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
+                            <fa-icon 
+                                *ngIf="rowData.cartItem.downloadStatus == 'downloading'" 
+                                style="margin-right: 5px;"
+                                [icon]="faSpinner" 
+                                [animation]="'spin'">
+                            </fa-icon>
+
                             <span
                                 *ngIf="rowData.cartItem.downloadStatus == 'error' || rowData.cartItem.downloadStatus == 'failed'; else normal"
                                 style="cursor: pointer;"
