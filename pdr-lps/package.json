@@ -8,7 +8,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build-dev": "ng build",
+    "build": "ng build --configuration production",
     "test": "ng test",
     "debug-test": "ng test --watch=true --browsers=DebugChrome",
     "lint": "ng lint pdr-lps",
