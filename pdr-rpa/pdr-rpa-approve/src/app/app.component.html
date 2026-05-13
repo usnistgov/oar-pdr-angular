@@ -42,10 +42,6 @@
       <button class="refresh-btn" (click)="refreshPage()">
         <mat-icon>refresh</mat-icon> Try Again
       </button>
-      <p class="support-message">
-        If the problem persists, please contact support at
-        <a href="mailto:datasupport@nist.gov">datasupport&#64;nist.gov</a>
-      </p>
     </div>
 
     <!-- Main Content -->
@@ -140,6 +136,11 @@
       </div>
     </div>
   </mat-card>
+
+  <p class="page-support-message" *ngIf="loaded || recordNotFound">
+    If something on this page is not working as expected, contact
+    <a href="mailto:datasupport@nist.gov">datasupport&#64;nist.gov</a>.
+  </p>
 </div>
 
 <!-- Dark Mode Toggle FAB -->

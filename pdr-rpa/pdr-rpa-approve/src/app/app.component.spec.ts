@@ -98,6 +98,15 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should show a support contact below the approval card', () => {
+    const supportMessage = fixture.nativeElement.querySelector('.page-support-message');
+    const supportLink = supportMessage.querySelector('a');
+
+    expect(supportMessage.textContent).toContain('If something on this page is not working as expected');
+    expect(supportLink.textContent).toBe('datasupport@nist.gov');
+    expect(supportLink.getAttribute('href')).toBe('mailto:datasupport@nist.gov');
+  });
+
   it('should extract recordId from query params', () => {
     component.ngOnInit();
     expect(component.recordId).toBe('ark:123');
