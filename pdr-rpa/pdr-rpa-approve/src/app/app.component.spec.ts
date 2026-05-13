@@ -50,6 +50,7 @@ describe('AppComponent', () => {
   let mockRPAService: any;
 
   beforeEach(async () => {
+    mockRecord.userInfo.approvalStatus = 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov';
     mockConfigService = {
       getConfig: jest.fn().mockReturnValue(mockConfig),
     };
@@ -57,7 +58,7 @@ describe('AppComponent', () => {
       getRecord: jest.fn().mockReturnValue(of({ "record": mockRecord } as RecordWrapper)),
       approveRequest: jest.fn().mockReturnValue(of({
         recordId: '123',
-        approvalStatus: 'Approved_2023-04-25T10:00:00.000Z_sme@nist.gov'
+        approvalStatus: 'ApprovalPending_2023-04-25T10:00:00.000Z_sme@nist.gov'
       } as ApprovalResponse)),
       declineRequest: jest.fn().mockReturnValue(of({
         recordId: '123',
@@ -97,6 +98,15 @@ describe('AppComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should show a support contact below the approval card', () => {
+    const supportMessage = fixture.nativeElement.querySelector('.page-support-message');
+    const supportLink = supportMessage.querySelector('a');
+
+    expect(supportMessage.textContent).toContain('If something on this page is not working as expected');
+    expect(supportLink.textContent).toBe('datasupport@nist.gov');
+    expect(supportLink.getAttribute('href')).toBe('mailto:datasupport@nist.gov');
+  });
+
   it('should extract recordId from query params', () => {
     component.ngOnInit();
     expect(component.recordId).toBe('ark:123');
@@ -119,7 +129,8 @@ describe('AppComponent', () => {
   it('should call onApprove()', async () => {
     component.recordId = 'ark:123';
     component.onApprove();
-    expect(component.displayProgressSpinner).toEqual(true);
+    expect(component.displayProgressSpinner).toEqual(false);
+    expect(component.status).toEqual('ApprovalPending');
     expect(mockRPAService.approveRequest).toHaveBeenCalledWith(
       'ark:123',
       {
@@ -133,7 +144,8 @@ describe('AppComponent', () => {
   it('should call onDecline()', () => {
     component.recordId = 'ark:123';
     component.onDecline();
-    expect(component.displayProgressSpinner).toEqual(true);
+    expect(component.displayProgressSpinner).toEqual(false);
+    expect(component.status).toEqual('Declined');
     expect(mockRPAService.declineRequest).toHaveBeenCalledWith(
       'ark:123',
       {
@@ -276,6 +288,38 @@ describe('AppComponent', () => {
       }
     };
 
+    const approvalPendingMockRecord: Record = {
+      id: '123',
+      caseNum: '1234567890',
+      userInfo: {
+        fullName: 'John Doe',
+        organization: 'NIST',
+        email: 'john.doe@nist.gov',
+        receiveEmails: 'Yes',
+        country: 'United States',
+        approvalStatus: 'ApprovalPending_2023-04-25T10:00:00.000Z_sme@nist.gov',
+        productTitle: 'example title',
+        subject: 'example subject',
+        description: 'example description'
+      }
+    };
+
+    const approvalFailedMockRecord: Record = {
+      id: '123',
+      caseNum: '1234567890',
+      userInfo: {
+        fullName: 'John Doe',
+        organization: 'NIST',
+        email: 'john.doe@nist.gov',
+        receiveEmails: 'Yes',
+        country: 'United States',
+        approvalStatus: 'ApprovalFailed_2023-04-25T10:00:00.000Z_sme@nist.gov',
+        productTitle: 'example title',
+        subject: 'example subject',
+        description: 'example description'
+      }
+    };
+
     it('should correctly parse a pending status', () => {
       component.parseApprovalStatus(pendingMockRecord);
       expect(component.status).toEqual('Pending');
@@ -290,6 +334,24 @@ describe('AppComponent', () => {
       expect(component.statusDate).toEqual('2023-04-25T10:00:00.000Z');
       expect(component.smeEmail).toEqual('sme@nist.gov');
       expect(component.randomId).toEqual('randomId12345');
+    });
+
+    it('should correctly identify approval processing status', () => {
+      component.parseApprovalStatus(approvalPendingMockRecord);
+      expect(component.status).toEqual('ApprovalPending');
+      expect(component.statusDate).toEqual('2023-04-25T10:00:00.000Z');
+      expect(component.smeEmail).toEqual('sme@nist.gov');
+      expect(component.isApprovalProcessing()).toBe(true);
+      expect(component.statusLabel).toEqual('Processing Approval');
+    });
+
+    it('should correctly identify approval failed status', () => {
+      component.parseApprovalStatus(approvalFailedMockRecord);
+      expect(component.status).toEqual('ApprovalFailed');
+      expect(component.statusDate).toEqual('2023-04-25T10:00:00.000Z');
+      expect(component.smeEmail).toEqual('sme@nist.gov');
+      expect(component.isApprovalFailed()).toBe(true);
+      expect(component.statusLabel).toEqual('Approval Failed');
     });
   });
 });
