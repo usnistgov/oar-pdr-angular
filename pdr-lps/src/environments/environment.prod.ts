@@ -13,7 +13,9 @@ import { LPSConfig } from 'oarlps';
 export const context = {
     production: true,
     useMetadataService: false,
-    useCustomizationService: true
+    useCustomizationService: true,
+    useMIDASDAPService: false,
+    useResourceService: true
 };
 
 export const config : LPSConfig = {
@@ -21,11 +23,21 @@ export const config : LPSConfig = {
         orgHome:     "https://nist.gov/",
         portalBase:  "https://data.nist.gov/",
         pdrHome:     "https://data.nist.gov/pdr/",
-        pdrSearch:   "https://data.nist.gov/sdp/"
+        pdrSearch: "https://data.nist.gov/sdp/",
+        mdService:   "https://data.nist.gov/rmm/"
     },
-    mdAPI: "https://data.nist.gov/rmm/records/",
+    PDRAPIs: {
+        mdSearch: "https://mdsdev.nist.gov/rmm/records/",
+        mdService: "https://mdsdev.nist.gov/od/id/",
+        metrics: "https://data.nist.gov/rmm/usagemetrics/"
+    },
+    dapEditing: {
+        serviceEndpoint: "https://mdsdev.nist.gov/midas/dap/mds3/",
+        editEnabled: false,
+    },    
+    systemVersion: "v1.3.X",
     distService: "https://data.nist.gov/od/ds/",
-    mode:        "dev",
+    mode:        "prod",
     status:      "Dev Version",
     appVersion:  "v1.1.0",
     production:  context.production,
@@ -34,8 +46,10 @@ export const config : LPSConfig = {
     screenSizeBreakPoint: 1060,
     bundleSizeAlert: 500000000,
     embedMetadata: "schema.org",
+    downloadableFileLimit: 300,
     // Decide how many seconds to wait to refresh metrics after user download one/more files
-    delayTimeForMetricsRefresh: 300  
+    delayTimeForMetricsRefresh: 300,
+    standardNISTTaxonomyURI: "https://data.nist.gov/od/dm/nist-themes/"
 }
 
 export const testdata : {} = { }
