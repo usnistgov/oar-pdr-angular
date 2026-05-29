@@ -91,6 +91,8 @@ export class ResourceIdentityComponent implements OnChanges {
                 public globalService: GlobalService,
                 public gaService: GoogleAnalyticsService,
                 public iconLibrary: FaIconLibrary,
+                private chref: ChangeDetectorRef,
+                public edstatsvc: EditStatusService,
                 public lpService: LandingpageService)
     { 
         // iconLibrary.addIcons(
@@ -105,9 +107,8 @@ export class ResourceIdentityComponent implements OnChanges {
             this.onResize(width + 20);
         })
 
-        effect(() => {
-            this.isEditMode = this.editstatsvc.isEditMode();
-            // this.chref.detectChanges();
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
         })
     }
 

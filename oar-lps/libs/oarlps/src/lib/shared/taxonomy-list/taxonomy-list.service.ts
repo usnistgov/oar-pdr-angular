@@ -24,7 +24,7 @@ export class TaxonomyListService {
         public collectionService: CollectionService,
         private cfg: AppConfig) {
 
-        this.taxonomyServiceBase = cfg.get("links.taxonomyBase", "assets/collection/");
+        this.taxonomyServiceBase = cfg.get("links.taxonomyBase", "./assets/collection/");
         if (! this.taxonomyServiceBase.endsWith("/"))
             this.taxonomyServiceBase += "/";
     }

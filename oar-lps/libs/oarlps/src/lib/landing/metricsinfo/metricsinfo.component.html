@@ -1,8 +1,8 @@
 <div *ngIf="showMetrics" >
     <div class="metrics-header" [ngStyle]="metricsStyle(true)">
         Dataset Metrics 
-        <!-- Display spinner while loading metrics data -->
-        <span *ngIf="!metricsData.dataReady" class="metrics-spinner" style="color:#ffffff;width: 1em;float: right;">
+        <!-- Display spinner while loading metrics data. Hide the spinner when timeout -->
+        <span *ngIf="!metricsData.dataReady && !spinnerTimeout" class="metrics-spinner" style="color:#ffffff;width: 1em;float: right;">
             <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
         </span>
     </div>
