@@ -63,6 +63,18 @@ describe('EditStatusService', () => {
         svc.startEditing("testid");
         expect(resID).toEqual("testid");
     });
+
+    it('setEditMode', () => {
+        svc.setEditMode(LandingConstants.editModes.EDIT_MODE);
+        svc._isEditMode.subscribe((value) => {
+            expect(value).toBeTruthy();
+        });        
+
+        svc.setEditMode(LandingConstants.editModes.DONE_MODE);
+        svc._isEditMode.subscribe((value) => {
+            expect(value).toBeFalsy();
+        });
+    });
 });
 
 

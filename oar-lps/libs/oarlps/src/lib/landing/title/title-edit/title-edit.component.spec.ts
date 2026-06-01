@@ -70,16 +70,10 @@ describe('TitleEditComponent', () => {
     });
 
     it('editMode', () => {
-        edstatsvc.setEditMode(LandingConstants.editModes.EDIT_MODE);
-        expect(edstatsvc.isEditMode).toBeTruthy();
-
         mockWatchIsEditMode.next(true);
         fixture.detectChanges();
         let buttonElement = fixture.nativeElement.querySelector('button');
         expect(buttonElement).toBeTruthy();
-
-        edstatsvc.setEditMode(LandingConstants.editModes.DONE_MODE);
-        expect(edstatsvc.isEditMode).toBeFalsy();
 
         mockWatchIsEditMode.next(false);
         fixture.detectChanges();
