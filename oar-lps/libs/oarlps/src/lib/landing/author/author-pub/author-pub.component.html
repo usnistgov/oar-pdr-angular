@@ -36,6 +36,7 @@
                         [class.amplified]="isMouseOver" 
                         [icon]="['fas', clickAuthors? caretDownIcon : caretRightIcon]"
                         class="amplifiable expand-btn" 
+                        style="margin-right: 5px;"
                         (mouseover)="isMouseOver = true" 
                         (mouseleave)="isMouseOver = false"
                         (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();">

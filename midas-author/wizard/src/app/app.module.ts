@@ -51,7 +51,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         MetadataUpdateService,
         SidebarService,
         StaffDirectoryService
-        // fakeBackendProvider
     ],
     schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     bootstrap: [AppComponent]

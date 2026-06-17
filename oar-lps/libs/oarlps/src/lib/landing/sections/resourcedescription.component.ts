@@ -65,16 +65,21 @@ export class ResourceDescriptionComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(public globalService: GlobalService,
-                public edstatsvc: EditStatusService ) 
-    {
+    constructor(
+        public globalService: GlobalService,
+        public edstatsvc: EditStatusService) {
+        
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width + 20;
         })
 
-        effect(() => {
-            this.isEditMode = this.edstatsvc.isEditMode();
-        })
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        });        
+
+        // effect(() => {
+        //     this.isEditMode = this.edstatsvc.isEditMode();
+        // })
     }
 
     ngOnInit(): void {

@@ -17,7 +17,6 @@ import { NotificationService } from '../../../shared/notification-service/notifi
 import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
-import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TreeTableModule } from 'primeng/treetable';
@@ -118,7 +117,6 @@ export class DatafilesMidasComponent {
                 public breakpointObserver: BreakpointObserver,
                 public mdupdsvc : MetadataUpdateService, 
                 public lpService: LandingpageService, 
-                private msgsvc: UserMessageService,
                 private chref: ChangeDetectorRef,
                 public globalService: GlobalService,
                 private confirmDialogSvc: ConfirmationDialogService,
@@ -250,7 +248,7 @@ export class DatafilesMidasComponent {
                         
                             // this.buildTree(this.record['components']); // Will rebuild in pub component
                         }else{
-                            this.msgsvc.error("Fail to retrive updated dataset.");
+                            this.globalService.error("Fail to retrive updated dataset.");
                         }
                         this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
                     },

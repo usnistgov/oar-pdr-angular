@@ -1,6 +1,6 @@
 import { Component, OnInit, SimpleChanges, Input, ViewChild, ElementRef, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
-import { Themes } from '../../../shared/globals/globals';
+import { Message, Themes } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { ToastrService } from 'ngx-toastr';
@@ -22,7 +22,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-accesspage-list',
@@ -68,10 +68,11 @@ export class AccesspageListComponent implements OnInit {
     editMode: string = MODE.NORMAL; 
     forceReset: boolean = false;
     globalsvc = inject(GlobalService);
-
+    
     //icon class names
     // addIcon = iconClass.ADD;
     faPlus = faPlus;
+    faXmark = faXmark;
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
@@ -86,7 +87,6 @@ export class AccesspageListComponent implements OnInit {
     @Input() fieldName: string;
     @Input() mdupdsvc : MetadataUpdateService;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
-    errMessage: string;
 
     constructor(private notificationService: NotificationService,
                 private toastrService: ToastrService,
@@ -225,8 +225,8 @@ export class AccesspageListComponent implements OnInit {
                         this.setCurrentPage(index);
                         this.setMode(MODE.LIST);
                     }else{
-                        let msg = "Update failed";
-                        console.error(msg);
+                        this.globalsvc.error("Update failed", this.fieldName);
+                        console.error("Update failed");
                     }
                 })
             }else{
@@ -264,7 +264,8 @@ export class AccesspageListComponent implements OnInit {
                         this.setMode(MODE.LIST);
                         this.forceReset = true; // Force accesspage editor to reset data
                     } else {
-                        let msg = "Failed to restore access pages"
+                        let msg = "Failed to restore access pages";
+                        this.globalsvc.error(msg, this.fieldName);
                         console.error(msg);
                     }
                 })
@@ -286,8 +287,9 @@ export class AccesspageListComponent implements OnInit {
         this.updateMatadata().then((success) => {
             if(success){
                 this.setMode(MODE.LIST);
-            }else{
-                console.error("Update failed.")
+            } else {
+                //Error was hanled by metadata update service, just set error message here for consistency and log the error.
+                console.error("Update failed.");
             }
         });
 
@@ -323,6 +325,9 @@ export class AccesspageListComponent implements OnInit {
             case 'undoCurrentChanges':
                 this.undoCurApageChanges();
                 break;
+            case 'closeEditBlock':
+                this.cancelEditing();
+                break;            
             default:
                 break;
         }
@@ -339,8 +344,8 @@ export class AccesspageListComponent implements OnInit {
      * Cancel current changes
      */
     cancelEditing() {
-        this.useMetadata();
-        this.setMode();
+        // this.useMetadata();
+        this.setMode(MODE.LIST);
         this.currentOrderChanged = false;
     }
 
@@ -361,6 +366,8 @@ export class AccesspageListComponent implements OnInit {
      * Save current access page
      */
     saveCurApage(refreshHelp: boolean = true, editmode: string = MODE.LIST) {
+        this.lpService.setCurrentSection("");
+
         let postMessage = {};
         // this.record[this.fieldName] = JSON.parse(JSON.stringify([...this.accessPages, ...this.nonAccessPages]));
         
@@ -433,6 +440,10 @@ export class AccesspageListComponent implements OnInit {
                     }else{
                         let msg = "Access page update failed.";
                         console.error(msg);
+
+                        //Scroll to top to make sure user can see the error message
+                        // this.globalsvc.scrollToTop();
+
                         resolve(false);
                     }
                 });
@@ -474,7 +485,7 @@ export class AccesspageListComponent implements OnInit {
      * Set the GI to different mode
      * @param editmode edit mode to be set
      */
-    setMode(editmode: string = MODE.LIST, refreshHelp: boolean = true) {
+    setMode(editmode: string = MODE.NORMAL, refreshHelp: boolean = true) {
         let sectionMode: SectionMode = {} as SectionMode;
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
@@ -508,6 +519,7 @@ export class AccesspageListComponent implements OnInit {
                
                 break;
             default: // normal
+                editmode = MODE.NORMAL;
                 // Collapse the edit block
                 this.editBlockStatus = 'collapsed'
               
@@ -527,7 +539,7 @@ export class AccesspageListComponent implements OnInit {
 
         this.chref.detectChanges();
     }
-   
+
     /**
      * Get the background color of the whole record for list mode
      * We do not keep track of individual page status here because in list mode,
@@ -575,32 +587,36 @@ export class AccesspageListComponent implements OnInit {
     }
 
     /**
-     * Determine icon class of add button
-     * If edit mode is normal, display enabled icon.
-     * Otherwise display disabled icon.
-     * @returns add button icon class
-     */    
-    addIconClass() {
-        if(this.isNormal){
-            return "fas fa-plus fa-sm icon_enabled";
-        }else{
-            return "fas fa-plus fa-sm icon_disabled";
-        }
-    }
+     * Add/close button disabled when in edit/add mode. 
+     * @param button The type of the button
+    * @returns icon class name for the button
+     */
+    iconClass(button: string) {
+        let Returnclass: string ="icon_disabled";
 
-    /**
-     * Determine icon class of edit button
-     * If edit mode is normal, display edit icon.
-     * Otherwise display check icon.
-     * @returns edit button icon class
-     */   
-    editIconClass() {
-        if(this.isNormal && this.accessPages.length > 0){
-            return "fas fa-pencil icon_enabled";
-        }else{
-            return "fas fa-pencil icon_disabled";
+        switch (button) {
+            case 'hideList':
+                if (this.isEditing || this.isAdding) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'add':
+                if (this.isEditing || this.isAdding) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;
+            default:
+                break;
         }
-    }
+
+        return Returnclass;
+    }      
 
 
     openEditBlock() {

@@ -39,11 +39,15 @@ export class ResourceRefsComponent {
     /**
      * create an instance of the Identity section
      */
-    constructor(public edstatsvc: EditStatusService)
-    { 
-        effect(() => {
-            this.isEditMode = this.edstatsvc.isEditMode();
-        })
+    constructor(public edstatsvc: EditStatusService) { 
+
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        });        
+
+        // effect(() => {
+        //     this.isEditMode = this.edstatsvc.isEditMode();
+        // })
     }
 
     /**

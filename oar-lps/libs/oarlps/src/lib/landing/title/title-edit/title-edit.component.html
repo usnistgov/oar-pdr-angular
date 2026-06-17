@@ -1,17 +1,17 @@
 <!-- When editEnabled is true, there are two modes: edit mode and preview mode. 
-     This is defined by mdupdsvc.isEditMode (boolean).
+     This is defined by isEditMode (boolean).
      In edit mode, there are also two modes: editing and non-editing.
      This is defined by isEditing variable (boolean).
 
      The textarea box only shows up when isEditng = true. Otherwise display text.
 
-     The pencil button only show up when mdupdsvc.isEditMode is true and isEditing = false.
+     The pencil button only show up when isEditMode is true and isEditing = false.
      Other edit buttons show up when isEditing is true.
   -->
 <div style="width: 100%;">
     <div style="display: table; margin-bottom: 0em;width:100%;">
         <div class="editable_container no-wrap" style="width:100%;">
-            <div class="editable_field red-star" *ngIf="edstatsvc.isEditMode()">
+            <div class="editable_field red-star" *ngIf="isEditMode">
                 *
             </div>
 
@@ -34,8 +34,8 @@
             }
   
             <!-- Control buttons -->
-            @if(edstatsvc.isEditMode()) {
-                <div *ngIf="edstatsvc.isEditMode()" class="editable_field" style="white-space: nowrap;">
+            @if(isEditMode) {
+                <div *ngIf="isEditMode" class="editable_field" style="white-space: nowrap;">
                     @if(!isEditing) {
                         <button 
                             class="edit_button" 
@@ -48,7 +48,7 @@
                             <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                         </button> 
 
-                        @if( updated ) {
+                        @if( dataChanged && updated ) {
                             <!-- Restore button, restore original value -->
                             <button 
                                 class="edit_button" 
@@ -66,18 +66,21 @@
                         <!-- Save button -->
                         <button 
                             class="edit_button" 
-                            type="button" (click)="onSave()"
+                            type="button" 
+                            [disabled]="!dataChanged"
+                            (click)="onSave()"
                             aria-label="save button" 
                             ngbTooltip="Save changes">
 
                             <fa-icon 
-                                class="icon_enabled" 
+                                [class]="iconClass('save')"
                                 [icon]="faSave">
                             </fa-icon>
                         </button>
 
                         <!-- Cancel editing button: cancel current changes -->
                         <button 
+                            *ngIf="(isEditing || isAdding) && dataChanged"
                             class="edit_button" 
                             type="button"
                             (click)="cancelEditing()" 
@@ -89,6 +92,22 @@
                                 title="Cancel edit">
                             </fa-icon>
                         </button>   
+
+                        <!-- Closebutton - hide edit block -->
+                        <button 
+                            class="edit_button" 
+                            *ngIf="isEditing || isAdding" 
+                            [disabled]="dataChanged"
+                            type="button" 
+                            (click)="hideEditBlock()"
+                            aria-label="Hide edit block" 
+                            pTooltip="Hide edit block" 
+                            tooltipPosition="top">
+                            <fa-icon 
+                                [icon]="faXmark" 
+                                [class]="iconClass('close')">
+                            </fa-icon>
+                        </button>
                     }
                 </div>
             }

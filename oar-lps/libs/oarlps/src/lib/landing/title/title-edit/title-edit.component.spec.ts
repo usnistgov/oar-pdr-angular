@@ -40,7 +40,7 @@ describe('TitleEditComponent', () => {
                 { provide: DAPService, useFactory: createDAPService, 
                     deps: [ environment, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
+                    edstatsvc, dapsvc, null, null)
                 } 
             ]
         })
@@ -62,16 +62,12 @@ describe('TitleEditComponent', () => {
     });
 
     it('editMode', () => {
-        edstatsvc.editMode.set(LandingConstants.editModes.EDIT_MODE);
-        expect(edstatsvc.isEditMode()).toBeTruthy();
-
+        component.isEditMode = true;
         fixture.detectChanges();
         let buttonElement = fixture.nativeElement.querySelector('button');
         expect(buttonElement).toBeTruthy();
 
-        edstatsvc.editMode.set(LandingConstants.editModes.DONE_MODE);
-        expect(edstatsvc.isEditMode()).toBeFalsy();
-
+        component.isEditMode = false;
         fixture.detectChanges();
         buttonElement = fixture.nativeElement.querySelector('button');
         expect(buttonElement).toBeFalsy();

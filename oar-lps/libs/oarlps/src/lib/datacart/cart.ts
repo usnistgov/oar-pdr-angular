@@ -6,7 +6,6 @@ import { Observable, Subject } from 'rxjs';
 
 import { NerdmComp } from '../nerdm/nerdm';
 import { CartConstants, DownloadStatus } from './cartconstants';
-import { UserMessageService } from '../frame/usermessage.service';
 
 /**
  * convert a data cart contents to a string appropriate for saving to local storage
@@ -120,8 +119,7 @@ export class DataCart {
     constructor(name: string, 
                 data?: DataCartLookup, 
                 store: Storage|null = localStorage, 
-                update: number = 0,
-                public msgsvc: UserMessageService = null) {
+                update: number = 0) {
         this.cartName = name;
         if (data) this.contents = data;
         this._storage = store;  // if null; cart is in-memory only
@@ -393,7 +391,7 @@ export class DataCart {
     /**
      * add a DataCartItem to the cart
      */
-    addItem(item: DataCartItem, dosave: boolean = true, msgsvc: UserMessageService = null) : void {
+    addItem(item: DataCartItem, dosave: boolean = true) : void {
         this.contents[this._idForItem(item)] = item;
 
         if (dosave) this.save();
@@ -413,8 +411,7 @@ export class DataCart {
     addFile(resid: string, 
             file: DataCartItem|NerdmComp,
             markSelected: boolean = false, 
-            dosave: boolean = true,
-            msgsvc: UserMessageService = null) : DataCartItem
+            dosave: boolean = true) : DataCartItem
     {
         let fail = function(msg: string) : DataCartItem {
             console.error("Unable to load file NERDm component: "+msg+": "+JSON.stringify(file));
@@ -434,7 +431,7 @@ export class DataCart {
         if (item['downloadStatus'] === undefined)
             item['downloadStatus'] = "";
         item['isSelected'] = markSelected;
-        this.addItem(item, dosave, msgsvc);
+        this.addItem(item, dosave);
         return item;
     }
 

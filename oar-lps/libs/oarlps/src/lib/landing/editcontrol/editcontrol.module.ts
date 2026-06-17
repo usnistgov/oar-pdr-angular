@@ -18,7 +18,7 @@ import { EditStatusService } from './editstatus.service';
     exports: [ ],
     providers: [
         HttpClient,
-        MetadataUpdateService,
+        // MetadataUpdateService,
         EditStatusService,
         { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService, StaffDirectoryService ] }
     ]

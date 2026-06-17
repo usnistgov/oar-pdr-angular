@@ -21,8 +21,8 @@ describe('UserMessageService', () => {
 
     it('sends tip', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.tip("50c");
         expect(message).toEqual("50c");
         expect(type).toEqual("tip");
@@ -30,8 +30,8 @@ describe('UserMessageService', () => {
 
     it('sends tip', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.tip("50c");
         expect(message).toEqual("50c");
         expect(type).toEqual("tip");
@@ -42,8 +42,8 @@ describe('UserMessageService', () => {
 
     it('sends instruction', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.instruct("Stop!");
         expect(message).toEqual("Stop!");
         expect(type).toEqual("instruction");
@@ -54,8 +54,8 @@ describe('UserMessageService', () => {
 
     it('sends warning', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.warn("Beware.");
         expect(message).toEqual("Beware.");
         expect(type).toEqual("warning");
@@ -66,8 +66,8 @@ describe('UserMessageService', () => {
 
     it('sends an error', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.error("tsk");
         expect(message).toEqual("tsk");
         expect(type).toEqual("error");
@@ -78,8 +78,8 @@ describe('UserMessageService', () => {
 
     it('sends a system error', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.syserror("ouch");
         expect(message).toEqual("ouch");
         expect(type).toEqual("syserror");
@@ -90,8 +90,8 @@ describe('UserMessageService', () => {
 
     it('sends a celebration', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.celebrate("sing!");
         expect(message).toEqual("sing!");
         expect(type).toEqual("celebration");
@@ -102,8 +102,8 @@ describe('UserMessageService', () => {
 
     it('sends an informational item', () => {
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("");
+        expect(type).toEqual("instruction");
         svc.inform("I am");
         expect(message).toEqual("I am");
         expect(type).toEqual("information");
@@ -122,8 +122,8 @@ describe('UserMessageService', () => {
         expect(type).toBeNull();
 
         svc.subscribe(subscriber);
-        expect(message).toBeNull();
-        expect(type).toBeNull();
+        expect(message).toEqual("50c");
+        expect(type).toEqual("tip");
 
         svc.instruct("Just Do It(TM)");
         expect(message).toEqual("Just Do It(TM)");

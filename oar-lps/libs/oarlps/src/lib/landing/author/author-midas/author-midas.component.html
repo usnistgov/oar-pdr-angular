@@ -1,7 +1,7 @@
 <div style="display: table;">
     <div class="editable_container">
-        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || edstatsvc.isEditMode()">
-            <div class="editable_field" *ngIf="edstatsvc.isEditMode()" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || isEditMode">
+            <div class="editable_field" *ngIf="isEditMode" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
                 @if(isScienceTheme){
                     Facilitators:
                 }
@@ -31,19 +31,6 @@
                     <fa-icon [icon]="faPencil" size="sm" [style.opacity]="iconOpacity()"></fa-icon>
                 </button> 
 
-                <!-- Hide button - hide edit block -->
-                <button 
-                    class="edit_button" 
-                    *ngIf="isEditing" 
-                    [disabled]="childIsEditing || childIsAdding" 
-                    type="button" 
-                    (click)="hideEditBlock()" 
-                    aria-label="Hide edit block" 
-                    pTooltip="Hide edit block"
-                    tooltipPosition="top" >                     
-                    <fa-icon [icon]="faXmark" [style.opacity]="iconOpacity()"></fa-icon>
-                </button> 
-
                 <!-- Undo all changes button -->
                 <button
                     class="edit_button" 
@@ -63,9 +50,11 @@
 
 <!-- Lazy loading in edit mode. Never get loaded in public mode -->
 
-@if(isEditing) {
+<!-- @if(isEditing) { -->
     <!-- Author editor -->
-    <div [@editExpand]="editBlockStatus" 
+    <div 
+        *ngIf="isEditing"
+        [@editExpand]="editBlockStatus" 
         style = "width: 100%;" 
         [style.overflow] = "overflowStyle">
         <lib-author-list #authorlist 
@@ -76,4 +65,4 @@
             (editmodeOutput)="setChildEditMode($event)">
         </lib-author-list>
     </div>
-}
+<!-- } -->

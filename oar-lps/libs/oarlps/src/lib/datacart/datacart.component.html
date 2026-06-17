@@ -4,6 +4,11 @@
                  (onRemoveDownloaded)="remvoeDownloadedFiles($event)">
 </app-cartcontrol>
 
+<!-- error messages go here -->
+<div style="width: 100%;">
+    <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message>
+</div>
+
 <!-- Bundle plan -->
 <app-bundleplan #bundler [cartName]="dataCart.getName()" 
                 (outputOverallStatus)="updateCartOperationalStatus($event)">

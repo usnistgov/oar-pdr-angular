@@ -10,6 +10,7 @@ import { CartService } from './cart.service';
 import { DataCart } from './cart';
 import { BundleplanComponent } from './bundleplan/bundleplan.component';
 import { of, throwError } from 'rxjs';
+import { GlobalService } from '../shared/globals/globals';
 
 /**
  * a component that provides an interface for viewing the contents of a data cart and download items 
@@ -31,7 +32,7 @@ export class DatacartComponent implements OnInit, AfterViewInit {
     inBrowser: boolean = false;
 
     //Data
-    dataCart : DataCart = null;
+    dataCart : DataCart = new DataCart("");
     zipData: ZipData[] = [];
 
     overallStatus: string = "";
@@ -54,6 +55,7 @@ export class DatacartComponent implements OnInit, AfterViewInit {
         private route: ActivatedRoute,
         private router: Router,
         public cartService: CartService,
+        public globalsvc: GlobalService,
         @Inject(PLATFORM_ID) private platformId: Object ) 
     {
         this.inBrowser = isPlatformBrowser(platformId);
@@ -85,7 +87,9 @@ export class DatacartComponent implements OnInit, AfterViewInit {
                 } else {
                     // Handle the case where the cart could not be retrieved
                     this.isCartLoadedSuccessfully = false;
-                    return throwError(() => new Error("Cart could not be retrieved"));
+                    // return throwError(() => new Error("Cart could not be retrieved"));
+                    this.globalsvc.error("Error loading cart: " + cartName); // Display error message
+                    return of(null);
                 }
             })
         ).subscribe({
@@ -103,9 +107,10 @@ export class DatacartComponent implements OnInit, AfterViewInit {
               }
             },
             error: (error: string) => {
-              console.error("Error loading cart:", error);
-              this.errorMessage = error; // Set the error message for display
-              this.isCartLoadedSuccessfully = false;
+                console.error("Error loading cart:", error);
+                this.errorMessage = error; // Set the error message for display
+                this.globalsvc.error("Error loading cart: " + error); // Display error message
+                this.isCartLoadedSuccessfully = false;
             }
         });        
     }
