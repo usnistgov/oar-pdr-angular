@@ -13,8 +13,7 @@
  *
  */
 import { Component, OnInit, OnChanges, AfterViewInit, ViewChild, NgZone, HostListener, Inject,
-         PLATFORM_ID, TemplateRef, Input, 
-         ChangeDetectorRef} from '@angular/core';
+         PLATFORM_ID, TemplateRef, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CartService } from '../cart.service';
 import { DownloadService } from '../../shared/download-service/download-service.service';
@@ -24,7 +23,6 @@ import { CartConstants, DownloadStatus } from '../cartconstants';
 import { DataCart, DataCartItem } from '../cart';
 import { DisplayPrefs } from '../displayprefs';
 import { isPlatformBrowser } from '@angular/common';
-import { MatCheckbox } from '@angular/material/checkbox';
 
 
 /**
@@ -247,7 +245,7 @@ export class CartTreeNode {
 @Component({
   selector: 'app-treetable',
   templateUrl: './treetable.component.html',
-  styleUrls: ['./treetable.component.scss',
+  styleUrls: ['./treetable.component.css',
               '../datacart.component.css',
               '../../landing/landing.component.scss']
 })
@@ -299,7 +297,6 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
         public gaService: GoogleAnalyticsService,
         private ngZone: NgZone,
         public dialog: MatDialog,
-        private cdr: ChangeDetectorRef,
         @Inject(PLATFORM_ID) private platformId: Object
     ) {
 
@@ -411,8 +408,6 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
                 }
             }
         }
-
-        this.cdr.detectChanges();
     }
 
     /**
@@ -517,17 +512,17 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
     /**
      * Handle checkbox change events with proper parent/child propagation
      */
-    onCheckboxChange(isChecked: boolean, node: CartTreeNode): void {
-        // const isChecked = event.checked;
+    onCheckboxChange(event: any, node: CartTreeNode): void {
+        const isChecked = event.checked;
         // Only update if the state actually changed
-        // if (node.data.selected !== isChecked) {
+        if (node.data.selected !== isChecked) {
             node.data.selected = isChecked;
             node.data.indeterminate = false; // Clear indeterminate state when explicitly set
 
-            // Update data cart selection for this node
-            if (node.data.key) {
+            // Update data cart selection for this node (only for files)
+            if (node.data.cartItem) {
                 let parts = this._keySplit(node.data.key);
-                this.dataCart?.setSelected(parts[0], parts[1], !isChecked, true);
+                this.dataCart?.setSelected(parts[0], parts[1], isChecked, true);
             }
 
             // Propagate change to children
@@ -536,11 +531,8 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
             }
 
             // Update parent states
-            setTimeout(() => {
-                this.updateParentStates([this.dataTree]); // Start from root
-                this.cdr.detectChanges(); // Force all recursive templates to redraw
-            }, 0);
-        // }
+            this.updateParentStates([this.dataTree]); // Start from root
+        }
     }
 
     /**
@@ -554,10 +546,10 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
                     child.data.selected = isSelected;
                     child.data.indeterminate = false;
 
-                    // Update data cart
-                    if (child.data.key) {
+                    // Update data cart (only for files)
+                    if (child.data.cartItem) {
                         let parts = this._keySplit(child.data.key);
-                        this.dataCart?.setSelected(parts[0], parts[1], !isSelected, true);
+                        this.dataCart?.setSelected(parts[0], parts[1], isSelected, true);
                     }
 
                     // Recursively propagate to grandchildren
@@ -726,15 +718,11 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
      */
     setFileDownloaded(rowData: any) {
         // Google Analytics code to track download event
-        if (rowData && rowData.cartItem && rowData.cartItem.downloadURL) {
-            this.gaService.gaTrackEvent('download', undefined, rowData.ediid, rowData.cartItem.downloadURL);
-        }
+        this.gaService.gaTrackEvent('download', undefined, rowData.ediid, rowData.cartItem.downloadURL);
 
         rowData.downloadStatus = DownloadStatus.DOWNLOADED;
 
-        if (rowData && rowData.cartItem) {
-            this.dataCart?.setDownloadStatus(rowData.cartItem.resId, rowData.cartItem.filePath, rowData.downloadStatus, true);
-        }
+        this.dataCart?.setDownloadStatus(rowData.cartItem.resId, rowData.cartItem.filePath, rowData.downloadStatus, true);
     }
 
     /**
@@ -757,10 +745,9 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
     openDetails(event: MouseEvent, rowdata: CartTreeData) {
         this.fileNode = rowdata;
         const dialogRef = this.dialog.open(this.fileDetailsDialog, {
-          width: this.getDialogWidth(),
-          panelClass: "custom-dialog-container",
-          disableClose: false,
-          data: rowdata
+            width: this.getDialogWidth(),
+            panelClass: 'custom-dialog-container',
+            disableClose: false
         });
 
         dialogRef.afterClosed().subscribe(result => {
@@ -774,13 +761,5 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
         return {
             updateCartStatusInUse: () => {}
         };
-    }
-
-    downloadIconColor(status: string) {
-        if (status == "downloaded") {
-            return "var(--nist-green-light)";
-        } else {
-            return "#1976d2"
-        }
     }
 }

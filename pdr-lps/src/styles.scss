@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 * {
     font-family: sans-serif;
 }
@@ -10,7 +14,7 @@
     --science-theme-background-light: #f5fbfd;
     --science-theme-background-light2: #e3f7fd;
     --science-theme-background-blue: #017abb;
-    --science-theme-background-blue-hover: #cdeeff;
+    --science-theme-background-blue-hover: #0197b1;
     --nist-green-default: #257a2d;
     --nist-green-dark: #1c6022;
     --nist-green-light: #6bad73;
@@ -38,36 +42,41 @@
     --chips-background-lighter: #f7f7fa;
     --chips-background-dark: #00076c;
     --chips-background-hover: #e4efff;
-    // Brown
+    /* Brown */
     --background-orange-default: #e53b10;
     --background-orange-light: #ffd49d;
     --background-orange-lighter: #fff2e1;
     --background-orange-dark: rgb(43, 28, 0);
     --background-orange-hover: #fce9d2;
-    // Beach Sunset
+    /* Beach Sunset */ 
     --background-beach-sunset-default: #1b4965;
     --background-beach-sunset-light: #5fa8d3;
     --background-beach-sunset-lighter: #cae9ff;
     --background-beach-sunset-dark: #0d3046;
     --background-beach-sunset-hover: #c1e8ff;
-    // Rosy Flamingo
+    /* Rosy Flamingo */ 
     --background-orange1-default: #67595e;
     --background-orange1-light: #f1e8e8;
     --background-orange1-lighter: #faf6f5;
     --background-orange1-dark: rgb(43, 16, 0);
     --background-orange1-hover: #f1e8e8;
-    // Purple
+    /* Purple */ 
     --background-purple-default: #bf619e;
     --background-purple-light: #ffe6f6;
     --background-purple-lighter: #fdf3f9;
     --background-purple-dark: #71385d;
     --background-purple-hover: #ffe6f6;
-    // AM Green
+    /* AM Green */ 
     --background-am-green-default: #2f983a;
     --background-am-green-dark: #1c6022;
     --background-am-green-light: color-mix(in srgb, var(--background-am-green-default) 25%, transparent);
     --background-am-green-lighter: color-mix(in srgb, var(--background-am-green-default) 5%, transparent);
     --background-am-green-hover: #cfffd4;
+}
+
+.mat-btn {
+    border-radius: 3px !important;
+    height: 30px !important;
 }
 
 .oar-button {
@@ -82,7 +91,7 @@
 }
 
 .oar-button:hover {
-    // color: var(--hover-text-color);
+    /* color: var(--hover-text-color);*/
     background-color: var(--hover-color);
 }
 
@@ -137,7 +146,7 @@ a:link {
 
 a:visited {
   color: rgb(119, 0, 117);
-//   color: #551A8B;
+/*   color: #551A8B; */
   background-color: transparent;
   text-decoration: none;
 }
@@ -409,4 +418,28 @@ a:focus {
     display: inline-block;
     transform: scale(3);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.icon32-centered {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    /* Force font baseline to collapse to exact element box */
+}
+
+.white-icon-button {
+    color: #ffffff;
+
+    /* Optional: Adjust the hover ripple effect state color to look good on dark backgrounds */
+    --mat-icon-button-state-layer-color: #ffffff;
+}
+
+/* Dialog container */
+.custom-dialog-container .mdc-dialog__surface {
+    /* mat-dialog-container override */
+    border-radius: 12px !important;
 }

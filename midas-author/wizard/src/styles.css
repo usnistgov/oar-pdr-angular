@@ -1,4 +1,6 @@
-/* @import '../node_modules/angular-archwizard/styles/archwizard'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
     /* Colors */
@@ -7,7 +9,7 @@
     --science-theme-background-light: #f5fbfd;
     --science-theme-background-light2: #e3f7fd;
     --science-theme-background-blue: #017abb;
-    --science-theme-background-blue-hover: #2db2fa;
+    --science-theme-background-blue-hover:  #0197b1;
     --nist-green-default: #257a2d;
     --nist-green-dark: #1c6022;
     --nist-green-light: #6bad73;
@@ -18,6 +20,11 @@
     --white: #fff;
 
     font-family: sans-serif;
+}
+
+.mat-btn {
+    border-radius: 3px !important;
+    height: 30px;
 }
 
 .textbox {
@@ -32,4 +39,19 @@
 .amplified {
     transform: scale(3);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.icon32-centered {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    /* Force font baseline to collapse to exact element box */
+}
+
+.white-icon-button {
+    color: #ffffff;
+
+    /* Optional: Adjust the hover ripple effect state color to look good on dark backgrounds */
+    --mat-icon-button-state-layer-color: #ffffff;
 }

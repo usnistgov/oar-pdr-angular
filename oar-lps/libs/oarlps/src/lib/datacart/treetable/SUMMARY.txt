@@ -1,0 +1,32 @@
+Treetable Component Summary
+
+Purpose: Displays hierarchical data cart files using Angular Material with download capabilities
+
+Key Elements:
+- CartTreeData interface: Defines node data structure
+- CartTreeNode class: Extends TreeNode with upsert/update/find/clean methods
+- TreetableComponent: Angular component managing the tree view
+
+Features:
+- Hierarchical file/folder display from data cart
+- Checkbox selection with parent/child propagation (fixes: checking/unchecking parents now properly affects children)
+- Indeterminate state support for partial selections
+- Download links with status indicators (color-coded)
+- Download progress spinners
+- Google Analytics integration for download tracking
+- Expand/collapse all toggle
+- Show/hide zip filenames toggle
+- File details popup on click
+- Responsive column widths based on screen size
+- Automatic refresh on data cart changes
+- Download status reset functionality
+- Fixed selection state synchronization with data cart (removed conflicting manual updates in onCheckboxChange)
+
+Dependencies:
+- Angular, Angular Material (Tree Table, Dialog, Icon, Checkbox, Progress Spinner)
+- FontAwesome (for status indicators)
+- CartService, DownloadService, GoogleAnalyticsService
+- formatBytes utility, DisplayPrefs, CartConstants
+
+Migration: Replaced PrimeNG TreeTable, OverlayPanel, and FontAwesome icons with Angular Material equivalents
+Fixes: Parent/child checkbox propagation now works correctly; Selection state properly synchronized with data cart

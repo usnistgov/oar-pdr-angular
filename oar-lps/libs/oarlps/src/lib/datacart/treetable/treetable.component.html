@@ -1,230 +1,287 @@
-<div *ngIf="inBrowser" style="display: inline-block; margin: auto;">
-    <div class="full-span" style="width: 94%;">
-        <p-treeTable styleClass="p-treetable-sm" *ngIf="isVisible" #ngtt [resizableColumns]="true" selectionMode="checkbox" sortField="name"
-                     [value]="dataTree.children" dataKey="key" [(selection)]="selectedData"
-                     (onNodeSelect)="onNodeSelect($event)" (onNodeUnselect)="onNodeUnselect($event)"
-                     [style]="{'margin':'auto', 'padding-bottom':'3%', 'color':'black'}">
-            <ng-template pTemplate="header">
-                <tr>
-                    <th [ngStyle]="headerStyle(titleWidth)" ttResizableColumn>
-                        <span (click)="expandToLevel(dataTree.children, !isExpanded, null)" style="padding-right:0.5em;">
-                            <!-- <i *ngIf="!isExpanded" class="fas fa-arrow-circle-down faa-1x icon-white"
-                                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Expand All"></i>
-                            <i *ngIf="isExpanded" class="fas fa-arrow-circle-up faa-1x icon-white"
-                                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Collapse All"></i> -->
+<div *ngIf="inBrowser" style="display: inline-block; margin: auto; width: 100%">
+    <!-- <div *ngIf="isVisible" class="mat-elevation-z8 max-h-[600px] overflow-y-auto w-[94%] mx-auto m-2 md:m-6 lg:m-12 border-2 border-solid border-blue-500 grid grid-cols-[1fr_max(100px,10%)_max(100px,10%)_max(60px,8%)_max(60px,8%)_max(60px,8%)] gap-4"> -->
+        <!-- Angular Material Tree Table -->
+        <!-- <div *ngIf="isVisible" class="mat-elevation-z8" style="max-height: 600px; overflow-y: auto;"> -->
 
-                            <fa-icon 
-                                *ngIf="!isExpanded" 
-                                [class.amplified]="isMouseOver" 
-                                [icon]="faCircleArrowDown"
-                                class="amplifiable" 
-                                style="cursor: pointer;" 
-                                (mouseover)="isMouseOver = true" 
-                                (mouseleave)="isMouseOver = false"
-                                data-toggle="tooltip" 
-                                title="Expand All">
-                            </fa-icon>
+            <!-- <div class="mat-header-row" style="display: flex; align-items: center; background-color: #1E6BA1; color: white; padding: 8px 12px;"> -->
+        <div *ngIf="isVisible" style="margin-top: .5em;"
+            class="mat-elevation-z8 w-[94%] mx-auto m-2 md:m-6 lg:m-12">
+            <!-- Header -->
+            <div class="text-[14px] px-[16px] items-center h-[40px] grid grid-cols-[1fr_max(50px,10%)_max(50px,5%)_max(50px,5%)_max(50px,8%)] gap-4 bg-[#1E6BA1] text-white font-bold">
 
-                            <fa-icon 
-                                *ngIf="isExpanded" 
-                                [class.amplified]="isMouseOver" 
-                                [icon]="faCircleArrowUp"
-                                class="amplifiable" 
-                                style="cursor: pointer;" 
-                                (mouseover)="isMouseOver = true" 
-                                (mouseleave)="isMouseOver = false"
-                                data-toggle="tooltip" 
-                                title="Collapse All">
-                            </fa-icon>
-                        </span>
-                        <span (click)="showZipFilesNames = !showZipFilesNames" style="padding-right:0.5em;">
-                            <!-- <i *ngIf="!showZipFilesNames" class="fas fa-eye faa-1x icon-white"
-                                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Show Zip Files"></i>
-                            <i *ngIf="showZipFilesNames" class="fas fa-eye-slash faa-1x icon-white"
-                                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Hide Zip Files"></i> -->
+            <!-- <div class="mat-header-row"
+                style="display: flex; align-items: center; background-color: #1E6BA1; color: white; padding: 8px 12px;"> -->
+                <!-- <div style="flex: 0 0 60%; display: flex; align-items: center; font-size: 14px;"> -->
+                <!-- <div style="align-items: center; font-size: 14px;"> -->
+                <div class="whitespace-nowrap">
+                    <button mat-icon-button (click)="expandToLevel(dataTree.children, !isExpanded, null)" aria-label="Expand icon">
+                        <mat-icon matTooltip="Expand All" matTooltipPosition="above" class="white-icon-button">
+                            {{isExpanded? 'expand_more': 'chevron_right'}}
+                        </mat-icon>
+                    </button>
 
-                            <fa-icon 
-                                *ngIf="!showZipFilesNames" 
-                                [icon]="faEye"
-                                data-toggle="tooltip"
-                                title="Show Zip Files">
-                            </fa-icon>
+                    <!-- <span (click)="showZipFilesNames = !showZipFilesNames" style="padding-right: 8px; cursor: pointer;"> -->
+                    <button mat-icon-button (click)="showZipFilesNames = !showZipFilesNames" aria-label="visibility icon" class="ml-[-10px]">
+                        <mat-icon *ngIf="!showZipFilesNames"
+                                  matTooltip="Show Zip Files"
+                                  matTooltipPosition="above"
+                                  class="white-icon-button">
+                            visibility
+                        </mat-icon>
+                        <mat-icon *ngIf="showZipFilesNames"
+                                  matTooltip="Hide Zip Files"
+                                  matTooltipPosition="above"
+                                  class="white-icon-button">
+                            visibility_off
+                        </mat-icon>
+                    </button>
+                    <span class="align-super">Name</span>
+                </div>
+                <div style="text-align: left;">
+                    <span class="align-super hidden sm:hidden md:flex whitespace-nowrap">Media Type</span>
+                    <span class="align-super md:hidden">Type</span>
+                </div>
+                <div style="text-align: right;">Size</div>
+                <div style="text-align: center;">
+                    <mat-icon class="items-center w-[40px] h-[40px]" style="vertical-align: middle;">cloud_download</mat-icon>
+                </div>
+                <div class="flex flex-row whitespace-nowrap">
+                    <span class="align-super hidden sm:hidden md:flex">Status</span>
+                    <span class="align-super md:hidden">
+                        <mat-icon 
+                            class="white-icon-button" 
+                            matTooltip="Download Status">download_done</mat-icon>
+                    </span>
 
-                            <fa-icon 
-                                *ngIf="showZipFilesNames" 
-                                [icon]="faEyeSlash" 
-                                data-toggle="tooltip" 
-                                title="Hide Zip Files">
-                            </fa-icon>                        
-                        </span>
-                        Name
-                    </th>
-                    <th [ngStyle]="headerStyle(typeWidth)" ttResizableColumn>Media Type</th>
-                    <th [ngStyle]="headerStyle(sizeWidth)" ttResizableColumn>Size</th>
-                    <th [ngStyle]="headerStyle(actionWidth)" ttResizableColumn>
-                        <!-- <i class="fas fa-cloud-download-alt" aria-hidden="true" data-toggle="tooltip" title="Actions"></i> -->
-                        <fa-icon 
-                            [icon]="faCloudDownload" 
-                            data-toggle="tooltip"
-                            title="Actions">
-                        </fa-icon>
-                    </th>
-                    <th [ngStyle]="headerStyle(statusWidth)" ttResizableColumn>
-                        Status
-                        <div class="badge status-reset-button" (click)="clearDownloadStatus()" data-toggle="tooltip"
-                            title="Reset status">Reset</div>
-                    </th>
-                </tr>
+                    <button 
+                        mat-icon-button 
+                        class="btn mat-btn flex" 
+                        style="width: 25px !important;height: 25px !important;margin-top: -10px;"
+                        matTooltip="Reset status" 
+                        matTooltipPosition="above"
+                        (click)="clearDownloadStatus()">
+                        <mat-icon class="white-icon-button">
+                            replay_circle_filled
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tree Content -->
+            <div *ngIf="dataTree.children?.length > 0; else emptyMessage" style="font-size: 14px;">
+                <!-- Recursive tree node template -->
+                <ng-container *ngFor="let node of dataTree.children; let i = index">
+                    <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: node, level: 0}"></div>
+                </ng-container>
+            </div>
+
+            <ng-template #emptyMessage>
+                <div style="text-align: center; padding: 24px; color: #666; font-size: 14px;">
+                    No records found
+                </div>
             </ng-template>
-            <ng-template let-rowNode let-rowData="rowData" let-i="rowIndex" pTemplate="body">
-                <tr style="background: #FFFFFF; border-bottom: 1px solid lightgray">
-                    <td [ngStyle]="bodyStyle(titleWidth)">
-                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                        &nbsp;
-                        <p-treeTableCheckbox 
-                            [value]="rowNode" 
-                            class="ptree-checkbox">
-                        </p-treeTableCheckbox>
-                        <span *ngIf="rowData.cartItem">
-                            <a (click)="openDetails($event,rowData,op3) " style="color: #1471AE; cursor: pointer;"
-                                data-toggle="tooltip" title="Click for more details">
-                                {{rowData.name}} </a>
-                        </span>
-                        <span *ngIf="!rowData.cartItem">
-                            {{rowData.name}}
-                        </span>
-                        <span *ngIf="showZipFilesNames && rowData.cartItem" 
-                              style="color:grey;margin-left: 1em;font-style: italic;">
-                           {{rowData.cartItem.zipFile || ''}}
-                        </span>
-                    </td>
-                    <td [ngStyle]="bodyStyle(typeWidth)">
-                        <span>{{rowData.mediaType}}</span>
-                    </td>
-                    <td [ngStyle]="bodyStyle(sizeWidth)">
-                        <span *ngIf="rowData.cartItem">{{rowData.size}}</span>
-                    </td>
-                    <td [ngStyle]="bodyStyle(sizeWidth)">
-                        <div *ngIf="rowData.cartItem;else space_holder" style="display:inline;color: green;" >
-                            <a *ngIf="rowData.cartItem.downloadStatus != 'downloading'" href='{{rowData.cartItem.downloadURL}}' target='_blank' download="download" data-toggle="tooltip" 
-                                title="Download this file" aria-label="Download this file">
-                                <!-- <i class="fas fa-download"
-                                    aria-hidden="true" (click)="setFileDownloaded(rowData)"></i> -->
 
-                                <fa-icon 
-                                    [icon]="faDownload" 
-                                    (click)="setFileDownloaded(rowData)"
-                                    aria-hidden="true">
-                                </fa-icon>
-                            </a>
-                            <a *ngIf="rowData.cartItem.downloadStatus == 'downloading'" data-toggle="tooltip" 
-                            title="Download this file" aria-label="Download this file">
-                            <!-- <i class="fas fa-download"
-                                aria-hidden="true"></i> -->
+            <!-- Tree Node Template -->
+            <ng-template #treeNodeTemplate let-node let-level="level">
+                <!-- <div class="mat-row" style="display: flex; align-items: center; background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 8px 12px;"> -->
+                <div
+                    class="text-[18px] px-[16px] items-center h-auto grid grid-cols-[1fr_max(50px,10%)_max(50px,5%)_max(50px,5%)_max(50px,8%)] gap-4 border-b border-gray-300">
 
-                            <fa-icon 
-                                [icon]="faDownload" 
-                                aria-hidden="true">
-                            </fa-icon>
+                    <!-- Tree toggler and checkbox -->
+                    <div>
+                        <button *ngIf="node.children?.length > 0" mat-icon-button (click)="node.isExpanded = !node.isExpanded"
+                                [attr.aria-label]="node.isExpanded ? 'Collapse' : 'Expand'"
+                                style="padding: 4px; min-width: 36px;">
+                            <mat-icon style="padding-top: 2px;">{{node.isExpanded? 'expand_more': 'chevron_right'}}</mat-icon>
+                        </button>
+                        <span *ngIf="node.children?.length == 0" style="margin-right: 48px;"> </span>
+                        <mat-checkbox 
+                            style="vertical-align: bottom;"
+                            class="custom-rounded-checkbox"
+                            [indeterminate]="node.data.indeterminate"
+                            [checked]="node.data.selected"
+                            (change)="onCheckboxChange($event.checked, node)"></mat-checkbox>
+                        
+                        <span *ngIf="node.data.cartItem" 
+                              class="align-super text-[#1471AE] cursor-pointer"
+                              (click)="openDetails($event, node.data)"
+                              matTooltipPosition="above" matTooltip="Click for more details">
+                            {{node.data.name}}
+                        </span>
+                        <span *ngIf="!node.data.cartItem" class="align-super">{{node.data.name}}</span>
+                        <span *ngIf="showZipFilesNames && node.data.cartItem"
+                              class="ml-[12px] italic align-super">
+                            {{node.data.cartItem.zipFile || ''}}
+                        </span>
+                    </div>
+
+                    <!-- Media Type -->
+                    <div>
+                        {{node.data.mediaType || ''}}
+                    </div>
+
+                    <!-- Size -->
+                    <div style="text-align: right;">
+                        <span *ngIf="node.data.cartItem">{{node.data.size || ''}}</span>
+                    </div>
+
+                    <!-- Actions (Download) -->
+                    <!-- <div style="text-align: center;"> -->
+                    <div *ngIf="node.data.cartItem; else noFile" style="text-align: center;">
+                        <a *ngIf="node.data.cartItem.downloadStatus != 'downloading'"
+                            href='{{node.data.cartItem.downloadURL}}' target='_blank' download="download"
+                            matTooltipPosition="above"  matTooltip="Download this file"
+                            (click)="setFileDownloaded(node.data.cartItem)"
+                            style="margin: auto"
+                            [ngStyle]="{'color': downloadIconColor(node.data.cartItem.downloadStatus)}"
+                            [class.disabled]="node.data.cartItem.downloadStatus == 'downloading'">
+                            <mat-icon style="vertical-align: middle;">file_download</mat-icon>
                         </a>
-                        </div>
-                        <ng-template #space_holder>
-                            <div style="display:inline;padding-right: 0.4em;">&nbsp;&nbsp;</div>
-                        </ng-template>
-                    </td>
-                    <td [ngStyle]="bodyStyle(statusWidth)">
-                        <div id="downloadstatus" *ngIf="rowData.cartItem" style="display:inline;"
-                            [ngStyle]="{'color':getDownloadStatusColor(rowData.cartItem.downloadStatus)}">
-                            <!-- <i [class]="getIconClass(rowData.cartItem.downloadStatus)" style="margin-right: .5em;"
-                                aria-hidden="true" data-toggle="tooltip" title="{{rowData.cartItem.downloadStatus}}"></i> -->
+                        <a *ngIf="node.data.cartItem.downloadStatus == 'downloading'"
+                            matTooltipPosition="above"  matTooltip="Download this file">
+                            <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon>
+                        </a>
+                    </div>
+                    <ng-template #noFile>
+                        <div style="display: inline; padding-right: 4px; width: 36px; text-align: center;">&nbsp;</div>
+                    </ng-template>
+                    <!-- </div> -->
 
-                            <fa-icon 
-                                *ngIf="getIconClass(rowData.cartItem.downloadStatus)"
-                                [icon]="['fas', getIconClass(rowData.cartItem.downloadStatus)]" 
-                                style="margin-right: .5em;"
-                                aria-hidden="true"
-                                aria-hidden="true" 
-                                data-toggle="tooltip" 
-                                title="{{rowData.cartItem.downloadStatus}}">
-                            </fa-icon>
+                    <!-- Status -->
+                    <div 
+                         [ngStyle]="{'color': getDownloadStatusColor(node.data.cartItem?.downloadStatus)}">
+                        <mat-icon *ngIf="!['downloading', 'error', 'failed'].includes(node.data.cartItem?.downloadStatus) && getIconClass(node.data.cartItem?.downloadStatus)"
+                                  class="mr-[6px] text-[24px]"
+                                  aria-hidden="true"
+                                  matTooltipPosition="above"
+                                  matTooltip="{{node.data.cartItem?.downloadStatus}}">
+                                  {{getIconClass(node.data.cartItem?.downloadStatus)}}
+                        </mat-icon>
+                        <mat-spinner *ngIf="node.data.cartItem?.downloadStatus == 'downloading'"
+                                              diameter="16" strokeWidth="2"
+                                              style="margin-right: 6px;vertical-align: middle"></mat-spinner>
+                        <!-- <span *ngIf="['error', 'failed'].includes(node.data.cartItem?.downloadStatus); else normalStatus"
+                            class="hidden sm:hidden md:hidden lg:flex text-xs"  
+                            style="cursor: pointer; text-decoration: underline;"
+                            (click)="openDetails($event, node.data)"
+                            [style.cursor]="{'pointer': node.data.cartItem?.downloadStatus == 'error' || node.data.cartItem?.downloadStatus == 'failed', 'default': true}">
+                            {{getStatusForDisplay(node.data.cartItem?.downloadStatus)}}
+                        </span>
+                        <ng-template #normalStatus>
+                            <span class="hidden sm:hidden md:hidden lg:flex text-xs">{{getStatusForDisplay(node.data.cartItem?.downloadStatus)}}</span>
+                        </ng-template> -->
+                    </div>
+                </div>
 
-                            <p-progressSpinner *ngIf="rowData.cartItem.downloadStatus == 'downloading'"
-                                [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner>
-                            <span
-                                *ngIf="rowData.cartItem.downloadStatus == 'error' || rowData.cartItem.downloadStatus == 'failed'; else normal"
-                                style="cursor: pointer;"
-                                (click)="openDetails($event,rowData,op4) "><u>{{getStatusForDisplay(rowData.cartItem.downloadStatus)}}</u></span>
-                            <ng-template #normal>
-                                <span>{{getStatusForDisplay(rowData.cartItem.downloadStatus)}}</span>
-                            </ng-template>
-                        </div>
-                    </td>
-                </tr>
+                <!-- Children nodes -->
+                <div class="rounded-sm" *ngIf="node.isExpanded && node.children?.length > 0" style="padding-left: {{(level + 1) * 24}}px;">
+                    <ng-container *ngFor="let child of node.children; let j = index">
+                        <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: child, level: level + 1}"></div>
+                    </ng-container>
+                </div>
             </ng-template>
-            <ng-template pTemplate="emptymessage">
-                <tr>
-                    <td align="center" colspan="3">
-                        No records found
-                    </td>
-                </tr>
-            </ng-template>
-
-            <!-- 👇 Custom toogler icons -->
-            <ng-template pTemplate="togglericon" let-open>
-                <fa-icon [icon]="open ? faChevronDown : faChevronRight"></fa-icon>
-            </ng-template>
-        </p-treeTable>
-    </div>
+        </div>
+    <!-- </div> -->
 </div>
 
 <!-- Popup dialog for file details -->
-<p-overlayPanel class="fileDialog" #op3 [dismissable]="true" [showCloseIcon]="true"
-    [style]="{'display':'inline-block','position':'related','left':'50%','top':'80%'}" appendToBody=true>
-    <div class="filecard" [ngStyle]="{'max-width':getDialogWidth()}">
-        <div class="overlay-title">
+<ng-template #fileDetailsDialog let-data>
+    <div class="max-w-[500px] w-full max-h-[80vh] overflow-y-auto text-[14px]">
+        <div class="flex items-center justify-center text-2xl w-full h-10 bg-[#1E6BA1] text-white uppercase font-bold">
             File details
+            <div class="absolute right-1 top-0">
+                <button
+                    mat-icon-button
+                    id="close-button"
+                    class="scale-75 rounded text-white hover:bg-sky-500"
+                    (click)="dialog.closeAll()"
+                    aria-label="Close dialog"
+                    matTooltipPosition="above" 
+                    matTooltip="Close dialog">
+                    <mat-icon class="btn-icon text-white">close</mat-icon>
+                </button>
+            </div>
         </div>
-        <div class="grid filesection">
-            <div *ngIf="fileNode" class="col-12 col-md-12 col-lg-12 col-sm-10">
-                <span class="font8" style="color:grey">
-                    Selected {{fileNode.filetype}} <br>
-                </span>
-                <span class="font14">{{ fileNode ? fileNode.name : '' }}</span>
-                <span class="font8" style="color:grey">
-                    <br><b>Type:</b>
-                    <span style="margin-left:0.5em;" class="textstyle1">{{ (fileNode.cartItem.mediaType) ? fileNode.cartItem.mediaType : 'Not Available'}} </span>
-                </span>
-                <span class="font8" style="margin-left: 2.5rem">
-                    Size:
-                    <span *ngIf="fileNode.cartItem.size" class="textstyle1">{{ fileNode.size }} </span>
-                    <span *ngIf="!fileNode.cartItem.size" class="textstyle1"><i>Not Available</i></span>
-                </span>
-                <br><span class="font10"><b>Description:</b> </span>
-                <div class="well filedesc">
-                    <span *ngIf="!fileNode.cartItem.description"><i>No Description Available</i></span>
-                    <span *ngIf="fileNode.cartItem.description">{{ fileNode.cartItem.description }} </span>
+        <div *ngIf="data" class="p-6 text-[16px]">
+            <!-- Name -->
+            <div class="mb-2">
+                <div class="font-bold">
+                    Selected {{data.filetype}}
+                </div>
+                <div>
+                    {{ data ? data.name : '' }}
+                </div>
+            </div>
+
+            <!-- Type -->
+            <div class="grid grid-cols-[50%_1fr] mb-2">
+                <div class="mb-0">
+                    <span class="font-bold mr-2">
+                        Type:
+                    </span>
+                    <span class="font-medium">
+                        {{ (data.cartItem?.mediaType) ? data.cartItem.mediaType : 'Not Available' }}
+                    </span>
+                </div>
+                
+                <!-- Size -->
+                <div class="mb-0">
+                    <span class="font-bold mr-2">
+                        Size:
+                    </span>
+                    <span *ngIf="data.cartItem?.size" class="text-[13px] font-medium">
+                        {{ data.size }}
+                    </span>
+                    <span *ngIf="!data.cartItem?.size" class="text-[13px] font-medium italic">
+                        Not Available
+                    </span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div>
+                <div class="font-bold">
+                    Description:
+                </div>
+                <div class="bg-[#307F38] text-white p-3">
+                    <div *ngIf="data.cartItem?.description" class="text-[13px] font-medium">
+                        {{ data.cartItem.description }}
+                    </div>
+                    <div *ngIf="!data.cartItem?.description" class="text-[13px] font-medium italic">
+                        No Description Available
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- Close button -->
+        <!-- <div class="text-center">
+            <button mat-button class="mat-btn" (click)="dialog.closeAll()">Close</button>
+        </div> -->
     </div>
-</p-overlayPanel>
+</ng-template>
 
 <!-- Popup dialog for download details -->
-<p-overlayPanel class="fileDialog" #op4 [dismissable]="true" [showCloseIcon]="true"
-    [style]="{'display':'inline-block','position':'related','left':'50%','top':'80%','max-width':'400px'}"
-    appendToBody=true>
-    <div class="filecard">
-        <div class="grid filesection">
-            <div *ngIf="fileNode" class="col-12 col-md-12 col-lg-12 col-sm-10">
-                <div class="warning-overlay-title">Message details</div>
-                <div class="long-text">File path: {{fileNode.cartItem.filePath}}</div>
-                <div class="long-text">Download URL: {{fileNode.cartItem.downloadURL}}</div>
-                <div class="long-text">Message: {{fileNode.message||'unknown'}}</div>
+<ng-template #downloadDetailsDialog let-data>
+    <div class="filecard" style="max-width: 500px; width: 90%; max-height: 80vh;">
+        <mat-dialog-title style="background-color: #ff9800; color: white; padding: 16px 24px; margin: -24px -24px 0 -24px;">
+            Message details
+        </mat-dialog-title>
+        <mat-dialog-content style="padding: 24px;">
+            <div *ngIf="data" class="col-12">
+                <div style="margin-bottom: 16px; padding: 12px; background-color: #f5f5f5; border-radius: 4px; word-break: break-all;">
+                    <b>File path:</b> {{data.cartItem?.filePath || 'Not available'}}
+                </div>
+                <div style="margin-bottom: 16px; padding: 12px; background-color: #f5f5f5; border-radius: 4px; word-break: break-all;">
+                    <b>Download URL:</b> {{data.cartItem?.downloadURL || 'Not available'}}
+                </div>
+                <div style="padding: 12px; background-color: #f5f5f5; border-radius: 4px; word-break: break-all;">
+                    <b>Message:</b> {{data.message || 'unknown'}}
+                </div>
             </div>
-        </div>
+        </mat-dialog-content>
+        <mat-dialog-actions align="end" style="padding: 16px 24px;">
+            <button mat-button (click)="dialog.closeAll()" style="margin-right: 8px;">Close</button>
+        </mat-dialog-actions>
     </div>
-</p-overlayPanel>
+</ng-template>

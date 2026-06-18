@@ -18,7 +18,7 @@
     "@angular/core": "^18.2.13",
     "@angular/flex-layout": "^13.0.0-beta.38",
     "@angular/forms": "^18.2.13",
-    "@angular/material": "^17.3.10",
+    "@angular/material": "^18.0.0",
     "@angular/platform-browser": "^18.2.13",
     "@angular/platform-browser-dynamic": "^18.2.13",
     "@angular/router": "^18.2.13",
@@ -50,5 +50,8 @@
   },
   "browser": {
     "process": false
+  },
+  "peerDependencies": {
+    "tailwindcss": "^3.4.19"
   }
 }

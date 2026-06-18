@@ -27,6 +27,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { MatButtonModule } from '@angular/material/button';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -59,7 +60,8 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
         SidebarComponent,
         MenuComponent,
         FrameModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatButtonModule
     ],
     providers: [
         Title, NgbActiveModal

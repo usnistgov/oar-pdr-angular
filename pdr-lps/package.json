@@ -29,19 +29,22 @@
   "peerDependencies": {
     "@angular/common": "^18.2.13",
     "@angular/core": "^18.2.13",
-    "@angular/platform-server": "18.2.13",
+    "@angular/platform-server": "18.2.14",
     "rxjs": "~7.8.1",
     "zone.js": "~0.14.10"
   },
   "optionalDependencies": {
-    "oarng": "file:../lib/dist/oarng",
-    "oarlps": "file:../oar-lps/dist/oarlps"
+    "oarlps": "file:../oar-lps/dist/oarlps",
+    "oarng": "file:../lib/dist/oarng"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~18.2.12",
     "@angular/cli": "18.2.12",
-    "typescript": "^5.4.5",
-    "@types/node": "^12.11.1"
+    "@types/node": "^12.11.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.41",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^5.4.5"
   },
   "browser": {
     "fs": false,
@@ -51,5 +54,11 @@
   "sideEffects": [
     "*.css",
     "*.scss"
-  ]
+  ],
+  "dependencies": {
+    "@angular/animations": "^17.0.0 || ^18.0.0",
+    "@angular/cdk": "~17.3.10 || ^18.0.0",
+    "@angular/forms": "^17.0.0 || ^18.0.0",
+    "@angular/material": "^18.0.0"
+  }
 }

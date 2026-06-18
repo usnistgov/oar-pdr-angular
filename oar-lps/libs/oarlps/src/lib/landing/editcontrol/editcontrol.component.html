@@ -199,6 +199,31 @@
         <!-- Preview button -->
         <!-- Normal mode -->
         <button 
+            mat-raised-button 
+            *ngIf="!mobileMode && isEditMode" 
+            class="btn mat-btn btn-labeled" 
+            id="ec-preview-btn"
+            matTooltip="Preview" 
+            [ngClass]="buttonSize" 
+            (click)="preview()" 
+            [disabled]="!readyEdit">
+            <mat-icon>visibility</mat-icon>
+            Preview
+        </button>
+
+        <button 
+            mat-icon-button 
+            *ngIf="mobileMode && isEditMode" 
+            class="btn mat-btn btn-labeled" 
+            id="ec-files-btn" 
+            [ngClass]="buttonSize"
+            (click)="preview()" 
+            [disabled]="!readyEdit" 
+            aria-label="Preview" 
+            matTooltip="Preview">
+            <mat-icon class="btn-icon">visibility</mat-icon>
+        </button>
+        <!-- <button 
             type="button" 
             pTooltip="Preview" 
             tooltipPosition="bottom" 
@@ -210,10 +235,10 @@
             [disabled]="!readyEdit">
 
             <fa-icon [icon]="faEye"></fa-icon>Preview
-        </button>
+        </button> -->
         
         <!-- mobile mode -->
-        <button 
+        <!-- <button 
             type="button" 
             pTooltip="Preview" 
             tooltipPosition="bottom" 
@@ -224,48 +249,33 @@
             [disabled]="!readyEdit">
 
             <fa-icon [icon]="faEye"></fa-icon>
-        </button>
+        </button> -->
 
         <!-- Manage Files button -->
         <button 
-            *ngIf="screenWidth > screenSizeBreakPoint && !mobileMode" 
-            [pTooltip]="fileManagerTooltip"
-            tooltipPosition="bottom" 
-            type="button" 
-            class="btn btn-labeled" 
+            mat-raised-button 
+            *ngIf="!mobileMode" 
+            class="btn mat-btn btn-labeled"
             id="ec-files-btn"
-            [ngClass]="screenWidth > screenSizeBreakPoint? 'ec-files-btn' : 'ec-files-btn-sm'" 
+            [matTooltip]="fileManagerTooltip"
+            [ngClass]="buttonSize"
             (click)="openFileManager()"
             [disabled]="!readyEdit">
-
-            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Manage Files
+            <mat-icon>open_in_new</mat-icon>
+            {{fileManagerBtnLabel}}
         </button>
 
         <button 
-            *ngIf="screenWidth <= screenSizeBreakPoint && !mobileMode" 
-            [pTooltip]="fileManagerTooltip"
-            tooltipPosition="bottom" 
-            type="button" 
-            class="btn btn-labeled" 
-            id="ec-files-btn-sm" 
-            (click)="openFileManager()"
-            [disabled]="!readyEdit">
-
-            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Files
-        </button>
-
-        <button 
+            mat-icon-button 
             *ngIf="mobileMode" 
-            [pTooltip]="fileManagerTooltip" 
-            tooltipPosition="bottom" 
-            type="button"
-            class="btn btn-labeled" 
-            id="ec-files-btn-mo" 
-            icon="fas fa-external-link-alt faa-1x icon-white"
-            (click)="openFileManager()" 
-            [disabled]="!readyEdit">
-
-            <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
+            class="btn mat-btn btn-labeled"
+            id="ec-files-btn"
+            [ngClass]="buttonSize"
+            (click)="openFileManager()"
+            [disabled]="!readyEdit"
+            aria-label="Open external site" 
+            matTooltip="Open in a new tab">
+            <mat-icon class="btn-icon">open_in_new</mat-icon>
         </button>
     </div>
 </div>

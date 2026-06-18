@@ -24,6 +24,7 @@ import { MetricsinfoComponent, MessageBarComponent, SidebarComponent, CitationPo
          MenuComponent, EditControlComponent, LandingBodyComponent, FrameModule
  } from 'oarlps';
 import { AuthenticationService } from 'oarng';
+import { MatButtonModule } from '@angular/material/button';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -53,7 +54,8 @@ import { AuthenticationService } from 'oarng';
         MetricsinfoComponent,
         LandingBodyComponent,
         EditControlComponent,
-        FrameModule
+        FrameModule,
+        MatButtonModule
     ],
     providers: [
         Title

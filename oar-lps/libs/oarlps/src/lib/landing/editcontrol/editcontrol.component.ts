@@ -25,7 +25,6 @@ import { LandingpageService } from '../landingpage.service';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from '../submission/submit-confirm/submit-confirm.component';
 import { FormsModule } from '@angular/forms';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confirmation-dialog.module';
 import { CommonModule } from '@angular/common';
@@ -48,7 +47,9 @@ import {
     faArrowUpRightFromSquare
 } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
-
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -69,11 +70,13 @@ import { faCircle } from '@fortawesome/free-regular-svg-icons';
         ButtonModule, 
         OverlayPanelModule, 
         NgbModule, 
-        NgSelectModule, 
         FormsModule,
         EditStatusComponent,
         SubmitConfirmComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule
     ],
     templateUrl: './editcontrol.component.html',
     styleUrls: ['./editcontrol.component.css']
@@ -941,5 +944,29 @@ export class EditControlComponent implements OnInit, OnChanges {
 
     toogleMessage() {
         this.forceDisplay = !this.forceDisplay;
+    }
+
+    get buttonSize() {
+        if (!this.mobileMode) {
+            if (this.screenWidth > this.screenSizeBreakPoint) {
+                return 'normal-btn';
+            } else {
+                return 'small-btn'
+            }
+        } else {
+            return 'mobil-btn';
+        }
+    }
+
+    get fileManagerBtnLabel() {
+        if (!this.mobileMode) {
+            if (this.screenWidth > this.screenSizeBreakPoint) {
+                return 'Manage Files';
+            } else {
+                return 'Files'
+            }
+        } else {
+            return '';
+        }        
     }
 }
