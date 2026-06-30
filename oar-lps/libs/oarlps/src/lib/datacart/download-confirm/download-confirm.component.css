@@ -34,16 +34,12 @@
     word-wrap: break-word;
 }
 
-.bar {
-    color: white;
-    background-color:#153971;
-    width: 100%;
-    text-align: center;
-    font-size: 30px;
-    font-weight: bolder;
+.dialog-footer {
+  @apply justify-center;
 }
 
 #summary {
     background-color: rgb(170, 212, 189);
     margin: .5em 0em;
 }
+

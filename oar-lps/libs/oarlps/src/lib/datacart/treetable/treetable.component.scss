@@ -36,23 +36,6 @@
     width: 24px;
 }
 
-::ng-deep .custom-rounded-checkbox  {
-    .mdc-checkbox__background {
-        /* Set border radius */
-        --mdc-checkbox-container-shape: 6px;
-        border-radius: 3px !important;
-        border-width: 1px !important;
-        border-color: #2196F3 !important;
-    }
 
-    /* 2. ACTIVE / CHECKED STATE: Background Color & Border Color */
-    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
-    .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background {
-        background-color: var(--nist-blue-default) !important;
-        /* Custom Active Box Fill Color */
-        border-color: var(--nist-blue-default) !important;
-        /* Custom Active Box Border Color */
-    }
-}
 
 

@@ -1,0 +1,66 @@
+<div class="tree-table">
+    <!-- Header -->
+    <div class="tree-table-header">
+        <!-- Indentation column (empty for header) -->
+        <div class="tree-table-header-cell tree-table-indent-col"></div>
+        <!-- Toggler column header -->
+        <div class="tree-table-header-cell tree-table-toggler-col">
+        <!-- Header for toggler column - we can leave it empty or put an icon -->
+        <!-- Let's put an expand all icon? Not now. -->
+        </div>
+        <!-- Checkbox column header (if selectable) -->
+        <div *ngIf="selectable" class="tree-table-header-cell tree-table-checkbox-col">
+        <!-- Header for checkbox column - we can put a master checkbox? Not now. -->
+        </div>
+        <!-- Column headers -->
+        <div *ngFor="let column of columns" class="tree-table-header-cell">
+        {{ column.header }}
+        </div>
+    </div>
+
+    <!-- Tree content -->
+    <div class="tree-table-body">
+        <!-- Render root nodes -->
+        <ng-container *ngFor="let node of internalRoots">
+            <div *ngTemplateOutlet="nodeTemplate; context: { $implicit: node, level: 0 }"></div>
+        </ng-container>
+    </div>
+
+    <!-- Template for a tree node -->
+    <ng-template #nodeTemplate let-node let-level="level">
+        <div class="tree-table-row" [class.selected]="isNodeSelected(node)">
+        <!-- Indentation column: set width based on level -->
+        <div class="tree-table-indent-col" [style.width.px]="level * 24"></div>
+
+        <!-- Toggler column -->
+        <div class="tree-table-toggler-col">
+            <button *ngIf="node.children.length > 0" mat-icon-button (click)="toggleExpand(node)"
+                    [attr.aria-label]="node.expanded ? 'Collapse' : 'Expand'">
+            <mat-icon>{{ getExpandIcon(node) }}</mat-icon>
+            </button>
+            <span *ngIf="node.children.length === 0" class="tree-table-toggler-placeholder"></span>
+        </div>
+
+        <!-- Checkbox column (if selectable) -->
+        <div *ngIf="selectable" class="tree-table-checkbox-col">
+            <mat-checkbox
+            [checked]="isNodeSelected(node)"
+            (change)="onCheckboxChange(node, $event)"
+            [indeterminate]="false">
+            </mat-checkbox>
+        </div>
+
+        <!-- Data columns -->
+        <div *ngFor="let column of columns" class="tree-table-data-cell">
+            {{ getFieldValue(node, column.field) }}
+        </div>
+        </div>
+
+        <!-- Children nodes (if expanded) -->
+        <div class="tree-table-children" *ngIf="node.expanded">
+        <ng-container *ngFor="let child of node.children">
+            <div *ngTemplateOutlet="nodeTemplate; context: { $implicit: child, level: level + 1 }"></div>
+        </ng-container>
+        </div>
+    </ng-template>
+</div>

@@ -3,7 +3,7 @@
         titleLn1="PUBLIC"
         titleLn2="DATA REPOSITORY"
         [homeButtonLink]="homeButtonLink">
-    <div class="custom-navbar">
+    <!-- <div class="custom-navbar">
         <a href="/pdr/about" target="_blank"><b style="color: white !important;">About</b></a> |
         <a href="{{contactLink}}" target="_blank" style="color: white !important;"><b>Help</b></a> |
         <a href="{{searchLink}}" target="_blank" style="color: white !important;"><b>Search</b></a> |
@@ -13,6 +13,138 @@
             <span style="margin-right: 5px;"><b>Cart</b></span>
             <fa-icon [icon]="faCartShopping"></fa-icon>
             <span class="w3-badge badge-notify">{{cartLength}}</span></a>
+    </div> -->
+
+    <div class="custom-navbar-mat text-white">
+        <!-- Desktop Menu -->
+
+        <div
+            class="hidden md:flex items-center gap-2">
+
+            <span class="text-white">|</span>
+
+            <a
+                href="/pdr/about"
+                class="!text-white font-bold hover:text-blue-200">
+                About
+            </a>
+
+            <span class="text-white">|</span>
+
+            <a
+                href="{{contactLink}}"
+                class="!text-white font-bold hover:text-blue-200">
+                Help
+            </a>
+
+            <span class=" text-white">|</span>
+
+            <a
+                href="{{searchLink}}"
+                class="!text-white font-bold hover:text-blue-200">
+                Search
+            </a>
+
+            <span class="text-white">|</span>
+
+            <a 
+                href="/datacart/global_datacart" 
+                target="_blank" 
+                class="!text-white font-bold flex items-center">
+                Cart
+
+                <button
+                    mat-icon-button
+                    class="cart-button mb-1"
+                    [matBadge]="cartLength"
+                    matBadgeColor="green"
+                    matBadgeSize="medium"
+                    matBadgeOverlap="true">
+
+                    <mat-icon class="!text-white text-[24px]">shopping_cart</mat-icon>
+
+                </button>                             
+            </a>
+        </div>
+
+        <!-- Mobile Menu -->
+
+        <div class="md:hidden">
+
+            <button
+                mat-icon-button
+                class="text-white"
+                [matMenuTriggerFor]="mobileMenu">
+
+                <mat-icon class="!text-white">
+                    menu
+                </mat-icon>
+
+            </button>
+
+            <mat-menu #mobileMenu="matMenu">
+
+                <a
+                href="/pdr/about">
+                    <button mat-menu-item>
+
+                        <mat-icon>info</mat-icon>
+
+                        <span>About</span>
+
+                    </button>
+                </a>
+
+                <a
+                    href="{{contactLink}}">
+                    
+                    <button mat-menu-item>
+
+                        <mat-icon>help</mat-icon>
+
+                        <span>Help</span>
+
+                    </button>
+                </a>
+
+                <a
+                    href="{{contactLink}}">
+
+                    <button mat-menu-item>
+
+                        <mat-icon>search</mat-icon>
+
+                        <span>Search</span>
+
+                    </button>
+                </a>
+
+                <a 
+                    href="/datacart/global_datacart" 
+                    target="_blank" 
+                    class="!text-white font-bold flex items-center">
+
+                    <button mat-menu-item>
+    
+                        <!-- Main content goes here -->
+                        <p class="flex items-start">
+                            <mat-icon>
+                                shopping_cart
+                            </mat-icon>
+
+                            <span>Cart</span>
+                        </p>
+
+                        <!-- Child div placed at the top-right corner -->
+                        <div class="rounded-full absolute top-0 right-[10px] bg-green-600 text-white px-[4px] text-[10px]">
+                            {{cartLength}}
+                        </div>
+
+                    </button>
+                </a>
+            </mat-menu>
+
+        </div>
     </div>
 </app-header-pub>
 

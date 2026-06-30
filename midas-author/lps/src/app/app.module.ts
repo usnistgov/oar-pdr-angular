@@ -19,6 +19,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -43,51 +44,54 @@ enableProdMode();
  * The Landing Page Service Application
  */
 @NgModule({
-    declarations: [
-      AppComponent
-    ],
-    imports: [
-        OARLPSModule,
-        ErrorsModule,
-        AppRoutingModule,
-        LandingAboutComponent,
-        ConfigModule,
-        StaffDirModule,
-        EditControlModule.forRoot(environment),
-        FooterComponent,
-        HeaderComponent,
-        HeaderPubComponent,
-        LandingPageComponent,
-        CommonModule,
-        BrowserAnimationsModule,
-        ToastrModule.forRoot()
-    ],
-    exports: [AppComponent],
-    providers: [
-        AppErrorHandler,
-        { provide: ErrorHandler, useClass: AppErrorHandler },
-        {
-          provide: UrlSerializer,
-          useClass: LowerCaseUrlSerializer
-        },
-        GoogleAnalyticsService,
-        DatePipe,
-        CollectionService,
-        NgbActiveModal,
-        ConfirmationDialogService
-        // {
-        //     provide: APP_INITIALIZER,
-        //     useFactory: initializeApp,
-        //     deps: [CollectionService],
-        //     multi: true
-        // }
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+  declarations: [AppComponent],
+  imports: [
+    OARLPSModule,
+    ErrorsModule,
+    AppRoutingModule,
+    LandingAboutComponent,
+    ConfigModule,
+    StaffDirModule,
+    EditControlModule.forRoot(environment),
+    FooterComponent,
+    HeaderComponent,
+    HeaderPubComponent,
+    LandingPageComponent,
+    CommonModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
+  ],
+  exports: [AppComponent],
+  providers: [
+    AppErrorHandler,
+    { provide: ErrorHandler, useClass: AppErrorHandler },
+    {
+      provide: UrlSerializer,
+      useClass: LowerCaseUrlSerializer,
+    },
+    GoogleAnalyticsService,
+    DatePipe,
+    CollectionService,
+    NgbActiveModal,
+    ConfirmationDialogService,
+    {
+      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+      useValue: {
+        position: 'above',
+      },
+    },
+    // {
+    //     provide: APP_INITIALIZER,
+    //     useFactory: initializeApp,
+    //     deps: [CollectionService],
+    //     multi: true
+    // }
+  ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
-
 export class AppModule {
-    // We inject the service here to keep it alive whole time
-    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) { }
+  // We inject the service here to keep it alive whole time
+  constructor(protected _googleAnalyticsService: GoogleAnalyticsService) {}
 }
 
 

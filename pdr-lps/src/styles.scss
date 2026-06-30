@@ -72,6 +72,12 @@
     --background-am-green-light: color-mix(in srgb, var(--background-am-green-default) 25%, transparent);
     --background-am-green-lighter: color-mix(in srgb, var(--background-am-green-default) 5%, transparent);
     --background-am-green-hover: #cfffd4;
+
+    /* Material buttons */
+    --mdc-filled-button-container-shape: 5px;
+    --mdc-outlined-button-container-shape: 5px;
+    --mdc-text-button-container-shape: 5px;
+    --mdc-protected-button-container-shape: 5px;    
 }
 
 .mat-btn {
@@ -442,4 +448,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .custom-dialog-container .mdc-dialog__surface {
     /* mat-dialog-container override */
     border-radius: 12px !important;
+}
+
+.custom-rounded-checkbox  {
+    .mdc-checkbox__background {
+        /* Set border radius */
+        --mdc-checkbox-container-shape: 6px;
+        border-radius: 3px !important;
+        border-width: 1px !important;
+        border-color: #2196F3 !important;
+    }
+
+    /* 2. ACTIVE / CHECKED STATE: Background Color & Border Color */
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+    .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background {
+        background-color: var(--nist-blue-default) !important;
+        /* Custom Active Box Fill Color */
+        border-color: var(--nist-blue-default) !important;
+        /* Custom Active Box Border Color */
+    }
+}
+
+.cart-button .mat-badge-content {
+    background-color: var(--nist-green-default) !important;
+    color: white !important;
 }

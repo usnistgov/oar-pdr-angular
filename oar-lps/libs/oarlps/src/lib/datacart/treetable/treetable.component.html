@@ -7,7 +7,11 @@
         <div *ngIf="isVisible" style="margin-top: .5em;"
             class="mat-elevation-z8 w-[94%] mx-auto m-2 md:m-6 lg:m-12">
             <!-- Header -->
-            <div class="text-[14px] px-[16px] items-center h-[40px] grid grid-cols-[1fr_max(50px,10%)_max(50px,5%)_max(50px,5%)_max(50px,8%)] gap-4 bg-[#1E6BA1] text-white font-bold">
+            <div class="text-[14px] px-[16px] items-center h-[40px] 
+                        grid 
+                        grid-cols-1
+                        md:grid-cols-[1fr_max(50px,5%)_max(50px,8%)]
+                        lg:grid-cols-[1fr_max(50px,10%)_max(50px,5%)_max(50px,5%)_max(50px,8%)] gap-4 bg-[#1E6BA1] text-white font-bold">
 
             <!-- <div class="mat-header-row"
                 style="display: flex; align-items: center; background-color: #1E6BA1; color: white; padding: 8px 12px;"> -->
@@ -37,15 +41,23 @@
                     </button>
                     <span class="align-super">Name</span>
                 </div>
-                <div style="text-align: left;">
-                    <span class="align-super hidden sm:hidden md:flex whitespace-nowrap">Media Type</span>
-                    <span class="align-super md:hidden">Type</span>
+                
+                <!-- Media Type -->
+                <div class="hidden lg:flex whitespace-nowrap text-left">
+                    <span class="align-super hidden md:hidden lg:flex whitespace-nowrap">Media Type</span>
+                    <span class="align-super hidden md:flex lg:hidden">Type</span>
                 </div>
-                <div style="text-align: right;">Size</div>
-                <div style="text-align: center;">
+                
+                <!-- Size -->
+                <div class="hidden lg:flex whitespace-nowrap text-right">Size</div>
+
+                <!-- Download -->
+                <div class="hidden md:flex whitespace-nowrap text-center items-center justify-center">
                     <mat-icon class="items-center w-[40px] h-[40px]" style="vertical-align: middle;">cloud_download</mat-icon>
                 </div>
-                <div class="flex flex-row whitespace-nowrap">
+
+                <!-- Status -->
+                <div class="hidden md:flex whitespace-nowrap flex-row">
                     <span class="align-super hidden sm:hidden md:flex">Status</span>
                     <span class="align-super md:hidden">
                         <mat-icon 
@@ -85,7 +97,11 @@
             <ng-template #treeNodeTemplate let-node let-level="level">
                 <!-- <div class="mat-row" style="display: flex; align-items: center; background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 8px 12px;"> -->
                 <div
-                    class="text-[18px] px-[16px] items-center h-auto grid grid-cols-[1fr_max(50px,10%)_max(50px,5%)_max(50px,5%)_max(50px,8%)] gap-4 border-b border-gray-300">
+                    class="text-[18px] px-[16px] items-center h-auto 
+                            grid 
+                            grid-cols-1
+                            md:grid-cols-[1fr_max(50px,5%)_max(50px,8%)]
+                            lg:grid-cols-[1fr_max(50px,10%)_max(50px,5%)_max(50px,5%)_max(50px,8%)] gap-4 border-b border-gray-300">
 
                     <!-- Tree toggler and checkbox -->
                     <div>
@@ -95,6 +111,8 @@
                             <mat-icon style="padding-top: 2px;">{{node.isExpanded? 'expand_more': 'chevron_right'}}</mat-icon>
                         </button>
                         <span *ngIf="node.children?.length == 0" style="margin-right: 48px;"> </span>
+
+                        <!-- Checkbox -->
                         <mat-checkbox 
                             style="vertical-align: bottom;"
                             class="custom-rounded-checkbox"
@@ -102,13 +120,30 @@
                             [checked]="node.data.selected"
                             (change)="onCheckboxChange($event.checked, node)"></mat-checkbox>
                         
+                        <!-- File Name -->
                         <span *ngIf="node.data.cartItem" 
                               class="align-super text-[#1471AE] cursor-pointer"
                               (click)="openDetails($event, node.data)"
-                              matTooltipPosition="above" matTooltip="Click for more details">
+                              matTooltip="Click for more details">
                             {{node.data.name}}
                         </span>
+
                         <span *ngIf="!node.data.cartItem" class="align-super">{{node.data.name}}</span>
+
+                        <!-- Arrow: only display for leaves -->
+                        <span *ngIf="node.children && node.children.length == 0"
+                            class="text-[#1471AE] cursor-pointer" 
+                            matTooltip="Click for more details"
+                            (click)="openDetails($event, node.data)">
+                            <mat-icon
+                                [class.amplified]="amplifyIcon(node.data)"
+                                (mouseover)="onMouseOver($event, node.data)" 
+                                (mouseleave)="hoverRowKey=null" >
+                                {{rowExpanded(node.data.key) ? 'arrow_drop_down' : 'arrow_right'}}
+                            </mat-icon>
+                        </span>
+
+                        <!-- Zip file that this file associated with -->
                         <span *ngIf="showZipFilesNames && node.data.cartItem"
                               class="ml-[12px] italic align-super">
                             {{node.data.cartItem.zipFile || ''}}
@@ -116,21 +151,21 @@
                     </div>
 
                     <!-- Media Type -->
-                    <div>
+                    <div class="hidden sm:hidden lg:flex whitespace-nowrap">
                         {{node.data.mediaType || ''}}
                     </div>
 
                     <!-- Size -->
-                    <div style="text-align: right;">
+                    <div class="hidden sm:hidden lg:flex whitespace-nowrap text-right">
                         <span *ngIf="node.data.cartItem">{{node.data.size || ''}}</span>
                     </div>
 
                     <!-- Actions (Download) -->
                     <!-- <div style="text-align: center;"> -->
-                    <div *ngIf="node.data.cartItem; else noFile" style="text-align: center;">
+                    <div *ngIf="node.data.cartItem; else noFile" class="hidden md:flex whitespace-nowrap text-center">
                         <a *ngIf="node.data.cartItem.downloadStatus != 'downloading'"
                             href='{{node.data.cartItem.downloadURL}}' target='_blank' download="download"
-                            matTooltipPosition="above"  matTooltip="Download this file"
+                            matTooltip="Download this file"
                             (click)="setFileDownloaded(node.data.cartItem)"
                             style="margin: auto"
                             [ngStyle]="{'color': downloadIconColor(node.data.cartItem.downloadStatus)}"
@@ -138,7 +173,7 @@
                             <mat-icon style="vertical-align: middle;">file_download</mat-icon>
                         </a>
                         <a *ngIf="node.data.cartItem.downloadStatus == 'downloading'"
-                            matTooltipPosition="above"  matTooltip="Download this file">
+                            matTooltip="Downloading">
                             <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon>
                         </a>
                     </div>
@@ -148,18 +183,26 @@
                     <!-- </div> -->
 
                     <!-- Status -->
-                    <div 
+                    <div class="hidden md:flex whitespace-nowrap"
                          [ngStyle]="{'color': getDownloadStatusColor(node.data.cartItem?.downloadStatus)}">
                         <mat-icon *ngIf="!['downloading', 'error', 'failed'].includes(node.data.cartItem?.downloadStatus) && getIconClass(node.data.cartItem?.downloadStatus)"
                                   class="mr-[6px] text-[24px]"
                                   aria-hidden="true"
-                                  matTooltipPosition="above"
                                   matTooltip="{{node.data.cartItem?.downloadStatus}}">
                                   {{getIconClass(node.data.cartItem?.downloadStatus)}}
                         </mat-icon>
+
                         <mat-spinner *ngIf="node.data.cartItem?.downloadStatus == 'downloading'"
                                               diameter="16" strokeWidth="2"
                                               style="margin-right: 6px;vertical-align: middle"></mat-spinner>
+
+                        <mat-icon *ngIf="['error', 'failed'].includes(node.data.cartItem?.downloadStatus)"
+                                  class="mr-[6px] text-[24px]"
+                                  aria-hidden="true"
+                                  matTooltip="{{node.data.cartItem?.downloadStatus}}">
+                                  {{getIconClass(node.data.cartItem?.downloadStatus)}}
+                        </mat-icon>
+
                         <!-- <span *ngIf="['error', 'failed'].includes(node.data.cartItem?.downloadStatus); else normalStatus"
                             class="hidden sm:hidden md:hidden lg:flex text-xs"  
                             style="cursor: pointer; text-decoration: underline;"
@@ -170,6 +213,98 @@
                         <ng-template #normalStatus>
                             <span class="hidden sm:hidden md:hidden lg:flex text-xs">{{getStatusForDisplay(node.data.cartItem?.downloadStatus)}}</span>
                         </ng-template> -->
+                    </div>
+                </div>
+
+                <!-- EXPANDED DETAIL -->
+                <div
+                    [@detailExpand]="
+                    rowExpanded(node.data.key)
+                        ? 'expanded'
+                        : 'collapsed'
+                    "
+                    style="padding-left: {{(level + 1) * 60}}px; padding-right: 48px"
+                    class="grid grid-cols-1 w-full my-2">
+
+                    <div>
+                        <div class="mb-2">
+                            <div class="font-bold">
+                                Selected {{node.data.filetype}}
+                            </div>
+                            <div>
+                                {{ node.data ? node.data.name : '' }}
+                            </div>
+                        </div>
+
+                        <!-- Type & Size  -->
+                        <div class="grid grid-cols-[50%_1fr] mb-2">
+                            <!-- Type -->
+                            <div class="mb-0">
+                                <span class="font-bold mr-2">
+                                    Type:
+                                </span>
+                                <span class="font-medium">
+                                    {{ (node.data.cartItem?.mediaType) ? node.data.cartItem.mediaType : 'Not Available' }}
+                                </span>
+                            </div>
+                            
+                            <!-- Size -->
+                            <div class="mb-0">
+                                <span class="font-bold mr-2">
+                                    Size:
+                                </span>
+                                <span *ngIf="node.data.cartItem?.size" class="text-[13px] font-medium">
+                                    {{ node.data.size }}
+                                </span>
+                                <span *ngIf="!node.data.cartItem?.size" class="text-[13px] font-medium italic">
+                                    Not Available
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Status and Download -->
+                        <div class="grid grid-cols-2 mb-2">
+                            <!-- Status -->
+                            <div class="mb-0">
+                                <span class="font-bold mr-2">
+                                    Download Status:
+                                </span>
+                                <span class="font-medium">
+                                    {{ node.data.cartItem?.downloadStatus }}
+                                </span>
+                            </div>
+
+                            <div *ngIf="node.data.cartItem">
+                                <a *ngIf="node.data.cartItem?.downloadStatus != 'downloading'"
+                                    href='{{node.data.cartItem.downloadURL}}' target='_blank' download="download"
+                                    matTooltip="Download this file"
+                                    (click)="setFileDownloaded(node.data.cartItem)"
+                                    style="margin: auto"
+                                    [ngStyle]="{'color': downloadIconColor(node.data.cartItem.downloadStatus)}"
+                                    [class.disabled]="node.data.cartItem.downloadStatus == 'downloading'">
+                                    <mat-icon style="vertical-align: middle;">file_download</mat-icon>
+                                </a>
+                                <a *ngIf="node.data.cartItem?.downloadStatus == 'downloading'"
+                                    matTooltip="Downloading">
+                                    <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Description -->
+                        <div>
+                            <div class="font-bold">
+                                Description:
+                            </div>
+                            <div class="bg-[var(--nist-green-lighter)] p-3" style="border: 1px solid lightgrey; border-radius: 5px;">
+                                <div *ngIf="node.data.cartItem?.description" class="text-[13px] font-medium">
+                                    {{ node.data.cartItem.description }}
+                                </div>
+                                <div *ngIf="!node.data.cartItem?.description" class="text-[13px] font-medium italic">
+                                    No Description Available
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

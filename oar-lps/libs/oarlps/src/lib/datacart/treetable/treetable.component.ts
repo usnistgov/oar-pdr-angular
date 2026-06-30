@@ -25,7 +25,14 @@ import { DataCart, DataCartItem } from '../cart';
 import { DisplayPrefs } from '../displayprefs';
 import { isPlatformBrowser } from '@angular/common';
 import { MatCheckbox } from '@angular/material/checkbox';
-
+import { TreeTableColumn } from '../../tree-table/tree-table.component';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from "@angular/animations";
 
 /**
  * the structure used as the data item in a TreeNode displaying an item in the cart (or its parent collection)
@@ -245,542 +252,627 @@ export class CartTreeNode {
  * the component providing the view of the files in the data cart.
  */
 @Component({
-  selector: 'app-treetable',
-  templateUrl: './treetable.component.html',
-  styleUrls: ['./treetable.component.scss',
-              '../datacart.component.css',
-              '../../landing/landing.component.scss']
+  selector: "app-treetable",
+  templateUrl: "./treetable.component.html",
+  styleUrls: [
+    "./treetable.component.scss",
+    "../datacart.component.css",
+    "../../landing/landing.component.scss",
+  ],
+  animations: [
+    trigger("detailExpand", [
+      state(
+        "collapsed",
+        style({
+          height: "0px",
+          opacity: 0,
+          overflow: "hidden",
+        }),
+      ),
+
+      state(
+        "expanded",
+        style({
+          height: "*",
+          opacity: 1,
+          overflow: "hidden",
+        }),
+      ),
+
+      transition("expanded <=> collapsed", animate("250ms ease-in-out")),
+    ]),
+  ],
 })
 export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
-    public CART_CONSTANTS: any;
+  public CART_CONSTANTS: any;
 
-    dataCart: DataCart | null = null;
-    dataCartStatus: any; // DataCartStatus type would be imported
-    inBrowser: boolean = false;
+  dataCart: DataCart | null = null;
+  dataCartStatus: any; // DataCartStatus type would be imported
+  inBrowser: boolean = false;
 
-    // Data
-    dataTree: CartTreeNode = new CartTreeNode(); // its children are the TreeNode[] given to TreeTable
-    selectedData: CartTreeNode[] = []; // selected data for TreeTable
-    fileNode: CartTreeData | null = null;
+  // Data
+  dataTree: CartTreeNode = new CartTreeNode(); // its children are the TreeNode[] given to TreeTable
+  selectedData: CartTreeNode[] = []; // selected data for TreeTable
+  fileNode: CartTreeData | null = null;
 
-    // Display
-    isExpanded: boolean = true;
-    isVisible: boolean = true;
-    showZipFilesNames: boolean = true;
-    titleWidth: string = '60%';
-    typeWidth: string = 'auto';
-    sizeWidth: string = '100px';
-    actionWidth: string = '30px';
-    statusWidth: string = 'auto';
-    fontSize: string = '16px';
-    mobWidth: number = 0;
-    mobHeight: number = 0;
-    defaultExpandLevel: number = 3;
+  // Display
+  isExpanded: boolean = true;
+  expandedRowKey: string | null = "";
+  hoverRowKey: string | null = "";
+  isVisible: boolean = true;
+  showZipFilesNames: boolean = true;
+  titleWidth: string = "60%";
+  typeWidth: string = "auto";
+  sizeWidth: string = "100px";
+  actionWidth: string = "30px";
+  statusWidth: string = "auto";
+  fontSize: string = "16px";
+  mobWidth: number = 0;
+  mobHeight: number = 0;
+  defaultExpandLevel: number = 3;
+  columns: TreeTableColumn[] = [
+    { field: "name", header: "Name" },
+    { field: "mediaType", header: "Media Type" },
+    { field: "size", header: "Size" },
+    { field: "downloadStatus", header: "Status" },
+  ];
 
-    //icon class names
-    circleUpIcon = 'expand_less'; // Material icon
-    circleDownIcon = 'expand_more'; // Material icon
-    eyeIcon = 'visibility'; // Material icon
-    eyeSlashIcon = 'visibility_off'; // Material icon
-    cloudDownloadIcon = 'file_download'; // Material icon
-    downloadIcon = 'file_download'; // Material icon
-    checkIcon = 'check_circle'; // Material icon
+  //icon class names
+  circleUpIcon = "expand_less"; // Material icon
+  circleDownIcon = "expand_more"; // Material icon
+  eyeIcon = "visibility"; // Material icon
+  eyeSlashIcon = "visibility_off"; // Material icon
+  cloudDownloadIcon = "file_download"; // Material icon
+  downloadIcon = "file_download"; // Material icon
+  checkIcon = "check_circle"; // Material icon
 
-    isMouseOver: boolean = false;
+  isMouseOver: boolean = false;
 
-    // Template references for dialogs
-    @ViewChild('fileDetailsDialog') fileDetailsDialog!: TemplateRef<any>;
-    @ViewChild('downloadDetailsDialog') downloadDetailsDialog!: TemplateRef<any>;
+  // Template references for dialogs
+  @ViewChild("fileDetailsDialog") fileDetailsDialog!: TemplateRef<any>;
+  @ViewChild("downloadDetailsDialog") downloadDetailsDialog!: TemplateRef<any>;
 
-    @Input() cartName: string = '';
+  @Input() cartName: string = "";
 
-    constructor(
-        public cartService: CartService,
-        public gaService: GoogleAnalyticsService,
-        private ngZone: NgZone,
-        public dialog: MatDialog,
-        private cdr: ChangeDetectorRef,
-        @Inject(PLATFORM_ID) private platformId: Object
-    ) {
+  constructor(
+    public cartService: CartService,
+    public gaService: GoogleAnalyticsService,
+    private ngZone: NgZone,
+    public dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) {
+    this.inBrowser = isPlatformBrowser(platformId);
+    this.CART_CONSTANTS = CartConstants.cartConst;
 
-        this.inBrowser = isPlatformBrowser(platformId);
-        this.CART_CONSTANTS = CartConstants.cartConst;
-
-        if(this.inBrowser){
-            this.mobHeight = (window.innerHeight);
-            this.mobWidth = (window.innerWidth);
-            this.setWidth(this.mobWidth);
-            window.onresize = (e) => {
-                ngZone.run(() => {
-                    this.mobWidth = window.innerWidth;
-                    this.mobHeight = window.innerHeight;
-                    this.setWidth(this.mobWidth);
-                });
-            };
-        }
-    }
-
-    ngOnInit() {
-        if(this.inBrowser){
-            this.dataCartStatus = this.getDataCartStatus(); // Placeholder method
-
-            this.dataCart = this.cartService.getCart(this.cartName);
-
-            this.loadDataTree();
-
-            this.dataCart?.watchForChanges(this.cartChanged.bind(this));
-        }
-    }
-
-    ngOnChanges() {
-    }
-
-    ngAfterViewInit() {
-        // Initialize selections
-        this.initializeSelections();
-    }
-
-    /**
-     * Initialize selections from data cart
-     */
-    initializeSelections() : void {
-        this.selectedData = [];
-        this.markSelectionsFromCart(this.dataTree.children);
-        // Update parent states based on children
-        this.updateParentStates(this.dataTree.children);
-    }
-
-    /**
-     * Mark selections from data cart into the tree
-     */
-    markSelectionsFromCart(nodes: CartTreeNode[]): void {
-        for (let node of nodes) {
-            // Find corresponding item in cart
-            const cartItem = this.dataCart ? this.dataCart.findFileById(node.data.key) : null;
-            if (cartItem) {
-                node.data.selected = cartItem.isSelected;
-                if (cartItem.isSelected) {
-                    this.selectedData.push(node);
-                }
-            }
-            // Recursively process children
-            if (node.children && node.children.length > 0) {
-                this.markSelectionsFromCart(node.children);
-            }
-        }
-    }
-
-    /**
-     * Update parent selection states based on children
-     */
-    updateParentStates(nodes: CartTreeNode[]): void {
-        for (let node of nodes) {
-            // Process children first
-            if (node.children && node.children.length > 0) {
-                this.updateParentStates(node.children);
-
-                // Update parent state based on children
-                const selectedChildren = node.children.filter(child => child.data.selected === true);
-
-                if (selectedChildren.length === 0) {
-                    // No children selected
-                    node.data.selected = false;
-                    node.data.indeterminate = false;
-                    // Remove from selectedData if present
-                    const index = this.selectedData.indexOf(node);
-                    if (index > -1) {
-                        this.selectedData.splice(index, 1);
-                    }
-                } else if (selectedChildren.length === node.children.length) {
-                    // All children selected
-                    node.data.selected = true;
-                    node.data.indeterminate = false;
-                    // Add to selectedData if not present
-                    if (this.selectedData.indexOf(node) === -1) {
-                        this.selectedData.push(node);
-                    }
-                } else {
-                    // Some children selected (indeterminate state)
-                    node.data.selected = false; // Visually unchecked but indeterminate
-                    node.data.indeterminate = true;
-                    // Remove from selectedData if present (indeterminate nodes aren't considered "selected" for our purposes)
-                    const index = this.selectedData.indexOf(node);
-                    if (index > -1) {
-                        this.selectedData.splice(index, 1);
-                    }
-                }
-            }
-        }
-
-        this.cdr.detectChanges();
-    }
-
-    /**
-     * When storage changed and the key matches current datacart,
-     * reload the datacart and refresh the tree table.
-     * @param event - change event
-     */
-    cartChanged(which: any) {
-        if (!this.dataCart) return;
-
-        // Update selections due to cart additions or changes to item data
-        let node: CartTreeNode = null;
-        for (let item of this.dataCart.getFiles()) {
-            node = this.dataTree.upsertNodeFor(item);
-            // Update selection status
-            node.data.selected = item.isSelected;
-            if (item.isSelected && !this.selectedData.includes(node)) {
-                this.selectedData.push(node);
-            } else if (!item.isSelected) {
-                // Remove from selectedData if not selected
-                const index = this.selectedData.indexOf(node);
-                if (index > -1) {
-                    this.selectedData.splice(index, 1);
-                }
-            }
-        }
-
-        // Remove deleted items and adjust selection view
-        this.dataTree.cleanNodes(this.dataCart,
-                                 (node: CartTreeNode) => {
-                                     // Remove from selectedData if node was selected
-                                     if (node.data.selected) {
-                                         node.data.selected = false;
-                                         const index = this.selectedData.indexOf(node);
-                                         if (index > -1) {
-                                             this.selectedData.splice(index, 1);
-                                         }
-                                     }
-                                 },
-                                 (parent: CartTreeNode) => {
-                                     // Parent selection handling will be handled by updateParentStates
-                                 });
-
-        // Make sure the top level name is set to the resource title
-        for (let child of this.dataTree.children) {
-            if (child.data.resTitle) child.data.name = child.data.resTitle
-        }
-
-        // Trigger refresh - reset selections and re-mark them
-        this.selectedData = [];
-        this.markSelectionsFromCart(this.dataTree.children);
-        // Update parent states based on children
-        this.updateParentStates(this.dataTree.children);
-    }
-
-    /**
-     * Load the data cart. If this is not the global data cart (user clicked on Download All button),
-     * bundle download function will be fired immediately. Otherwise just display the data cart.
-     * @param isGlobal - indicates if this is a global data cart
-     */
-    loadDataTree() {
-        if (!this.dataCart) return;
-
-        let node: CartTreeNode = null;
-        this.selectedData = []
-        for (let item of this.dataCart.getFiles()) {
-            node = this.dataTree.upsertNodeFor(item);
-            if (item.isSelected)
-                this.selectedData.push(node);
-        }
-
-        // Tweak the top level: set name to the resource title, open first level
-        for (let child of this.dataTree.children) {
-            if (child.data.resTitle) child.data.name = child.data.resTitle
-            child.isExpanded = true;
-        }
-
-        let dispname : string = this.dataCart.getDisplayName();
-        this.dataCartStatus.updateCartStatusInUse(this.cartName, true, dispname);
-    }
-
-    /**
-     * Respond to the user's selection of a file or collection
-     */
-    onNodeSelect(ev: any) {
-        if (ev.node && ev.node.data) {
-            let parts = this._keySplit(ev.node.data.key);
-            this.dataCart?.setSelected(parts[0], parts[1], false, true);
-        }
-    }
-
-    /**
-     * Respond to the user's de-selection of a file or collection
-     */
-    onNodeUnselect(ev: any) {
-        if (ev.node && ev.node.data) {
-            let parts = this._keySplit(ev.node.data.key);
-            this.dataCart?.setSelected(parts[0], parts[1], true, true);
-        }
-    }
-
-    /**
-     * Handle checkbox change events with proper parent/child propagation
-     */
-    onCheckboxChange(isChecked: boolean, node: CartTreeNode): void {
-        // const isChecked = event.checked;
-        // Only update if the state actually changed
-        // if (node.data.selected !== isChecked) {
-            node.data.selected = isChecked;
-            node.data.indeterminate = false; // Clear indeterminate state when explicitly set
-
-            // Update data cart selection for this node
-            if (node.data.key) {
-                let parts = this._keySplit(node.data.key);
-                this.dataCart?.setSelected(parts[0], parts[1], !isChecked, true);
-            }
-
-            // Propagate change to children
-            if (node.children && node.children.length > 0) {
-                this.propagateSelectionToChildren(node, isChecked);
-            }
-
-            // Update parent states
-            setTimeout(() => {
-                this.updateParentStates([this.dataTree]); // Start from root
-                this.cdr.detectChanges(); // Force all recursive templates to redraw
-            }, 0);
-        // }
-    }
-
-    /**
-     * Propagate selection state to all children nodes
-     */
-    propagateSelectionToChildren(node: CartTreeNode, isSelected: boolean): void {
-        if (node.children && node.children.length > 0) {
-            for (let child of node.children) {
-                // Only update if the state actually changed to avoid unnecessary updates
-                if (child.data.selected !== isSelected) {
-                    child.data.selected = isSelected;
-                    child.data.indeterminate = false;
-
-                    // Update data cart
-                    if (child.data.key) {
-                        let parts = this._keySplit(child.data.key);
-                        this.dataCart?.setSelected(parts[0], parts[1], !isSelected, true);
-                    }
-
-                    // Recursively propagate to grandchildren
-                    if (child.children && child.children.length > 0) {
-                        this.propagateSelectionToChildren(child, isSelected);
-                    }
-                }
-            }
-        }
-    }
-
-    _keySplit(key: string) {
-        let p: number = key.indexOf("/");
-        if (p < 0) return [key];
-        return [key.substring(0,p), key.substring(p+1)]
-    }
-
-    /**
-     * Return color code based on the input download status
-     * @param downloadStatus download status
-     */
-    getDownloadStatusColor(downloadStatus: string){
-        return DisplayPrefs.getDownloadStatusColor(downloadStatus);
-    }
-
-    /**
-     * Some download status for display is different from the status in the dataFiles. This function maps the
-     * status in the dataFiles to the one for display.
-     * @param downloadStatus download status
-     */
-    getStatusForDisplay(downloadStatus: string){
-        return DisplayPrefs.getDownloadStatusLabel(downloadStatus);
-    }
-
-    /**
-     * Return different icon class based on the input status
-     * @param downloadStatus download status
-     */
-    getIconClass(downloadStatus: string){
-        return DisplayPrefs.getDownloadStatusIcon(downloadStatus);
-    }
-
-    /**
-     * Set data table's column widthes based on the width of the device window
-     * @param mobWidth width of the device window
-     */
-    setWidth(mobWidth: number) {
-        if (mobWidth > 1340) {
-            this.titleWidth = '60%';
-            this.typeWidth = 'auto';
-            this.sizeWidth = '100px';
-            this.actionWidth = '30px';
-            this.statusWidth = 'auto';
-            this.fontSize = '16px';
-        } else if (mobWidth > 780 && this.mobWidth <= 1340) {
-            this.titleWidth = '60%';
-            this.typeWidth = '150px';
-            this.sizeWidth = '100px';
-            this.actionWidth = '30px';
-            this.statusWidth = '150px';
-            this.fontSize = '14px';
-        }
-        else {
-            this.titleWidth = '40%';
-            this.typeWidth = '20%';
-            this.sizeWidth = '20%';
-            this.actionWidth = '10%';
-            this.statusWidth = '20%';
-            this.fontSize = '12px';
-        }
-    }
-
-    /**
-     * Set the header style of the tree table
-     * @param width - width of the column
-     */
-    headerStyle(width: string) {
-        return { 'background-color': '#1E6BA1', 'width': width, 'color': 'white', 'font-size': this.fontSize, 'padding': '3px 10px' };
-    }
-
-    /**
-     * Set the body style of the tree table
-     * @param width - width of the tree table
-     */
-    bodyStyle(width: string) {
-        return { 'width': width, 'font-size': this.fontSize, 'padding': '0' };
-    }
-
-    /**
-     * Expand the tree to a level
-     * @param dataFiles - tree data file
-     * @param isExpanded - flag indicating if the tree is expanded
-     * @param targetLevel - level to expand
-     */
-    expandToLevel(dataFiles: any, isExpanded: boolean, targetLevel: any) {
-        this.expandAll(dataFiles, isExpanded, 0, targetLevel)
-    }
-
-    /**
-     * Expand the tree to a level - recursive
-     * @param dataFiles  - tree data file
-     * @param isExpanded - flag indicating if the tree is expanded
-     * @param level - current level
-     * @param targetLevel - level to expand
-     */
-    expandAll(dataFiles: any, isExpanded: boolean, level: any, targetLevel: any) {
-        let currentLevel = level + 1;
-
-        for (let i = 0; i < dataFiles.length; i++) {
-            dataFiles[i].isExpanded = isExpanded;
-            if (targetLevel != null) {
-                if (dataFiles[i].children.length > 0 && currentLevel < targetLevel) {
-                    this.expandAll(dataFiles[i].children, isExpanded, currentLevel, targetLevel);
-                }
-            } else {
-                if (dataFiles[i].children.length > 0) {
-                    this.expandAll(dataFiles[i].children, isExpanded, currentLevel, targetLevel);
-                }
-            }
-        }
-        this.isExpanded = isExpanded;
-        this.refreshTree();
-    }
-
-    /**
-     * Refresh the tree table
-     */
-    refreshTree(){
-        this.isVisible = false;
-        setTimeout(() => {
-            this.isVisible = true;
-        }, 0);
-    }
-
-    /**
-     * Clears all download status for both dataFiles and dataCart
-     */
-    clearDownloadStatus() {
-        this.dataCart?.restore();
-        this._clearCartDownloadStatus(this.dataTree.children);
-        this.dataCart?.save();
-    }
-
-    _clearCartDownloadStatus(dataFiles: CartTreeNode[]) {
-        // This will only clear the status of files that are not currently being downloaded
-        for (let dfile of dataFiles) {
-            if (dfile.children && dfile.children.length > 0)
-                this._clearCartDownloadStatus(dfile.children);
-            else if (dfile.data.cartItem && dfile.data.downloadStatus != DownloadStatus.DOWNLOADING)
-                this.dataCart?.setDownloadStatus(dfile.data.cartItem.resId, dfile.data.cartItem.filePath,
-                                                DownloadStatus.NO_STATUS, false);
-        }
-    }
-
-    /**
-     * Function to display bytes in appropriate format.
-     * @param bytes - input data in bytes
-     */
-    formatBytes(bytes: number) {
-        return formatBytes(bytes);
-    }
-
-    /**
-     * Function to set status when a file was downloaded
-     * @param rowData - tree node that the file was downloaded
-     */
-    setFileDownloaded(rowData: any) {
-        // Google Analytics code to track download event
-        if (rowData && rowData.cartItem && rowData.cartItem.downloadURL) {
-            this.gaService.gaTrackEvent('download', undefined, rowData.ediid, rowData.cartItem.downloadURL);
-        }
-
-        rowData.downloadStatus = DownloadStatus.DOWNLOADED;
-
-        if (rowData && rowData.cartItem) {
-            this.dataCart?.setDownloadStatus(rowData.cartItem.resId, rowData.cartItem.filePath, rowData.downloadStatus, true);
-        }
-    }
-
-    /**
-     * Make sure the width of popup dialog is less than 500px or 80% of the window width
-     */
-    getDialogWidth() {
-        if(this.inBrowser){
-            var w = window.innerWidth > 500 ? 500 : window.innerWidth;
-            return w + 'px';
-        }else{
-            return '500px';
-        }
-    }
-
-    /**
-     * Open a popup window to display file details
-     * @param event - MouseEvent
-     * @param rowdata - CartTreeData
-     */
-    openDetails(event: MouseEvent, rowdata: CartTreeData) {
-        this.fileNode = rowdata;
-        const dialogRef = this.dialog.open(this.fileDetailsDialog, {
-          width: this.getDialogWidth(),
-          panelClass: "custom-dialog-container",
-          disableClose: false,
-          data: rowdata
+    if (this.inBrowser) {
+      this.mobHeight = window.innerHeight;
+      this.mobWidth = window.innerWidth;
+      this.setWidth(this.mobWidth);
+      window.onresize = (e) => {
+        ngZone.run(() => {
+          this.mobWidth = window.innerWidth;
+          this.mobHeight = window.innerHeight;
+          this.setWidth(this.mobWidth);
         });
-
-        dialogRef.afterClosed().subscribe(result => {
-            this.fileNode = null;
-        });
+      };
     }
+  }
 
-    // Placeholder method - would need to implement based on actual DataCartStatus service
-    getDataCartStatus() {
-        // This would return the actual DataCartStatus instance
-        return {
-            updateCartStatusInUse: () => {}
-        };
+  ngOnInit() {
+    if (this.inBrowser) {
+      this.dataCartStatus = this.getDataCartStatus(); // Placeholder method
+
+      this.dataCart = this.cartService.getCart(this.cartName);
+
+      this.loadDataTree();
+
+      this.dataCart?.watchForChanges(this.cartChanged.bind(this));
     }
+  }
 
-    downloadIconColor(status: string) {
-        if (status == "downloaded") {
-            return "var(--nist-green-light)";
+  ngOnChanges() {}
+
+  ngAfterViewInit() {
+    // Initialize selections
+    this.initializeSelections();
+  }
+
+  /**
+   * Initialize selections from data cart
+   */
+  initializeSelections(): void {
+    this.selectedData = [];
+    this.markSelectionsFromCart(this.dataTree.children);
+    // Update parent states based on children
+    this.updateParentStates(this.dataTree.children);
+  }
+
+  /**
+   * Mark selections from data cart into the tree
+   */
+  markSelectionsFromCart(nodes: CartTreeNode[]): void {
+    for (let node of nodes) {
+      // Find corresponding item in cart
+      const cartItem = this.dataCart
+        ? this.dataCart.findFileById(node.data.key)
+        : null;
+      if (cartItem) {
+        node.data.selected = cartItem.isSelected;
+        if (cartItem.isSelected) {
+          this.selectedData.push(node);
+        }
+      }
+      // Recursively process children
+      if (node.children && node.children.length > 0) {
+        this.markSelectionsFromCart(node.children);
+      }
+    }
+  }
+
+  /**
+   * Update parent selection states based on children
+   */
+  updateParentStates(nodes: CartTreeNode[]): void {
+    for (let node of nodes) {
+      // Process children first
+      if (node.children && node.children.length > 0) {
+        this.updateParentStates(node.children);
+
+        // Update parent state based on children
+        const selectedChildren = node.children.filter(
+          (child) => child.data.selected === true,
+        );
+
+        if (selectedChildren.length === 0) {
+          // No children selected
+          node.data.selected = false;
+          node.data.indeterminate = false;
+          // Remove from selectedData if present
+          const index = this.selectedData.indexOf(node);
+          if (index > -1) {
+            this.selectedData.splice(index, 1);
+          }
+        } else if (selectedChildren.length === node.children.length) {
+          // All children selected
+          node.data.selected = true;
+          node.data.indeterminate = false;
+          // Add to selectedData if not present
+          if (this.selectedData.indexOf(node) === -1) {
+            this.selectedData.push(node);
+          }
         } else {
-            return "#1976d2"
+          // Some children selected (indeterminate state)
+          node.data.selected = false; // Visually unchecked but indeterminate
+          node.data.indeterminate = true;
+          // Remove from selectedData if present (indeterminate nodes aren't considered "selected" for our purposes)
+          const index = this.selectedData.indexOf(node);
+          if (index > -1) {
+            this.selectedData.splice(index, 1);
+          }
         }
+      }
     }
+
+    this.cdr.detectChanges();
+  }
+
+  /**
+   * When storage changed and the key matches current datacart,
+   * reload the datacart and refresh the tree table.
+   * @param event - change event
+   */
+  cartChanged(which: any) {
+    if (!this.dataCart) return;
+
+    // Update selections due to cart additions or changes to item data
+    let node: CartTreeNode = null;
+    for (let item of this.dataCart.getFiles()) {
+      node = this.dataTree.upsertNodeFor(item);
+      // Update selection status
+      node.data.selected = item.isSelected;
+      if (item.isSelected && !this.selectedData.includes(node)) {
+        this.selectedData.push(node);
+      } else if (!item.isSelected) {
+        // Remove from selectedData if not selected
+        const index = this.selectedData.indexOf(node);
+        if (index > -1) {
+          this.selectedData.splice(index, 1);
+        }
+      }
+    }
+
+    // Remove deleted items and adjust selection view
+    this.dataTree.cleanNodes(
+      this.dataCart,
+      (node: CartTreeNode) => {
+        // Remove from selectedData if node was selected
+        if (node.data.selected) {
+          node.data.selected = false;
+          const index = this.selectedData.indexOf(node);
+          if (index > -1) {
+            this.selectedData.splice(index, 1);
+          }
+        }
+      },
+      (parent: CartTreeNode) => {
+        // Parent selection handling will be handled by updateParentStates
+      },
+    );
+
+    // Make sure the top level name is set to the resource title
+    for (let child of this.dataTree.children) {
+      if (child.data.resTitle) child.data.name = child.data.resTitle;
+    }
+
+    // Trigger refresh - reset selections and re-mark them
+    this.selectedData = [];
+    this.markSelectionsFromCart(this.dataTree.children);
+    // Update parent states based on children
+    this.updateParentStates(this.dataTree.children);
+  }
+
+  /**
+   * Load the data cart. If this is not the global data cart (user clicked on Download All button),
+   * bundle download function will be fired immediately. Otherwise just display the data cart.
+   * @param isGlobal - indicates if this is a global data cart
+   */
+  loadDataTree() {
+    if (!this.dataCart) return;
+
+    let node: CartTreeNode = null;
+    this.selectedData = [];
+    for (let item of this.dataCart.getFiles()) {
+      node = this.dataTree.upsertNodeFor(item);
+      if (item.isSelected) this.selectedData.push(node);
+    }
+
+    // Tweak the top level: set name to the resource title, open first level
+    for (let child of this.dataTree.children) {
+      if (child.data.resTitle) child.data.name = child.data.resTitle;
+      child.isExpanded = true;
+    }
+
+    let dispname: string = this.dataCart.getDisplayName();
+    this.dataCartStatus.updateCartStatusInUse(this.cartName, true, dispname);
+  }
+
+  /**
+   * Respond to the user's selection of a file or collection
+   */
+  onNodeSelect(ev: any) {
+    if (ev.node && ev.node.data) {
+      let parts = this._keySplit(ev.node.data.key);
+      this.dataCart?.setSelected(parts[0], parts[1], false, true);
+    }
+  }
+
+  /**
+   * Respond to the user's de-selection of a file or collection
+   */
+  onNodeUnselect(ev: any) {
+    if (ev.node && ev.node.data) {
+      let parts = this._keySplit(ev.node.data.key);
+      this.dataCart?.setSelected(parts[0], parts[1], true, true);
+    }
+  }
+
+  /**
+   * Handle checkbox change events with proper parent/child propagation
+   */
+  onCheckboxChange(isChecked: boolean, node: CartTreeNode): void {
+    // const isChecked = event.checked;
+    // Only update if the state actually changed
+    // if (node.data.selected !== isChecked) {
+    node.data.selected = isChecked;
+    node.data.indeterminate = false; // Clear indeterminate state when explicitly set
+
+    // Update data cart selection for this node
+    if (node.data.key) {
+      let parts = this._keySplit(node.data.key);
+      this.dataCart?.setSelected(parts[0], parts[1], !isChecked, true);
+    }
+
+    // Propagate change to children
+    if (node.children && node.children.length > 0) {
+      this.propagateSelectionToChildren(node, isChecked);
+    }
+
+    // Update parent states
+    setTimeout(() => {
+      this.updateParentStates([this.dataTree]); // Start from root
+      this.cdr.detectChanges(); // Force all recursive templates to redraw
+    }, 0);
+    // }
+  }
+
+  /**
+   * Propagate selection state to all children nodes
+   */
+  propagateSelectionToChildren(node: CartTreeNode, isSelected: boolean): void {
+    if (node.children && node.children.length > 0) {
+      for (let child of node.children) {
+        // Only update if the state actually changed to avoid unnecessary updates
+        if (child.data.selected !== isSelected) {
+          child.data.selected = isSelected;
+          child.data.indeterminate = false;
+
+          // Update data cart
+          if (child.data.key) {
+            let parts = this._keySplit(child.data.key);
+            this.dataCart?.setSelected(parts[0], parts[1], !isSelected, true);
+          }
+
+          // Recursively propagate to grandchildren
+          if (child.children && child.children.length > 0) {
+            this.propagateSelectionToChildren(child, isSelected);
+          }
+        }
+      }
+    }
+  }
+
+  _keySplit(key: string) {
+    let p: number = key.indexOf("/");
+    if (p < 0) return [key];
+    return [key.substring(0, p), key.substring(p + 1)];
+  }
+
+  /**
+   * Return color code based on the input download status
+   * @param downloadStatus download status
+   */
+  getDownloadStatusColor(downloadStatus: string) {
+    return DisplayPrefs.getDownloadStatusColor(downloadStatus);
+  }
+
+  /**
+   * Some download status for display is different from the status in the dataFiles. This function maps the
+   * status in the dataFiles to the one for display.
+   * @param downloadStatus download status
+   */
+  getStatusForDisplay(downloadStatus: string) {
+    return DisplayPrefs.getDownloadStatusLabel(downloadStatus);
+  }
+
+  /**
+   * Return different icon class based on the input status
+   * @param downloadStatus download status
+   */
+  getIconClass(downloadStatus: string) {
+    return DisplayPrefs.getDownloadStatusIcon(downloadStatus);
+  }
+
+  /**
+   * Set data table's column widthes based on the width of the device window
+   * @param mobWidth width of the device window
+   */
+  setWidth(mobWidth: number) {
+    if (mobWidth > 1340) {
+      this.titleWidth = "60%";
+      this.typeWidth = "auto";
+      this.sizeWidth = "100px";
+      this.actionWidth = "30px";
+      this.statusWidth = "auto";
+      this.fontSize = "16px";
+    } else if (mobWidth > 780 && this.mobWidth <= 1340) {
+      this.titleWidth = "60%";
+      this.typeWidth = "150px";
+      this.sizeWidth = "100px";
+      this.actionWidth = "30px";
+      this.statusWidth = "150px";
+      this.fontSize = "14px";
+    } else {
+      this.titleWidth = "40%";
+      this.typeWidth = "20%";
+      this.sizeWidth = "20%";
+      this.actionWidth = "10%";
+      this.statusWidth = "20%";
+      this.fontSize = "12px";
+    }
+  }
+
+  /**
+   * Set the header style of the tree table
+   * @param width - width of the column
+   */
+  headerStyle(width: string) {
+    return {
+      "background-color": "#1E6BA1",
+      width: width,
+      color: "white",
+      "font-size": this.fontSize,
+      padding: "3px 10px",
+    };
+  }
+
+  /**
+   * Set the body style of the tree table
+   * @param width - width of the tree table
+   */
+  bodyStyle(width: string) {
+    return { width: width, "font-size": this.fontSize, padding: "0" };
+  }
+
+  /**
+   * Expand the tree to a level
+   * @param dataFiles - tree data file
+   * @param isExpanded - flag indicating if the tree is expanded
+   * @param targetLevel - level to expand
+   */
+  expandToLevel(dataFiles: any, isExpanded: boolean, targetLevel: any) {
+    this.expandAll(dataFiles, isExpanded, 0, targetLevel);
+  }
+
+  /**
+   * Expand the tree to a level - recursive
+   * @param dataFiles  - tree data file
+   * @param isExpanded - flag indicating if the tree is expanded
+   * @param level - current level
+   * @param targetLevel - level to expand
+   */
+  expandAll(dataFiles: any, isExpanded: boolean, level: any, targetLevel: any) {
+    let currentLevel = level + 1;
+
+    for (let i = 0; i < dataFiles.length; i++) {
+      dataFiles[i].isExpanded = isExpanded;
+      if (targetLevel != null) {
+        if (dataFiles[i].children.length > 0 && currentLevel < targetLevel) {
+          this.expandAll(
+            dataFiles[i].children,
+            isExpanded,
+            currentLevel,
+            targetLevel,
+          );
+        }
+      } else {
+        if (dataFiles[i].children.length > 0) {
+          this.expandAll(
+            dataFiles[i].children,
+            isExpanded,
+            currentLevel,
+            targetLevel,
+          );
+        }
+      }
+    }
+    this.isExpanded = isExpanded;
+    this.refreshTree();
+  }
+
+  /**
+   * Refresh the tree table
+   */
+  refreshTree() {
+    this.isVisible = false;
+    setTimeout(() => {
+      this.isVisible = true;
+    }, 0);
+  }
+
+  /**
+   * Clears all download status for both dataFiles and dataCart
+   */
+  clearDownloadStatus() {
+    this.dataCart?.restore();
+    this._clearCartDownloadStatus(this.dataTree.children);
+    this.dataCart?.save();
+  }
+
+  _clearCartDownloadStatus(dataFiles: CartTreeNode[]) {
+    // This will only clear the status of files that are not currently being downloaded
+    for (let dfile of dataFiles) {
+      if (dfile.children && dfile.children.length > 0)
+        this._clearCartDownloadStatus(dfile.children);
+      else if (
+        dfile.data.cartItem &&
+        dfile.data.downloadStatus != DownloadStatus.DOWNLOADING
+      )
+        this.dataCart?.setDownloadStatus(
+          dfile.data.cartItem.resId,
+          dfile.data.cartItem.filePath,
+          DownloadStatus.NO_STATUS,
+          false,
+        );
+    }
+  }
+
+  /**
+   * Function to display bytes in appropriate format.
+   * @param bytes - input data in bytes
+   */
+  formatBytes(bytes: number) {
+    return formatBytes(bytes);
+  }
+
+  /**
+   * Function to set status when a file was downloaded
+   * @param rowData - tree node that the file was downloaded
+   */
+  setFileDownloaded(rowData: any) {
+    // Google Analytics code to track download event
+    if (rowData && rowData.cartItem && rowData.cartItem.downloadURL) {
+      this.gaService.gaTrackEvent(
+        "download",
+        undefined,
+        rowData.ediid,
+        rowData.cartItem.downloadURL,
+      );
+    }
+
+    rowData.downloadStatus = DownloadStatus.DOWNLOADED;
+
+    if (rowData && rowData.cartItem) {
+      this.dataCart?.setDownloadStatus(
+        rowData.cartItem.resId,
+        rowData.cartItem.filePath,
+        rowData.downloadStatus,
+        true,
+      );
+    }
+  }
+
+  /**
+   * Make sure the width of popup dialog is less than 500px or 80% of the window width
+   */
+  getDialogWidth() {
+    if (this.inBrowser) {
+      var w = window.innerWidth > 500 ? 500 : window.innerWidth;
+      return w + "px";
+    } else {
+      return "500px";
+    }
+  }
+
+  /**
+   * Open a popup window to display file details
+   * @param event - MouseEvent
+   * @param rowdata - CartTreeData
+   */
+  openDetails(event: MouseEvent, rowdata: CartTreeData) {
+    this.expandedRowKey =
+      this.expandedRowKey === rowdata.key ? null : rowdata.key;
+    // this.fileNode = rowdata;
+    // const dialogRef = this.dialog.open(this.fileDetailsDialog, {
+    //   width: this.getDialogWidth(),
+    //   panelClass: "custom-dialog-container",
+    //   disableClose: false,
+    //   data: rowdata,
+    // });
+
+    // dialogRef.afterClosed().subscribe((result) => {
+    //   this.fileNode = null;
+    // });
+  }
+
+  onMouseOver(event: MouseEvent, data: any) {
+      this.hoverRowKey = data.key;
+      console.log("this.hoverRowKey mouseover:", this.hoverRowKey);
+  }
+
+    amplifyIcon(nodeData: any) {
+        let a = nodeData.key == this.hoverRowKey;
+        console.log("nodeData.key", nodeData.key);
+        console.log("this.hoverRowKey", this.hoverRowKey);
+        return a;
+    }
+  // Placeholder method - would need to implement based on actual DataCartStatus service
+  getDataCartStatus() {
+    // This would return the actual DataCartStatus instance
+    return {
+      updateCartStatusInUse: () => {},
+    };
+  }
+
+  downloadIconColor(status: string) {
+    if (status == "downloaded") {
+      return "var(--nist-green-light)";
+    } else {
+      return "#1976d2";
+    }
+  }
+
+  rowExpanded(key: string): boolean {
+    return this.expandedRowKey === key;
+  }
 }

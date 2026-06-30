@@ -15,6 +15,7 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
 import { Component } from '@angular/core';
 // import { SelectionModel } from '@angular/cdk/collections';
 // import { FlatTreeControl } from '@angular/cdk/tree';
+import { TreeTableComponent } from '../tree-table/tree-table.component';
 import {
   MatTreeFlatDataSource,
   MatTreeFlattener,
@@ -48,6 +49,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatTooltipModule,
     MatProgressSpinnerModule,
     MatDialogModule,
+    TreeTableComponent
   ],
   exports: [DatacartComponent],
   providers: [CartService, LeaveWhileDownloadingGuard],
