@@ -226,6 +226,7 @@ export class DatafilesPubComponent {
   refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
   EDIT_MODES: any;
   filesReady: boolean = false;
+  filteredFiles: TreeNode[] = [];
   skipReload: boolean = true;
   globalsvc = inject(GlobalService);
   expandedRowKey: string | null = "";
@@ -238,12 +239,12 @@ export class DatafilesPubComponent {
   showBulkDesc: boolean = false;
   searchText: string = "";
 
-  virtualScroll: boolean = false;
-  mouse: any = { x: 0, y: 0 };
-  mouseDragging: boolean = false;
-  prevMouseY: number = 0;
-  prevTreeTableHeight: number = 0;
-  treeTableHeight: number = 25; //Default height of the tree table
+//   virtualScroll: boolean = false;
+//   mouse: any = { x: 0, y: 0 };
+//   mouseDragging: boolean = false;
+//   prevMouseY: number = 0;
+//   prevTreeTableHeight: number = 0;
+//   treeTableHeight: number = 25; //Default height of the tree table
 
   // The key of treenode whose details is currently displayed
   currentKey: string = "";
@@ -289,8 +290,13 @@ export class DatafilesPubComponent {
   isOverflowing = false;
   scrollContainerElement: any;
 
+  // Define the default and full heights for the table
+  DEFAULT_HEIGHT = 400;
+  FULL_HEIGHT = 9999; // A large number to represent full height (no effective constraint)
+
   // Sets the initial table max-height
-  tableMaxHeight = 400;
+  tableMaxHeight: number = this.DEFAULT_HEIGHT;
+  naturalHeight: number | null = null;
 
   // Track dragging state and start mouse position
   private isDragging = false;
@@ -340,7 +346,6 @@ export class DatafilesPubComponent {
         ngZone.run(() => {
           this.appWidth = window.innerWidth;
           this.appHeight = window.innerHeight;
-          this.setWidth(this.appWidth);
         });
       };
     }
@@ -369,7 +374,6 @@ export class DatafilesPubComponent {
     if (this.inBrowser) {
       this.appHeight = window.innerHeight;
       this.appWidth = window.innerWidth;
-      this.setWidth(this.appWidth);
 
       this.globalDataCart = this.cartService.getGlobalCart();
       this.cartLength = this.globalDataCart.size();
@@ -390,6 +394,9 @@ export class DatafilesPubComponent {
     );
   }
 
+    get showDragBar() {
+        return this.tableMaxHeight > this.DEFAULT_HEIGHT;
+    }
   /**
    * Decide how we want to display the restrcied data:
    * Non-restrict or not publishing platform: normal display -- normal
@@ -409,11 +416,6 @@ export class DatafilesPubComponent {
     } else {
       return "restrict_preview";
     }
-  }
-
-  get fileManagerTooltip() {
-    if (this.fileManagerUrl) return this.fileManagerUrl;
-    else return "File Manager URL is not available.";
   }
 
   /**
@@ -443,6 +445,13 @@ export class DatafilesPubComponent {
     event.preventDefault();
     this.isDragging = true;
     this.startY = event.clientY;
+
+    // Update naturalHeight to get latest content height
+    if (this.scrollContainer) {
+      const element = this.scrollContainer.nativeElement;
+      this.naturalHeight = element.scrollHeight;
+    }
+
     this.startHeight = this.tableMaxHeight;
   }
 
@@ -450,39 +459,41 @@ export class DatafilesPubComponent {
   @HostListener("window:mousemove", ["$event"])
   onMouseMove(event: MouseEvent) {
       
-    this.mouse = {
-      x: event.clientX,
-      y: event.clientY,
-    };
+    // this.mouse = {
+    //   x: event.clientX,
+    //   y: event.clientY,
+    // };
 
-    if (this.mouseDragging) {
-      let diff = this.mouse.y - this.prevMouseY;
-      this.treeTableHeight = this.prevTreeTableHeight + diff;
-      this.treeTableHeight =
-        this.treeTableHeight < 26 ? 25 : this.treeTableHeight;
-    }
+    // if (this.mouseDragging) {
+    //   let diff = this.mouse.y - this.prevMouseY;
+    //   this.treeTableHeight = this.prevTreeTableHeight + diff;
+    //   this.treeTableHeight =
+    //     this.treeTableHeight < 26 ? 25 : this.treeTableHeight;
+    // }
       
     //For new table:
     if (!this.isDragging) return;
 
+    const element = this.scrollContainer.nativeElement;
     // Calculate vertical mouse movement distance
     const deltaY = event.clientY - this.startY;
 
-    // Calculate new height, capping it between 150px and 800px boundaries
+    // Calculate new height, capping it between 150px and (naturalHeight or FULL_HEIGHT) boundaries
     const newHeight = this.startHeight + deltaY;
-    this.tableMaxHeight = Math.max(150, Math.min(newHeight, 800));
-      
+    const maxHeight =
+      this.naturalHeight !== null ? this.naturalHeight : element.scrollHeight;
+    this.tableMaxHeight = Math.max(150, Math.min(newHeight, maxHeight));
   }
 
-  onMousedown(event) {
-    this.prevMouseY = this.mouse.y;
-    this.prevTreeTableHeight = this.treeTableHeight;
-    this.mouseDragging = true;
-  }
+//   onMousedown(event) {
+//     this.prevMouseY = this.mouse.y;
+//     this.prevTreeTableHeight = this.treeTableHeight;
+//     this.mouseDragging = true;
+//   }
 
   @HostListener("window:mouseup", ["$event"])
   onMouseUp(event) {
-      this.mouseDragging = false;
+    //   this.mouseDragging = false;
       this.isDragging = false;
   }
 
@@ -499,12 +510,12 @@ export class DatafilesPubComponent {
     this.edstatsvc.setShowLPContent(true);
 
     // If total file count > virtual scrolling threshold, set virtual scrolling to true.
-    this.virtualScroll =
-      this.fileCount > FileCountForVirtualScroll ? true : false;
+    // this.virtualScroll =
+    //   this.fileCount > FileCountForVirtualScroll ? true : false;
 
     // If number of top level elements > 5, set table height to MaxTreeTableHeight, otherwise set it to actual rows * 25 pixels
-    this.treeTableHeight =
-      this.files.length > 5 ? MaxTreeTableHeight : this.files.length * 25;
+    // this.treeTableHeight =
+    //   this.files.length > 5 ? MaxTreeTableHeight : this.files.length * 25;
   }
 
   /**
@@ -565,7 +576,7 @@ export class DatafilesPubComponent {
    * 2. "@type" does not have ":Hidden" and ":ChecksumFile"
    * 3. "@type" must end with "File".
    */
-  buildTree(comps: NerdmComp[]): void {
+  buildTree(comps: NerdmComp[] | null): void {
     if (!this.record["components"]) {
       this.filesReady = true;
       return;
@@ -588,6 +599,7 @@ export class DatafilesPubComponent {
         downloadStatus: DownloadStatus.NO_STATUS,
         downloadProgress: 0,
       };
+        
       if (comp) {
         out["comp"] = comp;
         out["mediaType"] = comp.mediaType || "";
@@ -595,23 +607,26 @@ export class DatafilesPubComponent {
           comp.size === null || comp.size === undefined
             ? ""
             : this.formatBytes(comp.size);
-        out["DetailsDisplayed"] = false;
-        out["DetailsDisplayed02"] = false;
-        out["isMouseOver"] = false;
+        // out["DetailsDisplayed"] = false;
+        // out["DetailsDisplayed02"] = false;
+        // out["isMouseOver"] = false;
       }
       return out;
     };
-    let _insertComp = (levels: string[], comp: NerdmComp, tree: TreeNode) => {
-      for (let child of tree.children) {
-        if (child.data.name == levels[0]) {
-          if (levels && levels.length > 1) {
-            return _insertComp(levels.slice(1), comp, child);
-          } else {
-            child.data = makeNodeData(levels[0], tree.data.key, comp, true);
-            return child;
+      let _insertComp = (levels: string[], comp: NerdmComp, tree: TreeNode) => {
+          if (tree.children) {
+              for (let child of tree.children) {
+                  if (child.data.name == levels[0]) {
+                      if (levels && levels.length > 1) {
+                          return _insertComp(levels.slice(1), comp, child);
+                      } else {
+                          child.data = makeNodeData(levels[0], tree.data.key, comp, true);
+                          return child;
+                      }
+                  }
+              }
           }
-        }
-      }
+          
       // anscestor node does not exist yet
       if (levels && levels.length > 1) {
         // haven't found leaf yet
@@ -632,7 +647,10 @@ export class DatafilesPubComponent {
     };
 
     let insertComp = (comp: NerdmComp, root: TreeNode) => {
-      let levels = comp.filepath.split("/");
+        let levels;
+        if (comp.filepath) levels = comp.filepath.split("/");
+        else levels = [""];
+
       return _insertComp(levels, comp, root);
     };
 
@@ -641,22 +659,27 @@ export class DatafilesPubComponent {
     let root: TreeNode = { data: { name: "", key: "" }, children: [] };
     let node: TreeNode = null;
 
-    // Filter out hidden, sha or files without "File" in "@type" field
-    for (let comp of comps) {
-      if (
-        comp.filepath &&
-        comp["@type"].filter((tp) => tp.includes(":Hidden")).length == 0 &&
-        comp["@type"].filter((tp) => tp.includes(":ChecksumFile")).length == 0
-      ) {
-        node = insertComp(comp, root);
-        if (
-          node.data.comp["@type"].filter((tp) => tp.endsWith("File")).length > 0
-        ) {
-          count++;
-        }
+      // Filter out hidden, sha or files without "File" in "@type" field
+      if (comps) {
+          for (let comp of comps) {
+              if (
+                  comp.filepath &&
+                  comp["@type"].filter((tp) => tp.includes(":Hidden")).length == 0 &&
+                  comp["@type"].filter((tp) => tp.includes(":ChecksumFile")).length == 0
+              ) {
+                  node = insertComp(comp, root);
+                  if (
+                      node.data.comp["@type"].filter((tp) => tp.endsWith("File")).length > 0
+                  ) {
+                      count++;
+                  }
+              }
+          }
       }
-    }
+      
     this.files = [...root.children];
+    // Sort the tree alphabetically by name (case-insensitive) at each level
+    this.sortTree(this.files);
     this.fileCount = count;
     this.updateStatusFromCart();
 
@@ -672,31 +695,31 @@ export class DatafilesPubComponent {
    * @param event
    * @returns
    */
-  treeTableToggled(event: any = null) {
-    //Set tree table's height based on the tree status
-    // If only one top level folder and user collapses it, set window to MinTreeTableHeight.
-    // Else if only one file (not folder) in the table,  set window to MinTreeTableHeight.
-    // Else if only one top level folder and table height is MinTreeTableHeight and user expands the top folder, set window to MaxTreeTableHeight.
-    // Else leave the height as it is.
+//   treeTableToggled(event: any = null) {
+//     //Set tree table's height based on the tree status
+//     // If only one top level folder and user collapses it, set window to MinTreeTableHeight.
+//     // Else if only one file (not folder) in the table,  set window to MinTreeTableHeight.
+//     // Else if only one top level folder and table height is MinTreeTableHeight and user expands the top folder, set window to MaxTreeTableHeight.
+//     // Else leave the height as it is.
 
-    let expanded: boolean = false;
-    this.files.forEach((file) => {
-      if (file.expanded) expanded = true;
-    });
-    this.isExpanded = expanded;
+//     let expanded: boolean = false;
+//     this.files.forEach((file) => {
+//       if (file.expanded) expanded = true;
+//     });
+//     this.isExpanded = expanded;
 
-    if (this.files.length == 1 && !this.files[0].expanded) {
-      this.treeTableHeight = MinTreeTableHeight;
-    } else {
-      if (this.fileCount <= 1 || this.treeTableHeight < MinTreeTableHeight) {
-        this.treeTableHeight = MinTreeTableHeight;
-      } else {
-        if (this.treeTableHeight == MinTreeTableHeight) {
-          this.treeTableHeight = MaxTreeTableHeight;
-        }
-      }
-    }
-  }
+//     if (this.files.length == 1 && !this.files[0].expanded) {
+//       this.treeTableHeight = MinTreeTableHeight;
+//     } else {
+//       if (this.fileCount <= 1 || this.treeTableHeight < MinTreeTableHeight) {
+//         this.treeTableHeight = MinTreeTableHeight;
+//       } else {
+//         if (this.treeTableHeight == MinTreeTableHeight) {
+//           this.treeTableHeight = MaxTreeTableHeight;
+//         }
+//       }
+//     }
+//   }
 
   /**
    * Function to expand tree display to certain level
@@ -720,7 +743,7 @@ export class DatafilesPubComponent {
 
     let currentLevel = level + 1;
     for (let i = 0; i < dataFiles.length; i++) {
-      dataFiles[i].expanded = expanded;
+      dataFiles[i].isExpanded = expanded;
       if (targetLevel != null) {
         if (dataFiles[i].children.length > 0 && currentLevel < targetLevel) {
           this.expandAll(
@@ -742,10 +765,10 @@ export class DatafilesPubComponent {
       }
     }
     this.isExpanded = expanded;
-    this.visible = false;
-    setTimeout(() => {
-      this.visible = true;
-    }, 0);
+    // this.visible = false;
+    // setTimeout(() => {
+    //   this.visible = true;
+    // }, 0);
   }
 
   /**
@@ -756,44 +779,26 @@ export class DatafilesPubComponent {
    * @param visible visibility of this tree
    * @param expand expand state of this tree
    */
-  setTree(tree, nodesProp, prop, visible, expand) {
-    tree.forEach((treenode) => {
-      if (typeof tree === "object") {
-        // standard tree node (one root)
-        treenode["data"]["visible"] = visible;
-      }
+//   setTree(tree, nodesProp, prop, visible, expand) {
+//     tree.forEach((treenode) => {
+//       if (typeof tree === "object") {
+//         // standard tree node (one root)
+//         treenode["data"]["visible"] = visible;
+//       }
 
-      // if this is not maching node, search nodes, children (if prop exist and it is not empty)
-      if (treenode[nodesProp] !== undefined && treenode[nodesProp].length > 0) {
-        treenode["expanded"] = expand;
-        return this.setTree(
-          treenode[nodesProp],
-          nodesProp,
-          prop,
-          visible,
-          expand,
-        );
-      }
-    });
-  }
-
-  /**
-   * Reset the tree to it's original state: collapsed and visible.
-   */
-  resetTree() {
-    this.searchText = "";
-    this.setTree(this.files, "children", "name", true, false);
-  }
-
-  /**
-   * Expand or collapse the tree
-   * @param expand Indicating if the action is expand
-   */
-  toogleTree(expand = false, refresh = false) {
-    this.setTree(this.files, "children", "name", true, expand);
-    this.treeTableToggled();
-    if (refresh) this.refreshTreeTable();
-  }
+//       // if this is not maching node, search nodes, children (if prop exist and it is not empty)
+//       if (treenode[nodesProp] !== undefined && treenode[nodesProp].length > 0) {
+//         treenode["expanded"] = expand;
+//         return this.setTree(
+//           treenode[nodesProp],
+//           nodesProp,
+//           prop,
+//           visible,
+//           expand,
+//         );
+//       }
+//     });
+//   }
 
   /**
    * Refresh the tree table display by turning the visibility off and on.
@@ -1168,132 +1173,6 @@ export class DatafilesPubComponent {
     }
   }
 
-  /**
-   * Following functions set tree table style
-   */
-  titleStyleHeader() {
-    return {
-      "background-color": "var(--science-theme-background-dark)",
-      width: this.cols[0].width,
-      color: "white",
-      "font-size": this.fontSize,
-    };
-  }
-
-  typeStyleHeader() {
-    return {
-      "background-color": "var(--science-theme-background-dark)",
-      width: this.cols[1].width,
-      color: "white",
-      "font-size": this.fontSize,
-    };
-  }
-
-  sizeStyleHeader() {
-    return {
-      "background-color": "var(--science-theme-background-dark)",
-      width: this.cols[2].width,
-      color: "white",
-      "font-size": this.fontSize,
-    };
-  }
-
-  statusStyleHeader() {
-    return {
-      "background-color": "var(--science-theme-background-dark)",
-      width: this.cols[3].width,
-      color: "white",
-      "font-size": this.fontSize,
-      "white-space": "nowrap",
-    };
-  }
-
-  titleStyle(rowData: any) {
-    let cursor = this.isLeaf(rowData) ? "pointer" : "default";
-    let color = this.isLeaf(rowData)
-      ? "var(--science-theme-background-dark)"
-      : "black";
-    return {
-      width: this.cols[0].width,
-      height: "10px",
-      "margin-left": "10px",
-      cursor: cursor,
-      color: color,
-      padding: 0,
-      "font-size": this.fontSize,
-    };
-  }
-
-  typeStyle() {
-    return {
-      width: this.cols[1].width,
-      height: "10px",
-      "font-size": this.fontSize,
-      color: "black",
-      padding: 0,
-    };
-  }
-
-  sizeStyle() {
-    return {
-      width: this.cols[2].width,
-      height: "10px",
-      "font-size": this.fontSize,
-      color: "black",
-      padding: 0,
-    };
-  }
-
-  statusStyle() {
-    return {
-      width: this.cols[3].width,
-      height: "10px",
-      "font-size": this.fontSize,
-      color: "black",
-      padding: 0,
-    };
-  }
-
-  /**
-   * Set column width based on screen width
-   * @param appWidth - width of current window
-   */
-  setWidth(appWidth: number) {
-    if (appWidth > 1340) {
-      this.cols[0].width = "60%";
-      this.cols[1].width = "20%";
-      this.cols[2].width = "15%";
-      this.cols[3].width = "100px";
-      this.fontSize = "16px";
-    } else if (appWidth > 780 && this.appWidth <= 1340) {
-      this.cols[0].width = "60%";
-      this.cols[1].width = "170px";
-      this.cols[2].width = "100px";
-      this.cols[3].width = "100px";
-      this.fontSize = "14px";
-    } else {
-      this.cols[0].width = "50%";
-      this.cols[1].width = "20%";
-      this.cols[2].width = "20%";
-      this.cols[3].width = "10%";
-      this.fontSize = "12px";
-    }
-
-    this.chref.detectChanges();
-  }
-
-  /**
-   * Make sure the width of popup dialog is less than 500px or 80% of the window width
-   */
-  getDialogWidth() {
-    if (this.inBrowser) {
-      // var w = window.innerWidth > 500 ? 500 : window.innerWidth;
-      return window.innerWidth + "px";
-    } else {
-      return "500px";
-    }
-  }
-
   copyToClipboard(val: string) {
     const selBox = document.createElement("textarea");
     selBox.style.position = "fixed";
@@ -1372,7 +1251,32 @@ export class DatafilesPubComponent {
   }
 
   filterTreeTable(filterText: string) {
-    this.treeTable.filterGlobal(filterText, "contains");
+    const ft = filterText.trim().toLowerCase();
+    if (!ft) {
+        this.filteredFiles = [];
+        return;
+    }
+    const filterNodes = (nodes: TreeNode[]): TreeNode[] => {
+        const result: TreeNode[] = [];
+        for (const node of nodes) {
+            const match = node.data.name.toLowerCase().includes(ft);
+            let filteredChildren: TreeNode[] = [];
+            if (node.children && node.children.length > 0) {
+            filteredChildren = filterNodes(node.children);
+            }
+            if (match || filteredChildren.length > 0) {
+            const newNode = { ...node };
+            if (filteredChildren.length > 0) {
+                newNode.children = filteredChildren;
+            } else {
+                newNode.children = [];
+            }
+            result.push(newNode);
+            }
+        }
+        return result;
+    };
+    this.filteredFiles = filterNodes(this.files);
   }
 
   rowExpanded(key: string): boolean {
@@ -1414,6 +1318,9 @@ export class DatafilesPubComponent {
   private checkOverflow() {
     if (this.scrollContainer) {
       const element = this.scrollContainer.nativeElement;
+      // Store the natural height (the height of the content without overflow constraint)
+      this.naturalHeight = element.scrollHeight;
+
       // If total content height is bigger than visible height
       const hasOverflow = element.scrollHeight > element.clientHeight;
 
@@ -1424,5 +1331,59 @@ export class DatafilesPubComponent {
         }, 0);
       }
     }
+  }
+
+  /**
+   * Sort the tree nodes alphabetically by name (case-insensitive) at each level.
+   * @param nodes The array of tree nodes to sort (and recursively sort their children)
+   */
+  private sortTree(nodes: TreeNode[]): void {
+    // Sort the current level
+    nodes.sort((a: TreeNode, b: TreeNode) => {
+      const nameA = (a.data && a.data.name) ? a.data.name.toLowerCase() : '';
+      const nameB = (b.data && b.data.name) ? b.data.name.toLowerCase() : '';
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      return 0;
+    });
+
+    // Recursively sort children
+    nodes.forEach(node => {
+      if (node.children && node.children.length > 0) {
+        this.sortTree(node.children);
+      }
+    });
+  }
+
+  /** Check if the table is currently set to full height */
+    isFullHeight(): boolean {
+        if (this.scrollContainer) {
+            const element = this.scrollContainer.nativeElement;
+            return this.tableMaxHeight === element.scrollHeight;
+        } else {
+            return false;
+        }
+    }
+
+  /** Check if the table is currently set to default height */
+  isDefaultHeight(): boolean {
+    return this.tableMaxHeight === this.DEFAULT_HEIGHT;
+  }
+
+  /** Expand the table to full height to show all content */
+    expandToFullHeight(): void {
+        if (this.scrollContainer) {
+            const element = this.scrollContainer.nativeElement;
+            this.tableMaxHeight = element.scrollHeight;
+        } 
+    }
+
+  /** Set the table height to the default height (400px) */
+  setToDefaultHeight(): void {
+    this.tableMaxHeight = this.DEFAULT_HEIGHT;
   }
 }

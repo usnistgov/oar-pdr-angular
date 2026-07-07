@@ -427,6 +427,12 @@ a:focus {
     --mat-icon-button-state-layer-color: #ffffff;
 }
 
+/* Dialog container */
+.custom-dialog-container .mdc-dialog__surface {
+    /* mat-dialog-container override */
+    border-radius: 12px !important;
+}
+
 .custom-rounded-checkbox  {
     .mdc-checkbox__background {
         /* Set border radius */
@@ -444,4 +450,9 @@ a:focus {
         border-color: var(--nist-blue-default) !important;
         /* Custom Active Box Border Color */
     }
+}
+
+.cart-button .mat-badge-content {
+    background-color: var(--nist-green-default) !important;
+    color: white !important;
 }

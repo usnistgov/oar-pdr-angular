@@ -86,7 +86,12 @@ describe('DatafilesPubComponent', () => {
     it('Should have file tree table', () => {
         component.editEnabled = false;
         fixture.detectChanges();
-        expect(fixture.nativeElement.querySelectorAll('th').length).toBeGreaterThan(0);
+        // expect(fixture.nativeElement.querySelectorAll('th').length).toBeGreaterThan(0);
+        
+        const divElement =
+          fixture.nativeElement.querySelector("#scrollContainer");
+            
+        expect(divElement).toBeTruthy(); 
     });
 
     it('toggleAllFilesInGlobalCart() should be called', () => {

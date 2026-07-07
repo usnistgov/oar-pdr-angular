@@ -20,6 +20,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -60,6 +65,11 @@ enableProdMode();
     CommonModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatBadgeModule,
+    MatTooltipModule,
   ],
   exports: [AppComponent],
   providers: [
