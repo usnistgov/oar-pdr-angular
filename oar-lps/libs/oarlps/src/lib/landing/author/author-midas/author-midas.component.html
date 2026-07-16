@@ -1,7 +1,7 @@
 <div style="display: table;">
     <div class="editable_container">
-        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || edstatsvc.isEditMode()">
-            <div class="editable_field" *ngIf="edstatsvc.isEditMode()" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
+        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || isEditMode">
+            <div class="editable_field" *ngIf="isEditMode" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
                 @if(isScienceTheme){
                     Facilitators:
                 }

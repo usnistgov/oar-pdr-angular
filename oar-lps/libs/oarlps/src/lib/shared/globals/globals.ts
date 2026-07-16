@@ -2,12 +2,13 @@ import { Inject, Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { SelectItem, TreeNode } from 'primeng/api';
 import { DOCUMENT } from '@angular/common';
+import { UpdateDetails } from '../../landing/editcontrol/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GlobalService {
-    public message = signal("");
+    // public message = signal("");
     public sectionMode = signal<SectionMode>({} as SectionMode);
     public collection = signal<string>("");
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
@@ -63,6 +64,18 @@ export class GlobalService {
     }
     public watchMessage(subscriber) {
         this._message.subscribe(subscriber);
+    }  
+
+    /**
+     * Set/get UpdateDetails 
+     */
+    _updateDetails : BehaviorSubject<UpdateDetails> =
+        new BehaviorSubject<UpdateDetails | null>(null);
+    public setUpdateDetails(val : UpdateDetails) { 
+        this._updateDetails.next(val); 
+    }
+    public watchUpdateDetails(subscriber) {
+        this._updateDetails.subscribe(subscriber);
     }  
 
     /**
@@ -448,6 +461,21 @@ export class SubmissionData {
     }
 }
 
+export interface SubmissionFeedback {
+    id: number;
+    description: string;
+    reviewer: string;
+    type: string;
+}
+
+export interface SubmissionStatus {
+    id: string;
+    phase: string;
+    updated: number;
+    info_at: string;
+    feedback: SubmissionFeedback[];
+}
+
 export class RevisionTypes {
     data: RevisionDetails[];
 
@@ -514,6 +542,9 @@ export class RevisionTypes {
     }
 }
 
+/**
+ * Constants for landing page
+ */
 export class LandingConstants {
     public static get editModes(): any { 
         return {
@@ -521,14 +552,18 @@ export class LandingConstants {
             PREVIEW_MODE: 'previewMode',
             DONE_MODE: 'doneMode',
             VIEWONLY_MODE: 'viewOnlyMode',
+            VIEWONLY_WITH_CONTROL_MODE: 'viewOnlyControlMode',
             OUTSIDE_MIDAS_MODE: 'outsideMidasMode'
         }
     };
 
-    public static get editTypes(): any { 
+    public static get recStates(): any { 
         return {
-            NORMAL: 'normal', 
-            REVISE: 'revise' 
+            EDIT: 'edit', //
+            SUBMITTED: 'submitted',    //submitted
+            PUBLISHED: 'published',    //published
+            REVISE: 'revise',       //Back to edit after publication
+            RESUBMIT: 'resubmit'    //Back to edit after submission
         }
     }; 
 }

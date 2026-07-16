@@ -11,7 +11,7 @@
 <div style="width: 100%;">
     <div style="display: table; margin-bottom: 0em;width:100%;">
         <div class="editable_container no-wrap" style="width:100%;">
-            <div class="editable_field red-star" *ngIf="edstatsvc.isEditMode()">
+            <div class="editable_field red-star" *ngIf="isEditMode">
                 *
             </div>
 
@@ -34,8 +34,8 @@
             }
   
             <!-- Control buttons -->
-            @if(edstatsvc.isEditMode()) {
-                <div *ngIf="edstatsvc.isEditMode()" class="editable_field" style="white-space: nowrap;">
+            @if(isEditMode) {
+                <div class="editable_field" style="white-space: nowrap;">
                     @if(!isEditing) {
                         <button 
                             class="edit_button" 
