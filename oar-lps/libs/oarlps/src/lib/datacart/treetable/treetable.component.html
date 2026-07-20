@@ -104,7 +104,7 @@
                             lg:grid-cols-[1fr_max(50px,10%)_max(50px,5%)_max(50px,5%)_max(50px,8%)] gap-4 border-b border-gray-300">
 
                     <!-- Tree toggler and checkbox -->
-                    <div>
+                    <div style="padding-left: {{(level + 1) * 24}}px;">
                         <button *ngIf="node.children?.length > 0" mat-icon-button (click)="node.isExpanded = !node.isExpanded"
                                 [attr.aria-label]="node.isExpanded ? 'Collapse' : 'Expand'"
                                 style="padding: 4px; min-width: 36px;">
@@ -151,18 +151,18 @@
                     </div>
 
                     <!-- Media Type -->
-                    <div class="hidden sm:hidden lg:flex whitespace-nowrap">
+                    <div class="hidden sm:hidden lg:flex whitespace-nowrap overflow-x-scroll">
                         {{node.data.mediaType || ''}}
                     </div>
 
                     <!-- Size -->
-                    <div class="hidden sm:hidden lg:flex whitespace-nowrap text-right">
+                    <div class="hidden sm:hidden lg:flex whitespace-nowrap text-right overflow-x-scroll">
                         <span *ngIf="node.data.cartItem">{{node.data.size || ''}}</span>
                     </div>
 
                     <!-- Actions (Download) -->
                     <!-- <div style="text-align: center;"> -->
-                    <div *ngIf="node.data.cartItem; else noFile" class="hidden md:flex whitespace-nowrap text-center">
+                    <div *ngIf="node.data.cartItem; else noFile" class="hidden md:flex whitespace-nowrap text-center overflow-x-scroll">
                         <a *ngIf="node.data.cartItem.downloadStatus != 'downloading'"
                             href='{{node.data.cartItem.downloadURL}}' target='_blank' download="download"
                             matTooltip="Download this file"
@@ -183,7 +183,7 @@
                     <!-- </div> -->
 
                     <!-- Status -->
-                    <div class="hidden md:flex whitespace-nowrap"
+                    <div class="hidden md:flex whitespace-nowrap overflow-x-scroll"
                          [ngStyle]="{'color': getDownloadStatusColor(node.data.cartItem?.downloadStatus)}">
                         <mat-icon *ngIf="!['downloading', 'error', 'failed'].includes(node.data.cartItem?.downloadStatus) && getIconClass(node.data.cartItem?.downloadStatus)"
                                   class="mr-[6px] text-[24px]"
@@ -309,7 +309,7 @@
                 </div>
 
                 <!-- Children nodes -->
-                <div class="rounded-sm" *ngIf="node.isExpanded && node.children?.length > 0" style="padding-left: {{(level + 1) * 24}}px;">
+                <div class="rounded-sm" *ngIf="node.isExpanded && node.children?.length > 0">
                     <ng-container *ngFor="let child of node.children; let j = index">
                         <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: child, level: level + 1}"></div>
                     </ng-container>

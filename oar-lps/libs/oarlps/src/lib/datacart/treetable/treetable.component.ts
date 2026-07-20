@@ -411,53 +411,6 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   /**
-   * Update parent selection states based on children
-   */
-  updateParentStates(nodes: CartTreeNode[]): void {
-    for (let node of nodes) {
-      // Process children first
-      if (node.children && node.children.length > 0) {
-        this.updateParentStates(node.children);
-
-        // Update parent state based on children
-        const selectedChildren = node.children.filter(
-          (child) => child.data.selected === true,
-        );
-
-        if (selectedChildren.length === 0) {
-          // No children selected
-          node.data.selected = false;
-          node.data.indeterminate = false;
-          // Remove from selectedData if present
-          const index = this.selectedData.indexOf(node);
-          if (index > -1) {
-            this.selectedData.splice(index, 1);
-          }
-        } else if (selectedChildren.length === node.children.length) {
-          // All children selected
-          node.data.selected = true;
-          node.data.indeterminate = false;
-          // Add to selectedData if not present
-          if (this.selectedData.indexOf(node) === -1) {
-            this.selectedData.push(node);
-          }
-        } else {
-          // Some children selected (indeterminate state)
-          node.data.selected = false; // Visually unchecked but indeterminate
-          node.data.indeterminate = true;
-          // Remove from selectedData if present (indeterminate nodes aren't considered "selected" for our purposes)
-          const index = this.selectedData.indexOf(node);
-          if (index > -1) {
-            this.selectedData.splice(index, 1);
-          }
-        }
-      }
-    }
-
-    this.cdr.detectChanges();
-  }
-
-  /**
    * When storage changed and the key matches current datacart,
    * reload the datacart and refresh the tree table.
    * @param event - change event
@@ -610,6 +563,55 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
         }
       }
     }
+  }
+
+  /**
+   * Update parent selection states based on children
+   */
+  updateParentStates(nodes: CartTreeNode[]): void {
+    for (const node of nodes) {
+        if (!node.children?.length) {
+            continue;
+        }
+
+        // Update descendants first
+        this.updateParentStates(node.children);
+
+        const allSelected = node.children.every(
+            (child) => child.data.selected && !child.data.indeterminate,
+        );
+
+        const anySelected = node.children.some(
+            (child) => child.data.selected || child.data.indeterminate,
+        );
+
+        if (allSelected) {
+            node.data.selected = true;
+            node.data.indeterminate = false;
+
+            if (!this.selectedData.includes(node)) {
+            this.selectedData.push(node);
+            }
+        } else if (anySelected) {
+            node.data.selected = false;
+            node.data.indeterminate = true;
+
+            const i = this.selectedData.indexOf(node);
+            if (i >= 0) {
+            this.selectedData.splice(i, 1);
+            }
+        } else {
+            node.data.selected = false;
+            node.data.indeterminate = false;
+
+            const i = this.selectedData.indexOf(node);
+            if (i >= 0) {
+            this.selectedData.splice(i, 1);
+            }
+        }
+    }
+
+    this.cdr.detectChanges();
   }
 
   _keySplit(key: string) {
@@ -846,16 +848,16 @@ export class TreetableComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   onMouseOver(event: MouseEvent, data: any) {
-      this.hoverRowKey = data.key;
-      console.log("this.hoverRowKey mouseover:", this.hoverRowKey);
+    this.hoverRowKey = data.key;
+    console.log("this.hoverRowKey mouseover:", this.hoverRowKey);
   }
 
-    amplifyIcon(nodeData: any) {
-        let a = nodeData.key == this.hoverRowKey;
-        console.log("nodeData.key", nodeData.key);
-        console.log("this.hoverRowKey", this.hoverRowKey);
-        return a;
-    }
+  amplifyIcon(nodeData: any) {
+    let a = nodeData.key == this.hoverRowKey;
+    console.log("nodeData.key", nodeData.key);
+    console.log("this.hoverRowKey", this.hoverRowKey);
+    return a;
+  }
   // Placeholder method - would need to implement based on actual DataCartStatus service
   getDataCartStatus() {
     // This would return the actual DataCartStatus instance

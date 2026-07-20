@@ -39,8 +39,14 @@
             <div style="padding-left: -1em;padding-right: -2em;" *ngIf="isActive && !searching">
                 <!-- Loop through all themes -->
                 <div *ngFor="let key of collectionOrder">
-                    <app-taxonomy *ngIf="allCollections[key].theme" [collectionThemesTree]="allCollections[key].theme?.collectionThemesTree" [collection]="key" [isCollection]="true"
-                        [colorScheme]="colorScheme" [collectionNodeExpanded]="true" [clearAllCheckbox]="clearAllCheckbox"
+                    <app-taxonomy 
+                        *ngIf="allCollections[key].theme" 
+                        [collectionThemesTree]="allCollections[key].theme?.collectionThemesTree" 
+                        [collection]="key" 
+                        [isCollection]="true"
+                        [colorScheme]="colorScheme" 
+                        [collectionNodeExpanded]="true" 
+                        [clearAllCheckbox]="clearAllCheckbox"
                         (filterString)="updateFilterString($event, key)">
                     </app-taxonomy>
                 </div>
