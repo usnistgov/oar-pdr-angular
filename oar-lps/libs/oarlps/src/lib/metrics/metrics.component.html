@@ -179,75 +179,97 @@
      Total No. files: {{filescount}}, Total dataset size: {{totalFileSize}}
 </div>
 
-<!-- Display tree table -->
-<div #panel0 id="panel0" *ngIf="inBrowser; else filesLoading" class="flex-container" >
-    <p-treeTable *ngIf="visible" [value]="files" [columns]="cols" selectionMode="single" [style]="{'max-height':'400px','overflow':'auto'}" stickyHeader="true" stickyTopAt=".layout-topbar"
-        [resizableColumns]="true" sortField="name" styleClass="p-treetable-sm">
-        <ng-template pTemplate="header" let-columns>
-            <tr>
-                <th *ngFor="let col of columns; let i = index" [style.width]="col.width" [style.font-size]="fontSize"
-                    [style.text-align]="getTableHearderTextAlign(i)" [style.padding-right]="getTableHearderPadding(i)" ttResizableColumn>
-                    <span *ngIf="col.header == 'Name'">
-                        <span (click)="expandToLevel(files, !isExpanded, 0, null)"
-                            style="padding-right:0.5em;">
-                            <!-- <i *ngIf="!isExpanded" class="faa faa-arrow-circle-down faa-1x icon-white"
-                                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Expand All"></i>
-                            <i *ngIf="isExpanded" class="fas fa-arrow-circle-up faa-1x icon-white"
-                                style="cursor: pointer;color: rgb(255, 255, 255);" data-toggle="tooltip"
-                                title="Collapse All"></i> -->
+<!-- Angular Material tree table -->
 
-                            <!-- <fa-icon 
-                                *ngIf="!isExpanded" 
-                                [class.amplified]="isMouseOver" 
-                                [icon]="faCircleArrowDown"
-                                class="amplifiable" 
-                                style="cursor: pointer;" 
-                                (mouseover)="isMouseOver = true" 
-                                (mouseleave)="isMouseOver = false"
-                                data-toggle="tooltip" 
-                                title="Expand All">
-                            </fa-icon>
+<div *ngIf="inBrowser; else filesLoading" class="flex px-10 py-5 -mt-4 mb-4 mx-auto max-h-[420px] h-auto" >
+    <div 
+        #scrollContainer 
+        id="scrollContainer"
+        *ngIf="inBrowser && visible" 
+        [style.max-height.px]="tableMaxHeight"
+        class="w-full block relative overflow-y-scroll mx-auto">
 
-                            <fa-icon 
-                                *ngIf="isExpanded" [
-                                class.amplified]="isMouseOver" 
-                                [icon]="faCircleArrowUp"
-                                class="amplifiable" 
-                                style="cursor: pointer;"
-                                (mouseover)="isMouseOver = true" 
-                                (mouseleave)="isMouseOver = false"
-                                data-toggle="tooltip"
-                                title="Collapse All">
-                            </fa-icon> -->
-                        </span>
+        <!-- Header -->
+        <div class="sticky top-0 z-10
+                    text-[14px] px-[16px] items-center h-[40px] 
+                        grid
+                        md:grid-cols-1
+                        lg:grid-cols-[1fr_max(50px,5%)_max(50px,8%)] gap-4 bg-[#1E6BA1] text-white font-bold">
+
+            <!-- Name -->
+            <div class="whitespace-nowrap">
+                <span class="align-super">Name</span>
+            </div>
+            
+            <!-- Downloads -->
+            <div class="hidden xl:flex whitespace-nowrap text-left">
+                <span class="align-super flex whitespace-nowrap">Downloas</span>
+            </div>
+            
+            <!-- File Size -->
+            <div class="hidden xl:flex whitespace-nowrap text-right">File Size</div>
+        </div>
+
+        <!-- Tree Content -->
+        <div *ngIf="files.length > 0; else emptyMessage" style="font-size: 14px;">
+            <!-- Recursive tree node template -->
+            <ng-container *ngFor="let node of files; let i = index">
+                <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: node, level: 0, index: i}"></div>
+            </ng-container>
+        </div>
+
+        <ng-template #emptyMessage>
+            <div style="text-align: center; padding: 24px; color: #666; font-size: 14px;">
+                No records found
+            </div>
+        </ng-template>
+
+        <!-- Tree Node Template -->
+        <ng-template #treeNodeTemplate let-node let-level="level" let-index="index">
+            <!-- <div class="mat-row" style="display: flex; align-items: center; background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 8px 12px;"> -->
+            <div
+                class="text-[18px] px-[16px] items-center h-auto pt-[0.5em] border-t border-gray-300
+                        grid
+                        md:grid-cols-1
+                        lg:grid-cols-[1fr_max(50px,5%)_max(50px,8%)] gap-4"
+                        [style.background-color]="rowBackColor(node)">
+
+                <!-- File Name -->
+                <div style="padding-left: {{(level + 1) * 24}}px;">
+                    <button *ngIf="node && node.children?.length > 0" mat-icon-button (click)="node.isExpanded = !node.isExpanded"
+                            [attr.aria-label]="node.isExpanded ? 'Collapse' : 'Expand'"
+                            style="padding: 4px; min-width: 36px;">
+                        <mat-icon style="padding-top: 2px;">{{node.isExpanded? 'expand_more': 'chevron_right'}}</mat-icon>
+                    </button>
+                    <span *ngIf="node && node.children?.length == 0" style="margin-right: 48px;"> </span>
+
+                    <span 
+                        class="align-super text-[#1471AE] cursor-pointer">
+                        {{node.data.name}}
                     </span>
-                    {{col.header}}
-                </th>
-            </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-            <tr [ttSelectableRow]="rowNode" [ngStyle]="{'background-color': rowColor(rowNode)}">
-                <td [ngStyle]="titleStyle()">
-                    <p-treeTableToggler [rowNode]="rowNode" data-toggle="tooltip" title="Expand/Collapse">
-                    </p-treeTableToggler>
-                        {{rowData.name}} 
-                </td>
-                <td [ngStyle]="successGetStyle()">
-                    <span>{{rowData.success_get}}</span>
-                </td>
-                <td [ngStyle]="totalDownloadsStyle()">
-                    <span>{{commonFunctionService.formatBytes(rowData.download_size,2)}}</span>
-                </td>
-            </tr>
-        </ng-template>
+                </div>
 
-        <!-- 👇 Custom toogler icons -->
-        <ng-template pTemplate="togglericon" let-open>
-            <fa-icon [icon]="open ? faChevronDown : faChevronRight"></fa-icon>
+                <!-- Downloads -->
+                <div class="hidden xl:flex">
+                    {{node.data.success_get}}
+                </div>
+
+                <!-- File Size -->
+                <div class="hidden xl:flex text-right">
+                    <span>{{commonFunctionService.formatBytes(node.data.download_size,2)}}</span>
+                </div>                   
+            </div>
+
+            <!-- Children nodes -->
+            <div class="rounded-sm" *ngIf="node.isExpanded && node.children?.length > 0" >
+                <ng-container *ngFor="let child of node.children; let j = index">
+                    <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: child, level: level + 1, index: j}"></div>
+                </ng-container>
+            </div>
         </ng-template>
-    </p-treeTable>
+    </div>         
 </div>
+
 <ng-template #filesLoading>
     <div>
         <b>Metrics </b>

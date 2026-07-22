@@ -15,13 +15,6 @@ import { LandingpageService } from '../../landingpage.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TreeTableModule } from 'primeng/treetable';
-import { TreeTable } from 'primeng/treetable';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { BadgeModule } from 'primeng/badge';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
 // import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BulkConfirmComponent } from '../bulk-confirm/bulk-confirm.component';
@@ -119,13 +112,7 @@ interface DataFileItem {
   imports: [
     CommonModule,
     RouterModule,
-    BadgeModule,
-    TreeTableModule,
-    OverlayPanelModule,
-    ProgressSpinnerModule,
-    ButtonModule,
     FormsModule,
-    TooltipModule,
     NgbModule,
     FontAwesomeModule,
     MatCheckboxModule,
@@ -281,7 +268,7 @@ export class DatafilesPubComponent {
   faChevronDown = faChevronDown;
 
   // @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
-  @ViewChild("tt") treeTable!: TreeTable;
+//   @ViewChild("tt") treeTable!: TreeTable;
 
   // Capture the scrollable container wrapper
   @ViewChild("scrollContainer") scrollContainer!: ElementRef<HTMLDivElement>;

@@ -33,31 +33,44 @@ import {
     faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
 import { iconClass } from '../shared/globals/globals';
+import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatButtonModule } from "@angular/material/button";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { MatDialogModule } from "@angular/material/dialog";
+
 
 const MOBIL_LABEL_LIMIT = 20;
 const DESKTOP_LABEL_LIMIT = 50;
 
 @Component({
-    selector: 'app-metrics',
+    selector: "app-metrics",
     standalone: true,
     imports: [
-        NgbModule, 
-        TreeModule, 
-        FieldsetModule, 
-        DialogModule, 
-        OverlayPanelModule, 
-        TreeTableModule, 
+        NgbModule,
+        TreeModule,
+        FieldsetModule,
+        DialogModule,
+        OverlayPanelModule,
+        TreeTableModule,
         ButtonModule,
-        CommonModule, 
+        CommonModule,
         FormsModule,
         HorizontalBarchartComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatCheckboxModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        MatDialogModule,
     ],
-    templateUrl: './metrics.component.html',
-    styleUrls: ['./metrics.component.css', '../landing/landing.component.scss']
+    templateUrl: "./metrics.component.html",
+    styleUrls: ["./metrics.component.css", "../landing/landing.component.scss"],
 })
 export class MetricsComponent implements OnInit {
-    imageURL: string = 'assets/images/sdp-background.jpg';
+    imageURL: string = "assets/images/sdp-background.jpg";
     inBrowser: boolean = false;
     lps: string;
     pdrHomeUrl: string = "";
@@ -67,9 +80,9 @@ export class MetricsComponent implements OnInit {
     pdrid: string;
     files: TreeNode[] = [];
     fileLevelData: any;
-    firstTimeLogged: string = '';
-    datasetTitle: string = '';
-    datasetSubtitle: string = '';
+    firstTimeLogged: string = "";
+    datasetTitle: string = "";
+    datasetSubtitle: string = "";
     lastDownloadDate: string = "";
     filescount: number = 0;
     record: NerdmRes = null;
@@ -90,7 +103,7 @@ export class MetricsComponent implements OnInit {
     recordLevelTotalDownloads: number = 0;
     visible: boolean = true;
     cols: any[] = [];
-    fontSize: string = '16px';  // Default font size
+    fontSize: string = "16px"; // Default font size
     noChartData: boolean = true;
 
     //Display
@@ -120,19 +133,19 @@ export class MetricsComponent implements OnInit {
     faCircleArrowUp = faCircleArrowUp;
     faChartBar = faChartBar;
     faDownload = faDownload;
-    faFileArrowDown = faFileArrowDown
+    faFileArrowDown = faFileArrowDown;
     faChevronRight = faChevronRight;
     faChevronDown = faChevronDown;
 
     isMouseOver: boolean = false;
 
-    recordLevelData : RecordLevelMetrics;
-        
+    recordLevelData: RecordLevelMetrics;
+
     // injected as ViewChilds so that this class can send messages to it with a synchronous method call.
     @ViewChild(HorizontalBarchartComponent)
     private barchart: HorizontalBarchartComponent;
 
-    @ViewChild('panel0', { read: ElementRef }) public panel0: ElementRef<any>;
+    // @ViewChild("panel0", { read: ElementRef }) public panel0: ElementRef<any>;
 
     constructor(
         private route: ActivatedRoute,
@@ -144,19 +157,22 @@ export class MetricsComponent implements OnInit {
         public gaService: GoogleAnalyticsService,
         private nerdmReserv: NERDmResourceService,
         public iconLibrary: FaIconLibrary,
-        public metricsService: MetricsService) { 
+        public metricsService: MetricsService,
+    ) {
+        // iconLibrary.addIcons(
+        //     faCircleArrowDown,
+        //     faCircleArrowUp,
+        //     faChartBar,
+        //     faDownload,
+        //     faFileArrowDown
+        // );
 
-            // iconLibrary.addIcons(
-            //     faCircleArrowDown,
-            //     faCircleArrowUp,
-            //     faChartBar,
-            //     faDownload,
-            //     faFileArrowDown
-            // ); 
-        
-            this.inBrowser = isPlatformBrowser(platformId);
-            this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "1060");
-        }
+        this.inBrowser = isPlatformBrowser(platformId);
+        this.screenSizeBreakPoint = +this.cfg.get(
+            "screenSizeBreakPoint",
+            "1060",
+        );
+    }
 
     ngOnInit() {
         this.lps = this.cfg.get("links.landingPageService", "/od/id/");
@@ -165,31 +181,32 @@ export class MetricsComponent implements OnInit {
         this.recordLevelData = new RecordLevelMetrics();
 
         this.cols = [
-            { field: 'name', header: 'Name', width: '60%' },
-            { field: 'success_get', header: 'Downloads', width: '20%' },
-            { field: 'download_size', header: 'File Size', width: '20%' }];
+            { field: "name", header: "Name", width: "60%" },
+            { field: "success_get", header: "Downloads", width: "20%" },
+            { field: "download_size", header: "File Size", width: "20%" },
+        ];
 
         // Expend the data tree to level one
         this.yAxisLabel = "";
 
-        this.route.params.subscribe(queryParams => {
+        this.route.params.subscribe((queryParams) => {
             this.ediid = queryParams.id;
             this.pdrHomeUrl = this.lps + this.ediid;
             // Get dataset title
-            this.nerdmReserv.getResource(this.ediid).subscribe(md => {
-            // this.searchService.searchById(this.ediid, true).subscribe(md => {
-                if(md) {
+            this.nerdmReserv.getResource(this.ediid).subscribe((md) => {
+                // this.searchService.searchById(this.ediid, true).subscribe(md => {
+                if (md) {
                     this.record = md as NerdmRes;
-                    this.datasetTitle = md['title'];
-                    this.pdrid = md['@id'];
-    
+                    this.datasetTitle = md["title"];
+                    this.pdrid = md["@id"];
+
                     this.createNewDataHierarchy();
-                    if (this.files.length != 0){
+                    if (this.files.length != 0) {
                         this.files = <TreeNode[]>this.files[0].data;
-                    }else{
+                    } else {
                         this.noChartData = true;
                     }
-    
+
                     this.expandToLevel(this.files, true, 0, 1);
 
                     if (this.inBrowser) {
@@ -197,7 +214,7 @@ export class MetricsComponent implements OnInit {
                         this.getMetricsData();
                     }
                 }
-            })                              
+            });
         });
     }
 
@@ -205,21 +222,21 @@ export class MetricsComponent implements OnInit {
      *  Following functions detect screen size
      */
     @HostListener("window:resize", [])
-        public onResize() {
-            this.detectScreenSize();
+    public onResize() {
+        this.detectScreenSize();
     }
-    
+
     public ngAfterViewInit() {
         this.detectScreenSize();
     }
 
     private detectScreenSize() {
         setTimeout(() => {
-            if(this.inBrowser){
+            if (this.inBrowser) {
                 this.screenWidth = window.innerWidth;
-                if(this.screenWidth < 550){
+                if (this.screenWidth < 550) {
                     this.maxLabelLength = MOBIL_LABEL_LIMIT;
-                }else{
+                } else {
                     this.maxLabelLength = DESKTOP_LABEL_LIMIT;
                 }
             }
@@ -233,117 +250,155 @@ export class MetricsComponent implements OnInit {
     getMetricsData() {
         // Get record level metrics data
         let that = this;
-        this.metricsService.getRecordLevelMetrics(this.ediid).subscribe(async (event) => {
-            switch (event.type) {
-                case HttpEventType.Response:
-                    // this.recordLevelData = JSON.parse(JSON.stringify(event.body));
-                    that.recordLevelData = JSON.parse(await event.body.text());
-                    if(that.recordLevelData.DataSetMetrics != undefined && that.recordLevelData.DataSetMetrics.length > 0){
+        this.metricsService.getRecordLevelMetrics(this.ediid).subscribe(
+            async (event) => {
+                switch (event.type) {
+                    case HttpEventType.Response:
+                        // this.recordLevelData = JSON.parse(JSON.stringify(event.body));
+                        that.recordLevelData = JSON.parse(
+                            await event.body.text(),
+                        );
+                        if (
+                            that.recordLevelData.DataSetMetrics != undefined &&
+                            that.recordLevelData.DataSetMetrics.length > 0
+                        ) {
+                            if (that.handleRecordLevelData(that)) {
+                                //Get file level data
+                                that.getFileLevelMetricsData();
+                            }
 
-                        if(that.handleRecordLevelData(that)) {
-                            //Get file level data
-                            that.getFileLevelMetricsData();
+                            // this.xAxisLabel = "Total Downloads Since " + that.firstTimeLogged;
+                            that.datasetSubtitle =
+                                "Metrics Since " + that.firstTimeLogged;
+                        } else {
+                            that.noDatasetSummary = true;
                         }
 
-                        // this.xAxisLabel = "Total Downloads Since " + that.firstTimeLogged;
-                        that.datasetSubtitle = "Metrics Since " + that.firstTimeLogged;
-                    }else{
-                        that.noDatasetSummary = true;
-                    }
+                        break;
+                    default:
+                        break;
+                }
+            },
+            (err) => {
+                let dateTime = new Date();
+                console.log("err", err);
+                that.errorMsg = JSON.stringify(err);
+                that.hasError = true;
 
-                    break;
-                default:
-                    break;
-            }
-
-        },
-        (err) => {
-            let dateTime = new Date();
-            console.log("err", err);
-            that.errorMsg = JSON.stringify(err);
-            that.hasError = true;
-
-            that.emailSubject = 'PDR: Error getting file level metrics data';
-            that.emailBody =
-                'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'
-                + '[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]' + '%0D%0A%0D%0A'
-                + 'ediid:' + that.ediid + '%0D%0A'
-                + 'Time: ' + dateTime.toString() + '%0D%0A%0D%0A'
-                + 'Error message:%0D%0A' + JSON.stringify(err);
+                that.emailSubject =
+                    "PDR: Error getting file level metrics data";
+                that.emailBody =
+                    "The information below describes an error that occurred while downloading metrics data." +
+                    "%0D%0A%0D%0A" +
+                    "[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]" +
+                    "%0D%0A%0D%0A" +
+                    "ediid:" +
+                    that.ediid +
+                    "%0D%0A" +
+                    "Time: " +
+                    dateTime.toString() +
+                    "%0D%0A%0D%0A" +
+                    "Error message:%0D%0A" +
+                    JSON.stringify(err);
 
                 that.readyDisplay = true;
-        });
+            },
+        );
     }
 
     getFileLevelMetricsData() {
         // Get file level metrics data
         let that = this;
-        this.metricsService.getFileLevelMetrics(this.ediid).subscribe(async (event) => {
-            // Some large dataset might take a while to download. Only handle the response
-            // when it finishes downloading
-            if(event.type == HttpEventType.Response){
-                let response = await event.body.text();
-                that.fileLevelData = JSON.parse(response);
+        this.metricsService.getFileLevelMetrics(this.ediid).subscribe(
+            async (event) => {
+                // Some large dataset might take a while to download. Only handle the response
+                // when it finishes downloading
+                if (event.type == HttpEventType.Response) {
+                    let response = await event.body.text();
+                    that.fileLevelData = JSON.parse(response);
 
-                if(that.fileLevelData.FilesMetrics != undefined && that.fileLevelData.FilesMetrics.length > 0){
-                    that.totalFileLevelSuccessfulGet = 0;
-                    that.totalFilesinChart = 0;
-                    that.cleanupFileLevelData(this.files);
-                    that.fileLevelData.FilesMetrics = that.metricsData;
-                    that.handleSum(that.files);
-                    if(that.fileLevelData.FilesMetrics.length > 0){
-                        that.noChartData = that.noDatasetSummary;
-                        // this.noChartData = false;
-                        that.createChartData();
-                        that.lastDownloadDate = that.getLastDownloadDate()
-                    }else{
+                    if (
+                        that.fileLevelData.FilesMetrics != undefined &&
+                        that.fileLevelData.FilesMetrics.length > 0
+                    ) {
+                        that.totalFileLevelSuccessfulGet = 0;
+                        that.totalFilesinChart = 0;
+                        that.cleanupFileLevelData(this.files);
+                        that.fileLevelData.FilesMetrics = that.metricsData;
+                        that.handleSum(that.files);
+                        if (that.fileLevelData.FilesMetrics.length > 0) {
+                            that.noChartData = that.noDatasetSummary;
+                            // this.noChartData = false;
+                            that.createChartData();
+                            that.lastDownloadDate = that.getLastDownloadDate();
+                        } else {
+                            that.noChartData = true;
+                        }
+                    } else {
                         that.noChartData = true;
                     }
-                }else{
-                    that.noChartData = true;
+
+                    that.readyDisplay = true;
                 }
+            },
+            (err) => {
+                let dateTime = new Date();
+                console.log("err", err);
+                that.errorMsg = JSON.stringify(err);
+                that.hasError = true;
+                that.emailSubject =
+                    "PDR: Error getting file level metrics data";
+                that.emailBody =
+                    "The information below describes an error that occurred while downloading metrics data." +
+                    "%0D%0A%0D%0A" +
+                    "[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]" +
+                    "%0D%0A%0D%0A" +
+                    "ediid:" +
+                    that.ediid +
+                    "%0D%0A" +
+                    "Time: " +
+                    dateTime.toString() +
+                    "%0D%0A%0D%0A" +
+                    "Error message:%0D%0A" +
+                    JSON.stringify(err);
 
                 that.readyDisplay = true;
-            }
-        },
-        (err) => {
-            let dateTime = new Date();
-            console.log("err", err);
-            that.errorMsg = JSON.stringify(err);
-            that.hasError = true;
-            that.emailSubject = 'PDR: Error getting file level metrics data';
-            that.emailBody =
-                'The information below describes an error that occurred while downloading metrics data.' + '%0D%0A%0D%0A'
-                + '[From the PDR Team:  feel free to add additional information about the failure or your questions here.  Thanks for sending this message!]' + '%0D%0A%0D%0A'
-                + 'ediid:' + that.ediid + '%0D%0A'
-                + 'Time: ' + dateTime.toString() + '%0D%0A%0D%0A'
-                + 'Error message:%0D%0A' + JSON.stringify(err);
-
-            that.readyDisplay = true;
-        });                                 
+            },
+        );
     }
 
     /**
      * Handle record level data.
-     * If only one record in DataSetMetrics, just use it. Otherwise check if pdrid matches 
+     * If only one record in DataSetMetrics, just use it. Otherwise check if pdrid matches
      * Nerdm record's pdrid. If yes, use it. Otherwise return false.
      * @returns true if there is valid record level data record
      */
     handleRecordLevelData(that: any) {
         let met: any = null;
 
-        if(this.recordLevelData.DataSetMetrics && this.recordLevelData.DataSetMetrics.length > 1) {
-            for(let metrics of this.recordLevelData.DataSetMetrics) {
-                if(metrics["pdrid"] && (metrics["pdrid"].toLowerCase() == 'nan' || metrics["pdrid"].trim() == this.pdrid) && metrics["last_time_logged"]){
+        if (
+            this.recordLevelData.DataSetMetrics &&
+            this.recordLevelData.DataSetMetrics.length > 1
+        ) {
+            for (let metrics of this.recordLevelData.DataSetMetrics) {
+                if (
+                    metrics["pdrid"] &&
+                    (metrics["pdrid"].toLowerCase() == "nan" ||
+                        metrics["pdrid"].trim() == this.pdrid) &&
+                    metrics["last_time_logged"]
+                ) {
                     met = metrics;
                 }
             }
-        }else{
+        } else {
             met = this.recordLevelData.DataSetMetrics[0];
         }
 
-        if(met) {
-            that.firstTimeLogged = this.datePipe.transform(met.first_time_logged, "MMM d, y");
+        if (met) {
+            that.firstTimeLogged = this.datePipe.transform(
+                met.first_time_logged,
+                "MMM d, y",
+            );
             that.recordLevelTotalDownloads = met.success_get;
             that.totalDatasetDownloads = met.record_download;
             that.totalUniqueUsers = met.number_users;
@@ -351,8 +406,11 @@ export class MetricsComponent implements OnInit {
 
             that.noDatasetSummary = false;
             that.noChartData = false;
-        }else{
-            console.error("Unable to handle multiple record level metrics data. Either missing pdrid or pdrid mismatch.", this.recordLevelData.DataSetMetrics);
+        } else {
+            console.error(
+                "Unable to handle multiple record level metrics data. Either missing pdrid or pdrid mismatch.",
+                this.recordLevelData.DataSetMetrics,
+            );
 
             this.noDatasetSummary = true;
             this.noChartData = true;
@@ -364,17 +422,25 @@ export class MetricsComponent implements OnInit {
     /**
      * Remove outdated data and sha files from the metrics
      */
-    cleanupFileLevelData(files: TreeNode[]){
+    cleanupFileLevelData(files: TreeNode[]) {
         let metricsData: any[] = [];
-        for(let node of files){
+        for (let node of files) {
             //Only check leaf
-            if(node.children.length <= 0) {
-                let found = this.metricsService.findFileLevelMatch(this.fileLevelData.FilesMetrics, node.data.ediid, node.data.pdrid, node.data.filePath);
+            if (node.children.length <= 0) {
+                let found = this.metricsService.findFileLevelMatch(
+                    this.fileLevelData.FilesMetrics,
+                    node.data.ediid,
+                    node.data.pdrid,
+                    node.data.filePath,
+                );
 
-                if(found){
+                if (found) {
                     metricsData.push(found);
                     node.data.success_get = found.success_get;
-                    if(!node.data.download_size || node.data.download_size == 0){
+                    if (
+                        !node.data.download_size ||
+                        node.data.download_size == 0
+                    ) {
                         node.data.download_size = found.download_size;
                     }
 
@@ -382,13 +448,13 @@ export class MetricsComponent implements OnInit {
                     this.totalFilesinChart += 1;
 
                     node.data.inChart = true;
-                    if(node.parent){
+                    if (node.parent) {
                         node.parent.data.inChart = true;
                     }
                 }
 
                 this.filescount = this.filescount + 1;
-            }else {
+            } else {
                 this.cleanupFileLevelData(node.children);
             }
         }
@@ -396,88 +462,116 @@ export class MetricsComponent implements OnInit {
         // Append to existing metrics data - for some reason Object.assign did not work properly
         // Had to append metricsData elements one by one!
         // this.metricsData = Object.assign(JSON.parse(JSON.stringify(metricsData)), this.metricsData);
-        for(let k=0; k < metricsData.length; k++)
+        for (let k = 0; k < metricsData.length; k++)
             this.metricsData.push(metricsData[k]);
     }
 
     /**
      * Sum each folder in the file tree
-     * @param files 
+     * @param files
      */
-    handleSum(files: TreeNode[]){
+    handleSum(files: TreeNode[]) {
         this.totalFileSize = 0;
-        for(let child of files) {
-            const {downloads, fileSize} = this.sumFolder(child);
+        for (let child of files) {
+            const { downloads, fileSize } = this.sumFolder(child);
             this.totalFileSize += fileSize;
         }
 
-        this.totalFileSizeForDisplay = this.commonFunctionService.formatBytes(this.totalFileSize, 2);
+        this.totalFileSizeForDisplay = this.commonFunctionService.formatBytes(
+            this.totalFileSize,
+            2,
+        );
     }
 
     /**
      * Recursive call to sum each folder
-     * @param node 
-     * @returns 
+     * @param node
+     * @returns
      */
-    sumFolder(node: TreeNode){
+    sumFolder(node: TreeNode) {
         if (node.children.length > 0) {
-            for(let child of node.children) {
-                const {downloads, fileSize} = this.sumFolder(child);              
+            for (let child of node.children) {
+                const { downloads, fileSize } = this.sumFolder(child);
                 node.data.success_get += downloads;
                 node.data.download_size += fileSize;
-            };
+            }
         }
-    
+
         var downloads = node.data.success_get;
 
         var fileSize;
-        if(!node.data.download_size || node.data.download_size == 'nan')
+        if (!node.data.download_size || node.data.download_size == "nan")
             fileSize = 0;
-        else
-            fileSize = node.data.download_size;
+        else fileSize = node.data.download_size;
 
-        return {downloads, fileSize};
+        return { downloads, fileSize };
     }
 
     /**
      * Save metrics data in csv format
      */
     saveMetrics() {
-        if(!this.fileLevelData || this.fileLevelData.FilesMetrics == undefined){
+        if (
+            !this.fileLevelData ||
+            this.fileLevelData.FilesMetrics == undefined
+        ) {
             // Need to display message in the future
             return;
         }
         // Make a deep copy of the metrics data
-        let fileMetrics = JSON.parse(JSON.stringify(this.fileLevelData.FilesMetrics));
+        let fileMetrics = JSON.parse(
+            JSON.stringify(this.fileLevelData.FilesMetrics),
+        );
         // Remove the ediid column
-        for(let i in fileMetrics) {
+        for (let i in fileMetrics) {
             delete fileMetrics[i].ediid;
-         }
+        }
 
         // convert JSON to CSV
-        const replacer = (key, value) => value === null ? '' : value // specify how you want to handle null values here
-        const header = Object.keys(fileMetrics[0])
-        let csv = fileMetrics.map(row => header.map(fieldName => 
-        JSON.stringify(row[fieldName], replacer)).join(','))
-        csv.unshift(header.join(','))
-        csv = csv.join('\r\n')
+        const replacer = (key, value) => (value === null ? "" : value); // specify how you want to handle null values here
+        const header = Object.keys(fileMetrics[0]);
+        let csv = fileMetrics.map((row) =>
+            header
+                .map((fieldName) => JSON.stringify(row[fieldName], replacer))
+                .join(","),
+        );
+        csv.unshift(header.join(","));
+        csv = csv.join("\r\n");
 
-        if(this.recordLevelTotalDownloads == null || this.recordLevelTotalDownloads == undefined)
+        if (
+            this.recordLevelTotalDownloads == null ||
+            this.recordLevelTotalDownloads == undefined
+        )
             this.recordLevelTotalDownloads = 0;
 
         // Add summary
-        csv = "# Record id," + this.ediid + "\r\n"
-            + "# Total file downloads," + this.recordLevelTotalDownloads + "\r\n"
-            + "# Total dataset downloads," + this.totalDatasetDownloads + "\r\n"
-            + "# Total bytes downloaded," + this.totalDownloadSizeInByte + "\r\n"
-            + "# Total unique users," + this.totalUniqueUsers + "\r\n"
-            + "\r\n" + csv;
+        csv =
+            "# Record id," +
+            this.ediid +
+            "\r\n" +
+            "# Total file downloads," +
+            this.recordLevelTotalDownloads +
+            "\r\n" +
+            "# Total dataset downloads," +
+            this.totalDatasetDownloads +
+            "\r\n" +
+            "# Total bytes downloaded," +
+            this.totalDownloadSizeInByte +
+            "\r\n" +
+            "# Total unique users," +
+            this.totalUniqueUsers +
+            "\r\n" +
+            "\r\n" +
+            csv;
 
         // Create link and download
-        var link = document.createElement('a');
-        link.setAttribute('href', 'data:text/csv;charset=utf-8,%EF%BB%BF' + encodeURIComponent(csv));
-        link.setAttribute('download', this.ediid + '.csv');
-        link.style.visibility = 'hidden';
+        var link = document.createElement("a");
+        link.setAttribute(
+            "href",
+            "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURIComponent(csv),
+        );
+        link.setAttribute("download", this.ediid + ".csv");
+        link.style.visibility = "hidden";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -496,12 +590,12 @@ export class MetricsComponent implements OnInit {
     saveMetricsAsImage() {
         this.barchart.saveMetricsAsImage(this.datasetTitle + ".jpg");
     }
-    
+
     /**
      * Convert input data into chart data format and calculate recordLevelTotalDownloads
      */
     createChartData() {
-        if(!this.fileLevelData) return;
+        if (!this.fileLevelData) return;
 
         this.chartData = [];
 
@@ -513,15 +607,18 @@ export class MetricsComponent implements OnInit {
         let dupFileNames: string[] = [];
 
         // Find all duplicate file names if any
-        for(let j = 0; j < this.fileLevelData.FilesMetrics.length; j++){
+        for (let j = 0; j < this.fileLevelData.FilesMetrics.length; j++) {
             // Get file name from path
-            if(this.fileLevelData.FilesMetrics[j].filepath){
-                filename = this.fileLevelData.FilesMetrics[j].filepath.replace(/^.*[\\\/]/, '');
-                filename = decodeURI(filename).replace(/^.*[\\\/]/, '');
-                if(nameList.find(x => x == filename)){
-                    if(!dupFileNames.find(x => x == filename))
+            if (this.fileLevelData.FilesMetrics[j].filepath) {
+                filename = this.fileLevelData.FilesMetrics[j].filepath.replace(
+                    /^.*[\\\/]/,
+                    "",
+                );
+                filename = decodeURI(filename).replace(/^.*[\\\/]/, "");
+                if (nameList.find((x) => x == filename)) {
+                    if (!dupFileNames.find((x) => x == filename))
                         dupFileNames.push(filename);
-                }else{
+                } else {
                     nameList.push(filename);
                 }
             }
@@ -529,59 +626,100 @@ export class MetricsComponent implements OnInit {
 
         // Populate chartData. For dup file names, use full path without ediid.
         // Handle long file name: to make it simple, if file name is longer than max label length
-        // (laptop and mobile are different), we will truncate the begining characters 
+        // (laptop and mobile are different), we will truncate the begining characters
         // and add a sequence number at the end and put it in the first column (for display
-        // purpose). The real file name with path saved in the 3rd column. 
-        // The real file name saved in the 4th column. 
+        // purpose). The real file name with path saved in the 3rd column.
+        // The real file name saved in the 4th column.
 
         let filenameSq: number = 1;
         let filenameWithPathSq: number = 1;
 
-        for(let i = 0; i < this.fileLevelData.FilesMetrics.length; i++){
+        for (let i = 0; i < this.fileLevelData.FilesMetrics.length; i++) {
             // Get file name from path
-            if(this.fileLevelData.FilesMetrics[i].filepath){
-
-
-                filename = this.fileLevelData.FilesMetrics[i].filepath.replace(/^.*[\\\/]/, '');
-                filename = decodeURI(filename).replace(/^.*[\\\/]/, '');
-                filename = filename.replace(new RegExp('%20', 'g'), " ").trim();
+            if (this.fileLevelData.FilesMetrics[i].filepath) {
+                filename = this.fileLevelData.FilesMetrics[i].filepath.replace(
+                    /^.*[\\\/]/,
+                    "",
+                );
+                filename = decodeURI(filename).replace(/^.*[\\\/]/, "");
+                filename = filename.replace(new RegExp("%20", "g"), " ").trim();
                 filenameDisp = filename;
 
-                if(filename.length > this.maxLabelLength) {
-                    filenameDisp = "..." + filename.substr(filename.length - this.maxLabelLength);
+                if (filename.length > this.maxLabelLength) {
+                    filenameDisp =
+                        "..." +
+                        filename.substr(filename.length - this.maxLabelLength);
                 }
 
                 filenameWithPath = this.fileLevelData.FilesMetrics[i].filepath;
                 filenameWithPath = decodeURI(filenameWithPath);
-                filenameWithPath = '/' + filenameWithPath.replace(new RegExp('%20', 'g'), " ").trim();
+                filenameWithPath =
+                    "/" +
+                    filenameWithPath
+                        .replace(new RegExp("%20", "g"), " ")
+                        .trim();
                 filenameWithPathDisp = filenameWithPath;
 
-                if(filenameWithPath.length > this.maxLabelLength) {
-                    filenameWithPathDisp = "..." + filenameWithPath.substr(filenameWithPath.length - this.maxLabelLength);
+                if (filenameWithPath.length > this.maxLabelLength) {
+                    filenameWithPathDisp =
+                        "..." +
+                        filenameWithPath.substr(
+                            filenameWithPath.length - this.maxLabelLength,
+                        );
                 }
 
                 // Discard blank file name and handle duplicates
                 let data = [];
-                if(filename != "" && filenameWithPath != ""){
+                if (filename != "" && filenameWithPath != "") {
                     // First, check if any dup real name
-                    var value = Math.floor(this.fileLevelData.FilesMetrics[i].success_get);
-                    if(dupFileNames.find(x => x == filename)){
-                        if(!this.chartData.find(e => e[2] == filenameWithPath)){
-                            data = [filenameWithPathDisp, value, filenameWithPath, filename];
+                    var value = Math.floor(
+                        this.fileLevelData.FilesMetrics[i].success_get,
+                    );
+                    if (dupFileNames.find((x) => x == filename)) {
+                        if (
+                            !this.chartData.find(
+                                (e) => e[2] == filenameWithPath,
+                            )
+                        ) {
+                            data = [
+                                filenameWithPathDisp,
+                                value,
+                                filenameWithPath,
+                                filename,
+                            ];
                         }
-                    }else{
-                        data = [filenameDisp, value, filenameWithPath, filename];
+                    } else {
+                        data = [
+                            filenameDisp,
+                            value,
+                            filenameWithPath,
+                            filename,
+                        ];
                     }
 
                     // Second, check if any dup display name
-                    if(this.chartData.find(e => e[0] == filenameDisp)){
-                        data = [filenameDisp + "_" + filenameSq.toString(), value, filenameWithPath, filename];
+                    if (this.chartData.find((e) => e[0] == filenameDisp)) {
+                        data = [
+                            filenameDisp + "_" + filenameSq.toString(),
+                            value,
+                            filenameWithPath,
+                            filename,
+                        ];
 
                         filenameSq++;
                     }
 
-                    if(this.chartData.find(e => e[0] == filenameWithPathDisp)){
-                        data = [filenameWithPathDisp + "_" + filenameWithPathSq.toString(), value, filenameWithPath, filename];
+                    if (
+                        this.chartData.find((e) => e[0] == filenameWithPathDisp)
+                    ) {
+                        data = [
+                            filenameWithPathDisp +
+                                "_" +
+                                filenameWithPathSq.toString(),
+                            value,
+                            filenameWithPath,
+                            filename,
+                        ];
 
                         filenameWithPathSq++;
                     }
@@ -596,11 +734,19 @@ export class MetricsComponent implements OnInit {
      * Get the last download date (file level)
      * @returns last download date
      */
-    getLastDownloadDate(){
+    getLastDownloadDate() {
         if (this.fileLevelData.FilesMetrics.length) {
-            var lastDownloadTime = this.fileLevelData.FilesMetrics.reduce((m,v,i) => (v.last_time_logged > m.last_time_logged) && i ? v : m).last_time_logged;
+            var lastDownloadTime = this.fileLevelData.FilesMetrics.reduce(
+                (m, v, i) =>
+                    v.last_time_logged > m.last_time_logged && i ? v : m,
+            ).last_time_logged;
 
-            return this.datePipe.transform(this.fileLevelData.FilesMetrics.reduce((m,v,i) => (v.last_time_logged > m.last_time_logged) && i ? v : m).last_time_logged, "MMM d, y");
+            return this.datePipe.transform(
+                this.fileLevelData.FilesMetrics.reduce((m, v, i) =>
+                    v.last_time_logged > m.last_time_logged && i ? v : m,
+                ).last_time_logged,
+                "MMM d, y",
+            );
         }
     }
 
@@ -608,7 +754,10 @@ export class MetricsComponent implements OnInit {
      * Get total recordset level download size
      */
     get totalDownloadSize() {
-        return this.commonFunctionService.formatBytes(this.totalDownloadSizeInByte, 2);
+        return this.commonFunctionService.formatBytes(
+            this.totalDownloadSizeInByte,
+            2,
+        );
         // if(this.recordLevelData.DataSetMetrics[0] != undefined){
         //     return this.commonFunctionService.formatBytes(this.recordLevelData.DataSetMetrics[0].total_size, 2);
         // }else{
@@ -618,7 +767,7 @@ export class MetricsComponent implements OnInit {
 
     /**
      * Get total recordset level download size in bytes
-     * 01/08/2024 Discussed with Deoyani, use "total_size_download" in record level data. 
+     * 01/08/2024 Discussed with Deoyani, use "total_size_download" in record level data.
      * No need to add file level data anymore.
      */
     // get totalDownloadSizeInByte() {
@@ -631,39 +780,53 @@ export class MetricsComponent implements OnInit {
     //     return totalDownload;
     // }
 
-     /**
+    /**
      * Reture style for Title column of the file tree
-     * @returns 
+     * @returns
      */
     titleStyle() {
-        return { 'width': this.cols[0].width, 'font-size': this.fontSize };
+        return { width: this.cols[0].width, "font-size": this.fontSize };
     }
 
     /**
      * Reture style for Success Get column of the file tree
-     * @returns 
+     * @returns
      */
     successGetStyle() {
-        return { 'width': this.cols[1].width, 'font-size': this.fontSize, "text-align": "right" };
+        return {
+            width: this.cols[1].width,
+            "font-size": this.fontSize,
+            "text-align": "right",
+        };
     }
 
     /**
      * Reture style for Totle Downloads column of the file tree
-     * @returns 
+     * @returns
      */
     totalDownloadsStyle() {
-        return { 'width': this.cols[2].width, 'font-size': this.fontSize, "text-align": "right", "padding-right":"3em" };
+        return {
+            width: this.cols[2].width,
+            "font-size": this.fontSize,
+            "text-align": "right",
+            "padding-right": "3em",
+        };
     }
 
     /**
      * Function to expand tree display to certain level
      * @param dataFiles - file tree
-     * @param expanded - expand flag 
+     * @param expanded - expand flag
      * @param currentLevel - current level
      * @param targetLevel - the level to expand to. Null - expand all level
      */
-    expandToLevel(dataFiles: any, expanded: boolean, currentLevel:number = 0, targetLevel: any = null) {
-        this.expandAll(dataFiles, expanded, currentLevel, targetLevel)
+    expandToLevel(
+        dataFiles: any,
+        expanded: boolean,
+        currentLevel: number = 0,
+        targetLevel: any = null,
+    ) {
+        this.expandAll(dataFiles, expanded, currentLevel, targetLevel);
 
         this.isExpanded = expanded;
         this.visible = false;
@@ -675,21 +838,40 @@ export class MetricsComponent implements OnInit {
     /**
      * Function to expand tree display to certain level - used by expandToLevel()
      * @param dataFiles - file tree
-     * @param expanded 
+     * @param expanded
      * @param currentLevel - current level
      * @param targetLevel - the level we want to expand
      */
-    expandAll(dataFiles: TreeNode[], expanded: boolean, currentLevel: any = 0, targetLevel: any = 0) {
+    expandAll(
+        dataFiles: TreeNode[],
+        expanded: boolean,
+        currentLevel: any = 0,
+        targetLevel: any = 0,
+    ) {
         let nextLevel = currentLevel + 1;
         for (let i = 0; i < dataFiles.length; i++) {
             dataFiles[i].expanded = expanded;
             if (targetLevel != null) {
-                if (dataFiles[i].children && dataFiles[i].children.length > 0 && nextLevel < targetLevel) {
-                    this.expandAll(dataFiles[i].children, expanded, nextLevel, targetLevel);
+                if (
+                    dataFiles[i].children &&
+                    dataFiles[i].children.length > 0 &&
+                    nextLevel < targetLevel
+                ) {
+                    this.expandAll(
+                        dataFiles[i].children,
+                        expanded,
+                        nextLevel,
+                        targetLevel,
+                    );
                 }
             } else {
                 if (dataFiles[i].children && dataFiles[i].children.length > 0) {
-                    this.expandAll(dataFiles[i].children, expanded, nextLevel, targetLevel);
+                    this.expandAll(
+                        dataFiles[i].children,
+                        expanded,
+                        nextLevel,
+                        targetLevel,
+                    );
                 }
             }
         }
@@ -699,17 +881,20 @@ export class MetricsComponent implements OnInit {
      * Create file tree from Nerdm record
      */
     createNewDataHierarchy() {
-        var testdata: TreeNode = {}
-        if (this.record['components'] != null) {
-            testdata["data"] = this.arrangeIntoTree(this.record['components'], this.record['@id']);
+        var testdata: TreeNode = {};
+        if (this.record["components"] != null) {
+            testdata["data"] = this.arrangeIntoTree(
+                this.record["components"],
+                this.record["@id"],
+            );
             this.files.push(testdata);
         }
     }
 
     /**
      * Create a tree structure from a Nerdm component
-     * @param paths 
-     * @returns 
+     * @param paths
+     * @returns
      */
     private arrangeIntoTree(paths, pdrid) {
         const tree: TreeNode[] = [];
@@ -717,25 +902,31 @@ export class MetricsComponent implements OnInit {
         var i = 1;
         var tempfiletest = "";
 
-        for(let path of paths) {
-            //Remove hidden type files and sha files 
-            if (path.filepath && !path['@type'].includes('nrd:Hidden') && !path.filepath.endsWith('sha256')) {
+        for (let path of paths) {
+            //Remove hidden type files and sha files
+            if (
+                path.filepath &&
+                !path["@type"].includes("nrd:Hidden") &&
+                !path.filepath.endsWith("sha256")
+            ) {
                 if (!path.filepath.startsWith("/"))
                     path.filepath = "/" + path.filepath;
 
-                const pathParts = path.filepath.split('/');
+                const pathParts = path.filepath.split("/");
                 pathParts.shift(); // Remove first blank element from the parts array.
                 let currentLevel = tree; // initialize currentLevel to root
 
-                for(let part of pathParts) {
+                for (let part of pathParts) {
                     // check to see if the path already exists.
-                    const existingPath = currentLevel.filter(level => level.data.name === part);
+                    const existingPath = currentLevel.filter(
+                        (level) => level.data.name === part,
+                    );
                     if (existingPath.length > 0) {
                         // The path to this item was already in the tree, so don't add it again.
-                        // Set the current level to this path's children  
+                        // Set the current level to this path's children
                         currentLevel = existingPath[0].children;
                     } else {
-                        let tempId = path['@id'];
+                        let tempId = path["@id"];
                         if (tempId == null || tempId == undefined)
                             tempId = path.filepath;
 
@@ -750,40 +941,53 @@ export class MetricsComponent implements OnInit {
                                 size: path.size,
                                 downloadUrl: path.downloadURL,
                                 description: path.description,
-                                filetype: path['@type'][0],
+                                filetype: path["@type"][0],
                                 resId: tempId,
                                 // resId: path["filepath"].replace(/^.*[\\\/]/, ''),
                                 filePath: path.filepath,
                                 success_get: 0,
-                                download_size: path.size? path.size: 0,
+                                download_size: path.size ? path.size : 0,
                                 isLeaf: false,
                                 inChart: false,
-                                bkcolor: "white"
-                            }, children: []
+                                bkcolor: "white",
+                            },
+                            children: [],
                         };
                         currentLevel.push(newPart);
                         currentLevel = newPart.children;
                     }
-                };
+                }
             }
             i = i + 1;
-        };
+        }
         return tree;
     }
 
     /**
      * Set raw back color based on node attributes
-     * @param rowNode 
-     * @returns 
+     * @param rowNode
+     * @returns
      */
-    rowColor(rowNode){
-        if(rowNode.node.data.bkcolor != "white"){
+    rowColor(rowNode) {
+        if (rowNode.node.data.bkcolor != "white") {
             return rowNode.node.data.bkcolor;
-        }else if(rowNode.node.children.length > 0){
+        } else if (rowNode.node.children.length > 0) {
             return "#c2eeff";
-        }else if(rowNode.node.data.inChart){
+        } else if (rowNode.node.data.inChart) {
             return "#e6ffe6";
-        }else{
+        } else {
+            return "white";
+        }
+    }
+
+    rowBackColor(node) {
+        if (node.data.bkcolor != "white") {
+            return node.data.bkcolor;
+        } else if (node.children.length > 0) {
+            return "#c2eeff";
+        } else if (node.data.inChart) {
+            return "#e6ffe6";
+        } else {
             return "white";
         }
     }
@@ -794,8 +998,8 @@ export class MetricsComponent implements OnInit {
      * @param index Column index
      * @returns text align style
      */
-    getTableHearderTextAlign(index){
-        if(index == 0) return "left";
+    getTableHearderTextAlign(index) {
+        if (index == 0) return "left";
         else return "right";
     }
 
@@ -805,8 +1009,8 @@ export class MetricsComponent implements OnInit {
      * @param index Column index
      * @returns padding style
      */
-    getTableHearderPadding(index){
-        if(index == 2) return "3em";
+    getTableHearderPadding(index) {
+        if (index == 2) return "3em";
         else return "0em";
     }
 }
