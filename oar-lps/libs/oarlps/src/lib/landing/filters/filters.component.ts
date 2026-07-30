@@ -466,6 +466,7 @@ export class FiltersComponent implements OnInit {
      */
     onSuccess(searchResults: any[]) {
         this.resultStatus = this.RESULT_STATUS.success;
+
         // this.themesWithCount = [];
         this.componentsWithCount = [];
         this.searchResults = searchResults;
@@ -1107,24 +1108,34 @@ export class FiltersComponent implements OnInit {
      * @param collectionThemesWithCountCol - input array of tree nodes
      */
     deDup(collectionThemesWithCountCol: any, searchResults: any, collection: string) {
-        if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 1) {
+        if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 0) {
             collectionThemesWithCountCol.children.forEach(child => {
-                if (child.children && child.children.length > 1) {
+                if (child.children && child.children.length > 0) {
                     this.deDup(child, searchResults, collection);
                 } else {
                     //For a leaf, loop through siblings to see if any node has the same taxonomy (data field)
                     for (var i = 0; i < collectionThemesWithCountCol.children.length; i++) {
                         let sibling = collectionThemesWithCountCol.children[i];
-                        if (sibling["data"][0] != child["data"][0] && sibling.children.length > child.children.length && sibling["data"][0].includes(child["data"][0])) {
+                        if (
+                            sibling["data"][0] != child["data"][0] &&
+                            sibling.children.length > child.children.length &&
+                            sibling["data"][0].startsWith(child["data"][0])
+                        ) {
                             child["data"][0] = child["data"][0] + ":Other";
-                            child["key"] = sibling.key+"Other";
+                            child["key"] = sibling.key + "Other";
                             child["label"] = "Other---1";
-                            child["level"]++; 
+                            child["level"]++;
                             child.parent = sibling;
 
                             //Remove child from current parent and make it a child of the sibling
-                            collectionThemesWithCountCol.children = collectionThemesWithCountCol.children.filter(cc => cc["data"][0] != child.data[0]);
-                            collectionThemesWithCountCol["ediids"] = collectionThemesWithCountCol["ediids"].filter(ediid => ediid != child.ediid);
+                            collectionThemesWithCountCol.children =
+                                collectionThemesWithCountCol.children.filter(
+                                    (cc) => cc["data"][0] != child.data[0],
+                                );
+                            collectionThemesWithCountCol["ediids"] =
+                                collectionThemesWithCountCol["ediids"].filter(
+                                    (ediid) => ediid != child.ediid,
+                                );
                             sibling.children.push(child);
                             if (!sibling["ediids"].includes(child.ediid)) {
                                 sibling["ediids"].push(child.ediid);

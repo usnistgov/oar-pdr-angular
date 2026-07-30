@@ -1,10 +1,10 @@
-import { Inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { SelectItem, TreeNode } from 'primeng/api';
-import { DOCUMENT } from '@angular/common';
+import { Inject, Injectable, signal } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
+import { SelectItem, TreeNode } from "primeng/api";
+import { DOCUMENT } from "@angular/common";
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: "root",
 })
 export class GlobalService {
     public message = signal("");
@@ -13,142 +13,146 @@ export class GlobalService {
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
     public fakeBackendAlerted = signal<boolean>(false);
 
-    constructor(@Inject(DOCUMENT) private document: Document,) { }
+    constructor(@Inject(DOCUMENT) private document: Document) {}
 
     /**
-     * Current color palette.  
+     * Current color palette.
      * Make color palette observable for any component.
      */
-    _colorPalette : BehaviorSubject<any> =
-        new BehaviorSubject<any>({});
-    public setColorPalette(val : any) { 
-        this._colorPalette.next(val); 
+    _colorPalette: BehaviorSubject<any> = new BehaviorSubject<any>({});
+    public setColorPalette(val: any) {
+        this._colorPalette.next(val);
     }
     public watchColorPalette(subscriber) {
         this._colorPalette.subscribe(subscriber);
-    }    
+    }
 
     /**
-     * Current collection.  
+     * Current collection.
      * Make collection observable for any component.
      */
-    _collection : BehaviorSubject<string> =
-        new BehaviorSubject<string>("");
-    public setCollection(val : string) { 
-        this._collection.next(val); 
+    _collection: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    public setCollection(val: string) {
+        this._collection.next(val);
     }
     public watchCollection(subscriber) {
         this._collection.subscribe(subscriber);
-    }    
+    }
 
     /**
-     * Set/get the width of the left side landing page 
+     * Set/get the width of the left side landing page
      */
-    _lpsLeftWidth : BehaviorSubject<number> =
-        new BehaviorSubject<number>(600);
-    public setLpsLeftWidth(val : number) { 
-        this._lpsLeftWidth.next(val); 
+    _lpsLeftWidth: BehaviorSubject<number> = new BehaviorSubject<number>(600);
+    public setLpsLeftWidth(val: number) {
+        this._lpsLeftWidth.next(val);
     }
     public watchLpsLeftWidth(subscriber) {
         this._lpsLeftWidth.subscribe(subscriber);
-    }  
+    }
 
     /**
-     * Set/get message to display 
+     * Set/get message to display
      */
-    _message : BehaviorSubject<string> =
-        new BehaviorSubject<string>("");
-    public setMessage(val : string) { 
-        this._message.next(val); 
+    _message: BehaviorSubject<string> = new BehaviorSubject<string>("");
+    public setMessage(val: string) {
+        this._message.next(val);
     }
     public watchMessage(subscriber) {
         this._message.subscribe(subscriber);
-    }  
+    }
 
     /**
-     * Set/get user's authorization info 
+     * Set/get user's authorization info
      */
-    _authorized : BehaviorSubject<boolean> =
-        new BehaviorSubject<boolean>(false);
-    public setAuthorized(val : boolean) { 
-        this._authorized.next(val); 
+    _authorized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    public setAuthorized(val: boolean) {
+        this._authorized.next(val);
     }
     public watchAuthorized(subscriber) {
         this._authorized.subscribe(subscriber);
-    }  
+    }
 
     /**
-     * Set/get user's authentication info 
+     * Set/get user's authentication info
      */
-    _authenticated : BehaviorSubject<boolean> =
-        new BehaviorSubject<boolean>(false);
-    public setAuthenticated(val : boolean) { 
-        this._authenticated.next(val); 
+    _authenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        false,
+    );
+    public setAuthenticated(val: boolean) {
+        this._authenticated.next(val);
     }
     public watchAuthenticated(subscriber) {
         this._authenticated.subscribe(subscriber);
-    } 
+    }
 
     /**
-     * Set/get current record 
+     * Set/get current record
      */
-    _currentRec : BehaviorSubject<any> =
-        new BehaviorSubject<any>({});
-    public setCurrentRec(val : any) { 
-        this._currentRec.next(val); 
+    _currentRec: BehaviorSubject<any> = new BehaviorSubject<any>({});
+    public setCurrentRec(val: any) {
+        this._currentRec.next(val);
     }
     public watchCurrentRec(subscriber) {
         this._currentRec.subscribe(subscriber);
-    } 
+    }
 
     /**
-     * Flag to tell the app to hide the content display or not. 
-     * Usecase: to hide server side rendering content while in edit mode and display the content when 
+     * Flag to tell the app to hide the content display or not.
+     * Usecase: to hide server side rendering content while in edit mode and display the content when
      * browser side rendering is ready.
      */
-    _showLPContent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    public setShowLPContent(val: boolean){
+    _showLPContent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        false,
+    );
+    public setShowLPContent(val: boolean) {
         this._showLPContent.next(val);
     }
     public watchShowLPContent(subscriber) {
         this._showLPContent.subscribe(subscriber);
     }
 
-    _hasDataFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    public setHasDataFiles(val: boolean){
+    _hasDataFiles: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        false,
+    );
+    public setHasDataFiles(val: boolean) {
         this._hasDataFiles.next(val);
     }
     public watchHasDataFiles(subscriber) {
         this._hasDataFiles.subscribe(subscriber);
     }
-    
+
     /**
-     * Set/get SubmissionData 
+     * Set/get SubmissionData
      */
-    _submissionData: BehaviorSubject<SubmissionData> = new BehaviorSubject<SubmissionData>({} as SubmissionData);
-    public setSubmissionData(val: SubmissionData){
+    _submissionData: BehaviorSubject<SubmissionData> =
+        new BehaviorSubject<SubmissionData>({} as SubmissionData);
+    public setSubmissionData(val: SubmissionData) {
         this._submissionData.next(val);
     }
     public watchSubmissionData(subscriber) {
         this._submissionData.subscribe(subscriber);
     }
-    
 
-    getTextWidth(textString: string, font: string="Roboto,'Helvetica Neue',sans-serif", size:number=22, fontWeight: string="bold") {
-        let text = this.document.createElement("span"); 
-        this.document.body.appendChild(text); 
-     
-        text.style.fontFamily = font; 
-        text.style.fontSize = size + "px"; 
-        text.style.fontWeight = fontWeight; 
-        text.style.height = 'auto'; 
-        text.style.width = 'auto'; 
-        text.style.position = 'absolute'; 
-        text.style.whiteSpace = 'no-wrap'; 
-        text.innerHTML = textString; 
-     
-        let width = Math.ceil(text.clientWidth); 
-        this.document.body.removeChild(text); 
+    getTextWidth(
+        textString: string,
+        font: string = "Roboto,'Helvetica Neue',sans-serif",
+        size: number = 22,
+        fontWeight: string = "bold",
+    ) {
+        let text = this.document.createElement("span");
+        this.document.body.appendChild(text);
+
+        text.style.fontFamily = font;
+        text.style.fontSize = size + "px";
+        text.style.fontWeight = fontWeight;
+        text.style.height = "auto";
+        text.style.width = "auto";
+        text.style.position = "absolute";
+        text.style.whiteSpace = "no-wrap";
+        text.innerHTML = textString;
+
+        let width = Math.ceil(text.clientWidth);
+        this.document.body.removeChild(text);
 
         return width * 0.9 + 50;
     }
@@ -156,29 +160,30 @@ export class GlobalService {
     /**
      * Replace reserved chars with char name to avoid problems
      * when parsing filter string in the result list component.
-     * For example, replace "&" with "aaamp". Replace "," with "commma". 
+     * For example, replace "&" with "aaamp". Replace "," with "commma".
      * result list component restores "aaamp" back to "&", "commma" back to ",".
      * @param strng input string
      */
     escapeReservedChars(inputStrng: string) {
-        if (!inputStrng || inputStrng.trim() == "")
-            return "";
+        if (!inputStrng || inputStrng.trim() == "") return "";
         else
-            return inputStrng.replace(new RegExp("&", "g"), "aaamp").replace(new RegExp(",", "g"), "commma");
-    }    
-
-    /**
-     * Restore reserved chars. 
-     * For example, change "aaamp" back to "&", "commma" with ",".
-     * @param inputString 
-     */
-    restoreReservedChars(inputString: string) {
-        if(!inputString || inputString.trim() == "")
-            return "";
-        else
-            return inputString.replace(new RegExp("aaamp", "g"), "&").replace(new RegExp("commma", "g"), ","); 
+            return inputStrng
+                .replace(new RegExp("&", "g"), "aaamp")
+                .replace(new RegExp(",", "g"), "commma");
     }
 
+    /**
+     * Restore reserved chars.
+     * For example, change "aaamp" back to "&", "commma" with ",".
+     * @param inputString
+     */
+    restoreReservedChars(inputString: string) {
+        if (!inputString || inputString.trim() == "") return "";
+        else
+            return inputString
+                .replace(new RegExp("aaamp", "g"), "&")
+                .replace(new RegExp("commma", "g"), ",");
+    }
 }
 
 export const NIST = "National Institute of Standards and Technology";
@@ -186,8 +191,8 @@ export const NIST = "National Institute of Standards and Technology";
 export const GENERAL = "general";
 
 export class Themes {
-    static readonly SCIENCE_THEME = 'ScienceTheme';
-    static readonly DEFAULT_THEME = 'DefaultTheme';
+    static readonly SCIENCE_THEME = "ScienceTheme";
+    static readonly DEFAULT_THEME = "DefaultTheme";
 }
 
 let _theme = {};
@@ -203,90 +208,91 @@ export class ThemesPrefs {
     private static readonly _lSourceLabel = _sourceLabel;
 
     public static getTheme(type: string) {
-        if(! type || type == '') {
-            return ThemesPrefs._lTheme[Themes.DEFAULT_THEME]
+        if (!type || type == "") {
+            return ThemesPrefs._lTheme[Themes.DEFAULT_THEME];
         }
 
-        if(! ThemesPrefs._lTheme[type]) {
-            return ThemesPrefs._lTheme[Themes.DEFAULT_THEME]
+        if (!ThemesPrefs._lTheme[type]) {
+            return ThemesPrefs._lTheme[Themes.DEFAULT_THEME];
         }
 
-        return ThemesPrefs._lTheme[type]
+        return ThemesPrefs._lTheme[type];
     }
 
     public static getResourceLabel(theme: string) {
-        if(! theme || theme == '') {
-            return ThemesPrefs._lSourceLabel[Themes.DEFAULT_THEME]
+        if (!theme || theme == "") {
+            return ThemesPrefs._lSourceLabel[Themes.DEFAULT_THEME];
         }
 
-        if(! ThemesPrefs._lSourceLabel[theme]) {
-            return ThemesPrefs._lSourceLabel[Themes.DEFAULT_THEME]
+        if (!ThemesPrefs._lSourceLabel[theme]) {
+            return ThemesPrefs._lSourceLabel[Themes.DEFAULT_THEME];
         }
 
-        return ThemesPrefs._lSourceLabel[theme]
+        return ThemesPrefs._lSourceLabel[theme];
     }
 }
 
 export class AppSettings {
-    public static HOMEPAGE_DEFAULT_URL='https://nextcloud-dev.nist.gov';
-    public static FILE_MANAGER_URL='https://nextcloud-dev.nist.gov/index.php/apps/files/?dir=/2618&fileid=4845';
+    public static HOMEPAGE_DEFAULT_URL = "https://nextcloud-dev.nist.gov";
+    public static FILE_MANAGER_URL =
+        "https://nextcloud-dev.nist.gov/index.php/apps/files/?dir=/2618&fileid=4845";
 }
 
 /**
- * This is the infostruction a section or side bar will broadcast when edit mode changes. 
+ * This is the infostruction a section or side bar will broadcast when edit mode changes.
  * sender: the name of the section who sent the message (including side bar)
  * section: the name (Nerdm field name) of the section who sent the message. Most of time it's the same as sender. But when sender is side bar, the section will be the actual section name.
- * mode: the edit mode of this section. 
+ * mode: the edit mode of this section.
  */
 export interface SectionMode {
-    "sender": string, 
-    "section": string,
-    "mode": string
+    sender: string;
+    section: string;
+    mode: string;
 }
 
 export interface SectionHelp {
-    "section": string,
-    "topic": string,
-    "showGeneral": boolean
+    section: string;
+    topic: string;
+    showGeneral: boolean;
 }
 
 export const MODE = {
-    "NORMAL": "normal",
-    "LIST": "list",
-    "EDIT": "edit",
-    "ADD": "add"
-}
+    NORMAL: "normal",
+    LIST: "list",
+    EDIT: "edit",
+    ADD: "add",
+};
 
 //For display purpose
 export class Sections {
-    static readonly DEFAULT_SECTION = 'Title';
-    static readonly GENERAL = 'General';
-    static readonly TITLE = 'Title';
-    static readonly ACCESS_PAGES = 'Access Pages';
-    static readonly DESCRIPTION = 'Description';
-    static readonly TOPICS = 'Research Topics';
-    static readonly KEYWORDS = 'Keywords';
-    static readonly IDENTITY = 'Iidentity';
-    static readonly ABOUT = 'About';
-    static readonly REFERENCES = 'References';
-    static readonly DATA_ACCESS = 'Data Access';
-    static readonly AUTHORS = 'Authors';   
-    static readonly FACILITATORS = 'Facilitators';  
-    static readonly SIDEBAR = 'Sidebar'; 
-    static readonly CONTACT = 'Contact';
-    static readonly VISIT_HOME_PAGE = 'Visit Home Page';
-    static readonly DOI = 'DOI';
-    static readonly VERSION = 'Version';
-    static readonly COLLECTION = 'Collection';
-    static readonly FILES = 'Files';
-    static readonly ISPARTOF = 'IsPartOf';
+    static readonly DEFAULT_SECTION = "Title";
+    static readonly GENERAL = "General";
+    static readonly TITLE = "Title";
+    static readonly ACCESS_PAGES = "Access Pages";
+    static readonly DESCRIPTION = "Description";
+    static readonly TOPICS = "Research Topics";
+    static readonly KEYWORDS = "Keywords";
+    static readonly IDENTITY = "Iidentity";
+    static readonly ABOUT = "About";
+    static readonly REFERENCES = "References";
+    static readonly DATA_ACCESS = "Data Access";
+    static readonly AUTHORS = "Authors";
+    static readonly FACILITATORS = "Facilitators";
+    static readonly SIDEBAR = "Sidebar";
+    static readonly CONTACT = "Contact";
+    static readonly VISIT_HOME_PAGE = "Visit Home Page";
+    static readonly DOI = "DOI";
+    static readonly VERSION = "Version";
+    static readonly COLLECTION = "Collection";
+    static readonly FILES = "Files";
+    static readonly ISPARTOF = "IsPartOf";
 }
 
 //_fieldName is the field name in Nerdm record
 let _fieldName = {};
 _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
-_fieldName[Sections.ACCESS_PAGES] = "components";  //component
+_fieldName[Sections.ACCESS_PAGES] = "components"; //component
 // _fieldName[Sections.ACCESS_PAGES] = "links";  //component
 _fieldName[Sections.DESCRIPTION] = "description";
 // _fieldName[Sections.TOPICS] = "theme";
@@ -336,19 +342,23 @@ export class SectionPrefs {
     private static readonly _lDispName = _displayName;
 
     public static getFieldName(section: string) {
-        if(! _fieldName || _fieldName == '') {
-            return SectionPrefs._lSectionID[Sections.DEFAULT_SECTION]
+        if (!_fieldName || _fieldName == "") {
+            return SectionPrefs._lSectionID[Sections.DEFAULT_SECTION];
         }
 
-        if(! SectionPrefs._lSectionID[section]) {
-            return SectionPrefs._lSectionID[Themes.DEFAULT_THEME]
+        if (!SectionPrefs._lSectionID[section]) {
+            return SectionPrefs._lSectionID[Themes.DEFAULT_THEME];
         }
 
-        return SectionPrefs._lSectionID[section]
+        return SectionPrefs._lSectionID[section];
     }
 
     public static getDispName(section: string) {
-        if(! _displayName || _displayName == '' || ! SectionPrefs._lDispName[section]) {
+        if (
+            !_displayName ||
+            _displayName == "" ||
+            !SectionPrefs._lDispName[section]
+        ) {
             return SectionPrefs._lDispName[GENERAL];
         }
 
@@ -357,43 +367,43 @@ export class SectionPrefs {
 }
 
 export class ResourceType {
-    static readonly RESOURCE = 'resource';
-    static readonly SOFTWARE = 'software';
-    static readonly DATA = 'data';
+    static readonly RESOURCE = "resource";
+    static readonly SOFTWARE = "software";
+    static readonly DATA = "data";
 }
 
 export interface Suggestion {
-    "id": string,       //a unique identifier for the finding
-    "subject": string,   //a name of a data property that the detected issue concerns; 
-                        //this is the primary property that needs to be corrected
-    "summary": string,    //a short (e.g. single sentence) description or title for the detected issue
-    "details": string[] //a more detailed description of the issue.  Each element in the list can be
-                            //considered a different paragraph.  The first element should summarize the
-                            //problem, while subsequent elements can provide tips on how to correct the issue.
+    id: string; //a unique identifier for the finding
+    subject: string; //a name of a data property that the detected issue concerns;
+    //this is the primary property that needs to be corrected
+    summary: string; //a short (e.g. single sentence) description or title for the detected issue
+    details: string[]; //a more detailed description of the issue.  Each element in the list can be
+    //considered a different paragraph.  The first element should summarize the
+    //problem, while subsequent elements can provide tips on how to correct the issue.
 }
 
 export interface ReviewResponse {
-    "req": Suggestion[],
-    "warn": Suggestion[],
-    "rec": Suggestion[]
+    req: Suggestion[];
+    warn: Suggestion[];
+    rec: Suggestion[];
 }
 
 export interface SubmitResponse {
-    "action": string,   //e.g. "validate"
-    "message": string,  //this will be the message that was provided in the input or a default message if not provided
-    "validation": {
-        "failures": Suggestion[],
-        "warnings": Suggestion[],
-        "recommendations": Suggestion[],
-    }
+    action: string; //e.g. "validate"
+    message: string; //this will be the message that was provided in the input or a default message if not provided
+    validation: {
+        failures: Suggestion[];
+        warnings: Suggestion[];
+        recommendations: Suggestion[];
+    };
 }
 
 export interface RevisionDetails {
-    id: number,
-    label: string,
-    tooltip: string,
-    typeName: string,
-    majorChanges: boolean
+    id: number;
+    label: string;
+    tooltip: string;
+    typeName: string;
+    majorChanges: boolean;
 }
 
 export interface Reviewers {
@@ -432,13 +442,13 @@ export class SubmissionData {
     addRevisionID(id: number) {
         if (!this.revisionIDs) this.revisionIDs = [];
 
-        if ( !this.revisionIDs.includes(id) ) {
+        if (!this.revisionIDs.includes(id)) {
             this.revisionIDs.push(id);
         }
     }
 
     removeRevisionID(id: number) {
-        this.revisionIDs = this.revisionIDs.filter(revID => revID !== id); 
+        this.revisionIDs = this.revisionIDs.filter((revID) => revID !== id);
     }
 
     includes(id: number) {
@@ -454,41 +464,41 @@ export class RevisionTypes {
     constructor() {
         this.data = [
             {
-                "id": 1,
-                "label": "Addition of new files",
-                "tooltip": "",
-                "typeName": "add_files",
-                "majorChanges": true
+                id: 1,
+                label: "Addition of new files",
+                tooltip: "",
+                typeName: "add_files",
+                majorChanges: true,
             },
             {
-                "id": 2,
-                "label": "Removal previously published files",
-                "tooltip": "",
-                "typeName": "remove_files",
-                "majorChanges": true
+                id: 2,
+                label: "Removal previously published files",
+                tooltip: "",
+                typeName: "remove_files",
+                majorChanges: true,
             },
             {
-                "id": 3,
-                "label": "Major changes to files or other data available on remote sites or in software repositories",
-                "tooltip": "",
-                "typeName": "change_major",
-                "majorChanges": true
+                id: 3,
+                label: "Major changes to files or other data available on remote sites or in software repositories",
+                tooltip: "",
+                typeName: "change_major",
+                majorChanges: true,
             },
             {
-                "id": 4,
-                "label": "Minor corrections to files",
-                "tooltip": "",
-                "typeName": "change_minor",
-                "majorChanges": false
+                id: 4,
+                label: "Minor corrections to files",
+                tooltip: "",
+                typeName: "change_minor",
+                majorChanges: false,
             },
             {
-                "id": 5,
-                "label": "Metadata changes",
-                "tooltip": "",
-                "typeName": "metadata",
-                "majorChanges": false
-            }
-        ]
+                id: 5,
+                label: "Metadata changes",
+                tooltip: "",
+                typeName: "metadata",
+                majorChanges: false,
+            },
+        ];
     }
 
     getAllTypes() {
@@ -515,22 +525,22 @@ export class RevisionTypes {
 }
 
 export class LandingConstants {
-    public static get editModes(): any { 
+    public static get editModes(): any {
         return {
-            EDIT_MODE: 'editMode',
-            PREVIEW_MODE: 'previewMode',
-            DONE_MODE: 'doneMode',
-            VIEWONLY_MODE: 'viewOnlyMode',
-            OUTSIDE_MIDAS_MODE: 'outsideMidasMode'
-        }
-    };
+            EDIT_MODE: "editMode",
+            PREVIEW_MODE: "previewMode",
+            DONE_MODE: "doneMode",
+            VIEWONLY_MODE: "viewOnlyMode",
+            OUTSIDE_MIDAS_MODE: "outsideMidasMode",
+        };
+    }
 
-    public static get editTypes(): any { 
+    public static get editTypes(): any {
         return {
-            NORMAL: 'normal', 
-            REVISE: 'revise' 
-        }
-    }; 
+            NORMAL: "normal",
+            REVISE: "revise",
+        };
+    }
 }
 
 export interface ColorScheme {
@@ -545,20 +555,20 @@ export interface ColorScheme {
  * Collection field name
  */
 export class Collections {
-    static readonly DEFAULT = 'NIST';
-    static readonly FORENSICS = 'Forensics';
-    static readonly SEMICONDUCTORS = 'Semiconductors';
-    static readonly AM = 'AM';
+    static readonly DEFAULT = "NIST";
+    static readonly FORENSICS = "Forensics";
+    static readonly SEMICONDUCTORS = "Semiconductors";
+    static readonly AM = "AM";
 }
 
 /**
  * Collection display name
  */
 export class CollectionDisplay {
-    static readonly DEFAULT = 'NIST';
-    static readonly FORENSICS = 'Forensics';
-    static readonly SEMICONDUCTORS = 'CHIPS METIS Data';
-    static readonly AM = 'Additive Manufacturing';
+    static readonly DEFAULT = "NIST";
+    static readonly FORENSICS = "Forensics";
+    static readonly SEMICONDUCTORS = "CHIPS METIS Data";
+    static readonly AM = "Additive Manufacturing";
 }
 
 export class Collection {
@@ -597,7 +607,7 @@ export interface Topic {
     id: number;
     tag: string;
     scheme: string;
-    '@type': string;
+    "@type": string;
 }
 
 /**
@@ -610,61 +620,96 @@ export class FilterTreeNode implements TreeNode {
     label: string = "";
     ediids: string[] = [];
     expanded = false;
-    keyname: string = '';
-    key: string = '';
-    taxonomy: string = ''; // Only for this node
+    keyname: string = "";
+    key: string = "";
+    taxonomy: string = ""; // Only for this node
     parent = null;
     level: number = 1;
     selectable: boolean = true;
     unspecified: boolean[] = [];
-    
-    constructor(label: string='', expanded: boolean = false, key: string=null, keyname: string=null, data: string = '', count: number = 0, selectable: boolean = true, level: number = 1, taxonomy: string = "") {
+
+    constructor(
+        label: string = "",
+        expanded: boolean = false,
+        key: string = null,
+        keyname: string = null,
+        data: string = "",
+        count: number = 0,
+        selectable: boolean = true,
+        level: number = 1,
+        taxonomy: string = "",
+    ) {
         this.label = label;
-        if(data && !this.data.includes(data))
-            this.data.push(data);
+        if (data && !this.data.includes(data)) this.data.push(data);
         this.count = count;
         this.selectable = selectable;
         this.level = level;
         this.keyname = keyname;
         if (!keyname) this.keyname = key;
         this.key = key;
-        if(!key) {
+        if (!key) {
             this.keyname = label;
             this.key = label;
         }
         this.taxonomy = taxonomy;
     }
 
-   /**
+    /**
      * insert or update a node within this tree corresponding to the given data cart item
      * @return CartTreeNode   the node that was inserted or updated
      */
-    upsertNodeFor(item: any[], level:number = 1, searchResults: any = null, collection: string = null, taxonomyURI: any = {}) : TreeNode {
+    upsertNodeFor(
+        item: any[],
+        level: number = 1,
+        searchResults: any = null,
+        collection: string = null,
+        taxonomyURI: any = {},
+    ): TreeNode {
         let levels = item[0].split(":");
-        for(let i = 0; i < levels.length; i++) {
+        for (let i = 0; i < levels.length; i++) {
             levels[i] = levels[i].trim();
         }
-        
-        return this._upsertNodeFor(levels, item, level, searchResults, collection, taxonomyURI);
+
+        return this._upsertNodeFor(
+            levels,
+            item,
+            level,
+            searchResults,
+            collection,
+            taxonomyURI,
+        );
     }
 
-    _upsertNodeFor(levels: string[], item: any[], level: number = 1, searchResults: any = null, collection: string=null, taxonomyURI: any = {}, parentKey:string = "") : TreeNode {
-        // find the node corresponding to the given item in the tree 
+    _upsertNodeFor(
+        levels: string[],
+        item: any[],
+        level: number = 1,
+        searchResults: any = null,
+        collection: string = null,
+        taxonomyURI: any = {},
+        parentKey: string = "",
+    ): TreeNode {
+        // find the node corresponding to the given item in the tree
         for (let child of this.children) {
             if (child.keyname == levels[0] && child.children.length > 0) {
-                if(searchResults) {
+                if (searchResults) {
                     for (let resultItem of searchResults) {
                         let found: boolean = false;
-                        if(resultItem.topic && resultItem.topic.length > 0){
-                            for(let topic of resultItem.topic) {
-                                if(topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
-                                    if(collection == Collections.DEFAULT) {
-                                        if(topic.tag.includes(item[0])) {
+                        if (resultItem.topic && resultItem.topic.length > 0) {
+                            for (let topic of resultItem.topic) {
+                                if (
+                                    topic["scheme"] &&
+                                    topic["scheme"].indexOf(
+                                        taxonomyURI[collection],
+                                    ) >= 0
+                                ) {
+                                    if (collection == Collections.DEFAULT) {
+                                        if (topic.tag.includes(item[0])) {
                                             found = true;
                                             break;
                                         }
-                                    }else{
-                                        if(topic.tag == item[0]) {
+                                    } else {
+                                        if (topic.tag == item[0]) {
                                             found = true;
                                             break;
                                         }
@@ -672,22 +717,28 @@ export class FilterTreeNode implements TreeNode {
                                 }
                             }
                         }
-    
-                        if(found){
-                            if(!child.ediids.includes(resultItem.ediid)){
+
+                        if (found) {
+                            if (!child.ediids.includes(resultItem.ediid)) {
                                 child.ediids.push(resultItem.ediid);
                                 child.count++;
                             }
-                        }        
+                        }
                     }
                 }
 
-                if (levels.length > 1){
-                    return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI);
-                }else {
+                if (levels.length > 1) {
+                    return child._upsertNodeFor(
+                        levels.slice(1),
+                        item,
+                        level + 1,
+                        searchResults,
+                        collection,
+                        taxonomyURI,
+                    );
+                } else {
                     child.label = levels[0] + "---" + item[1];
-                    if(!child.data.includes(item[0]))
-                        child.data.push(item[0]);
+                    if (!child.data.includes(item[0])) child.data.push(item[0]);
 
                     return child;
                 }
@@ -708,22 +759,80 @@ export class FilterTreeNode implements TreeNode {
         }
 
         if (levels.length == 1) {
-            label += "---" + item[1]; 
+            label += "---" + item[1];
         }
 
-        if(levels[0] == "Unspecified") {
+        if (levels[0] == "Unspecified") {
             count = item[1];
         }
 
-        let child = new FilterTreeNode(label, false, key, keyname, data, count, true, level+1, taxonomy);
+        let child = new FilterTreeNode(
+            label,
+            false,
+            key,
+            keyname,
+            data,
+            count,
+            true,
+            level + 1,
+            taxonomy,
+        );
         child.parent = this;
         this.children = [...this.children, child];
 
-        if (levels.length > 1){
-            return child._upsertNodeFor(levels.slice(1), item, level+1, searchResults, collection, taxonomyURI, key);
+        if (levels.length > 1) {
+            return child._upsertNodeFor(
+                levels.slice(1),
+                item,
+                level + 1,
+                searchResults,
+                collection,
+                taxonomyURI,
+                key,
+            );
         }
         return child;
-    }    
+    }
+
+    /**
+     * Check if two taxonomy terms are the "same" based on collection
+     * @param topic - topic field value of a search result
+     * @param taxonomy - taxonomy to be checked if it's the same as topic
+     * @param taxonomyURI - taxonomyURI
+     * @param collection - collection
+     * @param tree - Current tree. Used to handle "Other" which means the real taxonomy is
+     * @returns
+     */
+    private topicMatches(
+        topic: any,
+        taxonomy: string,
+        taxonomyURI: string[],
+        collection: string,
+        tree: FilterTreeNode,
+    ): boolean {
+        //Check if topic has scheme value and topic.scheme matches taxonomyURI. Skip if false.
+        if (!topic.scheme || topic.scheme.indexOf(taxonomyURI) < 0) {
+            return false;
+        }
+
+        //For default collection (NIST), check if topics.tag includes taxonomy because taxonomy has only one level.
+        if (collection === "DEFAULT") {
+            return topic.tag?.includes(taxonomy);
+        }
+
+        //If tree label is "Other" which means topic (search result topic) must be exactly the same as taxonomy 
+        if (tree.label.startsWith("Other")) {
+            return topic.tag === taxonomy;
+        }
+
+        //Otherwise taxonomy and topic tag must be exactly the same. The following code ignore the space before and after ":"
+        const taxonomyToFind = taxonomy.split(":");
+        const taxonomyToSearch = (topic.tag ?? "").split(":");
+
+        return taxonomyToFind.every(
+            (value, index) => value === taxonomyToSearch[index],
+        );
+    }
 
     /**
      *  Add count to each node
@@ -732,121 +841,131 @@ export class FilterTreeNode implements TreeNode {
      * @param collection: Collection
      * @param taxonomyURI: taxonomy URI to identify the topic.
      */
-    addCount(searchResults: any = null, collection: string=null, taxonomyURI: any = {}) {
-        for (let child of this.children) {
-            this._addCount(child, searchResults, collection, taxonomyURI);
-        }
+    addCount(
+        searchResults: any = null,
+        collection: string = Collections.DEFAULT,
+        taxonomyURI: any = {},
+    ) {
+        this.ediids = [];
+
+        this._addCount(this, searchResults, collection, taxonomyURI);
     }
 
-    _addCount(tree: FilterTreeNode, searchResults: any = null, collection: string=null, taxonomyURI: any = {}) {
-        if (tree.label.slice(0, 5) == "Other")
-            console.log("tree", tree);
+    _addCount(
+        tree: FilterTreeNode = this,
+        searchResults: any = null,
+        collection: string = Collections.DEFAULT,
+        taxonomyURI: any = {},
+    ) {
+        if (!tree.children || tree.children.length == 0) {
+            // Only count leaf nodes
 
-        tree.count = 0;
-        tree.ediids = [];
-        tree.key = tree.keyname;
-        let taxonomy = tree.taxonomy;
-        let parent: FilterTreeNode = tree.parent;
+            tree.count = 0;
+            tree.ediids = [];
+            tree.key = tree.keyname;
+            let taxonomy = tree.taxonomy;
+            let parent: FilterTreeNode | null = tree.parent;
 
-        while (parent && parent.level > 1) {
-            tree.key = parent.keyname + tree.key;
-            parent = parent.parent;
-        }
+            while (parent) {
+                tree.key = parent["keyname"] + tree.key;
+                parent = parent["parent"];
+            }
 
-        if (searchResults && searchResults.length > 0) {
-            for (let resultItem of searchResults) {
-                let found: boolean = false;
-                if(resultItem.topic && resultItem.topic.length > 0){
-                    for(let topic of resultItem.topic) {
-                        if (topic['scheme'] && topic['scheme'].indexOf(taxonomyURI[collection]) >= 0) {
-                            // For default collection (NIST), we only check if the taxonomy of the result item includes the taxonomy that we are looking for.
-                            if(collection == Collections.DEFAULT) {
-                                if(topic.tag.includes(taxonomy)) {
-                                    found = true;
-                                    break;
-                                }
-                            } else {
-                                // Handle "Other" specially because "Other" is not in any tag (we added it to resolve the case that node and leaf have the same name).
-                                if (tree.label.slice(0, 5) == "Other") {
-                                    if(topic.tag == taxonomy) {
-                                        found = true;
-                                        break;
-                                    }   
-                                } else {
-                                    // See if the taxonomy of the result item includes the taxonomy that we are looking for.
-                                    // We count it even if the taxonomy of the result item has move levels than the taxonomy that we are looking for.
-                                    let taxonomyToFind = taxonomy.split(":");
-                                    let taxonomyToSearch = topic.tag.split(":");
+            if (searchResults && searchResults.length > 0) {
+                const filteredResults = searchResults.filter((searchResults) =>
+                    searchResults.topic?.some((topic) =>
+                        this.topicMatches(
+                            topic,
+                            taxonomy,
+                            taxonomyURI[collection],
+                            collection,
+                            tree,
+                        ),
+                    ),
+                );
 
-                                    let foundMatch = true;
-                                    for (let i = 0; i < taxonomyToFind.length; i++) {
-                                        if (taxonomyToFind[i] != taxonomyToSearch[i]) {
-                                            foundMatch = false;
-                                            break;
-                                        }
-                                    }
+                tree.ediids = [
+                    ...new Set(
+                        [
+                            ...tree.ediids,
+                            ...filteredResults.map((result) => result.ediid),
+                        ].filter((id) => id != null && id != undefined),
+                    ),
+                ];
+            }
+        } else {
+            for (let child of tree.children) {
+                if (tree.ediids && tree.ediids.length > 0 && tree.ediids[0]) {
+                    let ediid = this._addCount(
+                        child,
+                        searchResults,
+                        collection,
+                        taxonomyURI,
+                    );
 
-                                    if (foundMatch) {
-                                        found = true;
-                                        break;
-                                    }                                
-                                }
-                            }
-                        }
+                    tree.ediids = [
+                        ...new Set(
+                            [...tree.ediids, ...(ediid ?? [])].filter(
+                                (id) => id != null && id !== undefined,
+                            ),
+                        ),
+                    ];
+                } else {
+                    let ediid = this._addCount(
+                        child,
+                        searchResults,
+                        collection,
+                        taxonomyURI,
+                    );
+
+                    if (ediid) {
+                        tree.ediids = ediid;
                     }
                 }
-
-                if(found){
-                    if(!tree.ediids.includes(resultItem.ediid)){
-                        tree.ediids.push(resultItem.ediid);
-                        tree.count++;
-                    }
-                }        
             }
         }
 
-        for (let child of tree.children) {
-            this._addCount(child, searchResults, collection, taxonomyURI);
-        }
-    }    
-  
+        tree.count = tree.ediids.length;
+        return tree.ediids;
+    }
+
     /**
      *  Refresh taxonomy for each node
      */
     refreshTaxonomy() {
         for (let child of this.children) {
             this._refreshTaxonomy(child);
-        }        
+        }
     }
 
     _refreshTaxonomy(tree: FilterTreeNode) {
         let parent: FilterTreeNode = tree.parent;
         tree.taxonomy = tree.keyname;
-        
-        if(parent && parent.level > 1) {
-            if(parent.taxonomy)
+
+        if (parent && parent.level > 1) {
+            if (parent.taxonomy)
                 tree.taxonomy = parent.taxonomy + ":" + tree.taxonomy;
-        }       
-        
+        }
+
         for (let child of tree.children) {
             this._refreshTaxonomy(child);
-        }        
-    }  
+        }
+    }
 }
 
 //For display purpose
 export class iconClass {
-    static readonly EDIT = 'pencil';
-    static readonly CLOSE = 'xmark';
-    static readonly SAVE = 'save';
-    static readonly SUBMIT = 'square-check';
-    static readonly CANCEL = 'undo';
-    static readonly UNDO = 'undo';
-    static readonly ADD = 'plus';
-    static readonly DELETE = 'trash-can';
-    static readonly DELETE2 = 'trash';
-    static readonly RESET = 'recycle';
-    static readonly CLOSE_CIRCLE = 'circle-xmark'; 
+    static readonly EDIT = "pencil";
+    static readonly CLOSE = "xmark";
+    static readonly SAVE = "save";
+    static readonly SUBMIT = "square-check";
+    static readonly CANCEL = "undo";
+    static readonly UNDO = "undo";
+    static readonly ADD = "plus";
+    static readonly DELETE = "trash-can";
+    static readonly DELETE2 = "trash";
+    static readonly RESET = "recycle";
+    static readonly CLOSE_CIRCLE = "circle-xmark";
     static readonly ARROW_CIRCLE_RIGHT = "arrow-circle-right";
     static readonly ANGLES_UP = "angles-up";
     static readonly ANGLES_RIGHT = "angles-right";
@@ -854,11 +973,11 @@ export class iconClass {
     static readonly ANGLES_LEFT = "angles-left";
     static readonly ARROW_UP_RIGHT_FROM_SQUARE = "arrow-up-right-from-square";
     static readonly CART_PLUS = "cart-plus";
-    static readonly DOWNLOAD = "download";    
-    static readonly SPINNER = "spinner"; 
-    static readonly CHART_BAR = "chart-bar"; 
-    static readonly LOCK = "lock"; 
-    static readonly UNLOCK = "unlock"; 
+    static readonly DOWNLOAD = "download";
+    static readonly SPINNER = "spinner";
+    static readonly CHART_BAR = "chart-bar";
+    static readonly LOCK = "lock";
+    static readonly UNLOCK = "unlock";
     static readonly CARET_RIGHT = "caret-right";
     static readonly CARET_DOWN = "caret-down";
     static readonly ERASER = "eraser";
@@ -875,10 +994,10 @@ export class iconClass {
     static readonly TIMES = "times";
     static readonly EYE = "eye";
     static readonly EYE_SLASH = "eye-slash";
-    static readonly CHECK = 'check';
-    static readonly WARNING = 'triangle-exclamation';
-    static readonly FILE_DOWNLOAD = 'file-arrow-down';
-    static readonly CLOUD_DOWNLOAD = 'cloud-download';
-    static readonly REPEAT = 'repeat';
-    static readonly GLOBE = 'globe';
+    static readonly CHECK = "check";
+    static readonly WARNING = "triangle-exclamation";
+    static readonly FILE_DOWNLOAD = "file-arrow-down";
+    static readonly CLOUD_DOWNLOAD = "cloud-download";
+    static readonly REPEAT = "repeat";
+    static readonly GLOBE = "globe";
 }
