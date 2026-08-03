@@ -3,7 +3,6 @@ import { CommonFunctionService } from '../shared/common-function/common-function
 import { ActivatedRoute } from '@angular/router';
 import { MetricsService } from '../shared/metrics-service/metrics.service';
 import { AppConfig } from '../config/config';
-import { TreeNode } from 'primeng/api';
 import { RecordLevelMetrics } from './metrics';
 import { DatePipe } from '@angular/common';
 import { HorizontalBarchartComponent } from './horizontal-barchart/horizontal-barchart.component';
@@ -13,14 +12,8 @@ import { NerdmRes } from '../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
 import { HttpEventType } from '@angular/common/http';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TreeTableModule } from 'primeng/treetable';
-import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TreeModule } from 'primeng/tree';
-import { FieldsetModule } from 'primeng/fieldset';
-import { DialogModule } from 'primeng/dialog';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { NERDmResourceService } from '../nerdm/nerdm.service';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -32,7 +25,7 @@ import {
     faChevronRight,
     faChevronDown
 } from '@fortawesome/free-solid-svg-icons';
-import { iconClass } from '../shared/globals/globals';
+import { iconClass, TreeNode } from "../shared/globals/globals";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
@@ -49,12 +42,6 @@ const DESKTOP_LABEL_LIMIT = 50;
     standalone: true,
     imports: [
         NgbModule,
-        TreeModule,
-        FieldsetModule,
-        DialogModule,
-        OverlayPanelModule,
-        TreeTableModule,
-        ButtonModule,
         CommonModule,
         FormsModule,
         HorizontalBarchartComponent,

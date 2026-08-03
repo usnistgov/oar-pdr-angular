@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, Output, Inject, PLATFORM_ID, EventEmitter } from '@angular/core';
 import { ZipData } from '../../shared/download-service/zipData';
-import { TreeNode } from 'primeng/api';
 import { DownloadService } from '../../shared/download-service/download-service.service';
 import { formatBytes } from '../../utils';
 import { OverlayPanel } from 'primeng/overlaypanel';

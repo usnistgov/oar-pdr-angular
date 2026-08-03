@@ -1,5 +1,4 @@
 import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef, inject, HostListener, ViewChild, ElementRef } from '@angular/core';
-import { TreeNode } from 'primeng/api';
 import { CartService } from '../../../datacart/cart.service';
 import { NerdmRes, NerdmComp } from '../../../nerdm/nerdm';
 import { DataCart, DataCartItem } from '../../../datacart/cart';
@@ -10,7 +9,13 @@ import { EditStatusService } from '../../../landing/editcontrol/editstatus.servi
 import { LandingConstants } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
-import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
+import {
+    SectionPrefs,
+    Sections,
+    GlobalService,
+    iconClass,
+    TreeNode,
+} from "../../../shared/globals/globals";
 import { LandingpageService } from '../../landingpage.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';

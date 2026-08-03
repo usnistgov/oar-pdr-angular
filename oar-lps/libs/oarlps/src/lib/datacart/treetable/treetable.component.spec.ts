@@ -7,7 +7,6 @@ import { DataCartItem, DataCart } from '../../datacart/cart';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestDataService } from '../../shared/testdata-service/testDataService';
-import { TreeTableModule } from 'primeng/treetable';
 import { AppConfig } from '../../config/config';
 import * as env from '../../../environments/environment';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
@@ -236,7 +235,6 @@ describe('TreetableComponent', () => {
             declarations: [ TreetableComponent ],
             schemas: [NO_ERRORS_SCHEMA],
             imports: [
-                TreeTableModule,
                 HttpClientTestingModule,
                 BrowserAnimationsModule],  // Added this to fix animation error
             providers: [

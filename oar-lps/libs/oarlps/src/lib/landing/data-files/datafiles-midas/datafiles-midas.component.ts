@@ -1,5 +1,4 @@
 import { Component, Input, Output, NgZone, OnInit, OnChanges, SimpleChanges, EventEmitter, ChangeDetectorRef } from '@angular/core';
-import { TreeNode } from 'primeng/api';
 import { CartService } from '../../../datacart/cart.service';
 import { AppConfig } from '../../../config/config';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
@@ -14,7 +13,12 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
+import {
+    SectionPrefs,
+    Sections,
+    GlobalService,
+    TreeNode,
+} from "../../../shared/globals/globals";
 import { LandingpageService } from '../../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { UserMessageService } from '../../../frame/usermessage.service';

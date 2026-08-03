@@ -1,34 +1,55 @@
-<table style="width: 100%;">
-    <tr  style="width: 100%;">
+<table style="width: 100%">
+    <tr style="width: 100%">
         <!-- Text edit area -->
-        <td class="edit-block" style="width: calc(100%-30px);" >
-            <div style="width: 100%;text-align: left;padding: 10px;">
-
+        <td class="edit-block" style="width: calc(100%-30px)">
+            <div style="width: 100%; text-align: left; padding: 0px">
                 <!-- Selected topics -->
-                <div style="width:90%; margin: 1em auto 1em auto;">
+                <div style="width: 90%; margin: 0.5em auto 0em auto">
                     <table width="100%" align="center">
                         <tr class="selected-topic-header">
                             <td class="selected-topic-header">
                                 <span>Selected topics:</span>
                             </td>
-                            <td width="50px">
-                            </td>
+                            <td width="50px"></td>
                         </tr>
-                        <tr *ngFor="let topic of selectedTopics; let i = index; trackBy: trackByFn" align="top"
-                            style="border-bottom:1pt solid black;" height="2em" [style.background-color]="backgroundColor">
-                            <td style="padding-left: 2em;">
+                        <tr
+                            *ngFor="
+                                let topic of selectedTopics;
+                                let i = index;
+                                trackBy: trackByFn
+                            "
+                            align="top"
+                            style="border-bottom: 1pt solid black"
+                            height="2em"
+                            [style.background-color]="backgroundColor"
+                        >
+                            <td style="padding-left: 2em">
                                 <!-- For new topic structure, change topic to topic.tag -->
-                                <span (click)="searchAndExpandTaxonomyTree(topic.tag, true)"
-                                    style="color: #1E6BA1; cursor: pointer;">{{topic.tag}}</span>
+                                <span
+                                    (click)="
+                                        searchAndExpandTaxonomyTree(
+                                            topic.tag,
+                                            true
+                                        )
+                                    "
+                                    style="color: #1e6ba1; cursor: pointer"
+                                    >{{ topic.tag }}</span
+                                >
                             </td>
                             <!-- Delete button -->
                             <td width="50px">
-                                <fa-icon 
+                                <fa-icon
                                     [icon]="faXmark"
                                     (click)="deleteTopic(i)"
-                                    style="float: right;cursor: pointer;color:grey; margin: .5em;" 
+                                    style="
+                                        float: right;
+                                        cursor: pointer;
+                                        color: grey;
+                                        margin: 0.5em;
+                                    "
                                     data-toggle="tooltip"
-                                    title="Delete affiliation"></fa-icon>
+                                    title="Delete affiliation"
+                                ></fa-icon>
                             </td>
                         </tr>
                     </table>
@@ -37,72 +58,215 @@
                 <!-- Topic search 
                 -  Once user start typing in this input field, the taxonomy list below will be filtered.
                 -->
-                <div style="width:90%; margin: 1em auto 0em auto;">
-                    <input type="text" style="height:35px;background-color: #E7FFFE;" [(ngModel)]="searchText"
-                        (input)="onSearchTextChange()" placeholder="Type here to filter topics" />
+                <div style="width: 90%; margin: 0em auto 0em auto">
+                    <input
+                        type="text"
+                        style="height: 35px; background-color: #e7fffe"
+                        [(ngModel)]="searchText"
+                        (input)="filterTreeTable()"
+                        placeholder="Type here to filter topics"
+                    />
                 </div>
 
                 <!-- Taxonomy list to select -->
-                <div class="selected-topic-header" style="width:90%; margin: 0em auto 0em auto;">
-                    <span>Select topic(s) from the NIST research taxonomy (Double click
-                        on name to select; scroll down to see more):</span>
+                <div
+                    class="selected-topic-header"
+                    style="width: 90%; margin: 0em auto 0em auto"
+                >
+                    <span class="mr-2" style="vertical-align: super"
+                        >Select topic(s) from the NIST research taxonomy (Double
+                        click on name to select; scroll down to see more):</span
+                    >
 
-                    <!-- Reset button to reset the taxonomy list to it's original state:
-                    - Display only first level
-                    - No filtering
-                    -->
-                    <!-- <i [class]="resetIcon" class = "reset" (click)="showAllTopics()" data-toggle="tooltip" title="Reset"></i> -->
-                    <fa-icon 
-                        [icon]="faRecycle"
-                        (click)="showAllTopics()" 
-                        data-toggle="tooltip" 
-                        title="Reset"></fa-icon>
+                    <button
+                        mat-icon-button
+                        (click)="showAllTopics()"
+                        matTooltip="Reset"
+                        aria-label="Reset"
+                    >
+                        <mat-icon>restart_alt</mat-icon>
+                    </button>
                 </div>
-                <div style="clear: both;"></div>
-                <div #panel0
-                    style="width:90%; margin: 0em auto 2em auto; height: 50vh; overflow-y: scroll; border: 1px solid lightgrey;">
+                <div style="clear: both"></div>
+                <div
+                    #panel0
+                    style="
+                        width: 90%;
+                        margin: 0em auto 2em auto;
+                        height: 50vh;
+                        overflow-y: scroll;
+                        border: 1px solid lightgrey;
+                    "
+                >
+                    <div style="margin: 0.5em 1em 0.5em 1em">
+                        <!-- Angular Material Tree Table -->
+                        <!-- Tree Content -->
+                        <div
+                            *ngIf="taxonomyTree.length > 0; else emptyMessage"
+                            style="font-size: 14px"
+                        >
+                            <!-- Recursive tree node template -->
+                            <ng-container
+                                *ngFor="
+                                    let node of searchText
+                                        ? filteredTaxonomy
+                                        : taxonomyTree;
+                                    let i = index
+                                "
+                            >
+                                <div
+                                    *ngTemplateOutlet="
+                                        treeNodeTemplate;
+                                        context: {
+                                            $implicit: node,
+                                            level: 0,
+                                            index: i,
+                                        }
+                                    "
+                                ></div>
+                            </ng-container>
+                        </div>
 
-                    <div style="margin: .5em 1em .5em 1em;">
-                        <p-treeTable *ngIf="isVisible" [value]="taxonomyTree" styleClass="p-treetable-sm">
-                            <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
-                                <tr (dblclick)="updateTopics(rowNode)" (click)="openPopup($event,op5)">
-                                    <td (mouseover)="setHighlight(rowData)" (mouseout)="setHighlight('')"
-                                        [ngStyle]="{'background-color': rowBackColor(rowData), 'display': rowVisibility(rowData), 'cursor': getTopicCursor(rowNode)}">
-                                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
-                                        <span [ngStyle]="{'color': rowColor(rowNode)}">{{rowData.name}}</span>
-                                    </td>
-                                </tr>
-                            </ng-template>
+                        <ng-template #emptyMessage>
+                            <div
+                                style="
+                                    text-align: center;
+                                    padding: 24px;
+                                    color: #666;
+                                    font-size: 14px;
+                                "
+                            >
+                                No records found
+                            </div>
+                        </ng-template>
 
-                            <!-- 👇 Custom toogler icons -->
-                            <ng-template pTemplate="togglericon" let-open>
-                                <fa-icon [icon]="open ? faChevronDown : faChevronRight"></fa-icon>
-                            </ng-template>
-                        </p-treeTable>
+                        <!-- Tree Node Template -->
+                        <ng-template
+                            #treeNodeTemplate
+                            let-node
+                            let-level="level"
+                            let-index="index"
+                        >
+                            <!-- <div class="mat-row" style="display: flex; align-items: center; background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 8px 12px;"> -->
+                            <div
+                                class="text-[18px] h-auto"
+                                (mouseover)="setHighlight(node.data)"
+                                (mouseout)="setHighlight('')"
+                                [ngStyle]="{
+                                    'background-color': rowBackColor(node.data),
+                                    display: rowVisibility(node.data),
+                                    cursor: getTopicCursor(node.data),
+                                }"
+                                [ngClass]="
+                                    index === 0
+                                        ? 'mt-2 border-t-0'
+                                        : 'pt-2 border-t border-t-[#e0e0e0]'
+                                "
+                            >
+                                <!-- Tree toggler -->
+                                <div style="padding-left: {{ level * 24 }}px;">
+                                    <button
+                                        *ngIf="
+                                            node && node.children?.length > 0
+                                        "
+                                        mat-icon-button
+                                        (click)="
+                                            node.isExpanded = !node.isExpanded
+                                        "
+                                        [attr.aria-label]="
+                                            node.isExpanded
+                                                ? 'Collapse'
+                                                : 'Expand'
+                                        "
+                                        style="padding: 4px; min-width: 36px"
+                                    >
+                                        <mat-icon style="padding-top: 2px">{{
+                                            node.isExpanded
+                                                ? "expand_more"
+                                                : "chevron_right"
+                                        }}</mat-icon>
+                                    </button>
+                                    <span
+                                        *ngIf="
+                                            node && node.children?.length == 0
+                                        "
+                                        style="margin-right: 48px"
+                                    >
+                                    </span>
+
+                                    <!-- Taxonomy Name -->
+                                    <span
+                                        *ngIf="node.data"
+                                        class="align-super text-[#1471AE] cursor-pointer"
+                                        (dblclick)="updateTopics(node)"
+                                        matTooltip="Double-click to select."
+                                        [ngStyle]="{ color: rowColor(node) }"
+                                    >
+                                        {{ node.data.name }}
+                                    </span>
+
+                                    <span *ngIf="!node.data" class="align-super"
+                                        >" "</span
+                                    >
+                                </div>
+                            </div>
+
+                            <!-- Children nodes -->
+                            <div
+                                class="rounded-sm"
+                                *ngIf="
+                                    node.isExpanded && node.children?.length > 0
+                                "
+                            >
+                                <ng-container
+                                    *ngFor="
+                                        let child of node.children;
+                                        let j = index
+                                    "
+                                >
+                                    <div
+                                        *ngTemplateOutlet="
+                                            treeNodeTemplate;
+                                            context: {
+                                                $implicit: child,
+                                                level: level + 1,
+                                                index: j,
+                                            }
+                                        "
+                                    ></div>
+                                </ng-container>
+                            </div>
+                        </ng-template>
                     </div>
                 </div>
             </div>
         </td>
 
         <!-- Control buttons -->
-        <td style="width: 90px;vertical-align: top;">
+        <td style="width: 90px; vertical-align: top">
             <!-- Save button -->
-            <button class="edit_button" type="button" (click)="onSave()" aria-label="edit button" [disabled]="!dataChanged" ngbTooltip="Save changes">
+            <button
+                class="edit_button"
+                type="button"
+                (click)="onSave()"
+                aria-label="edit button"
+                [disabled]="!dataChanged"
+                ngbTooltip="Save changes"
+            >
                 <fa-icon [icon]="faSave"></fa-icon>
             </button>
-    
+
             <!-- Cancel button -->
             <!-- <button *ngIf="dataChanged" class="edit_button" type="button" -->
-            <button class="edit_button" type="button"
-                (click)="undoCurrentChanges()" aria-label="Undo button" ngbTooltip="Undo current changes">
+            <button
+                class="edit_button"
+                type="button"
+                (click)="undoCurrentChanges()"
+                aria-label="Undo button"
+                ngbTooltip="Undo current changes"
+            >
                 <fa-icon [icon]="faUndo"></fa-icon>
-            </button>             
-        </td>          
+            </button>
+        </td>
     </tr>
 </table>
-
-<p-overlayPanel class="fileDialog" #op5 [baseZIndex]=9999 [dismissable]="true" [showCloseIcon]="false" [style]="{'display':'inline-block','position':'absolute','left':'0','top':'20%'}" [appendTo]="'body'">
-    <div>
-        Double-click on theme to select.
-    </div>
-</p-overlayPanel>

@@ -1,20 +1,33 @@
-import { Component, Input, OnInit, EventEmitter, Output, ElementRef, ViewChild, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { NerdmRes } from '../../../nerdm/nerdm';
-import { MODE, iconClass, SectionPrefs, Sections } from '../../../shared/globals/globals';
-import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { TreeNode } from 'primeng/api';
-import { TaxonomyListService } from '../../../shared/taxonomy-list';
-import { UserMessageService } from '../../../frame/usermessage.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
-import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { TreeTableModule } from 'primeng/treetable';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { CollectionService } from '../../../shared/collection-service/collection.service';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    Component,
+    Input,
+    OnInit,
+    EventEmitter,
+    Output,
+    ElementRef,
+    ViewChild,
+    SimpleChanges,
+    ChangeDetectorRef,
+} from "@angular/core";
+import { NerdmRes } from "../../../nerdm/nerdm";
+import {
+    MODE,
+    iconClass,
+    SectionPrefs,
+    Sections,
+    TreeNode,
+} from "../../../shared/globals/globals";
+import { MetadataUpdateService } from "../../editcontrol/metadataupdate.service";
+import { TaxonomyListService } from "../../../shared/taxonomy-list";
+import { UserMessageService } from "../../../frame/usermessage.service";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { CollectionService } from "../../../shared/collection-service/collection.service";
+import {
+    FontAwesomeModule,
+    FaIconLibrary,
+} from "@fortawesome/angular-fontawesome";
 import {
     faPencil,
     faXmark,
@@ -23,28 +36,38 @@ import {
     faTrashCan,
     faRecycle,
     faChevronDown,
-    faChevronRight
-} from '@fortawesome/free-solid-svg-icons';
+    faChevronRight,
+} from "@fortawesome/free-solid-svg-icons";
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
 
-export const ROW_COLOR = '#1E6BA1';
+export const ROW_COLOR = "#1E6BA1";
 
 @Component({
-    selector: 'lib-topic-edit',
+    selector: "lib-topic-edit",
     standalone: true,
-    imports: [        
+    imports: [
         CommonModule,
         FormsModule,
-        ButtonModule,
         NgbModule,
-        OverlayPanelModule,
         FontAwesomeModule,
-        TreeTableModule],
-    templateUrl: './topic-edit.component.html',
-    styleUrls: ['../../landing.component.scss', './topic-edit.component.css']
+        MatCheckboxModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatProgressSpinnerModule,
+        MatDialogModule,
+    ],
+    templateUrl: "./topic-edit.component.html",
+    styleUrls: ["../../landing.component.scss", "./topic-edit.component.css"],
 })
 export class TopicEditComponent implements OnInit {
     fieldName = SectionPrefs.getFieldName(Sections.TOPICS);
-    editMode: string = MODE.NORMAL; 
+    editMode: string = MODE.NORMAL;
     dataChanged: boolean = false;
 
     isVisible: boolean = true;
@@ -53,7 +76,8 @@ export class TopicEditComponent implements OnInit {
     highlight: string = "";
     taxonomyList: any[];
     taxonomyTree: TreeNode[] = [];
-    toggle: Boolean = true;  
+    filteredTaxonomy: TreeNode[] = [];
+    toggle: Boolean = true;
     originalSelectedTopicsTopics: any[] = [];
     collectionData: any;
     // selectedTopics: any[] = [];
@@ -82,15 +106,16 @@ export class TopicEditComponent implements OnInit {
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
     // @ViewChild('panel', { read: ElementRef }) public panel: ElementRef<any>;
-    @ViewChild('panel0', { read: ElementRef, static: true }) public panel0: ElementRef<any>;
+    @ViewChild("panel0", { read: ElementRef, static: true })
+    public panel0: ElementRef<any>;
 
-
-    constructor(public mdupdsvc: MetadataUpdateService,
-                private taxonomyListService: TaxonomyListService,
-                public collectionService: CollectionService,
-                public iconLibrary: FaIconLibrary,
-                private msgsvc: UserMessageService) { 
-        
+    constructor(
+        public mdupdsvc: MetadataUpdateService,
+        private taxonomyListService: TaxonomyListService,
+        public collectionService: CollectionService,
+        public iconLibrary: FaIconLibrary,
+        private msgsvc: UserMessageService,
+    ) {
         // iconLibrary.addIcons(
         //     faPencil,
         //     faXmark,
@@ -103,45 +128,56 @@ export class TopicEditComponent implements OnInit {
 
     ngOnInit(): void {
         this.collectionData = this.collectionService.getCollectionData();
-        
-        this.taxonomyListService.get(this.collection, 0).subscribe((result) => {
-            if (result != null && result != undefined)
-                this.buildTaxonomyTree(result);
-    
-            this.taxonomyList = [];
-            for (var i = 0; i < result.length; i++) {
-                this.taxonomyList.push({ "taxonomy": result[i].label });
-            }
-    
-            this.setTreeVisible(true);
-    
-        }, (err) => {
-            console.error("Failed to load taxonomy terms from server: "+err.message);
-            this.msgsvc.warn("Failed to load taxonomy terms; you may have problems editing the "+
-                            "topics assigned to this record.");
-        });
+
+        this.taxonomyListService.get(this.collection, 0).subscribe(
+            (result) => {
+                if (result != null && result != undefined)
+                    this.buildTaxonomyTree(result);
+
+                this.taxonomyList = [];
+                for (var i = 0; i < result.length; i++) {
+                    this.taxonomyList.push({ taxonomy: result[i].label });
+                }
+
+                this.setTreeVisible(true);
+            },
+            (err) => {
+                console.error(
+                    "Failed to load taxonomy terms from server: " + err.message,
+                );
+                this.msgsvc.warn(
+                    "Failed to load taxonomy terms; you may have problems editing the " +
+                        "topics assigned to this record.",
+                );
+            },
+        );
     }
 
     /**
-     * Once input record changed, refresh the topic list 
-     * @param changes 
+     * Once input record changed, refresh the topic list
+     * @param changes
      */
     ngOnChanges(changes: SimpleChanges): void {
         // this.cloneArray(this.selectedTopics, this.originalSelectedTopicsTopics);
-
         // for(let obj of this.selectedTopicObjs) {
         //     this.selectedTopics.push(obj.tag);
-        // }        
+        // }
     }
 
     /**
      * a field indicating if this data has beed edited
      */
-    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get updated() {
+        return this.mdupdsvc.fieldUpdated(this.fieldName);
+    }
 
-    get isEditing() { return this.editMode==MODE.EDIT }
+    get isEditing() {
+        return this.editMode == MODE.EDIT;
+    }
 
-    get isNormal() { return this.editMode==MODE.NORMAL }
+    get isNormal() {
+        return this.editMode == MODE.NORMAL;
+    }
 
     reset() {
         this.dataChanged = false;
@@ -150,7 +186,7 @@ export class TopicEditComponent implements OnInit {
     }
 
     // cloneArray(sourceArray: any[], targetArray: any[]) {
-    //     if(!sourceArray) 
+    //     if(!sourceArray)
     //         targetArray = sourceArray;
     //     else{
     //         targetArray = [];
@@ -159,17 +195,22 @@ export class TopicEditComponent implements OnInit {
     // }
 
     /*
-        *   build taxonomy tree
-        */
+     *   build taxonomy tree
+     */
     buildTaxonomyTree(result: any) {
         // filter out deprecated topics
-        let allTaxonomy = result.filter(topic => {
-            return topic.deprecatedSince === undefined || topic.deprecatedSince === null || topic.deprecatedSince === "";
+        let allTaxonomy = result.filter((topic) => {
+            return (
+                topic.deprecatedSince === undefined ||
+                topic.deprecatedSince === null ||
+                topic.deprecatedSince === ""
+            );
         });
 
-        var tempTaxonomyTree = {}
+        var tempTaxonomyTree = {};
         if (allTaxonomy != null && allTaxonomy != undefined) {
-            tempTaxonomyTree["data"] = this.arrangeIntoTaxonomyTree(allTaxonomy);
+            tempTaxonomyTree["data"] =
+                this.arrangeIntoTaxonomyTree(allTaxonomy);
             this.taxonomyTree.push(tempTaxonomyTree);
         }
 
@@ -179,21 +220,23 @@ export class TopicEditComponent implements OnInit {
     private arrangeIntoTaxonomyTree(paths) {
         const tree = [];
 
-        if(paths) {
+        if (paths) {
             paths.forEach((path) => {
                 var fullpath: string;
-                if (! path.label)
-                    path.label = path.term;
-                if (path.parent != null && path.parent != undefined && path.parent != "")
+                if (!path.label) path.label = path.term;
+                if (
+                    path.parent != null &&
+                    path.parent != undefined &&
+                    path.parent != ""
+                )
                     fullpath = path.parent + ":" + path.label;
-                else
-                    fullpath = path.label;
+                else fullpath = path.label;
 
-                const pathParts = fullpath.split(':');
+                const pathParts = fullpath.split(":");
                 let currentLevel = tree; // initialize currentLevel to root
 
                 for (var j = 0; j < pathParts.length; j++) {
-                    let tempId: string = '';
+                    let tempId: string = "";
                     for (var k = 0; k < j + 1; k++) {
                         tempId = tempId + pathParts[k].trim();
 
@@ -203,10 +246,12 @@ export class TopicEditComponent implements OnInit {
                     }
 
                     // check to see if the path already exists.
-                    const existingPath = currentLevel.filter(level => level.data.treeId === tempId);
+                    const existingPath = currentLevel.filter(
+                        (level) => level.data.treeId === tempId,
+                    );
                     if (existingPath.length > 0) {
                         // The path to this item was already in the tree, so don't add it again.
-                        // Set the current level to this path's children  
+                        // Set the current level to this path's children
                         currentLevel = existingPath[0].children;
                     } else {
                         let newPart = null;
@@ -215,28 +260,27 @@ export class TopicEditComponent implements OnInit {
                                 treeId: tempId,
                                 name: pathParts[j],
                                 researchTopic: tempId,
-                                bkcolor: 'white'
-                            }, children: [],
-                            expanded: false
+                                bkcolor: "white",
+                            },
+                            children: [],
+                            expanded: false,
                         };
                         currentLevel.push(newPart);
                         currentLevel = newPart.children;
                     }
-                };
+                }
             });
         }
-        
+
         return tree;
     }
 
     undoCurrentChanges() {
         //Revert this.nistTaxonomyTopics
-        // this.cloneArray(this.originalSelectedTopicsTopics ,this.selectedTopics);  
-        this.cmdOutput.emit({"command": 'undoCurrentChanges'});
+        // this.cloneArray(this.originalSelectedTopicsTopics ,this.selectedTopics);
+        this.cmdOutput.emit({ command: "undoCurrentChanges" });
         this.reset();
     }
-
-
 
     /**
      * Save topics.
@@ -244,47 +288,60 @@ export class TopicEditComponent implements OnInit {
      */
     onSave(refreshHelp: boolean = true) {
         this.dataChanged = false;
-        this.cmdOutput.emit({'command':'saveTopics','selectedTopics':this.selectedTopics});
+        this.cmdOutput.emit({
+            command: "saveTopics",
+            selectedTopics: this.selectedTopics,
+        });
     }
 
     /**
      * Delete a topic
      */
     deleteTopic(index: number) {
-        if(!this.selectedTopics) return;
+        if (!this.selectedTopics) return;
 
         this.setTreeVisible(true);
         this.searchAndExpandTaxonomyTree(this.selectedTopics[index], false);
-        this.selectedTopics = this.selectedTopics.filter(topic => topic != this.selectedTopics[index]);
+        this.selectedTopics = this.selectedTopics.filter(
+            (topic) => topic != this.selectedTopics[index],
+        );
         this.refreshTopicTree();
         this.dataChanged = true;
-        this.dataChangedOutput.emit(
-            {
-                "action": "dataChanged",
-                "data": this.selectedTopics
-            });
+        this.dataChangedOutput.emit({
+            action: "dataChanged",
+            data: this.selectedTopics,
+        });
     }
-    
+
     /**
      * Update the topic list
      */
-    updateTopics(rowNode: any) {
-        if(!this.selectedTopics) this.selectedTopics = [];
+    updateTopics(node: any) {
+        if (!this.selectedTopics) this.selectedTopics = [];
         this.toggle = false;
-        const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
-        if (existingTopic == undefined || existingTopic == null || existingTopic.length == 0) {
+        const existingTopic = this.selectedTopics.filter(
+            (topic) => topic.tag == node.data.researchTopic,
+            // (topic) => topic == rowNode.node.data.researchTopic,
+        );
+        if (
+            existingTopic == undefined ||
+            existingTopic == null ||
+            existingTopic.length == 0
+        ) {
             //Need to create a topic object before push
-            this.selectedTopics.push(
-                {
-                    "tag": rowNode.node.data.researchTopic,
-                    "scheme": this.scheme,
-                    "@type": 'Concept'
-                });
+            this.selectedTopics.push({
+                tag: node.data.researchTopic,
+                scheme: this.scheme,
+                "@type": "Concept",
+            });
 
             // this.selectedTopics.push(rowNode.node.data.researchTopic);
-    
+
             this.dataChanged = true;
-            this.dataChangedOutput.emit({"action": "dataChanged","data": this.selectedTopics});
+            this.dataChangedOutput.emit({
+                action: "dataChanged",
+                data: this.selectedTopics,
+            });
             // Reset search text box
             if (this.searchText != "") {
                 this.searchText = "";
@@ -294,67 +351,76 @@ export class TopicEditComponent implements OnInit {
     }
 
     /*
-    *   Set text color if the given topic already exists
-    */
-    getTopicColor(rowNode: any) {
-        if(!this.selectedTopics) return ROW_COLOR;
+     *   Set text color if the given topic already exists
+     */
+    getTopicColor(node: any) {
+        if (!this.selectedTopics) return ROW_COLOR;
 
-        const existingTopic = this.selectedTopics.filter(topic => topic == rowNode.node.data.researchTopic);
-        if (existingTopic == undefined || existingTopic == null || existingTopic.length <= 0) {
+        const existingTopic = this.selectedTopics.filter(
+            (topic) => topic.tag == node.data.researchTopic,
+        );
+        if (
+            existingTopic == undefined ||
+            existingTopic == null ||
+            existingTopic.length <= 0
+        ) {
             return ROW_COLOR;
         } else {
-            return 'lightgrey';
+            return "lightgrey";
         }
     }
 
     /*
-    *   Set cursor type
-    */
-    getTopicCursor(rowNode: any) {
-        if(!this.selectedTopics) return 'default';
+     *   Set cursor type
+     */
+    getTopicCursor(data: any) {
+        if (!this.selectedTopics) return "default";
 
-        const existingTopic = this.selectedTopics.filter(topic0 => topic0 == rowNode.node.data.researchTopic);
-        if (existingTopic == undefined || existingTopic == null || existingTopic.length <= 0)
-            return 'pointer';
-        else
-            return 'default';
+        const existingTopic = this.selectedTopics.filter(
+            (topic0) => topic0.tag == data.researchTopic,
+        );
+        if (
+            existingTopic == undefined ||
+            existingTopic == null ||
+            existingTopic.length <= 0
+        )
+            return "pointer";
+        else return "default";
     }
 
     searchAndExpandTaxonomyTree(topic: string, option: boolean) {
         var index: number;
 
         this.expandTree(this.taxonomyTree, false);
-        this.setTreeVisible(true, 'white');
+        this.setTreeVisible(true, "white");
         // First hide all tree node
         // this.setTreeVisible(false);
         this.resetTreeBackColor(this.taxonomyTree);
         var treeNode: TreeNode = null;
         for (let i = 0; treeNode == null && i < this.taxonomyTree.length; i++) {
-        treeNode = this.searchTreenode(this.taxonomyTree[i], topic);
+            treeNode = this.searchTreenode(this.taxonomyTree[i], topic);
         }
         if (treeNode != null) {
-        if (treeNode.parent != null)
-            this.setVisible(treeNode.parent.children, true);
+            if (treeNode.parent != null)
+                this.setVisible(treeNode.parent.children, true);
 
-        treeNode.data.visible = true;
-        if (option)
-            treeNode.data.bkcolor = 'lightyellow';
-        else
-            treeNode.data.bkcolor = 'white';
+            treeNode.data.visible = true;
+            if (option) treeNode.data.bkcolor = "lightyellow";
+            else treeNode.data.bkcolor = "white";
         }
 
         if (option) {
-        var child = treeNode;
-        while (treeNode != null) {
-            if (treeNode.parent != null) {
-            treeNode.parent.expanded = true;
-            treeNode.parent.data.visible = true;
+            var child = treeNode;
+            while (treeNode != null) {
+                if (treeNode.parent != null) {
+                    treeNode.parent.expanded = true;
+                    treeNode.parent.data.visible = true;
+                }
+                child = treeNode;
+                treeNode = treeNode.parent;
             }
-            child = treeNode;
-            treeNode = treeNode.parent;
-        }
 
-        index = this.taxonomyTree.findIndex(x => x === child);
+            index = this.taxonomyTree.findIndex((x) => x === child);
         }
 
         this.isVisible = false;
@@ -363,16 +429,13 @@ export class TopicEditComponent implements OnInit {
         }, 0);
 
         setTimeout(() => {
-        this.panel0.nativeElement.scrollTop = index * 30;
+            this.panel0.nativeElement.scrollTop = index * 30;
         }, 1);
-
     }
 
     rowVisibility(rowData: any) {
-        if (rowData.visible)
-        return "block";
-        else
-        return "none";
+        if (rowData.visible) return "block";
+        else return "none";
     }
 
     setTreeVisible(visible: boolean, backgroundColor?: string) {
@@ -383,103 +446,105 @@ export class TopicEditComponent implements OnInit {
         if (tree == undefined || tree == null) return;
 
         for (let i = 0; i < tree.length; i++) {
-        if (tree[i].data != null && tree[i].data != undefined) {
-            tree[i].data.visible = option;
-            if (backgroundColor != null)
-            tree[i].data.bkcolor = backgroundColor;
-        }
+            if (tree[i].data != null && tree[i].data != undefined) {
+                tree[i].data.visible = option;
+                if (backgroundColor != null)
+                    tree[i].data.bkcolor = backgroundColor;
+            }
 
-        if (tree[i].children != null && tree[i].children != undefined && tree[i].children.length > 0) {
-            this.setVisible(tree[i].children, option, backgroundColor);
-        }
+            if (
+                tree[i].children != null &&
+                tree[i].children != undefined &&
+                tree[i].children.length > 0
+            ) {
+                this.setVisible(tree[i].children, option, backgroundColor);
+            }
         }
     }
 
     /*
-    *   Refresh the taxonomy tree 
-    */
+     *   Refresh the taxonomy tree
+     */
     refreshTopicTree() {
         this.isVisible = false;
         setTimeout(() => {
-        this.isVisible = true;
+            this.isVisible = true;
         }, 0);
     }
 
     /*
-    *   Expand/collapse treenodes
-    */
+     *   Expand/collapse treenodes
+     */
     expandTree(tree: TreeNode[], option: boolean) {
         for (let i = 0; i < tree.length; i++) {
-        tree[i].expanded = option;
-        if (tree[i].children.length > 0) {
-            this.expandTree(tree[i].children, option);
-        }
+            tree[i].expanded = option;
+            if (tree[i].children.length > 0) {
+                this.expandTree(tree[i].children, option);
+            }
         }
     }
 
     /*
-    *   Expand/collapse treenodes
-    */
+     *   Expand/collapse treenodes
+     */
     resetTreeBackColor(tree: TreeNode[]) {
         for (let i = 0; i < tree.length; i++) {
-        tree[i].data.bkcolor = 'white';
-        if (tree[i].children.length > 0) {
-            this.resetTreeBackColor(tree[i].children);
-        }
+            tree[i].data.bkcolor = "white";
+            if (tree[i].children.length > 0) {
+                this.resetTreeBackColor(tree[i].children);
+            }
         }
     }
 
     /*
-    *   search treeNode
-    */
+     *   search treeNode
+     */
     searchTreenode(tree: TreeNode, topic: string) {
         if (tree.data.researchTopic == topic) {
-        return tree;
+            return tree;
         } else if (tree.children != null) {
-        var i;
-        var result = null;
-        for (i = 0; result == null && i < tree.children.length; i++) {
-            result = this.searchTreenode(tree.children[i], topic);
-        }
-        return result;
+            var i;
+            var result = null;
+            for (i = 0; result == null && i < tree.children.length; i++) {
+                result = this.searchTreenode(tree.children[i], topic);
+            }
+            return result;
         }
         return null;
     }
 
     /*
-    *   Return row background color
-    */
+     *   Return row background color
+     */
     rowBackColor(rowData: any) {
         if (this.highlight == "") {
-        if (rowData == null || rowData == undefined)
-            return "white";
-        else
-            return rowData.bkcolor;
+            if (rowData == null || rowData == undefined) return "white";
+            else return rowData.bkcolor;
         } else {
-        if (this.highlight == rowData.name) {
-            return "#cccccc";
-        }
+            if (this.highlight == rowData.name) {
+                return "#cccccc";
+            }
         }
     }
 
     /*
-    *   Return row background color
-    */
-    rowColor(rowNode: any) {
+     *   Return row background color
+     */
+    rowColor(node: any) {
         if (this.highlight == "") {
-            return this.getTopicColor(rowNode);
+            return this.getTopicColor(node);
         } else {
-            if (this.highlight == rowNode.node.data.name) {
+            if (this.highlight == node.data.name) {
                 return "white";
-        } else {
-            return this.getTopicColor(rowNode);
-        }
+            } else {
+                return this.getTopicColor(node);
+            }
         }
     }
 
     /*
-    *   Display all topics
-    */
+     *   Display all topics
+     */
     showAllTopics() {
         this.searchText = "";
         this.setTreeVisible(true);
@@ -487,96 +552,118 @@ export class TopicEditComponent implements OnInit {
 
         this.isVisible = false;
         setTimeout(() => {
-        this.isVisible = true;
+            this.isVisible = true;
         }, 0);
     }
 
     /*
-    *   When user changes the search text
-    */
+     *   When user changes the search text
+     */
     onSearchTextChange() {
         var tree: any;
-        this.setTreeVisible(false, 'white');
+        this.setTreeVisible(false, "white");
         this.expandTree(this.taxonomyTree, true);
         for (var i = 0; i < this.taxonomyTree.length; i++)
-        this.setTreenodeVisible(this.taxonomyTree[i], this.searchText);
+            this.setTreenodeVisible(this.taxonomyTree[i], this.searchText);
 
         this.refreshTopicTree();
     }
 
+    filterTreeTable() {
+        let filterText = this.searchText;
+        const ft = filterText.trim().toLowerCase();
+        if (!ft) {
+            this.filteredTaxonomy = [];
+            return;
+        }
+        const filterNodes = (nodes: TreeNode[]): TreeNode[] => {
+            const result: TreeNode[] = [];
+            for (const node of nodes) {
+                const match = node.data.name.toLowerCase().includes(ft);
+                let filteredChildren: TreeNode[] = [];
+                if (node.children && node.children.length > 0) {
+                    filteredChildren = filterNodes(node.children);
+                }
+                if (match || filteredChildren.length > 0) {
+                    const newNode = { ...node };
+                    if (filteredChildren.length > 0) {
+                        newNode.children = filteredChildren;
+                    } else {
+                        newNode.children = [];
+                    }
+                    result.push(newNode);
+                }
+            }
+            return result;
+        };
+        this.filteredTaxonomy = filterNodes(this.taxonomyTree);
+    }
+
     /*
-    *   search treeNode, if found set visible to true
-    */
+     *   search treeNode, if found set visible to true
+     */
     setTreenodeVisible(tree: TreeNode, topic: string) {
-        if (tree.data && tree.data.researchTopic.toLowerCase().indexOf(topic.toLowerCase()) > -1) {
-        if (tree != null) {
-            tree.data.bkcolor = "#E7FFFE";
-            if (tree.parent == null) {
-            tree.data.visible = true;
-            this.setVisible(tree.children, true);
+        if (
+            tree.data &&
+            tree.data.researchTopic.toLowerCase().indexOf(topic.toLowerCase()) >
+                -1
+        ) {
+            if (tree != null) {
+                tree.data.bkcolor = "#E7FFFE";
+                if (tree.parent == null) {
+                    tree.data.visible = true;
+                    this.setVisible(tree.children, true);
+                } else {
+                    tree.parent.data.visible = true;
+                    this.setVisible(tree.parent.children, true);
+                }
             }
-            else {
-            tree.parent.data.visible = true;
-            this.setVisible(tree.parent.children, true);
-            }
-        }
-        return tree;
+            return tree;
         } else if (tree.children != null) {
-        var result = null;
-        for (var i = 0; result == null && i < tree.children.length; i++) {
-            this.setTreenodeVisible(tree.children[i], topic);
-        }
+            var result = null;
+            for (var i = 0; result == null && i < tree.children.length; i++) {
+                this.setTreenodeVisible(tree.children[i], topic);
+            }
         }
         return tree;
     }
 
     /*
-    *   This function is used to track ngFor loop
-    */
+     *   This function is used to track ngFor loop
+     */
     trackByFn(index: any, author: any) {
         return index;
     }
 
     setHighlight(rowData: any) {
-        if (rowData == "")
-        this.highlight = "";
-        else
-        this.highlight = rowData.name;
-    }
-
-    openPopup($event, overlaypanel: OverlayPanel){
-        this.toggle = true;
-        setTimeout(()=>{
-            if(this.toggle){
-                overlaypanel.toggle($event)
-            }
-        },250)
+        if (rowData == "") this.highlight = "";
+        else this.highlight = rowData.name;
     }
 
     /**
-     * Retuen background color of the whole record (the container of all authors) 
+     * Retuen background color of the whole record (the container of all authors)
      * based on the dataChanged flag of the record.
      * @returns the background color of the whole record
      */
     get backgroundColor() {
-        let bkgroundColor = 'var(--editable)';
+        let bkgroundColor = "var(--editable)";
 
-        if(this.dataChanged){
-            bkgroundColor = 'var(--data-changed)';
-        }else if(this.updated){
-            bkgroundColor = 'var(--data-changed-saved)';
-        }else if(this.isEditing){
-            bkgroundColor = 'white';
+        if (this.dataChanged) {
+            bkgroundColor = "var(--data-changed)";
+        } else if (this.updated) {
+            bkgroundColor = "var(--data-changed-saved)";
+        } else if (this.isEditing) {
+            bkgroundColor = "white";
         }
 
         return bkgroundColor;
-    }   
-    
+    }
+
     /**
      * Emit command to parent component
      * @param cmd command
      */
     commandOut(cmd: string) {
-        this.cmdOutput.emit({"command": cmd});
-    }    
+        this.cmdOutput.emit({ command: cmd });
+    }
 }

@@ -1,6 +1,6 @@
 import { Inject, Injectable, signal } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { SelectItem, TreeNode } from "primeng/api";
+import { SelectItem } from "primeng/api";
 import { DOCUMENT } from "@angular/common";
 
 @Injectable({
@@ -354,10 +354,7 @@ export class SectionPrefs {
     }
 
     public static getDispName(section: string) {
-        if (
-            !_displayName ||
-            !SectionPrefs._lDispName[section]
-        ) {
+        if (!_displayName || !SectionPrefs._lDispName[section]) {
             return SectionPrefs._lDispName[GENERAL];
         }
 
@@ -794,6 +791,46 @@ export class FilterTreeNode implements TreeNode {
     }
 
     /**
+     * Check if two taxonomy terms are the "same" based on collection
+     * @param topic - topic field value of a search result
+     * @param taxonomy - taxonomy to be checked if it's the same as topic
+     * @param taxonomyURI - taxonomyURI
+     * @param collection - collection
+     * @param tree - Current tree. Used to handle "Other" which means the real taxonomy is
+     * @returns
+     */
+    private topicMatches(
+        topic: any,
+        taxonomy: string,
+        taxonomyURI: string[],
+        collection: string,
+        tree: FilterTreeNode,
+    ): boolean {
+        //Check if topic has scheme value and topic.scheme matches taxonomyURI. Skip if false.
+        if (!topic.scheme || topic.scheme.indexOf(taxonomyURI) < 0) {
+            return false;
+        }
+
+        //For default collection (NIST), check if topics.tag includes taxonomy because taxonomy has only one level.
+        if (collection === "DEFAULT") {
+            return topic.tag?.includes(taxonomy);
+        }
+
+        //If tree label is "Other" which means topic (search result topic) must be exactly the same as taxonomy
+        if (tree.label.startsWith("Other")) {
+            return topic.tag === taxonomy;
+        }
+
+        //Otherwise taxonomy and topic tag must be exactly the same. The following code ignore the space before and after ":"
+        const taxonomyToFind = taxonomy.split(":");
+        const taxonomyToSearch = (topic.tag ?? "").split(":");
+
+        return taxonomyToFind.every(
+            (value, index) => value === taxonomyToSearch[index],
+        );
+    }
+
+    /**
      *  Add count to each node
      *  Loop through search result items and count those that natch the taxonomy of treenode.
      * @param searchResults: search result array
@@ -807,12 +844,7 @@ export class FilterTreeNode implements TreeNode {
     ) {
         this.ediids = [];
 
-        this._addCount(
-            this,
-            searchResults,
-            collection,
-            taxonomyURI,
-        );
+        this._addCount(this, searchResults, collection, taxonomyURI);
     }
 
     _addCount(
@@ -893,33 +925,6 @@ export class FilterTreeNode implements TreeNode {
         return tree.ediids;
     }
 
-    private topicMatches(
-        topic: any,
-        taxonomy: string,
-        taxonomyURI: string[],
-        collection: string,
-        tree: FilterTreeNode,
-    ): boolean {
-        if (!topic.scheme || topic.scheme.indexOf(taxonomyURI) < 0) {
-            return false;
-        }
-
-        if (collection === "DEFAULT") {
-            return topic.tag?.includes(taxonomy);
-        }
-
-        if (tree.label.startsWith("Other")) {
-            return topic.tag === taxonomy;
-        }
-
-        const taxonomyToFind = taxonomy.split(":");
-        const taxonomyToSearch = (topic.tag ?? "").split(":");
-
-        return taxonomyToFind.every(
-            (value, index) => value === taxonomyToSearch[index],
-        );
-    }
-
     /**
      *  Refresh taxonomy for each node
      */
@@ -991,4 +996,15 @@ export class iconClass {
     static readonly CLOUD_DOWNLOAD = "cloud-download";
     static readonly REPEAT = "repeat";
     static readonly GLOBE = "globe";
+}
+
+export interface TreeNode<T = any> {
+    label?: string;
+    key?: string;
+    data?: T;
+    children?: TreeNode<T>[];
+    parent?: TreeNode<T>;
+    expanded?: boolean;
+    leaf?: boolean;
+    selectable?: boolean;
 }

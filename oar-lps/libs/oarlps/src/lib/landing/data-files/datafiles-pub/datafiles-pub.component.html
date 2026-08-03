@@ -202,315 +202,314 @@
                 [style.max-height.px]="tableMaxHeight"
                 class="block relative overflow-y-scroll mx-auto">
 
-                <!-- Angular Material Tree Table -->
-                    <!-- Header -->
-                    <div class="sticky top-0 z-10
-                                text-[14px] px-[16px] items-center h-[40px] 
-                                    grid
-                                    md:grid-cols-1
-                                    lg:grid-cols-[1fr_max(50px,5%)_max(50px,8%)]
-                                    xl:grid-cols-[1fr_max(50px,10%)_max(50px,10%)_max(50px,10%)] gap-4 bg-[#1E6BA1] text-white font-bold">
+                <!-- Header -->
+                <div class="sticky top-0 z-10
+                            text-[14px] px-[16px] items-center h-[40px] 
+                                grid
+                                md:grid-cols-1
+                                lg:grid-cols-[1fr_max(50px,5%)_max(50px,8%)]
+                                xl:grid-cols-[1fr_max(50px,10%)_max(50px,10%)_max(50px,10%)] gap-4 bg-[#1E6BA1] text-white font-bold">
 
-                        <div class="whitespace-nowrap">
-                            <button 
-                                mat-icon-button 
-                                [disabled] = "files.length == 0"
-                                (click)="expandToLevel((searchText ? filteredFiles : files), !isExpanded, null)" 
-                                aria-label="Expand icon">
-                                <mat-icon matTooltip="Expand All" matTooltipPosition="above" class="white-icon-button">
-                                    {{isExpanded? 'expand_more': 'chevron_right'}}
-                                </mat-icon>
+                    <div class="whitespace-nowrap">
+                        <button 
+                            mat-icon-button 
+                            [disabled] = "files.length == 0"
+                            (click)="expandToLevel((searchText ? filteredFiles : files), !isExpanded, null)" 
+                            aria-label="Expand icon">
+                            <mat-icon matTooltip="Expand All" matTooltipPosition="above" class="white-icon-button">
+                                {{isExpanded? 'expand_more': 'chevron_right'}}
+                            </mat-icon>
+                        </button>
+
+                        <span class="align-super">Name</span>
+                    </div>
+                    
+                    <!-- File Type -->
+                    <div class="hidden xl:flex whitespace-nowrap text-left">
+                        <span class="align-super hidden xl:flex whitespace-nowrap">File Type</span>
+                        <span class="align-super hidden lg:flex xl:hidden">Type</span>
+                    </div>
+                    
+                    <!-- Size -->
+                    <div class="hidden xl:flex whitespace-nowrap text-right">Size</div>
+
+                    <!-- Access -->
+                    <div class="hidden lg:flex whitespace-nowrap flex-row">
+                        <span class="align-super">Access</span>
+                    </div>
+                </div>
+
+                <!-- Tree Content -->
+                <div *ngIf="files.length > 0; else emptyMessage" style="font-size: 14px;">
+                    <!-- Recursive tree node template -->
+                    <ng-container *ngFor="let node of (searchText ? filteredFiles : files); let i = index">
+                        <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: node, level: 0, index: i}"></div>
+                    </ng-container>
+                </div>
+
+                <ng-template #emptyMessage>
+                    <div style="text-align: center; padding: 24px; color: #666; font-size: 14px;">
+                        No records found
+                    </div>
+                </ng-template>
+
+                <!-- Tree Node Template -->
+                <ng-template #treeNodeTemplate let-node let-level="level" let-index="index">
+                    <!-- <div class="mat-row" style="display: flex; align-items: center; background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 8px 12px;"> -->
+                    <div
+                        class="text-[18px] px-[16px] items-center h-auto
+                                grid
+                                md:grid-cols-1
+                                lg:grid-cols-[1fr_max(50px,5%)_max(50px,8%)]
+                                xl:grid-cols-[1fr_max(50px,10%)_max(50px,10%)_max(50px,10%)] gap-4"
+                        [ngStyle]="index === 0 ? {'margin-top': '0.5em', 'border-top': 'none'} : {'padding-top': '0.5em', 'border-top': '1px solid #e0e0e0'}">
+
+                        <!-- Tree toggler and checkbox -->
+                        <div style="padding-left: {{(level + 1) * 24}}px;">
+                            <button *ngIf="node && node.children?.length > 0" mat-icon-button (click)="node.isExpanded = !node.isExpanded"
+                                    [attr.aria-label]="node.isExpanded ? 'Collapse' : 'Expand'"
+                                    style="padding: 4px; min-width: 36px;">
+                                <mat-icon style="padding-top: 2px;">{{node.isExpanded? 'expand_more': 'chevron_right'}}</mat-icon>
                             </button>
+                            <span *ngIf="node && node.children?.length == 0" style="margin-right: 48px;"> </span>
 
-                            <span class="align-super">Name</span>
+                            <!-- File Name -->
+                            <span *ngIf="node.data" 
+                                class="align-super text-[#1471AE] cursor-pointer"
+                                (click)="openDetails($event, node.data)"
+                                matTooltip="Click for more details">
+                                {{node.data.name}}
+                            </span>
+
+                            <span *ngIf="!node.data" class="align-super">" "</span>
+
+                            <!-- Arrow: only display for leaves -->
+                            <span *ngIf="node && node.children && node.children.length == 0"
+                                class="text-[#1471AE] cursor-pointer" 
+                                matTooltip="Click for more details"
+                                (click)="openDetails($event, node.data)">
+                                <mat-icon
+                                    [class.amplified]="amplifyIcon(node.data)"
+                                    (mouseover)="onMouseOver($event, node.data)" 
+                                    (mouseleave)="hoverRowKey=null" >
+                                    {{rowExpanded(node.data.key) ? 'arrow_drop_down' : 'arrow_right'}}
+                                </mat-icon>
+                            </span>
                         </div>
-                        
+
                         <!-- File Type -->
-                        <div class="hidden xl:flex whitespace-nowrap text-left">
-                            <span class="align-super hidden xl:flex whitespace-nowrap">File Type</span>
-                            <span class="align-super hidden lg:flex xl:hidden">Type</span>
+                        <div class="hidden xl:flex">
+                            {{mediaTypeLookup(node.data)}}
                         </div>
-                        
+
                         <!-- Size -->
-                        <div class="hidden xl:flex whitespace-nowrap text-right">Size</div>
+                        <div class="hidden xl:flex text-right">
+                            <span *ngIf="node.data">{{node.data.size || ''}}</span>
+                        </div>
 
                         <!-- Access -->
-                        <div class="hidden lg:flex whitespace-nowrap flex-row">
-                            <span class="align-super">Access</span>
-                        </div>
-                    </div>
-
-                    <!-- Tree Content -->
-                    <div *ngIf="files.length > 0; else emptyMessage" style="font-size: 14px;">
-                        <!-- Recursive tree node template -->
-                        <ng-container *ngFor="let node of (searchText ? filteredFiles : files); let i = index">
-                            <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: node, level: 0, index: i}"></div>
-                        </ng-container>
-                    </div>
-
-                    <ng-template #emptyMessage>
-                        <div style="text-align: center; padding: 24px; color: #666; font-size: 14px;">
-                            No records found
-                        </div>
-                    </ng-template>
-
-                    <!-- Tree Node Template -->
-                    <ng-template #treeNodeTemplate let-node let-level="level" let-index="index">
-                        <!-- <div class="mat-row" style="display: flex; align-items: center; background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 8px 12px;"> -->
-                        <div
-                            class="text-[18px] px-[16px] items-center h-auto
-                                    grid
-                                    md:grid-cols-1
-                                    lg:grid-cols-[1fr_max(50px,5%)_max(50px,8%)]
-                                    xl:grid-cols-[1fr_max(50px,10%)_max(50px,10%)_max(50px,10%)] gap-4"
-                            [ngStyle]="index === 0 ? {'margin-top': '0.5em', 'border-top': 'none'} : {'padding-top': '0.5em', 'border-top': '1px solid #e0e0e0'}">
-
-                            <!-- Tree toggler and checkbox -->
-                            <div style="padding-left: {{(level + 1) * 24}}px;">
-                                <button *ngIf="node && node.children?.length > 0" mat-icon-button (click)="node.isExpanded = !node.isExpanded"
-                                        [attr.aria-label]="node.isExpanded ? 'Collapse' : 'Expand'"
-                                        style="padding: 4px; min-width: 36px;">
-                                    <mat-icon style="padding-top: 2px;">{{node.isExpanded? 'expand_more': 'chevron_right'}}</mat-icon>
-                                </button>
-                                <span *ngIf="node && node.children?.length == 0" style="margin-right: 48px;"> </span>
-
-                                <!-- File Name -->
-                                <span *ngIf="node.data" 
-                                    class="align-super text-[#1471AE] cursor-pointer"
-                                    (click)="openDetails($event, node.data)"
-                                    matTooltip="Click for more details">
-                                    {{node.data.name}}
+                        <div class="hidden lg:flex whitespace-nowrap text-center">
+                            @if(isPublicSite) {
+                                <span *ngIf="node.data && node.data.comp && node.data.comp.downloadURL; else noFile">
+                                    <a *ngIf="node.data.comp.downloadStatus != 'downloading'"
+                                        href='{{node.data.comp.downloadURL}}' target='_blank' download="download"
+                                        matTooltip="Download this file"
+                                        (click)="setFileDownloaded(node.data)"
+                                        style="margin: auto"
+                                        [ngStyle]="{'color':getDownloadBtnColor(node.data)}"
+                                        [class.disabled]="node.data.comp.downloadStatus == 'downloading'">
+                                        <mat-icon style="vertical-align: middle;">file_download</mat-icon>
+                                    </a>
+                                    <a *ngIf="node.data.comp.downloadStatus == 'downloading'"
+                                        matTooltip="Downloading">
+                                        <mat-spinner diameter="20"></mat-spinner>
+                                        <!-- <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon> -->
+                                    </a>
                                 </span>
+                                <ng-template #noFile>
+                                    <span style="display: inline; margin-right: 18px; text-align: center;">&nbsp;</span>
+                                </ng-template>
+                                <!-- </div> -->
 
-                                <span *ngIf="!node.data" class="align-super">{{node.data.name}}</span>
+                                <!-- Display shopping cart icon for oublic data. Otherwise display lock icon -->
+                                <span class="indent-content" *ngIf="displayMode != 'restrict'; else RestrictedAccessPage">
+                                    <span style="padding-left:10px;" *ngIf="node.data.isInCart;else not_in_cart"
+                                        (click)="removeFromGlobalCart(node.data)">
+                                        <!-- <i class="faa faa-cart-plus green-cart" aria-hidden="true" data-toggle="tooltip"
+                                            title="Remove from cart"></i> -->
 
-                                <!-- Arrow: only display for leaves -->
-                                <span *ngIf="node && node.children && node.children.length == 0"
-                                    class="text-[#1471AE] cursor-pointer" 
-                                    matTooltip="Click for more details"
-                                    (click)="openDetails($event, node.data)">
-                                    <mat-icon
-                                        [class.amplified]="amplifyIcon(node.data)"
-                                        (mouseover)="onMouseOver($event, node.data)" 
-                                        (mouseleave)="hoverRowKey=null" >
-                                        {{rowExpanded(node.data.key) ? 'arrow_drop_down' : 'arrow_right'}}
-                                    </mat-icon>
-                                </span>
-                            </div>
-
-                            <!-- File Type -->
-                            <div class="hidden xl:flex">
-                                {{mediaTypeLookup(node.data)}}
-                            </div>
-
-                            <!-- Size -->
-                            <div class="hidden xl:flex text-right">
-                                <span *ngIf="node.data">{{node.data.size || ''}}</span>
-                            </div>
-
-                            <!-- Access -->
-                            <div class="hidden lg:flex whitespace-nowrap text-center">
-                                @if(isPublicSite) {
-                                    <span *ngIf="node.data && node.data.comp && node.data.comp.downloadURL; else noFile">
-                                        <a *ngIf="node.data.comp.downloadStatus != 'downloading'"
-                                            href='{{node.data.comp.downloadURL}}' target='_blank' download="download"
-                                            matTooltip="Download this file"
-                                            (click)="setFileDownloaded(node.data)"
-                                            style="margin: auto"
-                                            [ngStyle]="{'color':getDownloadBtnColor(node.data)}"
-                                            [class.disabled]="node.data.comp.downloadStatus == 'downloading'">
-                                            <mat-icon style="vertical-align: middle;">file_download</mat-icon>
-                                        </a>
-                                        <a *ngIf="node.data.comp.downloadStatus == 'downloading'"
-                                            matTooltip="Downloading">
-                                            <mat-spinner diameter="20"></mat-spinner>
-                                            <!-- <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon> -->
-                                        </a>
+                                        <fa-icon 
+                                            [icon]="faCartPlus" 
+                                            class="green-cart"
+                                            size="sm" 
+                                            aria-hidden="true"
+                                            data-toggle="tooltip" 
+                                            title="Remove from cart">
+                                        </fa-icon>
                                     </span>
-                                    <ng-template #noFile>
-                                        <span style="display: inline; margin-right: 18px; text-align: center;">&nbsp;</span>
-                                    </ng-template>
-                                    <!-- </div> -->
-
-                                    <!-- Display shopping cart icon for oublic data. Otherwise display lock icon -->
-                                    <span class="indent-content" *ngIf="displayMode != 'restrict'; else RestrictedAccessPage">
-                                        <span style="padding-left:10px;" *ngIf="node.data.isInCart;else not_in_cart"
-                                            (click)="removeFromGlobalCart(node.data)">
-                                            <!-- <i class="faa faa-cart-plus green-cart" aria-hidden="true" data-toggle="tooltip"
-                                                title="Remove from cart"></i> -->
+                                    <span *ngIf="node.data.isInCart" style="margin-left: 0.5em;font-size: 0.5em">
+                                        Added
+                                    </span>
+                                    <ng-template #not_in_cart>
+                                        <div style="padding-left:10px;" (click)="addToGlobalCart(node.data)">
+                                            <!-- <i class="faa faa-cart-plus blue-cart" aria-hidden="true" data-toggle="tooltip"
+                                                title="Add to cart"></i> -->
 
                                             <fa-icon 
                                                 [icon]="faCartPlus" 
-                                                class="green-cart"
+                                                class="blue-cart" 
                                                 size="sm" 
                                                 aria-hidden="true"
                                                 data-toggle="tooltip" 
-                                                title="Remove from cart">
+                                                title="Add to cart">
                                             </fa-icon>
-                                        </span>
-                                        <span *ngIf="node.data.isInCart" style="margin-left: 0.5em;font-size: 0.5em">
-                                            Added
-                                        </span>
-                                        <ng-template #not_in_cart>
-                                            <div style="padding-left:10px;" (click)="addToGlobalCart(node.data)">
-                                                <!-- <i class="faa faa-cart-plus blue-cart" aria-hidden="true" data-toggle="tooltip"
-                                                    title="Add to cart"></i> -->
-
-                                                <fa-icon 
-                                                    [icon]="faCartPlus" 
-                                                    class="blue-cart" 
-                                                    size="sm" 
-                                                    aria-hidden="true"
-                                                    data-toggle="tooltip" 
-                                                    title="Add to cart">
-                                                </fa-icon>
-                                            </div>
-                                        </ng-template>
-                                    </span>
-                                    <ng-template #RestrictedAccessPage>
-                                        <a *ngIf="node.data && node.data.comp && !node.data.comp.downloadURL && rapWithAccessUrl" href={{accessURL}} target="_blank">
-                                            <!-- <i class="faa faa-lock blue-cart"
-                                                (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')"
-                                                aria-hidden="true" data-toggle="tooltip" title="Request access"></i> -->
-
-                                            <fa-icon 
-                                                [icon]="faLock" 
-                                                size="sm" 
-                                                (click)="googleAnalytics(node.data.comp['accessURL'], $event, 'Request access')"
-                                                aria-hidden="true"
-                                                data-toggle="tooltip" 
-                                                title="Request access">
-                                            </fa-icon>
-                                        </a>
-                                    </ng-template>  
-
-                                <!-- MIDAS side -->    
-                                } @else {
-                                    <div *ngIf="fileManagerUrl;else space_holder">
-                                        <a href='{{fileManagerUrl}}' target='_blank' aria-label="Access file in File Manager"
-                                            ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(node.data)">
-
-                                            <fa-icon 
-                                                [icon]="faDownload" 
-                                                [ngStyle]="{'color':getDownloadBtnColor(node.data)}"
-                                                size="sm" 
-                                                aria-hidden="true">
-                                            </fa-icon>
-                                            <span class="sr-only">Hidden text for 508 compliance</span>
-                                        </a>
-                                        <a *ngIf="node.data.comp.downloadStatus == 'downloading'"
-                                            matTooltip="Downloading">
-                                            <mat-spinner diameter="20"></mat-spinner>
-                                            <!-- <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon> -->
-                                        </a>
-                                        <!-- <p-progressSpinner *ngIf="rowData.comp.downloadStatus == 'downloading'"
-                                            [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner> -->
-                                    </div>
-                                    <ng-template #space_holder>
-                                        <div style="padding-right: 0.4em;">&nbsp;&nbsp;</div>
+                                        </div>
                                     </ng-template>
-                                }  
-                            </div>                       
-                        </div>
+                                </span>
+                                <ng-template #RestrictedAccessPage>
+                                    <a *ngIf="node.data && node.data.comp && !node.data.comp.downloadURL && rapWithAccessUrl" href={{accessURL}} target="_blank">
+                                        <!-- <i class="faa faa-lock blue-cart"
+                                            (click)="googleAnalytics(rowData.comp['accessURL'], $event, 'Request access')"
+                                            aria-hidden="true" data-toggle="tooltip" title="Request access"></i> -->
 
-                        <!-- EXPANDED DETAIL -->
-                        <div
-                            [@detailExpand3]="
-                            rowExpanded(node.data.key)
-                                ? 'expanded'
-                                : 'collapsed'
-                            "
-                            class="pl-[calc((level+1)*60px)] pr-[48px] grid grid-cols-1 w-full ">
+                                        <fa-icon 
+                                            [icon]="faLock" 
+                                            size="sm" 
+                                            (click)="googleAnalytics(node.data.comp['accessURL'], $event, 'Request access')"
+                                            aria-hidden="true"
+                                            data-toggle="tooltip" 
+                                            title="Request access">
+                                        </fa-icon>
+                                    </a>
+                                </ng-template>  
 
-                            <div class="border border-solid border-gray-200 p-4 rounded-md m-6 bg-slate-100">
-                                <div class="mb-2">
-                                    <div class="font-bold">
-                                        Selected: {{node.data.filetype}}
-                                    </div>
-                                    <div class="bg-slate-100">
-                                        {{ node.data ? node.data.name : '' }}
-                                    </div>
+                            <!-- MIDAS side -->    
+                            } @else {
+                                <div *ngIf="fileManagerUrl;else space_holder">
+                                    <a href='{{fileManagerUrl}}' target='_blank' aria-label="Access file in File Manager"
+                                        ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(node.data)">
+
+                                        <fa-icon 
+                                            [icon]="faDownload" 
+                                            [ngStyle]="{'color':getDownloadBtnColor(node.data)}"
+                                            size="sm" 
+                                            aria-hidden="true">
+                                        </fa-icon>
+                                        <span class="sr-only">Hidden text for 508 compliance</span>
+                                    </a>
+                                    <a *ngIf="node.data.comp.downloadStatus == 'downloading'"
+                                        matTooltip="Downloading">
+                                        <mat-spinner diameter="20"></mat-spinner>
+                                        <!-- <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon> -->
+                                    </a>
+                                    <!-- <p-progressSpinner *ngIf="rowData.comp.downloadStatus == 'downloading'"
+                                        [style]="{width: '12px', height: '12px', 'margin-right': '.5em'}"></p-progressSpinner> -->
+                                </div>
+                                <ng-template #space_holder>
+                                    <div style="padding-right: 0.4em;">&nbsp;&nbsp;</div>
+                                </ng-template>
+                            }  
+                        </div>                       
+                    </div>
+
+                    <!-- EXPANDED DETAIL -->
+                    <div
+                        [@detailExpand3]="
+                        rowExpanded(node.data.key)
+                            ? 'expanded'
+                            : 'collapsed'
+                        "
+                        class="pl-[calc((level+1)*60px)] pr-[48px] grid grid-cols-1 w-full ">
+
+                        <div class="border border-solid border-gray-200 p-4 rounded-md m-6 bg-slate-100">
+                            <div class="mb-2">
+                                <div class="font-bold">
+                                    Selected: {{node.data.filetype}}
+                                </div>
+                                <div class="bg-slate-100">
+                                    {{ node.data ? node.data.name : '' }}
+                                </div>
+                            </div>
+
+                            <!-- Type & Size  -->
+                            <div class="grid grid-cols-[50%_1fr] mb-2">
+                                <!-- Type -->
+                                <div class="mb-0">
+                                    <span class="font-bold mr-2">
+                                        Type:
+                                    </span>
+                                    <span class="font-medium bg-slate-100">
+                                        Media Type
+                                    </span>
+                                </div>
+                                
+                                <!-- Size -->
+                                <div class="mb-0">
+                                    <span class="font-bold mr-2">
+                                        Size:
+                                    </span>
+                                    <span *ngIf="node.data.size" class="text-[13px] font-medium bg-slate-100">
+                                        {{node.data.size}}
+                                    </span>
+                                    <span *ngIf="!node.data.size" class="text-[13px] font-medium italic bg-slate-100">
+                                        Not Available
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Status and Download -->
+                            <div class="grid grid-cols-2 mb-2">
+                                <!-- Status -->
+                                <div class="mb-0">
+                                    <span class="font-bold mr-2">
+                                        Download Status:
+                                    </span>
+                                    <span *ngIf="node.data && node.data.comp" class="font-medium bg-slate-100">
+                                        {{ node.data.comp.downloadStatus }}
+                                    </span>
                                 </div>
 
-                                <!-- Type & Size  -->
-                                <div class="grid grid-cols-[50%_1fr] mb-2">
-                                    <!-- Type -->
-                                    <div class="mb-0">
-                                        <span class="font-bold mr-2">
-                                            Type:
-                                        </span>
-                                        <span class="font-medium bg-slate-100">
-                                            Media Type
-                                        </span>
-                                    </div>
-                                    
-                                    <!-- Size -->
-                                    <div class="mb-0">
-                                        <span class="font-bold mr-2">
-                                            Size:
-                                        </span>
-                                        <span *ngIf="node.data.size" class="text-[13px] font-medium bg-slate-100">
-                                            {{node.data.size}}
-                                        </span>
-                                        <span *ngIf="!node.data.size" class="text-[13px] font-medium italic bg-slate-100">
-                                            Not Available
-                                        </span>
-                                    </div>
+                                <div *ngIf="node.data && node.data.comp">
+                                    <a *ngIf="node.data.comp?.downloadStatus != 'downloading'"
+                                        href='{{node.data.comp.downloadURL}}' target='_blank' download="download"
+                                        matTooltip="Download this file"
+                                        (click)="setFileDownloaded(node.data)"
+                                        style="margin: auto"
+                                        [ngStyle]="{'color': downloadIconColor(node.data.comp.downloadStatus)}"
+                                        [class.disabled]="node.data.comp.downloadStatus == 'downloading'">
+                                        <mat-icon style="vertical-align: middle;">file_download</mat-icon>
+                                    </a>
+                                    <a *ngIf="node.data.comp?.downloadStatus == 'downloading'"
+                                        matTooltip="Downloading">
+                                        <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon>
+                                    </a>
                                 </div>
+                            </div>
 
-                                <!-- Status and Download -->
-                                <div class="grid grid-cols-2 mb-2">
-                                    <!-- Status -->
-                                    <div class="mb-0">
-                                        <span class="font-bold mr-2">
-                                            Download Status:
-                                        </span>
-                                        <span *ngIf="node.data && node.data.comp" class="font-medium bg-slate-100">
-                                            {{ node.data.comp.downloadStatus }}
-                                        </span>
-                                    </div>
-
-                                    <div *ngIf="node.data && node.data.comp">
-                                        <a *ngIf="node.data.comp?.downloadStatus != 'downloading'"
-                                            href='{{node.data.comp.downloadURL}}' target='_blank' download="download"
-                                            matTooltip="Download this file"
-                                            (click)="setFileDownloaded(node.data)"
-                                            style="margin: auto"
-                                            [ngStyle]="{'color': downloadIconColor(node.data.comp.downloadStatus)}"
-                                            [class.disabled]="node.data.comp.downloadStatus == 'downloading'">
-                                            <mat-icon style="vertical-align: middle;">file_download</mat-icon>
-                                        </a>
-                                        <a *ngIf="node.data.comp?.downloadStatus == 'downloading'"
-                                            matTooltip="Downloading">
-                                            <mat-icon class="text-[#9e9e9e]" style="vertical-align: middle;">file_download</mat-icon>
-                                        </a>
-                                    </div>
+                            <!-- Description -->
+                            <div class="my-2">
+                                <div class="font-bold">
+                                    Description:
                                 </div>
-
-                                <!-- Description -->
-                                <div class="my-2">
-                                    <div class="font-bold">
-                                        Description:
+                                <div class="bg-[var(--nist-green-lighter)] p-3 bg-[#c1e7ff]" style="border: 1px solid lightgrey; border-radius: 5px;">
+                                    <div *ngIf="node.data && node.data.comp && node.data.comp.description" class="text-[13px] font-medium">
+                                        {{ node.data.comp.description }}
                                     </div>
-                                    <div class="bg-[var(--nist-green-lighter)] p-3 bg-[#c1e7ff]" style="border: 1px solid lightgrey; border-radius: 5px;">
-                                        <div *ngIf="node.data && node.data.comp && node.data.comp.description" class="text-[13px] font-medium">
-                                            {{ node.data.comp.description }}
-                                        </div>
-                                        <div *ngIf="node.data && node.data.comp && !node.data.comp.description" class="text-[13px] font-medium italic">
-                                            No Description Available
-                                        </div>
+                                    <div *ngIf="node.data && node.data.comp && !node.data.comp.description" class="text-[13px] font-medium italic">
+                                        No Description Available
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Children nodes -->
-                        <div class="rounded-sm" *ngIf="node.isExpanded && node.children?.length > 0" >
-                            <ng-container *ngFor="let child of node.children; let j = index">
-                                <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: child, level: level + 1, index: j}"></div>
-                            </ng-container>
-                        </div>
-                    </ng-template>
+                    <!-- Children nodes -->
+                    <div class="rounded-sm" *ngIf="node.isExpanded && node.children?.length > 0" >
+                        <ng-container *ngFor="let child of node.children; let j = index">
+                            <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: child, level: level + 1, index: j}"></div>
+                        </ng-container>
+                    </div>
+                </ng-template>
                 <!-- </div> -->
             </div>
             
