@@ -19,11 +19,14 @@ import {
     GlobalService,
     ReviewResponse,
     SectionHelp,
-    iconClass
+    iconClass,
+    SubmissionStatus,
+    SubmissionFeedback
 } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from '../submission/submit-confirm/submit-confirm.component';
+import { SubmitStatusComponent } from '../submission/submit-status/submit-status.component';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ButtonModule } from 'primeng/button';
@@ -82,9 +85,9 @@ export class EditControlComponent implements OnInit, OnChanges {
 
     private _dapUpdtsvc: DAPUpdateService = null;
     private originalRecord: NerdmRes = null;
-    _editMode: string;
-    EDIT_TYPES: any = LandingConstants.editTypes;
-    _editType: string;
+    editMode: string;
+    REC_STATES: any = LandingConstants.recStates;
+    curRecState: string;
     EDIT_MODES: any;
     screenWidth: number;
     screenSizeBreakPoint: number;
@@ -106,7 +109,7 @@ export class EditControlComponent implements OnInit, OnChanges {
 
     suggestions: ReviewResponse = {} as ReviewResponse;
     revisionStarted: boolean = false;
-    editTypes = LandingConstants.editTypes;
+    recStates = LandingConstants.recStates;
     readonly dialog = inject(MatDialog);
     
     //icon class
@@ -236,7 +239,6 @@ export class EditControlComponent implements OnInit, OnChanges {
         );
 
         this.edstatsvc._setLastUpdated(this.mdupdsvc.lastUpdate);
-        this.edstatsvc._setAuthorized(this.isAuthorized());
 
         this.authsvc.getCredentials().subscribe((cred) => {
             this.cred = cred;
@@ -251,8 +253,6 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "768");
         this.portalURL = this.cfg.get("portalAPI", "https://mdsdev.nist.gov/portal/landing");
     }
-
-
 
     ngOnInit() {
         let i = 0;
@@ -280,14 +280,14 @@ export class EditControlComponent implements OnInit, OnChanges {
         });     
         
         this.edstatsvc.watchEditMode((editMode) => {
-            this._editMode = editMode;
+            this.editMode = editMode;
         })
 
-        this.edstatsvc.watchEditType((editType) => {
-            this._editType = editType;
+        this.edstatsvc.watchRecState((recState) => {
+            this.curRecState = recState;
             this.submissionData["isRevision"] = this.isRevision;
             this.globalService.setSubmissionData(this.submissionData);
-            this.updateMode(true);
+            // this.updateMode(true);
         })
 
         this.lpService.watchMobileMode((response) => {
@@ -306,27 +306,29 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     get isSubmitted() {
-        return this.mdupdsvc.recStatus.state == "submitted";
+        return this.mdupdsvc.submitted;
+        // return this.mdupdsvc.recStatus.state == "submitted";
     }
 
     get isRevision() {
-        return this._editType == this.EDIT_TYPES.REVISE;
+        return this.mdupdsvc.revision;
+        // return this.curRecState == this.REC_STATES.REVISE;
     }
 
     get isEditMode() {
-        return this._editMode == this.EDIT_MODES.EDIT_MODE;
+        return this.editMode == this.EDIT_MODES.EDIT_MODE;
     }
 
     get isPreviewMode() {
-        return this._editMode == this.EDIT_MODES.PREVIEW_MODE;
+        return this.editMode == this.EDIT_MODES.PREVIEW_MODE || this.editMode == this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE;
     }
 
     get isDoneMode() {
-        return this._editMode == this.EDIT_MODES.DONE_MODE;
+        return this.editMode == this.EDIT_MODES.DONE_MODE;
     }
 
     get isOutsideMidasMode() {
-        return this._editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE
+        return this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE
     }
 
     get editBtnLabel() {
@@ -337,7 +339,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     get readyEdit() {
         if (this.isSubmitted) {
             return false;
-        }else if (this.isAuthorized) {
+        }else if (this.authorized) {
             if (this.isRevision)
                 return this.revisionStarted;
             else
@@ -349,7 +351,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     get editEnable() {
-        return this.isAuthorized && !this.isSubmitted;
+        return this.authorized && !this.isSubmitted && !this.mdupdsvc.published;
     }
 
     get revisionWidth() {
@@ -361,73 +363,68 @@ export class EditControlComponent implements OnInit, OnChanges {
             return {'width': '50px'};
     }
 
+    get stateForDisplay() {
+        let state = this.mdupdsvc.recStatus.state;
+        if (this.mdupdsvc.resubmit) {
+            state = "Resubmit";
+        }
+        if (this.mdupdsvc.revision) {
+            state = "Revision";
+        }
 
-    /**
-     * 
-     * @param nologin Return current mode string for display
-     */
-    get currentMode(){
-        let returnString: string = "";
-        switch(this._editMode) { 
-            case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORMAL)
-                    returnString = "EDIT MODE";
-                else if(this._editType == this.EDIT_TYPES.REVISE)
-                    returnString = "REVISION MODE";
-
-                break; 
-            } 
-            case this.EDIT_MODES.PREVIEW_MODE: { 
-                returnString = "PREVIEW MODE";
-                if(this._editType == this.EDIT_TYPES.REVISE)
-                    returnString = "REVISION MODE";
-                break; 
-            } 
-            case this.EDIT_MODES.DONE_MODE: { 
-                returnString = "DONE";
-                break; 
-            } 
-            default: { 
-                break; 
-            } 
-        } 
-
-        return returnString;
+        return state;
     }
 
-    get editModeTooltip() {
-        let returnString: string = "";
-        switch(this._editMode) { 
-            case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORMAL)
-                    returnString = "EDIT MODE";
-                else if(this._editType == this.EDIT_TYPES.REVISE)
-                    returnString = "REVISION MODE";
-                break; 
-            } 
-            case this.EDIT_MODES.PREVIEW_MODE: { 
-                returnString = "PREVIEW MODE";
-                break; 
-            } 
-            case this.EDIT_MODES.DONE_MODE: { 
-                returnString = "DONE MODE";
-                break; 
-            } 
-            default: { 
-                break; 
-            } 
-        } 
+    submitBtnLabel(btnType: string = 'normal') {
+        let btnLabel: string = "";
+
+        switch (btnType) {
+            case 'mobile':
+                btnLabel = "Submit";
+                break;
+            
+            default:
+                btnLabel = "Submit for Review";
+                break;                
+        }
+
+        return btnLabel;
+    }
+
+    /**
+     * Return current mode string for display
+     */
+    get currentMode(){
+        let returnString: string = "EDIT MODE";
+
+        if(this.mdupdsvc.published) {
+            returnString = "VIEW ONLY MODE";
+        }else if(this.mdupdsvc.submitted) {
+            returnString = "VIEW ONLY MODE";
+        }else if(this.mdupdsvc.resubmit) {
+            returnString = "RESUBMIT MODE";
+        }else if (this.mdupdsvc.revision) {
+            returnString = "REVISION MODE";
+        }
+
+        if (this.editMode == this.EDIT_MODES.PREVIEW_MODE) {
+            returnString = "PREVIEW MODE";
+        }
+
+        if (this.editMode == this.EDIT_MODES.DONE_MODE) {
+            returnString = "DONE";
+        }
 
         return returnString;
     }
 
     get editModeIconClass() {
         let returnString: string = "";
-        switch(this._editMode) { 
+        switch(this.editMode) { 
             case this.EDIT_MODES.EDIT_MODE: { 
-                if(this._editType == this.EDIT_TYPES.NORMAL)
+                if(this.curRecState == this.REC_STATES.EDIT)
                     returnString = "fa-pencil";
-                else if(this._editType == this.EDIT_TYPES.REVISE)
+                else if(this.curRecState == this.REC_STATES.REVISE)
                     returnString = "fa-undo";
                 break; 
             } 
@@ -508,45 +505,11 @@ export class EditControlComponent implements OnInit, OnChanges {
      * @param editmode   
      */
     setEditMode(editmode : string){
-        this._editMode = editmode;
+        this.editMode = editmode;
         //broadcast the editmode
-        this.edstatsvc.editMode.set(editmode);
-        this.edstatsvc._setEditMode(editmode);
+        this.edstatsvc.setEditMode(editmode);
         this.chref.detectChanges();
     }
-
-
-    // get hasRequiredItems() {
-    //     return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.failures &&  this.submitResponse.validation.failures.length > 0;
-    // }
-
-    // get hasRecommendedItems() {
-    //     return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.warnings &&  this.submitResponse.validation.warnings.length > 0;
-    // }
-
-    // get hasNiceToHaveItems() {
-    //     return this.submitResponse && this.submitResponse.validation && this.submitResponse.validation.recommendations &&  this.submitResponse.validation.recommendations.length > 0;
-    // }
-
-    updateMode(remoteStart: boolean = false) {
-        if (this.isRevision) {
-            
-            if (!remoteStart) {
-                this.revisionStarted = true;
-                this.setEditMode(this.EDIT_MODES.EDIT_MODE); 
-            } else {
-                this.setEditMode(this.EDIT_MODES.PREVIEW_MODE); 
-            }
-
-        } else {
-            if (this.isSubmitted) {
-                this.setEditMode(this.EDIT_MODES.PREVIEW_MODE); 
-            } else {
-                this.setEditMode(this.EDIT_MODES.EDIT_MODE); 
-            }
-        }
-    }
-
 
     /**
      * When user clicks on the edit button
@@ -556,7 +519,10 @@ export class EditControlComponent implements OnInit, OnChanges {
         // set the flag to true and stay true. This flag is to set the edit button lable
         // for revision mode. For other mode it will be ignored.
         this.startEditing();
-        this.revisionStarted = true;
+
+        if (this.curRecState == this.REC_STATES.REVISE) {
+            this.revisionStarted = true;
+        }
     }
 
     /**
@@ -597,65 +563,35 @@ export class EditControlComponent implements OnInit, OnChanges {
             
                     this.modalRef.result.then((result) => {
                         if (result) {
-                            // if(!err)
-                                this.edit();
+                            this.setEditMode(this.EDIT_MODES.EDIT_MODE);
+                            this.edstatsvc.setShowLPContent(true);
+                            this.revisionStarted = true;
                         } else {
                             console.log("User changed mind.");
                         }
                     }, (reason) => {
                     });
                 })
+            } else if (this.mdupdsvc.submitted || this.mdupdsvc.published) {
+                this.setEditMode(this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE);
             } else {
                 // this.updateMode(remoteStart);
-                this.edit();
+                // this.edit();
+                this.setEditMode(this.EDIT_MODES.EDIT_MODE);
+                
+                this.edstatsvc.setShowLPContent(true);
             }
-        } else {
-            this.edit();
+        } else { // Unauthorized - set to the edit mode set by landing page
+            // this.edit();
+            this.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
+            
+            this.edstatsvc.setShowLPContent(true);
         }
 
-        if (this._editMode == this.EDIT_MODES.EDIT_MODE) {
+        if (this.editMode == this.EDIT_MODES.EDIT_MODE) {
             this.edstatsvc.setShowLPContent(true);
             return;
         }
-    }
-
-    edit() {
-        this.mdupdsvc.startEditing(this.resID).subscribe(
-            (authorized) => {
-                if (authorized) {
-                    // User authorized
-                    console.log("Loading draft...");
-                    this.statusbar.showMessage("Loading draft...", true)
-                    // this.globalService.setMessage("Loading draft...");
-
-                    //See if this is revision
-                    if (this.mdupdsvc.published && !this.revisionStarted) {
-                        this.edstatsvc._setEditType(this.editTypes.REVISE);
-                        // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["typeName"]);
-                        this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    } else if (this.mdupdsvc.submitted) {
-                        this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    } else {
-                        this.setEditMode(this.EDIT_MODES.EDIT_MODE);  
-                    }
-
-                    // if (this.isRevision) {
-                    //     this.revisionStarted = true;
-                    // }
-                }
-                else {
-                    // not authorized; switch to preview mode
-                    this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    this.statusbar.showMessage("You are not authorized to edit this record");
-                }
-                this.edstatsvc.setShowLPContent(true);
-            },
-            (err) => {
-                console.error("Failed to start editing "+this.resID+": "+err.message);
-                this.statusbar.showMessage("Failure loading for editing: "+err.message, true);
-                this.edstatsvc.setShowLPContent(true);
-            }
-        );            
     }
 
     /**
@@ -765,14 +701,6 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     /**
-     * return true if the user is currently authorized to to edit the resource metadata.
-     * If false, can attempt to gain authorization via a call to authorizeEditing();
-     */
-    public isAuthorized(): boolean {
-        return Boolean(this._dapUpdtsvc);
-    }
-
-    /**
      * obtain authorization to edit the metadata and pass that authorization to the editing widgets.
      *
      * Authorization in this context mean a CustomizationService with a valid authorization token 
@@ -838,7 +766,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     }else{
                       subscriber.next(false);
                       this.edstatsvc._setAuthorized(false);
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                      this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                     }
                     
                     subscriber.complete();
@@ -852,7 +780,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                     subscriber.next(false);
                     subscriber.complete();
                     this.edstatsvc._setAuthorized(false);
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE)
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
                 }
             );
         });
@@ -883,6 +811,9 @@ export class EditControlComponent implements OnInit, OnChanges {
       
     }
 
+    /**
+     * Open submit confirmation dialog
+     */
     openSubmitConfirmDialog() {
         let ngbModalOptions: NgbModalOptions = {
             backdrop: 'static',
@@ -912,19 +843,51 @@ export class EditControlComponent implements OnInit, OnChanges {
         );
     }
 
-    submitReview() {
-        // Finalizing
-        this.mdupdsvc.submit("finalize", {"message": "preparing for submission"}).subscribe(
-            (result) => {
-                //Finalize with no error. Then refresh Nerdm record
-                this.mdupdsvc.loadDraft(true).subscribe((result) => {
-                    //Once Nerdm record refreshed. Suggestions will automatically refreshed as well
-                    //Then display the pop up window
+    /**
+     * Open submit status dialog
+     */
+    openSubmitStatusDialog(submitStatus: any) {
+        let ngbModalOptions: NgbModalOptions = {
+            backdrop: 'static',
+            keyboard: false,
+            windowClass: "modal-small",
+            size: 'lg'
+        };
 
-                    this.openSubmitConfirmDialog();
-                })
+        this.modalRef = this.modalService.open(SubmitStatusComponent, ngbModalOptions);
+        this.modalRef.componentInstance.submitStatus = submitStatus;
+        this.modalRef.componentInstance.returnValue.subscribe(
+            (submit) => {
+                    console.log("User closed submit status window.");//Do nothing
+            }, 
+            (reason) => {
+                console.log("User canceled submit.");//Do nothing
             }
-        )
+        );
+    }
+
+    submitReview() {
+        if (this.isSubmitted) {
+            //Get external_review property from record status
+            let submitStatus = this.mdupdsvc.recStatus.external_review;
+
+            //If submitted, display a popup window to display the overall status state    
+            this.openSubmitStatusDialog(submitStatus);
+
+        } else {
+            // Finalizing
+            this.mdupdsvc.submit("finalize", {"message": "preparing for submission"}).subscribe(
+                (result) => {
+                    //Finalize with no error. Then refresh Nerdm record
+                    this.mdupdsvc.loadDraft(true).subscribe((result) => {
+                        //Once Nerdm record refreshed. Suggestions will automatically refreshed as well
+                        //Then display the pop up window
+
+                        this.openSubmitConfirmDialog();
+                    })
+                }
+            )
+        }
     }
 
     /**

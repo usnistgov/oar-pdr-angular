@@ -1,4 +1,4 @@
-import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, effect } from '@angular/core';
+import { Component, OnChanges, SimpleChanges, Input, Output, EventEmitter, effect, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes, NerdmComp, NERDResource } from '../../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { trigger, style, animate, transition } from '@angular/animations';
@@ -96,6 +96,7 @@ export class ResourceDataComponent implements OnChanges {
     constructor(public globalService: GlobalService,
         public edstatsvc: EditStatusService,
         public iconLibrary: FaIconLibrary,
+        private chref: ChangeDetectorRef,
         private gaService: GoogleAnalyticsService){ 
 
         // iconLibrary.addIcons(
@@ -110,13 +111,12 @@ export class ResourceDataComponent implements OnChanges {
             this.maxWidth = width + 20;
         });
 
-        effect(() => {
-            this.isEditMode = this.edstatsvc.isEditMode();
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
         })
     }
 
     ngOnInit(): void {
-        this.isEditMode = this.edstatsvc.isEditMode();
         this.recordType = (new NERDResource(this.record)).resourceLabel();
 
         this.colorScheme = {

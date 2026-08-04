@@ -43,6 +43,18 @@
     z-index: 10;
 }
 
+.menu-button {
+    background: var(--nist-green-default) !important;
+    padding: 0px;
+    border-radius: 5px;
+    border: 0px;
+    margin: auto;
+}
+
+.menu-button:hover {
+    background: var(--nist-green-light) !important;
+}
+
 .sticky-button{
     position: fixed;
     top: 1em;

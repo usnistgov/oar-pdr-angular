@@ -52,3 +52,12 @@
     [metricsData]="metricsData" 
     [showMetrics]="showMetrics">
 </app-metricsinfo>
+
+<!-- Submit status: only display when record state is submitted or resubmit -->
+@if(hasSubmitStatusData) {
+    <submit-status 
+        *ngIf="curRecState==recStates.SUBMITTED || curRecState==recStates.RESUBMIT"
+        [submitStatus]="submitStatus" 
+        [showFeedback]="showFeedback">
+    </submit-status>
+}
