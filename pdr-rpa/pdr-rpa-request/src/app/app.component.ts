@@ -52,7 +52,11 @@ export class AppComponent implements OnInit {
   datasetNotFound = false;
   isWelcomeCollapsed = false;
   isDarkMode = false;
-  showCopyToast = false;
+
+  // Toast notification state
+  toastVisible: boolean = false;
+  toastMessage: string = '';
+  toastType: 'success' | 'error' | 'info' = 'info';
 
   constructor(
     private route: ActivatedRoute,
@@ -281,10 +285,24 @@ export class AppComponent implements OnInit {
    */
   copyToClipboard(text: string): void {
     navigator.clipboard.writeText(text).then(() => {
-      this.showCopyToast = true;
-      setTimeout(() => {
-        this.showCopyToast = false;
-      }, 2000);
+      this.showToast('ID copied to clipboard', 'success');
     });
+  }
+
+  /**
+   * Show a toast notification (auto-hides after 4 seconds).
+   */
+  showToast(message: string, type: 'success' | 'error' | 'info'): void {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.toastVisible = true;
+    setTimeout(() => this.hideToast(), 4000);
+  }
+
+  /**
+   * Hide the toast notification.
+   */
+  hideToast(): void {
+    this.toastVisible = false;
   }
 }
