@@ -1,0 +1,50 @@
+<!-- This component is for both normal display and pop up purpose 
+     Header and footer are for pop up window that are controlled by showHeaderFooter variable -->
+<div class="wrapper" *ngIf="reviewSystems.length > 0">
+    <!-- Header -->
+    <div *ngIf="showHeaderFooter" [ngClass]="showFeedback? 'popup-title' : 'sb-title sb-body'">
+    <!-- <div class="sb-title"> -->
+        Submission Status
+
+        <span *ngIf="!showFeedback" class="submit-enlarger"
+            (click)="openSubmitStatusDialog(submitStatus)"
+            style="color:#ffffff;width: 1em;float: right;">
+            <fa-icon [icon]="faUpRightAndDownLeftFromCenter"
+                class="btn-icon enlarge-icon" size="sm">
+            </fa-icon>
+        </span>
+    </div>
+
+    <!-- Display different review systems in separated tabs.  -->
+    <div class="body">
+        <!-- Tab Headers. If only one review system, no tab header will be displayed. -->
+        <div class="tabs" *ngIf="reviewSystems && reviewSystems.length > 1">
+            <button 
+                *ngFor="let sys of reviewSystems; let i = index" 
+                #tabs
+                (click)="selectTab(i)" 
+                [class.active]="activeTabIndex === i">
+
+                {{ sys }}
+            </button>
+        </div>
+
+        <!-- Display the active review system -->
+        <submit-status-nps 
+            [submitStatus]="submitStatus[activeSystem]" 
+            [showFeedback]="showFeedback"
+            (returnValue)="processCommand($event)">
+        </submit-status-nps>
+    </div>
+
+    <!-- Footer for popup -->
+    <div class="control-buttons" *ngIf="showHeaderFooter">
+        <!-- Close button -->
+        <button type="button" pTooltip="Back to Edit" tooltipPosition="bottom" class="btn btn-cancel" id="btn-close"
+            (click)="close()">
+
+            <fa-icon [icon]="faXmark" class="btn-icon" size="sm"></fa-icon>
+            Close
+        </button>
+    </div>
+</div>

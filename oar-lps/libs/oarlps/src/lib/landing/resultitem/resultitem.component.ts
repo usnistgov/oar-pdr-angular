@@ -47,11 +47,11 @@ export class ResultitemComponent implements OnInit {
         if(this.resultItem.landingPage.indexOf(this.resultItem.ediid.split("/").at(-1)) >= 0) {
           this.homeIconClass = "pi pi-database btn-icon";
         } else {
-          this.homeIconClass = "faa faa-external-link vertical-center";
+          this.homeIconClass = "pi pi-external-link vertical-center";
         }
       }else{
         this.homeBtnURL = this.PDRAPIURL + this.resultItem.ediid;
-        this.homeIconClass = "faa faa-external-link vertical-center";
+        this.homeIconClass = "pi pi-external-link vertical-center";
       }
 
       if(this.resultItem.description)

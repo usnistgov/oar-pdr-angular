@@ -12,6 +12,7 @@
     "scripts": {
         "build-lib": "npm run build oarng --prefix ./lib --watch",
         "build-oarlps": "npm run build oarlps --prefix ./oar-lps --watch",
+        "build-pdrlps-dev": "npm run build-dev pdr-lps --prefix ./pdr-lps --watch",
         "build-pdrlps": "npm run build pdr-lps --prefix ./pdr-lps --watch",
         "build-pdrlps:ssr": "npm run build-pdrlps; npm run build:ssr --prefix ./pdr-lps --watch",
         "build-midaslps": "npm run build midas-lps --prefix ./midas-author/lps --watch",

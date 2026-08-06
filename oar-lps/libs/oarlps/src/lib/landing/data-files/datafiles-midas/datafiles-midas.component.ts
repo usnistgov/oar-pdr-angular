@@ -92,6 +92,7 @@ export class DatafilesMidasComponent {
     fontSize: string = "16px";
     EDIT_MODES: any;
     editMode: string;
+    curRecState: string;    // Current record state (normal, edit, submitted, resubmit, revesion, etc)
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
@@ -101,8 +102,7 @@ export class DatafilesMidasComponent {
     refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
     // revisionType: string = ""
     // arrRevisionTypes: any[] = [];
-    _editType: string;
-    EDIT_TYPES: any = LandingConstants.editTypes;
+    REC_STATE: any = LandingConstants.recStates;
     authorized: boolean = false;
 
     // The key of treenode whose details is currently displayed
@@ -150,10 +150,6 @@ export class DatafilesMidasComponent {
         });
     }
 
-    // get isRevisionType() {
-    //     return this._editType == this.EDIT_TYPES.REVISE;
-    // }
-
     ngOnInit() {
         // this.arrRevisionTypes = LandingConstants.reviseTypes;
         // if(this.record && !this.record["keyword"]) this.record["keyword"] = [];
@@ -166,8 +162,8 @@ export class DatafilesMidasComponent {
             this.authorized = authorized;
         })
 
-        this.editstatsvc.watchEditType((editType) => {
-            this._editType = editType;
+        this.editstatsvc.watchRecState((recState) => {
+            this.curRecState = recState;
         })
 
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
