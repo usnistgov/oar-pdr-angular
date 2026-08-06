@@ -1,0 +1,30 @@
+<div *ngIf="feedback && feedback.length > 0" class="wrapper">
+    <!-- Label/title of this feedback -->
+    <strong class="label" [ngStyle]="{'color': label.color}">{{label.label}}</strong>
+
+    <!-- Icon buttons for expand/collapse -->
+    <fa-icon 
+        *ngIf="viewBlockStatus=='expanded'" 
+        [icon]="faChevronUp" 
+        class="btn-icon" 
+        (click)="viewBlockStatus='collapsed'">
+    </fa-icon>
+
+    <fa-icon 
+        *ngIf="viewBlockStatus=='collapsed'" 
+        [icon]="faChevronDown" 
+        class="btn-icon" 
+        (click)="viewBlockStatus='expanded'">
+    </fa-icon>
+
+    <!-- Feedback details -->
+    <div [@editExpand]="viewBlockStatus" style="overflow: hidden;">
+        <div *ngFor="let fb of feedback; let i = index" 
+            class="feedback-item"
+            [ngClass]="{ 'even-row': i % 2 === 0, 'odd-row': i % 2 !== 0 }">
+            
+            <div><strong>Description:</strong> {{ fb.desc }}</div>
+            <div><strong>Reviewer:</strong> {{ fb.reviewer }}</div>
+        </div>
+    </div>
+</div>

@@ -38,21 +38,20 @@ describe('EditStatusService', () => {
         expect(svc.lastUpdated).toEqual(null);
         expect(svc.userID).toBeNull();
         expect(svc.authenticated).toBe(false);
-        expect(svc.authorized).toBe(false);
         // expect(svc.editingEnabled()).toBe(true);
     });
 
     it('setable', () => {
         svc._setLastUpdated(updateDetails);
-        svc._setEditMode(EDIT_MODES.EDIT_MODE);
+        svc.setEditMode(EDIT_MODES.EDIT_MODE);
         svc._setUserID("Hank");
-        svc._setAuthorized(false);
+        // svc._setAuthorized(false);
 
         expect(svc.lastUpdated._updateDate).toEqual("today");
         expect(svc.lastUpdated.userAttributes).toEqual(userAttributes);
         expect(svc.userID).toEqual("Hank");
         expect(svc.authenticated).toBe(true);
-        expect(svc.authorized).toBe(false);
+        // expect(svc.authorized).toBe(false);
     });
 
     it('watchable remote start', () => {
@@ -63,6 +62,18 @@ describe('EditStatusService', () => {
         expect(resID).toEqual("");
         svc.startEditing("testid");
         expect(resID).toEqual("testid");
+    });
+
+    it('setEditMode', () => {
+        svc.setEditMode(LandingConstants.editModes.EDIT_MODE);
+        svc._isEditMode.subscribe((value) => {
+            expect(value).toBeTruthy();
+        });        
+
+        svc.setEditMode(LandingConstants.editModes.DONE_MODE);
+        svc._isEditMode.subscribe((value) => {
+            expect(value).toBeFalsy();
+        });
     });
 });
 
