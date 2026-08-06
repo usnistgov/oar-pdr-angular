@@ -417,7 +417,15 @@ export class AppComponent implements OnInit, OnDestroy {
     this.pollingSubscription = timer(this.pollIntervalMs, this.pollIntervalMs).pipe(
       switchMap(() => this.rpaService.getRecord(this.recordId, this._creds)),
       pluck('record'),
-      tap(record => this.applyRecord(record as Record)),
+      tap(record => {
+        this.applyRecord(record as Record);
+        // Notify the SME once the async processing reaches a terminal state.
+        if (this.isApproved()) {
+          this.showToast('The request was approved and the dataset is ready. The user has been notified.', 'success');
+        } else if (this.isApprovalFailed()) {
+          this.showToast('Approval processing failed. You can retry the approval or decline the request.', 'error');
+        }
+      }),
       takeWhile((_, index) => this.isApprovalProcessing() && index < this.maxPollAttempts - 1, true),
       catchError(error => {
         if (environment.debug) console.error(`[${this.constructor.name}] Error polling approval status:`, error);

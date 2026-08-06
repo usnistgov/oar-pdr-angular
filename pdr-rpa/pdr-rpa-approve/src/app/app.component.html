@@ -151,27 +151,23 @@
   <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
 </button>
 
-<!-- Custom Toast Notification -->
-<div class="toast-overlay" *ngIf="toastVisible" (click)="hideToast()">
-  <div class="toast-container" [class.toast-success]="toastType === 'success'"
-       [class.toast-error]="toastType === 'error'"
-       [class.toast-info]="toastType === 'info'"
-       (click)="$event.stopPropagation()">
-    <div class="toast-icon">
-      <mat-icon *ngIf="toastType === 'success'">check_circle</mat-icon>
-      <mat-icon *ngIf="toastType === 'error'">error</mat-icon>
-      <mat-icon *ngIf="toastType === 'info'">info</mat-icon>
-    </div>
-    <div class="toast-content">
-      <h4 class="toast-title">
-        {{ toastType === 'success' ? 'Success' : toastType === 'error' ? 'Error' : 'Info' }}
-      </h4>
-      <p class="toast-message">{{ toastMessage }}</p>
-    </div>
-    <button class="toast-close" (click)="hideToast()">
-      <mat-icon>close</mat-icon>
-    </button>
+<!-- Toast Notification (bottom-right, non-blocking) -->
+<div class="rpa-toast" *ngIf="toastVisible"
+     [class.toast-success]="toastType === 'success'"
+     [class.toast-error]="toastType === 'error'"
+     [class.toast-info]="toastType === 'info'"
+     role="status" aria-live="polite">
+  <mat-icon class="toast-icon">
+    {{ toastType === 'success' ? 'check_circle' : toastType === 'error' ? 'error' : 'info' }}
+  </mat-icon>
+  <div class="toast-content">
+    <h4 class="toast-title">
+      {{ toastType === 'success' ? 'Success' : toastType === 'error' ? 'Error' : 'Info' }}
+    </h4>
+    <p class="toast-message">{{ toastMessage }}</p>
   </div>
+  <button class="toast-close" (click)="hideToast()" aria-label="Dismiss notification">
+    <mat-icon>close</mat-icon>
+  </button>
 </div>
-
 <app-footer></app-footer>
