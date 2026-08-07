@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormGroupDirective } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -244,6 +244,8 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   // Parent renders these as toast notifications
   @Output() notify = new EventEmitter<{ message: string; type: 'success' | 'error' | 'info' }>();
 
+  @ViewChild(FormGroupDirective) private formGroupDirective?: FormGroupDirective;
+
   form!: FormGroup;
   isLoading = false;
 
@@ -294,6 +296,9 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   resetForm(): void {
     this.formBuilder.resetForm(this.form, this.formConfig);
+    // Also clear the directive's submitted flag, otherwise mat-form-field
+    // keeps the emptied required fields styled red after a successful submit.
+    this.formGroupDirective?.resetForm(this.form.getRawValue());
   }
 
   private markAllAsTouched(): void {
