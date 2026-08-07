@@ -55,6 +55,7 @@ export class AppComponent implements OnInit {
 
   // Toast notification state
   toastVisible: boolean = false;
+  toastTitle: string = '';
   toastMessage: string = '';
   toastType: 'success' | 'error' | 'info' = 'info';
 
@@ -230,9 +231,10 @@ export class AppComponent implements OnInit {
    */
   private handleSubmissionSuccess(result: any): void {
     this.dynamicForm.setLoading(false);
-    this.dynamicForm.showSuccess(
+    this.showToast(
       this.formConfig?.successMessage ||
-      'Your request was submitted successfully. You will receive a confirmation email shortly.'
+      'Your request was submitted successfully. You will receive a confirmation email shortly.',
+      'success'
     );
     this.dynamicForm.resetForm();
 
@@ -246,8 +248,9 @@ export class AppComponent implements OnInit {
    */
   private handleSubmissionError(error: any): void {
     this.dynamicForm.setLoading(false);
-    this.dynamicForm.showError(
-      'There was an error sending this request. Please contact datasupport@nist.gov'
+    this.showToast(
+      'There was an error sending this request. Please contact datasupport@nist.gov',
+      'error'
     );
 
     console.error('[AppComponent] Submission error:', error);
@@ -285,18 +288,25 @@ export class AppComponent implements OnInit {
    */
   copyToClipboard(text: string): void {
     navigator.clipboard.writeText(text).then(() => {
-      this.showToast('ID copied to clipboard', 'success');
+      // Plain confirmation, no title needed
+      this.showToast('ID copied to clipboard', 'success', '');
     });
   }
 
   /**
    * Show a toast notification (auto-hides after 4 seconds).
+   * Pass an empty title to render the message with no heading.
    */
-  showToast(message: string, type: 'success' | 'error' | 'info'): void {
+  showToast(message: string, type: 'success' | 'error' | 'info', title?: string): void {
     this.toastMessage = message;
     this.toastType = type;
+    this.toastTitle = title !== undefined ? title : this.defaultToastTitle(type);
     this.toastVisible = true;
     setTimeout(() => this.hideToast(), 4000);
+  }
+
+  private defaultToastTitle(type: 'success' | 'error' | 'info'): string {
+    return type === 'success' ? 'Success' : type === 'error' ? 'Error' : 'Info';
   }
 
   /**
