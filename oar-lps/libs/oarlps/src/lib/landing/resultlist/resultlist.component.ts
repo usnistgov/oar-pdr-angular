@@ -10,30 +10,34 @@ import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'app-resultlist',
-  templateUrl: './resultlist.component.html',
-  styleUrls: ['../landing.component.scss', './resultlist.component.css'],
-  animations: [
-        trigger('detailExpand', [
-        state('void', style({height: '0px', minHeight: '0'})),
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        transition('expanded <=> void', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    selector: "app-resultlist",
+    templateUrl: "./resultlist.component.html",
+    styleUrls: ["../landing.component.scss", "./resultlist.component.css"],
+    animations: [
+        trigger("detailExpand", [
+            state("void", style({ height: "0px", minHeight: "0" })),
+            state("collapsed", style({ height: "0px", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
+            transition(
+                "expanded <=> collapsed",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+            transition(
+                "expanded <=> void",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
         ]),
-        trigger(
-            'enterAnimation', [
-                transition(':enter', [
-                    style({height: '0px', opacity: 0}),
-                    animate('700ms', style({height: '100%', opacity: 1}))
-                ]),
-                transition(':leave', [
-                    style({height: '100%', opacity: 1}),
-                    animate('700ms', style({height: 0, opacity: 0}))
-                ])
-            ]
-        )
-    ]
+        trigger("enterAnimation", [
+            transition(":enter", [
+                style({ height: "0px", opacity: 0 }),
+                animate("700ms", style({ height: "100%", opacity: 1 })),
+            ]),
+            transition(":leave", [
+                style({ height: "100%", opacity: 1 }),
+                animate("700ms", style({ height: 0, opacity: 0 })),
+            ]),
+        ]),
+    ],
 })
 export class ResultlistComponent implements OnInit {
     searchResults: any[];
@@ -42,7 +46,12 @@ export class ResultlistComponent implements OnInit {
     searchResultsOriginal: any[];
     currentIndex: number = 0;
     resultCount: number = 0;
-    options = [{name:'Title', value:'title'}, {name:'Description', value:'description'}, {name:'Last Modified Date (Default)', value:'modified'}, {name:'Keyword', value:'keyword'}];
+    options = [
+        { name: "Title", value: "title" },
+        { name: "Description", value: "description" },
+        { name: "Last Modified Date (Default)", value: "modified" },
+        { name: "Keyword", value: "keyword" },
+    ];
     optionSelected: string;
     searchPhases: string = "";
     searchFields: string[] = ["title", "description", "keyword"];
@@ -60,22 +69,25 @@ export class ResultlistComponent implements OnInit {
     totalResultItems: number = 0;
     totalPages: number = 0;
     itemsPerPage: number = 10;
-    pages = [{name:'Page 1', value:1},{name:'Page 2', value:2}];
-    currentPage: any = {name:'Page 1', value:1};
+    pages = [
+        { name: "Page 1", value: 1 },
+        { name: "Page 2", value: 2 },
+    ];
+    currentPage: any = { name: "Page 1", value: 1 };
 
     allCollections: any = {};
 
     //  Color
     colorScheme: any;
     defaultColor: string;
-    lightColor: string;  
-    lighterColor: string;  
+    lightColor: string;
+    lighterColor: string;
 
     globalsvc = inject(GlobalService);
 
     //icon class names
     // spinnerIcon = iconClass.SPINNER;
-    // searchIcon = iconClass.SEARCH;    
+    // searchIcon = iconClass.SEARCH;
 
     faMagnifyingGlass = faMagnifyingGlass;
     faSpinner = faSpinner;
@@ -84,46 +96,45 @@ export class ResultlistComponent implements OnInit {
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
     @Input() mobWidth: number = 1920;
-    @Input() resultWidth: string = '400px';
-    @Input() filterString: string = '';
+    @Input() resultWidth: string = "400px";
+    @Input() filterString: string = "";
     @Input() collection: string = Collections.FORENSICS;
     @Input() taxonomyURI: any = {};
 
     constructor(
-        private searchService: SearchService, 
+        private searchService: SearchService,
         private cfg: AppConfig,
         public globalService: GlobalService,
         public iconLibrary: FaIconLibrary,
-        public gaService: GoogleAnalyticsService) { 
-
+        public gaService: GoogleAnalyticsService,
+    ) {
         // iconLibrary.addIcons(faMagnifyingGlass, faSpinner);
 
         this.searchService.watchClearAll((clearAll: boolean) => {
-            if(clearAll) {
+            if (clearAll) {
                 this.searchPhases = "";
                 this.filterResults();
             }
         });
-    
+
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
-        })
+        });
     }
 
     ngOnInit(): void {
-        this.PDRAPIURL = this.cfg.get('links.pdrIDResolver', '/od/id/');
+        this.PDRAPIURL = this.cfg.get("links.pdrIDResolver", "/od/id/");
 
         let that = this;
-        let urls = (new NERDResource(this.md)).dynamicSearchUrls();
+        let urls = new NERDResource(this.md).dynamicSearchUrls();
 
-        for(let i=0; i < urls.length; i++){
-            this.searchService.resolveSearchRequest(urls[i])
-            .subscribe(
-                searchResults => {
-                    this.resultCount = searchResults['ResultCount'];
+        for (let i = 0; i < urls.length; i++) {
+            this.searchService.resolveSearchRequest(urls[i]).subscribe(
+                (searchResults) => {
+                    this.resultCount = searchResults["ResultCount"];
                     that.onSuccess(searchResults.ResultData);
                 },
-                error => that.onError(urls[i], error)
+                (error) => that.onError(urls[i], error),
             );
         }
 
@@ -131,21 +142,22 @@ export class ResultlistComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes.filterString != null && changes.filterString != undefined) {
+        if (changes.filterString != null && changes.filterString != undefined) {
             this.filterResults();
         }
     }
 
     get resultWidthNum() {
-        if(this.resultWidth == "100%")
-            return 400;
+        if (this.resultWidth == "100%") return 400;
         else {
-            return this.resultWidth.substring(0, this.resultWidth.length-2)
+            return this.resultWidth.substring(0, this.resultWidth.length - 2);
         }
     }
 
     onSelected(event) {
-        this.currentPage = this.pages.filter(p => p.name == event.target.value)[0];
+        this.currentPage = this.pages.filter(
+            (p) => p.name == event.target.value,
+        )[0];
     }
 
     /**
@@ -154,21 +166,20 @@ export class ResultlistComponent implements OnInit {
      */
     onSuccess(searchResults: any[]) {
         searchResults.forEach((object) => {
-            object['expandIcon'] = "faa faa-caret-right";
-            object['isExpanded'] = false;
-            object['active'] = true;
-        })
+            object["expandIcon"] = "faa faa-caret-right";
+            object["isExpanded"] = false;
+            object["active"] = true;
+        });
 
         this.searchResultsOriginal = JSON.parse(JSON.stringify(searchResults));
         let srchResults = JSON.parse(JSON.stringify(searchResults));
 
-        if(this.searchResults && this.searchResults.length > 0) 
+        if (this.searchResults && this.searchResults.length > 0)
             this.searchResults = [...this.searchResults, ...srchResults];
-        else
-            this.searchResults = srchResults;
+        else this.searchResults = srchResults;
 
         //Init searchResults
-        for(let item of this.searchResults) {
+        for (let item of this.searchResults) {
             item.active = true;
         }
 
@@ -180,71 +191,75 @@ export class ResultlistComponent implements OnInit {
 
     /**
      * Calculate total pages and total result items
-     * @returns 
+     * @returns
      */
     getTotalResultItems() {
-        if(!this.searchResultsForDisplay) return;
+        if (!this.searchResultsForDisplay) return;
 
         let totalItems: number = 0;
 
         this.totalResultItems = this.searchResultsForDisplay.length;
         this.noSearchResult = this.totalResultItems == 0;
 
-        if(this.totalResultItems % this.itemsPerPage == 0)
-            this.totalPages = Math.trunc(this.totalResultItems / this.itemsPerPage);
+        if (this.totalResultItems % this.itemsPerPage == 0)
+            this.totalPages = Math.trunc(
+                this.totalResultItems / this.itemsPerPage,
+            );
         else
-            this.totalPages = Math.trunc(this.totalResultItems / this.itemsPerPage) + 1;
+            this.totalPages =
+                Math.trunc(this.totalResultItems / this.itemsPerPage) + 1;
 
         this.pages = [];
-        for(let i=1; i <= this.totalPages; i++) {
-            this.pages.push({name:'Page '+i+' of '+this.totalPages, value:i})
+        for (let i = 1; i <= this.totalPages; i++) {
+            this.pages.push({
+                name: "Page " + i + " of " + this.totalPages,
+                value: i,
+            });
         }
     }
 
     /**
-     *  Expand the row to display file details. It's little tricky when hiding the details. 
-     *  We have to delay the action to let the animation to finish. 
+     *  Expand the row to display file details. It's little tricky when hiding the details.
+     *  We have to delay the action to let the animation to finish.
      * @param fileNode       the TreeNode for the file to provide details for
      */
     toggleDetails(fileNode: any, index: number) {
         let currentFileNode = this.searchResultsForDisplay[this.currentIndex];
         //Close current details window if it's open
-        if(index != this.currentIndex && currentFileNode != undefined) {
+        if (index != this.currentIndex && currentFileNode != undefined) {
             currentFileNode.expandIcon = "faa faa-caret-right";
             currentFileNode.isExpanded = false;
         }
 
         this.currentIndex = index;
 
-        if(fileNode.isExpanded){
+        if (fileNode.isExpanded) {
             fileNode.isExpanded = false;
             fileNode.expandIcon = "faa faa-caret-right";
-        }else{
+        } else {
             fileNode.isExpanded = true;
-            fileNode.expandIcon = "faa faa-caret-down";            
+            fileNode.expandIcon = "faa faa-caret-down";
         }
     }
 
     /**
      * This function returns alter text/tooltip text for the expand symbol next to the given treenode title
      * @param fileNode the TreeNode
-     * @returns 
+     * @returns
      */
     expandButtonAlterText(fileNode: any) {
-        if(fileNode.isExpanded)
-            return "Close dataset details";
-        else
-            return "Open dataset details";
+        if (fileNode.isExpanded) return "Close dataset details";
+        else return "Open dataset details";
     }
-    
+
     /**
      * Return class name based on given column number and window size
-     * @param column 
+     * @param column
      */
-    flexgrow(column: number){
+    flexgrow(column: number) {
         let lclass: string = "full-width";
 
-        if(this.mobWidth > 1024 ) lclass = "flex-grow" + column;
+        if (this.mobWidth > 1024) lclass = "flex-grow" + column;
         else lclass = "full-width";
 
         return lclass;
@@ -253,8 +268,8 @@ export class ResultlistComponent implements OnInit {
     /**
      * Return the class for the top bar (total result, pagination and Customize View button)
      */
-    resultTopBarClass(){
-        if(this.mobWidth > 1024 ) return "flex-container";
+    resultTopBarClass() {
+        if (this.mobWidth > 1024) return "flex-container";
         else return "";
     }
 
@@ -262,38 +277,46 @@ export class ResultlistComponent implements OnInit {
      * If search is unsuccessful push the error message
      */
     onError(url: string, error: any) {
-        console.error("Search URL ("+url+") failed to resolve: "+error.message);
+        console.error(
+            "Search URL (" + url + ") failed to resolve: " + error.message,
+        );
     }
 
     /**
      * Filter the search result with search text
-     * Rules: 
+     * Rules:
      *     A B -- A or B
      *     A,B -- A or B
      *     "A B" -- Search for "A B"
      * @param searchString search text from the search box
      */
     filterResultByPhase(searchString: string) {
-        if(!this.searchResults) return;
+        if (!this.searchResults) return;
 
-        if(!searchString || searchString.trim() == "") {
+        if (!searchString || searchString.trim() == "") {
             searchString = "";
             this.searchResults = this.searchResultsOriginal;
             return;
         }
 
-        let filteredResults: any;;
+        let filteredResults: any;
         let finalFilteredResults: any[] = [];
 
         // Reserve everything in quotes
         let quotes = searchString.match(/\"(.*?)\"/g);
 
-        if(quotes){
-            for(let i = 0; i < quotes.length; i++){
-                if(quotes[i].match(/\"(.*?)\"/)[1].trim() != '')
-                    searchString = searchString.replace(new RegExp(quotes[i].match(/\"(.*?)\"/)[1], 'g'), 'Quooooote'+i);
+        if (quotes) {
+            for (let i = 0; i < quotes.length; i++) {
+                if (quotes[i].match(/\"(.*?)\"/)[1].trim() != "")
+                    searchString = searchString.replace(
+                        new RegExp(quotes[i].match(/\"(.*?)\"/)[1], "g"),
+                        "Quooooote" + i,
+                    );
                 else
-                    searchString = searchString.replace(quotes[i], 'Quooooote'+i);
+                    searchString = searchString.replace(
+                        quotes[i],
+                        "Quooooote" + i,
+                    );
             }
         }
 
@@ -301,27 +324,31 @@ export class ResultlistComponent implements OnInit {
         let tempValue = searchString.replace(/,/g, " ").replace(/  /g, " ");
 
         let lSearchPhases = tempValue.split(" ");
-        
+
         lSearchPhases.forEach((searchPhase: string) => {
             let searchWord: string = "";
 
-            if(searchPhase != ""){
+            if (searchPhase != "") {
                 // filteredResults = JSON.parse(JSON.stringify(this.searchResultsOriginal));
-                filteredResults = JSON.parse(JSON.stringify(this.searchResults));
+                filteredResults = JSON.parse(
+                    JSON.stringify(this.searchResults),
+                );
 
                 // Restore the contents in quotes
-                if(searchPhase.indexOf('Quooooote') >= 0) {
-                    searchPhase = searchPhase.replace(/"/g, '');
-                    let index = searchPhase.substring(searchPhase.indexOf('Quooooote')+9);
-                    searchWord = quotes[index].replace(/"/g, '');
-                }else{
-                    searchWord = searchPhase.replace(/"/g, '');
+                if (searchPhase.indexOf("Quooooote") >= 0) {
+                    searchPhase = searchPhase.replace(/"/g, "");
+                    let index = searchPhase.substring(
+                        searchPhase.indexOf("Quooooote") + 9,
+                    );
+                    searchWord = quotes[index].replace(/"/g, "");
+                } else {
+                    searchWord = searchPhase.replace(/"/g, "");
                 }
 
                 // Filter by word
                 this.filterResultByWord(this.searchResults, searchWord);
             }
-        })
+        });
     }
 
     /**
@@ -329,35 +356,43 @@ export class ResultlistComponent implements OnInit {
      * @param searchResults The result list to be searched
      * @param searchString search string
      */
-    filterResultByWord(searchResults:any[], searchString: string) {
+    filterResultByWord(searchResults: any[], searchString: string) {
         let retuenVal: any[] = [];
         let found: boolean = false;
 
         // Filter by word means only remove items, never add items
-        for(let object of searchResults) {
-            if(object.active){
+        for (let object of searchResults) {
+            if (object.active) {
                 found = false;
-                for(let key of this.searchFields) {
-                    if(Array.isArray(object[key])) {
-                        for(let val of object[key]) {
-                            if(val.toLowerCase().includes(searchString.trim().toLowerCase())) {
+                for (let key of this.searchFields) {
+                    if (Array.isArray(object[key])) {
+                        for (let val of object[key]) {
+                            if (
+                                val
+                                    .toLowerCase()
+                                    .includes(searchString.trim().toLowerCase())
+                            ) {
                                 retuenVal.push(object);
                                 found = true;
                                 break;
                             }
                         }
-                    }else{
-                        if(object[key].toLowerCase().includes(searchString.toLowerCase())) {
+                    } else {
+                        if (
+                            object[key]
+                                .toLowerCase()
+                                .includes(searchString.toLowerCase())
+                        ) {
                             retuenVal.push(object);
                             found = true;
                             break;
                         }
                     }
 
-                    if(found) break;
-                };
+                    if (found) break;
+                }
 
-                object.active = found; 
+                object.active = found;
             }
         }
     }
@@ -366,12 +401,12 @@ export class ResultlistComponent implements OnInit {
      * Reset active flags of all search result items to true (default)
      */
     resetResult(active: boolean = false) {
-        if(this.searchResults) {
+        if (this.searchResults) {
             this.searchResults.forEach((object) => {
                 object.expandIcon = "faa faa-caret-right";
                 object.isExpanded = false;
                 object.active = active;
-            })
+            });
         }
     }
 
@@ -379,78 +414,125 @@ export class ResultlistComponent implements OnInit {
      * Apply filters from left side panel and the search word(s) from the search text box
      */
     filterResults() {
-        if(this.searchResults == undefined) return;
+        if (this.searchResults == undefined) return;
 
         let filters: string[];
-        
+
         // Reset the search result
-        this.resetResult(this.filterString=="NoFilter");
+        this.resetResult(this.filterString == "NoFilter");
 
         // Handle filters
-        if(this.filterString != "noFilter" && this.filterString != ""){
+        if (this.filterString != "noFilter" && this.filterString != "") {
             filters = this.filterString.split("&");
             filters.forEach((filter) => {
-                switch(filter.split("=")[0]){
+                switch (filter.split("=")[0]) {
                     case "@type":
                         this.searchResults.forEach((object) => {
-                            if(!object.active){
+                            if (!object.active) {
                                 // object.active = false;
 
                                 object["@type"].forEach((oType) => {
                                     let types = filter.split("=")[1].split(",");
-                                    types.forEach(type => {
-                                        if(oType.toLowerCase().includes(this.globalsvc.restoreReservedChars(type).toLowerCase()))
+                                    types.forEach((type) => {
+                                        if (
+                                            oType
+                                                .toLowerCase()
+                                                .includes(
+                                                    this.globalsvc
+                                                        .restoreReservedChars(
+                                                            type,
+                                                        )
+                                                        .toLowerCase(),
+                                                )
+                                        )
                                             object.active = true;
                                     });
-                                })
-                            } 
+                                });
+                            }
                         });
 
                         break;
                     case "topic.tag":
                         let topics = filter.split("=")[1].split(",");
-                        for(let resultItem of this.searchResults) {
-                            
-                            if(!resultItem.active){
+                        for (let resultItem of this.searchResults) {
+                            if (!resultItem.active) {
                                 // resultItem.active = false;
 
-                                for(let oTopic of resultItem["topic"]) {
-                                    for(let topic of topics) {
+                                for (let oTopic of resultItem["topic"]) {
+                                    for (let topic of topics) {
                                         let collection = topic.split("----")[0];
-                                        let topicValue = this.globalsvc.restoreReservedChars(topic.split("----")[1]);
+                                        let topicValue =
+                                            this.globalsvc.restoreReservedChars(
+                                                topic.split("----")[1],
+                                            );
 
-                                        if(oTopic['scheme'] && oTopic['scheme'].indexOf(this.taxonomyURI[collection]) >= 0) {
-                                            if(collection == Collections.DEFAULT) {
-                                                if(oTopic["tag"].toLowerCase().includes(topicValue.toLowerCase()))
+                                        if (
+                                            oTopic["scheme"] &&
+                                            oTopic["scheme"].indexOf(
+                                                this.taxonomyURI[collection],
+                                            ) >= 0
+                                        ) {
+                                            if (
+                                                collection ==
+                                                Collections.DEFAULT
+                                            ) {
+                                                if (
+                                                    oTopic["tag"]
+                                                        .toLowerCase()
+                                                        .includes(
+                                                            topicValue.toLowerCase(),
+                                                        )
+                                                )
                                                     resultItem.active = true;
-                                            }else {
-                                                if(oTopic["tag"].toLowerCase() == (topicValue.toLowerCase()))
+                                            } else {
+                                                if (
+                                                    this.areStringsEqual(
+                                                        oTopic["tag"],
+                                                        topicValue,
+                                                    )
+                                                )
                                                     resultItem.active = true;
                                             }
                                         }
-                                    };
-                                };
+                                    }
+                                }
                             }
-                        };
+                        }
 
                         break;
                     case "components.@type":
                         this.searchResults.forEach((object) => {
-                            if(object["components"] != undefined) {
-                                if(!object.active){
+                            if (object["components"] != undefined) {
+                                if (!object.active) {
                                     // object.active = false;
-    
-                                    object["components"].forEach((component) => {
-                                        component["@type"].forEach((cType) => {
-                                            let types = filter.split("=")[1].split(",");
-                                            types.forEach(type => {
-                                                if(cType.toLowerCase().includes(this.globalsvc.restoreReservedChars(type).toLowerCase()))
-                                                    object.active = true;
-                                            });
-                                        })
-                                    })
+
+                                    object["components"].forEach(
+                                        (component) => {
+                                            component["@type"].forEach(
+                                                (cType) => {
+                                                    let types = filter
+                                                        .split("=")[1]
+                                                        .split(",");
+                                                    types.forEach((type) => {
+                                                        if (
+                                                            cType
+                                                                .toLowerCase()
+                                                                .includes(
+                                                                    this.globalsvc
+                                                                        .restoreReservedChars(
+                                                                            type,
+                                                                        )
+                                                                        .toLowerCase(),
+                                                                )
+                                                        )
+                                                            object.active = true;
+                                                    });
+                                                },
+                                            );
+                                        },
+                                    );
                                 }
-                            }else {
+                            } else {
                                 object.active = false;
                             }
                         });
@@ -458,10 +540,14 @@ export class ResultlistComponent implements OnInit {
                         break;
                     case "contactPoint.fn":
                         this.searchResults.forEach((object) => {
-                            if(!object.active){
+                            if (!object.active) {
                                 // object.active = false;
-                            
-                                if(object["contactPoint"]["fn"].includes(filter.split("=")[1]))
+
+                                if (
+                                    object["contactPoint"]["fn"].includes(
+                                        filter.split("=")[1],
+                                    )
+                                )
                                     object.active = true;
                             }
                         });
@@ -471,17 +557,28 @@ export class ResultlistComponent implements OnInit {
                         // Loop through each keyword in each search result. Display those that match
                         // the keywords from keyword filter
                         this.searchResults.forEach((object) => {
-                            if(!object.active){
+                            if (!object.active) {
                                 // object.active = false;
-                            
+
                                 object["keyword"].forEach((keyword) => {
                                     //Loop through each search keyword from keyword filter
-                                    filter.split("=")[1].split(",").forEach(kw => {
-                                        if(keyword.toLowerCase().includes(this.globalsvc.restoreReservedChars(kw))){
-                                            object.active = true;
-                                        }
-                                    })   
-                                })
+                                    filter
+                                        .split("=")[1]
+                                        .split(",")
+                                        .forEach((kw) => {
+                                            if (
+                                                keyword
+                                                    .toLowerCase()
+                                                    .includes(
+                                                        this.globalsvc.restoreReservedChars(
+                                                            kw,
+                                                        ),
+                                                    )
+                                            ) {
+                                                object.active = true;
+                                            }
+                                        });
+                                });
                             }
                         });
 
@@ -489,7 +586,7 @@ export class ResultlistComponent implements OnInit {
                     default:
                         break;
                 }
-            })
+            });
         }
 
         // Handle search text box first
@@ -497,10 +594,12 @@ export class ResultlistComponent implements OnInit {
 
         this.searchResultsForDisplay = [];
         this.searchResults.forEach((object) => {
-            if(object.active) this.searchResultsForDisplay.push(object);
-        })
+            if (object.active) this.searchResultsForDisplay.push(object);
+        });
 
-        this.searchResultsForDisplayOriginal = JSON.parse(JSON.stringify(this.searchResultsForDisplay));
+        this.searchResultsForDisplayOriginal = JSON.parse(
+            JSON.stringify(this.searchResultsForDisplay),
+        );
 
         this.getTotalResultItems();
         this.currentPage = this.pages[0];
@@ -511,33 +610,33 @@ export class ResultlistComponent implements OnInit {
      * @param event sort item
      */
     onSortByChange(event: any) {
-        if(event.target.value == "none") {
-            this.searchResultsForDisplay = JSON.parse(JSON.stringify(this.searchResultsForDisplayOriginal));
+        if (event.target.value == "none") {
+            this.searchResultsForDisplay = JSON.parse(
+                JSON.stringify(this.searchResultsForDisplayOriginal),
+            );
 
             this.refreshResult();
             event.target.value = "";
             return;
         }
 
-        let key = this.options.filter(o => o.name == event.target.value)[0].value;
+        let key = this.options.filter((o) => o.name == event.target.value)[0]
+            .value;
 
-        if(key == "modified"){
+        if (key == "modified") {
             this.sortByDate();
-        }else{
-            this.searchResultsForDisplay.sort((a, b)=> {
-                if(Array.isArray(a[key])){
-                    if(key == "modified")
+        } else {
+            this.searchResultsForDisplay.sort((a, b) => {
+                if (Array.isArray(a[key])) {
+                    if (key == "modified")
                         return b[key][0].localeCompare(a[key][0]);
-                    else
-                        return a[key][0].localeCompare(b[key][0]);
-                }else{
-                    if(key == "modified")
-                        return b[key].localeCompare(a[key]);
-                    else
-                        return a[key].localeCompare(b[key]);
+                    else return a[key][0].localeCompare(b[key][0]);
+                } else {
+                    if (key == "modified") return b[key].localeCompare(a[key]);
+                    else return a[key].localeCompare(b[key]);
                 }
             });
-    
+
             this.refreshResult();
         }
     }
@@ -545,10 +644,10 @@ export class ResultlistComponent implements OnInit {
     /**
      * Sort the result by date
      */
-    sortByDate(){
-        if(!this.searchResultsForDisplay) return;
+    sortByDate() {
+        if (!this.searchResultsForDisplay) return;
 
-        this.searchResultsForDisplay.sort((a, b)=> {
+        this.searchResultsForDisplay.sort((a, b) => {
             return b["modified"].localeCompare(a["modified"]);
         });
 
@@ -567,35 +666,57 @@ export class ResultlistComponent implements OnInit {
 
     /**
      * Determine if a given dataset has contact point email
-     * @param dataset 
-     * @returns 
+     * @param dataset
+     * @returns
      */
     hasEmail(dataset: any) {
-        if(dataset['contactPoint'])
-            return 'hasEmail' in dataset['contactPoint'];
-        else
-            return false;
+        if (dataset["contactPoint"])
+            return "hasEmail" in dataset["contactPoint"];
+        else return false;
     }
 
     /**
      * Get the doi url from the given dataset. If not available, return blank.
-     * @param dataset 
+     * @param dataset
      * @returns doi url. Return blank if not available.
      */
     doiUrl(dataset: any) {
-        if (dataset['doi'] !== undefined && dataset['doi'] !== "")
-            return "https://doi.org/" + dataset['doi'].substring(4);
-        else    
-            return "";
+        if (dataset["doi"] !== undefined && dataset["doi"] !== "")
+            return "https://doi.org/" + dataset["doi"].substring(4);
+        else return "";
     }
 
     lastModified(dataset: any) {
         let lastDate: Date;
-        if(dataset.modified) {
-            lastDate = new Date(dataset.modified.slice(0,10));
+        if (dataset.modified) {
+            lastDate = new Date(dataset.modified.slice(0, 10));
             return lastDate.toLocaleDateString();
-        }else{
+        } else {
             return "None";
         }
+    }
+
+    /**
+     * Compare two strings. Each contains items separated by ":". Make sure the numbers of items
+     * are the same and item strings are the same (case insensitive) and item orders are the same.
+     * @param str1 input string 1
+     * @param str2 input string 2
+     * @returns
+     */
+    areStringsEqual(str1: string, str2: string): boolean {
+        // Split both strings by ':'
+        const arr1 = str1.split(":");
+        const arr2 = str2.split(":");
+
+        // If they don't have the same number of items, they aren't equal
+        if (arr1.length !== arr2.length) {
+            return false;
+        }
+
+        // Compare each item by index (preserving order) case-insensitively
+        return arr1.every(
+            (item, index) =>
+                item.trim().toLowerCase() === arr2[index].trim().toLowerCase(),
+        );
     }
 }

@@ -1,0 +1,1595 @@
+[
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-2522"
+            }
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-2522",
+        "ediid": "ark:/88434/mds2-2522",
+        "version": "1.0.1",
+        "doi": "doi:10.18434/mds2-2522",
+        "title": "Forensic facial examiners vs. super-recognizers: Evaluating behavior beyond accuracy",
+        "contactPoint": {
+            "fn": "Carina Hahn",
+            "hasEmail": "mailto:carina.hahn@nist.gov"
+        },
+        "modified": "2021-12-17 00:00:00",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-2522",
+        "description": [
+            "This is the corresponding analysis script for the preprint paper, Forensic facial examiners vs. super-recognizers: Evaluating behavior beyond accuracy available from https://psyarxiv.com/hq2ab/."
+        ],
+        "keyword": ["biometrics", "face recognition", "forensics"],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics"
+            },
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics: Face",
+                "@type": "Concept"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "theme": ["Forensics", "Information Technology: Biometrics"],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.31234/osf.io/hq2ab",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.31234/osf.io/hq2ab",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "Forensic facial examiners vs. super-recognizers: Evaluating behavior beyond accuracy",
+                "issued": "2021-08-24",
+                "citation": "Hahn, C. A., Tang, L. L., Yates, A. N., & Phillips, P. J. (2021). Forensic facial examiners vs. super-recognizers: Evaluating behavior beyond accuracy. doi:10.31234/osf.io/hq2ab\n"
+            }
+        ],
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/face-recognition-humans-machines/tree/main/Examiners%20vs.%20Super-recognizers",
+                "format": {
+                    "description": "GitHub Repository"
+                },
+                "description": "This is the GitHub repository containing the code for Forensic facial examiners vs. super-recognizers: Evaluating behavior beyond accuracy. ",
+                "title": "Forensic facial examiners vs. super-recognizers: Evaluating behavior beyond accuracy",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/face-recognition-humans-machines/tree/main/Examiners%20vs.%20Super-recognizers",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            },
+            {
+                "accessURL": "https://doi.org/10.18434/mds2-2522",
+                "title": "DOI Access for Forensic facial examiners vs. super-recognizers: Evaluating behavior beyond accuracy",
+                "@type": ["nrd:Hidden", "dcat:Distribution"],
+                "@id": "#doi:10.18434/mds2-2522"
+            }
+        ],
+        "annotated": "2023-01-29T13:58:33.282994",
+        "revised": "2021-12-21T20:22:54.847737",
+        "issued": null,
+        "firstIssued": "2021-12-21T20:22:54.847737",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-2522/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2021-12-17 00:00:00",
+                    "@id": "ark:/88434/mds2-2522/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2522/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2023-01-29",
+                    "@id": "ark:/88434/mds2-2522/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2522/pdr:v/1.0.1",
+                    "description": "added to Forensics Science Theme"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds014mftx"
+            }
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics: Face",
+                "@type": "Concept"
+            }
+        ],
+        "keyword": ["FERET", "face", "biometrics"],
+        "landingPage": "https://data.nist.gov/od/id/26F2FB7D11E1EB44E0531A570681D23C1451",
+        "title": "Color FERET Database",
+        "theme": ["Information Technology: Biometrics"],
+        "programCode": ["006:052"],
+        "description": [
+            "The DOD Counterdrug Technology Program sponsored the Facial Recognition Technology (FERET) program and development of the FERET database. The National Institute of Standards and Technology (NIST) is serving as Technical Agent for distribution of the FERET database. The goal of the FERET program is to develop new techniques, technology, and algorithms for the automatic recognition of human faces. As part of the FERET program, a database of facial imagery was collected between December 1993 and August 1996. The database is used to develop, test, and evaluate face recognition algorithms."
+        ],
+        "bureauCode": ["006:55"],
+        "contactPoint": {
+            "hasEmail": "mailto:karen.marshall@nist.gov",
+            "fn": "Karen Marshall"
+        },
+        "accessLevel": "restricted public",
+        "@id": "ark:/88434/mds014mftx",
+        "publisher": {
+            "@type": "org:Organization",
+            "name": "National Institute of Standards and Technology"
+        },
+        "license": "https://www.nist.gov/open/license",
+        "language": ["en"],
+        "modified": "2000-01-20 00:00:00",
+        "ediid": "26F2FB7D11E1EB44E0531A570681D23C1451",
+        "version": "1.0.2",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds014mftx.rel",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2000-01-20",
+                    "@id": "ark:/88434/mds014mftx/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds014mftx/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2023-01-27",
+                    "@id": "ark:/88434/mds014mftx/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds014mftx/pdr:v/1.0.1",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2000-01-20 00:00:00",
+                    "@id": "ark:/88434/mds014mftx/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds014mftx/pdr:v/1.0.2",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ],
+        "annotated": "2023-06-12T22:46:42.340911",
+        "issued": null,
+        "components": [],
+        "doi": "doi:10.18434/M31475",
+        "status": "available",
+        "rights": "Users must abide by the release agreement and request an account to obtain the data. For more information please visit http://www.nist.gov/itl/iad/ig/colorferet.cfm."
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds00tf5pn"
+            }
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics: Fingerprints",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics: Hand Geometry",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics: Palm",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["deo:BibliographicReference"],
+                "@id": "#ref:nist-srd/SD19/sd19_users_guide_edition_2.pdf",
+                "refType": "IsReferencedBy",
+                "location": "https://s3.amazonaws.com/nist-srd/SD19/sd19_users_guide_edition_2.pdf",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ]
+            },
+            {
+                "@type": ["deo:BibliographicReference"],
+                "@id": "#ref:nist-srd/SD19/1stEditionUserGuide.pdf",
+                "refType": "IsReferencedBy",
+                "location": "https://s3.amazonaws.com/nist-srd/SD19/1stEditionUserGuide.pdf",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ]
+            }
+        ],
+        "keyword": [
+            "automated data capture",
+            "character recognition",
+            "characters",
+            "hand printed characters",
+            "hand prints",
+            "hand writing recognition",
+            "OCR",
+            "handprints",
+            "printed characters",
+            "recognition",
+            "software recognition"
+        ],
+        "landingPage": "https://www.nist.gov/srd/nist-special-database-19",
+        "title": "NIST Handprinted Forms and Characters - NIST Special Database 19 ",
+        "theme": ["Information Technology: Biometrics"],
+        "programCode": ["006:052"],
+        "description": [
+            "Special Database 19 contains NIST's entire corpus of training materials for handprinted document and character recognition. It publishes Handprinted Sample Forms from 3600 writers, 810,000 character images isolated from their forms, ground truth classifications for those images, reference forms for further data collection, and software utilities for image management and handling. there are two editions of the databases.  One is the original database with the images in mis or pct format.  It also includes software to open and manipulate the data. The second edition has the images all in PNG format."
+        ],
+        "bureauCode": ["006:55"],
+        "contactPoint": {
+            "hasEmail": "mailto:karen.marshall@nist.gov",
+            "fn": "Karen Marshall"
+        },
+        "accessLevel": "restricted public",
+        "@id": "ark:/88434/mds00tf5pn",
+        "publisher": {
+            "@type": "org:Organization",
+            "name": "National Institute of Standards and Technology"
+        },
+        "license": "https://www.nist.gov/open/license",
+        "language": ["en"],
+        "modified": "2016-08-18 00:00:00",
+        "ediid": "FF429BC1785F8B3EE0431A570681E858206",
+        "components": [
+            {
+                "accessURL": "https://doi.org/10.18434/t4h01c",
+                "format": {
+                    "description": "text/html"
+                },
+                "description": "DOI Access to NIST Handprinted Forms and Characters - NIST Special Database 19",
+                "title": "DOI Access to NIST Handprinted Forms and Characters - NIST Special Database 19",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#10.18434/t4h01c",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "doi": "doi:10.18434/M3206",
+        "version": "1.0.5",
+        "versionHistory": [
+            {
+                "version": "1.0.0",
+                "issued": "2016-08-18",
+                "@id": "ark:/88434/mds00tf5pn",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn",
+                "description": "initial release"
+            },
+            {
+                "version": "1.0.1",
+                "issued": "2016-08-18 00:00:00",
+                "@id": "ark:/88434/mds00tf5pn",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.2",
+                "issued": "2016-08-18 00:00:00",
+                "@id": "ark:/88434/mds00tf5pn",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn",
+                "description": "metadata update"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds00tf5pn/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2016-08-18",
+                    "@id": "ark:/88434/mds00tf5pn/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2016-08-18 00:00:00",
+                    "@id": "ark:/88434/mds00tf5pn/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn/pdr:v/1.0.1",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2016-08-18 00:00:00",
+                    "@id": "ark:/88434/mds00tf5pn/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn/pdr:v/1.0.2",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.3",
+                    "issued": "2023-01-26",
+                    "@id": "ark:/88434/mds00tf5pn/pdr:v/1.0.3",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn/pdr:v/1.0.3",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.4",
+                    "issued": "2023-01-26",
+                    "@id": "ark:/88434/mds00tf5pn/pdr:v/1.0.4",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn/pdr:v/1.0.4",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.5",
+                    "issued": "2016-08-18 00:00:00",
+                    "@id": "ark:/88434/mds00tf5pn/pdr:v/1.0.5",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00tf5pn/pdr:v/1.0.5",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ],
+        "annotated": "2023-06-12T22:47:32.299640",
+        "issued": null,
+        "status": "available",
+        "rights": "Access to NIST Special Database 19 is available for a fee. For more information please visit https://www.nist.gov/srd/nist-special-database-19."
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds10274c2"
+            }
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds10274c2",
+        "title": "NIST Special Database 302 Nail to Nail (N2N) Fingerprint Challenge ",
+        "contactPoint": {
+            "fn": "Karen Marshall",
+            "hasEmail": "mailto:karen.marshall@nist.gov"
+        },
+        "modified": "2018-06-14 00:00:00",
+        "ediid": "70BA2D6BE8C167ABE053245706812F0F1943",
+        "landingPage": "https://data.nist.gov/od/id/70BA2D6BE8C167ABE053245706812F0F1943",
+        "description": [
+            "In September 2017, the Intelligence Advanced Research Projects Activity (IARPA) held a data collection as part of its Nail to Nail (N2N) Fingerprint Challenge. Participating Challengers deployed devices designed to collect an image of the full nail to nail surface area of a fingerprint equivalent to a rolled fingerprint from an unacclimated user, without assistance from a trained operator. Traditional operator-assisted live-scan rolled fingerprints were also captured, along with assorted other friction ridge live-scan and latent captures.",
+            "In this data collection, study participants needed to have their fingerprints captured using traditional operator-assisted techniques in order to quantify the performance of the Challenger devices. IARPA invited members of the Federal Bureau of Investigation (FBI) Biometric Training Team to the data collection to perform this task. Each study participant had N2N fingerprint images captured twice, each by a different FBI expert, resulting in two N2N baseline datasets.",
+            "To ensure the veracity of recorded N2N finger positions in the baseline datasets, Challenge test staff also captured plain fingerprint impressions in a 4-4-2 slap configuration. This capture method refers to simultaneously imaging the index, middle, ring, and little fingers on the right hand, then repeating the process on the left hand, and finishing with the simultaneous capture of the left and right thumbs. This technique is a best practice to ensure finger sequence order, since it is physically challenging for a study participant to change the ordering of fingers when imaging them simultaneously.",
+            "There were four baseline (two rolled and two slap), eight challenger and ten auxiliary fingerprint sensors deployed during the data collection, amassing a series of rolled and plain images. It was required that the baseline devices achieve 100% acquisition rate, in order to verify the recorded friction ridge generalized positions (FRGPs) and study participant identifiers for other devices. There were no such requirements for Challenger devices. Not all devices were able to achieve 100% acquisition rate.",
+            "Plain, rolled, and touch-free impression fingerprints were captured from a multitude of devices, as well as sets of plain palm impressions.",
+            "NIST also partnered with the FBI and Schwarz Forensic Enterprises (SFE) to design activity scenarios in which subjects would likely leave fingerprints on different objects. The activities and associated objects were chosen in order to use a number of latent print development techniques and simulate the types of objects often found in real law enforcement case work."
+        ],
+        "keyword": [
+            "latent",
+            "fingerprints",
+            "rolled",
+            "plain",
+            "palm",
+            "friction ridge",
+            "biometrics",
+            "segmentation",
+            "slap"
+        ],
+        "theme": ["Information Technology: Biometrics"],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.1",
+                "tag": "Biometrics: Fingerprints",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.6028/NIST.TN.2007",
+                "refType": "IsDocumentedBy",
+                "location": "https://doi.org/10.6028/NIST.TN.2007",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "NIST Special Database 302:",
+                "issued": "2019-12",
+                "citation": "Fiumara, G., Flanagan, P., Grantham, J., Ko, K., Marshall, K., Schwarz, M., Tabassi, E., Woodgate, B., & Boehnen, C. (2019). NIST Special Database 302: https://doi.org/10.6028/nist.tn.2007\n"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "doi": "doi:10.18434/M31943",
+        "components": [
+            {
+                "accessURL": "https://doi.org/10.18434/M31943",
+                "title": "DOI Access for NIST Special Database 302 Nail to Nail (N2N) Fingerprint Challenge ",
+                "@type": ["nrd:Hidden", "dcat:Distribution"],
+                "@id": "#doi:10.18434/M31943"
+            }
+        ],
+        "version": "1.0.3",
+        "issued": "2019-12-18T10:33:34",
+        "versionHistory": [
+            {
+                "version": "1.0.0",
+                "issued": "2018-06-14 00:00:00",
+                "@id": "ark:/88434/mds10274c2",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds10274c2",
+                "description": "initial release"
+            },
+            {
+                "version": "1.0.1",
+                "issued": "2018-06-14 00:00:00",
+                "@id": "ark:/88434/mds10274c2",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds10274c2",
+                "description": "metadata update"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds10274c2/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds10274c2/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds10274c2/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds10274c2/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds10274c2/pdr:v/1.0.1",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2023-01-27",
+                    "@id": "ark:/88434/mds10274c2/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds10274c2/pdr:v/1.0.2",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.3",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds10274c2/pdr:v/1.0.3",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds10274c2/pdr:v/1.0.3",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ],
+        "annotated": "2023-06-12T22:50:17.261102",
+        "status": "available",
+        "rights": "Use of this data requires users agree to be bound by the following terms and conditions. The database will only be used for biometrics related research. The database will not be further distributed, published, copied, or disseminated in any way or form wh"
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds00wpckz"
+            }
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics: Face",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Article"],
+                "@id": "#ref:10.6028/NIST.IR.7807",
+                "refType": "IsCitedBy",
+                "location": "https://doi.org/10.6028/NIST.IR.7807",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "NIST special database 32 multiple encounter dataset II (MEDS-II) :",
+                "issued": "2011",
+                "citation": "Founds, A. P., Orlans, N., Whiddon, G., & Watson, C. (2011). NIST special database 32 multiple encounter dataset II (MEDS-II)â¯: doi:10.6028/nist.ir.7807\n"
+            }
+        ],
+        "keyword": ["face", "forensic", "biometrics"],
+        "landingPage": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
+        "title": "Multiple Encounter Dataset (MEDS-II) - NIST Special Database 32",
+        "theme": ["Information Technology: Biometrics"],
+        "programCode": ["006:052"],
+        "description": [
+            "Multiple Encounter Dataset (MEDS-II) is a test corpus organized from an extract of submissions of deceased persons with prior multiple encounters. MEDS is provided to assist the FBI and partner organizations refine tools, techniques, and procedures for face recognition as it supports Next Generation Identification (NGI), forensic comparison, training, analysis, face image conformance, and inter-agency exchange standards. The MITRE Corporation (MITRE) prepared MEDS in the FBI Data Analysis Support Laboratory (DASL) with support from the FBI Biometric Center of Excellence."
+        ],
+        "bureauCode": ["006:55"],
+        "contactPoint": {
+            "hasEmail": "mailto:karen.marshall@nist.gov",
+            "fn": "Karen Marshall"
+        },
+        "accessLevel": "public",
+        "@id": "ark:/88434/mds00wpckz",
+        "publisher": {
+            "@type": "org:Organization",
+            "name": "National Institute of Standards and Technology"
+        },
+        "license": "https://www.nist.gov/open/license",
+        "language": ["en"],
+        "modified": "2011-07-11 00:00:00",
+        "ediid": "26DEBF5B517C6750E0531A570681AA751450",
+        "components": [
+            {
+                "accessURL": "https://www.nist.gov/itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
+                "format": {
+                    "description": "zip file with jpeg images "
+                },
+                "description": "zip file with JPEG images of faces",
+                "title": "Multiple Encounter Dataset (MEDS-II)",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#itl/iad/image-group/special-database-32-multiple-encounter-dataset-meds",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "version": "1.0.4",
+        "versionHistory": [
+            {
+                "version": "1.0.0",
+                "issued": "2011-07-11",
+                "@id": "ark:/88434/mds00wpckz",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00wpckz",
+                "description": "initial release"
+            },
+            {
+                "version": "1.0.1",
+                "issued": "2011-07-11 00:00:00",
+                "@id": "ark:/88434/mds00wpckz",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00wpckz",
+                "description": "metadata update"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds00wpckz/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2011-07-11",
+                    "@id": "ark:/88434/mds00wpckz/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00wpckz/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2011-07-11 00:00:00",
+                    "@id": "ark:/88434/mds00wpckz/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00wpckz/pdr:v/1.0.1",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2023-01-26",
+                    "@id": "ark:/88434/mds00wpckz/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00wpckz/pdr:v/1.0.2",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.3",
+                    "issued": "2011-07-11 00:00:00",
+                    "@id": "ark:/88434/mds00wpckz/pdr:v/1.0.3",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00wpckz/pdr:v/1.0.3",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.4",
+                    "issued": "2011-07-11 00:00:00",
+                    "@id": "ark:/88434/mds00wpckz/pdr:v/1.0.4",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00wpckz/pdr:v/1.0.4",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ],
+        "annotated": "2023-06-12T22:57:00.188264",
+        "issued": null,
+        "doi": "doi:10.18434/M31450",
+        "status": "available"
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds00sxbvh"
+            }
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Information Technology: Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics: Face",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["deo:BibliographicReference"],
+                "@id": "#ref:document/readmesd18pdf",
+                "refType": "IsReferencedBy",
+                "location": "https://www.nist.gov/document/readmesd18pdf",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ]
+            }
+        ],
+        "keyword": [
+            "8 bit gray scales",
+            "facial recognition",
+            "front views",
+            "law enforcement",
+            "matching",
+            "mugshots",
+            "profile views",
+            "profiles"
+        ],
+        "landingPage": "https://data.nist.gov/od/id/1E651A532AFD8816E0531A570681A662439",
+        "title": "NIST Mugshot Identification Database (MID) - NIST Special Database 18",
+        "theme": ["Information Technology: Biometrics"],
+        "programCode": ["006:052"],
+        "description": [
+            "This database was distributed for use in development and testing of automated mugshot identification systems. The database consists of one zipped file, containing a total of 3,248 images of variable size using PNG format for the images and TXT format for corresponding metadata files. There are images of 1,573 individuals (cases) 1,495 male and 78 female.",
+            "The database contains both front and side (profile) views when available. Separating front views and profiles, there are 131 cases with two or more front views and 1,418 with only one front view. Profiles have 89 cases with two or more profiles and 1,268 with only one profile. Cases with both fronts and profiles have 89 cases with two or more of both fronts and profiles, 27 with two or more fronts and one profile, and 1,217 with only one front and one profile."
+        ],
+        "bureauCode": ["006:55"],
+        "contactPoint": {
+            "hasEmail": "mailto:karen.marshall@nist.gov",
+            "fn": "Karen Marshall"
+        },
+        "accessLevel": "public",
+        "@id": "ark:/88434/mds00sxbvh",
+        "publisher": {
+            "@type": "org:Organization",
+            "name": "National Institute of Standards and Technology"
+        },
+        "license": "https://www.nist.gov/open/license",
+        "language": ["en"],
+        "modified": "2005-01-09 00:00:00",
+        "ediid": "1E651A532AFD8816E0531A570681A662439",
+        "components": [
+            {
+                "accessURL": "https://doi.org/10.18434/t4159s",
+                "format": {
+                    "description": "text/html"
+                },
+                "description": "DOI Access to NIST Mugshot Identification Database (MID) - NIST Special Database 18",
+                "title": "DOI Access to NIST Mugshot Identification Database (MID) - NIST Special Database 18",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#10.18434/t4159s",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            },
+            {
+                "accessURL": "https://www.nist.gov/srd/nist-special-database-18",
+                "format": {
+                    "description": "the downloaded file is in zipped format with the images in PNG format"
+                },
+                "description": "This database is being distributed for use in developing and testing of mugshot identification systems. The database contains images of 1,573 individuals (cases) for a total of 3,248 images stored in PNG format. The mugshots are mainly of male cases, with the database containing 1495 male cases and 78 female cases. The gender and age of each individual are stored in a text file that accompanies each image.",
+                "title": "Special  Database 18 -NIST Mugshot Identification Database (MID)",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#srd/nist-special-database-18",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "doi": "doi:10.18434/M3439",
+        "version": "1.0.8",
+        "versionHistory": [
+            {
+                "version": "1.0.0",
+                "issued": "2005-01-09",
+                "@id": "ark:/88434/mds00sxbvh",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh",
+                "description": "initial release"
+            },
+            {
+                "version": "1.0.1",
+                "issued": "2005-01-09 00:00:00",
+                "@id": "ark:/88434/mds00sxbvh",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.2",
+                "issued": "2005-01-09 00:00:00",
+                "@id": "ark:/88434/mds00sxbvh",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.3",
+                "issued": "2005-01-09 00:00:00",
+                "@id": "ark:/88434/mds00sxbvh",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.4",
+                "issued": "2005-01-09 00:00:00",
+                "@id": "ark:/88434/mds00sxbvh",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh",
+                "description": "metadata update"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds00sxbvh.rel",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2005-01-09",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2005-01-09 00:00:00",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.1",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2005-01-09 00:00:00",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.2",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.3",
+                    "issued": "2005-01-09 00:00:00",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.3",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.3",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.4",
+                    "issued": "2005-01-09 00:00:00",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.4",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.4",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.5",
+                    "issued": "2005-01-09 00:00:00",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.5",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.5",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.6",
+                    "issued": "2023-01-25",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.6",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.6",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.7",
+                    "issued": "2005-01-09 00:00:00",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.7",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.7",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.8",
+                    "issued": "2005-01-09 00:00:00",
+                    "@id": "ark:/88434/mds00sxbvh/pdr:v/1.0.8",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds00sxbvh/pdr:v/1.0.8",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "status": "available",
+        "rights": "Use of this data requires users agree to be bound by the following terms and conditions. The database will only be used for biometrics related research. The database will not be further distributed, published, copied, or disseminated in any way or form.",
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ],
+        "annotated": "2023-09-27T18:05:21.468825",
+        "issued": null
+    },
+    {
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds1068c0v"
+            }
+        ],
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "@id": "ark:/88434/mds1068c0v",
+        "doi": "doi:10.18434/T4/1502472",
+        "title": "NIST Special Database 300 Uncompressed Plain and Rolled Images from Fingerprint Cards ",
+        "contactPoint": {
+            "fn": "Karen Marshall",
+            "hasEmail": "mailto:karen.marshall@nist.gov"
+        },
+        "modified": "2018-06-12 00:00:00",
+        "ediid": "6B5200EAC9FB2EB1E0532457068101C91919",
+        "landingPage": "https://data.nist.gov/od/id/6B5200EAC9FB2EB1E0532457068101C91919",
+        "description": [
+            "NIST, working with the FBI, has digitized 888 inked fingerprint arrest cards that were in various physical conditions, from pristine to badly damaged and faded, and were collected during law enforcement professionals' duties. This database contains images of the 10 rolled fingerprint impressions, the two four-finger slap impressions (finger positions 13 and 14), the two thumb slap impressions (finger positions 11 and 12) and the segmented impressions from the slap images (13,14). The database also includes the coordinates that were used to segment the impressions from the slap fingerprint images.",
+            "The cards were scanned at three different resolutions: 500, 1,000, and 2,000 pixels per inch (PPI). All three resolutions were scanned in grayscale at a depth of 8 bits-per pixel.",
+            "Data available as of July 2018 is Special Database 300a, in 500 ppi with PNG formatted impressions.  Data at other resolutions, in other image formats, and in other record types may be forthcoming."
+        ],
+        "keyword": [
+            "fingerprint",
+            "rolled",
+            "plain",
+            "segmentation",
+            "ink cards",
+            "biometrics",
+            "friction ridge"
+        ],
+        "theme": ["Information Technology: Biometrics"],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.1",
+                "tag": "Biometrics: Fingerprints: Rolled",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.1",
+                "tag": "Biometrics: Fingerprints: Plain",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Article"],
+                "@id": "#ref:10.6028/NIST.TN.1993",
+                "refType": "IsDocumentedBy",
+                "location": "https://doi.org/10.6028/NIST.TN.1993",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "NIST special database 300: uncompressed plain and rolled images from fingerprint cards",
+                "issued": "2018-06",
+                "citation": "Fiumara, G., Flanagan, P., Grantham, J., Bandini, B., Ko, K., & Libert, J. (2018). NIST special database 300: uncompressed plain and rolled images from fingerprint cards. doi:10.6028/nist.tn.1993\n"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "components": [
+            {
+                "accessURL": "https://doi.org/10.18434/T4/1502472",
+                "format": "text/html",
+                "description": "DOI Access to NIST Special Database 300 Uncompressed Plain and Rolled Images from Fingerprint Cards",
+                "title": "DOI Access to NIST Special Database 300 Uncompressed Plain and Rolled Images from Fingerprint Cards",
+                "@type": ["nrd:Hidden", "dcat:Distribution"],
+                "@id": "#doi:10.18434/T4/1502472"
+            }
+        ],
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "version": "1.0.6",
+        "versionHistory": [
+            {
+                "version": "1.0.0",
+                "issued": "2018-06-12",
+                "@id": "ark:/88434/mds1068c0v",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v",
+                "description": "initial release"
+            },
+            {
+                "version": "1.0.1",
+                "issued": "2018-06-12 00:00:00",
+                "@id": "ark:/88434/mds1068c0v",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.2",
+                "issued": "2018-06-12 00:00:00",
+                "@id": "ark:/88434/mds1068c0v",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v",
+                "description": "metadata update"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds1068c0v/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2018-06-12",
+                    "@id": "ark:/88434/mds1068c0v/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2018-06-12 00:00:00",
+                    "@id": "ark:/88434/mds1068c0v/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v/pdr:v/1.0.1",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2018-06-12 00:00:00",
+                    "@id": "ark:/88434/mds1068c0v/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v/pdr:v/1.0.2",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.3",
+                    "issued": "2018-06-12 00:00:00",
+                    "@id": "ark:/88434/mds1068c0v/pdr:v/1.0.3",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v/pdr:v/1.0.3",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.4",
+                    "issued": "2023-01-27",
+                    "@id": "ark:/88434/mds1068c0v/pdr:v/1.0.4",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v/pdr:v/1.0.4",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.5",
+                    "issued": "2018-06-12 00:00:00",
+                    "@id": "ark:/88434/mds1068c0v/pdr:v/1.0.5",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v/pdr:v/1.0.5",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.6",
+                    "issued": "2018-06-12 00:00:00",
+                    "@id": "ark:/88434/mds1068c0v/pdr:v/1.0.6",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds1068c0v/pdr:v/1.0.6",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "status": "available",
+        "rights": "Use of this data requires users agree to be bound by the following terms and conditions. The database will only be used for biometrics related research. The database will not be further distributed, published, copied, or disseminated in any way or form",
+        "annotated": "2024-04-24T14:43:05.394895",
+        "issued": null,
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ]
+    },
+    {
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds11ckbd2"
+            }
+        ],
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@type": ["nrdp:PublicDataResource", "dcat:Dataset"],
+        "@id": "ark:/88434/mds11ckbd2",
+        "doi": "doi:10.18434/T4/1502474",
+        "title": "NIST Special Database 301 Nail to Nail (N2N) Fingerprint Challenge Dry Run",
+        "contactPoint": {
+            "fn": "Karen Marshall",
+            "hasEmail": "mailto:karen.marshall@nist.gov"
+        },
+        "modified": "2018-06-14 00:00:00",
+        "ediid": "6F1714704711023AE053245706818C1A1936",
+        "landingPage": "https://data.nist.gov/od/id/6F1714704711023AE053245706818C1A1936",
+        "description": [
+            "In April 2017, the Intelligence Advanced Research Projects Activity (IARPA) held a dry run for the data collection portion of its Nail to Nail (N2N) Fingerprint Challenge. This data collection event was designed to ensure that the real data collection event held in September 2017 would be successful. To this end, biometric data from unhabituated individuals needed to be collected. That data is now released by NIST as Special Database 301.",
+            "In total, 14 fingerprint sensors were deployed during the data collection, amassing a series of rolled and plain images. The devices include rolled fingerprints captured by skilled experts from the Federal Bureau of Investigation (FBI) Biometric Training Team. Captures of slaps, palms, and other plain impression fingerprint impressions were additionally recorded.",
+            "NIST also partnered with the FBI and Schwarz Forensic Enterprises to design activity scenarios in which subjects would likely leave fingerprints on different objects. The activities and associated objects were chosen in order to use a number of latent print development techniques and simulate the types of objects often found in real law enforcement case work. NIST also collected some mugshot-style face and iris images of the subjects who participated in the dry run. These data are also available for download."
+        ],
+        "keyword": [
+            "latent",
+            "fingerprints",
+            "rolled",
+            "plain",
+            "palm",
+            "friction ridge",
+            "biometrics"
+        ],
+        "theme": ["Information Technology: Biometrics"],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.0",
+                "tag": "Biometrics",
+                "@type": "Concept"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.1",
+                "tag": "Biometrics: Fingerprints",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Article"],
+                "@id": "#ref:10.6028/NIST.TN.2002",
+                "refType": "IsCitedBy",
+                "location": "https://doi.org/10.6028/NIST.TN.2002",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "NIST special database 301: nail to nail fingerprint challenge dry run",
+                "issued": "2018-07",
+                "citation": "Fiumara, G., Flanagan, P., Schwarz, M., Tabassi, E., & Boehnen, C. (2018). NIST special database 301: nail to nail fingerprint challenge dry run. doi:10.6028/nist.tn.2002\n"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "components": [
+            {
+                "accessURL": "https://doi.org/10.18434/T4/1502474",
+                "format": "text/html",
+                "description": "DOI Access to NIST Special Database 301 Nail to Nail (N2N) Fingerprint Challenge Dry Run",
+                "title": "DOI Access to NIST Special Database 301 Nail to Nail (N2N) Fingerprint Challenge Dry Run",
+                "@type": ["nrd:Hidden", "dcat:Distribution"],
+                "@id": "#doi:10.18434/T4/1502474"
+            }
+        ],
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "version": "1.0.9",
+        "versionHistory": [
+            {
+                "version": "1.0.0",
+                "issued": "2018-06-14",
+                "@id": "ark:/88434/mds11ckbd2",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2",
+                "description": "initial release"
+            },
+            {
+                "version": "1.0.1",
+                "issued": "2018-06-14 00:00:00",
+                "@id": "ark:/88434/mds11ckbd2",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.2",
+                "issued": "2018-06-14 00:00:00",
+                "@id": "ark:/88434/mds11ckbd2",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.3",
+                "issued": "2018-06-14 00:00:00",
+                "@id": "ark:/88434/mds11ckbd2",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2",
+                "description": "metadata update"
+            },
+            {
+                "version": "1.0.4",
+                "issued": "2018-06-14 00:00:00",
+                "@id": "ark:/88434/mds11ckbd2",
+                "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2",
+                "description": "metadata update"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds11ckbd2/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2018-06-14",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.1",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.2",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.3",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.3",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.3",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.4",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.4",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.4",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.5",
+                    "issued": "2023-01-28",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.5",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.5",
+                    "description": "added to Forensics Science Theme"
+                },
+                {
+                    "version": "1.0.6",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.6",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.6",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.7",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.7",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.7",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.8",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.8",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.8",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.9",
+                    "issued": "2018-06-14 00:00:00",
+                    "@id": "ark:/88434/mds11ckbd2/pdr:v/1.0.9",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds11ckbd2/pdr:v/1.0.9",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ],
+        "annotated": "2024-04-24T14:43:43.339092",
+        "issued": null,
+        "status": "available",
+        "rights": "Use of this data requires users agree to be bound by the following terms and conditions. The database will only be used for biometrics related research. The database will not be further distributed, published, copied, or disseminated in any way or form wh"
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-2909"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataPublication"
+        ],
+        "@id": "ark:/88434/mds2-2909",
+        "ediid": "ark:/88434/mds2-2909",
+        "version": "1.1.0",
+        "doi": "doi:10.18434/mds2-2909",
+        "title": "NIST Fingerprint Image Quality (NFIQ) 2 Conformance Test Set",
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0001",
+                "title": "Forensics Science Data"
+            }
+        ],
+        "contactPoint": {
+            "fn": "Gregory Fiumara",
+            "hasEmail": "mailto:gregory.fiumara@nist.gov"
+        },
+        "modified": "2021-11-03",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-2909",
+        "description": [
+            "The images and values in this dataset are used to ensure conformance with ISO/IEC 29794-4, which may be purchased from https://www.iso.org/standard/62791.html. Values were computed with NIST's NFIQ 2 software, https://github.com/usnistgov/NFIQ2. When compiling the NIST NFIQ 2 source code or developing their own alternate implementation of quality metrics contained within ISO/IEC 29794-4, Annex A of the standard requires that the developer ensure that software generate values within 1% of these values when using these images as input."
+        ],
+        "keyword": ["biometric", "conformance", "fingerprint", "quality"],
+        "topic": [
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Information Technology: Biometrics"
+            },
+            {
+                "@type": "Concept",
+                "scheme": "https://data.nist.gov/od/dm/nist-themes/v1.1",
+                "tag": "Forensics: Fingerprints and pattern evidence"
+            },
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-forensics/v1.1",
+                "tag": "Biometrics: Fingerprints",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.6028/NIST.IR.8382",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.6028/NIST.IR.8382",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "NFIQ 2 NIST Fingerprint Image Quality",
+                "issued": "2021-07-13",
+                "citation": "Tabassi, E., Olsen, M., Bausinger, O., Busch, C., Figlarz, A., Fiumara, G., Henniger, O., Merkle, J., Ruhland, T., Schiel, C., & Schwaiger, M. (2021). NFIQ 2 NIST Fingerprint Image Quality. https://doi.org/10.6028/nist.ir.8382\n"
+            }
+        ],
+        "accessLevel": "restricted public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "theme": [
+            "Information Technology: Biometrics",
+            "Forensics: Fingerprints and pattern evidence"
+        ],
+        "components": [
+            {
+                "accessURL": "https://data.nist.gov/od/ds/rpa/request/?ediid=ark:/88434/mds2-2909",
+                "description": "This page provides a registration form that must be completed before downloading the data.",
+                "title": "Gateway for Registered Data Access",
+                "@type": [
+                    "nrdp:RestrictedAccessPage",
+                    "nrdp:AccessPage",
+                    "dcat:Distribution"
+                ],
+                "@id": "#od/rp?@id=ark:/88434/mds2-2909",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            },
+            {
+                "@id": "cmps/README.txt",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "README.txt",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-2909/README.txt",
+                "mediaType": "text/plain",
+                "description": "Description of table columns in the NFIQ 2 Conformance Expected Output Table (nfiq2_conformance_expected_output.csv)",
+                "title": "README: table columns",
+                "size": 5071,
+                "checksum": {
+                    "hash": "07f057c854f4a0f953dfde91cc5828352b5bbaedbb332dd2701509d1ba3f27f7",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            },
+            {
+                "@id": "cmps/nfiq2_conformance_expected_output.csv",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "nfiq2_conformance_expected_output.csv",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-2909/nfiq2_conformance_expected_output.csv",
+                "mediaType": "text/csv",
+                "description": "Expected output from NFIQ 2 when run against the conformance dataset.",
+                "title": "NFIQ 2 Conformance Expected Output",
+                "size": 74061,
+                "checksum": {
+                    "hash": "863b33fd8b5a725616d21d5f482205ea7d0e625162f883b6aadfb20ad6cea34e",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            },
+            {
+                "@id": "cmps/README.txt",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "nfiq2_conformance.zip",
+                "mediaType": "application/zip",
+                "description": "Zip archive of images described in output table (nfiq2_conformance_expected_output.csv)",
+                "title": "NFIQ 2 Images",
+                "size": 17777409,
+                "checksum": {
+                    "hash": "df2f933d2b427bcea1e418da72c33e4ef37c02a48d081c1e328a282679fcab2c",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            }
+        ],
+        "rights": "Purchase is not required for data downloading. Users must complete registration form to download data.",
+        "authors": [
+            {
+                "familyName": "Fiumara",
+                "fn": "Gregory  Fiumara",
+                "givenName": "Gregory",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "subunits": [
+                            "Information Technology Laboratory",
+                            "Information Access Division"
+                        ],
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0002-4853-8315",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Figlarz",
+                "fn": "Andrew   Figlarz",
+                "givenName": "Andrew ",
+                "@type": "foaf:Person"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-2909/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2021-11-03",
+                    "@id": "ark:/88434/mds2-2909/pdr:v/1.0.0",
+                    "description": "initial release",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2909/pdr:v/1.0.0"
+                },
+                {
+                    "version": "1.1.0",
+                    "issued": "2024-01-09",
+                    "@id": "ark:/88434/mds2-2909/pdr:v/1.1.0",
+                    "description": "update to include restricted data in-situ",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-2909/pdr:v/1.1.0"
+                }
+            ]
+        },
+        "annotated": "2024-01-10T02:05:30",
+        "revised": "2024-01-10T02:05:30",
+        "issued": "2024-01-10T02:05:30",
+        "firstIssued": "2023-06-02T20:36:54.343631"
+    }
+]
