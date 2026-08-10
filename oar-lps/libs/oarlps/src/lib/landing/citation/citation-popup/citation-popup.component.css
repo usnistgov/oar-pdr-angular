@@ -26,6 +26,8 @@
     text-align: center;
     font-size: 30px;
     font-weight: bolder;
+    height: 40px;
+    line-height: 40px;    
 }
 
 .control-buttons {

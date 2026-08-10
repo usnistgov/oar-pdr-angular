@@ -42,3 +42,7 @@ a:focus {
 fa-icon {
     margin-right: 3px;
 }
+
+.citation-dialog .mat-mdc-dialog-surface {
+    @apply rounded-xl;
+}

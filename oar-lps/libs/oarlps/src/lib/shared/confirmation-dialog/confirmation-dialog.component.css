@@ -6,7 +6,6 @@
 #cd-ok-button {
     width:200px;
     height:2em;
-    vertical-align: middle;
     background-color: green;
     color: white;
 }
@@ -14,14 +13,20 @@
 #cd-cancel-button {
     width:200px;
     height:2em;
-    vertical-align: middle;
     background-color: grey;
     color: white;
 }
 
 .warning-icon {
     color: rgb(252, 122, 0);
-    padding-left: .2em;
-    padding-right: .5em;
-    float: left;
+    padding-right: 10px; /* 10px gap */
+    margin-right: 6px; /* Increased margin to prevent clipping */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+}
+
+.mat-icon-2x {
+    font-size: 2em;
 }

@@ -40,18 +40,20 @@ export class ResultitemComponent implements OnInit {
 
     constructor() { }
 
+    homeIconName: string = '';
+
     ngOnInit(): void {
       if(this.resultItem.landingPage) {
         this.homeBtnURL = this.resultItem.landingPage;
 
         if(this.resultItem.landingPage.indexOf(this.resultItem.ediid.split("/").at(-1)) >= 0) {
-          this.homeIconClass = "pi pi-database btn-icon";
+          this.homeIconName = "storage"; // Database icon for landing page matching ediid
         } else {
-          this.homeIconClass = "pi pi-external-link vertical-center";
+          this.homeIconName = "link"; // External link icon for other landing pages
         }
       }else{
         this.homeBtnURL = this.PDRAPIURL + this.resultItem.ediid;
-        this.homeIconClass = "pi pi-external-link vertical-center";
+        this.homeIconName = "link"; // External link icon when no landing page
       }
 
       if(this.resultItem.description)

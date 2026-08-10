@@ -2,7 +2,6 @@ import { Component, OnInit, Inject, PLATFORM_ID, ViewChild, ElementRef } from '@
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { ButtonModule } from 'primeng/button';
 import { AppConfig } from '../config/config';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faDownload, faCartPlus, faCopy } from '@fortawesome/free-solid-svg-icons';

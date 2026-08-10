@@ -2,11 +2,9 @@ import { Component, OnInit, Input, Output, Inject, PLATFORM_ID, EventEmitter } f
 import { ZipData } from '../../shared/download-service/zipData';
 import { DownloadService } from '../../shared/download-service/download-service.service';
 import { formatBytes } from '../../utils';
-import { OverlayPanel } from 'primeng/overlaypanel';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { DownloadData } from '../../shared/download-service/downloadData';
 import { CartService } from '../cart.service';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DownloadConfirmComponent } from '../download-confirm/download-confirm.component';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { DataCart, DataCartItem } from '../cart';
@@ -77,8 +75,7 @@ export class BundleplanComponent implements OnInit {
     //Data
     zipData: ZipData[] = [];
 
-    // For pop up
-    modalRef: any;
+;
 
     emailSubject: string;
     emailBody: string;
@@ -126,7 +123,6 @@ export class BundleplanComponent implements OnInit {
         private downloadService: DownloadService,
         public gaService: GoogleAnalyticsService,
         public cartService: CartService,
-        private modalService: NgbModal,
         public iconLibrary: FaIconLibrary,
         public dialog: MatDialog,
         @Inject(PLATFORM_ID) private platformId: Object,
@@ -261,11 +257,23 @@ export class BundleplanComponent implements OnInit {
      * @param overlaypanel - the pop up control
      * @param zip
      */
-    openErrZipDetails(event, overlaypanel: OverlayPanel, zip: ZipData = null) {
-        this.problemZip = zip;
+    openErrZipDetails(zip: ZipData | null = null) {
+        if (zip) {
+            this.problemZip = zip;
+        }
         this.emailSubject = "PDR: Error downloading zip file";
 
-        overlaypanel.toggle(event);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '800px';
+        dialogConfig.maxWidth = "95vw";
+        dialogConfig.data = {
+            title: 'Error Details',
+            message: this.generateErrorMessage(),
+            btnOkText: 'OK',
+            showCancelButton: false
+        };
+
+        this.dialog.open(ConfirmationDialogComponent, dialogConfig);
     }
 
     /**
@@ -295,6 +303,28 @@ export class BundleplanComponent implements OnInit {
         }
 
         return emaibody;
+    }
+
+    /**
+     * Generate error message for the dialog
+     * @returns {string} Formatted error message
+     */
+    generateErrorMessage(): string {
+        if (!this.problemZip) {
+            return 'No error details available';
+        }
+
+        let message = `File: ${this.problemZip.fileName || 'N/A'}\n\n`;
+        message += `Download URL: ${this.problemZip.downloadUrl || 'N/A'}\n\n`;
+        message += `Error Message: ${this.problemZip.downloadErrorMessage || 'N/A'}\n\n`;
+
+        if (this.problemZip.bundle) {
+            message += `Bundle Details:\n${JSON.stringify(this.problemZip.bundle, null, 2)}`;
+        } else {
+            message += `Bundle Details: N/A`;
+        }
+
+        return message;
     }
 
     /**
@@ -425,38 +455,6 @@ export class BundleplanComponent implements OnInit {
                     console.log("User canceled download");
                 }
                 });
-
-                // let ngbModalOptions: NgbModalOptions = {
-                //     backdrop: "static",
-                //     keyboard: false,
-                //     windowClass: "myCustomModalClass",
-                //     size: "lg",
-                // };
-
-                // this.modalRef = this.modalService.open(
-                //     DownloadConfirmComponent,
-                //     ngbModalOptions,
-                // );
-                // this.modalRef.componentInstance.bundle_plan_size = blob.size;
-                // this.modalRef.componentInstance.zipData = this.zipData;
-                // this.modalRef.componentInstance.totalFiles = blob.filesCount;
-                // this.modalRef.componentInstance.returnValue.subscribe(
-                //     (returnValue) => {
-                //         if (returnValue) {
-                //             this.showCurrentTask = false;
-                //             this.downloadStarted = true;
-                //             this.processBundle();
-                //         } else {
-                //             this.showCurrentTask = false;
-                //             this.cancelDownloadAll();
-                //             console.log("User canceled download");
-                //         }
-                //     },
-                //     (reason) => {
-                //         this.showCurrentTask = false;
-                //         this.cancelDownloadAll();
-                //     },
-                // );
             } else {
                 // error
                 this.emailSubject = "PDR: Error getting download plan";
@@ -682,24 +680,27 @@ export class BundleplanComponent implements OnInit {
     cancelDownloadAllConfirmation() {
         var message = "This will cancel all current and pending download process.";
 
-        this.modalRef = this.modalService.open(ConfirmationDialogComponent);
-        this.modalRef.componentInstance.title = "Please confirm";
-        this.modalRef.componentInstance.btnOkText = "Yes";
-        this.modalRef.componentInstance.btnCancelText = "No";
-        this.modalRef.componentInstance.message = message;
-        this.modalRef.componentInstance.showWarningIcon = true;
-        this.modalRef.componentInstance.showCancelButton = true;
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '800px';
+        dialogConfig.maxWidth = "95vw";
+        dialogConfig.data = {
+            title: "Please confirm",
+            message: message,
+            btnOkText: "Yes",
+            btnCancelText: "No",
+            showWarningIcon: true,
+            showCancelButton: true
+        };
 
-        this.modalRef.result.then(
-        (result) => {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe((result) => {
             if (result) {
-            this.cancelDownloadAll();
+                this.cancelDownloadAll();
             } else {
-            console.log("User changed mind.");
+                console.log("User changed mind.");
             }
-        },
-        (reason) => {},
-        );
+        });
     }
 
     /**

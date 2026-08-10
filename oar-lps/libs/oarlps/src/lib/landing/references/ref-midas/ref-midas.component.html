@@ -1,71 +1,92 @@
 <!-- Edit mode -->
-@if(isEditMode) {
+@if (isEditMode) {
     <div class="editable_container">
         <!-- <ng-template #hasReferences> -->
-        <div class="editable_field" style="max-width: calc(100% - 70px); margin-right: 5px;">
-            <div *ngIf="isEditMode && (!record['references'] || record['references'].length == 0)"  [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" style="margin-bottom: 10px; padding-left: 10px;">
+        <div
+            class="editable_field"
+            style="max-width: calc(100% - 70px); margin-right: 5px"
+        >
+            <div
+                *ngIf="
+                    isEditMode &&
+                    (!record['references'] || record['references'].length == 0)
+                "
+                [ngStyle]="
+                    mdupdsvc.getFieldStyle(
+                        fieldName,
+                        dataChanged,
+                        undefined,
+                        isEditing
+                    )
+                "
+                style="margin-bottom: 10px; padding-left: 10px"
+            >
                 Add references to papers and other datasets.
             </div>
 
-            <ref-pub [record]="record" ></ref-pub>
+            <ref-pub [record]="record"></ref-pub>
             <!-- <div [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged, undefined, isEditing)" *ngFor="let ref of record['references']" style="padding-left: 10px; padding-top: 5px;min-height: 1.65em;">
                 <span *ngIf="ref.location; else noreflink">
-                    <span class="fas fa-external-link-alt">&nbsp;</span>
+                    <mat-icon>link</mat-icon>
                     <a href={{ref.location}} target="blank">{{ ref['location'] }}</a>
                 </span>
                 <ng-template #noreflink>
                     <span >{{ ref['citation'] }}</span>
                 </ng-template>
             </div> -->
-        </div>        
+        </div>
         <!-- </ng-template> -->
-        
+
         <!-- Control buttons -->
-        <div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap;width: 1.65em;">
-            <button 
-                class="edit_button" 
-                *ngIf="isNormal" 
-                type="button" 
-                (click)="startEditing()" 
+        <div
+            class="editable_field"
+            *ngIf="isEditMode"
+            style="white-space: nowrap; width: 1.65em"
+        >
+            <button
+                class="edit_button"
+                *ngIf="isNormal"
+                (click)="startEditing()"
                 aria-label="Edit reference"
-                pTooltip="Edit reference" 
-                tooltipPosition="top" 
-                style="cursor: pointer">
-                <fa-icon [icon]="faPencil" size="sm"></fa-icon>
-            </button> 
+                matTooltip="Edit reference"
+                matTooltipPosition="above"
+            >
+                <fa-icon [icon]="faPencil" size="sm"  data-toggle="tooltip" title="Edit description"></fa-icon>
+            </button>
 
             <!-- Hide button - hide edit block -->
-            <button 
-                class="edit_button" 
-                *ngIf="!isNormal" 
-                [disabled]="childIsEditing || childIsAdding" 
-                type="button" 
-                (click)="hideEditBlock()" 
+            <button
+                class="edit_button"
+                *ngIf="!isNormal"
+                [disabled]="childIsEditing || childIsAdding"
+                (click)="hideEditBlock()"
                 aria-label="Hide edit block"
-                pTooltip="Hide edit block"
-                tooltipPosition="top" >
-                <fa-icon [icon]="faXmark" size="sm"></fa-icon>
-            </button> 
+                matTooltip="Hide edit block"
+                matTooltipPosition="above"
+            >
+                <fa-icon [icon]="faXmark"></fa-icon>
+            </button>
 
             <!-- Undo all changes button -->
-            <button #undo 
-                class="edit_button" 
-                *ngIf="refChanged || refUpdated" 
-                [disabled]="childIsEditing || childIsAdding" 
-                type="button"
-                (click)="undoAllChanges()" 
-                aria-label="Undo" 
-                pTooltip="Undo"
-                tooltipPosition="top" >
-                <fa-icon [icon]="faUndo" size="sm"></fa-icon>
-            </button>                
+            <button
+                #undo
+                class="edit_button"
+                *ngIf="refChanged || refUpdated"
+                [disabled]="childIsEditing || childIsAdding"
+                (click)="undoAllChanges()"
+                aria-label="Undo"
+                matTooltip="Undo"
+                matTooltipPosition="above"
+            >
+                <fa-icon [icon]="faUndo" data-toggle="tooltip" title="Undo description changes"></fa-icon>
+            </button>
         </div>
     </div>
 }
 <!-- preview mode -->
 <!-- <ng-template #nonEdit> -->
-@else{
-    <ref-pub [record]="record" ></ref-pub>
+@else {
+    <ref-pub [record]="record"></ref-pub>
 }
 
 <!-- Defer block for lazyloading
@@ -73,9 +94,17 @@
     This block will only be loaded when loadEditRefBlock is set to true.
 -->
 @if (loadEditRefBlock) {
-    <div style="width: 100%;" [@editExpand]="editBlockExpanded" [style.overflow] = "overflowStyle">
-        <lib-ref-list #reflist [nerdmRecord]="record" [inBrowser]="inBrowser" (dataCommand)="onRefChange($event)" (editmodeOutput)="setChildEditMode($event)"></lib-ref-list>
+    <div
+        style="width: 100%"
+        [@editExpand]="editBlockExpanded"
+        [style.overflow]="overflowStyle"
+    >
+        <lib-ref-list
+            #reflist
+            [nerdmRecord]="record"
+            [inBrowser]="inBrowser"
+            (dataCommand)="onRefChange($event)"
+            (editmodeOutput)="setChildEditMode($event)"
+        ></lib-ref-list>
     </div>
 }
-
-

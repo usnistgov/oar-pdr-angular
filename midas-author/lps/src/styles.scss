@@ -15,7 +15,7 @@
     --nist-green-dark: #1c6022;
     --nist-green-light: #6bad73;
     --nist-green-lighter: #f0f7f1;
-    --nist-green-hover: #def8e0;
+    --nist-green-hover: #389a40;
     --nist-blue-default: #12659c;
     --nist-blue-dark: #0c4870;
     --nist-blue-light: #197dc0;
@@ -455,4 +455,8 @@ a:focus {
 .cart-button .mat-badge-content {
     background-color: var(--nist-green-default) !important;
     color: white !important;
+}
+
+.mdc-dialog__surface {
+    border-radius: 8px !important;
 }

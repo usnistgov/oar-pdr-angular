@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, ViewChild, Input, HostListener, ChangeDetectorRef, inject, Inject } from '@angular/core';
+import { Component, OnInit, OnChanges, ViewChild, Input, HostListener, ChangeDetectorRef } from '@angular/core';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
 import { UserMessageService } from '../../frame/usermessage.service';
 import { MessageBarComponent } from '../../frame/messagebar.component';
@@ -8,7 +8,6 @@ import { EditStatusService } from './editstatus.service';
 import { DAPUpdateService } from '../../nerdm/dap.service';
 import { NerdmRes } from '../../nerdm/nerdm'
 import { AppConfig } from '../../config/config';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import {
     LandingConstants,
     RevisionDetails,
@@ -22,15 +21,13 @@ import {
     iconClass
 } from '../../shared/globals/globals';
 import { LandingpageService } from '../landingpage.service';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from '../submission/submit-confirm/submit-confirm.component';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { ConfirmationDialogModule } from '../../shared/confirmation-dialog/confirmation-dialog.module';
 import { CommonModule } from '@angular/common';
 import { AuthenticationService, Credentials } from 'oarng';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -50,6 +47,8 @@ import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EditcontrolInfoComponent } from './editcontrol-info/editcontrol-info.component';
+
 
 /**
  * a panel that serves as a control center for editing metadata displayed in the 
@@ -65,14 +64,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     selector: 'pdr-edit-control',
     standalone: true,
     imports: [
-        CommonModule, 
-        ConfirmationDialogModule, 
-        ButtonModule, 
-        OverlayPanelModule, 
-        NgbModule, 
+        CommonModule,
+        ConfirmationDialogModule,
         FormsModule,
         EditStatusComponent,
         SubmitConfirmComponent,
+        EditcontrolInfoComponent,
         FontAwesomeModule,
         MatButtonModule,
         MatIconModule,
@@ -99,7 +96,6 @@ export class EditControlComponent implements OnInit, OnChanges {
     revisionType: string;
     submitResponse: SubmitResponse = {} as SubmitResponse;
     mobileMode: boolean = false;
-    modalRef: any; // For submit pop up
     collection: string;
     message: string = "test";
     cred: Credentials = null;
@@ -110,7 +106,6 @@ export class EditControlComponent implements OnInit, OnChanges {
     suggestions: ReviewResponse = {} as ReviewResponse;
     revisionStarted: boolean = false;
     editTypes = LandingConstants.editTypes;
-    readonly dialog = inject(MatDialog);
     
     //icon class
     editIcon = iconClass.EDIT;
@@ -182,13 +177,13 @@ export class EditControlComponent implements OnInit, OnChanges {
                         private authsvc: AuthenticationService,
                         private confirmDialogSvc: ConfirmationDialogService,
                         private cfg: AppConfig,
-                        public lpService: LandingpageService, 
+                        public lpService: LandingpageService,
                         private chref: ChangeDetectorRef,
-                        private modalService: NgbModal,
                         public globalService: GlobalService,
                         public collectionService: CollectionService,
                         public iconLibrary: FaIconLibrary,
-                        private msgsvc: UserMessageService) {
+                        private msgsvc: UserMessageService,
+                        private dialog: MatDialog) {
 
         iconLibrary.addIcons(
             faPencil,
@@ -580,32 +575,43 @@ export class EditControlComponent implements OnInit, OnChanges {
                     var message;
                     var err: boolean = false;
 
-                    this.modalRef = this.modalService.open(ConfirmationDialogComponent);
+                    const dialogConfig = new MatDialogConfig();
+                    dialogConfig.width = '600px';
+                    dialogConfig.maxWidth = "95vw";
+                    dialogConfig.data = {
+                        title: 'Note',
+                        message: 'Simple changes to metadata or README files can be published without review.  Adding, removing, or making major changes to files will require NPS review before publishing.',
+                        btnOkText: 'Ok',
+                        btnCancelText: 'Cancel',
+                        showWarningIcon: false,
+                        showCancelButton: false
+                    };
+
+                    const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
 
                     //For testing, disable error handling
                     if (result["error"] && false) {
                         err = true;
-                        this.modalRef.componentInstance.title = 'The server returned following error message';
+                        dialogRef.componentInstance.title = 'The server returned following error message';
                         message = result["error"];
                     } else {
-                        this.modalRef.componentInstance.title = 'Note';
+                        dialogRef.componentInstance.title = 'Note';
                         message = 'Simple changes to metadata or README files can be published without review.  Adding, removing, or making major changes to files will require NPS review before publishing.';
                     }
 
-                    this.modalRef.componentInstance.btnOkText = 'Ok';
-                    this.modalRef.componentInstance.btnCancelText = 'Cancel';
-                    this.modalRef.componentInstance.message = message;
-                    this.modalRef.componentInstance.showWarningIcon = false;
-                    this.modalRef.componentInstance.showCancelButton = false;
-            
-                    this.modalRef.result.then((result) => {
+                    dialogRef.componentInstance.btnOkText = 'Ok';
+                    dialogRef.componentInstance.btnCancelText = 'Cancel';
+                    dialogRef.componentInstance.message = message;
+                    dialogRef.componentInstance.showWarningIcon = false;
+                    dialogRef.componentInstance.showCancelButton = false;
+
+                    dialogRef.afterClosed().subscribe((result) => {
                         if (result) {
                             // if(!err)
                                 this.edit();
                         } else {
                             console.log("User changed mind.");
                         }
-                    }, (reason) => {
                     });
                 })
             } else {
@@ -717,16 +723,6 @@ export class EditControlComponent implements OnInit, OnChanges {
             });
     }
 
-    /**
-     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert 
-     * the data to its previous state.
-     */
-    public showEditControlHelpPopup(event, overlaypanel: OverlayPanel): void {
-        overlaypanel.hide();
-        setTimeout(() => {
-            overlaypanel.show(event);
-        }, 100);
-    }
 
     /**
      * Tell backend that the editing is done
@@ -887,19 +883,19 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     openSubmitConfirmDialog() {
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "modal-small",
-            size: 'lg'
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = "800px";
+        dialogConfig.maxWidth = "95vw";         
+        dialogConfig.data = {
+            submitResponse: this.submitResponse
         };
 
-        this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
-        this.modalRef.componentInstance.submitResponse = this.submitResponse;
-        this.modalRef.componentInstance.returnValue.subscribe(
+        const dialogRef = this.dialog.open(SubmitConfirmComponent, dialogConfig);
+
+        dialogRef.componentInstance.returnValue.subscribe(
             (submit) => {
                 if ( submit.goSubmit ) {
-                    // DBIO Web Service Action:  PATCH /dap/mds3/id/status    
+                    // DBIO Web Service Action:  PATCH /dap/mds3/id/status
                     // with input: { "action": "submit" }
                     this.mdupdsvc.submit("submit").subscribe((result) => {
                         //reload the landing page
@@ -908,7 +904,40 @@ export class EditControlComponent implements OnInit, OnChanges {
                 }else{
                     console.log("User canceled submit.");//Do nothing
                 }
-            }, 
+            },
+            (reason) => {
+                console.log("User canceled submit.");//Do nothing
+            }
+        );
+    }
+
+    openDialog_mat() {
+        this.openSubmitConfirmDialog();
+    }
+
+    openDialog() {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '90%';
+        dialogConfig.maxWidth = '500px';
+        dialogConfig.data = {
+            submitResponse: this.submitResponse
+        };
+
+        const dialogRef = this.dialog.open(SubmitConfirmComponent, dialogConfig);
+
+        dialogRef.componentInstance.returnValue.subscribe(
+            (submit) => {
+                if ( submit.goSubmit ) {
+                    // DBIO Web Service Action:  PATCH /dap/mds3/id/status
+                    // with input: { "action": "submit" }
+                    this.mdupdsvc.submit("submit").subscribe((result) => {
+                        //reload the landing page
+                        window.location.reload();
+                    })
+                }else{
+                    console.log("User canceled submit.");//Do nothing
+                }
+            },
             (reason) => {
                 console.log("User canceled submit.");//Do nothing
             }
@@ -967,6 +996,25 @@ export class EditControlComponent implements OnInit, OnChanges {
             }
         } else {
             return '';
-        }        
+        }
+    }
+
+    /**
+     * Open help dialog for edit control buttons
+     */
+    public showEditControlHelpPopup(event): void {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '800px';
+        dialogConfig.maxWidth = "95vw"; 
+        dialogConfig.panelClass = "about-dialog";
+
+        const dialogRef = this.dialog.open(
+            EditcontrolInfoComponent,
+            dialogConfig,
+        );
+
+        dialogRef.afterClosed().subscribe(() => {
+            // Handle dialog close if needed
+        });
     }
 }

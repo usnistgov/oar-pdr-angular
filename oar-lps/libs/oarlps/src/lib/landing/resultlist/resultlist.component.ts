@@ -17,11 +17,7 @@ import {
     iconClass,
 } from "../../shared/globals/globals";
 import { CollectionService } from "../../shared/collection-service/collection.service";
-import { FaIconLibrary } from "@fortawesome/angular-fontawesome";
-import {
-    faMagnifyingGlass,
-    faSpinner,
-} from "@fortawesome/free-solid-svg-icons";
+
 
 @Component({
     selector: "app-resultlist",
@@ -103,8 +99,6 @@ export class ResultlistComponent implements OnInit {
     // spinnerIcon = iconClass.SPINNER;
     // searchIcon = iconClass.SEARCH;
 
-    faMagnifyingGlass = faMagnifyingGlass;
-    faSpinner = faSpinner;
 
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
@@ -119,11 +113,8 @@ export class ResultlistComponent implements OnInit {
         private searchService: SearchService,
         private cfg: AppConfig,
         public globalService: GlobalService,
-        public iconLibrary: FaIconLibrary,
         public gaService: GoogleAnalyticsService,
     ) {
-        // iconLibrary.addIcons(faMagnifyingGlass, faSpinner);
-
         this.searchService.watchClearAll((clearAll: boolean) => {
             if (clearAll) {
                 this.searchPhases = "";

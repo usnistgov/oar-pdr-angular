@@ -34,7 +34,6 @@ export * from './lib/landing/nerdm.component';
 
 export * from './lib/landing/author/author.service';
 
-export * from './lib/landing/tools/tools.module';
 export * from './lib/landing/tools/menu.component';
 
 export * from './lib/datacart/cart.service';

@@ -1,0 +1,78 @@
+<div class="wrapper">
+    <div
+        class="w-full text-center text-[30px] font-extrabold text-white bg-[#153971] h-11 leading-10"
+    >
+        About the Edit Mode Buttons
+    </div>
+
+    <div class="m-5">
+        <div style="margin-bottom: 0.5em">
+            The buttons above allow you to control your session:
+        </div>
+        <table class="table">
+            <tbody>
+                <tr>
+                    <th scope="row">Manage Files</th>
+                    <td>
+                        Opens the File Manager where you can upload and organize
+                        files that are part of this publication. The File Manager
+                        will appear in a separate tab in your browser.
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Preview</th>
+                    <td>
+                        Switches to Preview Mode to show you how the page will look
+                        to the public after publication. The editing controls and
+                        buttons will be hidden. When in preview mode, this button
+                        will change to "Edit"; click it again to return to Edit
+                        Mode.
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Discard</th>
+                    <td>
+                        Discards all changes that have been made to this page in the
+                        current session (since it was opened). Use this button to
+                        abandon any changes you have made. You will have the
+                        opportunity to continue editing using the initial contents
+                        of the page.
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row">Submit for Review</th>
+                    <td>
+                        Click this button when all edits are complete and you are
+                        ready to submit it for publication. Your draft will be
+                        analyzed for any missing data or recommended improvements
+                        that can be made; these will appear in a pop-up window where
+                        you can either confirm the submission or return to editing.
+                        (If any missing data is required, you will not be able to
+                        proceed with the submission.) Proceeding with the submission
+                        will usually send the draft through the NPS review process;
+                        however, if only minor changes are indicated, NPS review is
+                        not required and the draft will be submitted directly for
+                        publication.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="w-full h-12 flex items-center justify-center border-t border-gray-300">
+        <button
+            mat-flat-button
+            class="close-btn flex items-center justify-center gap-2 px-4 py-2 rounded-lg"
+            (mouseenter)="buttonHover = true"
+            (mouseleave)="buttonHover = false"
+            [style.background-color]="buttonHover
+                ? colorScheme.hoverVar
+                : colorScheme.defaultVar"
+            [style.color]="'white'"
+            (click)="close()"
+        >
+            <mat-icon>close</mat-icon>
+            <span>Close</span>
+        </button>
+    </div>
+</div>

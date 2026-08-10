@@ -1,55 +1,54 @@
-import { Component, EventEmitter, inject, Inject, Input, OnInit, Output } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';  
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { Component, EventEmitter, Inject, Input, OnInit, Output } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { iconClass } from '../globals/globals';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-confirmation-dialog',
   standalone: true,
-  imports: [ NgbModule, CommonModule, FontAwesomeModule ],
+  imports: [ CommonModule, MatButtonModule, MatIconModule ],
   templateUrl: './confirmation-dialog.component.html',
   styleUrls: ['./confirmation-dialog.component.css']
 })
 export class ConfirmationDialogComponent implements OnInit {
-   
-    // warningIcon = iconClass.WARNING;
-    faTriangleExclamation = faTriangleExclamation;
 
-    @Input() public title: string;
-    @Input() public message: string;
-    @Input() public btnOkText: string;
-    @Input() public btnCancelText: string;
-    @Input() public showWarningIcon: boolean;
-    @Input() public showCancelButton: boolean;
+
+    @Input() public matDialog: boolean = true;
+    @Input() public title: string = '';
+    @Input() public message: string = '';
+    @Input() public btnOkText: string = 'OK';
+    @Input() public btnCancelText: string = 'Cancel';
+    @Input() public showWarningIcon: boolean = false;
+    @Input() public showCancelButton: boolean = true;
     @Output() cmdOutput: EventEmitter<any> = new EventEmitter();
 
     constructor(
-        @Inject(NgbActiveModal) public activeModal: NgbActiveModal,
-        public iconLibrary: FaIconLibrary,) { 
-        
-        // iconLibrary.addIcons(
-        //     faTriangleExclamation
-        // );
+        @Inject(MAT_DIALOG_DATA) public data: any,
+        public dialogRef: MatDialogRef<ConfirmationDialogComponent>) {
     }
 
     ngOnInit() {
+        if(this.matDialog){
+            this.title = this.data.title;
+            this.message = this.data.message;
+            this.btnOkText = this.data.btnOkText;
+            this.btnCancelText = this.data.btnCancelText;
+            this.showWarningIcon = this.data.showWarningIcon;
+            this.showCancelButton = this.data.showCancelButton;
+        }
     }
 
     public decline() {
-        // this.cmdOutput.emit("decline");
-        this.activeModal.close(false);
+        this.dialogRef.close(false);
     }
 
     public accept() {
-        // this.cmdOutput.emit("accept");
-        this.activeModal.close(true);
+        this.dialogRef.close(true);
     }
 
     public dismiss() {
-        // this.cmdOutput.emit("dismiss");
-        this.activeModal.dismiss();
+        this.dialogRef.close();
     }
 }

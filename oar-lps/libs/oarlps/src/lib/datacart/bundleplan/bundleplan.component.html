@@ -87,8 +87,7 @@
                         {{getStatusForDisplay(zip.downloadStatus)}}
                     </div>
                     <ng-template #download_error>
-                        <div style="display:inline-block;margin-left: .5em;font-size: 0.8em; color: red; cursor: pointer;" (click)="openErrZipDetails($event,op5,zip) ">
-                            <!-- <i class="fas fa-exclamation-triangle" [ngStyle]="{'padding-right':'.5em', 'margin-top':'8px'}"></i> -->
+                        <div style="display:inline-block;margin-left: .5em;font-size: 0.8em; color: red; cursor: pointer;" (click)="openErrZipDetails(zip)">
 
                             <fa-icon 
                                 [icon]="faTriangleExclamation" 
@@ -99,9 +98,6 @@
                             <u>{{getStatusForDisplay(zip.downloadStatus)}}</u>
                         </div>
                     </ng-template>
-                    <!-- <i *ngIf="zip.downloadStatus != null" class="faa faa-repeat"
-                        style="display: inline-block; margin-left: .5em; font-size: 0.8em; color: #1E6BA1; cursor: pointer;"
-                        data-toggle="tooltip" title="Retry" (click)="downloadOneZip(zip)"></i> -->
 
                     <fa-icon 
                         *ngIf="zip.downloadStatus != null" 
@@ -200,39 +196,3 @@
         </ng-template>
     </div>
 </div>
-
-<!-- Popup dialog for download time info -->
-<!-- <p-overlayPanel class="fileDialog" #op5 [dismissable]="true" [showCloseIcon]="false"
-    [style]="{'display':'inline-block','position':'related','top':'80%','max-width':getDialogWidth(),'overflow-wrap': 'break-word'}"
-    appendToBody=true>
-    <div class="warning-overlay-title">
-        Message details
-    </div>
-
-    <table class="table">
-        <tbody>
-            <tr>
-                <th scope="row" style="width: 40%;">Zip file name</th>
-                <td>{{problemZip.fileName}}</td>
-            </tr>
-            <tr>
-                <th scope="row">Download URL</th>
-                <td>{{problemZip.downloadUrl}}</td>
-            </tr>
-            <tr>
-                <th scope="row">Size</th>
-                <td>{{problemZip.bundleSize}}</td>
-            </tr>
-            <tr>
-                <th scope="row">Error message</th>
-                <td>{{problemZip.downloadErrorMessage}}</td>
-            </tr>
-            <tr>
-                <th scope="row">Tech support</th>
-                <td><a href="mailto:datasupport@nist.gov?subject={{emailSubject}}&body={{getEmailBody()}}"
-                    (click)="gaService.gaTrackEvent('Email', $event, 'AskHelp', 'mailto:datasupport@nist.gov')">datasupport&#64;nist.gov
-                </a></td>
-            </tr>
-        </tbody>
-    </table>
-</p-overlayPanel> -->

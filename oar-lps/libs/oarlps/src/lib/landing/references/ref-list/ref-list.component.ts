@@ -1,7 +1,6 @@
-import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter, ChangeDetectorRef, inject } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, ElementRef, SimpleChanges, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -14,29 +13,30 @@ import {
 import { Reference } from '../reference';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
-import { TooltipModule } from 'primeng/tooltip';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'lib-ref-list',
     standalone: true,
     imports: [
         CommonModule,
-        ButtonModule,
-        TooltipModule,
         FormsModule,
         CollapseModule,
         TextEditComponent,
         RefEditComponent,
         ConfirmationDialogComponent,
         DragDropModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatButtonModule,
+        MatTooltipModule
     ],
     templateUrl: './ref-list.component.html',
     styleUrls: ['../../landing.component.scss', '../references.component.css', './ref-list.component.css'],
@@ -63,14 +63,10 @@ export class RefListComponent implements OnInit {
     // For error message display
     errMessage: string
 
-    // For warning pop up
-    modalRef: any;
 
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter reference data?" will not display.
     // Default is "normal" mode.
     editMode: string = MODE.NORMAL; 
-    globalsvc = inject(GlobalService);
-
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
     dropListReceiverElement?: HTMLElement;
@@ -89,14 +85,15 @@ export class RefListComponent implements OnInit {
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
-    constructor(public mdupdsvc : MetadataUpdateService,        
-        private modalService: NgbModal,  
+    constructor(public mdupdsvc : MetadataUpdateService,
         private notificationService: NotificationService,
-        private chref: ChangeDetectorRef,  
+        private chref: ChangeDetectorRef,
         public iconLibrary: FaIconLibrary,
-        public lpService: LandingpageService) { 
+        public lpService: LandingpageService,
+        public globalService: GlobalService,
+        private dialog: MatDialog) {
 
-        // iconLibrary.addIcons( faPlus); 
+        // iconLibrary.addIcons( faPlus);
     }
 
     ngOnInit(): void {
@@ -681,22 +678,26 @@ export class RefListComponent implements OnInit {
     undoAllChangesConfirmation(){
         var message = 'This will undo all reference changes.';
 
-        this.modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true });
-        this.modalRef.componentInstance.title = 'Please confirm';
-        this.modalRef.componentInstance.btnOkText = 'Confirm';
-        this.modalRef.componentInstance.btnCancelText = 'Cancel';
-        this.modalRef.componentInstance.message = message;
-        this.modalRef.componentInstance.showWarningIcon = true;
-        this.modalRef.componentInstance.showCancelButton = true;
-        
-        this.modalRef.result.then(
-            (result) => {
-                if ( result ) {
-                    this.undoChanges();
-                }else{
-                    console.log("User changed mind.");
-                }
-            }, (reason) => {
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '800px';
+        dialogConfig.maxWidth = "95vw";
+        dialogConfig.data = {
+            title: 'Please confirm',
+            message: message,
+            btnOkText: 'Confirm',
+            btnCancelText: 'Cancel',
+            showWarningIcon: true,
+            showCancelButton: true
+        };
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.undoChanges();
+            } else {
+                console.log("User changed mind.");
+            }
         });
     }    
 }

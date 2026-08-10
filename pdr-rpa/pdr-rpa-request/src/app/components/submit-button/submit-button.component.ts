@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { ProgressSpinner } from 'primeng/progressspinner';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-submit-button',
   templateUrl: './submit-button.component.html',
-  styleUrls: ['./submit-button.component.css']
+  styleUrls: ['./submit-button.component.css'],
+  standalone: true,
+  imports: [MatProgressSpinnerModule]
 })
 export class SubmitButtonComponent implements OnInit {
 

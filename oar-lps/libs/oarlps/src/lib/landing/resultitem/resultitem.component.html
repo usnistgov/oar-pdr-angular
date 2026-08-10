@@ -2,7 +2,7 @@
     <div class="item-title" [style.background-color]="colorScheme.defaultVar">
         <!-- Title button -->
         <a class="btn-parent title-btn" style="color: white;width: fit-content;" href="{{PDRAPIURL}}{{resultItem.ediid}}" target="_blank" rel="noopener">
-            <i class="pi pi-database btn-icon"></i>
+            <mat-icon class="btn-icon">storage</mat-icon>
             <span style="display: table-cell;">
                 {{resultItem.title.trim()}}
             </span>
@@ -10,9 +10,9 @@
 
         <!-- Home button -->
         <div class="vertical-top home-btn">
-            <a  class="btn-parent home-btn" 
+            <a  class="btn-parent home-btn"
             href="{{homeBtnURL}}" target="_blank" rel="noopener">
-                <i [class]="homeIconClass"></i>
+                <mat-icon class="btn-icon">{{homeIconName}}</mat-icon>
                 <span style="display: table-cell;">
                         Access Data
                 </span>
