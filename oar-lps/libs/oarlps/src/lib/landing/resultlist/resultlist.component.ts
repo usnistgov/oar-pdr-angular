@@ -4,7 +4,12 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { SearchService } from '../../shared/search-service/index';
 import { AppConfig } from '../../config/config';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
-import { Collections, ColorScheme, GlobalService, iconClass } from '../../shared/globals/globals';
+import {
+    Collections,
+    ColorScheme,
+    GlobalService,
+    removeLastPathIfVersion,
+} from "../../shared/globals/globals";
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
@@ -468,31 +473,22 @@ export class ResultlistComponent implements OnInit {
 
                                         if (
                                             oTopic["scheme"] &&
-                                            oTopic["scheme"].indexOf(
-                                                this.taxonomyURI[collection],
-                                            ) >= 0
+                                            removeLastPathIfVersion(
+                                                oTopic["scheme"],
+                                            ) ==
+                                                removeLastPathIfVersion(
+                                                    this.taxonomyURI[
+                                                        collection
+                                                    ],
+                                                )
                                         ) {
                                             if (
-                                                collection ==
-                                                Collections.DEFAULT
-                                            ) {
-                                                if (
-                                                    oTopic["tag"]
-                                                        .toLowerCase()
-                                                        .includes(
-                                                            topicValue.toLowerCase(),
-                                                        )
+                                                this.areStringsEqual(
+                                                    oTopic["tag"],
+                                                    topicValue,
                                                 )
-                                                    resultItem.active = true;
-                                            } else {
-                                                if (
-                                                    this.areStringsEqual(
-                                                        oTopic["tag"],
-                                                        topicValue,
-                                                    )
-                                                )
-                                                    resultItem.active = true;
-                                            }
+                                            )
+                                                resultItem.active = true;
                                         }
                                     }
                                 }
