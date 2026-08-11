@@ -12,7 +12,10 @@ import { Collections, Collection, CollectionThemes, FilterTreeNode, GlobalServic
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner, faAnglesDown, faAnglesLeft, faAnglesRight, faAnglesUp, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { iconClass } from '../../shared/globals/globals';
+import {
+    iconClass,
+    removeLastPathIfVersion,
+} from "../../shared/globals/globals";
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -964,16 +967,27 @@ export class FiltersComponent implements OnInit {
                         topicLabel = topic.tag;
                     }
 
-                    if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.AM]) >= 0) {
+                    if (topic["scheme"] && 
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.AM])
+                    ) {
                         collection = Collections.AM;
-                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
+                    } else if (
+                        topic["scheme"] &&
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.SEMICONDUCTORS])
+                    ) {
                         collection = Collections.SEMICONDUCTORS;
-                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
+                    } else if (
+                        topic["scheme"] &&
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.FORENSICS])
+                    ) {
                         collection = Collections.FORENSICS;
-                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0) {
+                    } else if (
+                        topic["scheme"] &&
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.DEFAULT])
+                    ) {
                         collection = Collections.DEFAULT;
                     } else {
-                        collection = '';
+                        collection = "";
                     }
                     
                     if (collection != '') {

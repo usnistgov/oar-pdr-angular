@@ -646,6 +646,26 @@ export interface Topic {
 }
 
 /**
+ * This function removes the version info in a given URI.
+ * @param uri
+ */
+export function removeLastPathIfVersion(uri: string): string {
+    const lastSlash = uri.lastIndexOf('/');
+
+    if (lastSlash === -1) {
+        return uri;
+    }
+
+    const lastSegment = uri.substring(lastSlash + 1);
+
+    if (/^[vV]/.test(lastSegment)) {
+        return uri.substring(0, lastSlash);
+    }
+
+    return uri;
+}
+
+/**
  * A TreeNode that knows how to insert and update items from a data cart
  */
 export class FilterTreeNode implements TreeNode {
@@ -734,20 +754,11 @@ export class FilterTreeNode implements TreeNode {
                             for (let topic of resultItem.topic) {
                                 if (
                                     topic["scheme"] &&
-                                    topic["scheme"].indexOf(
-                                        taxonomyURI[collection],
-                                    ) >= 0
+                                    removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(taxonomyURI[collection])
                                 ) {
-                                    if (collection == Collections.DEFAULT) {
-                                        if (topic.tag.includes(item[0])) {
-                                            found = true;
-                                            break;
-                                        }
-                                    } else {
-                                        if (topic.tag == item[0]) {
-                                            found = true;
-                                            break;
-                                        }
+                                    if (topic.tag == item[0]) {
+                                        found = true;
+                                        break;
                                     }
                                 }
                             }
@@ -841,12 +852,13 @@ export class FilterTreeNode implements TreeNode {
     private topicMatches(
         topic: any,
         taxonomy: string,
-        taxonomyURI: string[],
+        taxonomyURI: string,
         collection: string,
         tree: FilterTreeNode,
     ): boolean {
         //Check if topic has scheme value and topic.scheme matches taxonomyURI. Skip if false.
-        if (!topic.scheme || topic.scheme.indexOf(taxonomyURI) < 0) {
+        if (!topic.scheme || removeLastPathIfVersion(topic["scheme"]) != removeLastPathIfVersion(taxonomyURI)) {
+            // topic.scheme.indexOf(taxonomyURI) < 0) {
             return false;
         }
 
