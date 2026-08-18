@@ -59,6 +59,7 @@ export class AppComponent implements OnInit, OnDestroy {
   record: Record;
   loaded: boolean = false;
   displayProgressSpinner: boolean = false;
+  loadingMessage: string = 'Checking your sign-in...';
   recordNotFound = false;
   errorMessage: string = '';
   errorTitle: string = '';
@@ -103,6 +104,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initDarkMode();
     this.displayProgressSpinner = true;
+    this.loadingMessage = 'Checking your sign-in...';
     this.status = "pending";
 
     // Use simulation mode if enabled
@@ -112,7 +114,10 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     this.authenticate().pipe(
-      tap(recordId => this.recordId = recordId),
+      tap(recordId => {
+        this.recordId = recordId;
+        this.loadingMessage = 'Loading your request...';
+      }),
 
       // Retrieve the record from the RPA service
       switchMap(recordId => this.rpaService.getRecord(recordId as string, this._creds)),

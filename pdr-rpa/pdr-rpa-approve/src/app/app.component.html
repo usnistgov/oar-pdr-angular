@@ -4,7 +4,7 @@
 <div class="loading-overlay" *ngIf="displayProgressSpinner">
   <div class="spinner-container">
     <mat-spinner diameter="48" color="primary"></mat-spinner>
-    <p class="loading-text">Processing...</p>
+    <p class="loading-text">{{ loadingMessage }}</p>
   </div>
 </div>
 
