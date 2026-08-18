@@ -1,6 +1,5 @@
 import { Inject, Injectable, signal } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
-import { SelectItem } from "primeng/api";
 import { DOCUMENT } from "@angular/common";
 
 @Injectable({
@@ -586,6 +585,15 @@ export interface ColorScheme {
     lighter: string;
     dark: string;
     hover: string;
+}
+
+/**
+ * Interface for selectable items with label and value properties
+ * Replaces PrimeNG SelectItem to remove external dependency
+ */
+export interface SelectItem {
+    label: string;
+    value: any;
 }
 
 export interface CollectionThemes {

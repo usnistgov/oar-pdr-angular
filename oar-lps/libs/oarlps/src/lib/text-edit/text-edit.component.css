@@ -37,4 +37,22 @@
 .control-wrapper {
     width: fit-content;
     text-align: center;
+    
+}
+
+.edit_button0 {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: rgb(233, 233, 233, 0);
+  vertical-align: top;
+  border-style: solid;
+  border-color: lightgrey;
+  border-width: 0px 0px 0px 0px;
+  color: var(--link);
+  margin: 0px;
+  padding: 0px;
+  z-index: 999;
 }

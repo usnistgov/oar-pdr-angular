@@ -439,7 +439,7 @@ a:visited {
 }
 
 .edit_button {
-  display: table-cell;
+  display: inline-flex;
   width: 1.65em;
   height: 1.65em;
   background-color: rgb(233, 233, 233);

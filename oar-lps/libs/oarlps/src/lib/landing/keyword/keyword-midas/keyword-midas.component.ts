@@ -8,7 +8,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastrModule } from 'ngx-toastr';
-import { TextEditModule } from '../../../text-edit/text-edit.module';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Chips, ChipsModule } from 'primeng/chips';
@@ -24,15 +23,16 @@ import {
     faSave,
     faUndo
 } from '@fortawesome/free-solid-svg-icons';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
 
 @Component({
     selector: 'keyword-midas',
     standalone: true,
-    imports: [ 
+    imports: [
         CommonModule,
         FormsModule,
         ToolbarModule,
-        TextEditModule,
+        TextEditComponent,
         TextareaAutoresizeModule,
         NgbModule,
         ChipsModule,

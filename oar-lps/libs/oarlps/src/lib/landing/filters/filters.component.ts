@@ -8,9 +8,9 @@ import {
     ChangeDetectorRef,
     inject,
 } from "@angular/core";
-import { SelectItem } from "primeng/api";
 import { TreeNode } from "primeng/api";
 import { Message } from "primeng/api";
+import { SelectItem } from "../../shared/globals/globals";
 import {
     TaxonomyListService,
     SearchfieldsListService,

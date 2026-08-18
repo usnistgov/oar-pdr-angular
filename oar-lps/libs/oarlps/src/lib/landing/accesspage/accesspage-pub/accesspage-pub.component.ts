@@ -51,6 +51,7 @@ export class AccesspagePubComponent {
     faCaretRight = faCaretRight;
 
     isMouseOver: boolean = false;
+    mouseOverIndex: number = 0;
     
     @Input() record: NerdmRes = null;
     @Input() theme: string;

@@ -1,145 +1,228 @@
 <div class="table-wraper">
     <table width="100%">
-        <tr style="width: 100% !important;">
+        <tr style="width: 100% !important">
             <!-- Drag drop icon -->
-            <td *ngIf="dragDropIcon" class="dragdrop">
-                <img src="./assets/images/reorder.png" class="dragdropicon" [style.opacity]="iconOpacity()" ngbTooltip="Drag and re-position this item" alt="Drag and re-position this item">
+            <td *ngIf="dragDropIcon" class="dragdrop" [style.cursor]="dragDropIcon ? 'move' : 'default'">
+                <img
+                    src="./assets/images/reorder.png"
+                    class="dragdropicon"
+                    [style.opacity]="iconOpacity()"
+                    ngbTooltip="Drag and re-position this item"
+                    alt="Drag and re-position this item"
+                />
             </td>
 
             <!-- Text field -->
-            <td class="text-field-wrapper">
-                <input class="editable-text-field" *ngIf="editing" type="text" (keyup.enter)="onKeyEnter(defaultAction)" [(ngModel)]="currentVal" [placeholder]="placeHolderText"/>
+            <td class="text-field-wrapper" [style.cursor]="dragDropIcon ? 'move' : 'default'">
+                <mat-form-field *ngIf="editing" class="editable-text-field">
+                    <input
+                        matInput
+                        type="text"
+                        (keyup.enter)="onKeyEnter(defaultAction)"
+                        [(ngModel)]="currentVal"
+                        [placeholder]="placeHolderText"
+                    />
+                </mat-form-field>
                 <span *ngIf="!editing" class="display-text-field">
-                    <div style="padding: 2px 10px;" *ngIf="currentVal && currentVal.trim() != ''; else notext">{{ currentVal }}</div>
+                    <div
+                        style="padding: 2px 10px"
+                        *ngIf="
+                            currentVal && currentVal.trim() != '';
+                            else notext
+                        "
+                    >
+                        {{ currentVal }}
+                    </div>
                     <ng-template #notext>
-                        <span style="color: grey;">{{placeHolderText}}</span>
+                        <span style="color: grey">{{ placeHolderText }}</span>
                     </ng-template>
-                    
                 </span>
             </td>
 
             <!-- Controls -->
-            <td class="control-wrapper" [style.width]="controlBoxWidth" [style.border-left]="controlBorderStyle()">
+            <td
+                class="control-wrapper"
+                [style.width]="controlBoxWidth"
+                [style.border-left]="controlBorderStyle()"
+            >
                 <!-- Edit/Save button-->
-                <button 
-                    *ngIf="editButton" 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="editSave()" 
-                    [disabled]="disableControl" 
+                <button
+                    *ngIf="editButton"
+                    class="edit_button"
+                    mat-button
+                    type="button"
+                    (click)="editSave()"
+                    [disabled]="disableControl"
                     [aria-label]="getTooltip('edit')"
-                    [pTooltip]="getTooltip('edit')"
-                    tooltipPosition="top" >
-
-                    <fa-icon [icon]="['fas', getEditIconClass()]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="getTooltip('edit')"></fa-icon>
+                    [matTooltip]="getTooltip('edit')"
+                    matTooltipPosition="above"
+                >
+                    <fa-icon
+                        [icon]="['fas', getEditIconClass()]"
+                        size="sm"
+                        [style.opacity]="iconOpacity()"
+                    ></fa-icon>
 
                     <!-- <fa-icon [icon]="['fas', getEditIconClass()]" size="sm" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="getTooltip('edit')"></fa-icon> -->
+                        data-toggle="tooltip" ></fa-icon> -->
                 </button>
 
                 <!-- Custom button -->
-                <button 
-                    *ngIf="customButton" 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="cust();" 
-                    [disabled]="disableControl" 
+                <button
+                    *ngIf="customButton"
+                    class="edit_button"
+                    mat-button
+                    type="button"
+                    (click)="cust()"
+                    [disabled]="disableControl"
                     [aria-label]="custBtnTooltip"
-                    [pTooltip]="custBtnTooltip"
-                    tooltipPosition="top" >
-
-                    <fa-icon [icon]="['fas', custBtnIcon]" size="sm"  [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="Costom"></fa-icon>
-                    <!-- <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" [title]="Costom"></i> -->
+                    [matTooltip]="custBtnTooltip"
+                    matTooltipPosition="above"
+                >
+                    <fa-icon
+                        [icon]="['fas', custBtnIcon]"
+                        size="sm"
+                        [style.opacity]="iconOpacity()"
+                    ></fa-icon>
+                    <!-- <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" ></i> -->
                 </button>
 
                 <!-- Edit only button-->
-                <button 
-                    *ngIf="editOnlyButton" 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="edit()" 
-                    [disabled]="editing || disableControl" 
-                    aria-label="Edit button" 
-                    pTooltip="Edit this item"
-                    tooltipPosition="top" >
+                <fa-icon
+                    *ngIf="editOnlyButton"
+                    class="edit_button action-icon"
+                    [class.disabled]="editing || disableControl"
+                    [icon]="['fas', editIcon]"
+                    size="sm"
+                    (click)="edit()"
+                    [class]="getEditOnlyIconClass()"
+                    [style.opacity]="iconOpacity()"
+                    aria-label="Edit button"
+                    matTooltip="Edit this item"
+                    matTooltipPosition="above"
+                >
+                </fa-icon>
 
-                    <fa-icon [icon]="['fas', editIcon]" size="sm" [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="getTooltip('edit')"></fa-icon>
-                    <!-- <i [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity(editing)"
-                        data-toggle="tooltip" [title]="getTooltip('edit')"></i> -->
-                </button>
+                <!-- <button
+                    *ngIf="editOnlyButton"
+                    class="edit_button"
+                    mat-button
+                    (click)="edit()"
+                    [disabled]="editing || disableControl"
+                    aria-label="Edit button"
+                    matTooltip="Edit this item"
+                    matTooltipPosition="above" >
+
+                    <fa-icon [icon]="['fas', editIcon]" size="sm" [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity()"></fa-icon>
+                </button> -->
 
                 <!-- Delete/undoEdit button-->
-                <button 
-                    *ngIf="deleteButton" 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="removeUndo()" 
-                    [disabled]="disableControl" 
+                <fa-icon
+                    *ngIf="deleteButton"
+                    class="edit_button action-icon"
+                    [class.disabled]="disableControl"
+                    [icon]="['fas', getDelIconClass()]"
+                    size="sm"
+                    (click)="removeUndo()"
+                    [style.opacity]="iconOpacity()"
+                    data-toggle="tooltip"
                     [aria-label]="getTooltip('delete')"
-                    [pTooltip]="getTooltip('delete')"
-                    tooltipPosition="top">
+                    [matTooltip]="getTooltip('delete')"
+                    matTooltipPosition="above"
+                >
+                </fa-icon>
+
+                <!-- <button
+                    *ngIf="deleteButton"
+                    class="edit_button"
+                    mat-button
+                    (click)="removeUndo()"
+                    [disabled]="disableControl"
+                    [aria-label]="getTooltip('delete')"
+                    [matTooltip]="getTooltip('delete')"
+                    matTooltipPosition="above">
 
                     <fa-icon [icon]="['fas', getDelIconClass()]" size="sm" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="getTooltip('delete')"></fa-icon>
-                    <!-- <i [class]="getDelIconClass()" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="getTooltip('delete')"></i> -->
-                </button>
+                        data-toggle="tooltip" ></fa-icon>
+                </button> -->
 
                 <!-- Restore button-->
-                <button 
-                    *ngIf="restoreButton" 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="restore()" 
-                    [disabled]="disableControl || !dataChanged || isNew || editing" 
-                    aria-label="Restore button" 
-                    pTooltip="Restore from original value" 
+                <fa-icon
+                    *ngIf="restoreButton"
+                    class="edit_button action-icon"
+                    [class.disabled]="disableControl || !dataChanged || isNew || editing"
+                    [icon]="['fas', undoIcon]"
+                    (click)="restore()"
+                    size="sm"
+                    [style.opacity]="iconOpacity(editing)"
+                    aria-label="Restore button"
+                    matTooltip="Restore from original value"
                     data-container="body"
-                    tooltipPosition="top">
+                    matTooltipPosition="above"
+                ></fa-icon>       
 
-                    <fa-icon [icon]="['fas', undoIcon]" size="sm" [style.opacity]="iconOpacity(editing)" data-toggle="tooltip"
-                        [title]="getTooltip('restore')"></fa-icon>
-
-                    <!-- <i [class]="undoIcon" [style.opacity]="iconOpacity(editing)"
-                        data-toggle="tooltip" [title]="getTooltip('restore')"></i> -->
-                </button>
+                <!-- <button
+                    *ngIf="restoreButton"
+                    class="edit_button"
+                    mat-button
+                    type="button"
+                    (click)="restore()"
+                    [disabled]="
+                        disableControl || !dataChanged || isNew || editing
+                    "
+                    aria-label="Restore button"
+                    matTooltip="Restore from original value"
+                    data-container="body"
+                    matTooltipPosition="above"
+                >
+                    <fa-icon
+                        [icon]="['fas', undoIcon]"
+                        size="sm"
+                        [style.opacity]="iconOpacity(editing)"
+                    ></fa-icon>
+                </button> -->
 
                 <!-- Plus button-->
-                <button 
-                    *ngIf="plusButton" 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="add()" 
-                    [disabled]="disableControl" 
-                    aria-label="Add button" 
-                    pTooltip="Add new item"
-                    tooltipPosition="top">
-
-                    <fa-icon [icon]="['fas', addIcon]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="Add"></fa-icon>
+                <button
+                    *ngIf="plusButton"
+                    class="edit_button"
+                    mat-button
+                    type="button"
+                    (click)="add()"
+                    [disabled]="disableControl"
+                    aria-label="Add button"
+                    matTooltip="Add new item"
+                    matTooltipPosition="above"
+                >
+                    <fa-icon
+                        [icon]="['fas', addIcon]"
+                        size="sm"
+                        [style.opacity]="iconOpacity()"
+                    ></fa-icon>
                     <!-- <i class="faa faa-plus" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="Add"></i> -->
                 </button>
 
                 <!-- Submit button-->
-                <button 
-                    *ngIf="submitButton" 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="submit()" 
-                    [disabled]="disableControl" 
-                    aria-label="submit button" 
-                    [pTooltip]="submitTooltip"
-                    tooltipPosition="top">
-
-                    <fa-icon [icon]="['fas', submitIcon]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="submit"></fa-icon>
+                <button
+                    *ngIf="submitButton"
+                    class="edit_button"
+                    mat-button
+                    type="button"
+                    (click)="submit()"
+                    [disabled]="disableControl"
+                    aria-label="submit button"
+                    [matTooltip]="submitTooltip"
+                    matTooltipPosition="above"
+                >
+                    <fa-icon
+                        [icon]="['fas', submitIcon]"
+                        size="sm"
+                        [style.opacity]="iconOpacity()"
+                    ></fa-icon>
 
                     <!-- <i [class]="submitIcon" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="submit"></i> -->
+                        data-toggle="tooltip" ></i> -->
                 </button>
             </td>
         </tr>

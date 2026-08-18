@@ -47,7 +47,7 @@ width: 95% !important;
     height: fit-content;
     border: solid 1px #ccc;
     color: rgba(0, 0, 0, 0.87);
-    cursor: move;
+    // cursor: move;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -134,21 +134,4 @@ button {
 .reorder-icon {
     width: 40px;
     height: 100%;
-}
-
-.edit_button0 {
-    width: 24px !important;
-    height: 24px !important;
-    padding: 0 !important;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.edit_button0 .mat-icon {
-    font-size: 18px;
-    width: 18px;
-    height: 18px;
-    line-height: 18px;
 }

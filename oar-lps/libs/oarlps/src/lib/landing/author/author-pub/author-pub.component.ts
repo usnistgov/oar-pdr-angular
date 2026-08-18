@@ -1,8 +1,7 @@
 import { Component, Input, SimpleChanges } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Author } from '../author';
 import { CommonModule } from '@angular/common';
-import { CollapseModule } from '../../collapseDirective/collapse.module';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
     faCaretDown,
@@ -15,8 +14,7 @@ import { iconClass } from '../../../shared/globals/globals';
     standalone: true,
     imports: [
         CommonModule,
-        CollapseModule,
-        NgbModule,
+        MatExpansionModule,
         FontAwesomeModule
     ],
     templateUrl: './author-pub.component.html',

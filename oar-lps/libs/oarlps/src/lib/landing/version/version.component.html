@@ -39,8 +39,8 @@
         Issued: <strong>{{record.issued.slice(0,10)}}</strong></ng-template>
 
     <!-- Release history -->
-    <div class="card customcard" [collapse]="!visibleHistory">
-        <div class="" *ngIf="record.annotated; else issueddate" style="padding-right: 10pt;">
+    <mat-expansion-panel [expanded]="visibleHistory">
+        <div class="pt-3" *ngIf="record.annotated; else issueddate" style="padding-right: 10pt;">
             Description Last Updated: <strong>{{record.annotated.slice(0,10)}}</strong></div>
 
         <b>Release History:</b>
@@ -54,7 +54,8 @@
                 <i>{{release.description}}</i>
             </span>
         </span>
-    </div>
+    </mat-expansion-panel> 
+
     <p style="margin-top: 10px;" *ngIf="newer && newer.location">
         <b>There is a more recent release of this resource available: &nbsp;&nbsp;
             <a href="{{resolverForId(newer['@id'])}}"

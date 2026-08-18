@@ -436,23 +436,6 @@ a:visited {
   font-size: 1.5em;
 }
 
-.edit_button {
-  display: table-cell;
-  width: 1.65em;
-  height: 1.65em;
-  background-color: rgb(233, 233, 233, 0);
-  vertical-align: top;
-  border-style: solid;
-  border-color: lightgrey;
-  border-width: 0px 0px 0px 0px;
-  z-index: 99;
-  color: var(--link);
-}
-
-.edit_button:hover:enabled {
-    border: 1px solid var(--nist-blue-default);
-}
-
 .icon_enabled { 
   color: var(--link);
   font-size: 1em;
@@ -607,7 +590,8 @@ a:visited {
     background: white;
     border: 1px solid #ddd;
     border-radius: 4px;
-    cursor: move;
+    display: block;
+    list-style: none;
 }
 
 .list-item:last-child {
@@ -620,4 +604,32 @@ a:visited {
 
 .cdk-drag-placeholder {
     opacity: 0.3;
+}
+
+.edit_button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  background-color: rgb(233, 233, 233, 0);
+  vertical-align: top;
+  border-style: solid;
+  border-color: lightgrey;
+  border-width: 0px 0px 0px 0px;
+  color: var(--link);
+  margin: 6px;
+  cursor: pointer;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.edit_button:hover {
+    // border: 1px solid var(--nist-blue-default);
+    color: #1976d2;
+}
+
+.edit_button.disabled {
+    color: #bdbdbd;
+    cursor: default;
+    pointer-events: none;
 }

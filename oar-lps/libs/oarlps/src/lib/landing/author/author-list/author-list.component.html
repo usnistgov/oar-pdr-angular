@@ -12,7 +12,6 @@
                         <div class="list-item" 
                             *ngFor="let author of record[fieldName]; let i = index"
                             cdkDrag
-                            [style.cursor]="dragDropCursor"
                             [cdkDragDisabled]="isDragDisabled">
                     
                             <div (click)="selectAuthor(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"

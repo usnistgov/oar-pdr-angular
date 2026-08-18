@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { iconClass } from '../shared/globals/globals';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -24,10 +26,12 @@ import {
     selector: 'lib-text-edit',
     standalone: true,
     imports: [
-        ButtonModule,
-        TooltipModule,
+        MatButtonModule,
+        MatTooltipModule,
         CommonModule,
         FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
         FontAwesomeModule
     ],
     templateUrl: './text-edit.component.html',
@@ -329,6 +333,5 @@ export class TextEditComponent implements OnInit {
                 this.submit();
                 break;
         }
-
     }
 }

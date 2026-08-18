@@ -9,7 +9,6 @@ import { ErrorsModule } from './errors/errors.module';
 import { SectionsModule } from './landing/sections/sections.module';
 import { DoneModule } from './landing/done/done.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TextEditModule } from './text-edit/text-edit.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TextareaAutoresizeModule } from './textarea-autoresize/textarea-autoresize.module';
 import { SectionTitleModule } from './landing/section-title/section-title.module';
@@ -18,15 +17,14 @@ import { ToastrModule } from 'ngx-toastr';
 @NgModule({
     declarations: [ ],
     imports: [
-        CommonModule, 
-        FrameModule, 
+        CommonModule,
+        FrameModule,
         ConfigModule,
         DirectivesModule,
         ErrorsModule,
         SectionsModule,
         DoneModule,
         DragDropModule,
-        TextEditModule,
         HttpClientModule,
         TextareaAutoresizeModule,
         SectionTitleModule,

@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { environment } from '../environments/environment-impl';
 import { LandingPageComponent } from './landing/landingpage.component';
 import { LandingAboutModule, SharedModule, DatacartModule, DirectivesModule, 
-         MetricsModule, OARLPSModule, NerdmModule, ConfigModule, 
+         OARLPSModule, NerdmModule, ConfigModule, 
          BrowserMetadataTransferModule} from 'oarlps';
 import { GoogleAnalyticsService, CollectionService, ConfirmationDialogService } from 'oarlps';
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
@@ -43,7 +43,6 @@ enableProdMode();
     LandingAboutModule,
     DirectivesModule,
     DatacartModule,
-    MetricsModule,
     SharedModule.forRoot(),
     HttpClientModule,
     FormsModule,
@@ -88,7 +87,7 @@ enableProdMode();
     //     multi: true
     // }
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
 export class AppModule {
   // We inject the service here to keep it alive whole time

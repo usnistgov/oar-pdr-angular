@@ -3,7 +3,6 @@
         <span class="recordType">
             <b>{{recordType}}</b>
         </span>
-        <br>
         <app-title 
             [record]="record" 
             [isPublicSite]="isPublicSite">
@@ -67,7 +66,7 @@
         <div class="table" style="margin: 0px;padding: 0px;">
             <div class="cell left">
                 @if(isPublicSite) {
-                    <div class="editable_field" style="margin: 5px 5px 5px 0px;">
+                    <div class="!w-full editable_field" style="margin: 5px 5px 5px 0px;">
                         <contact-pub class="contact" [record]="record"></contact-pub>
                     </div>
                 }

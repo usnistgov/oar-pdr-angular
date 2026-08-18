@@ -5,8 +5,7 @@ import { EditStatusService } from '../editcontrol/editstatus.service';
 import { SectionHelp, SectionPrefs, Sections } from '../../shared/globals/globals';
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { CommonModule } from '@angular/common';
-import { CollapseModule } from '../collapseDirective/collapse.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatExpansionModule } from "@angular/material/expansion";
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -36,8 +35,7 @@ interface reference {
     standalone: true,
     imports: [
         CommonModule,
-        CollapseModule,
-        NgbModule,
+        MatExpansionModule,          
         FontAwesomeModule
     ],
     templateUrl: './version.component.html',
