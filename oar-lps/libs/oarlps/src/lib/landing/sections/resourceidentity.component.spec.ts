@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, waitForAsync  } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { ResourceIdentityComponent } from './resourceidentity.component';
 import { testdata } from '../../../environments/environment';
@@ -9,12 +11,15 @@ import { Component } from '@angular/core';
 import { TitleComponent } from '../title/title.component';
 import { IspartofComponent } from '../ispartof/ispartof.component';
 import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
+import { FacilitatorsPubComponent } from '../facilitators-to be removed/facilitators-pub/facilitators-pub.component';
+import { FacilitatorsMidasComponent } from '../facilitators-to be removed/facilitators-midas/facilitators-midas.component';
 import { ContactPubComponent } from '../contact/contact-pub/contact-pub.component';
 import { ContactMidasComponent } from '../contact/contact-midas/contact-midas.component';
 import { AuthorPubComponent } from '../author/author-pub/author-pub.component';
 import { AuthorMidasComponent } from '../author/author-midas/author-midas.component';
 import { VisithomePubComponent } from '../visithome/visithome-pub/visithome-pub.component';
 import { VisithomeMidasComponent } from '../visithome/visithome-midas/visithome-midas.component';
+import { VersionComponent } from '../version/version.component';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
@@ -81,6 +86,34 @@ describe('ResourceIdentityComponent', () => {
         })
         class TestVisithomeMidasComponent {}
 
+        @Component({
+            selector: "facilitators",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestFacilitatorsComponent {}
+
+        @Component({
+            selector: "facilitators-pub",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestFacilitatorsPubComponent {}
+
+        @Component({
+            selector: "facilitators-midas",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestFacilitatorsMidasComponent {}
+
+        @Component({
+            selector: "pdr-version",
+            standalone: true,
+            template: `<div></div>`,
+        })
+        class TestVersionComponent {}
+
         TestBed.overrideComponent(ResourceIdentityComponent, {
             add: {
                 imports: [
@@ -91,7 +124,11 @@ describe('ResourceIdentityComponent', () => {
                     TestVisithomePubComponent,
                     TestVisithomeMidasComponent,
                     TestContactPubComponent,
-                    TestContactMidasComponent
+                    TestContactMidasComponent,
+                    TestFacilitatorsComponent,
+                    TestFacilitatorsPubComponent,
+                    TestFacilitatorsMidasComponent,
+                    TestVersionComponent
                 ],
             },
             remove: {
@@ -103,7 +140,11 @@ describe('ResourceIdentityComponent', () => {
                     VisithomePubComponent,
                     VisithomeMidasComponent,
                     AuthorPubComponent,
-                    AuthorMidasComponent
+                    AuthorMidasComponent,
+                    FacilitatorsComponent,
+                    FacilitatorsPubComponent,
+                    FacilitatorsMidasComponent,
+                    VersionComponent
                 ],
             },
         });
@@ -127,7 +168,11 @@ describe('ResourceIdentityComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [FontAwesomeTestingModule],
+            imports: [
+                FontAwesomeTestingModule,
+                CommonModule,
+                NoopAnimationsModule
+            ],
             providers: [
                 GoogleAnalyticsService,
                 {
@@ -138,7 +183,7 @@ describe('ResourceIdentityComponent', () => {
                         cartPlusIcon: 'undo',
                         copyIcon: 'undo'
                     }
-                }                
+                }
             ]})
         .compileComponents();
 

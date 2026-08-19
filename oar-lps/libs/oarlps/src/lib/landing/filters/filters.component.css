@@ -79,6 +79,7 @@
 
 .lbl-filter {
     margin-top:1em;
+    margin-bottom: .5em;
     width: 100%;
     padding-left: 1em;
     padding-top:1em;
@@ -149,4 +150,12 @@
 
 .clearall:hover {
     background-color: var(--background-hover) !important;
+}
+
+.author-filter {
+  --mdc-filled-text-field-container-color: var(--author-background);
+}
+
+.keyword-filter {
+    --mdc-filled-text-field-container-color: var(--keyword-background);
 }

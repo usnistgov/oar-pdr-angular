@@ -3,39 +3,33 @@ import { CommonModule } from '@angular/common';
 import { SearchresultComponent } from './searchresult.component';
 import { FiltersModule } from '../filters/filters.module';
 import { ResultlistModule } from '../resultlist/resultlist.module';
-import { TreeModule } from 'primeng/tree';
-import { PanelMenuModule } from 'primeng/panelmenu';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { DialogModule } from 'primeng/dialog';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { InputTextModule } from 'primeng/inputtext';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { CheckboxModule } from 'primeng/checkbox';
-import { TooltipModule } from 'primeng/tooltip';
-import { DropdownModule } from "primeng/dropdown";
+import { MatTreeModule } from '@angular/material/tree';
+import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [SearchresultComponent],
   imports: [
-    CommonModule, 
+    CommonModule,
     FiltersModule,
     ResultlistModule,
-    TreeModule, 
-    DialogModule, 
-    InputTextModule, 
-    PanelMenuModule, 
-    OverlayPanelModule, 
-    CheckboxModule, 
-    TooltipModule,
-    MessagesModule,
-    MessageModule,
-    InputTextareaModule,
-    ProgressSpinnerModule,
-    MultiSelectModule,
-    DropdownModule
+    MatTreeModule,
+    MatDialogModule,
+    MatInputModule,
+    MatListModule,
+    MatMenuModule,
+    MatCheckboxModule,
+    MatTooltipModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatSelectModule
   ],
   exports: [
     SearchresultComponent

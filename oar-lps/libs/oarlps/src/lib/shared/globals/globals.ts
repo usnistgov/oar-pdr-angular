@@ -617,17 +617,18 @@ export interface Topic {
 /**
  * A TreeNode that knows how to insert and update items from a data cart
  */
-export class FilterTreeNode implements TreeNode {
+export class FilterTreeNode implements AppTreeNode {
     children: FilterTreeNode[] = [];
     count: number = 0;
     data: string[] = [];
     label: string = "";
     ediids: string[] = [];
     expanded = false;
+    leaf: boolean = false;
     keyname: string = "";
     key: string = "";
     taxonomy: string = ""; // Only for this node
-    parent = null;
+    parent: FilterTreeNode | null = null;
     level: number = 1;
     selectable: boolean = true;
     unspecified: boolean[] = [];
@@ -635,8 +636,9 @@ export class FilterTreeNode implements TreeNode {
     constructor(
         label: string = "",
         expanded: boolean = false,
-        key: string = null,
-        keyname: string = null,
+        leaf: boolean = false,
+        key: string | null = null,
+        keyname: string | null = null,
         data: string = "",
         count: number = 0,
         selectable: boolean = true,
@@ -656,6 +658,8 @@ export class FilterTreeNode implements TreeNode {
             this.key = label;
         }
         this.taxonomy = taxonomy;
+        this.expanded = expanded;
+        this.leaf = leaf;
     }
 
     /**
@@ -666,9 +670,9 @@ export class FilterTreeNode implements TreeNode {
         item: any[],
         level: number = 1,
         searchResults: any = null,
-        collection: string = null,
+        collection: string | null = null,
         taxonomyURI: any = {},
-    ): TreeNode {
+    ): AppTreeNode<any> {
         let levels = item[0].split(":");
         for (let i = 0; i < levels.length; i++) {
             levels[i] = levels[i].trim();
@@ -692,7 +696,7 @@ export class FilterTreeNode implements TreeNode {
         collection: string = null,
         taxonomyURI: any = {},
         parentKey: string = "",
-    ): TreeNode {
+    ): AppTreeNode<any> {
         // find the node corresponding to the given item in the tree
         for (let child of this.children) {
             if (child.keyname == levels[0] && child.children.length > 0) {
@@ -773,6 +777,7 @@ export class FilterTreeNode implements TreeNode {
         let child = new FilterTreeNode(
             label,
             false,
+            false, // leaf
             key,
             keyname,
             data,
@@ -943,7 +948,7 @@ export class FilterTreeNode implements TreeNode {
     }
 
     _refreshTaxonomy(tree: FilterTreeNode) {
-        let parent: FilterTreeNode = tree.parent;
+        let parent: FilterTreeNode | null = tree.parent;
         tree.taxonomy = tree.keyname;
 
         if (parent && parent.level > 1) {
@@ -1006,13 +1011,16 @@ export class iconClass {
     static readonly GLOBE = "globe";
 }
 
-export interface TreeNode<T = any> {
+export interface AppTreeNode<T = any> {
     label?: string;
     key?: string;
     data?: T;
-    children?: TreeNode<T>[];
-    parent?: TreeNode<T>;
+    children?: AppTreeNode<T>[];
+    parent?: AppTreeNode<T> | null;
     expanded?: boolean;
     leaf?: boolean;
     selectable?: boolean;
 }
+
+// Backward compatibility alias
+export { AppTreeNode as TreeNode };

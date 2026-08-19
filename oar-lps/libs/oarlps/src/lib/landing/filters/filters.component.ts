@@ -8,9 +8,8 @@ import {
     ChangeDetectorRef,
     inject,
 } from "@angular/core";
-import { TreeNode } from "primeng/api";
 import { Message } from "primeng/api";
-import { SelectItem } from "../../shared/globals/globals";
+import { SelectItem, AppTreeNode as TreeNode } from "../../shared/globals/globals";
 import {
     TaxonomyListService,
     SearchfieldsListService,
@@ -46,6 +45,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { iconClass } from "../../shared/globals/globals";
 import SampleResult from "../../../assets/sample-data/searchResult04.json";
+import { FormControl } from '@angular/forms';
+import { Observable, startWith, map } from 'rxjs';
 
 const SEARCH_SERVICE = "SEARCH_SERVICE";
 
@@ -152,13 +153,6 @@ export class FiltersComponent implements OnInit {
     comwidth: string; // parent div width
     dropdownLabelLengthLimit: number = 30;
 
-    filterStyle = {
-        width: "100%",
-        "background-color": "#FFFFFF",
-        "font-weight": "400",
-        "font-style": "italic",
-    };
-
     // ResourceTypeStyle = {'width':'auto','padding-top': '.5em','padding-right': '.5em',
     // 'padding-bottom': '.5em','background-color': 'var(--science-theme-background-light)','border-width':'0'};
 
@@ -191,6 +185,17 @@ export class FiltersComponent implements OnInit {
     faAnglesUp = faAnglesUp;
     faXmark = faXmark;
 
+    // Form controls for autocomplete
+    authorControl = new FormControl("");
+    keywordControl = new FormControl("");
+    filteredAuthors: Observable<string[]>;
+    filteredKeywords: Observable<string[]>;
+
+    selectedAuthors: string[] = [];
+    // suggestedAuthors: string[] = [];
+    authorSearch = "";
+    keywordSearch = "";
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
@@ -199,6 +204,7 @@ export class FiltersComponent implements OnInit {
     @Input() mobileMode: boolean = false;
     @Input() theme: string;
     @Input() collection: string = Collections.FORENSICS;
+    @Input() isPublicSite: boolean = true;
     @Input() taxonomyURI: any = {};
     @Output() filterMode = new EventEmitter<string>(); // normal or collapsed
     @Output() filterString = new EventEmitter<string>();
@@ -304,12 +310,12 @@ export class FiltersComponent implements OnInit {
         }
 
         // Authors and contributors
-        if (this.selectedAuthor.length > 0) {
+        if (this.selectedAuthors.length > 0) {
             if (lFilterString != "") lFilterString += "&";
 
             lFilterString += "contactPoint.fn=";
 
-            for (let author of this.selectedAuthor) {
+            for (let author of this.selectedAuthors) {
                 lFilterString += author + ",";
             }
         }
@@ -556,17 +562,14 @@ export class FiltersComponent implements OnInit {
         if (this.componentsWithCount.length == 0) {
             compNoData = true;
             this.componentsWithCount = [];
-            this.componentsTree = [
-                {
-                    label: "Record has",
-                    expanded: true,
-                    children: this.componentsWithCount,
-                },
-            ];
+            const rootNode = new FilterTreeNode("Record has", true, false);
+            rootNode.children = this.componentsWithCount;
+            this.componentsTree = [rootNode];
 
             this.componentsWithCount.push(
                 new FilterTreeNode(
                     "DataFile - 0",
+                    false,
                     false,
                     "DataFile",
                     "DataFile",
@@ -578,6 +581,7 @@ export class FiltersComponent implements OnInit {
                 new FilterTreeNode(
                     "AccessPage - 0",
                     false,
+                    false,
                     "AccessPage",
                     "AccessPage",
                     "AccessPage",
@@ -588,6 +592,7 @@ export class FiltersComponent implements OnInit {
                 new FilterTreeNode(
                     "SubCollection - 0",
                     false,
+                    false,
                     "SubCollection",
                     "SubCollection",
                     "SubCollection",
@@ -595,10 +600,10 @@ export class FiltersComponent implements OnInit {
                 ),
             );
 
-            this.componentsTree[0].selectable = false;
+            rootNode.selectable = false;
 
             for (var i = 0; i < this.componentsWithCount.length; i++) {
-                this.componentsTree[0].children[i].selectable = false;
+                rootNode.children[i].selectable = false;
             }
         }
 
@@ -632,22 +637,18 @@ export class FiltersComponent implements OnInit {
             }
         }
 
-        this.resourceTypeTree = [
-            {
-                label: "Type of Resource",
-                expanded: false,
-                children: this.resourceTypesWithCount,
-            },
-        ];
+        const resourceRootNode = new FilterTreeNode(
+            "Type of Resource",
+            false,
+            false,
+        );
+        resourceRootNode.children = this.resourceTypesWithCount;
+        this.resourceTypeTree = [resourceRootNode];
 
         if (!compNoData) {
-            this.componentsTree = [
-                {
-                    label: "Record has",
-                    expanded: false,
-                    children: this.componentsWithCount,
-                },
-            ];
+            const rootNode = new FilterTreeNode("Record has", false, false);
+            rootNode.children = this.componentsWithCount;
+            this.componentsTree = [rootNode];
         }
         this.authors = this.collectAuthors(searchResults);
 
@@ -697,9 +698,9 @@ export class FiltersComponent implements OnInit {
      */
     filterAuthors(event) {
         //in a real application, make a request to a remote url with the query and return filtered results, for demo we filter at client side
-        let author = event.query;
+        const element = event.target as HTMLInputElement;
+        let author = element.value;
         let filtered: any[] = [];
-        let query = event.query;
         for (let i = 0; i < this.authors.length; i++) {
             let auth = this.authors[i];
             if (auth && auth.toLowerCase().indexOf(author.toLowerCase()) >= 0) {
@@ -707,7 +708,27 @@ export class FiltersComponent implements OnInit {
             }
         }
 
+        element.value = "";
         this.suggestedAuthors = filtered;
+    }
+
+    /**
+     * Create a list of suggested keyword based on given search query
+     * @param event - search query that user typed into the filter box
+     */
+    filterKeywords(event) {
+        const element = event.target as HTMLInputElement;
+        let keyword = element.value;
+        let filtered: any[] = [];
+        for (let i = 0; i < this.keywords.length; i++) {
+            let kwd = this.keywords[i];
+            if (kwd && kwd.toLowerCase().indexOf(keyword.toLowerCase()) >= 0) {
+                filtered.push(kwd);
+            }
+        }
+
+        element.value = "";
+        this.suggestedKeywords = filtered;
     }
 
     /**
@@ -861,7 +882,7 @@ export class FiltersComponent implements OnInit {
         this.suggestedThemes = [];
         this.suggestedKeywords = [];
         this.suggestedAuthors = [];
-        this.selectedAuthor = [];
+        // this.selectedAuthor = [];
         this.selectedKeywords = [];
         this.selectedThemes = [];
         this.selectedComponents = [];
@@ -940,6 +961,7 @@ export class FiltersComponent implements OnInit {
                 new FilterTreeNode(
                     res.label + "---" + count,
                     true,
+                    false, // leaf
                     res.label,
                     res.label,
                     res.label,
@@ -1077,6 +1099,7 @@ export class FiltersComponent implements OnInit {
                     new FilterTreeNode(
                         comp.label + "---" + count,
                         true,
+                        false, // leaf
                         comp.label,
                         comp.label,
                         comp.label,
@@ -1264,6 +1287,7 @@ export class FiltersComponent implements OnInit {
         this.collectionThemesWithCount[collection] = new FilterTreeNode(
             this.collection + " Research Topics",
             expand,
+            false, // leaf
             this.collection + " Research Topics",
         );
 
@@ -1422,5 +1446,76 @@ export class FiltersComponent implements OnInit {
             "--background-lighter": this.colorScheme.lighterVar,
             "--background-hover": this.colorScheme.hoverVar,
         };
+    }
+
+    // Autocomplete filtering methods
+    // private _filterAuthors(value: string): string[] {
+    //     const filterValue = value.toLowerCase();
+    //     return this.authors.filter((author) =>
+    //         author.toLowerCase().includes(filterValue),
+    //     );
+    // }
+
+    private _filterKeywords(value: string): string[] {
+        const filterValue = value.toLowerCase();
+        return this.keywords.filter((keyword) =>
+            keyword.toLowerCase().includes(filterValue),
+        );
+    }
+
+    // Autocomplete selection handlers
+
+    /**
+     * When user selects an author from the drop down list, add the author to
+     * the selected author list and update the search result.
+     * @param author seleted author
+     */
+    selectAuthor(author: string): void {
+        if (!this.selectedAuthors.includes(author)) {
+            this.selectedAuthors.push(author);
+        }
+
+        this.authorSearch = "";
+        this.filterResults();
+    }
+
+    /**
+     * When user selects a keyword from the drop down list, add the keyword to
+     * the selected keyword list and update the search result.
+     * @param keyword seleted keyword
+     */
+    selectKeyword(keyword: string): void {
+        if (!this.selectedKeywords.includes(keyword)) {
+            this.selectedKeywords.push(keyword);
+        }
+
+        this.keywordSearch = "";
+        this.filterResults();
+    }
+
+    /**
+     * Remove the author from the selected author list and update the search result.
+     * @param author: to be removed
+     */
+    removeAuthor(author: string): void {
+        const index = this.selectedAuthors.indexOf(author);
+
+        if (index >= 0) {
+            this.selectedAuthors.splice(index, 1);
+            this.filterResults();
+        }
+    }
+
+    /**
+     * Remove the author from the selected author list and update the search result.
+     * @param author: to be removed
+     */
+    removeKeyword(keyword: string): void {
+        const index = this.selectedKeywords.indexOf(keyword);
+
+        if (index >= 0) {
+            this.selectedKeywords.splice(index, 1);
+            this.filterResults();
+        }
     }
 }
