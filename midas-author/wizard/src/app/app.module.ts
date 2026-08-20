@@ -9,7 +9,6 @@ import { StepWizModule } from './startwiz/stepwizard.module';
 import { WizardModule } from 'oarng';
 import { AuthModule, RELEASE_INFO } from 'oarng';
 import { RELEASE } from '../environments/release-info';
-import { InputTextModule } from "primeng/inputtext";
 import { HttpClientModule } from '@angular/common/http';
 import { ConfigModule, MetadataUpdateService } from 'oarlps';
 import { GoogleAnalyticsService, SidebarService } from "oarlps";
@@ -28,7 +27,6 @@ import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
     StepWizModule,
     AppRoutingModule,
     WizardModule,
-    InputTextModule,
     AuthModule,
     HttpClientModule,
     ConfigModule,

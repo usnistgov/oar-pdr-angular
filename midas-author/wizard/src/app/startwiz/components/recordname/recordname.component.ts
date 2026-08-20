@@ -6,9 +6,12 @@ import { WizardService } from '../../services/wizard.service';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-recordname',
-  templateUrl: './recordname.component.html',
-  styleUrls: ['./recordname.component.css', '../../stepwizard.component.scss']
+    selector: 'app-recordname',
+    templateUrl: './recordname.component.html',
+    styleUrls: [
+        './recordname.component.css',
+        '../../stepwizard.component.scss',
+    ],
 })
 export class RecordNameComponent implements OnInit {
     lastStep: StepModel;
@@ -18,23 +21,27 @@ export class RecordNameComponent implements OnInit {
     showNames: boolean = false;
 
     sanitizedHtml: SafeHtml;
-    
+
     @Input() dataModel!: DataModel;
-    @Input() steps: StepModel[] =[];
+    @Input() steps: StepModel[] = [];
     @Input() helpText: any = {};
     @Input() marginLeft: number = 40;
-    
+
     constructor(
         private sanitizer: DomSanitizer,
         private cdr: ChangeDetectorRef,
         public wizardService: WizardService,
-        private stepService: StepService) { }
+        private stepService: StepService,
+    ) {}
 
     ngOnInit(): void {
-        let helpContent = this.stepService.iconHandler(this.helpText['general']);
-        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(helpContent);
+        let helpContent = this.stepService.iconHandler(
+            this.helpText['general'],
+        );
+        this.sanitizedHtml =
+            this.sanitizer.bypassSecurityTrustHtml(helpContent);
 
-        this.thisStep = this.stepService.getStep("Name");
+        this.thisStep = this.stepService.getStep('Name');
         this.lastStep = this.stepService.getLastStep();
 
         this.getNames();
@@ -44,29 +51,32 @@ export class RecordNameComponent implements OnInit {
      * Update the step status when record name changed.
      */
     onRecordNameChanged(event: any) {
-        if (event.target.value && this.nameTaken(event.target.value) || !event.target.value) {
+        if (
+            (event.target.value && this.nameTaken(event.target.value)) ||
+            !event.target.value
+        ) {
             this.thisStep.isComplete = false;
             this.lastStep.canGoNext = this.stepService.allDone();
         } else {
-            this.thisStep.isComplete = (event.target.value.trim() != "");
+            this.thisStep.isComplete = event.target.value.trim() != '';
             this.lastStep.canGoNext = this.stepService.allDone();
         }
     }
 
-    inputStyle() {
+    inputStyle(): { [key: string]: string } {
         if (this.dataModel.recordname) {
             if (this.nameTaken(this.dataModel.recordname)) {
                 return {
-                    'color': 'red'
+                    color: 'red'
                 };
             } else {
                 return {
-                    'color': 'green'
+                    color: 'green'
                 };
             }
         } else {
             return {
-                'color': 'black'
+                color: 'black'
             };
         }
     }
@@ -76,44 +86,51 @@ export class RecordNameComponent implements OnInit {
      * @param name The record name to be checked
      * @returns true if the input name was taken already.
      */
-    nameTaken(name: string = "") {
+    nameTaken(name: string = '') {
         let inputName = name.trim().toLowerCase();
-        if (!name || name.trim() == "") {
-            inputName = this.dataModel.recordname ? this.dataModel.recordname.trim().toLowerCase() : "";
+        if (!name || name.trim() == '') {
+            inputName = this.dataModel.recordname
+                ? this.dataModel.recordname.trim().toLowerCase()
+                : '';
         }
 
         return this.existingRecordNames.includes(inputName);
     }
 
     /**
-     * Get existing record names for the current user. 
+     * Get existing record names for the current user.
      * The record names will be used to check if the input record name is unique.
      */
     getNames() {
         let userId = this.wizardService.getCred().userId;
-        if(!userId) {
-            console.error("User ID is not available in credentials.");
+        if (!userId) {
+            console.error('User ID is not available in credentials.');
             return;
         }
 
-        this.wizardService.getExistingRecords(this.wizardService.getCred().userId)
+        this.wizardService
+            .getExistingRecords(this.wizardService.getCred().userId)
             .subscribe(
-                resp => {
+                (resp) => {
                     if (resp) {
-                        console.log("Existing records:", resp);
+                        console.log('Existing records:', resp);
                         resp.forEach((record) => {
                             if (record) {
-                                this.existingRecordNames.push(record['name'].toLowerCase());
-                                this.existingRecordNamesForDisplay.push(record['name'])
+                                this.existingRecordNames.push(
+                                    record['name'].toLowerCase(),
+                                );
+                                this.existingRecordNamesForDisplay.push(
+                                    record['name'],
+                                );
                             }
-                        })
+                        });
                     }
                 },
-                err => {
-                    console.error("Record name check error:", err);
-                }
+                (err) => {
+                    console.error('Record name check error:', err);
+                },
             );
-    }    
+    }
 
     toggleNames() {
         this.showNames = !this.showNames;
