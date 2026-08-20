@@ -45,8 +45,8 @@
                 (click)="onAdd()" 
                 aria-label="add button" 
                 [disabled]="isEditing || isAdding" 
-                pTooltip="Add author"
-                tooltipPosition="top" >
+                matTooltip="Add author"
+                matTooltipPosition="above" >
                 <fa-icon [icon]="faPlus" [class]="addIconClass()"></fa-icon>
             </button>
         </div>
@@ -78,13 +78,17 @@
                             (click)="saveCurrentAuthor()" 
                             aria-label="edit button" 
                             [disabled]="!currentAuthor || !currentAuthor.dataChanged" 
-                            ngbTooltip="Save authors">
+                            matTooltip="Save authors"
+                            matTooltipPosition="above" >
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
 
                     <!-- Cancel button -->
                     <button class="edit_button" type="button"
-                        (click)="undoCurAuthorChanges()" aria-label="undo button" ngbTooltip="Undo current changes">
+                        (click)="undoCurAuthorChanges()" 
+                        aria-label="undo button" 
+                        matTooltip="Undo current changes"
+                        matTooltipPosition="above" >
                         <fa-icon [icon]="faUndo"></fa-icon>
                     </button>
                 </div>

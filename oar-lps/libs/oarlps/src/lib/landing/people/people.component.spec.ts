@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { StaffDirectoryService, StaffDirModule, AuthenticationService } from 'oarng';
 import { PeopleComponent } from './people.component';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PeopleComponent', () => {
   let component: PeopleComponent;
@@ -13,8 +14,8 @@ describe('PeopleComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, StaffDirModule, PeopleComponent ],
-      providers: [ 
+      imports: [ HttpClientTestingModule, StaffDirModule, PeopleComponent, NoopAnimationsModule ],
+      providers: [
           StaffDirectoryService,
           AuthenticationService
        ]

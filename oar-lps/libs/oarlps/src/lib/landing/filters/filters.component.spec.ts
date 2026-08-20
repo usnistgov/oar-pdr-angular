@@ -6,9 +6,7 @@ import { FiltersComponent } from './filters.component';
 import { AppConfig } from '../../config/config';
 import { ChangeDetectorRef, TransferState } from '@angular/core';
 import { SearchService } from '../../shared/search-service/index';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
-import { TreeModule } from 'primeng/tree';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
@@ -40,9 +38,7 @@ describe('FiltersComponent', () => {
                 CommonModule,
                 NoopAnimationsModule,
                 HttpClientTestingModule,
-                AutoCompleteModule,
                 FormsModule,
-                TreeModule,
                 MatAutocompleteModule,
                 MatFormFieldModule,
                 MatChipsModule,

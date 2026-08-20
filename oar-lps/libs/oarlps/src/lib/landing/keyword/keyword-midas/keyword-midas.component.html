@@ -1,77 +1,186 @@
-<div id="keyword" style="display: table; width: 100%;">
-    <div class="editable_container" style="width: 100%;">
-        <div class="editable_field" style="width: fit-content; max-width: calc(100% - 80px)">
+<div id="keyword" style="display: table; width: 100%">
+    <div class="editable_container" style="width: 100%">
+        <div
+            class="editable_field"
+            style="width: fit-content; max-width: calc(100% - 80px)"
+        >
             <!-- Keywords in regular or preview mode -->
-                <keyword-pub [record]="record" [inBrowser]="inBrowser"></keyword-pub>
+            <keyword-pub
+                [record]="record"
+                [inBrowser]="inBrowser"
+            ></keyword-pub>
         </div>
 
         <!-- Control buttons -->
-        @if(isEditMode) {
-            <div class="editable_field" style="white-space: nowrap;">
-                @if(!isEditing) {
+        @if (isEditMode) {
+            <div class="editable_field" style="white-space: nowrap">
+                @if (!isEditing) {
                     <!-- Edit button -->
-                    <button class="edit_button" type="button" (click)="startEditing()" aria-label="Edit keywords" ngbTooltip="Edit keywords">
-                        <fa-icon [icon]="faPencil" size="sm"></fa-icon>
-                    </button>
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [icon]="faPencil"
+                        size="sm"
+                        (click)="startEditing()"
+                        aria-label="Edit keywords"
+                        matTooltip="Edit keywords"
+                        matTooltipPosition="above"
+                    >
+                    </fa-icon>
                 }
 
-                @if(isEditing && !dataChanged) {
+                @if (isEditing && !dataChanged) {
                     <!-- Close edit block -->
-                    <button class="edit_button" type="button" (click)="setMode()" aria-label="Close edit block" ngbTooltip="Close edit block">
-                        <fa-icon [icon]="faXmark"></fa-icon>
-                    </button>
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [icon]="faXmark"
+                        size="sm"
+                        (click)="setMode()"
+                        aria-label="Close edit block"
+                        matTooltip="Close edit block"
+                        matTooltipPosition="above"
+                    >
+                    </fa-icon>
+
+                    <!-- <button
+                        mat-button
+                        class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-2"
+                        type="button"
+                        (click)="setMode()"
+                        aria-label="Close edit block"
+                        matTooltip="Close edit block"
+                    >
+                        <mat-icon>close</mat-icon>
+                    </button> -->
                 }
 
-                @if(isEditing && dataChanged) {
+                @if (isEditing && dataChanged) {
                     <!-- Save button -->
-                    <button class="edit_button" type="button" (click)="onSave()"
-                    aria-label="save button" ngbTooltip="Save changes">
-                        <fa-icon [icon]="faSave"></fa-icon>
-                    </button>
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [icon]="faSave"
+                        size="sm"
+                        (click)="onSave()"
+                        aria-label="save button"
+                        matTooltip="Save changes"
+                        matTooltipPosition="above"
+                    >
+                    </fa-icon>
+
+                    <!-- <button
+                        mat-button
+                        class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-2"
+                        type="button"
+                        (click)="onSave()"
+                        aria-label="save button"
+                        matTooltip="Save changes"
+                    >
+                        <mat-icon>save</mat-icon>
+                    </button> -->
 
                     <!-- Cancel editing button - Undo current changes -->
-                    <button class="edit_button" type="button"
-                    (click)="cancelEditing()" aria-label="undo button" ngbTooltip="Cancel edit">
-                        <fa-icon [icon]="faUndo"></fa-icon>
-                    </button>
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [icon]="faUndo"
+                        size="sm"
+                        (click)="cancelEditing()"
+                        aria-label="save button"
+                        matTooltip="Save changes"
+                        matTooltipPosition="above"
+                    >
+                    </fa-icon>
+
+                    <!-- <button
+                        mat-button
+                        class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-2"
+                        type="button"
+                        (click)="cancelEditing()"
+                        aria-label="undo button"
+                        matTooltip="Cancel edit"
+                    >
+                        <mat-icon>undo</mat-icon>
+                    </button> -->
                 }
 
-                @if(!isEditing && updated) {
+                @if (!isEditing && updated) {
                     <!-- Undo button - Restore original keywords -->
-                    <button class="edit_button" type="button"
-                        (click)="restoreOriginal()" aria-label="Restore original keywords" ngbTooltip="Restore original keywords">
-                        <fa-icon [icon]="faUndo"></fa-icon>
-                    </button>
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [icon]="faUndo"
+                        size="sm"
+                        (click)="restoreOriginal()"
+                        aria-label="Restore original keywords"
+                        matTooltip="Restore original keywords"
+                        matTooltipPosition="above"
+                    >
+                    </fa-icon>
+
+                    <!-- <button
+                        mat-button
+                        class="text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-2"
+                        type="button"
+                        (click)="restoreOriginal()"
+                        aria-label="Restore original keywords"
+                        matTooltip="Restore original keywords"
+                    >
+                        <mat-icon>undo</mat-icon>
+                    </button> -->
                 }
             </div>
         }
 
         <!-- Keywords in edit mode -->
-        @if(isEditing && isEditMode){
-            <div style="width:100%" >
+        @if (isEditing && isEditMode) {
+            <div class="w-full">
                 <!-- Editing -->
-                @if(isEditing) {
-                    <div style="max-width: 100%;margin-right: 3px;" >
-                        <p-chips 
-                            #keyword [(ngModel)]="keywords" 
-                            (onAdd)="onAdd($event)" 
-                            (onRemove)="onRemove()" 
-                            addOnBlur="true" 
-                            separator="," 
-                            class="p-fluid" 
-                            placeholder="Add keywords">
-                        </p-chips>
+                @if (isEditing) {
+                    <div class="max-w-full mr-2">
+                        <mat-form-field class="w-100">
+                            <mat-label>Keywords</mat-label>
+                            <mat-chip-grid #chipGrid>
+                                @for (keyword of keywords; track keyword) {
+                                    <mat-chip-row
+                                        (removed)="removeKeyword(keyword)"
+                                    >
+                                        {{ keyword }}
+
+                                        <button
+                                            matChipRemove
+                                            [attr.aria-label]="
+                                                'Remove ' + keyword
+                                            "
+                                        >
+                                            <mat-icon>cancel</mat-icon>
+                                        </button>
+                                    </mat-chip-row>
+                                }
+
+                                <input
+                                    placeholder="Add keywords"
+                                    [matChipInputFor]="chipGrid"
+                                    [matChipInputSeparatorKeyCodes]="
+                                        separatorKeysCodes
+                                    "
+                                    [matChipInputAddOnBlur]="true"
+                                    (matChipInputTokenEnd)="addKeyword($event)"
+                                />
+                            </mat-chip-grid>
+                        </mat-form-field>
                     </div>
                 }
                 <!-- nonEditing: only display tags-->
-                @else if(!isEmpty){
-                    <div class="keywords" style="max-width: 100%;padding: 5px;display: flex;flex-wrap: wrap;min-height: 28px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName)">
-                        <span style="border: 1px solid rgb(236, 236, 236);background-color: var(--tag-blue);padding: 2px 5px;margin: 3px;border-radius: 20px;text-align: center;" *ngFor="let keyword of keywords; let i = index">
-                            {{keyword}}
-                        </span>
+                @else if (!isEmpty) {
+                    <div
+                        class="keywords w-full p-2 flex flex-wrap min-h-[28px]"
+                        [ngStyle]="mdupdsvc.getFieldStyle(fieldName)"
+                    >
+                        <mat-chip-list class="keywords" aria-label="Keywords">
+                            <mat-chip *ngFor="let keyword of keywords">{{
+                                keyword
+                            }}</mat-chip>
+                        </mat-chip-list>
                     </div>
                 }
-            </div>    
+            </div>
         }
     </div>
 </div>

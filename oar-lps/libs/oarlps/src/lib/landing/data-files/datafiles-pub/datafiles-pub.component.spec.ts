@@ -5,7 +5,6 @@ import { CartService } from '../../../datacart/cart.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ToastrModule } from 'ngx-toastr';
-import { TreeTableModule } from 'primeng/treetable';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { DataCart } from '../../../datacart/cart';
 import { CartConstants } from '../../../datacart/cartconstants';
@@ -29,7 +28,6 @@ describe('DatafilesPubComponent', () => {
                 RouterTestingModule,
                 HttpClientTestingModule,
                 DatafilesPubComponent,
-                TreeTableModule,
                 BrowserAnimationsModule,
                 ToastrModule.forRoot(),
                 FontAwesomeTestingModule

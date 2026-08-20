@@ -1,6 +1,6 @@
 <div class="editable_container" style="width: 100%;" >
     <div *ngIf="errMessage">
-        <lib-single-msg-bar 
+        <lib-single-msg-bar
             [message]="errMessage"
             (command_out)="clearMessage()"
         >
@@ -12,18 +12,11 @@
             <div class="add-option" *ngIf="isAdding">
                 <span style="margin-right: 1em;">Reference entry method:</span>
                 <span style="margin-right: 1em;">
-                    <input type="radio" value="1" name="inputMethod" id="inputMethod1" [ngModel]="inputMethod" (change)="setInputMethod($event)">
-                    <label for="inputMethod1"> &nbsp;DOI&nbsp;&nbsp;&nbsp;</label>
-                </span>
-
-                <span style="margin-right: 1em;">
-                    <input type="radio" value="2" name="inputMethod" id="inputMethod2" [ngModel]="inputMethod" (change)="setInputMethod($event)">
-                    <label for="inputMethod2"> &nbsp;Reference Data&nbsp;&nbsp;&nbsp;</label>
-                </span>
-
-                <span style="margin-right: 1em;">
-                    <input type="radio" value="3" name="inputMethod" id="inputMethod3" [ngModel]="inputMethod" (change)="setInputMethod($event)">
-                    <label for="inputMethod3"> &nbsp;Citation Text&nbsp;&nbsp;&nbsp;</label>
+                    <mat-radio-group [(ngModel)]="inputMethod" (change)="setInputMethod($event)">
+                        <mat-radio-button value="1">DOI</mat-radio-button>
+                        <mat-radio-button value="2">Reference Data</mat-radio-button>
+                        <mat-radio-button value="3">Citation Text</mat-radio-button>
+                    </mat-radio-group>
                 </span>
             </div>
 
@@ -51,20 +44,14 @@
                         <span>Reference Type:</span>
                     </td>
                     <td colspan="2">
-                         <table>
-                            <tr>
-                                <td style="width: calc(100%-130px);">
-                                    Is this reference the one that best describes the data (or software) in this data publication?
-                                    <div style="height: 8px;"> </div>
-                                </td>
-                                <td align="right" style="width: 130px;vertical-align:top;">
-                                    <input type="radio" value="1" name="reftype" id="reftype1" [(ngModel)]="reftype" (change)="onReftypeChanged($event)">
-                                    <label for="rftype1"> &nbsp;Yes&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" value="2" name="reftype" id="reftype2" [(ngModel)]="reftype" (change)="onReftypeChanged($event)">
-                                    <label for="reftype2"> &nbsp;No&nbsp;&nbsp;&nbsp;</label>
-                                </td>
-                            </tr>
-                        </table>
+                        <div style="width: calc(100%-130px);">
+                            Is this reference the one that best describes the data (or software) in this data publication?
+                            <div style="height: 8px;"> </div>
+                        </div>
+                        <mat-radio-group [(ngModel)]="reftype">
+                            <mat-radio-button value="1">Yes</mat-radio-button>
+                            <mat-radio-button value="2">No</mat-radio-button>
+                        </mat-radio-group>
                     </td>
                 </tr>
 
@@ -77,30 +64,24 @@
                         <div class="authorsbrief">
                             <!-- Author list -->
                             <span *ngFor="let author of ref['authors']; let i = index">
-                                {{ author }}                 
-                                <!-- <i [class]="deleteIcon" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
-                                        data-toggle="tooltip" title="Remove author"></i>  -->
-
-                                <fa-icon 
-                                    [icon]="faTrashCan" 
+                                {{ author }}
+                                <fa-icon
+                                    [icon]="faTrashCan"
                                     size="sm"
-                                    (click)="removeAuthor(i)" 
+                                    (click)="removeAuthor(i)"
                                     style="cursor: pointer;color: var(--nist-blue-default);"
-                                    data-toggle="tooltip" 
-                                    title="Remove author">
+                                    matTooltip="Remove author">
                                 </fa-icon>
 
                                 <span *ngIf="i < ref['authors'].length-1 ">,</span>
                             </span>
                             <!-- expand button -->
-                            <!-- <i style="margin-left: 1rem;" class="fas"
-                                [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" (click)="authorExpandClick();"></i> -->
-
-                            <fa-icon 
-                                *ngIf="caretRightIcon && caretDownIcon" 
-                                [icon]="['fas', expandIconClass()]" 
+                            <fa-icon
+                                *ngIf="caretRightIcon && caretDownIcon"
+                                [icon]="['fas', expandIconClass()]"
                                 size="sm"
-                                (click)="authorExpandClick()">
+                                (click)="authorExpandClick()"
+                                matTooltip="Expand/Collapse Authors">
                             </fa-icon>
                         </div>
                         <!-- Author editor -->
@@ -113,140 +94,112 @@
                 <!-- Title -->
                 <tr *ngIf="isEditing || (isAdding && useRefData) || showAllFields">
                     <td align="right">
-                        <span>Title:</span>
-                    </td>
-                    <td colspan="2">
-                        <span style="width: 100%">
-                            <span style="display:inline-block;width: 100%;">
-                                <input type="text" [(ngModel)]="ref.title" style="height:2em;"
-                                (input)="onChange(true)"/>
-                            </span>
-                        </span>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Title</mat-label>
+                            <input matInput [(ngModel)]="ref.title" (input)="onChange(true)">
+                        </mat-form-field>
                     </td>
                 </tr>
 
                 <!-- Journal(label) -->
                 <tr *ngIf="isEditing || (isAdding && useRefData) || showAllFields">
                     <td align="right">
-                        <span>Journal:</span>
-                    </td>
-                    <td colspan="2">
-                        <span style="width: 100%">
-                            <span style="display:inline-block;width: 100%;
-                            ">
-                                <input type="text" [(ngModel)]="ref.label" style="height:2em;"
-                                (input)="onChange(true)"/>
-                            </span>
-                        </span>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Journal</mat-label>
+                            <input matInput [(ngModel)]="ref.label" (input)="onChange(true)">
+                        </mat-form-field>
                     </td>
                 </tr>
 
                 <!-- Publish Year/Vol/Number/Pages -->
                 <tr *ngIf="isEditing || (isAdding && useRefData) || showAllFields">
                     <td align="right">
-                        <span>Publish Year:</span>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Publish Year</mat-label>
+                            <input matInput [(ngModel)]="ref.publishYear" (input)="onChange(true)">
+                        </mat-form-field>
                     </td>
                     <td colspan="2">
-                        <span style="width: 100%">
-                            <span style="display:inline-block;width: 20%;margin-right: 5px;">
-                                <input type="text" [(ngModel)]="ref.publishYear" style="height:2em;"
-                                (input)="onChange(true)"/>
-                            </span>
-                            <span style="display:inline-block;margin-right: 5px;margin-left: 20px;text-align: right;">
-                                Vol.
-                            </span>
-                            <span style="display:inline-block;width: 15%;margin-right: 5px;">
-                                <input type="text" [(ngModel)]="ref.vol" style="height:2em;"
-                                (input)="onChange(true)"/>
-                            </span>
-                            <span style="display:inline-block;margin-right: 5px;margin-left: 20px;text-align: right;">
-                                No.
-                            </span>
-                            <span style="display:inline-block;width: 15%;margin-right: 5px;">
-                                <input type="text" id="number" [(ngModel)]="ref.volNumber" style="height:2em;"
-                                (input)="onChange(true)"/>
-                            </span>
-                            <span style="display:inline-block;margin-right: 5px;text-align: right;margin-left: 20px;">
-                                Pages:
-                            </span>
-                            <span style="display:inline-block;width: 15%;">
-                                <input type="text" id="pages" [(ngModel)]="ref.pages" style="height:2em;"
-                                (input)="onChange(true)"/>
-                            </span>
-                        </span>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <mat-form-field appearance="fill" style="width: 20%;">
+                                <mat-label>Vol.</mat-label>
+                                <input matInput [(ngModel)]="ref.vol" (input)="onChange(true)">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" style="width: 15%;">
+                                <mat-label>No.</mat-label>
+                                <input matInput [(ngModel)]="ref.volNumber" (input)="onChange(true)">
+                            </mat-form-field>
+                            <mat-form-field appearance="fill" style="width: 15%;">
+                                <mat-label>Pages</mat-label>
+                                <input matInput [(ngModel)]="ref.pages" (input)="onChange(true)">
+                            </mat-form-field>
+                        </div>
                     </td>
                 </tr>
 
                 <!-- In preparation -->
-
-                <tr data-toggle="tooltip" title="Citation" *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
+                <tr *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
                     <td align="right">
                         <span>In Preparation:</span>
                     </td>
                     <td colspan="2">
-                        <input type="checkbox"
-                            (change)="ref.inPreparation = $event.target.checked ? 'yes' : 'no';onChange(true)"
-                            [checked]="ref.inPreparation == 'yes'" />
+                        <mat-checkbox
+                            [checked]="ref.inPreparation === 'yes'"
+                            (change)="ref.inPreparation = $event.checked ? 'yes' : 'no'; onChange(true)"
+                            >In Preparation
+                        </mat-checkbox>
                     </td>
                 </tr>
 
                 <!-- Citation  -->
-                <tr data-toggle="tooltip" title="Citation" *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
+                <tr *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
                     <td align="right">
                         <span>Citation:</span>
                     </td>
                     <td>
-                        <textarea [(ngModel)]='ref.citation' rows="4" (input)="onChange(false) " style="width: 100%" [disabled]="!citationLocked">                             
-                        </textarea>
+                        <mat-form-field appearance="fill">
+                            <mat-label>Citation</mat-label>
+                            <textarea matInput [(ngModel)]='ref.citation' rows="4" (input)="onChange(false)" [disabled]="!citationLocked"></textarea>
+                        </mat-form-field>
                     </td>
                     <td style="width: 30px !important;vertical-align: top;">
-                        <button 
-                            class="edit_button" 
+                        <button
+                            mat-button
+                            class="edit_button"
                             type="button"
-                            (click)="resetCitation()" 
+                            (click)="resetCitation()"
                             aria-label="reset button"
-                            pTooltip="Reset" 
-                            tooltipPosition="top" >
-                            <fa-icon [icon]="faUndo" size="sm" data-toggle="tooltip" title="Reset citation"></fa-icon>
-                            <!-- <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i> -->
+                            matTooltip="Reset"
+                            matTooltipPosition="above" >
+                            <fa-icon [icon]="faUndo" size="sm"></fa-icon>
                         </button>
 
-                        <button 
-                            class="edit_button" 
-                            type="button" 
+                        <button
+                            mat-button
+                            class="edit_button"
+                            type="button"
                             *ngIf="isEditing || !useCitationData"
-                            (click)="citationLocked = !citationLocked" 
+                            (click)="citationLocked = !citationLocked"
                             aria-label="lock/unlock button"
-                            [pTooltip]="citationLockTooltip()" 
-                            tooltipPosition="top">
-                            <fa-icon 
-                                *ngIf="lockIcon && undoIcon" 
-                                [icon]="['fas', citationLockClass()]" 
+                            [matTooltip]="citationLockTooltip()"
+                            matTooltipPosition="above">
+                            <fa-icon
+                                *ngIf="lockIcon && unlockIcon"
+                                [icon]="['fas', citationLockClass()]"
                                 size="sm"
-                                data-toggle="tooltip" 
-                                [title]="citationLockTooltip()">
+                                matTooltip="{{citationLockTooltip()}}">
                             </fa-icon>
-
-                            <!-- <i [class]="citationLockClass()" 
-                                data-toggle="tooltip" 
-                                [title]="citationLockTooltip()"></i> -->
                         </button>
                     </td>
                 </tr>
 
                 <!-- URL -->
-                <tr data-toggle="tooltip" title="Label" *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
+                <tr *ngIf="isEditing || (isAdding && useDOI && doiLoaded) || (isAdding && useCitationData) || (isAdding && useRefData) || showAllFields">
                     <td align="right">
-                        <span>URL:</span>
-                    </td>
-                    <td colspan="2">
-                        <span style="width: 100%">
-                            <span style="display:inline-block;width: 100%;
-                            ">
-                                <input type="text" [(ngModel)]="ref.location" style="height:2em;"
-                                (input)="onChange()"/>
-                            </span>
-                        </span>
+                        <mat-form-field appearance="fill">
+                            <mat-label>URL</mat-label>
+                            <input matInput [(ngModel)]="ref.location" (input)="onChange()">
+                        </mat-form-field>
                     </td>
                 </tr>
 
@@ -257,27 +210,27 @@
     <!-- Control buttons -->
     <div class="editable_field" style="white-space: nowrap;">
         <!-- Save button -->
-        <button 
-            class="edit_button" 
-            type="button" 
-            (click)="commandOut('saveCurrentChanges')" 
-            aria-label="edit button" 
-            [disabled]="!ref.dataChanged" 
-            pTooltip="Save current changes"
-            tooltipPosition="top" >
-            <!-- <i [class]="saveIcon"></i> -->
+
+
+        <button
+            class="edit_button"
+            type="button"
+            (click)="commandOut('saveCurrentChanges')"
+            aria-label="edit button"
+            [disabled]="!ref.dataChanged"
+            matTooltip="Save current changes"
+            matTooltipPosition="above" >
             <fa-icon [icon]="faSave" size="sm"></fa-icon>
         </button>
 
         <!-- Cancel button -->
-        <button 
-            class="edit_button" 
+        <button
+            class="edit_button"
             type="button"
-            (click)="commandOut('undoCurrentChanges');reset()" 
-            aria-label="undo button" 
-            pTooltip="Undo current changes"
-            tooltipPosition="top" >
-            <!-- <i [class]="cancelIcon"></i> -->
+            (click)="commandOut('undoCurrentChanges');reset()"
+            aria-label="undo button"
+            matTooltip="Undo current changes"
+            matTooltipPosition="above" >
             <fa-icon [icon]="faUndo" size="sm"></fa-icon>
         </button>
     </div>

@@ -12,7 +12,6 @@ import { LandingConstants } from '../../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { NotificationService } from '../../../shared/notification-service/notification.service';
 import {
     SectionPrefs,
     Sections,
@@ -20,18 +19,9 @@ import {
     TreeNode,
 } from "../../../shared/globals/globals";
 import { LandingpageService } from '../../landingpage.service';
-import { OverlayPanel } from 'primeng/overlaypanel';
 import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { TreeTableModule } from 'primeng/treetable';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { BadgeModule } from 'primeng/badge';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { FrameModule } from '../../../frame/frame.module';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -51,13 +41,6 @@ declare var _initAutoTracker: Function;
   imports: [
     CommonModule,
     RouterModule,
-    BadgeModule,
-    TreeTableModule,
-    OverlayPanelModule,
-    ProgressSpinnerModule,
-    ButtonModule,
-    TooltipModule,
-    NgbModule,
     DatafilesPubComponent,
     FontAwesomeModule,
     MatCheckboxModule,
@@ -135,7 +118,6 @@ export class DatafilesMidasComponent {
   fileManagerUrl: string = "https://nextcloud-dev.nist.gov";
   fileManagerBaseUrl: string = "https://nextcloud-dev.nist.gov";
   fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
-  overlaypanelOn: boolean = false;
   refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
   // revisionType: string = ""
   // arrRevisionTypes: any[] = [];
@@ -310,46 +292,6 @@ export class DatafilesMidasComponent {
         this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
       },
     });
-  }
-
-  /**
-   * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert
-   * the data to its previous state.
-   */
-  public showLargeFileManagerHelpPopup(
-    event,
-    overlaypanel: OverlayPanel,
-  ): void {
-    if (!this.overlaypanelOn) {
-      overlaypanel.hide();
-      setTimeout(() => {
-        overlaypanel.show(event);
-        this.overlaypanelOn = true;
-        this.chref.detectChanges();
-      }, 100);
-    } else {
-      overlaypanel.hide();
-      setTimeout(() => {
-        this.chref.detectChanges();
-      }, 0);
-    }
-  }
-
-  onHide() {
-    this.overlaypanelOn = false;
-    setTimeout(() => {
-      this.chref.detectChanges();
-    }, 0);
-  }
-
-  hideOverlay(event, overlaypanel: OverlayPanel) {
-    overlaypanel.hide();
-    this.overlaypanelOn = false;
-
-    setTimeout(() => {
-      // this will make the execution after the above boolean has changed
-      event.chref.detectChanges();
-    }, 0);
   }
 
   /**

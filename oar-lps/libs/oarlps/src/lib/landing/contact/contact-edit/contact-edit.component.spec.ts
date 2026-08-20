@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { ContactEditComponent } from './contact-edit.component';
-import { PeopleModule } from '../../people/people.module';
 import { StaffDirectoryService, StaffDirModule, AuthenticationService } from 'oarng';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('ContactEditComponent', () => {
@@ -16,8 +16,8 @@ describe('ContactEditComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-        imports: [ HttpClientTestingModule, ContactEditComponent, PeopleModule, StaffDirModule, FontAwesomeTestingModule ],
-        providers: [ 
+        imports: [ HttpClientTestingModule, ContactEditComponent, StaffDirModule, FontAwesomeTestingModule, NoopAnimationsModule ],
+        providers: [
             StaffDirectoryService,
             AuthenticationService
         ]

@@ -13,7 +13,6 @@ import { AppConfig } from '../../../config/config';
 import { TransferState } from '@angular/core';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { ToastrModule } from 'ngx-toastr';
-import { TreeTableModule } from 'primeng/treetable';
 import { EditStatusService } from '../../../landing/editcontrol/editstatus.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as env from '../../../../environments/environment';
@@ -64,7 +63,6 @@ describe('DatafilesMidasComponent', () => {
                 RouterTestingModule,
                 HttpClientTestingModule,
                 DatafilesMidasComponent,
-                TreeTableModule,
                 BrowserAnimationsModule,
                 ToastrModule.forRoot(),
                 FontAwesomeTestingModule],

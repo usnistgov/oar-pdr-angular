@@ -7,9 +7,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AppConfig } from '../../config/config'
 import { TransferState } from '@angular/core';
 import { SearchService } from '../../shared/search-service/index';
-import { DropdownModule } from "primeng/dropdown";
-import { TreeModule } from 'primeng/tree';
-import { AutoCompleteModule } from 'primeng/autocomplete';
 import { FormsModule } from '@angular/forms';
 import { config, testdata } from '../../../environments/environment';
 
@@ -26,9 +23,6 @@ describe('SearchresultComponent', () => {
         imports: [
             BrowserAnimationsModule, 
             HttpClientTestingModule, 
-            DropdownModule, 
-            TreeModule, 
-            AutoCompleteModule,
             FormsModule],
         providers: [
             { provide: AppConfig,       useValue: cfg },

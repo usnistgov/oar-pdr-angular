@@ -1,58 +1,70 @@
 import { Component, OnInit, Input, ElementRef, EventEmitter, SimpleChanges, ViewChild, effect, ChangeDetectorRef, inject } from '@angular/core';
-import { NgbModalOptions, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ToolbarModule } from 'primeng/toolbar';
-import { ToastrModule } from 'ngx-toastr';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatChipInput } from '@angular/material/chips';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Chips, ChipsModule } from 'primeng/chips';
-import { ChipModule } from "primeng/chip";
-import { TagModule } from 'primeng/tag';
+import { ToastrModule } from 'ngx-toastr';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { LandingConstants, iconClass } from '../../../shared/globals/globals';
 import { KeywordPubComponent } from '../keyword-pub/keyword-pub.component';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import {
     faPencil,
     faXmark,
     faSave,
-    faUndo
-} from '@fortawesome/free-solid-svg-icons';
-import { TextEditComponent } from '../../../text-edit/text-edit.component';
+    faUndo,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { COMMA, ENTER } from "@angular/cdk/keycodes";
+import { MatChipInputEvent } from "@angular/material/chips";
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @Component({
-    selector: 'keyword-midas',
+    selector: "keyword-midas",
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
-        ToolbarModule,
+        MatChipsModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatButtonModule,
         TextEditComponent,
         TextareaAutoresizeModule,
-        NgbModule,
-        ChipsModule,
-        ChipModule,
-        TagModule,
         ToastrModule,
         KeywordPubComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatFormFieldModule,
     ],
-    templateUrl: './keyword-midas.component.html',
-    styleUrls: ['./keyword-midas.component.scss', '../../landing.component.scss']
+    templateUrl: "./keyword-midas.component.html",
+    styleUrls: [
+        "./keyword-midas.component.scss",
+        "../../landing.component.scss",
+    ],
 })
 export class KeywordMidasComponent {
+    //icon class names
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+
     @Input() record: any[];
-    @Input() inBrowser: boolean;   // false if running server-side
+    @Input() inBrowser: boolean; // false if running server-side
     @Input() isEditMode: boolean = true;
-    
+
     fieldName: string = SectionPrefs.getFieldName(Sections.KEYWORDS);
-    editMode: string = MODE.NORMAL; 
+    editMode: string = MODE.NORMAL;
     placeholder: string = "Enter keywords separated by comma";
+    @ViewChild("chipInput") chipInput!: MatChipInput;
     isEditing: boolean = false;
     keywords: string[] = [];
     originKeywords: string = "";
@@ -68,6 +80,8 @@ export class KeywordMidasComponent {
     public EDIT_MODES: any = LandingConstants.editModes;
     globalsvc = inject(GlobalService);
 
+    readonly separatorKeysCodes = [ENTER, COMMA];
+
     //icon class names
     // editIcon = iconClass.EDIT;
     // closeIcon = iconClass.CLOSE;
@@ -75,49 +89,41 @@ export class KeywordMidasComponent {
     // cancelIcon = iconClass.CANCEL;
     // undoIcon = iconClass.UNDO;
 
-    faPencil = faPencil;
-    faXmark = faXmark;
-    faSave = faSave;
-    faUndo = faUndo;
-
-    @ViewChild('keyword') public chipsElement: Chips;
-
-    constructor(public mdupdsvc : MetadataUpdateService,        
-                private ngbModal: NgbModal, 
-                public lpService: LandingpageService,    
-                private chref: ChangeDetectorRef,
-                public iconLibrary: FaIconLibrary,
-                private notificationService: NotificationService){ 
-
-        // iconLibrary.addIcons(
-        //     faPencil,
-        //     faXmark,
-        //     faSave,
-        //     faUndo
-        // );        
-    }
+    constructor(
+        public mdupdsvc: MetadataUpdateService,
+        public lpService: LandingpageService,
+        private chref: ChangeDetectorRef,
+        private notificationService: NotificationService,
+    ) {}
 
     /**
      * a field indicating if this data has beed edited
      */
-    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get updated() {
+        return this.mdupdsvc.fieldUpdated(this.fieldName);
+    }
 
     get keywordWidth() {
-        if(this.isEditing){
-            return {'width': 'fit-content', 'max-width': 'calc(100% - 400px)', 'height':'fit-content'};
-        }else{
-            return {'width': 'fit-content', 'max-width': 'calc(100% - 360px)'};
+        if (this.isEditing) {
+            return {
+                width: "fit-content",
+                "max-width": "calc(100% - 400px)",
+                height: "fit-content",
+            };
+        } else {
+            return { width: "fit-content", "max-width": "calc(100% - 360px)" };
         }
     }
 
     /**
-     * a field indicating whether there are no keywords are set.  
+     * a field indicating whether there are no keywords are set.
      */
     get isEmpty() {
-        if (! this.record[this.fieldName])
-            return true;
-        if (this.record[this.fieldName] instanceof Array &&
-            this.record[this.fieldName].filter(kw => Boolean(kw)).length == 0)
+        if (!this.record[this.fieldName]) return true;
+        if (
+            this.record[this.fieldName] instanceof Array &&
+            this.record[this.fieldName].filter((kw) => Boolean(kw)).length == 0
+        )
             return true;
         return false;
     }
@@ -128,30 +134,41 @@ export class KeywordMidasComponent {
         this.keywordInit();
 
         this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if( sectionMode ) {
-                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-                        if(this.isEditing){
-                            this.onSave(false); // Do not refresh help text 
-                        }else{
+            if (sectionMode) {
+                if (
+                    sectionMode.sender !=
+                    SectionPrefs.getFieldName(Sections.SIDEBAR)
+                ) {
+                    if (
+                        sectionMode.section != this.fieldName &&
+                        sectionMode.mode != MODE.NORMAL
+                    ) {
+                        if (this.isEditing) {
+                            this.onSave(false); // Do not refresh help text
+                        } else {
                             this.setMode(MODE.NORMAL, false);
                         }
                     }
-                }else { // Request from side bar, if not edit mode, start editing
-                    if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
+                } else {
+                    // Request from side bar, if not edit mode, start editing
+                    if (
+                        !this.isEditing &&
+                        sectionMode.section == this.fieldName &&
+                        this.isEditMode
+                    ) {
                         this.startEditing();
                     }
                 }
             }
-        })
+        });
     }
 
     /**
      * If record changed, update originalRecord to keep track on previous saved record
-     * @param changes 
+     * @param changes
      */
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes.record){
+        if (changes.record) {
             this.originalRecord = JSON.parse(JSON.stringify(this.record));
             this.getKeywords();
             this.keywordInit();
@@ -164,15 +181,23 @@ export class KeywordMidasComponent {
      * Update keywords and original keywords from the record
      */
     getKeywords() {
-        if(this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0)
-            this.keywords = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-        else
-            this.keywords = [];
+        if (
+            this.record &&
+            this.record[this.fieldName] &&
+            this.record[this.fieldName].length > 0
+        )
+            this.keywords = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
+        else this.keywords = [];
 
-        if(this.originalRecord && this.originalRecord[this.fieldName] && this.originalRecord[this.fieldName].length > 0)
+        if (
+            this.originalRecord &&
+            this.originalRecord[this.fieldName] &&
+            this.originalRecord[this.fieldName].length > 0
+        )
             this.originKeywords = this.originalRecord[this.fieldName].join(",");
-        else
-            this.originKeywords = '';
+        else this.originKeywords = "";
     }
 
     /**
@@ -183,12 +208,13 @@ export class KeywordMidasComponent {
         this.setMode(MODE.EDIT);
         this.isEditing = true;
 
-        setTimeout(()=>{ // this will make the execution after the above boolean has changed
-            if(this.chipsElement) {
-                this.chipsElement.inputViewChild.nativeElement.focus();
+        setTimeout(() => {
+            // this will make the execution after the above boolean has changed
+            if (this.chipInput) {
+                this.chipInput.inputElement.focus();
                 this.chref.detectChanges();
             }
-        },0); 
+        }, 0);
     }
 
     /**
@@ -206,7 +232,9 @@ export class KeywordMidasComponent {
      * @returns true if current keyword changed
      */
     currentKeywordChanged() {
-        return this.keywords.filter(x => !this.originalRecord[this.fieldName].includes(x));
+        return this.keywords.filter(
+            (x) => !this.originalRecord[this.fieldName].includes(x),
+        );
     }
 
     /**
@@ -215,19 +243,21 @@ export class KeywordMidasComponent {
      */
     keywordChanged() {
         // let keywordChanged = this.record[this.fieldName].filter(x => !this.originalRecord[this.fieldName].includes(x));
-        let keywordChanged2 = this.originalRecord[this.fieldName].filter(x => !this.record[this.fieldName].includes(x));
+        let keywordChanged2 = this.originalRecord[this.fieldName].filter(
+            (x) => !this.record[this.fieldName].includes(x),
+        );
 
-        return (this.currentKeywordChanged() || keywordChanged2.length > 0);
+        return this.currentKeywordChanged() || keywordChanged2.length > 0;
     }
 
     onAdd(event) {
         this.dataChanged = true;
-        this.keywordInit(); 
+        this.keywordInit();
     }
 
-    onRemove(event) {
+    onRemove() {
         this.dataChanged = true;
-        this.keywordInit(); 
+        this.keywordInit();
     }
 
     /**
@@ -235,39 +265,47 @@ export class KeywordMidasComponent {
      * @param refreshHelp Indicates if help content needs be refreshed.
      */
     onSave(refreshHelp: boolean = true) {
-        // Trim items 
+        // Trim items
         // this.record[this.fieldName] = this.record[this.fieldName].map(element => {
         //     return element.trim();
         // });
 
-        this.keywords = this.keywords.map(element => {
+        this.keywords = this.keywords.map((element) => {
             return element.trim();
         });
 
         // remove duplicates
-        this.keywords = this.keywords.filter((item, index)=> this.keywords.indexOf(item) === index);
+        this.keywords = this.keywords.filter(
+            (item, index) => this.keywords.indexOf(item) === index,
+        );
 
-        if(this.currentKeywordChanged()) {
+        if (this.currentKeywordChanged()) {
             let updmd = {};
             // updmd[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
             // this.record[this.fieldName] = this.keywords.split(/\s*,\s*/).filter(kw => kw != '');
 
             updmd[this.fieldName] = JSON.parse(JSON.stringify(this.keywords));
 
-            this.mdupdsvc.update(this.fieldName, updmd).then((updateSuccess) => {
-                if (updateSuccess){
-                    this.notificationService.showSuccessWithTimeout("Keywords updated.", "", 3000);
+            this.mdupdsvc
+                .update(this.fieldName, updmd)
+                .then((updateSuccess) => {
+                    if (updateSuccess) {
+                        this.notificationService.showSuccessWithTimeout(
+                            "Keywords updated.",
+                            "",
+                            3000,
+                        );
 
-                    this.setMode(MODE.NORMAL, refreshHelp);
-                    this.isEditing = false;
-                }else{
-                    let msg = "Keywords update failed";
-                    console.error(msg);
-                    this.setMode(MODE.NORMAL, refreshHelp);
-                    this.isEditing = false;
-                }
-            });
-        }else{
+                        this.setMode(MODE.NORMAL, refreshHelp);
+                        this.isEditing = false;
+                    } else {
+                        let msg = "Keywords update failed";
+                        console.error(msg);
+                        this.setMode(MODE.NORMAL, refreshHelp);
+                        this.isEditing = false;
+                    }
+                });
+        } else {
             this.setMode(MODE.NORMAL, refreshHelp);
             this.isEditing = false;
         }
@@ -277,13 +315,13 @@ export class KeywordMidasComponent {
      * Set background color based on the status of keywords
      * if it's the same as original value (nothing changed), set background color to white.
      * Otherwise set it to light yellow.
-     * @param keywords 
+     * @param keywords
      */
     setBackground() {
-        if(this.keywordChanged()){
-            this.backColor = 'var(--data-changed)';
-        }else{
-            this.backColor = 'white';
+        if (this.keywordChanged()) {
+            this.backColor = "var(--data-changed)";
+        } else {
+            this.backColor = "white";
         }
     }
 
@@ -292,11 +330,15 @@ export class KeywordMidasComponent {
      */
     restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
+            if (success) {
                 this.setMode(MODE.NORMAL);
 
-                this.notificationService.showSuccessWithTimeout("Reverted changes to keywords.", "", 3000);
-            }else{
+                this.notificationService.showSuccessWithTimeout(
+                    "Reverted changes to keywords.",
+                    "",
+                    3000,
+                );
+            } else {
                 let msg = "Failed to undo keywords metadata";
                 console.error(msg);
             }
@@ -307,7 +349,7 @@ export class KeywordMidasComponent {
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText() {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[this.editMode];
@@ -325,23 +367,23 @@ export class KeywordMidasComponent {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        if(refreshHelp){
+        if (refreshHelp) {
             this.refreshHelpText();
         }
 
         //Broadcast the current section and mode
-        //refreshHelp=false means this widget is closed by other widget, 
+        //refreshHelp=false means this widget is closed by other widget,
         //do not broadcast the section mode because other widget already did that.
-        if (refreshHelp) {        
-            this.lpService.setEditing(sectionMode); 
+        if (refreshHelp) {
+            this.lpService.setEditing(sectionMode);
             // this.globalsvc.sectionMode.set(sectionMode);
-        }    
+        }
 
         if (editmode != MODE.NORMAL) {
-            this.isEditing = true; 
-        }else{
+            this.isEditing = true;
+        } else {
             this.isEditing = false;
-            this.dataChanged = false;            
+            this.dataChanged = false;
         }
 
         this.chref.detectChanges();
@@ -349,12 +391,12 @@ export class KeywordMidasComponent {
 
     /**
      * Set bubble color based on content
-     * @param keyword 
+     * @param keyword
      */
     bubbleColor(keyword) {
-        if(keyword == "Show more..." || keyword == "Show less..." ) {
+        if (keyword == "Show more..." || keyword == "Show less...") {
             return "#e6ecff";
-        }else{
+        } else {
             return "#ededed";
         }
     }
@@ -363,17 +405,25 @@ export class KeywordMidasComponent {
      * Generate short and long keyword list for display
      */
     keywordInit() {
-        if(this.record[this.fieldName]) {
-            if(this.record[this.fieldName].length > 5) {
-                this.keywordShort = JSON.parse(JSON.stringify(this.record[this.fieldName])).slice(0, this.keywordBreakPoint);
+        if (this.record[this.fieldName]) {
+            if (this.record[this.fieldName].length > 5) {
+                this.keywordShort = JSON.parse(
+                    JSON.stringify(this.record[this.fieldName]),
+                ).slice(0, this.keywordBreakPoint);
                 this.keywordShort.push("Show more...");
-                this.keywordLong = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-                this.keywordLong.push("Show less...");                
-            }else {
-                this.keywordShort = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-                this.keywordLong = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+                this.keywordLong = JSON.parse(
+                    JSON.stringify(this.record[this.fieldName]),
+                );
+                this.keywordLong.push("Show less...");
+            } else {
+                this.keywordShort = JSON.parse(
+                    JSON.stringify(this.record[this.fieldName]),
+                );
+                this.keywordLong = JSON.parse(
+                    JSON.stringify(this.record[this.fieldName]),
+                );
             }
-        }else{
+        } else {
             this.keywordShort = [];
             this.keywordLong = [];
         }
@@ -385,30 +435,30 @@ export class KeywordMidasComponent {
 
     /**
      * Set border for "More..." and "Less..." button when mouse over
-     * @param keyword 
-     * @returns 
+     * @param keyword
+     * @returns
      */
     borderStyle(keyword) {
-        if(keyword == "Show more..." || keyword == "Show less..." ) {
-            if(this.hovered){
+        if (keyword == "Show more..." || keyword == "Show less...") {
+            if (this.hovered) {
                 return "1px solid blue";
-            }else{
+            } else {
                 return "1px solid #ededed";
             }
-        }else{
+        } else {
             return "1px solid #ededed";
         }
     }
 
     mouseEnter(keyword) {
-        if(keyword == "Show more..." || keyword == "Show less..." ) {
+        if (keyword == "Show more..." || keyword == "Show less...") {
             this.hovered = true;
             this.chref.detectChanges();
         }
     }
 
     mouseOut(keyword) {
-        if(keyword == "Show more..." || keyword == "Show less..." ) {
+        if (keyword == "Show more..." || keyword == "Show less...") {
             this.hovered = false;
             this.chref.detectChanges();
         }
@@ -416,14 +466,14 @@ export class KeywordMidasComponent {
 
     /**
      * Display short/long list based on which button was clicked.
-     * @param keyword 
+     * @param keyword
      */
     keywordClick(keyword) {
-        if(keyword == "Show more...") {
+        if (keyword == "Show more...") {
             this.keywordDisplay = this.keywordLong;
         }
 
-        if(keyword == "Show less...") {
+        if (keyword == "Show less...") {
             this.keywordDisplay = this.keywordShort;
         }
 
@@ -434,14 +484,33 @@ export class KeywordMidasComponent {
     /**
      * Set cursor type for "More..." and "Less..." button
      * @param keyword
-     * @returns 
+     * @returns
      */
     setCursor(keyword) {
-        if(keyword == "Show more..." || keyword == "Show less..." ) {
+        if (keyword == "Show more..." || keyword == "Show less...") {
             return "pointer";
-        }else{
+        } else {
             return "";
         }
-    }    
+    }
 
+    addKeyword(event: MatChipInputEvent): void {
+        const value = (event.value || "").trim();
+
+        if (value) {
+            this.keywords.push(value);
+            this.onAdd(value);
+        }
+
+        event.chipInput?.clear();
+    }
+
+    removeKeyword(keyword: string): void {
+        const index = this.keywords.indexOf(keyword);
+
+        if (index >= 0) {
+            this.keywords.splice(index, 1);
+            this.onRemove();
+        }
+    }
 }

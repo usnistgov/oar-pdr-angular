@@ -16,7 +16,7 @@
         type="button" 
         (click)="startEditing()" 
         aria-label="Edit collection" 
-        ngbTooltip="Edit collection" 
+        matTooltip="Edit collection" 
         style="cursor: pointer">
         <fa-icon [icon]="faPencil" [class]="getEditIconClass()" size="sm"></fa-icon>
     </button> 
@@ -25,7 +25,7 @@
     <button class="edit_button" 
         *ngIf="collectionHistory.length > 1" 
         type="button"
-        ngbTooltip="Undo Current Change"
+        matTooltip="Undo Current Change"
         (click)="undo()">
         <fa-icon [icon]="faUndo" [class]="getUndoIconClass()" size="sm"></fa-icon>
     </button>              
@@ -62,7 +62,7 @@
                         (click)="saveCollection()" 
                         aria-label="edit button" 
                         [disabled]="!dataChanged" 
-                        ngbTooltip="Save collection and close editing block">
+                        matTooltip="Save collection and close editing block">
                         <fa-icon [icon]="faSave"></fa-icon>
                     </button>
             
@@ -71,7 +71,7 @@
                         type="button"
                         (click)="undoCurCollectionChanges()" 
                         aria-label="undo button" 
-                        ngbTooltip="Undo and close editing block">
+                        matTooltip="Undo and close editing block">
                         <fa-icon [icon]="faXmark"></fa-icon>
                     </button>
                 </td>          

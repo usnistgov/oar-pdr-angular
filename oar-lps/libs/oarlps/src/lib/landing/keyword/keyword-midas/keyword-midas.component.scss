@@ -1,14 +1,19 @@
-.mychip {
-    border: 1px solid red !important;
-    background-color: aliceblue !important;
-    padding: 0px 3px !important;
-    margin-right: 5px !important;
-    border-radius: 5px  !important;
-}
-
 .required-field {
     color: rgb(173, 0, 0);
     margin-left: -12px;
     margin-right: 6px;
+}
+
+/* Styles for mat-chip to match the previous tag style */
+.keywords mat-chip {
+    border: 1px solid rgb(236, 236, 236) !important;
+    background-color: var(--tag-blue) !important;
+    padding: 2px 5px !important;
+    margin: 3px !important;
+    border-radius: 20px !important;
+    text-align: center;
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px;
 }
 

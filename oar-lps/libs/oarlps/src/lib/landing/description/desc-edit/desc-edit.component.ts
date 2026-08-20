@@ -5,7 +5,6 @@ import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ToolbarModule } from 'primeng/toolbar';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
@@ -16,17 +15,18 @@ import {
     faSave,
     faUndo
 } from '@fortawesome/free-solid-svg-icons';
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     selector: 'desc-edit',
     standalone: true,
-    imports: [ 
-        CommonModule, 
-        FormsModule, 
-        ToolbarModule,
+    imports: [
+        CommonModule,
+        FormsModule,
         TextareaAutoresizeModule,
-        NgbModule,
-        FontAwesomeModule
+        MatTooltipModule,
+        FontAwesomeModule,
+        NgbModule
     ],
     templateUrl: './desc-edit.component.html',
     styleUrls: ['../../landing.component.scss', './desc-edit.component.css']
@@ -64,7 +64,6 @@ export class DescEditComponent {
     
     constructor(public mdupdsvc : MetadataUpdateService,  
                 public edstatsvc: EditStatusService,      
-                private ngbModal: NgbModal,
                 private chref: ChangeDetectorRef,
                 private notificationService: NotificationService,
                 public iconLibrary: FaIconLibrary,

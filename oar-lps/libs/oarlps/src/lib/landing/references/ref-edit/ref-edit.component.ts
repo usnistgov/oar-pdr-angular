@@ -6,10 +6,7 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefAuthorComponent } from '../ref-author/ref-author.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
-import { ButtonModule } from 'primeng/button';				
-import { TooltipModule } from 'primeng/tooltip';
 import { AppConfig } from '../../../config/config';
 import { AuthenticationService } from 'oarng';
 import { iconClass } from '../../../shared/globals/globals';
@@ -26,6 +23,12 @@ import {
     faLock,
     faUnlock
 } from '@fortawesome/free-solid-svg-icons';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
     selector: 'lib-ref-edit',
@@ -33,13 +36,16 @@ import {
     imports: [
         CommonModule,
         FormsModule,
-        ButtonModule,
-        TooltipModule,
         TextEditComponent,
-        NgbModule,
         RefAuthorComponent,
         SingleMsgBarComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatRadioModule,
+        MatCheckboxModule
     ],
     templateUrl: './ref-edit.component.html',
     styleUrls: ['../../landing.component.scss', './ref-edit.component.css'],

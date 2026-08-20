@@ -8,7 +8,7 @@ import {
     ChangeDetectorRef,
     inject,
 } from "@angular/core";
-import { Message } from "primeng/api";
+
 import { SelectItem, AppTreeNode as TreeNode } from "../../shared/globals/globals";
 import {
     TaxonomyListService,
@@ -49,6 +49,21 @@ import { FormControl } from '@angular/forms';
 import { Observable, startWith, map } from 'rxjs';
 
 const SEARCH_SERVICE = "SEARCH_SERVICE";
+
+export interface Message {
+    severity?: string;
+    summary?: string;
+    detail?: string;
+    id?: any;
+    key?: string;
+    life?: number;
+    sticky?: boolean;
+    closable?: boolean;
+    data?: any;
+    icon?: string;
+    contentStyleClass?: string;
+    styleClass?: string;
+}
 
 @Component({
     selector: "app-filters",
