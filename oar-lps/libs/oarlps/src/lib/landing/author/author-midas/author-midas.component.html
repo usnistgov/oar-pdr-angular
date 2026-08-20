@@ -25,8 +25,8 @@
                     type="button" 
                     (click)="startEditing()" 
                     aria-label="Edit author" 
-                    pTooltip="Edit author" 
-                    tooltipPosition="top" 
+                    matTooltip="Edit author" 
+                    matTooltipPosition="above"
                     style="cursor: pointer">
                     <fa-icon [icon]="faPencil" size="sm" [style.opacity]="iconOpacity()"></fa-icon>
                 </button> 
@@ -39,8 +39,8 @@
                     type="button" 
                     (click)="hideEditBlock()" 
                     aria-label="Hide edit block" 
-                    pTooltip="Hide edit block"
-                    tooltipPosition="top" >                     
+                    matTooltip="Hide edit block"
+                    matTooltipPosition="above" >                     
                     <fa-icon [icon]="faXmark" [style.opacity]="iconOpacity()"></fa-icon>
                 </button> 
 
@@ -52,8 +52,8 @@
                     (click)="undoAllChanges()" 
                     [disabled]="childIsEditing || childIsAdding"
                     aria-label="undo button" 
-                    pTooltip="Undo"
-                    tooltipPosition="top">
+                    matTooltip="Undo"
+                    matTooltipPosition="above">
                     <fa-icon [icon]="faUndo" [style.opacity]="iconOpacity()"></fa-icon>
                 </button>             
             </div>

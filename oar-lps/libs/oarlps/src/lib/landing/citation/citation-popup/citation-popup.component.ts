@@ -1,7 +1,4 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { SharedModule } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { CitationDisplayComponent } from '../citation-display/citation-display.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -16,9 +13,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
     standalone: true,
     imports: [
         CommonModule,
-        ButtonModule,
-        DialogModule,
-        SharedModule,
         CitationDisplayComponent,
         FontAwesomeModule
     ],

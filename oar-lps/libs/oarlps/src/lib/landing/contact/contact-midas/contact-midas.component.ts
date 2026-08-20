@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { PeopleComponent } from '../../people/people.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { ContactPubComponent } from '../contact-pub/contact-pub.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -23,39 +23,45 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'contact-midas',
+    selector: "contact-midas",
     standalone: true,
     imports: [
-        CommonModule, 
-        CollapseModule, 
-        ContactEditComponent, 
+        CommonModule,
+        CollapseModule,
+        ContactEditComponent,
         ContactPubComponent,
-        PeopleComponent, 
-        NgbModule,
-        FontAwesomeModule
+        PeopleComponent,
+        MatTooltipModule,
+        FontAwesomeModule,
     ],
-    templateUrl: './contact-midas.component.html',
-    styleUrls: ['./contact-midas.component.scss', '../../landing.component.scss'],
+    templateUrl: "./contact-midas.component.html",
+    styleUrls: [
+        "./contact-midas.component.scss",
+        "../../landing.component.scss",
+    ],
     animations: [
-        trigger('editExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ])
-    ]
+        trigger("editExpand", [
+            state("collapsed", style({ height: "0px", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
+            transition(
+                "expanded <=> collapsed",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+    ],
 })
 export class ContactMidasComponent {
     currentContact: Contact = {} as Contact;
     originalRecord: any = {};
     fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
-    editMode: string = MODE.NORMAL; 
+    editMode: string = MODE.NORMAL;
     isPublicSite: boolean = false;
 
     tempInput: any = {};
 
-    editBlockStatus: string = 'collapsed';
-    overflowStyle: string = 'hidden';
-    backgroundColor: string = 'var(--editable)'; // Background color of the text edit area
+    editBlockStatus: string = "collapsed";
+    overflowStyle: string = "hidden";
+    backgroundColor: string = "var(--editable)"; // Background color of the text edit area
     dataChanged: boolean = false;
 
     LoadEditComp: boolean = false;
@@ -72,45 +78,44 @@ export class ContactMidasComponent {
     faXmark = faXmark;
     faSave = faSave;
     faUndo = faUndo;
-    faTrashCan = faTrashCan
+    faTrashCan = faTrashCan;
 
     @Input() record: any[];
-    @Input() inBrowser: boolean;   // false if running server-side
+    @Input() inBrowser: boolean; // false if running server-side
 
-    @ViewChild('contactedit') contactEdit: ContactEditComponent;
-    
-    constructor(public mdupdsvc : MetadataUpdateService,        
-                private ngbModal: NgbModal,
-                public edstatsvc: EditStatusService,
-                public lpService: LandingpageService, 
-                private chref: ChangeDetectorRef,
-                public iconLibrary: FaIconLibrary,
-                private notificationService: NotificationService){
+    @ViewChild("contactedit") contactEdit: ContactEditComponent;
 
+    constructor(
+        public mdupdsvc: MetadataUpdateService,
+        private ngbModal: NgbModal,
+        public edstatsvc: EditStatusService,
+        public lpService: LandingpageService,
+        private chref: ChangeDetectorRef,
+        public iconLibrary: FaIconLibrary,
+        private notificationService: NotificationService,
+    ) {
         // iconLibrary.addIcons(
         //     faPencil,
         //     faXmark,
         //     faSave,
         //     faUndo,
         //     faTrashCan
-        // );    
+        // );
     }
 
     /**
      * a field indicating if this data has beed edited
      */
-    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get updated() {
+        return this.mdupdsvc.fieldUpdated(this.fieldName);
+    }
 
-    email(hasEmail)
-    {
-        if(hasEmail == null || hasEmail == undefined)
-            return "";
+    email(hasEmail) {
+        if (hasEmail == null || hasEmail == undefined) return "";
 
         let email = hasEmail.split(":");
-        if(email && email.length <= 1)
-            return email[0];
-        else
-            return email[1];
+        if (email && email.length <= 1) return email[0];
+        else return email[1];
     }
 
     ngOnInit() {
@@ -119,42 +124,56 @@ export class ContactMidasComponent {
         // effect(() => {
         //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if(sectionMode){
-                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-                        if(this.isEditing && this.currentContact.dataChanged){
-                            this.saveCurrentContact(false); // Do not refresh help text 
+            if (sectionMode) {
+                if (
+                    sectionMode.sender !=
+                    SectionPrefs.getFieldName(Sections.SIDEBAR)
+                ) {
+                    if (
+                        sectionMode.section != this.fieldName &&
+                        sectionMode.mode != MODE.NORMAL
+                    ) {
+                        if (this.isEditing && this.currentContact.dataChanged) {
+                            this.saveCurrentContact(false); // Do not refresh help text
                         }
                         this.hideEditBlock(false);
                     }
-                }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                } else {
+                    if (
+                        !this.isEditing &&
+                        sectionMode.section == this.fieldName &&
+                        this.edstatsvc.isEditMode()
+                    ) {
                         this.startEditing();
                     }
                 }
             }
-        })
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes.record) {
+        if (changes.record) {
             setTimeout(() => {
                 this.updateOriginal();
             }, 0);
         }
     }
 
-    updateOriginal(){
-        if(this.hasContact) {
-            this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+    updateOriginal() {
+        if (this.hasContact) {
+            this.currentContact = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
             this.currentContact.dataChanged = false;
 
-            this.originalRecord[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-        }else{
-            if(this.record[this.fieldName] == undefined){
+            this.originalRecord[this.fieldName] = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
+        } else {
+            if (this.record[this.fieldName] == undefined) {
                 this.originalRecord[this.fieldName] = undefined;
                 this.currentContact = {} as Contact;
-            }else{
+            } else {
                 this.originalRecord[this.fieldName] = {} as Contact;
                 this.currentContact = {} as Contact;
             }
@@ -162,36 +181,44 @@ export class ContactMidasComponent {
     }
 
     get hasContact() {
-        if(!this.record) return false;
+        if (!this.record) return false;
         else return !this.emptyContact(this.record[this.fieldName]);
     }
 
     get hasEmail() {
-        return this.hasContact && this.currentContact && this.currentContact['hasEmail'];
+        return (
+            this.hasContact &&
+            this.currentContact &&
+            this.currentContact["hasEmail"]
+        );
     }
 
-    get isEditing() { return this.editMode==MODE.EDIT }
+    get isEditing() {
+        return this.editMode == MODE.EDIT;
+    }
 
-    get isNormal() { return this.editMode==MODE.NORMAL }
+    get isNormal() {
+        return this.editMode == MODE.NORMAL;
+    }
 
     /**
-     * Retuen background color of the whole record (the container of all authors) 
+     * Retuen background color of the whole record (the container of all authors)
      * based on the dataChanged flag of the record.
      * @returns the background color of the whole record
      */
     get getRecordBackgroundColor() {
-        if(this.edstatsvc.isEditMode()){
-            this.backgroundColor = 'var(--editable)';
-            
-            if(this.mdupdsvc.fieldUpdated(this.fieldName)){
-                this.backgroundColor = 'var(--data-changed-saved)';
+        if (this.edstatsvc.isEditMode()) {
+            this.backgroundColor = "var(--editable)";
+
+            if (this.mdupdsvc.fieldUpdated(this.fieldName)) {
+                this.backgroundColor = "var(--data-changed-saved)";
             }
-            
-            if(this.dataChanged){
-                this.backgroundColor = 'var(--data-changed)';
+
+            if (this.dataChanged) {
+                this.backgroundColor = "var(--data-changed)";
             }
-        }else{
-            this.backgroundColor = 'white';
+        } else {
+            this.backgroundColor = "white";
         }
 
         return this.backgroundColor;
@@ -200,27 +227,28 @@ export class ContactMidasComponent {
     /**
      * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
      * will be cut off. But if overflow style is visible, the animation is not working.
-     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
-     * Then tooltip will not be cut off. 
-     */    
+     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish.
+     * Then tooltip will not be cut off.
+     */
     setOverflowStyle() {
-        if(this.editBlockStatus == 'collapsed') {
-            this.overflowStyle = 'hidden';
-        }else {
-            this.overflowStyle = 'hidden';
+        if (this.editBlockStatus == "collapsed") {
+            this.overflowStyle = "hidden";
+        } else {
+            this.overflowStyle = "hidden";
             setTimeout(() => {
-                this.overflowStyle = 'visible';
+                this.overflowStyle = "visible";
             }, 1000);
-        } 
+        }
     }
 
     startEditing() {
         this.LoadEditComp = true;
 
-        if(this.record[this.fieldName])
-            this.currentContact = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-        else
-            this.currentContact = {} as Contact;
+        if (this.record[this.fieldName])
+            this.currentContact = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
+        else this.currentContact = {} as Contact;
 
         this.setMode(MODE.EDIT);
         this.chref.detectChanges();
@@ -243,8 +271,8 @@ export class ContactMidasComponent {
      * @param dataChanged parameter passed from child component
      */
     onContactChange(dataChanged: any) {
-        switch(dataChanged.action) {
-            case 'dataChanged':
+        switch (dataChanged.action) {
+            case "dataChanged":
                 this.dataChanged = true;
                 break;
 
@@ -257,15 +285,19 @@ export class ContactMidasComponent {
      * Unde current changes on contact
      */
     undoCurContactChanges() {
-        if(this.originalRecord[this.fieldName] == undefined) {
+        if (this.originalRecord[this.fieldName] == undefined) {
             this.record[this.fieldName] = undefined;
             this.currentContact = {} as Contact;
-        }else if(this.emptyContact(this.originalRecord[this.fieldName])){
+        } else if (this.emptyContact(this.originalRecord[this.fieldName])) {
             this.record[this.fieldName] = {} as Contact;
             this.currentContact = {} as Contact;
-        }else{
-            this.record[this.fieldName] = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName]));
-            this.currentContact = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName]));
+        } else {
+            this.record[this.fieldName] = JSON.parse(
+                JSON.stringify(this.originalRecord[this.fieldName]),
+            );
+            this.currentContact = JSON.parse(
+                JSON.stringify(this.originalRecord[this.fieldName]),
+            );
         }
 
         this.setMode(MODE.NORMAL, true);
@@ -276,7 +308,7 @@ export class ContactMidasComponent {
      * Close edit block. If is editing, save change first.
      */
     closeEditBlock() {
-        if(this.isEditing && this.dataChanged){
+        if (this.isEditing && this.dataChanged) {
             this.saveCurrentContact();
         }
 
@@ -288,17 +320,17 @@ export class ContactMidasComponent {
      * @returns icon class of the edit button
      */
     editIconClass() {
-        if(this.isEditing){
+        if (this.isEditing) {
             return "fas fa-pencil icon_disabled";
-        }else{
-            return "fas fa-pencil icon_enabled"
+        } else {
+            return "fas fa-pencil icon_enabled";
         }
     }
 
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText() {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[this.editMode];
@@ -315,19 +347,19 @@ export class ContactMidasComponent {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        if(refreshHelp){
+        if (refreshHelp) {
             this.refreshHelpText();
         }
-            
-        switch ( this.editMode ) {
+
+        switch (this.editMode) {
             case MODE.EDIT:
-                this.editBlockStatus = 'expanded';
+                this.editBlockStatus = "expanded";
                 this.setOverflowStyle();
                 break;
- 
+
             default: // normal
                 // Collapse the edit block
-                this.editBlockStatus = 'collapsed'
+                this.editBlockStatus = "collapsed";
                 this.currentContact.dataChanged = false;
                 this.setOverflowStyle();
                 this.dataChanged = false;
@@ -336,37 +368,45 @@ export class ContactMidasComponent {
 
         // this.getRecordBackgroundColor();
         //Broadcast the current section and mode
-        //refreshHelp=false means this widget is closed by other widget, 
+        //refreshHelp=false means this widget is closed by other widget,
         //do not broadcast the section mode because other widget already did that.
         if (refreshHelp) {
             // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
         }
-        
-        this.chref.detectChanges();  
+
+        this.chref.detectChanges();
     }
 
     getFieldStyle() {
         return this.mdupdsvc.getFieldStyle(this.fieldName);
     }
-    
+
     /**
      * Save current contact to the server
-     */    
+     */
     saveCurrentContact(refreshHelp: boolean = true) {
         var postMessage: any = {};
-        postMessage[this.fieldName] = JSON.parse(JSON.stringify(this.currentContact));
-        
-        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-            if (updateSuccess){
-                this.setMode(MODE.NORMAL, refreshHelp);
-                this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout("Contact updated.", "", 3000);
-            }else{
-                let msg = "Contact update failed.";
-                console.error(msg);
-            }
-        });
+        postMessage[this.fieldName] = JSON.parse(
+            JSON.stringify(this.currentContact),
+        );
+
+        this.mdupdsvc
+            .update(this.fieldName, postMessage)
+            .then((updateSuccess) => {
+                if (updateSuccess) {
+                    this.setMode(MODE.NORMAL, refreshHelp);
+                    this.chref.detectChanges();
+                    this.notificationService.showSuccessWithTimeout(
+                        "Contact updated.",
+                        "",
+                        3000,
+                    );
+                } else {
+                    let msg = "Contact update failed.";
+                    console.error(msg);
+                }
+            });
     }
 
     /**
@@ -377,18 +417,24 @@ export class ContactMidasComponent {
             var postMessage: any = {};
             postMessage[this.fieldName] = JSON.parse(JSON.stringify(contact));
             this.record[this.fieldName] = JSON.parse(JSON.stringify(contact));
-            
-            this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-                if (updateSuccess){
-                    this.notificationService.showSuccessWithTimeout("Contact updated.", "", 3000);
-                    resolve(true);
-                }else{
-                    let msg = "Contact update failed";
-                    console.error(msg);
-                    resolve(false);
-                }
-            });
-        })
+
+            this.mdupdsvc
+                .update(this.fieldName, postMessage)
+                .then((updateSuccess) => {
+                    if (updateSuccess) {
+                        this.notificationService.showSuccessWithTimeout(
+                            "Contact updated.",
+                            "",
+                            3000,
+                        );
+                        resolve(true);
+                    } else {
+                        let msg = "Contact update failed";
+                        console.error(msg);
+                        resolve(false);
+                    }
+                });
+        });
     }
 
     /*
@@ -396,12 +442,16 @@ export class ContactMidasComponent {
      */
     restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
+            if (success) {
                 this.setMode();
                 this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout("Reverted changes to contacts.", "", 3000);
-            }else{
-                let msg = "Failed to restore original value."
+                this.notificationService.showSuccessWithTimeout(
+                    "Reverted changes to contacts.",
+                    "",
+                    3000,
+                );
+            } else {
+                let msg = "Failed to restore original value.";
                 console.error(msg);
             }
         });

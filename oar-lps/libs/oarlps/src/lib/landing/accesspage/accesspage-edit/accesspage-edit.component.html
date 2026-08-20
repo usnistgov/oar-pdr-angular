@@ -55,8 +55,8 @@
             (click)="commandOut('saveCurrentPage')" 
             aria-label="edit button" 
             [disabled]="noURL || !accessPage || !accessPage?.dataChanged" 
-            pTooltip="Save current changes"
-            tooltipPosition="top" >
+            matTooltip="Save current changes"
+            matTooltipPosition="above" >
             <fa-icon [icon]="faSave"></fa-icon>
         </button>
 
@@ -66,8 +66,8 @@
             type="button"
             (click)="commandOut('undoCurrentChanges')" 
             aria-label="undo button" 
-            pTooltip="Undo current changes"
-            tooltipPosition="top">
+            matTooltip="Undo current changes"
+            matTooltipPosition="above">
             <fa-icon [icon]="faXmark"></fa-icon>
         </button>
     </div>

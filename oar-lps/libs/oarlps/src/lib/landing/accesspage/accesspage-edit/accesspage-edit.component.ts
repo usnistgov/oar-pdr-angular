@@ -3,8 +3,7 @@ import { NerdmComp } from '../../../nerdm/nerdm';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TooltipModule } from 'primeng/tooltip';
-import { ButtonModule } from 'primeng/button';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { iconClass } from '../../../shared/globals/globals';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -14,21 +13,23 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'lib-accesspage-edit',
+    selector: "lib-accesspage-edit",
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
-        TooltipModule,
-        ButtonModule,
-        FontAwesomeModule
+        MatTooltipModule,
+        FontAwesomeModule,
     ],
-    templateUrl: './accesspage-edit.component.html',
-    styleUrls: ['../../landing.component.scss', './accesspage-edit.component.css']
+    templateUrl: "./accesspage-edit.component.html",
+    styleUrls: [
+        "../../landing.component.scss",
+        "./accesspage-edit.component.css",
+    ],
 })
 export class AccesspageEditComponent implements OnInit {
     originalApage: NerdmComp = {} as NerdmComp;
-    editBlockStatus: string = 'collapsed';
+    editBlockStatus: string = "collapsed";
     accessPage: NerdmComp = {} as NerdmComp;
 
     //icon class names
@@ -48,39 +49,48 @@ export class AccesspageEditComponent implements OnInit {
 
     constructor(
         public mdupdsvc: MetadataUpdateService,
-        public iconLibrary: FaIconLibrary) { 
-        
+        public iconLibrary: FaIconLibrary,
+    ) {
         // iconLibrary.addIcons(
         //     faXmark,
         //     faSave,
         //     faUndo
-        // );  
+        // );
     }
 
     ngOnInit(): void {
-        if(this.currentApage) {
+        if (this.currentApage) {
             this.originalApage = JSON.parse(JSON.stringify(this.accessPage));
             this.accessPage = JSON.parse(JSON.stringify(this.currentApage));
-        }else
-            this.accessPage = {} as NerdmComp;
+        } else this.accessPage = {} as NerdmComp;
     }
 
-    get isEditing() { return this.editMode=="edit" };
-    get isAdding() { return this.editMode=="add" };
+    get isEditing() {
+        return this.editMode == "edit";
+    }
+    get isAdding() {
+        return this.editMode == "add";
+    }
     get noURL() {
-        return !this.accessPage || !this.accessPage.accessURL || this.accessPage.accessURL.trim() == "";
+        return (
+            !this.accessPage ||
+            !this.accessPage.accessURL ||
+            this.accessPage.accessURL.trim() == ""
+        );
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes.editMode && changes.editMode.currentValue == "normal") {
+        if (changes.editMode && changes.editMode.currentValue == "normal") {
             this.reset();
         }
 
-        if(changes.currentApage) {
-            if(this.currentApage) {
-                this.originalApage = JSON.parse(JSON.stringify(this.currentApage));
+        if (changes.currentApage) {
+            if (this.currentApage) {
+                this.originalApage = JSON.parse(
+                    JSON.stringify(this.currentApage),
+                );
                 this.accessPage = JSON.parse(JSON.stringify(this.currentApage));
-            }else{
+            } else {
                 this.originalApage = {} as NerdmComp;
                 this.accessPage = {} as NerdmComp;
             }
@@ -88,23 +98,24 @@ export class AccesspageEditComponent implements OnInit {
     }
 
     getRecordBackgroundColor() {
-        let dataChanged = this.accessPage? this.accessPage.dataChanged : false;
-        let bkcolor = this.mdupdsvc.getFieldStyle(this.fieldName, dataChanged)
+        let dataChanged = this.accessPage ? this.accessPage.dataChanged : false;
+        let bkcolor = this.mdupdsvc.getFieldStyle(this.fieldName, dataChanged);
 
         return bkcolor;
     }
 
     reset() {
-        this.editBlockStatus = 'collapsed';
-    
+        this.editBlockStatus = "collapsed";
     }
 
     onChange() {
-        if(this.accessPage)
-            this.accessPage.dataChanged = true;
+        if (this.accessPage) this.accessPage.dataChanged = true;
 
         this.currentApage = JSON.parse(JSON.stringify(this.accessPage));
-        this.dataChanged.emit({"accessPage": this.currentApage, "dataChanged": true});
+        this.dataChanged.emit({
+            accessPage: this.currentApage,
+            dataChanged: true,
+        });
     }
 
     /**
@@ -112,6 +123,6 @@ export class AccesspageEditComponent implements OnInit {
      * @param cmd command
      */
     commandOut(cmd: string) {
-        this.cmdOutput.emit({"command": cmd});
-    }    
+        this.cmdOutput.emit({ command: cmd });
+    }
 }

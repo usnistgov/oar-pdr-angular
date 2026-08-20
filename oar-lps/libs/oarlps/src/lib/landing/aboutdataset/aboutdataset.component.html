@@ -33,8 +33,8 @@
         <span 
             id="copy-to-clipboard" 
             (click)="copyToClipboard(citetext)" 
-            data-toggle="tooltip" 
-            title="Copy to clipboard">
+            matTooltip="Copy to clipboard"
+            matTooltipPosition="above">
             
             <!-- <i class="faa faa-clone"></i> -->
             <fa-icon [icon]="faCopy" size="sm"></fa-icon>
@@ -65,8 +65,8 @@
             *ngIf="caretRightIcon && caretDownIcon" 
             [icon]="['fas', showJsonClass()]" 
             size="sm" 
-            data-toggle="tooltip" 
-            [title]="jsonViewerTooltip()"></fa-icon>
+            matTooltipPosition="above"
+            [matTooltip]="jsonViewerTooltip()"></fa-icon>
         <!-- <i class="faa faa-caret-right" *ngIf="!showJsonViewer"></i>
         <i class="faa faa-caret-down" *ngIf="showJsonViewer"></i>  -->
         NERDm
@@ -90,8 +90,8 @@
                     <fa-icon 
                         [icon]="faFileCode" 
                         size="sm" 
-                        data-toggle="tooltip" 
-                        title="Download Json file" 
+                        matTooltip="Download Json file" 
+                        matTooltipPosition="above"
                         style="margin-right: 10px;">
                     </fa-icon>
                     <!-- <i class="faa faa-file-code-o" style="margin-right: 10px;"></i> -->
@@ -143,8 +143,8 @@
                 <fa-icon 
                     [icon]="faChartBar" 
                     size="sm" 
-                    data-toggle="tooltip" 
-                    title="View metrics"></fa-icon>
+                    matTooltip="View metrics"
+                    matTooltipPosition="above"></fa-icon>
 
                 See more details...
             </a>

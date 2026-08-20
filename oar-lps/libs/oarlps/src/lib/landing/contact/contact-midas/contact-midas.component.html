@@ -23,7 +23,8 @@
                         type="button" 
                         (click)="startEditing()" 
                         aria-label="Edit contact" 
-                        ngbTooltip="Edit contact" 
+                        matTooltip="Edit contact" 
+                        matTooltipPosition="above"
                         style="cursor: pointer">
 
                         <fa-icon [icon]="faPencil" size="sm"></fa-icon>
@@ -34,12 +35,13 @@
                         <button 
                             class="edit_button" 
                             type="button"
-                            (click)="restoreOriginal()">
+                            (click)="restoreOriginal()"
+                            matTooltip="Restore original"
+                            matTooltipPosition="above">
 
                             <fa-icon 
                                 [icon]="faUndo" 
-                                aria-label="Restore original" 
-                                ngbTooltip="Restore original">
+                                aria-label="Restore original">
                             </fa-icon>
                         </button>  
                     }
@@ -53,12 +55,11 @@
                         [disabled]="currentContact.dataChanged"
                         (click)="closeEditBlock()" 
                         aria-label="close button" 
-                        ngbTooltip="Close edit block">
+                        matTooltip="Close edit block"
+                        matTooltipPosition="above">
 
                         <fa-icon 
-                            [icon]="faXmark" 
-                            aria-label="Close edit block" 
-                            ngbTooltip="Close edit block">
+                            [icon]="faXmark">
                         </fa-icon>
                     </button>  
                 }
@@ -90,12 +91,12 @@
                         (click)="saveCurrentContact()" 
                         aria-label="edit button" 
                         [disabled]="!currentContact.dataChanged || !currentContact.fn" 
-                        ngbTooltip="Save contact">
+                        matTooltip="Save contact"
+                        matTooltipPosition="above">
 
                         <fa-icon 
                             [icon]="faSave" 
-                            aria-label="Save button" 
-                            ngbTooltip="Save current changes">
+                            aria-label="Save button">
                         </fa-icon>
                     </button>
             
@@ -106,12 +107,11 @@
                         type="button"
                         (click)="undoCurContactChanges()" 
                         aria-label="undo button" 
-                        ngbTooltip="Undo current changes">
+                        matTooltip="Undo current changes"
+                        matTooltipPosition="above">
 
                         <fa-icon 
-                            [icon]="faUndo" 
-                            aria-label="undo button" 
-                            ngbTooltip="Undo current changes">
+                            [icon]="faUndo">
                         </fa-icon>
                     </button>
                 </td>          

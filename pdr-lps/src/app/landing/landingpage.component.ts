@@ -13,8 +13,6 @@ import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NoidComponent } from './noid.component';
 import { CitationPopupComponent, DoneModule, SearchresultModule, DownloadStatusModule, FrameModule } from 'oarlps';
 import { SidebarComponent, MetricsinfoComponent, MessageBarComponent } from 'oarlps';
@@ -48,8 +46,6 @@ import { MatButtonModule } from '@angular/material/button';
     standalone: true,
     imports: [
         CommonModule,
-        ButtonModule,
-        NgbModule,
         SearchresultModule,
         DoneModule,
         DownloadStatusModule,
@@ -616,7 +612,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     setMenuPosition() {
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
-        // The breakpoint for PrimeNG menu is 750. For some reason the following min-width
+        // The breakpoint for menu is 750. For some reason the following min-width
         // need to set to 768 to be able to change the state at 750px.
         if(this.inBrowser){
             this.breakpointObserver

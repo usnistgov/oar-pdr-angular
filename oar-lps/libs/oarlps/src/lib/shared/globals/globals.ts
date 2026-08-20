@@ -589,7 +589,6 @@ export interface ColorScheme {
 
 /**
  * Interface for selectable items with label and value properties
- * Replaces PrimeNG SelectItem to remove external dependency
  */
 export interface SelectItem {
     label: string;

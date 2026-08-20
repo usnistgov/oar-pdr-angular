@@ -8,9 +8,8 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { formatBytes } from '../../utils';
 import { Themes, ThemesPrefs, GlobalService, iconClass } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
-import { FieldsetModule } from 'primeng/fieldset';
-import { ButtonModule } from 'primeng/button';
 import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
     faSpinner,
@@ -22,33 +21,30 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'aboutdataset-detail',
+    selector: "aboutdataset-detail",
     standalone: true,
     imports: [
         VersionComponent,
-        CommonModule, 
-        FieldsetModule, 
-        ButtonModule, 
+        CommonModule,
+        MatTooltipModule,
         NgxJsonViewerModule,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    templateUrl: './aboutdataset.component.html',
-    styleUrls: ['./aboutdataset.component.scss'],
+    templateUrl: "./aboutdataset.component.html",
+    styleUrls: ["./aboutdataset.component.scss"],
     animations: [
-        trigger(
-          'enterAnimation', [
-            transition(':enter', [
-              style({height: '0px', opacity: 0}),
-              animate('700ms', style({height: '100%', opacity: 1}))
+        trigger("enterAnimation", [
+            transition(":enter", [
+                style({ height: "0px", opacity: 0 }),
+                animate("700ms", style({ height: "100%", opacity: 1 })),
             ]),
-            transition(':leave', [
-              style({height: '100%', opacity: 1}),
-              animate('700ms', style({height: 0, opacity: 0}))
-            //   animate('500ms', style({transform: 'translateY(0)', opacity: 1}))
-            ])
-          ]
-        )
-    ]
+            transition(":leave", [
+                style({ height: "100%", opacity: 1 }),
+                animate("700ms", style({ height: 0, opacity: 0 })),
+                //   animate('500ms', style({transform: 'translateY(0)', opacity: 1}))
+            ]),
+        ]),
+    ],
 })
 export class AboutdatasetComponent implements OnChanges {
     nerdmRecord: any = {};
@@ -62,11 +58,13 @@ export class AboutdatasetComponent implements OnChanges {
     resourceType: string;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
-    scienceThemeResourceType = ThemesPrefs.getResourceLabel(Themes.SCIENCE_THEME);
+    scienceThemeResourceType = ThemesPrefs.getResourceLabel(
+        Themes.SCIENCE_THEME,
+    );
     isPartOf: string[][] = null;
     maxWidth: number = 1000;
-    
-     //Icons
+
+    //Icons
     spinnerIcon = iconClass.SPINNER;
     chartBarIcon = iconClass.CHART_BAR;
     caretRightIcon = iconClass.CARET_RIGHT;
@@ -87,7 +85,7 @@ export class AboutdatasetComponent implements OnChanges {
     @Input() theme: string;
 
     // Flag to tell if current screen size is mobile or small device
-    @Input() mobileMode : boolean|null = false;
+    @Input() mobileMode: boolean | null = false;
 
     @Input() metricsData: MetricsData;
     // Flag to control whether the JSON viewer is shown or not. Default is false.
@@ -96,14 +94,16 @@ export class AboutdatasetComponent implements OnChanges {
     /**
      * Setter and getter of JSON viewer collapse flag
      */
-    public get collapsed() { return this._collapsed; }
+    public get collapsed() {
+        return this._collapsed;
+    }
     public set collapsed(newValue) {
         // logic
         this._collapsed = true;
         setTimeout(() => {
             this._collapsed = newValue;
         }, 0);
-        
+
         this.showJson = false;
         setTimeout(() => {
             this.showJson = true;
@@ -113,50 +113,56 @@ export class AboutdatasetComponent implements OnChanges {
     /**
      * Setter and getter of JSON viewer expand depth
      */
-    public get jsonExpandDepth() { return this._jsonExpandDepth; }
-    public set jsonExpandDepth(newValue) {this._jsonExpandDepth = newValue}
+    public get jsonExpandDepth() {
+        return this._jsonExpandDepth;
+    }
+    public set jsonExpandDepth(newValue) {
+        this._jsonExpandDepth = newValue;
+    }
 
-    constructor(private cfgsvc: AppConfig, 
-                private chref: ChangeDetectorRef,
-                public globalService: GlobalService,
-                public iconLibrary: FaIconLibrary,
-                public gaService: GoogleAnalyticsService){ 
-
+    constructor(
+        private cfgsvc: AppConfig,
+        private chref: ChangeDetectorRef,
+        public globalService: GlobalService,
+        public iconLibrary: FaIconLibrary,
+        public gaService: GoogleAnalyticsService,
+    ) {
         iconLibrary.addIcons(
             faSpinner,
             faChartBar,
             faCaretDown,
             faCaretRight,
             faFileCode,
-            faCopy
+            faCopy,
         );
 
-        this.globalService.watchLpsLeftWidth(width => {
+        this.globalService.watchLpsLeftWidth((width) => {
             this.maxWidth = width;
-        })
+        });
     }
 
     ngOnInit(): void {
         this.nerdmRecord["Native JSON (NERDm)"] = this.record;
         this.nerdmDocUrl = this.cfgsvc.get("links.nerdmAbout", "/od/dm/nerdm/");
-        this.citetext = (new NERDResource(this.record)).getCitation();
+        this.citetext = new NERDResource(this.record).getCitation();
         this.resourceType = ThemesPrefs.getResourceLabel(this.theme);
 
         // set the isPartOf rendering, listing all of the collections this dataset is formally
         // a part of (as indicated by the NERDm isPartOf property.
-        let article: string, title: string, suffix: string; 
-        if (this.record["isPartOf"] && Array.isArray(this.record['isPartOf']) &&
-            this.record['isPartOf'].length > 0)
-        {
+        let article: string, title: string, suffix: string;
+        if (
+            this.record["isPartOf"] &&
+            Array.isArray(this.record["isPartOf"]) &&
+            this.record["isPartOf"].length > 0
+        ) {
             this.isPartOf = [];
             for (var coll of this.record["isPartOf"]) {
-                if (! coll['@id'])
-                    continue
+                if (!coll["@id"]) continue;
                 article = "";
                 title = "another collection";
                 suffix = "";
-                if (coll['title']) {
-                    title = coll['title'];
+                if (coll["title"]) {
+                    title = coll["title"];
                     if (NERDResource.objectMatchesTypes(coll, "ScienceTheme")) {
                         article = "the";
                         suffix = " Science Theme";
@@ -164,12 +170,17 @@ export class AboutdatasetComponent implements OnChanges {
                 }
                 this.isPartOf.push([
                     article,
-                    this.cfgsvc.get("links.pdrIDResolver", "/od/id/") + coll['@id'],
+                    this.cfgsvc.get("links.pdrIDResolver", "/od/id/") +
+                        coll["@id"],
                     title,
-                    suffix
+                    suffix,
                 ]);
             }
-            if (this.isPartOf && this.isPartOf.length == 1 && ! this.isPartOf[0][3]) {
+            if (
+                this.isPartOf &&
+                this.isPartOf.length == 1 &&
+                !this.isPartOf[0][3]
+            ) {
                 this.isPartOf[0][0] = "the";
                 this.isPartOf[0][3] = " collection";
             }
@@ -177,14 +188,13 @@ export class AboutdatasetComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (this.record && this.record["_id"]) 
-            delete this.record["_id"];
+        if (this.record && this.record["_id"]) delete this.record["_id"];
 
         // this.chref.detectChanges();
     }
 
     toggleJsonViewer() {
-        this.showJsonViewer = !this.showJsonViewer
+        this.showJsonViewer = !this.showJsonViewer;
         this.chref.detectChanges();
     }
 
@@ -192,16 +202,21 @@ export class AboutdatasetComponent implements OnChanges {
      * Once user export JSON, add an entry to Google Analytics
      */
     onjson() {
-        this.gaService.gaTrackEvent('download', undefined, this.record['title'], this.getDownloadURL());
+        this.gaService.gaTrackEvent(
+            "download",
+            undefined,
+            this.record["title"],
+            this.getDownloadURL(),
+        );
     }
 
     /**
      * return the URL that will download the NERDm metadata for the current resource
      */
-    getDownloadURL() : string {
+    getDownloadURL(): string {
         let out = this.cfgsvc.get("links.pdrIDResolver", "/od/id/");
-        if (out.slice(-1) != '/') out += '/';
-        out += this.record['@id'] + "?format=nerdm";
+        if (out.slice(-1) != "/") out += "/";
+        out += this.record["@id"] + "?format=nerdm";
 
         return out;
     }
@@ -210,7 +225,7 @@ export class AboutdatasetComponent implements OnChanges {
      * Expand the JSON viewer to certain level.
      * @param depth : the level the JSON viewer will expand to.
      */
-    expandToLevel(depth){
+    expandToLevel(depth) {
         this.jsonExpandDepth = depth;
         this.collapsed = false;
     }
@@ -219,34 +234,36 @@ export class AboutdatasetComponent implements OnChanges {
      * Reture record level total download size
      */
     get totalDownloadSize() {
-        if(this.metricsData != undefined)
+        if (this.metricsData != undefined)
             return formatBytes(this.metricsData.totalDownloadSize, 2);
-        else
-            return "";
+        else return "";
     }
 
-    copyToClipboard(val: string){
-        const selBox = document.createElement('textarea');
-        selBox.style.position = 'fixed';
-        selBox.style.left = '0';
-        selBox.style.top = '0';
-        selBox.style.opacity = '0';
+    copyToClipboard(val: string) {
+        const selBox = document.createElement("textarea");
+        selBox.style.position = "fixed";
+        selBox.style.left = "0";
+        selBox.style.top = "0";
+        selBox.style.opacity = "0";
         selBox.value = val;
         document.body.appendChild(selBox);
         selBox.focus();
         selBox.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         document.body.removeChild(selBox);
 
         this.citeCopied = true;
         setTimeout(() => {
             this.citeCopied = false;
         }, 2000);
-
     }
 
     get hasCurrentMetrics() {
-        return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
+        return (
+            this.metricsData.totalDatasetDownload > 0 ||
+            this.metricsData.totalUsers > 0 ||
+            this.metricsData.totalDownloadSize > 0
+        );
     }
 
     /**

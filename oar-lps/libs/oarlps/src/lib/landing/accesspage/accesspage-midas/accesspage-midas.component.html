@@ -14,8 +14,8 @@
                     class="edit_button"
                     (click)="startEditing()" 
                     aria-label="edit button"
-                    pTooltip="Edit access page"
-                    tooltipPosition="top" >
+                    matTooltip="Edit access page"
+                    matTooltipPosition="above" >
                     <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                 </button>
             }
@@ -27,8 +27,8 @@
                     [disabled] = 'isEditing || isAdding'
                     (click)="setMode()"
                     aria-label="Hide edit block" 
-                    pTooltip="Hide edit block"
-                    tooltipPosition="top">
+                    matTooltip="Hide edit block"
+                    matTooltipPosition="above">
                     <fa-icon [icon]="faXmark" size="sm"></fa-icon>
                 </button> 
             }
@@ -40,8 +40,8 @@
                     type="button"       
                     (click)="restoreOriginal()" 
                     aria-label="undo button" 
-                    pTooltip="Undo changes"
-                    tooltipPosition="top">
+                    matTooltip="Undo changes"
+                    matTooltipPosition="above">
                     <fa-icon [icon]="faUndo" size="sm"></fa-icon>
                 </button>
             }

@@ -11,8 +11,7 @@ import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { AuthorPubComponent } from '../author-pub/author-pub.component';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
     faPencil,
@@ -28,8 +27,7 @@ import {
         AuthorListComponent,
         AuthorPubComponent,
         CollapseModule,
-        ButtonModule,
-        TooltipModule,
+        MatTooltipModule,
         FontAwesomeModule
     ],
     templateUrl: './author-midas.component.html',

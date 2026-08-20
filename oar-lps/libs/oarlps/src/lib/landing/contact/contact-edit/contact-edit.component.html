@@ -9,20 +9,28 @@
             <td width="15%" align="right">
                 <span 
                     style="margin-right: .5em;white-space: nowrap;" 
-                    data-toggle="tooltip" 
-                    title="People lookup">NIST People Lookup:</span>
+                    matTooltip="People lookup"
+                    matTooltipPosition="above">NIST People Lookup:</span>
             </td>
             <td align="left">
                 <div class="w-full ml-[10px]">
-                    <lib-people (dataChanged)="onDataChanged($event)"></lib-people>
+                    <lib-people 
+                        (dataChanged)="onDataChanged($event)">
+                    </lib-people>
                 </div>
             </td>
         </tr>
 
         <tr>
             <td width="15%" align="right">
-                <span style="margin-right: .5em;white-space: nowrap;" data-toggle="tooltip" title="This field is required"><span
-                        style="color:red;">*</span> Name:</span>
+                <span 
+                    style="margin-right: .5em;white-space: nowrap;" 
+                    matTooltip="This field is required"
+                    matTooltipPosition="above">
+                    
+                    <span style="color:red;">*</span> 
+                    Name:
+                </span>
             </td>
             <td align="left">
                 <input type="text" [(ngModel)]="contact.fn" id="name-input" (input)="onFullNameChange($event.target.value)" placeholder="name@company.com" style="width: 100%;height: 2em;margin: 3px 10px;"/>
@@ -32,11 +40,21 @@
         <!-- Email -->
         <tr>
             <td align="right">
-                <span style="margin-right: .5em;" data-toggle="tooltip" title="This field is recommended"><span
-                        style="color:green;">*</span> Email:</span>
+                <span 
+                    style="margin-right: .5em;" 
+                    matTooltip="This field is recommended"
+                    matTooltipPosition="above">
+                    
+                    <span style="color:green;">*</span> Email:</span>
             </td>
             <td align="left">
-                <input type="text" [(ngModel)]="email" id="email-input" (input)="onEmailChange($event.target.value)" placeholder="name@company.com" style="width: 100%;height: 2em;margin: 3px 10px;"/>
+                <input 
+                    type="text" 
+                    [(ngModel)]="email" 
+                    id="email-input" 
+                    (input)="onEmailChange($event.target.value)" 
+                    placeholder="name@company.com" 
+                    style="width: 100%;height: 2em;margin: 3px 10px;"/>
             </td>
         </tr>
     </table>
