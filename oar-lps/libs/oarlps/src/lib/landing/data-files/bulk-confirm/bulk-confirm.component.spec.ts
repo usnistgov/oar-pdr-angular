@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogRef } from '@angular/material/dialog';
 import { BulkConfirmComponent } from './bulk-confirm.component';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
@@ -10,7 +10,9 @@ describe('BulkConfirmComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ BulkConfirmComponent, FontAwesomeTestingModule ],
-      providers: [ NgbActiveModal ]
+      providers: [
+        { provide: MatDialogRef, useValue: {} }
+      ]
     })
     .compileComponents();
   });

@@ -5,9 +5,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { Themes, ColorScheme, GlobalService, iconClass } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { SearchresultModule } from '../searchresult/searchresult.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
@@ -31,7 +29,6 @@ import { faGlobe, faLock } from '@fortawesome/free-solid-svg-icons';
         DatafilesMidasComponent,
         SearchresultModule,
         AccesspagePubComponent,
-        NgbModule,
         FontAwesomeModule
     ],
     templateUrl:   './resourcedata.component.html',

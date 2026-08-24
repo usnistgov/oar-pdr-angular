@@ -1,5 +1,4 @@
 import { Component, Input, SimpleChanges, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -69,7 +68,6 @@ export class AuthorMidasComponent {
     @Input() isScienceTheme: boolean = false;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-                private ngbModal: NgbModal,
                 public edstatsvc: EditStatusService,
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,

@@ -55,6 +55,7 @@
                                 matSuffix 
                                 class="w-2 custom-size-icon"
                                 matTooltip="Clear DOI"
+                                matTooltipPosition="above"
                                 (click)="ref.doi = ''">
                                 close
                             </mat-icon>
@@ -63,6 +64,7 @@
                                 matSuffix 
                                 class="w-2 custom-size-icon"
                                 matTooltip="Accept"
+                                matTooltipPosition="above"
                                 (click)="onDoiChange()">
                                 check
                             </mat-icon>
@@ -148,6 +150,7 @@
                                         color: var(--nist-blue-default);
                                     "
                                     matTooltip="Remove author"
+                                    matTooltipPosition="above"
                                 >
                                 </fa-icon>
 
@@ -162,6 +165,7 @@
                                 size="sm"
                                 (click)="authorExpandClick()"
                                 matTooltip="Expand/Collapse Authors"
+                                matTooltipPosition="above"
                             >
                             </fa-icon>
                         </div>
@@ -382,14 +386,12 @@
                             type="button"
                             (click)="resetCitation()"
                             aria-label="reset button"
-                            pTooltip="Reset"
-                            tooltipPosition="top"
+                            matTooltip="Reset"
+                            matTooltipPosition="above"
                         >
                             <fa-icon
                                 [icon]="faUndo"
                                 size="sm"
-                                data-toggle="tooltip"
-                                title="Reset citation"
                             ></fa-icon>
                             <!-- <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i> -->
                         </button>
@@ -400,15 +402,13 @@
                             *ngIf="isEditing || !useCitationData"
                             (click)="citationLocked = !citationLocked"
                             aria-label="lock/unlock button"
-                            [pTooltip]="citationLockTooltip()"
-                            tooltipPosition="top"
+                            [matTooltip]="citationLockTooltip()"
+                            matTooltipPosition="above"
                         >
                             <fa-icon
                                 *ngIf="lockIcon && undoIcon"
                                 [icon]="['fas', citationLockClass()]"
                                 size="sm"
-                                data-toggle="tooltip"
-                                [title]="citationLockTooltip()"
                             >
                             </fa-icon>
 

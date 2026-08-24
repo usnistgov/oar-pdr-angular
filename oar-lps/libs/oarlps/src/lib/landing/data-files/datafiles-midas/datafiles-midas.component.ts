@@ -23,7 +23,6 @@ import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
-import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleInfo, faRefresh, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { MatCheckboxModule } from "@angular/material/checkbox";
@@ -145,8 +144,6 @@ export class DatafilesMidasComponent {
     private msgsvc: UserMessageService,
     private chref: ChangeDetectorRef,
     public globalService: GlobalService,
-    private confirmDialogSvc: ConfirmationDialogService,
-    private ngZone: NgZone,
   ) {
     this.cols = [
       { field: "name", header: "Name", width: "60%" },
@@ -237,23 +234,6 @@ export class DatafilesMidasComponent {
    */
   openFileManager() {
     window.open(this.fileManagerUrl);
-
-    // if (this.isRevisionType && this.revisionType == "Metadata Update") {
-    //     let message = "Current revision type is 'Metadata Update'. Would you like to select a type from following and proceed?";
-
-    //     this.confirmDialogSvc.confirmManageFiles(
-    //         'Please confirm',
-    //         message, 'sm')
-    //         .then((confirmed) => {
-    //             if (confirmed) {
-    //                 this.revisionType = this.arrRevisionTypes[4];
-    //                 window.open(this.fileManagerUrl);
-    //             }
-    //         })
-    //         .catch(() => {
-    //             console.log("User canceled request (indirectly)");
-    //         });
-    // }
   }
 
   /**

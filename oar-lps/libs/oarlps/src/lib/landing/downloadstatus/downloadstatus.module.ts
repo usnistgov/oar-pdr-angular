@@ -1,15 +1,15 @@
 import { NgModule }     from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DownloadstatusComponent } from './downloadstatus.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 /**
- * module that provides support for rendering and managing a resource's text description 
+ * module that provides support for rendering and managing a resource's text description
  */
 @NgModule({
     imports: [
-        CommonModule, NgbModule, FontAwesomeModule
+        CommonModule, MatProgressBarModule, FontAwesomeModule
     ],
     declarations: [
         DownloadstatusComponent
@@ -25,5 +25,3 @@ export class DownloadStatusModule { }
 export {
     DownloadstatusComponent
 };
-
-    

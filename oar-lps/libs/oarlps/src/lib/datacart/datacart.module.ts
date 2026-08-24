@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 import { DownloadConfirmComponent } from './download-confirm/download-confirm.component';
 import { CartcontrolComponent } from './cartcontrol/cartcontrol.component';
 import { BundleplanComponent } from './bundleplan/bundleplan.component';
@@ -41,7 +38,6 @@ import { MatDialogModule } from '@angular/material/dialog';
   imports: [
     CommonModule,
     SharedModule,
-    NgbModule,
     FontAwesomeModule,
     MatCheckboxModule,
     MatButtonModule,

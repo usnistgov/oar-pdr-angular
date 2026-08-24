@@ -21,7 +21,6 @@ import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 // import { DataFileItem } from '../data-files-to-be-deleted.component';
-import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { BulkConfirmComponent } from '../bulk-confirm/bulk-confirm.component';
 import { AppConfig } from '../../../config/config';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
@@ -51,6 +50,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 
 // Define the maximum and minimum height for the virtual scroll window of the tree table.
 // We set maximum window size because the bigger the size the slower the performance.
@@ -118,7 +118,6 @@ interface DataFileItem {
     CommonModule,
     RouterModule,
     FormsModule,
-    NgbModule,
     FontAwesomeModule,
     MatCheckboxModule,
     MatButtonModule,
@@ -224,7 +223,6 @@ export class DatafilesPubComponent {
   expandedRowKey: string | null = "";
   hoverRowKey: string | null = "";
 
-  modalRef: any; // For bulk download confirm pop up
   bulkDownloadBase: string = "";
   bulkDownloadURL: string = "";
   downloadableFileLimit: number = 300; // Max number of files downloadable through lps
@@ -301,7 +299,7 @@ export class DatafilesPubComponent {
     public lpService: LandingpageService,
     private msgsvc: UserMessageService,
     private chref: ChangeDetectorRef,
-    private modalService: NgbModal,
+    private dialog: MatDialog,
     public edstatsvc: EditStatusService,
     private gaService: GoogleAnalyticsService,
     private cfg: AppConfig,
@@ -1193,18 +1191,13 @@ export class DatafilesPubComponent {
       return;
     }
 
-    let ngbModalOptions: NgbModalOptions = {
-      backdrop: "static",
-      keyboard: false,
-      windowClass: "modal-small",
-      size: "lg",
-    };
+    const dialogRef = this.dialog.open(BulkConfirmComponent, {
+      disableClose: true,
+      panelClass: 'modal-small',
+      width: '600px',
+    });
 
-    this.modalRef = this.modalService.open(
-      BulkConfirmComponent,
-      ngbModalOptions,
-    );
-    this.modalRef.componentInstance.returnValue.subscribe(
+    dialogRef.componentInstance.returnValue.subscribe(
       (submit) => {
         if (submit) {
           console.log("Return value", submit);

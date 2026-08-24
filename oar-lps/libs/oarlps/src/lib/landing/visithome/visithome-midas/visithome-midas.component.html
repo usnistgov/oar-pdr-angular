@@ -14,22 +14,37 @@
             @if(edstatsvc.isEditMode() && !inViewMode) {
                 <div class="editable_field" style="margin-left: 5px; margin-top: 2px;">
                     @if(!isEditing) {
-                        <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
+                        <button 
+                            class="edit_button" 
+                            (click)="startEditing()" 
+                            aria-label="edit button" 
+                            matTooltip="Edit URL"
+                            matTooltipPosition="above">
                             <fa-icon [icon]="faPencil" size="sm" title="Edit URL" aria-label="edit URL"></fa-icon>
                         </button>  
                         
                         @if(updated) {
                             <!-- Restore button -->
-                            <button class="edit_button" type="button"
-                            (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
+                            <button 
+                                class="edit_button" 
+                                type="button"
+                                (click)="restoreOriginal()" 
+                                aria-label="Restore button" 
+                                matTooltip="Restore original URL"
+                                matTooltipPosition="above">
                                 <fa-icon [icon]="faUndo"></fa-icon>
                             </button>   
                         }
                     }
                     @else {
                         <!-- Hide edit window button -->
-                        <button class="edit_button" type="button"
-                            (click)="hideEditBlock()" aria-label="Close button" ngbTooltip="Hide edit block">
+                        <button 
+                            class="edit_button" 
+                            type="button"
+                            (click)="hideEditBlock()" 
+                            aria-label="Close button" 
+                            matTooltip="Hide edit block"
+                            matTooltipPosition="above">
                             <fa-icon [icon]="faXmark"></fa-icon>
                         </button>    
                     }

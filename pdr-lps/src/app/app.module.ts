@@ -5,7 +5,6 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { ToastrModule } from 'ngx-toastr';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AppComponent } from './app.component';
 import { environment } from '../environments/environment-impl';
 import { LandingPageComponent } from './landing/landingpage.component';
@@ -52,7 +51,6 @@ enableProdMode();
     ToastrModule.forRoot({
       toastClass: "toast toast-bootstrap-compatibility-fix",
     }),
-    NgbModule,
     NerdmModule.forRoot(environment),
     ConfigModule,
     HeaderPubComponent,

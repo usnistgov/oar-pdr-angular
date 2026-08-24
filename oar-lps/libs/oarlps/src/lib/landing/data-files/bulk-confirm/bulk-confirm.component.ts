@@ -1,14 +1,17 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faDownload, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { iconClass } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
   selector: 'app-bulk-confirm',
   standalone: true,
-  imports: [ CommonModule, FontAwesomeModule ],
+  imports: [ CommonModule, FontAwesomeModule, MatButtonModule, MatIconModule, MatTooltipModule ],
   templateUrl: './bulk-confirm.component.html',
   styleUrls: ['./bulk-confirm.component.css']
 })
@@ -22,11 +25,11 @@ export class BulkConfirmComponent implements OnInit {
     faXmark = faXmark;
 
     @Output() returnValue: EventEmitter<boolean> = new EventEmitter();
-    
+
     constructor(
         public iconLibrary: FaIconLibrary,
-        public activeModal: NgbActiveModal) { 
-        
+        public dialogRef: MatDialogRef<BulkConfirmComponent>) {
+
         // iconLibrary.addIcons(faDownload, faXmark);
     }
 
@@ -36,30 +39,19 @@ export class BulkConfirmComponent implements OnInit {
     /**
      * When user clicks on Continue Download, close the pop up dialog and continue downloading.
      */
-    continueBulkDownload() 
+    continueBulkDownload()
     {
         this.returnValue.emit(true);
-        this.activeModal.close('Close click');
+        this.dialogRef.close('Close click');
     }
 
-    /** 
+    /**
      * When user click on Cancel, close the pop up dialog and do nothing.
      */
-    cancelBulkDownload() 
+    cancelBulkDownload()
     {
         this.returnValue.emit(false);
-        this.activeModal.close('Close click');
-    }    
+        this.dialogRef.close('Close click');
+    }
 
-    btnStyle() {
-        // let color = this.allCollections[this.collection].colorPalette;
-
-        return {
-            '--button-text-color': 'white',
-            '--button-color': 'var(--science-theme-background-default)',
-            '--hover-color': 'var(--science-theme-background-hover)',
-            '--disable-color': 'var(--disabled-grey)',
-            '--disable-text-color': 'var(--disabled-grey-text)'
-        };
-    }      
 }

@@ -41,7 +41,11 @@
                                     [style.cursor]="setCursor(topic)" 
                                     (click)="topicClick(topic, col)" 
                                     *ngFor="let topic of topicDisplay[col]; let i =index">
-                                    <span style="display: inline-block" [ngbTooltip]="topic.tag">{{ bubbleLabel(topic) }}</span>
+
+                                    <span 
+                                        style="display: inline-block">
+                                        {{ bubbleLabel(topic) }}
+                                    </span>
                                 </span> 
                             </span>
                         </span>

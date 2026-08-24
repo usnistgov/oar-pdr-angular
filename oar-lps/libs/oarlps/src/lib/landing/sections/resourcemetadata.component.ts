@@ -2,7 +2,6 @@ import { Component, OnChanges, SimpleChanges, Input, ViewChild } from '@angular/
 import { NerdmRes } from '../../nerdm/nerdm';
 import { MetricsData } from "../metrics-data";
 import { ThemesPrefs } from '../../shared/globals/globals';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { AboutdatasetComponent } from '../aboutdataset/aboutdataset.component';
 
@@ -17,8 +16,7 @@ import { AboutdatasetComponent } from '../aboutdataset/aboutdataset.component';
     standalone: true,
     imports: [
         SectionTitleComponent, 
-        AboutdatasetComponent,
-        NgbModule
+        AboutdatasetComponent
     ],
     templateUrl: './resourcemetadata.component.html',
     styleUrls:  [

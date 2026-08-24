@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { DownloadConfirmComponent } from './download-confirm.component';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { config } from '../../../environments/environment';
 import { AppConfig } from '../../config/config';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
@@ -19,8 +18,7 @@ describe('DownloadConfirmComponent', () => {
       providers: [
         { provide: AppConfig, useValue: cfg },
         { provide: MatDialogRef, useValue: { close: jest.fn() } },
-        { provide: MAT_DIALOG_DATA, useValue: { bundle_plan_size: 1000, zipData: [], totalFiles: 0 } },
-        NgbActiveModal
+        { provide: MAT_DIALOG_DATA, useValue: { bundle_plan_size: 1000, zipData: [], totalFiles: 0 } }
       ]
     })
     .compileComponents();

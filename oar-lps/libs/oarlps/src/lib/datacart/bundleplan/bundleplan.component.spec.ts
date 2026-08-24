@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap' ; 
 import { BundleplanComponent } from './bundleplan.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { DownloadService } from '../../shared/download-service/download-service.service';
@@ -28,8 +27,7 @@ describe('BundleplanComponent', () => {
             schemas: [NO_ERRORS_SCHEMA],
             imports: [
                 HttpClientTestingModule,
-                FontAwesomeTestingModule,
-                NgbModule
+                FontAwesomeTestingModule
             ],
             providers: [
                 CartService,

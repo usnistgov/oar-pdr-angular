@@ -3,7 +3,6 @@ import { EditStatusService } from '../editcontrol/editstatus.service';
 import { SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TitlePubComponent } from './title-pub/title-pub.component';
 import { TitleEditComponent } from './title-edit/title-edit.component';
 
@@ -14,8 +13,7 @@ import { TitleEditComponent } from './title-edit/title-edit.component';
         CommonModule, 
         FormsModule, 
         TitleEditComponent,
-        TitlePubComponent,
-        NgbModule 
+        TitlePubComponent
     ],
     templateUrl: './title.component.html',
     styleUrls: ['./title.component.css', '../landing.component.scss']

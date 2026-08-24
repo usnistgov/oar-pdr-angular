@@ -6,6 +6,7 @@ import { SectionHelp, SectionPrefs, Sections } from '../../shared/globals/global
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { CommonModule } from '@angular/common';
 import { MatExpansionModule } from "@angular/material/expansion";
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -31,20 +32,21 @@ interface reference {
  *   * if the version being viewed is not the latest, a link appears to the latest
  */
 @Component({
-    selector: 'pdr-version',
+    selector: "pdr-version",
     standalone: true,
     imports: [
         CommonModule,
-        MatExpansionModule,          
-        FontAwesomeModule
+        MatExpansionModule,
+        FontAwesomeModule,
+        MatTooltipModule,
     ],
-    templateUrl: './version.component.html',
-    styleUrls: [ '../landing.component.scss' ]
+    templateUrl: "./version.component.html",
+    styleUrls: ["../landing.component.scss"],
 })
 export class VersionComponent implements OnChanges {
     visibleHistory = false;
-    newer : reference = null;
-    lpssvc : string = null;
+    newer: reference = null;
+    lpssvc: string = null;
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string;
     fieldName = SectionPrefs.getFieldName(Sections.VERSION);
@@ -69,17 +71,14 @@ export class VersionComponent implements OnChanges {
      * create the component
      * @param cfg   the app configuration data
      */
-    constructor(public editstatsvc: EditStatusService,
-                public gaService: GoogleAnalyticsService,
-                public iconLibrary: FaIconLibrary,
-                public lpService: LandingpageService) { 
-        
-        iconLibrary.addIcons(
-            faCaretDown,
-            faCaretRight,
-            faCircleInfo
-        );
-   }
+    constructor(
+        public editstatsvc: EditStatusService,
+        public gaService: GoogleAnalyticsService,
+        public iconLibrary: FaIconLibrary,
+        public lpService: LandingpageService,
+    ) {
+        iconLibrary.addIcons(faCaretDown, faCaretRight, faCircleInfo);
+    }
 
     ngOnInit(): void {
         this.expandIconClass = this.caretRightIcon;
@@ -90,13 +89,12 @@ export class VersionComponent implements OnChanges {
 
         this.lpssvc = this.landingPageServiceStr;
 
-        if(this.record && this.record.version)
-            this.majorVersion = (new NERDResource(this.record)).getMajorVersion();
+        if (this.record && this.record.version)
+            this.majorVersion = new NERDResource(this.record).getMajorVersion();
     }
 
     ngOnChanges() {
-        if (this.record)
-            this.assessNewer(); 
+        if (this.record) this.assessNewer();
     }
 
     /**
@@ -104,80 +102,88 @@ export class VersionComponent implements OnChanges {
      */
     expandHistory() {
         this.visibleHistory = !this.visibleHistory;
-        this.expandIconClass = this.visibleHistory? this.caretDownIcon : this.caretRightIcon;
-        this.expandButtonAlterText = this.visibleHistory? "Close version history" : "Open version history";
+        this.expandIconClass = this.visibleHistory
+            ? this.caretDownIcon
+            : this.caretRightIcon;
+        this.expandButtonAlterText = this.visibleHistory
+            ? "Close version history"
+            : "Open version history";
     }
 
     /**
      * return a list of releases.  I
      */
     getReleases() {
-        if (! this.record)
-            return [];
+        if (!this.record) return [];
         let out = null;
-        if (this.record.releaseHistory) 
+        if (this.record.releaseHistory)
             out = this.record.releaseHistory.hasRelease;
-        if (! out && this.record.versionHistory)
+        if (!out && this.record.versionHistory)
             out = this.record.versionHistory;
-        if (! out)
-            out = [];
+        if (!out) out = [];
         return out;
     }
 
     /**
-     * create an HTML rendering of a version string for a NERDm VersionRelease.  
-     * If there is information available for linking to version's home page, a 
-     * link is returned.  Otherwise, just the version is returned (prepended 
+     * create an HTML rendering of a version string for a NERDm VersionRelease.
+     * If there is information available for linking to version's home page, a
+     * link is returned.  Otherwise, just the version is returned (prepended
      * with a "v").
      */
     renderRelVer(relinfo, thisversion) {
-        if (thisversion == relinfo.version)
-            return "v" + relinfo.version;
+        if (thisversion == relinfo.version) return "v" + relinfo.version;
         return this.renderRelAsLink(relinfo, "v" + relinfo.version);
     }
 
     renderRelAsLink(relinfo, linktext) {
         let out: string = linktext;
         if (relinfo.location)
-            out = '<a href="' + relinfo.location + '">' + linktext + '</a>';
-        else if (relinfo['@id']) {
-            if (relinfo['@id'].startsWith("doi:"))
-                out = '<a href="https://doi.org/' + relinfo['@id'].substring(4) + '">' + linktext + '</a>';
-            else if (relinfo['@id'].startsWith("ark:/88434/"))
-                out = '<a href="'+ this.lpssvc + relinfo['@id'].substring("ark:/88434/".length) +
-                      '">' + linktext + '</a>';
-            else if (relinfo['@id'].match(/^https?:\/\//))
-                out = '<a href="'+ relinfo['@id'] + '">' + linktext + '</a>';
+            out = '<a href="' + relinfo.location + '">' + linktext + "</a>";
+        else if (relinfo["@id"]) {
+            if (relinfo["@id"].startsWith("doi:"))
+                out =
+                    '<a href="https://doi.org/' +
+                    relinfo["@id"].substring(4) +
+                    '">' +
+                    linktext +
+                    "</a>";
+            else if (relinfo["@id"].startsWith("ark:/88434/"))
+                out =
+                    '<a href="' +
+                    this.lpssvc +
+                    relinfo["@id"].substring("ark:/88434/".length) +
+                    '">' +
+                    linktext +
+                    "</a>";
+            else if (relinfo["@id"].match(/^https?:\/\//))
+                out = '<a href="' + relinfo["@id"] + '">' + linktext + "</a>";
         }
         return out;
     }
 
     /**
-     * return a rendering of a release's ID.  If possible, the ID will be 
-     * rendered as a link.  If there is no ID, a link with the text "View..." 
-     * is returned. 
+     * return a rendering of a release's ID.  If possible, the ID will be
+     * rendered as a link.  If there is no ID, a link with the text "View..."
+     * is returned.
      */
     renderRelId(relinfo, thisversion) {
-        if (thisversion == relinfo.version)
-            return "this version";
+        if (thisversion == relinfo.version) return "this version";
         let id: string = "View...";
-        if (relinfo['@id']) id = relinfo['@id'];
-        if (this.editMode != this.EDIT_MODES.VIEWONLY_MODE)
-            return id;
-        else
-            return this.renderRelAsLink(relinfo, id);
+        if (relinfo["@id"]) id = relinfo["@id"];
+        if (this.editMode != this.EDIT_MODES.VIEWONLY_MODE) return id;
+        else return this.renderRelAsLink(relinfo, id);
     }
 
     /**
-     * analyze the resource metadata to determine if a newer version is 
-     * available.  Currently, this looks in three places (in order) within the 
+     * analyze the resource metadata to determine if a newer version is
+     * available.  Currently, this looks in three places (in order) within the
      * NERDm record:
      * <ol>
      *   <li> the 'isReplacedBy' property </li>
      *   <li> as a 'isPreviousVersionOf' reference in the references list.
      *   <li> in the 'versionHistory' property </li>
      * </ol>
-     * The checks for last two places may be removed in a future release. 
+     * The checks for last two places may be removed in a future release.
      */
     assessNewer() {
         if (!this.record) return;
@@ -185,50 +191,61 @@ export class VersionComponent implements OnChanges {
         // look for the 'isReplacedBy'; this is expected to be inserted into the
         // record on the fly by the server based on the values of 'replaces' in
         // all other resources.
-        if (this.record['isReplacedBy']) {
-            this.newer = this.record['isReplacedBy'];
+        if (this.record["isReplacedBy"]) {
+            this.newer = this.record["isReplacedBy"];
             // if (!this.newer['refid']) this.newer['refid'] = this.newer['@id'];
             return;
         }
 
         // look for a reference with refType="isPreviousVersionOf"; the
-        // referenced resource is a newer version. 
-        if (this.record['references']) {
-            for (let ref of this.record['references']) {
-                if (ref.refType == "IsPreviousVersionOf" && (ref.label || ref['@id'])) {
+        // referenced resource is a newer version.
+        if (this.record["references"]) {
+            for (let ref of this.record["references"]) {
+                if (
+                    ref.refType == "IsPreviousVersionOf" &&
+                    (ref.label || ref["@id"])
+                ) {
                     this.newer = ref;
                     // if (!this.newer['refid']) this.newer['refid'] = this.newer['@id'];
-                    if (!this.newer.label) this.newer.label = ref.newer['@id'];
+                    if (!this.newer.label) this.newer.label = ref.newer["@id"];
                     return;
                 }
             }
         }
 
         // look at the version history to see if there is a newer version listed
-        if (this.record['version'] && (this.record['releaseHistory'] || this.record['versionHistory'])) {
+        if (
+            this.record["version"] &&
+            (this.record["releaseHistory"] || this.record["versionHistory"])
+        ) {
             let history = this.getReleases();
             history.sort(compare_histories);
 
-            var thisversion = this.record['version'];
-            var p = thisversion.indexOf('+');    // presence indicates this is an update
-            if (p >= 0) thisversion = thisversion.substring(0, p)   // strip off +...
+            var thisversion = this.record["version"];
+            var p = thisversion.indexOf("+"); // presence indicates this is an update
+            if (p >= 0) thisversion = thisversion.substring(0, p); // strip off +...
 
-            if (history[history.length - 1]['version'] != thisversion &&
-                compare_histories(history[history.length - 1],
-                                  {
-                                      version: thisversion,
-                                      issued: this.record['modified']
-                                  }) > 0)
-            {
+            if (
+                history[history.length - 1]["version"] != thisversion &&
+                compare_histories(history[history.length - 1], {
+                    version: thisversion,
+                    issued: this.record["modified"],
+                }) > 0
+            ) {
                 // this version is older than the latest one in the history
-                this.newer = JSON.parse(JSON.stringify(history[history.length - 1]));
+                this.newer = JSON.parse(
+                    JSON.stringify(history[history.length - 1]),
+                );
                 // if (!this.newer['refid']) this.newer['refid'] = this.newer['@id'];
-                this.newer['label'] = this.newer['version'];
-                if (!this.newer['location'] && this.newer['@id']) {
-                    if (this.newer['@id'].startsWith("doi:"))
-                        this.newer.location = 'https://doi.org/' + this.newer['@id'].substring(4);
-                    else if (this.newer['refid'].startsWith("ark:/88434/"))
-                        this.newer.location = this.lpssvc + this.newer['@id'].substring("ark:/88434/".length);
+                this.newer["label"] = this.newer["version"];
+                if (!this.newer["location"] && this.newer["@id"]) {
+                    if (this.newer["@id"].startsWith("doi:"))
+                        this.newer.location =
+                            "https://doi.org/" + this.newer["@id"].substring(4);
+                    else if (this.newer["refid"].startsWith("ark:/88434/"))
+                        this.newer.location =
+                            this.lpssvc +
+                            this.newer["@id"].substring("ark:/88434/".length);
                 }
             }
         }
@@ -237,25 +254,21 @@ export class VersionComponent implements OnChanges {
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText() {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[this.editMode];
 
         this.lpService.setSectionHelp(sectionHelp);
-    }    
+    }
 
     resolverForId(id) {
         let out: string = null;
-        if (id.startsWith("doi:"))
-            out = "https://doi.org/" + id.substring(4);
-        else if (id.startsWith("ark:"))
-            out = this.lpssvc + id
-        else if (id.match(/^https?:\//))
-            out = id
-        return out
+        if (id.startsWith("doi:")) out = "https://doi.org/" + id.substring(4);
+        else if (id.startsWith("ark:")) out = this.lpssvc + id;
+        else if (id.match(/^https?:\//)) out = id;
+        return out;
     }
-
 }
 
 /**

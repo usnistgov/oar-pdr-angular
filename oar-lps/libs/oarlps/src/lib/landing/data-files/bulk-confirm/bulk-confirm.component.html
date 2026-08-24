@@ -11,33 +11,16 @@ Click "Proceed Bulk Download" to continue downloading. Or click on "Cancel Bulk 
     <div class="control-buttons">
         <!-- Buttons are arranged from right to left -->
             <!-- Continue Submit button -->
-            <button 
-                class="btn btn-labeled" 
-                id="btn-submit" 
+            <button mat-flat-button color="primary"
                 (click)="continueBulkDownload()">
-                <!-- <i class="faa faa-download faa-1x icon-white" style="color: #fff; margin-right: 10px;"></i> -->
-
-                <fa-icon 
-                    [icon]="faDownload" 
-                    class="btn-icon"
-                    style="color: #fff; margin-right: 10px;">
-                </fa-icon>
+                <mat-icon>file_download</mat-icon>
                 Proceed Bulk Download
             </button>
 
             <!-- Cancel button -->
-            <button 
-                type="button"
-                class="oar-button"
-                [ngStyle]="btnStyle()"
-                id="btn-cancel" 
+            <button mat-button class="cancel-btn"
                 (click)="cancelBulkDownload()">
-                <!-- <i class="faa faa-times faa-1x icon-white" style="color: #fff; margin-right: 10px;"></i> -->
-
-                <fa-icon 
-                    [icon]="faXmark" 
-                    style="color: #fff; margin-right: 10px;">
-                </fa-icon>
+                <mat-icon>cancel</mat-icon>
                 Cancel Bulk Download
             </button>
     </div>

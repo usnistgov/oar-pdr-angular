@@ -24,24 +24,24 @@
                 <div style="flex: 0 0 110px; text-align: left; margin-bottom: opx;margin-top: 5px;height: 35px;">
                     <span><b id="filelist-heading">Files</b></span>
                     <!-- <span class="fa-stack fa-lg icon-download grey-color" style="margin-right:-1em;" aria-label="Download all"
-                        ngbTooltip="Download all disabled in edit mode">
+                        matTooltip="Download all disabled in edit mode">
                     </span> -->
 
                     <!-- Download icon in MIDAS side -->
                     <span class="fa-stack grey-color" size="2x" style="margin: 0px -22px 0 10px" aria-label="Download all"
-                        ngbTooltip="Download all disabled in edit mode">
+                        matTooltip="Download all disabled in edit mode">
                         <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
                         <fa-icon [icon]="faDownload" class="fa-stack-1x small" style="top: 5px;"></fa-icon>
                     </span>
 
                     <!-- Add all to cart icon in MIDAS side -->
                     <span class="fa-stack grey-color" size="2x" style="margin: 0px -2em 0px 10px" aria-label="Add all to data cart"
-                        ngbTooltip="Add all to data cart disabled in edit mode">
+                        matTooltip="Add all to data cart disabled in edit mode">
                         <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 1.5;right: 20px;top: 8px;"></fa-icon>
                         <fa-icon [icon]="faCartPlus" class="fa-stack-1x small" style="top: 7px;left: -2px;"></fa-icon>
                     </span>
                     <!-- <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;"
-                        aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
+                        aria-label="Add all to data cart" matTooltip="Add all to data cart disabled in edit mode">
                     </span> -->
                     <span class="w3-badge badge-notify" style="background-color:rgb(107, 107, 107);">{{cartLength}}</span>
                 </div>
@@ -53,7 +53,7 @@
 
                     <!-- Download icon in public side -->
                     <a style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all"
-                        [ngbTooltip]="downloadAllTooltip" [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
+                        [matTooltip]="downloadAllTooltip" [ngStyle]="{'color':getDownloadAllBtnColor(),'cursor':'pointer'}">
                         <!-- <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                         <i *ngIf="!isAddingToDownloadAllCart; else show_spinner1" class="fas fa-download fa-stack-1x fa-xs"
                             aria-hidden="true"></i>
@@ -61,7 +61,7 @@
                                 aria-hidden="true"></i></ng-template> -->
 
                         <span class="fa-stack" size="2x" style="margin: -5px -22px 0 10px" aria-label="Download all"
-                            ngbTooltip="Download all">
+                            matTooltip="Download all">
                             <fa-icon 
                                 [icon]="faCircle" 
                                 class="fa-stack-2x" 
@@ -87,13 +87,13 @@
                     <a id="routeToDatacart" target="_blank" [routerLink]="['/datacart', 'popup']" style="display:none"></a>
 
                     <!-- Add all to cart icon in public side -->
-                    <span 
+                    <span
                         class="icon-cart"
-                        style="width: 30px;" 
-                        (click)="toggleAllFilesInGlobalCart(files)" 
-                        [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',}" 
+                        style="width: 30px;"
+                        (click)="toggleAllFilesInGlobalCart(files)"
+                        [ngStyle]="{'color':getAddAllToDataCartBtnColor(), 'cursor': 'pointer',}"
                         [aria-label]="cartProcessTooltip"
-                        [ngbTooltip]="cartProcessTooltip">
+                        [matTooltip]="cartProcessTooltip">
                         <!-- <i class="far fa-circle fa-stack-1x fa-lg" aria-hidden="true"></i>
                         <i *ngIf="!isTogglingAllInGlobalCart; else show_spinner" class="fas fa-cart-plus fa-stack-1x fa-xs"
                             aria-hidden="true"></i>
@@ -101,7 +101,7 @@
                                 aria-hidden="true"></i></ng-template> -->
 
                         <span class="fa-stack" size="2x" style="margin: 8px -2em 0px 10px" aria-label="Add all to cart"
-                            ngbTooltip="Add all to cart">
+                            matTooltip="Add all to cart">
                             <fa-icon 
                                 [icon]="faCircle" 
                                 class="fa-stack-2x" 
@@ -387,7 +387,7 @@
                             } @else {
                                 <div *ngIf="fileManagerUrl;else space_holder">
                                     <a href='{{fileManagerUrl}}' target='_blank' aria-label="Access file in File Manager"
-                                        ngbTooltip="Access file in File Manager" (click)="setFileDownloaded(node.data)">
+                                        matTooltip="Access file in File Manager" (click)="setFileDownloaded(node.data)">
 
                                         <fa-icon 
                                             [icon]="faDownload" 

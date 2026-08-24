@@ -1,322 +1,482 @@
-<div class="ui-grid ui-grid-responsive ui-grid-pad center" style="min-height:61vh;">
+<div
+    class="ui-grid ui-grid-responsive ui-grid-pad center"
+    style="min-height: 61vh"
+>
     <div class="" style="padding: 2.5rem 2.5rem 2.5rem 2.5rem">
-        <label class="labelStyle" style="margin-bottom: 1em;">Dataset Bulk Downloads</label>
+        <label class="labelStyle" style="margin-bottom: 1em"
+            >Dataset Bulk Downloads</label
+        >
         <div class="bodyTextSize">
             <p>
-                The NIST Public Data Repository allows users to download a single data file from a dataset by clicking 
-                on the download icon (
-                <fa-icon [icon]="faDownload" style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"></fa-icon>
-                ) to the right of file's name in the file listing; 
-                however, more often you will want to download many files from the dataset.  
+                The NIST Public Data Repository allows users to download a
+                single data file from a dataset by clicking on the download icon
+                (
+                <fa-icon
+                    [icon]="faDownload"
+                    style="
+                        color: &quot;#1E6BA1&quot;;
+                        padding-left: 2px;
+                        padding-right: 3px;
+                    "
+                ></fa-icon>
+                ) to the right of file's name in the file listing; however, more
+                often you will want to download many files from the dataset.
             </p>
-            <p>
-                There are a few options to download files in bulk:
-            </p>
+            <p>There are a few options to download files in bulk:</p>
 
             <ul>
-            <li> <span class="linked-text indented" (click)="goToSection('downloadAll')">Downloading all files with the Data Cart (for fewer than 300 files)</span> </li>
-            <li> <span class="linked-text indented" (click)="goToSection('addToCart')">Downloading a subset of files with the Data Cart </span></li>
-            <li> <span class="linked-text indented" (click)="goToSection('rclone')">Download data using the rclone tool <sup style="color: red;">*</sup> </span></li>
-            <li> <span class="linked-text indented" (click)="goToSection('pyscript')">Download data using the Python script, pdrdownload.py <sup style="color: red;">*</sup> </span></li>
-            <li> <span class="linked-text indented" (click)="goToSection('downloadAPI')">Programmatic access to NIST data products </span></li>
+                <li>
+                    <span
+                        class="linked-text indented"
+                        (click)="goToSection('downloadAll')"
+                        >Downloading all files with the Data Cart (for fewer
+                        than 300 files)</span
+                    >
+                </li>
+                <li>
+                    <span
+                        class="linked-text indented"
+                        (click)="goToSection('addToCart')"
+                        >Downloading a subset of files with the Data Cart
+                    </span>
+                </li>
+                <li>
+                    <span
+                        class="linked-text indented"
+                        (click)="goToSection('rclone')"
+                        >Download data using the rclone tool
+                        <sup style="color: red">*</sup>
+                    </span>
+                </li>
+                <li>
+                    <span
+                        class="linked-text indented"
+                        (click)="goToSection('pyscript')"
+                        >Download data using the Python script, pdrdownload.py
+                        <sup style="color: red">*</sup>
+                    </span>
+                </li>
+                <li>
+                    <span
+                        class="linked-text indented"
+                        (click)="goToSection('downloadAPI')"
+                        >Programmatic access to NIST data products
+                    </span>
+                </li>
             </ul>
 
             <p>
-            <span style="color: red;"><sup>*</sup>recommended for datasets with more than 300 files</span>
+                <span style="color: red"
+                    ><sup>*</sup>recommended for datasets with more than 300
+                    files</span
+                >
             </p>
 
-            <dl style="border: 2px solid black; background-color: #eeeeee; padding: 0ex 0.5ex 0ex 1ex; border-radius: 0.5ex; font-size: smaller; line-height: 2.5ex;">
-              <dt>Note:</dt>
-              <dd style="padding-left: 2em;"><i>This page mentions third party tools, some which may be commercial products; this does not imply endorsement by NIST.</i> </dd>
-            </dl>            
+            <dl
+                style="
+                    border: 2px solid black;
+                    background-color: #eeeeee;
+                    padding: 0ex 0.5ex 0ex 1ex;
+                    border-radius: 0.5ex;
+                    font-size: smaller;
+                    line-height: 2.5ex;
+                "
+            >
+                <dt>Note:</dt>
+                <dd style="padding-left: 2em">
+                    <i
+                        >This page mentions third party tools, some which may be
+                        commercial products; this does not imply endorsement by
+                        NIST.</i
+                    >
+                </dd>
+            </dl>
 
             <a name="download-all" #downloadall></a>
             <p class="smlabelStyle">Download all files through the Data Cart</p>
 
-            <div>        
-                For smaller datasets, all the files can be easily downloaded through the browser using the PDR Data
-                Cart. On the dataset's home page, just click on the "Download-All" icon
-                ( 
+            <div>
+                For smaller datasets, all the files can be easily downloaded
+                through the browser using the PDR Data Cart. On the dataset's
+                home page, just click on the "Download-All" icon (
                 <!-- <span style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"> 
                     <i class="faa faa-download" aria-hidden="true"></i>
                     <i class="faa faa-circle-thin" aria-hidden="true" style="scale: 1.7;margin-left: -17px;"></i>
                 </span> -->
                 <!-- Download icon -->
-                <span class="fa-stack" size="2x" style="margin: -5px -22px 0 10px">
-                    <fa-icon [icon]="faCircle" class="fa-stack-2x"
-                        style="scale: 1.5;right: 23px;top: 8px;">
+                <span
+                    class="fa-stack"
+                    size="2x"
+                    style="margin: -5px -22px 0 10px"
+                >
+                    <fa-icon
+                        [icon]="faCircle"
+                        class="fa-stack-2x"
+                        style="scale: 1.5; right: 23px; top: 8px"
+                    >
                     </fa-icon>
-                    <fa-icon [icon]="faDownload"
-                        class="fa-stack-1x small" style="top: 6px;">
+                    <fa-icon
+                        [icon]="faDownload"
+                        class="fa-stack-1x small"
+                        style="top: 6px"
+                    >
                     </fa-icon>
                 </span>
-                ) above and to the left of the file listing.
-                This will open a Data Cart (in a separate tab) with all of files from the dataset in it.  You
-                will see a spinner icon in that page as it prepares the download.  Eventually, it will show you a
-                list of one or more zip files containing the files from the dataset.  Click the "Start Download"
-                button to start downloading those Zip files.  
+                ) above and to the left of the file listing. This will open a
+                Data Cart (in a separate tab) with all of files from the dataset
+                in it. You will see a spinner icon in that page as it prepares
+                the download. Eventually, it will show you a list of one or more
+                zip files containing the files from the dataset. Click the
+                "Start Download" button to start downloading those Zip files.
             </div>
 
             <p>
-            <a name="add-to-cart" #addtocart></a>
-            <p class="smlabelStyle">Download selected portions of a dataset with the Data Cart</p>
+                <a name="add-to-cart" #addtocart></a>
+            </p>
+
+            <p class="smlabelStyle">
+                Download selected portions of a dataset with the Data Cart
+            </p>
             <p>
-                In the PDR, you have a general Data Cart available for downloading in bulk a variety of files from
-                multiple datasets. To use this feature, add files or folders of files from a dataset to your cart
-                by clicking on "Add-to-Cart" icons
-                (<span class="faa faa-cart-plus green-cart" style="color: '#1E6BA1';padding-left: 2px;padding-right: 3px;"></span>) on the right side of
-                the file listing.  Alternatively, add all the files from a dataset to your cart by clicking the
+                In the PDR, you have a general Data Cart available for
+                downloading in bulk a variety of files from multiple datasets.
+                To use this feature, add files or folders of files from a
+                dataset to your cart by clicking on "Add-to-Cart" icons (<span
+                    class="faa faa-cart-plus green-cart"
+                    style="
+                        color: &quot;#1E6BA1&quot;;
+                        padding-left: 2px;
+                        padding-right: 3px;
+                    "
+                ></span
+                >) on the right side of the file listing. Alternatively, add all
+                the files from a dataset to your cart by clicking the
                 "Add-all-to-Cart" icon
                 <!-- (<span style="color: '#1E6BA1';padding-left: 5px;padding-right: 8px;"> 
                     <i class="faa faa-cart-plus" aria-hidden="true"></i>
                     <i class="faa faa-circle-thin" aria-hidden="true" style="scale: 1.7;margin-left: -17px;"></i>
                 </span>)  -->
                 <!-- Add to cart icon -->
-                (<span class="fa-stack" size="2x" style="margin: -4px -1em 0px 15px" aria-label="Add all to cart"
-                    ngbTooltip="Add all to cart">
-                    <fa-icon [icon]="faCircle" class="fa-stack-2x"
-                        style="scale: 1.5;right: 20px;top: 8px;">
+                (<span
+                    class="fa-stack"
+                    size="2x"
+                    style="margin: -4px -1em 0px 15px"
+                    aria-label="Add all to cart"
+                    mayTooltip="Add all to cart"
+                    matTooltipPosition="above"
+                >
+                    <fa-icon
+                        [icon]="faCircle"
+                        class="fa-stack-2x"
+                        style="scale: 1.5; right: 20px; top: 8px"
+                    >
                     </fa-icon>
-                    <fa-icon [icon]="faCartPlus"
-                        class="fa-stack-1x small" style="top: 8px; left: -2px;">
-                    </fa-icon>
-                </span>)
-                above and to the left of the file listing.  
+                    <fa-icon
+                        [icon]="faCartPlus"
+                        class="fa-stack-1x small"
+                        style="top: 8px; left: -2px"
+                    >
+                    </fa-icon> </span
+                >) above and to the left of the file listing.
             </p>
             <p>
-                After adding the files of interest, you can open up your view of the Cart by clicking either the
-                "Cart" link in the most top-right corner of any dataset's home page or the "Data Cart" link in the
-                navigation bar on the right side of the dataset's page.  You will see a listing of the files and
-                folders you have added to the cart.  You can browse list, download individual files, or select the
-                files you wish to download in bulk by clicking the selection boxes at the left.  Click to the
-                "Download Selected" button to prepare download.  Like withe the "download-all" feature, a pop-up
-                will show you a list of one or more Zip files containing the selected files; click the "Start
+                After adding the files of interest, you can open up your view of
+                the Cart by clicking either the "Cart" link in the most
+                top-right corner of any dataset's home page or the "Data Cart"
+                link in the navigation bar on the right side of the dataset's
+                page. You will see a listing of the files and folders you have
+                added to the cart. You can browse list, download individual
+                files, or select the files you wish to download in bulk by
+                clicking the selection boxes at the left. Click to the "Download
+                Selected" button to prepare download. Like withe the
+                "download-all" feature, a pop-up will show you a list of one or
+                more Zip files containing the selected files; click the "Start
                 Download" to start the actual download.
             </p>
 
             <a name="rclone" #rclone></a>
-            <p class="smlabelStyle">Downloading large datasets using the rclone tool</p>
-            <p style="margin-left: 2em;">
+            <p class="smlabelStyle">
+                Downloading large datasets using the rclone tool
+            </p>
+            <p style="margin-left: 2em">
+                <a href="https://rclone.org/install/">
+                    <button
+                        type="button"
+                        class="oar-button"
+                        [ngStyle]="btnStyle()"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
 
-            <a href="https://rclone.org/install/">
-                <button
-                    type="button" 
-                    class="oar-button"
-                    [ngStyle]="btnStyle()"
-                    target="_blank"
-                    rel="noopener">
-                    <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
-
-                    <fa-icon 
-                        [icon]="faDownload" 
-                        size="sm" 
-                        class="download-icon">
-                    </fa-icon>
-                    Install rclone
-                </button>
-            </a>
+                        <fa-icon
+                            [icon]="faDownload"
+                            size="sm"
+                            class="download-icon"
+                        >
+                        </fa-icon>
+                        Install rclone
+                    </button>
+                </a>
+            </p>
 
             <p>
-                When PDR demand is high and the dataset you want to download contains a large number of files, the
-                Data Cart will struggle to provide the data.  When the number of files is larger than about 300, we
-                recommend you try using <a href="https://rclone.org/">rclone</a>; it is a free, open-source tool
-                for transfering many files to and from remote storage (such as a cloud drive) easily and reliably.
-                The NIST PDR is fully compatible with rclone, making it a useful tool for downloading large
-                datasets in bulk.  <a href="https://rclone.org/install/">It is available</a> for all major
-                computers, including <a href="https://rclone.org/install/#linux">Linux</a>,
+                When PDR demand is high and the dataset you want to download
+                contains a large number of files, the Data Cart will struggle to
+                provide the data. When the number of files is larger than about
+                300, we recommend you try using
+                <a href="https://rclone.org/">rclone</a>; it is a free,
+                open-source tool for transfering many files to and from remote
+                storage (such as a cloud drive) easily and reliably. The NIST
+                PDR is fully compatible with rclone, making it a useful tool for
+                downloading large datasets in bulk.
+                <a href="https://rclone.org/install/">It is available</a> for
+                all major computers, including
+                <a href="https://rclone.org/install/#linux">Linux</a>,
                 <a href="https://rclone.org/install/#macos">Macs</a>, and
-                <a href="https://rclone.org/install/#windows">Windows</a>, and can be installed manually or via 
-                common <a href="https://rclone.org/install/#package-managers">OS software package managers</a> 
-                (e.g. apt, rpm, Brew, etc.). 
+                <a href="https://rclone.org/install/#windows">Windows</a>, and
+                can be installed manually or via common
+                <a href="https://rclone.org/install/#package-managers"
+                    >OS software package managers</a
+                >
+                (e.g. apt, rpm, Brew, etc.).
             </p>
             <p>
-                After installing rclone, you can download all the files in a PDR dataset to your current directory
-                by typing: 
+                After installing rclone, you can download all the files in a PDR
+                dataset to your current directory by typing:
             </p>
-            <div style="margin: 1em 0em;" id="cite">
+            <div style="margin: 1em 0em" id="cite">
                 <span
-                    style="margin-left: 35px;" 
-                    [ngClass]="{'highlight': rcloneCopied}" 
-                    [@enterAnimation]>
-                    <code style="color: black;">{{rcloneCommand}}</code>
+                    style="margin-left: 35px"
+                    [ngClass]="{ highlight: rcloneCopied }"
+                    [@enterAnimation]
+                >
+                    <code style="color: black">{{ rcloneCommand }}</code>
                 </span>
-                <span 
-                    id="copy-to-clipboard" 
-                    (click)="copyToClipboard(rcloneCommand, 'rclone')" 
-                    data-toggle="tooltip" 
-                    title="Copy to clipboard">
+                <span
+                    id="copy-to-clipboard"
+                    (click)="copyToClipboard(rcloneCommand, 'rclone')"
+                    matTooltipPosition="above"
+                    matTooltip="Copy to clipboard"
+                >
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
-                    <fa-icon 
-                        [icon]="faCopy" 
-                        size="sm" 
-                        class="clone-icon">
+                    <fa-icon [icon]="faCopy" size="sm" class="clone-icon">
                     </fa-icon>
                 </span>
-                <span 
+                <span
                     [@enterAnimation]
-                    *ngIf="rcloneCopied" 
+                    *ngIf="rcloneCopied"
                     class="badge"
-                    style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+                    style="
+                        background-color: #f0f0f0;
+                        margin-left: 0.5em;
+                        color: black;
+                    "
+                >
                     Command copied to clipboard.
                 </span>
             </div>
 
             <p>
-                If the download process gets interrupted for any reason, you can rerun the same command, and it
-                will resume the download where it left off.  
+                If the download process gets interrupted for any reason, you can
+                rerun the same command, and it will resume the download where it
+                left off.
             </p>
 
             <a name="pyscript" #pyscript></a>
-            <p class="smlabelStyle">Downloading large datasets using the Python script, pdrdownload.py</p>
-            <p style="margin-left: 2em;">
+            <p class="smlabelStyle">
+                Downloading large datasets using the Python script,
+                pdrdownload.py
+            </p>
+            <p style="margin-left: 2em">
+                <a href="{{ pdrbase }}od/tools/pdrdownload.py">
+                    <button
+                        type="button"
+                        class="oar-button"
+                        [ngStyle]="btnStyle()"
+                        target="_blank"
+                        rel="noopener"
+                    >
+                        <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
 
-            <a href="{{pdrbase}}od/tools/pdrdownload.py">
-                <button
-                    type="button" 
-                    class="oar-button"
-                    [ngStyle]="btnStyle()"
-                    target="_blank"
-                    rel="noopener">
-                    <!-- <i class="faa faa-download download-icon" aria-hidden="true"></i> -->
+                        <fa-icon
+                            [icon]="faDownload"
+                            size="sm"
+                            class="download-icon"
+                        >
+                        </fa-icon>
+                        Download pdrdownload.py
+                    </button>
+                </a>
 
-                    <fa-icon 
-                        [icon]="faDownload" 
-                        size="sm" 
-                        class="download-icon">
-                    </fa-icon>
-                    Download pdrdownload.py
-                </button>
-            </a>
-
-            <code style="padding-left: 1em;">This script requires Python 3.8 or higher</code>
+                <code style="padding-left: 1em"
+                    >This script requires Python 3.8 or higher</code
+                >
             </p>
             <p>
-                Another way to download large datasets conveniently and reliably from the PDR is with our custom
-                Python script, 
-                <span [ngClass]="{'highlight': downloadscriptCopied}"><a href="{{pdrbase}}od/tools/pdrdownload.py">pdrdownload.py</a></span>.
-                For users that can run a python script, this script has several advantages:
+                Another way to download large datasets conveniently and reliably
+                from the PDR is with our custom Python script,
+                <span [ngClass]="{ highlight: downloadscriptCopied }"
+                    ><a href="{{ pdrbase }}od/tools/pdrdownload.py"
+                        >pdrdownload.py</a
+                    ></span
+                >. For users that can run a python script, this script has
+                several advantages:
             </p>
             <ul>
-                <li> It displays a preview of number of files and total number of bytes. </li>
-                <li> It downloads files into the same folder hierarchy as seen in dataset home
-                     page file listing.</li>
-                <li> It automatically checks that files downloaded with out error or corruption. </li>
-                <li> Restarting the script will resume file downloads after an interruption. </li>
+                <li>
+                    It displays a preview of number of files and total number of
+                    bytes.
+                </li>
+                <li>
+                    It downloads files into the same folder hierarchy as seen in
+                    dataset home page file listing.
+                </li>
+                <li>
+                    It automatically checks that files downloaded with out error
+                    or corruption.
+                </li>
+                <li>
+                    Restarting the script will resume file downloads after an
+                    interruption.
+                </li>
             </ul>
             <p>
-                To see a preview of what you will be downloading from your dataset, type:
+                To see a preview of what you will be downloading from your
+                dataset, type:
             </p>
 
-            <div style="margin: 1em 0em;" id="cite">
+            <div style="margin: 1em 0em" id="cite">
                 <span
-                    style="margin-left: 35px;" 
-                    [ngClass]="{'highlight': previewCopied}" 
-                    [@enterAnimation]>
-                    <code style="color: black;">{{previewCommand}}</code>
+                    style="margin-left: 35px"
+                    [ngClass]="{ highlight: previewCopied }"
+                    [@enterAnimation]
+                >
+                    <code style="color: black">{{ previewCommand }}</code>
                 </span>
-                <span 
-                    id="copy-to-clipboard" 
-                    (click)="copyToClipboard(previewCommand, 'preview')" 
-                    data-toggle="tooltip" 
-                    title="Copy to clipboard">
+                <span
+                    id="copy-to-clipboard"
+                    (click)="copyToClipboard(previewCommand, 'preview')"
+                    matTooltipPosition="above"
+                    matTooltip="Copy to clipboard"
+                >
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
-                    <fa-icon 
-                        [icon]="faCopy" 
-                        size="sm" 
-                        class="clone-icon">
+                    <fa-icon [icon]="faCopy" size="sm" class="clone-icon">
                     </fa-icon>
                 </span>
-                <span 
+                <span
                     [@enterAnimation]
-                    *ngIf="previewCopied" 
+                    *ngIf="previewCopied"
                     class="badge"
-                    style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+                    style="
+                        background-color: #f0f0f0;
+                        margin-left: 0.5em;
+                        color: black;
+                    "
+                >
                     Command copied to clipboard.
                 </span>
             </div>
 
             <p>
-                This will construct and save locally a list of the files in the dataset with the identifier,
-                <code>{{ ediid }}</code>, and it will display the total number of files and the total number of bytes 
-                available as part of this dataset.  
+                This will construct and save locally a list of the files in the
+                dataset with the identifier,
+                <code>{{ ediid }}</code
+                >, and it will display the total number of files and the total
+                number of bytes available as part of this dataset.
             </p>
-            <p>
-                To start the download, type:
-            </p>
+            <p>To start the download, type:</p>
 
-            <div style="margin: 1em 0em;" id="cite">
+            <div style="margin: 1em 0em" id="cite">
                 <span
-                    style="margin-left: 35px;" 
-                    [ngClass]="{'highlight': startDownloadCopied}" 
-                    [@enterAnimation]>
-                    <code style="color: black;">{{startDownloadCommand}}</code>
+                    style="margin-left: 35px"
+                    [ngClass]="{ highlight: startDownloadCopied }"
+                    [@enterAnimation]
+                >
+                    <code style="color: black">{{ startDownloadCommand }}</code>
                 </span>
-                <span 
-                    id="copy-to-clipboard" 
-                    (click)="copyToClipboard(startDownloadCommand, 'startDownload')" 
-                    data-toggle="tooltip" 
-                    title="Copy to clipboard">
+                <span
+                    id="copy-to-clipboard"
+                    (click)="
+                        copyToClipboard(startDownloadCommand, 'startDownload')
+                    "
+                    matTooltipPosition="above"
+                    matTooltip="Copy to clipboard"
+                >
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
-                    <fa-icon 
-                        [icon]="faCopy" 
-                        size="sm" 
-                        class="clone-icon">
+                    <fa-icon [icon]="faCopy" size="sm" class="clone-icon">
                     </fa-icon>
                 </span>
-                <span 
+                <span
                     [@enterAnimation]
-                    *ngIf="startDownloadCopied" 
+                    *ngIf="startDownloadCopied"
                     class="badge"
-                    style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+                    style="
+                        background-color: #f0f0f0;
+                        margin-left: 0.5em;
+                        color: black;
+                    "
+                >
                     Command copied to clipboard.
                 </span>
             </div>
 
             <p>
-                The script has other useful features like downloading subsets, more verbose output, and others.  To
-                see the full list of options available, type:
+                The script has other useful features like downloading subsets,
+                more verbose output, and others. To see the full list of options
+                available, type:
             </p>
 
-            <div style="margin: 1em 0em;" id="cite">
+            <div style="margin: 1em 0em" id="cite">
                 <span
-                    style="margin-left: 35px;" 
-                    [ngClass]="{'highlight': helpCopied}" 
-                    [@enterAnimation]>
-                    <code style="color: black;">{{helpCommand}}</code>
+                    style="margin-left: 35px"
+                    [ngClass]="{ highlight: helpCopied }"
+                    [@enterAnimation]
+                >
+                    <code style="color: black">{{ helpCommand }}</code>
                 </span>
-                <span 
-                    id="copy-to-clipboard" 
-                    (click)="copyToClipboard(helpCommand, 'help')" 
-                    data-toggle="tooltip" 
-                    title="Copy to clipboard">
+                <span
+                    id="copy-to-clipboard"
+                    (click)="copyToClipboard(helpCommand, 'help')"
+                    matTooltipPosition="above"
+                    matTooltip="Copy to clipboard"
+                >
                     <!-- <i class="faa faa-clone" style="color: rgb(1, 90, 255);cursor: pointer;"></i> -->
 
-                    <fa-icon 
-                        [icon]="faCopy" 
-                        size="sm" 
-                        class="clone-icon">
+                    <fa-icon [icon]="faCopy" size="sm" class="clone-icon">
                     </fa-icon>
                 </span>
-                <span 
+                <span
                     [@enterAnimation]
-                    *ngIf="helpCopied" 
+                    *ngIf="helpCopied"
                     class="badge"
-                    style="background-color:#f0f0f0; margin-left: 0.5em; color: black;">
+                    style="
+                        background-color: #f0f0f0;
+                        margin-left: 0.5em;
+                        color: black;
+                    "
+                >
                     Command copied to clipboard.
                 </span>
             </div>
 
             <p></p>
-                <a name="download-api" #downloadAPI></a>
-                <p class="smlabelStyle">Programmatic access to NIST data products</p>
+            <a name="download-api" #downloadAPI></a>
+            <p class="smlabelStyle">
+                Programmatic access to NIST data products
+            </p>
             <p>
-                The NIST Public Data Repository API interface allows users to create their own scripts for downloading 
-                files in bulk.  In particular, one can download
-                <a href="{{pdrbase}}od/id/{{ediid}}?format=nerdm">a JSON-encoded metadata description of a dataset</a> 
-                which provides the URLs for downloadable files along with other useful information for tracking the data.
+                The NIST Public Data Repository API interface allows users to
+                create their own scripts for downloading files in bulk. In
+                particular, one can download
+                <a href="{{ pdrbase }}od/id/{{ ediid }}?format=nerdm"
+                    >a JSON-encoded metadata description of a dataset</a
+                >
+                which provides the URLs for downloadable files along with other
+                useful information for tracking the data.
             </p>
         </div>
     </div>

@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { NerdmRes, NerdmComp, NERDResource } from '../../../nerdm/nerdm';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
@@ -17,7 +16,7 @@ import {
 @Component({
     selector: 'accesspage-pub',
     standalone: true,
-    imports: [ CommonModule, CollapseModule, NgbModule, FontAwesomeModule ],
+    imports: [ CommonModule, CollapseModule, FontAwesomeModule ],
     templateUrl: './accesspage-pub.component.html',
     styleUrls: ['../../landing.component.scss', './accesspage-pub.component.css'],
     animations: [

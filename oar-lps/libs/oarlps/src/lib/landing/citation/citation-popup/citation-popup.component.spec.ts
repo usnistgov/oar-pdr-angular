@@ -7,7 +7,6 @@ import { CitationPopupComponent } from './citation-popup.component';
 import { MatDialogRef } from '@angular/material/dialog';
 import { GlobalService } from '../../../shared/globals/globals';
 import { ElementRef, ChangeDetectorRef } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
@@ -24,7 +23,6 @@ describe('CitationPopupComponent', () => {
                 FontAwesomeTestingModule,
                 NoopAnimationsModule],
             providers: [
-                NgbActiveModal,
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 CollectionService,

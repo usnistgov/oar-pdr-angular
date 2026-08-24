@@ -11,7 +11,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { NerdmRes } from '../nerdm/nerdm';
 import { GoogleAnalyticsService } from '../shared/ga-service/google-analytics.service';
 import { HttpEventType } from '@angular/common/http';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NERDmResourceService } from '../nerdm/nerdm.service';
@@ -41,7 +40,6 @@ const DESKTOP_LABEL_LIMIT = 50;
     selector: "app-metrics",
     standalone: true,
     imports: [
-        NgbModule,
         CommonModule,
         FormsModule,
         HorizontalBarchartComponent,

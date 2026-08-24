@@ -7,7 +7,7 @@ import { Themes, AppSettings, SectionHelp, SectionPrefs, Sections, MODE } from '
 import { LandingpageService, HelpTopic } from '../landingpage.service';
 import { Collections, GlobalService } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { TitleComponent } from '../title/title.component';
 import { IspartofComponent } from '../ispartof/ispartof.component';
 import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
@@ -27,7 +27,7 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
  * a component that lays out the "identity" section of a landing page
  */
 @Component({
-    selector:      'pdr-resource-id',
+    selector: "pdr-resource-id",
     standalone: true,
     imports: [
         CommonModule,
@@ -43,16 +43,16 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
         FacilitatorsMidasComponent,
         AuthorPubComponent,
         AuthorMidasComponent,
-        NgbModule,
-        FontAwesomeModule
+        MatTooltipModule,
+        FontAwesomeModule,
     ],
-    templateUrl:   './resourceidentity.component.html',
-    styleUrls:   [
-        './resourceidentity.component.css', '../landing.component.scss'
-    ]
+    templateUrl: "./resourceidentity.component.html",
+    styleUrls: [
+        "./resourceidentity.component.css",
+        "../landing.component.scss",
+    ],
 })
 export class ResourceIdentityComponent implements OnChanges {
-
     recordType: string = "";
     doiUrl: string = null;
     doiLabel: string = "";
@@ -87,12 +87,13 @@ export class ResourceIdentityComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(public editstatsvc: EditStatusService,
-                public globalService: GlobalService,
-                public gaService: GoogleAnalyticsService,
-                public iconLibrary: FaIconLibrary,
-                public lpService: LandingpageService)
-    { 
+    constructor(
+        public editstatsvc: EditStatusService,
+        public globalService: GlobalService,
+        public gaService: GoogleAnalyticsService,
+        public iconLibrary: FaIconLibrary,
+        public lpService: LandingpageService,
+    ) {
         // iconLibrary.addIcons(
         //     faCircleInfo
         // );
@@ -101,14 +102,14 @@ export class ResourceIdentityComponent implements OnChanges {
             this.collection = collection;
         });
 
-        this.globalService.watchLpsLeftWidth(width => {
+        this.globalService.watchLpsLeftWidth((width) => {
             this.onResize(width + 20);
-        })
+        });
 
         effect(() => {
             this.isEditMode = this.editstatsvc.isEditMode();
             // this.chref.detectChanges();
-        })
+        });
     }
 
     ngOnInit(): void {
@@ -135,7 +136,10 @@ export class ResourceIdentityComponent implements OnChanges {
      * Decide if currently in view only mode
      */
     get inViewMode() {
-        return this.editMode == this.EDIT_MODES.VIEWONLY_MODE || this.editMode == this.EDIT_MODES.PREVIEW_MODE;
+        return (
+            this.editMode == this.EDIT_MODES.VIEWONLY_MODE ||
+            this.editMode == this.EDIT_MODES.PREVIEW_MODE
+        );
     }
 
     get isDefaultCollection() {
@@ -143,8 +147,7 @@ export class ResourceIdentityComponent implements OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (this.recordLoaded())
-            this.useMetadata();  // initialize internal component data based on metadata
+        if (this.recordLoaded()) this.useMetadata(); // initialize internal component data based on metadata
     }
 
     recordLoaded() {
@@ -152,31 +155,36 @@ export class ResourceIdentityComponent implements OnChanges {
     }
 
     /**
-     * initial this component's internal data used to drive the display based on the 
+     * initial this component's internal data used to drive the display based on the
      * input resource metadata
      */
     useMetadata(): void {
-        this.showHomePageLink = this.isExternalHomePage(this.record['landingPage']);
+        this.showHomePageLink = this.isExternalHomePage(
+            this.record["landingPage"],
+        );
 
-        this.recordType = (new NERDResource(this.record)).resourceLabel();
+        this.recordType = new NERDResource(this.record).resourceLabel();
 
-        if (this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
-            this.record['isPartOf'].length > 0 && this.record['isPartOf'][0]['@id'])
-        {
+        if (
+            this.record["isPartOf"] &&
+            Array.isArray(this.record["isPartOf"]) &&
+            this.record["isPartOf"].length > 0 &&
+            this.record["isPartOf"][0]["@id"]
+        ) {
             // this resource is part of a collection; format a label indicating that
-            let coll = this.record['isPartOf'][0];
-            
+            let coll = this.record["isPartOf"][0];
+
             let article = "";
             let title = "another collection";
             let suffix = "";
-            if (coll['title']) {
+            if (coll["title"]) {
                 article = "the";
-                title = coll['title']
+                title = coll["title"];
                 suffix = "Collection";
                 if (NERDResource.objectMatchesTypes(coll, "ScienceTheme"))
                     suffix = "Science Theme";
             }
-           
+
             // this.isPartOf = [
             //     article,
             //     this.cfg.get("links.pdrIDResolver") + coll['@id'],
@@ -185,34 +193,33 @@ export class ResourceIdentityComponent implements OnChanges {
             // ];
         }
 
-        if (this.record['doi'] !== undefined && this.record['doi'] !== ""){
-            this.doiUrl = "https://doi.org/" + this.record['doi'].substring(4);
+        if (this.record["doi"] !== undefined && this.record["doi"] !== "") {
+            this.doiUrl = "https://doi.org/" + this.record["doi"].substring(4);
             this.doiLabel = this.doiUrl;
-        }else if(this.record['landingPage']){
-            this.doiUrl = this.record['landingPage'];
-            this.doiLabel = this.record['@id'];
-        }
-        else{
+        } else if (this.record["landingPage"]) {
+            this.doiUrl = this.record["landingPage"];
+            this.doiLabel = this.record["@id"];
+        } else {
             this.doiUrl = this.landingPageURL + this.record["@id"];
             this.doiLabel = this.record["@id"];
         }
 
-        this.primaryRefs = (new NERDResource(this.record)).getPrimaryReferences();
+        this.primaryRefs = new NERDResource(this.record).getPrimaryReferences();
         for (let ref of this.primaryRefs) {
-            if (! ref['label'])
-                ref['label'] = ref['title'] || ref['citation'] || ref['location']
+            if (!ref["label"])
+                ref["label"] =
+                    ref["title"] || ref["citation"] || ref["location"];
         }
-    }    
+    }
 
     /**
      * return true if the given URL does not appear to be a PDR-generated home page URL.
-     * Note that if the input URL is not a string, false is returned.  
+     * Note that if the input URL is not a string, false is returned.
      */
-    public isExternalHomePage(url : string) : boolean {
-        if (! url)
-            return false;
-        let pdrhomeurl = /^https?:\/\/(\w+)(\.\w+)*\/od\/id\//
-        return ((url.match(pdrhomeurl)) ? false : true);
+    public isExternalHomePage(url: string): boolean {
+        if (!url) return false;
+        let pdrhomeurl = /^https?:\/\/(\w+)(\.\w+)*\/od\/id\//;
+        return url.match(pdrhomeurl) ? false : true;
     }
 
     /**
@@ -222,35 +229,32 @@ export class ResourceIdentityComponent implements OnChanges {
      * @param title - action title
      */
     googleAnalytics(url: string, event, title) {
-        this.gaService.gaTrackEvent('outbound', event, title, url);
+        this.gaService.gaTrackEvent("outbound", event, title, url);
     }
 
     visitHomePageBtnStyle() {
-        if(this.theme == this.scienceTheme) {
+        if (this.theme == this.scienceTheme) {
             return "var(--science-theme-background-default)";
-        }else{
-            return "var(--nist-green-default)"
+        } else {
+            return "var(--nist-green-default)";
         }
-
     }
-
 
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText() {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
-        sectionHelp.topic = HelpTopic[MODE.EDIT];   //Use edit mode in order to display help text
+        sectionHelp.topic = HelpTopic[MODE.EDIT]; //Use edit mode in order to display help text
 
         this.lpService.setSectionHelp(sectionHelp);
     }
-    
+
     /*
      * uncomment this as needed for debugging purposes
      *
     @ViewChild(VersionComponent)
     versionCmp : VersionComponent;
      */
-
 }

@@ -11,7 +11,8 @@
                     src="./assets/images/reorder.png"
                     class="dragdropicon"
                     [style.opacity]="iconOpacity()"
-                    ngbTooltip="Drag and re-position this item"
+                    matTooltip="Drag and re-position this item"
+                    matTooltipPosition="above"
                     alt="Drag and re-position this item"
                 />
             </td>
@@ -138,7 +139,6 @@
                     size="sm"
                     (click)="removeUndo()"
                     [style.opacity]="iconOpacity()"
-                    data-toggle="tooltip"
                     [aria-label]="getTooltip('delete')"
                     [matTooltip]="getTooltip('delete')"
                     matTooltipPosition="above"

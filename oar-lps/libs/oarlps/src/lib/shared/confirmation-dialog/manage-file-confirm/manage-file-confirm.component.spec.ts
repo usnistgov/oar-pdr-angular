@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ManageFileConfirmComponent } from './manage-file-confirm.component';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogRef } from '@angular/material/dialog';
 
 describe('ManageFileConfirmComponent', () => {
   let component: ManageFileConfirmComponent;
@@ -10,7 +10,9 @@ describe('ManageFileConfirmComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
         imports: [ManageFileConfirmComponent],
-        providers: [NgbActiveModal]
+        providers: [
+          { provide: MatDialogRef, useValue: {} }
+        ]
     })
     .compileComponents();
 

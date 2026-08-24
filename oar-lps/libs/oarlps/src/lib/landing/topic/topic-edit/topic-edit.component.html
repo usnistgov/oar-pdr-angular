@@ -82,6 +82,7 @@
                         mat-icon-button
                         (click)="showAllTopics()"
                         matTooltip="Reset"
+                        matTooltipPosition="above"
                         aria-label="Reset"
                     >
                         <mat-icon>restart_alt</mat-icon>
@@ -200,6 +201,7 @@
                                         class="align-super text-[#1471AE] cursor-pointer"
                                         (dblclick)="updateTopics(node)"
                                         matTooltip="Double-click to select."
+                                        matTooltipPosition="above"
                                         [ngStyle]="{ color: rowColor(node) }"
                                     >
                                         {{ node.data.name }}
@@ -251,7 +253,8 @@
                 (click)="onSave()"
                 aria-label="edit button"
                 [disabled]="!dataChanged"
-                ngbTooltip="Save changes"
+                matTooltip="Save changes"
+                matTooltipPosition="above"
             >
                 <fa-icon [icon]="faSave"></fa-icon>
             </button>
@@ -263,7 +266,8 @@
                 type="button"
                 (click)="undoCurrentChanges()"
                 aria-label="Undo button"
-                ngbTooltip="Undo current changes"
+                matTooltip="Undo current changes"
+                matTooltipPosition="above"
             >
                 <fa-icon [icon]="faUndo"></fa-icon>
             </button>

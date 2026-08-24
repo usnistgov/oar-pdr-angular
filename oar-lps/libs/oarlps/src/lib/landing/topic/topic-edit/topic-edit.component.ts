@@ -22,7 +22,6 @@ import { TaxonomyListService } from "../../../shared/taxonomy-list";
 import { UserMessageService } from "../../../frame/usermessage.service";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { CollectionService } from "../../../shared/collection-service/collection.service";
 import {
     FontAwesomeModule,
@@ -53,7 +52,6 @@ export const ROW_COLOR = "#1E6BA1";
     imports: [
         CommonModule,
         FormsModule,
-        NgbModule,
         FontAwesomeModule,
         MatCheckboxModule,
         MatButtonModule,

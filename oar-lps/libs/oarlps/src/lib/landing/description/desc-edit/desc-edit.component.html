@@ -25,32 +25,65 @@
 <!-- Control buttons -->
 <div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap;">
     <!-- Edit button -->
-    <button *ngIf="!isEditing" class="edit_button" type="button" (click)="startEditing()" 
-        aria-label="edit button" matTooltip="Edit description">
+    <button 
+        *ngIf="!isEditing" 
+        class="edit_button" 
+        type="button" 
+        (click)="startEditing()" 
+        aria-label="edit button" 
+        matTooltip="Edit description"
+        matTooltipPosition="above">
         <fa-icon [icon]="faPencil" size="sm"></fa-icon>
     </button>
 
     <!-- Hide button - hide edit block -->
-    <button class="edit_button" *ngIf="isEditing && !dataChanged" type="button" 
-        (click)="setMode()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+    <button 
+        class="edit_button" 
+        *ngIf="isEditing && !dataChanged" 
+        type="button" 
+        (click)="setMode()" 
+        aria-label="Hide edit block" 
+        matTooltip="Hide edit block"
+        matTooltipPosition="above">
+
         <fa-icon [icon]="faXmark"></fa-icon>
     </button> 
 
     <!-- Save button -->
-    <button class="edit_button" type="button" (click)="onSave()" *ngIf="isEditing && dataChanged"
-    aria-label="save button" matTooltip="Save description">
+    <button 
+        class="edit_button" 
+        type="button" 
+        (click)="onSave()" 
+        *ngIf="isEditing && dataChanged"
+        aria-label="save button" 
+        matTooltip="Save description"
+        matTooltipPosition="above">
+
         <fa-icon [icon]="faSave"></fa-icon>
     </button>
 
     <!-- Cancel editing button -->
-    <button class="edit_button" type="button" *ngIf="isEditing && dataChanged"
-    (click)="cancelEditing()" aria-label="undo button" matTooltip="Cancel edit">
+    <button 
+        class="edit_button" 
+        type="button" 
+        *ngIf="isEditing && dataChanged"
+        (click)="cancelEditing()" 
+        aria-label="undo button" 
+        matTooltip="Cancel edit"
+        matTooltipPosition="above">
+
         <fa-icon [icon]="faXmark" ></fa-icon>
     </button>
 
     <!-- Undo button: restore original value -->
-    <button class="edit_button" type="button" *ngIf="!isEditing && updated"
-        (click)="undoEditing()" aria-label="undo button" matTooltip="Restore original description">
+    <button 
+        class="edit_button" 
+        type="button" 
+        *ngIf="!isEditing && updated"
+        (click)="undoEditing()" 
+        aria-label="undo button" 
+        matTooltip="Restore original description"
+        matTooltipPosition="above">
         <fa-icon [icon]="faUndo"></fa-icon>
     </button>                
 </div>

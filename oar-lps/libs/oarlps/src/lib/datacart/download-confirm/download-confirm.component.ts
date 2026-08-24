@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, EventEmitter, Output, ElementRef, ViewChild, Inject, inject } from '@angular/core';
-// import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { ZipData } from '../../shared/download-service/zipData';
 import { formatBytes } from '../../utils';
 import { AppConfig } from '../../config/config';

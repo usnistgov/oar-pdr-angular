@@ -493,3 +493,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     padding-top: 4px !important;
     padding-bottom: 4px !important;
 }
+
+.mat-mdc-progress-bar {
+    display: block !important;
+    width: 100% !important;
+    height: 20px !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+
+    --mdc-linear-progress-track-height: 20px;
+    --mdc-linear-progress-active-indicator-height: 20px;
+
+    --mdc-linear-progress-track-color: #d9d9d9;
+    --mdc-linear-progress-active-indicator-color: #2196f3;
+}
+
+.mat-mdc-progress-bar .mdc-linear-progress__bar-inner {
+    border-top-width: 20px !important;
+}

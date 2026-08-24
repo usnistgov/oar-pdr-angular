@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
@@ -12,7 +11,6 @@ describe('ConfirmationDialogComponent', () => {
     TestBed.configureTestingModule({
       imports: [ ConfirmationDialogComponent, FontAwesomeTestingModule ],
       providers: [
-        NgbActiveModal,
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} }
       ]

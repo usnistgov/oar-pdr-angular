@@ -1,20 +1,47 @@
 <!-- Edit Control button bar -->
-<div class="control-wrapper science-theme-background" *ngIf="_editMode != EDIT_MODES.VIEWONLY_MODE" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')'}">
-
+<div
+    class="control-wrapper science-theme-background"
+    *ngIf="_editMode != EDIT_MODES.VIEWONLY_MODE"
+    [ngStyle]="{ 'background-image': 'url(' + imageURL + ')' }"
+>
     <div class="current-mode">
-        <div *ngIf="screenWidth > screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE">
-            <span *ngIf="message" style="margin-left: 1em;margin-right: 1em;font-size:12px">{{message}}</span>
+        <div
+            *ngIf="
+                screenWidth > screenSizeBreakPoint &&
+                _editMode != EDIT_MODES.DONE_MODE
+            "
+        >
             <span
                 *ngIf="message"
-                style="border: 1px solid white; color: white;cursor: pointer;"
-                (click)="message=''">
+                style="margin-left: 1em; margin-right: 1em; font-size: 12px"
+                >{{ message }}</span
+            >
+            <span
+                *ngIf="message"
+                style="border: 1px solid white; color: white; cursor: pointer"
+                (click)="message = ''"
+            >
                 <!-- <i class="fas fa-times"></i> -->
                 <fa-icon [icon]="faTimes"></fa-icon>
             </span>
-            {{currentMode}}
-            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" class="splitter1"> | </span>
-            <span *ngIf="mdupdsvc.recStatus.state == 'submitted' || mdupdsvc.recStatus.state == 'published'" id="submitted">
-                {{mdupdsvc.recStatus.state}}
+            {{ currentMode }}
+            <span
+                *ngIf="
+                    mdupdsvc.recStatus.state == 'submitted' ||
+                    mdupdsvc.recStatus.state == 'published'
+                "
+                class="splitter1"
+            >
+                |
+            </span>
+            <span
+                *ngIf="
+                    mdupdsvc.recStatus.state == 'submitted' ||
+                    mdupdsvc.recStatus.state == 'published'
+                "
+                id="submitted"
+            >
+                {{ mdupdsvc.recStatus.state }}
                 <!-- <i class="fas fa-info-circle" id="ec-info-btn-sm" (click)="toogleMessage()" data-toggle="tooltip"
                     title="Show message"></i> -->
 
@@ -22,14 +49,27 @@
                     id="ec-info-btn-sm"
                     [icon]="faCircleInfo"
                     (click)="toogleMessage()"
-                    data-toggle="tooltip"
-                    title="Show message">
+                    matTooltipPosition="above"
+                    matTooltip="Show message"
+                >
                 </fa-icon>
-
             </span>
         </div>
 
-        <div *ngIf="screenWidth <= screenSizeBreakPoint && _editMode != EDIT_MODES.DONE_MODE" style="color: white; float: left; margin: 0.5em .5em 0em 1em; font-size: 15px;" [ngbTooltip]="editModeTooltip">
+        <div
+            *ngIf="
+                screenWidth <= screenSizeBreakPoint &&
+                _editMode != EDIT_MODES.DONE_MODE
+            "
+            style="
+                color: white;
+                float: left;
+                margin: 0.5em 0.5em 0em 1em;
+                font-size: 15px;
+            "
+            [matTooltip]="editModeTooltip"
+            matTooltipPosition="above"
+        >
             <!-- <span class="fa-stack" style="margin-right:-1em;color: white;">
                 <i class="far fa-circle fa-stack-2x"></i>
                 <i class="fas fa-stack-1x fa-xs" [ngClass]="editModeIconClass"></i>
@@ -38,10 +78,17 @@
             <span
                 class="fa-stack"
                 size="2x"
-                style="margin-right:-1em;color: white;">
-
-                <fa-icon [icon]="faCircle" class="fa-stack-2x" style="scale: 0.8;"></fa-icon>
-                <fa-icon [icon]="faDownload" class="fa-stack-1x small"></fa-icon>
+                style="margin-right: -1em; color: white"
+            >
+                <fa-icon
+                    [icon]="faCircle"
+                    class="fa-stack-2x"
+                    style="scale: 0.8"
+                ></fa-icon>
+                <fa-icon
+                    [icon]="faDownload"
+                    class="fa-stack-1x small"
+                ></fa-icon>
             </span>
         </div>
     </div>
@@ -68,24 +115,23 @@
             id="ec-info-btn"
             [icon]="faCircleInfo"
             (click)="showEditControlHelpPopup($event)"
-            data-toggle="tooltip"
-            title="Show edit control help">
+            matTooltipPosition="above"
+            matTooltip="Show edit control help"
+        >
         </fa-icon>
-
-
 
         <!-- Submit for review button -->
         <button
             mat-raised-button
             *ngIf="screenWidth > screenSizeBreakPoint && !mobileMode"
             matTooltip="Submit for Review"
+            matTooltipPosition="above"
             class="btn btn-labeled"
             id="ec-review-btn"
             (click)="submitReview()"
             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
             label="Submit for Review"
         >
-
             <fa-icon [icon]="faCircleArrowUp"></fa-icon> Submit for Review
         </button>
 
@@ -95,15 +141,15 @@
 
         <button
             mat-raised-button
-             *ngIf="screenWidth <= screenSizeBreakPoint && !mobileMode"
-             matTooltip="Submit for Review"
-             class="btn btn-labeled"
-             id="ec-review-btn-sm"
-             (click)="openDialog_mat()"
-             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
-             label="Submit"
-         >
-
+            *ngIf="screenWidth <= screenSizeBreakPoint && !mobileMode"
+            matTooltip="Submit for Review"
+            matTooltipPosition="above"
+            class="btn btn-labeled"
+            id="ec-review-btn-sm"
+            (click)="openDialog_mat()"
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+            label="Submit"
+        >
             <fa-icon [icon]="faCircleArrowUp"></fa-icon>
             Submit
         </button>
@@ -112,11 +158,12 @@
             type="button"
             *ngIf="mobileMode"
             matTooltip="Submit for Review"
+            matTooltipPosition="above"
             class="btn btn-labeled"
             id="ec-review-btn-mo"
             (click)="openDialog()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
-
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+        >
             <fa-icon [icon]="faCircleArrowUp"></fa-icon>
         </button>
 
@@ -125,11 +172,12 @@
             *ngIf="!mobileMode"
             mat-raised-button
             matTooltip="Discard"
+            matTooltipPosition="above"
             class="btn btn-labeled"
             id="ec-discard-btn"
             (click)="confirmDiscardEdits()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
-
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+        >
             <fa-icon [icon]="faTrashCan"></fa-icon>
             Discard
         </button>
@@ -138,11 +186,12 @@
             *ngIf="mobileMode"
             type="button"
             matTooltip="Discard"
+            matTooltipPosition="above"
             class="btn btn-labeled"
             id="ec-discard-btn-sm"
             (click)="confirmDiscardEdits()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
-
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+        >
             <fa-icon [icon]="faTrashCan"></fa-icon>
         </button>
 
@@ -156,27 +205,29 @@
         <button
             mat-raised-button
             matTooltip="Edit"
+            matTooltipPosition="above"
             *ngIf="!mobileMode && isPreviewMode"
             type="button"
             class="btn btn-labeled ec-edit-btn"
             (click)="onEdit()"
             id="ec-edit-btn"
-            [disabled]="!editEnable">
-
+            [disabled]="!editEnable"
+        >
             <fa-icon [icon]="faPencil"></fa-icon>
-            {{editBtnLabel}}
+            {{ editBtnLabel }}
         </button>
 
         <button
             type="button"
             matTooltip="Edit"
+            matTooltipPosition="above"
             *ngIf="mobileMode && isPreviewMode"
             type="button"
             class="btn btn-labeled ec-edit-btn"
             (click)="onEdit()"
             id="ec-edit-btn-sm"
-            [disabled]="!editEnable">
-
+            [disabled]="!editEnable"
+        >
             <fa-icon [icon]="faPencil"></fa-icon>
         </button>
 
@@ -188,9 +239,11 @@
             class="btn mat-btn btn-labeled"
             id="ec-preview-btn"
             matTooltip="Preview"
+            matTooltipPosition="above"
             [ngClass]="buttonSize"
             (click)="preview()"
-            [disabled]="!readyEdit">
+            [disabled]="!readyEdit"
+        >
             <mat-icon>visibility</mat-icon>
             Preview
         </button>
@@ -204,7 +257,9 @@
             (click)="preview()"
             [disabled]="!readyEdit"
             aria-label="Preview"
-            matTooltip="Preview">
+            matTooltip="Preview"
+            matTooltipPosition="above"
+        >
             <mat-icon class="btn-icon">visibility</mat-icon>
         </button>
         <!-- <button
@@ -240,11 +295,13 @@
             class="btn mat-btn btn-labeled"
             id="ec-files-btn"
             [matTooltip]="fileManagerTooltip"
+            matTooltipPosition="above"
             [ngClass]="beanSize"
             (click)="openFileManager()"
-            [disabled]="!readyEdit">
+            [disabled]="!readyEdit"
+        >
             <mat-icon>open_in_new</mat-icon>
-            {{fileManagerBtnLabel}}
+            {{ fileManagerBtnLabel }}
         </button>
 
         <button
@@ -256,18 +313,21 @@
             (click)="openFileManager()"
             [disabled]="!readyEdit"
             aria-label="Open external site"
-            matTooltip="Open in a new tab">
+            matTooltip="Open in a new tab"
+            matTooltipPosition="above"
+        >
             <mat-icon class="btn-icon">open_in_new</mat-icon>
         </button>
     </div>
 </div>
 
 <!-- status message bar -->
- <div id="statusbar">
-    <pdr-edit-status [(mdrec)]="mdrec" [forceDisplay]="forceDisplay"></pdr-edit-status>
- </div>
-
-
+<div id="statusbar">
+    <pdr-edit-status
+        [(mdrec)]="mdrec"
+        [forceDisplay]="forceDisplay"
+    ></pdr-edit-status>
+</div>
 
 <!-- error messages go here -->
 <!-- <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message> -->

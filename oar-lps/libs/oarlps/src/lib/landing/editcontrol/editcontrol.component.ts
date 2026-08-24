@@ -862,22 +862,6 @@ export class EditControlComponent implements OnInit, OnChanges {
      * if revidion type is "Metadata Update". If so, display a pop up warning window.
      */
     openFileManager() {
-        // if (this.isRevision && this.revisionType == "Metadata Update") {
-        //     let message = "Current revision type is 'Metadata Update'. Would you like to change it to 'Major Data Change' and proceed?";
-
-        //     this.confirmDialogSvc.confirmManageFiles(
-        //         'Please confirm',
-        //         message, 'sm')
-        //         .then((confirmed) => {
-        //             if (confirmed) {
-        //                 this.revisionType = this.arrRevisionTypes[1].type;
-        //                 window.open(this.fileManagerUrl);
-        //             }
-        //         })
-        //         .catch(() => {
-        //             console.log("User canceled request (indirectly)");
-        //         });
-        // }
             window.open(this.fileManagerUrl);
       
     }

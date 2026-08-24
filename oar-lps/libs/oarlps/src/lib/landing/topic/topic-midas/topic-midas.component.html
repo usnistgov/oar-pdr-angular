@@ -11,7 +11,8 @@
             class="edit_button" 
             (click)="startEditing(data)" 
             aria-label="edit button" 
-            ngbTooltip="Edit topics">
+            matTooltip="Edit topics"
+            matTooltipPosition="above">
 
             <fa-icon [icon]="faPencil" size="sm"></fa-icon>
         </button>
@@ -24,14 +25,21 @@
             [disabled]="dataChanged" 
             (click)="setMode()" 
             aria-label="Close edit block" 
-            ngbTooltip="Close edit block">
+            matTooltip="Close edit block"
+            matTooltipPosition="above">
 
             <fa-icon [icon]="faXmark"></fa-icon>
         </button>
 
         <!-- Restore original -->
-        <button *ngIf="updated(data)" class="edit_button" type="button"
-        (click)="restoreOriginal(data)" aria-label="Restore original topics" ngbTooltip="Restore original topics">
+        <button 
+            *ngIf="updated(data)" 
+            class="edit_button" 
+            type="button"
+            (click)="restoreOriginal(data)" 
+            aria-label="Restore original topics" 
+            matTooltip="Restore original topics"
+            matTooltipPosition="above">
             <fa-icon [icon]="faUndo"></fa-icon>
         </button>     
     </ng-template>

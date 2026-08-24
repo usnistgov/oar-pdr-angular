@@ -1,5 +1,4 @@
 import { Component, Input, SimpleChanges, ChangeDetectorRef, effect, inject, ViewChild, ElementRef } from '@angular/core';
-import { NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
@@ -25,8 +24,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         FormsModule,
         TextareaAutoresizeModule,
         MatTooltipModule,
-        FontAwesomeModule,
-        NgbModule
+        FontAwesomeModule
     ],
     templateUrl: './desc-edit.component.html',
     styleUrls: ['../../landing.component.scss', './desc-edit.component.css']

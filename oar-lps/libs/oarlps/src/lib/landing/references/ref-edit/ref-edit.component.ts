@@ -6,7 +6,6 @@ import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service'
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RefAuthorComponent } from '../ref-author/ref-author.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { AppConfig } from '../../../config/config';
 import { AuthenticationService } from 'oarng';
@@ -44,7 +43,6 @@ import { MatIconModule } from '@angular/material/icon';
         MatRadioModule,
         MatIconModule,
         TextEditComponent,
-        NgbModule,
         RefAuthorComponent,
         SingleMsgBarComponent,
         FontAwesomeModule,

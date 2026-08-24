@@ -22,7 +22,6 @@ import { RecordLevelMetrics, MetricsService, MetricsData, formatBytes } from 'oa
 import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps';
 import { Themes, ThemesPrefs, Collections, CollectionService } from 'oarlps';
 import { HttpClient } from '@angular/common/http';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
@@ -60,7 +59,7 @@ import { MatButtonModule } from '@angular/material/button';
         MatButtonModule
     ],
     providers: [
-        Title, NgbActiveModal
+        Title
     ],
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss'],

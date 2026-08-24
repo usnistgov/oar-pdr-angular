@@ -2,7 +2,6 @@ import { Component, Input, effect } from '@angular/core';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../editcontrol/editstatus.service';
 import { RefMidasComponent } from '../references/ref-midas/ref-midas.component';
 import { RefPubComponent } from '../references/ref-pub/ref-pub.component';
@@ -18,8 +17,7 @@ import { RefPubComponent } from '../references/ref-pub/ref-pub.component';
         SectionTitleComponent,
         CommonModule,
         RefPubComponent,
-        RefMidasComponent,
-        NgbModule
+        RefMidasComponent
     ],
     templateUrl:   './resourcerefs.component.html',
     styleUrls:   [

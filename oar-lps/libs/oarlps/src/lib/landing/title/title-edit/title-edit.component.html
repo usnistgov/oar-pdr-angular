@@ -42,7 +42,8 @@
                             type="button"
                             (click)="startEditing()" 
                             aria-label="Edit title" 
-                            ngbTooltip="Edit title"
+                            matTooltip="Edit title"
+                            matTooltipPosition="above"
                             style="cursor: pointer">
 
                             <fa-icon [icon]="faPencil" size="sm"></fa-icon>
@@ -56,7 +57,8 @@
                                 [disabled]="!updated" 
                                 (click)="restoreOriginal()" 
                                 aria-label="Restore button" 
-                                ngbTooltip="Restore original title">
+                                matTooltip="Restore original title"
+                                matTooltipPosition="above">
 
                                 <fa-icon [icon]="faUndo"></fa-icon>
                             </button> 
@@ -68,7 +70,8 @@
                             class="edit_button" 
                             type="button" (click)="onSave()"
                             aria-label="save button" 
-                            ngbTooltip="Save changes">
+                            matTooltip="Save changes"
+                            matTooltipPosition="above">
 
                             <fa-icon 
                                 class="icon_enabled" 
@@ -82,7 +85,8 @@
                             type="button"
                             (click)="cancelEditing()" 
                             aria-label="undo button" 
-                            ngbTooltip="Cancel edit">
+                            matTooltip="Cancel edit"
+                            matTooltipPosition="above">
                             <fa-icon 
                                 [icon]="faUndo" 
                                 data-toggle="tooltip" 

@@ -1,5 +1,5 @@
 import { Component, Input, SimpleChanges, ViewChild, effect, ChangeDetectorRef, inject } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -19,40 +19,46 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'Visithome-midas',
+    selector: "Visithome-midas",
     standalone: true,
     imports: [
         CommonModule,
         FormsModule,
         VisithomeEditComponent,
         VisithomePubComponent,
-        NgbModule,
-        FontAwesomeModule
+        MatTooltipModule,
+        FontAwesomeModule,
     ],
-    templateUrl: './visithome-midas.component.html',
-    styleUrls: ['./visithome-midas.component.scss', '../../landing.component.scss'],
+    templateUrl: "./visithome-midas.component.html",
+    styleUrls: [
+        "./visithome-midas.component.scss",
+        "../../landing.component.scss",
+    ],
     animations: [
-        trigger('editExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ])
-    ]
+        trigger("editExpand", [
+            state("collapsed", style({ height: "0px", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
+            transition(
+                "expanded <=> collapsed",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+    ],
 })
 export class VisithomeMidasComponent {
     @Input() record: any[];
-    @Input() inBrowser: boolean;   // false if running server-side
+    @Input() inBrowser: boolean; // false if running server-side
     @Input() inViewMode: boolean;
     @Input() theme: string;
 
     fieldName = SectionPrefs.getFieldName(Sections.VISIT_HOME_PAGE);
     scienceTheme = Themes.SCIENCE_THEME;
-    editMode: string = MODE.NORMAL; 
+    editMode: string = MODE.NORMAL;
     visitHomeURL: string = "";
     dataChanged: boolean = false;
     originalRecord: any = {};
-    editBlockStatus: string = 'collapsed';
-    overflowStyle: string = 'hidden';
+    editBlockStatus: string = "collapsed";
+    overflowStyle: string = "hidden";
     globalsvc = inject(GlobalService);
     editStarted: boolean = false;
     isPublicSite: boolean = false;
@@ -69,15 +75,16 @@ export class VisithomeMidasComponent {
     faSave = faSave;
     faUndo = faUndo;
 
-    @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
-    
-    constructor(public mdupdsvc : MetadataUpdateService,
-                public edstatsvc: EditStatusService,        
-                public lpService: LandingpageService, 
-                private chref: ChangeDetectorRef,
-                public iconLibrary: FaIconLibrary,
-                private notificationService: NotificationService) 
-    { 
+    @ViewChild("visithomeedit") visitHomeEdit: VisithomeEditComponent;
+
+    constructor(
+        public mdupdsvc: MetadataUpdateService,
+        public edstatsvc: EditStatusService,
+        public lpService: LandingpageService,
+        private chref: ChangeDetectorRef,
+        public iconLibrary: FaIconLibrary,
+        private notificationService: NotificationService,
+    ) {
         // iconLibrary.addIcons(
         //     faPencil,
         //     faXmark,
@@ -88,7 +95,7 @@ export class VisithomeMidasComponent {
         effect(() => {
             // When edit mode changed, refresh the screen
             // Need to tell effect which signal trigger this function
-            const term = this.edstatsvc.isEditMode(); 
+            const term = this.edstatsvc.isEditMode();
             // Then refresh the screen
             this.chref.detectChanges();
         });
@@ -98,65 +105,84 @@ export class VisithomeMidasComponent {
         this.updateOriginal();
 
         this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if(sectionMode){
-                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-                        if(this.isEditing && this.dataChanged){
-                            this.saveVisitHomeURL(false); // Do not refresh help text 
+            if (sectionMode) {
+                if (
+                    sectionMode.sender !=
+                    SectionPrefs.getFieldName(Sections.SIDEBAR)
+                ) {
+                    if (
+                        sectionMode.section != this.fieldName &&
+                        sectionMode.mode != MODE.NORMAL
+                    ) {
+                        if (this.isEditing && this.dataChanged) {
+                            this.saveVisitHomeURL(false); // Do not refresh help text
                         }
-                        this.setMode(MODE.NORMAL,false);
+                        this.setMode(MODE.NORMAL, false);
                     }
-                }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                } else {
+                    if (
+                        !this.isEditing &&
+                        sectionMode.section == this.fieldName &&
+                        this.edstatsvc.isEditMode()
+                    ) {
                         this.startEditing();
                     }
                 }
             }
-        })
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes.record) {
+        if (changes.record) {
             setTimeout(() => {
                 this.updateOriginal();
             }, 0);
         }
     }
 
-    updateOriginal(){
+    updateOriginal() {
         this.visitHomeURL = "";
 
-        if(this.hasVisitHomeURL) {
-            this.visitHomeURL = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+        if (this.hasVisitHomeURL) {
+            this.visitHomeURL = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
             this.dataChanged = false;
 
-            this.originalRecord[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+            this.originalRecord[this.fieldName] = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
         }
     }
 
     /**
      * a field indicating if this data has beed edited
      */
-    get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
+    get updated() {
+        return this.mdupdsvc.fieldUpdated(this.fieldName);
+    }
 
-    get isEditing() { return this.editMode==MODE.EDIT }
+    get isEditing() {
+        return this.editMode == MODE.EDIT;
+    }
 
-    get isNormal() { return this.editMode==MODE.NORMAL }
+    get isNormal() {
+        return this.editMode == MODE.NORMAL;
+    }
 
     get hasVisitHomeURL() {
-        if(!this.record) return false;
+        if (!this.record) return false;
         else return this.isExternalHomePage(this.record[this.fieldName]);
     }
 
     /**
      * return true if the given URL does not appear to be a PDR-generated home page URL.
-     * Note that if the input URL is not a string, false is returned.  
+     * Note that if the input URL is not a string, false is returned.
      */
-    public isExternalHomePage(url : string) : boolean {
-        if (! url)
-            return false;
-        let pdrhomeurl = /^https?:\/\/(\w+)(\.\w+)*\/od\/id\//
-        return ((url.match(pdrhomeurl)) ? false : true);
+    public isExternalHomePage(url: string): boolean {
+        if (!url) return false;
+        let pdrhomeurl = /^https?:\/\/(\w+)(\.\w+)*\/od\/id\//;
+        return url.match(pdrhomeurl) ? false : true;
     }
 
     /**
@@ -164,10 +190,10 @@ export class VisithomeMidasComponent {
      * @returns icon class of the edit button
      */
     editIconClass() {
-        if(this.isEditing){
+        if (this.isEditing) {
             return "fas fa-pencil icon_disabled";
-        }else{
-            return "fas fa-pencil icon_enabled"
+        } else {
+            return "fas fa-pencil icon_enabled";
         }
     }
 
@@ -176,14 +202,14 @@ export class VisithomeMidasComponent {
      * @param dataChanged parameter passed from child component
      */
     onDataChange(dataChanged: any) {
-        switch(dataChanged.action) {
-            case 'dataChanged':
+        switch (dataChanged.action) {
+            case "dataChanged":
                 this.record[this.fieldName] = dataChanged.visitHomeURL;
                 this.visitHomeURL = dataChanged.visitHomeURL;
                 this.dataChanged = true;
                 break;
 
-            case 'dataReset':
+            case "dataReset":
                 this.record[this.fieldName] = dataChanged.visitHomeURL;
                 this.visitHomeURL = dataChanged.visitHomeURL;
                 this.dataChanged = false;
@@ -200,14 +226,14 @@ export class VisithomeMidasComponent {
      * @param cmd command from child component
      */
     onCommandChanged(cmd) {
-        switch(cmd.command) {
-            case 'saveURL':
+        switch (cmd.command) {
+            case "saveURL":
                 this.saveVisitHomeURL();
                 break;
-            case 'undoCurrentChanges':
+            case "undoCurrentChanges":
                 this.undoCurrentChanges();
                 break;
-            case 'restoreOriginal':
+            case "restoreOriginal":
                 this.restoreOriginal();
                 break;
             default:
@@ -227,11 +253,13 @@ export class VisithomeMidasComponent {
      * Unde current changes on Visit Home URL
      */
     undoCurrentChanges() {
-        if(this.originalRecord[this.fieldName] == undefined) {
+        if (this.originalRecord[this.fieldName] == undefined) {
             this.record[this.fieldName] = undefined;
             this.visitHomeURL = "";
-        }else{
-            this.record[this.fieldName] = JSON.parse(JSON.stringify(this.originalRecord[this.fieldName]));
+        } else {
+            this.record[this.fieldName] = JSON.parse(
+                JSON.stringify(this.originalRecord[this.fieldName]),
+            );
             this.visitHomeURL = this.record[this.fieldName];
         }
 
@@ -240,40 +268,46 @@ export class VisithomeMidasComponent {
     }
 
     saveVisitHomeURL(refreshHelp: boolean = true) {
-        if(!this.visitHomeURL) {
+        if (!this.visitHomeURL) {
             this.visitHomeURL = "";
         }
 
         this.record[this.fieldName] = this.visitHomeURL;
         let postMessage: any = {};
-        postMessage[this.fieldName] = this.visitHomeURL;;
+        postMessage[this.fieldName] = this.visitHomeURL;
 
-        this.mdupdsvc.update(this.fieldName, postMessage).then((updateSuccess) => {
-            if (updateSuccess){
-                this.setMode(MODE.NORMAL, refreshHelp);
-                this.chref.detectChanges();
-                this.notificationService.showSuccessWithTimeout("Visit Home URL updated.", "", 3000);
-            }else{
-                let msg = "failed to update Visit Home URL.";
-                console.error(msg);
-            }
-        });        
+        this.mdupdsvc
+            .update(this.fieldName, postMessage)
+            .then((updateSuccess) => {
+                if (updateSuccess) {
+                    this.setMode(MODE.NORMAL, refreshHelp);
+                    this.chref.detectChanges();
+                    this.notificationService.showSuccessWithTimeout(
+                        "Visit Home URL updated.",
+                        "",
+                        3000,
+                    );
+                } else {
+                    let msg = "failed to update Visit Home URL.";
+                    console.error(msg);
+                }
+            });
     }
 
     /**
-     * Retuen background color of the whole record (the container of all authors) 
+     * Retuen background color of the whole record (the container of all authors)
      * based on the dataChanged flag of the record.
      * @returns the background color of the whole record
      */
     get backgroundColor() {
-        let bkgroundColor = 'var(--editable)';
+        let bkgroundColor = "var(--editable)";
 
-        if(this.updated){
-            bkgroundColor = 'var(--data-changed-saved)';
+        if (this.updated) {
+            bkgroundColor = "var(--data-changed-saved)";
         }
-        
-        if(this.dataChanged){
-            bkgroundColor = 'var(--data-changed)';
+
+        if (this.dataChanged) {
+            bkgroundColor = "var(--data-changed)";
         }
 
         return bkgroundColor;
@@ -282,7 +316,7 @@ export class VisithomeMidasComponent {
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText() {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[this.editMode];
@@ -299,20 +333,20 @@ export class VisithomeMidasComponent {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        if(refreshHelp){
+        if (refreshHelp) {
             this.refreshHelpText();
         }
-            
-        switch ( this.editMode ) {
+
+        switch (this.editMode) {
             case MODE.EDIT:
-                this.editBlockStatus = 'expanded';
+                this.editBlockStatus = "expanded";
                 this.editStarted = true;
                 this.setOverflowStyle();
                 break;
- 
+
             default: // normal
                 // Collapse the edit block
-                this.editBlockStatus = 'collapsed';
+                this.editBlockStatus = "collapsed";
                 this.dataChanged = false;
                 this.editStarted = false;
                 this.setOverflowStyle();
@@ -320,7 +354,7 @@ export class VisithomeMidasComponent {
         }
 
         //Broadcast the current section and mode
-        //refreshHelp=false means this widget is closed by other widget, 
+        //refreshHelp=false means this widget is closed by other widget,
         //do not broadcast the section mode because other widget already did that.
         if (refreshHelp) {
             // this.globalsvc.sectionMode.set(sectionMode);
@@ -331,18 +365,18 @@ export class VisithomeMidasComponent {
     /**
      * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
      * will be cut off. But if overflow style is visible, the animation is not working.
-     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
-     * Then tooltip will not be cut off. 
-     */    
+     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish.
+     * Then tooltip will not be cut off.
+     */
     setOverflowStyle() {
-        if(this.editBlockStatus == 'collapsed') {
-            this.overflowStyle = 'hidden';
-        }else {
-            this.overflowStyle = 'hidden';
+        if (this.editBlockStatus == "collapsed") {
+            this.overflowStyle = "hidden";
+        } else {
+            this.overflowStyle = "hidden";
             setTimeout(() => {
-                this.overflowStyle = 'visible';
+                this.overflowStyle = "visible";
             }, 1000);
-        } 
+        }
     }
 
     /*
@@ -350,12 +384,16 @@ export class VisithomeMidasComponent {
      */
     restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
+            if (success) {
                 this.setMode();
                 this.chref.detectChanges();
                 this.visitHomeEdit.currentValueChanged = false;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to Visit Home URL.", "", 3000);
-            }else{
+                this.notificationService.showSuccessWithTimeout(
+                    "Reverted changes to Visit Home URL.",
+                    "",
+                    3000,
+                );
+            } else {
                 let msg = "Failed to undo Visit Home URL metadata";
                 console.error(msg);
             }
@@ -364,12 +402,12 @@ export class VisithomeMidasComponent {
 
     /**
      * Return visit homepage button style
-     * @returns 
+     * @returns
      */
     visitHomePageBtnStyle() {
-        if(this.theme == this.scienceTheme) {
+        if (this.theme == this.scienceTheme) {
             return "var(--science-theme-background-default)";
-        }else{
+        } else {
             return "var(--nist-green-default)";
         }
     }
