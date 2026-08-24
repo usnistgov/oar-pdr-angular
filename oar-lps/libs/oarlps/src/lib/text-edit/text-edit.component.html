@@ -1,8 +1,12 @@
 <div class="table-wraper">
     <table width="100%">
-        <tr style="width: 100% !important">
+        <tr style="width: 100% !important; padding-top: 10px;">
             <!-- Drag drop icon -->
-            <td *ngIf="dragDropIcon" class="dragdrop" [style.cursor]="dragDropIcon ? 'move' : 'default'">
+            <td
+                *ngIf="dragDropIcon"
+                class="dragdrop"
+                [style.cursor]="dragDropIcon ? 'move' : 'default'"
+            >
                 <img
                     src="./assets/images/reorder.png"
                     class="dragdropicon"
@@ -13,8 +17,16 @@
             </td>
 
             <!-- Text field -->
-            <td class="text-field-wrapper" [style.cursor]="dragDropIcon ? 'move' : 'default'">
-                <mat-form-field *ngIf="editing" class="editable-text-field">
+            <td
+                class="text-field-wrapper"
+                [style.cursor]="dragDropIcon ? 'move' : 'default'"
+            >
+                <mat-form-field
+                    *ngIf="editing"
+                    class="compact-field mr-1 w-full"
+                    appearance="fill"
+                    subscriptSizing="dynamic"
+                >
                     <input
                         matInput
                         type="text"
@@ -23,6 +35,7 @@
                         [placeholder]="placeHolderText"
                     />
                 </mat-form-field>
+
                 <span *ngIf="!editing" class="display-text-field">
                     <div
                         style="padding: 2px 10px"
@@ -150,7 +163,9 @@
                 <fa-icon
                     *ngIf="restoreButton"
                     class="edit_button action-icon"
-                    [class.disabled]="disableControl || !dataChanged || isNew || editing"
+                    [class.disabled]="
+                        disableControl || !dataChanged || isNew || editing
+                    "
                     [icon]="['fas', undoIcon]"
                     (click)="restore()"
                     size="sm"
@@ -159,7 +174,7 @@
                     matTooltip="Restore from original value"
                     data-container="body"
                     matTooltipPosition="above"
-                ></fa-icon>       
+                ></fa-icon>
 
                 <!-- <button
                     *ngIf="restoreButton"
@@ -207,7 +222,6 @@
                 <button
                     *ngIf="submitButton"
                     class="edit_button"
-                    mat-button
                     type="button"
                     (click)="submit()"
                     [disabled]="disableControl"
