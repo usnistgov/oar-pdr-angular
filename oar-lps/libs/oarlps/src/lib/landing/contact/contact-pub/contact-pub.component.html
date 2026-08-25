@@ -1,37 +1,49 @@
-@if(hasContact){
-    <div style="max-width:calc(100% - 4em);display: inline-block;">
-        <div style="padding-right: 0.5em;white-space: nowrap">
-            @if(isPublicSite) {
-                Contact: 
+@if (hasContact) {
+    <div class="contact-display">
+        <div class="contact-summary">
+            @if (isPublicSite) {
+                Contact:
             }
             <strong>
-                <a *ngIf="hasEmail"
-                    href="{{currentContact.hasEmail}}" target="_top">
-                    {{currentContact.fn}}</a>
-                <span *ngIf="!hasEmail" style="white-space: nowrap">{{currentContact.fn}}</span>
-            </strong>.
+                <a
+                    *ngIf="hasEmail"
+                    href="{{ currentContact.hasEmail }}"
+                    target="_top"
+                >
+                    {{ currentContact.fn }}</a
+                >
+                <span *ngIf="!hasEmail" style="white-space: nowrap">{{
+                    currentContact.fn
+                }}</span> </strong
+            >.
 
-            <fa-icon 
-                *ngIf="!clickContact" 
+            <fa-icon
+                *ngIf="!clickContact"
                 [class.amplified]="isMouseOver"
                 [icon]="faCaretRight"
                 class="amplifiable"
                 (mouseover)="isMouseOver = true"
                 (mouseleave)="isMouseOver = false"
-                (click)="closeContent = !closeContent; clickContact=expandContact();">
+                (click)="
+                    closeContent = !closeContent; clickContact = expandContact()
+                "
+            >
             </fa-icon>
 
-            <fa-icon 
-                *ngIf="clickContact" 
+            <fa-icon
+                *ngIf="clickContact"
                 [class.amplified]="isMouseOver"
-                [icon]="faCaretDown" 
+                [icon]="faCaretDown"
                 class="amplifiable"
-                (mouseover)="isMouseOver = true" 
+                (mouseover)="isMouseOver = true"
                 (mouseleave)="isMouseOver = false"
-                (click)="closeContent = !closeContent; clickContact=expandContact();">
+                (click)="
+                    closeContent = !closeContent; clickContact = expandContact()
+                "
+            >
             </fa-icon>
 
-            <mat-expansion-panel [expanded]="closeContent">
+            <!-- <mat-expansion-panel [expanded]="closeContent">
                 <div class="card card-body bg-faded" class="pt-3 w-fit">
                     <span class="" *ngIf="currentContact.fn">
                         <span>{{currentContact.fn}}</span>
@@ -56,7 +68,39 @@
                         </div>
                     }
                 </div>
-            </mat-expansion-panel>
+            </mat-expansion-panel> -->
+        </div>
+    </div>
+
+    <div *ngIf="clickContact">
+        <div class="p-3 w-fit border border-gray-200 rounded-lg bg-gray-100">
+            <span class="" *ngIf="currentContact.fn">
+                <span>{{ currentContact.fn }}</span>
+            </span>
+            @if (hasEmail) {
+                <span *ngIf="hasEmail">
+                    <br /><strong>Email:</strong>
+                    <a
+                        *ngIf="hasEmail"
+                        href="{{ currentContact.hasEmail }}"
+                        target="_top"
+                    >
+                        {{ email(currentContact.hasEmail) }}
+                    </a>
+                </span>
+            }
+
+            @if (currentContact.address) {
+                <div *ngIf="currentContact.address">
+                    <span><b>Address:</b></span>
+                    <div
+                        *ngFor="let address of currentContact.address"
+                        style="padding-left: 1em"
+                    >
+                        {{ address }}
+                    </div>
+                </div>
+            }
         </div>
     </div>
 }

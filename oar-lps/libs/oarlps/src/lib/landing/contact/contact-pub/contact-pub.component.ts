@@ -4,6 +4,13 @@ import { ContactService } from '../contact.service';
 import { Contact } from '../contact';
 import { LandingpageService } from '../../landingpage.service';
 import { CommonModule } from '@angular/common';
+import {
+    trigger,
+    state,
+    style,
+    animate,
+    transition,
+} from "@angular/animations";
 import { Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { MatExpansionModule } from "@angular/material/expansion";
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
@@ -15,19 +22,26 @@ import {
 @Component({
     selector: "contact-pub",
     standalone: true,
-    imports: [
-        CommonModule,
-        FontAwesomeModule,
-        MatExpansionModule
-    ],
+    imports: [CommonModule, FontAwesomeModule, MatExpansionModule],
     templateUrl: "./contact-pub.component.html",
     styleUrls: ["./contact-pub.component.scss", "../../landing.component.scss"],
+    animations: [
+        trigger("contactDetail", [
+            state("collapsed", style({ height: "0px", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
+            transition(
+                "expanded <=> collapsed",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+    ],
 })
 export class ContactPubComponent {
     currentContact: Contact = {} as Contact;
     fieldName = SectionPrefs.getFieldName(Sections.CONTACT);
     overflowStyle: string = "hidden";
     isMouseOver: boolean = false;
+    contactDetail: string = "collapsed";
 
     //icon class names
     // caretRightIcon = iconClass.CARET_RIGHT;

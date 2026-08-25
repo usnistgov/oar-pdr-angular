@@ -508,10 +508,16 @@ a:visited {
   vertical-align: top;
 }
 
-.editable_field {
+/* .editable_field {
   display: table-cell;
   text-align: left;
   vertical-align: top;
+} */
+
+.editable_field {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
 }
 
 .nist-card {
