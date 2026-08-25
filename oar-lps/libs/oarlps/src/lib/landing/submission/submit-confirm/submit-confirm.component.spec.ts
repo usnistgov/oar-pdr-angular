@@ -4,7 +4,6 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ElementRef, ChangeDetectorRef, NO_ERRORS_SCHEMA } from "@angular/core";
 import { GlobalService } from '../../../shared/globals/globals';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from './submit-confirm.component';
 import { MetadataUpdateService } from '../../../landing/editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -29,7 +28,6 @@ describe('SubmitConfirmComponent', () => {
             imports: [ SubmitConfirmComponent, CommonModule, NoopAnimationsModule, StaffDirModule, HttpClientTestingModule ],
             providers: [
                 UserMessageService,
-                NgbActiveModal,
                 { provide: StaffDirectoryService, useValue: { setAuthToken: () => {} } },
                 { provide: AuthenticationService, useValue: {
                     getCredentials: () => of({userId: "test", userAttributes: null, token: "fake token"})

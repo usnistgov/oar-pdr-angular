@@ -20,7 +20,7 @@
             >
                 <a
                     id="filtersLabel"
-                    class="btn-sm collapsed in"
+                    class="btn-sm collapsed in filtersLabel"
                     (click)="this.isActive = !this.isActive; setFilterWidth()"
                     data-toggle="collapse"
                     data-target="#demo"
@@ -30,12 +30,36 @@
 
                     <fa-icon
                         [icon]="['fas', getFilterImgClass()]"
+                        class="toggle-icon"
                         style="zoom: 100%; color: #fff; cursor: pointer"
                     >
                     </fa-icon>
                 </a>
 
                 <button
+                    mat-raised-button
+                    type="button"
+                    class="clearall"
+                    [ngStyle]="filterBkColor()"
+                    (click)="clearFilters()"
+                >
+                    <fa-icon [icon]="faXmark" class="clear-icon"> </fa-icon>
+
+                    Clear all
+                </button>
+
+                <!-- <fa-icon
+                    class="edit_button action-icon text-white"
+                    [icon]="faXmark"
+                    size="sm"
+                    (click)="onSave()"
+                    aria-label="save button"
+                    matTooltip="Save changes"
+                    matTooltipPosition="above"
+                >
+                </fa-icon> -->
+
+                <!-- <button
                     type="button"
                     class="p-button-sm clearall"
                     [ngStyle]="filterBkColor()"
@@ -48,7 +72,7 @@
                     >
                     </fa-icon>
                     Clear all
-                </button>
+                </button> -->
             </div>
 
             <!-- Filter body -->
@@ -142,12 +166,14 @@
                     </div>
                     <div class="filter-input p-fluid">
                         <label for="suggestedauthor" class="hidden"
-                            >Search Input</label>
+                            >Search Input</label
+                        >
 
-                        <mat-form-field 
-                            appearance="fill" 
+                        <mat-form-field
+                            appearance="fill"
                             class="author-filter w-full font-normal italic"
-                            [style.--author-background]="colorScheme.lightVar">
+                            [style.--author-background]="colorScheme.lightVar"
+                        >
                             <mat-label>Authors</mat-label>
 
                             <mat-chip-grid #authorChipGrid>
@@ -173,7 +199,7 @@
                                 [(ngModel)]="authorSearch"
                                 [matChipInputFor]="authorChipGrid"
                                 [matAutocomplete]="authorAuto"
-                                (input)="filterAuthors($event)" 
+                                (input)="filterAuthors($event)"
                                 maxlength="30"
                             />
 
@@ -207,14 +233,18 @@
                     <div class="filter-input p-fluid">
                         <label for="keyword" class="hidden">Keyword</label>
 
-                        <mat-form-field 
-                            appearance="fill" 
+                        <mat-form-field
+                            appearance="fill"
                             class="keyword-filter w-full font-normal italic"
-                            [style.--keyword-background]="colorScheme.lightVar">
+                            [style.--keyword-background]="colorScheme.lightVar"
+                        >
                             <mat-label>Keywords</mat-label>
 
                             <mat-chip-grid #keywordChipGrid>
-                                @for (keyword of selectedKeywords; track keyword) {
+                                @for (
+                                    keyword of selectedKeywords;
+                                    track keyword
+                                ) {
                                     <mat-chip-row
                                         (removed)="removeKeyword(keyword)"
                                     >
@@ -236,7 +266,7 @@
                                 [(ngModel)]="keywordSearch"
                                 [matChipInputFor]="keywordChipGrid"
                                 [matAutocomplete]="keywordAuto"
-                                (input)="filterKeywords($event)" 
+                                (input)="filterKeywords($event)"
                                 maxlength="30"
                             />
 
@@ -276,12 +306,12 @@
         "
     >
         <!-- Collapsed filters -->
-        <div>
+        <div class="rotatedFilter">
             <!-- <i class="faa faa-angle-double-right collapsedFilterIcon"></i> -->
 
             <fa-icon
                 [icon]="faAnglesRight"
-                class="collapsedFilterIcon"
+                class="collapsedFilterIcon toggle-icon"
                 style="zoom: 100%; color: #fff; cursor: pointer"
             >
             </fa-icon>

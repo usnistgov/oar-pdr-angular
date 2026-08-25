@@ -3,31 +3,37 @@ import { DataCartStatus } from '../../datacart/cartstatus';
 import { CartConstants } from '../../datacart/cartconstants';
 import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
-import { iconClass } from '../../shared/globals/globals';
+import { GlobalService, iconClass } from '../../shared/globals/globals';
 
 @Component({
-  selector: 'app-downloadstatus',
-  templateUrl: './downloadstatus.component.html',
-  styleUrls: ['./downloadstatus.component.css']
+    selector: "app-downloadstatus",
+    templateUrl: "./downloadstatus.component.html",
+    styleUrls: ["./downloadstatus.component.css"],
 })
 export class DownloadstatusComponent implements OnInit {
     dataCartStatus: DataCartStatus;
     public CART_CONSTANTS: any = CartConstants.cartConst;
     inited: boolean = false;
+    colorScheme: any;
 
     //icon class names
     // closeIcon = iconClass.CLOSE;
 
     faXmark = faXmark;
-    
+
     @Input() inBrowser: boolean;
 
-    constructor(public iconLibrary: FaIconLibrary) { 
-        // iconLibrary.addIcons(faXmark);
+    constructor(
+        public iconLibrary: FaIconLibrary,
+        public globalService: GlobalService,
+    ) {
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        });
     }
 
     ngOnInit() {
-        if(this.inBrowser){
+        if (this.inBrowser) {
             this.dataCartStatus = DataCartStatus.openCartStatus();
             window.addEventListener("storage", this.cartChanged.bind(this));
         }
@@ -42,40 +48,42 @@ export class DownloadstatusComponent implements OnInit {
     /**
      * When storage changed, if it's dataCartStatus, loop through each cart and restore dataCartStatus object.
      * The display will automatically pick up the data.
-     * 
+     *
      * All dataCartStatusItem's keys whose downloadPercentage = 100 will be emitted.
      * @param ev Event - storage changed
      */
-    cartChanged(ev){
-        if(this.inited){
-            if(ev.key == this.dataCartStatus.getName()){
+    cartChanged(ev) {
+        if (this.inited) {
+            if (ev.key == this.dataCartStatus.getName()) {
                 this.dataCartStatus.restore();
             }
         }
-
     }
 
     /**
      * Get keys of dataCartStatus. The UI uses it to display download progress
      */
-    get getKeys() { 
-        if(this.inBrowser) {
+    get getKeys() {
+        if (this.inBrowser) {
             return Object.keys(this.dataCartStatus.dataCartStatusItems);
-        }else{
+        } else {
             return [];
         }
     }
 
     /**
-     * Check if we want to display the title bar of the download status. 
+     * Check if we want to display the title bar of the download status.
      * If no status to display, we will not display the title bar.
      */
-    get showDownloadStatus(){
+    get showDownloadStatus() {
         let hasStatusToDisplay: boolean = false;
 
-        if(this.inBrowser) {
-            for(let key in this.dataCartStatus.dataCartStatusItems){
-                if(this.dataCartStatus.dataCartStatusItems[key].downloadPercentage > 0){
+        if (this.inBrowser) {
+            for (let key in this.dataCartStatus.dataCartStatusItems) {
+                if (
+                    this.dataCartStatus.dataCartStatusItems[key]
+                        .downloadPercentage > 0
+                ) {
                     hasStatusToDisplay = true;
                     break;
                 }
@@ -89,24 +97,45 @@ export class DownloadstatusComponent implements OnInit {
      * Remove the status item from the object
      * @param key the status item to be removed
      */
-    removeStatusItem(key: string){
+    removeStatusItem(key: string) {
         this.dataCartStatus.restore();
         delete this.dataCartStatus.dataCartStatusItems[key];
         this.dataCartStatus.save();
     }
 
     /**
-     * Return the display name of a dataCartStatusItem. For global data cart, display "Global Datacart". 
+     * Return the display name of a dataCartStatusItem. For global data cart, display "Global Datacart".
      * Otherwise, display property displayName as it is.
      * @param key the key of dataCartStatusItems
      */
-    cartName(key: string){
-        if(this.dataCartStatus.dataCartStatusItems[key].displayName == this.CART_CONSTANTS.GLOBAL_CART_NAME)
+    cartName(key: string) {
+        if (
+            this.dataCartStatus.dataCartStatusItems[key].displayName ==
+            this.CART_CONSTANTS.GLOBAL_CART_NAME
+        )
             return "Global Datacart";
-        else if (this.dataCartStatus.dataCartStatusItems[key].displayName.length > 20)
-            return this.dataCartStatus.dataCartStatusItems[key].displayName.substring(0,17) + "...";
-        else
-            return this.dataCartStatus.dataCartStatusItems[key].displayName;
-        
+        else if (
+            this.dataCartStatus.dataCartStatusItems[key].displayName.length > 20
+        )
+            return (
+                this.dataCartStatus.dataCartStatusItems[
+                    key
+                ].displayName.substring(0, 17) + "..."
+            );
+        else return this.dataCartStatus.dataCartStatusItems[key].displayName;
+    }
+
+    menuStyle(header: boolean = true) {
+        let defaultColor = this.colorScheme.defaultVar;
+
+        if (!header) {
+            defaultColor = this.colorScheme.lighterVar;
+        }
+
+        return {
+            "--background-default": defaultColor,
+            "--background-lighter": this.colorScheme.lighterVar,
+            "--background-hover": this.colorScheme.hoverVar,
+        };
     }
 }

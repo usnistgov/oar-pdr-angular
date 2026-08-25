@@ -9,7 +9,7 @@
 :root {
     /* Colors */
     --science-theme-background-default: #008097;
-    --science-theme-background-hover: #d9f9ff;
+    --science-theme-background-hover: #00aecd;
     --science-theme-background-dark: #007287;
     --science-theme-background-light: #f5fbfd;
     --science-theme-background-light2: #e3f7fd;
@@ -41,37 +41,37 @@
     --chips-background-light: #e3efff;
     --chips-background-lighter: #f7f7fa;
     --chips-background-dark: #00076c;
-    --chips-background-hover: #e4efff;
+    --chips-background-hover: #004ab9;
     /* Brown */
     --background-orange-default: #e53b10;
     --background-orange-light: #ffd49d;
     --background-orange-lighter: #fff2e1;
     --background-orange-dark: rgb(43, 28, 0);
-    --background-orange-hover: #fce9d2;
+    --background-orange-hover: #f34d23;
     /* Beach Sunset */ 
     --background-beach-sunset-default: #1b4965;
     --background-beach-sunset-light: #5fa8d3;
     --background-beach-sunset-lighter: #cae9ff;
     --background-beach-sunset-dark: #0d3046;
-    --background-beach-sunset-hover: #c1e8ff;
+    --background-beach-sunset-hover: #225c80;
     /* Rosy Flamingo */ 
     --background-orange1-default: #67595e;
     --background-orange1-light: #f1e8e8;
     --background-orange1-lighter: #faf6f5;
     --background-orange1-dark: rgb(43, 16, 0);
-    --background-orange1-hover: #f1e8e8;
+    --background-orange1-hover: #857178;
     /* Purple */ 
     --background-purple-default: #bf619e;
     --background-purple-light: #ffe6f6;
     --background-purple-lighter: #fdf3f9;
     --background-purple-dark: #71385d;
-    --background-purple-hover: #ffe6f6;
+    --background-purple-hover: #d369ae;
     /* AM Green */ 
     --background-am-green-default: #2f983a;
     --background-am-green-dark: #1c6022;
     --background-am-green-light: color-mix(in srgb, var(--background-am-green-default) 25%, transparent);
     --background-am-green-lighter: color-mix(in srgb, var(--background-am-green-default) 5%, transparent);
-    --background-am-green-hover: #cfffd4;
+    --background-am-green-hover: #32a43d;
 
     /* Material buttons */
     --mdc-filled-button-container-shape: 5px;
@@ -505,7 +505,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     --mdc-linear-progress-active-indicator-height: 20px;
 
     --mdc-linear-progress-track-color: #d9d9d9;
-    --mdc-linear-progress-active-indicator-color: #2196f3;
+    --mdc-linear-progress-active-indicator-color: #00a6ff;
 }
 
 .mat-mdc-progress-bar .mdc-linear-progress__bar-inner {

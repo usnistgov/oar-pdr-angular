@@ -9,14 +9,20 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatSelectModule } from "@angular/material/select";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 @NgModule({
-  declarations: [ResultlistComponent, ResultitemComponent],
-  imports: [
-    CommonModule, FormsModule, MatButtonModule, MatIconModule, MatTooltipModule, MatSelectModule, MatFormFieldModule, MatInputModule
-  ],
-  exports: [
-    ResultlistComponent, ResultitemComponent
-  ]
+    declarations: [ResultlistComponent, ResultitemComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FontAwesomeModule,
+    ],
+    exports: [ResultlistComponent, ResultitemComponent],
 })
-export class ResultlistModule { }
+export class ResultlistModule {}

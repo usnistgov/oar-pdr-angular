@@ -47,6 +47,19 @@
     height: 30px;
 }
 
+.rotatedFilter {
+    color: white !important;
+}
+
+.rotatedFilter:hover .rotatedFilterText{
+    color: #00f7ff !important;
+    text-decoration: underline !important;
+}
+
+.rotatedFilter:hover .collapsedFilterIcon{
+    color: #00f7ff !important;
+}
+
 .filterIcon {
     color: #fff;
     zoom: 130%;
@@ -158,4 +171,44 @@
 
 .keyword-filter {
     --mdc-filled-text-field-container-color: var(--keyword-background);
+}
+
+.clearall {
+    height: 30px;
+    padding: 0 10px !important;
+    color: white !important;
+    font-size: 13px;
+}
+
+.clear-icon {
+    color: white;
+    margin-right: 5px;
+}
+
+.clearall:hover {
+    border-color: #00f7ff;
+    text-decoration: underline;
+}
+
+.clearall:hover .clear-icon{
+    color: #00f7ff;
+}
+
+.filtersLabel {
+    height: 30px;
+    padding: 0 10px !important;
+    color: white !important;
+}
+
+.filtersLabel:hover {
+    border-color: #00f7ff;
+    text-decoration: underline !important;
+}
+
+.filtersLabel:hover .toggle-icon{
+    color: #00f7ff !important;
+}
+
+.toggle-icon {
+    color: white;
 }

@@ -1,86 +1,59 @@
 <div
-    style="width: 100%; margin-top: 38px; padding: 10px 0px 0px 0px"
+    class="results-container"
     *ngIf="showResultList"
 >
     <div
-        id="table"
-        style="height: 44px !important; overflow: hidden"
+        class="result-header"
         *ngIf="searchResultsForDisplay"
+        [style.background-color]="colorScheme.defaultVar"
     >
-        <div
-            class="tr result-header"
-            [style.background-color]="colorScheme.defaultVar"
+        <!-- Number of search results -->
+        <div class="result-count">
+            {{ totalResultItems }}
+            <span *ngIf="resultWidthNum > 830">datasets </span>
+            <span *ngIf="resultWidthNum > 500">found</span>
+        </div>
+
+        <!-- Pagination -->
+        <select
+            class="header-select"
+            (change)="onSelected($event)"
         >
-            <!-- Number of search result -->
-            <div class="td" style="width: 20%; vertical-align: bottom;">
-                <span
-                    class="text-wrapper"
-                    style="
-                        padding-left: 20px;
-                        font-weight: bold;
-                    "
-                >
-                    {{ totalResultItems }}
-                    <span *ngIf="resultWidthNum > 830">datasets </span>
-                    <span *ngIf="resultWidthNum > 500">found</span>
-                </span>
-            </div>
+            <option *ngFor="let page of pages">
+                {{ page.name }}
+            </option>
+        </select>
 
-            <!-- Pagination -->
-            <div class="wrapper" style="width: 40px; height: 20px; vertical-align: bottom;">
-                <select
-                    (change)="onSelected($event)"
-                    style="
-                        width: 140px;
-                        height: 30px;
-                        padding: 0 10px 0 5px;
-                    "
-                >
-                    <option *ngFor="let page of pages">
-                        {{ page.name }}
-                    </option>
-                </select>
-            </div>
+        <!-- Sorting -->
+        <select
+            class="header-select"
+            required
+            (change)="onSortByChange($event)"
+        >
+            <option value="" disabled selected>Sorted by...</option>
+            <option value="none">None</option>
 
-            <!-- Sorting -->
-            <div class="td" style="width: 30px; vertical-align: bottom;">
-                <div class="wrapper">
-                    <select
-                        required
-                        (change)="onSortByChange($event)"
-                        style="
-                            width: 140px;
-                            height: 30px;
-                            padding-left: 5px;
-                            padding-right: 10px;
-                        "
-                    >
-                        <option value="" disabled selected>Sorted by...</option>
-                        <option value="none">None</option>
-                        <option *ngFor="let option of options">
-                            {{ option.name }}
-                        </option>
-                    </select>
-                </div>
-            </div>
+            <option *ngFor="let option of options">
+                {{ option.name }}
+            </option>
+        </select>
 
-            <!-- Search text -->
-            <div class="search-wrapper">
-                <mat-icon class="search-icon">search</mat-icon>
+        <!-- Search -->
+        <div class="search-wrapper">
+            <mat-icon class="search-icon">search</mat-icon>
 
-                <input
-                    id="freeTextSearch"
-                    type="text"
-                    matInput
-                    [(ngModel)]="searchPhases"
-                    placeholder="Search for"
-                    (input)="filterResults()"
-                />
-            </div>
+            <input
+                id="freeTextSearch"
+                type="text"
+                matInput
+                [(ngModel)]="searchPhases"
+                placeholder="Search for"
+                (input)="filterResults()"
+            />
         </div>
     </div>
 
-    <!-- Search result -->
+   <!-- Search result -->
     <div *ngIf="showResult">
         <div
             *ngFor="let resultItem of searchResultsForDisplay; let i = index"
@@ -115,10 +88,127 @@
     </div>
 
     <div class="spinner" *ngIf="!searchResults">
-        <!-- <i class="faa faa-spinner faa-spin faa-stack-2x" style="color:#1E6BA1;" aria-hidden="true"></i> -->
-
         <mat-icon class="material-icon-spin" aria-hidden="true">
             autorenew
         </mat-icon>
     </div>
 </div>
+
+
+<!-- <div
+    style="width: 100%; margin-top: 38px; padding: 10px 0px 0px 0px"
+    *ngIf="showResultList"
+>
+    <div
+        id="table"
+        style="height: 44px !important; overflow: hidden"
+        *ngIf="searchResultsForDisplay"
+    >
+        <div
+            class="tr result-header"
+            [style.background-color]="colorScheme.defaultVar"
+        >
+            <div class="td" style="width: 20%; vertical-align: bottom;">
+                <span
+                    class="text-wrapper"
+                    style="
+                        padding-left: 20px;
+                        font-weight: bold;
+                    "
+                >
+                    {{ totalResultItems }}
+                    <span *ngIf="resultWidthNum > 830">datasets </span>
+                    <span *ngIf="resultWidthNum > 500">found</span>
+                </span>
+            </div>
+
+            <div class="wrapper" style="width: 40px; height: 20px; vertical-align: bottom;">
+                <select
+                    (change)="onSelected($event)"
+                    style="
+                        width: 140px;
+                        height: 30px;
+                        padding: 0 10px 0 5px;
+                    "
+                >
+                    <option *ngFor="let page of pages">
+                        {{ page.name }}
+                    </option>
+                </select>
+            </div>
+
+            <div class="td" style="width: 30px; vertical-align: bottom;">
+                <div class="wrapper">
+                    <select
+                        required
+                        (change)="onSortByChange($event)"
+                        style="
+                            width: 140px;
+                            height: 30px;
+                            padding-left: 5px;
+                            padding-right: 10px;
+                        "
+                    >
+                        <option value="" disabled selected>Sorted by...</option>
+                        <option value="none">None</option>
+                        <option *ngFor="let option of options">
+                            {{ option.name }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="search-wrapper">
+                <mat-icon class="search-icon">search</mat-icon>
+
+                <input
+                    id="freeTextSearch"
+                    type="text"
+                    matInput
+                    [(ngModel)]="searchPhases"
+                    placeholder="Search for"
+                    (input)="filterResults()"
+                />
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="showResult">
+        <div
+            *ngFor="let resultItem of searchResultsForDisplay; let i = index"
+            style="width: 100%; padding: 0px 0px 0px 0px"
+        >
+            <div
+                *ngIf="
+                    resultItem.active &&
+                    i >= (currentPage.value - 1) * itemsPerPage &&
+                    i <= currentPage.value * itemsPerPage - 1
+                "
+                style="margin-bottom: 0.2em; padding-bottom: 0.2em"
+            >
+                <app-resultitem
+                    [resultItem]="resultItem"
+                    [PDRAPIURL]="PDRAPIURL"
+                    [colorScheme]="colorScheme"
+                ></app-resultitem>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="noSearchResult">
+        <div style="text-align: center; border-bottom: 1px solid grey">
+            <img
+                id="dog"
+                src="./assets/images/NothingFound2_s.png"
+                alt="nothing found"
+            />
+            <span class="nothing-found-text">Nothing found...</span>
+        </div>
+    </div>
+
+    <div class="spinner" *ngIf="!searchResults">
+        <mat-icon class="material-icon-spin" aria-hidden="true">
+            autorenew
+        </mat-icon>
+    </div>
+</div> -->
