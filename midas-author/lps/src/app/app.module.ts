@@ -18,7 +18,6 @@ import { OARLPSModule, ConfigModule, EditControlModule, CollectionService, Confi
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -49,59 +48,58 @@ enableProdMode();
  * The Landing Page Service Application
  */
 @NgModule({
-  declarations: [AppComponent],
-  imports: [
-    OARLPSModule,
-    ErrorsModule,
-    AppRoutingModule,
-    LandingAboutComponent,
-    ConfigModule,
-    StaffDirModule,
-    EditControlModule.forRoot(environment),
-    FooterComponent,
-    HeaderComponent,
-    HeaderPubComponent,
-    LandingPageComponent,
-    CommonModule,
-    BrowserAnimationsModule,
-    ToastrModule.forRoot(),
-    MatIconModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatBadgeModule,
-    MatTooltipModule,
-  ],
-  exports: [AppComponent],
-  providers: [
-    AppErrorHandler,
-    { provide: ErrorHandler, useClass: AppErrorHandler },
-    {
-      provide: UrlSerializer,
-      useClass: LowerCaseUrlSerializer,
-    },
-    GoogleAnalyticsService,
-    DatePipe,
-    CollectionService,
-    NgbActiveModal,
-    ConfirmationDialogService,
-    {
-      provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
-      useValue: {
-        position: 'above',
-      },
-    },
-    // {
-    //     provide: APP_INITIALIZER,
-    //     useFactory: initializeApp,
-    //     deps: [CollectionService],
-    //     multi: true
-    // }
-  ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+    declarations: [AppComponent],
+    imports: [
+        OARLPSModule,
+        ErrorsModule,
+        AppRoutingModule,
+        LandingAboutComponent,
+        ConfigModule,
+        StaffDirModule,
+        EditControlModule.forRoot(environment),
+        FooterComponent,
+        HeaderComponent,
+        HeaderPubComponent,
+        LandingPageComponent,
+        CommonModule,
+        BrowserAnimationsModule,
+        ToastrModule.forRoot(),
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatBadgeModule,
+        MatTooltipModule,
+    ],
+    exports: [AppComponent],
+    providers: [
+        AppErrorHandler,
+        { provide: ErrorHandler, useClass: AppErrorHandler },
+        {
+            provide: UrlSerializer,
+            useClass: LowerCaseUrlSerializer,
+        },
+        GoogleAnalyticsService,
+        DatePipe,
+        CollectionService,
+        ConfirmationDialogService,
+        {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {
+                position: 'above',
+            },
+        },
+        // {
+        //     provide: APP_INITIALIZER,
+        //     useFactory: initializeApp,
+        //     deps: [CollectionService],
+        //     multi: true
+        // }
+    ],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
 export class AppModule {
-  // We inject the service here to keep it alive whole time
-  constructor(protected _googleAnalyticsService: GoogleAnalyticsService) {}
+    // We inject the service here to keep it alive whole time
+    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) {}
 }
 
 
