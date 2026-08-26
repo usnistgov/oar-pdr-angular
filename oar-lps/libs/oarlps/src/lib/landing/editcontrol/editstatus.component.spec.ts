@@ -94,7 +94,7 @@ describe('EditStatusComponent', () => {
         let cmpel = fixture.nativeElement;
         let bardiv = cmpel.querySelector(".ec-status-bar");
         expect(bardiv).not.toBeNull();
-        expect(bardiv.firstElementChild.innerHTML).toContain("Okay, Boomer.");
+        expect(bardiv.children[1].innerHTML).toContain("Okay, Boomer.");
 
         component.showMessage("Wait...", true, "blue");
         expect(component.message).toBe("Wait...");
@@ -102,7 +102,7 @@ describe('EditStatusComponent', () => {
         expect(component.isProcessing).toBeTruthy();
         fixture.detectChanges();
 
-        expect(bardiv.firstElementChild.innerHTML).toContain("Wait...");
+        expect(bardiv.children[1].innerHTML).toContain("Wait...");
     });
 
     it('showLastUpdate()', () => {
@@ -120,7 +120,7 @@ describe('EditStatusComponent', () => {
         fixture.detectChanges();
         cmpel = fixture.nativeElement;
         bardiv = cmpel.querySelector(".ec-status-bar");
-        expect(bardiv.children[0].children[0].innerHTML).toContain('To see any previously edited inputs');
+        expect(bardiv.children[1].children[0].innerHTML).toContain('To see any previously edited inputs');
 
         component.setLastUpdateDetails(updateDetails);
 
