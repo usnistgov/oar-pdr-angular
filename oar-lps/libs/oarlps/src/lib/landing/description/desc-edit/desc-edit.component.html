@@ -1,89 +1,113 @@
-<div class="editable_field red-star" *ngIf="isEditMode">
-    *
-</div>
+<div class="editable_field red-star" *ngIf="isEditMode">*</div>
 
 <div class="editable_field" [ngStyle]="descWidth">
     <!-- Not editing -->
-    <div style="width:fit-content" *ngIf="!isEditing">
+    <div style="width: fit-content" *ngIf="!isEditing">
         <div *ngIf="isEmpty; else hasDescription">
-            <div *ngIf="isEditMode" (click)="startEditing()" style="width:inherit;color: var(--disabled-grey-text); " [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
-                Describe this {{resource}}.
+            <div
+                *ngIf="isEditMode"
+                (click)="startEditing()"
+                style="width: inherit; color: var(--disabled-grey-text)"
+                [ngStyle]="
+                    mdupdsvc.getFieldStyle(fieldName, false, undefined, false)
+                "
+            >
+                Describe this {{ resource }}.
             </div>
         </div>
         <ng-template #hasDescription>
-            <div style="width:inherit; white-space: pre-wrap;padding-left: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)" (click)="startEditing()">{{description}}</div>
+            <div
+                style="width: inherit; white-space: pre-wrap; padding-left: 0px"
+                [ngStyle]="
+                    mdupdsvc.getFieldStyle(fieldName, false, undefined, false)
+                "
+                (click)="startEditing()"
+            >
+                {{ description }}
+            </div>
         </ng-template>
     </div>
 
     <!-- Editing -->
-    <div style="width:100%;" *ngIf="isEditing">
+    <div style="width: 100%" *ngIf="isEditing">
         <!-- <textarea #desc autocomplete="off" [placeholder]="placeholder" [(ngModel)]='description' (ngModelChange)="setBackground($event)" style="width: 100%;margin: 0px; padding: 0px;" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, dataChanged)" libTextareaAutoresize></textarea> -->
-        <textarea #desc autocomplete="off" [(ngModel)]='description' [placeholder]="placeholder" (ngModelChange)="setBackground($event)" [ngStyle]="{'background-color': backColor}" style="width: 100%;cursor: text !important; min-height: 6em;" libTextareaAutoresize></textarea>
+        <textarea
+            #desc
+            autocomplete="off"
+            [(ngModel)]="description"
+            [placeholder]="placeholder"
+            (ngModelChange)="setBackground($event)"
+            [ngStyle]="{ 'background-color': backColor }"
+            style="width: 100%; cursor: text !important; min-height: 6em; padding: 10px;"
+            libTextareaAutoresize
+        ></textarea>
     </div>
 </div>
 
 <!-- Control buttons -->
-<div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap;">
+<div class="editable_field" *ngIf="isEditMode" style="white-space: nowrap">
     <!-- Edit button -->
-    <button 
-        *ngIf="!isEditing" 
-        class="edit_button" 
-        type="button" 
-        (click)="startEditing()" 
-        aria-label="edit button" 
+    <button
+        *ngIf="!isEditing"
+        class="edit_button"
+        type="button"
+        (click)="startEditing()"
+        aria-label="edit button"
         matTooltip="Edit description"
-        matTooltipPosition="above">
+        matTooltipPosition="above"
+    >
         <fa-icon [icon]="faPencil" size="sm"></fa-icon>
     </button>
 
     <!-- Hide button - hide edit block -->
-    <button 
-        class="edit_button" 
-        *ngIf="isEditing && !dataChanged" 
-        type="button" 
-        (click)="setMode()" 
-        aria-label="Hide edit block" 
+    <button
+        class="edit_button"
+        *ngIf="isEditing && !dataChanged"
+        type="button"
+        (click)="setMode()"
+        aria-label="Hide edit block"
         matTooltip="Hide edit block"
-        matTooltipPosition="above">
-
+        matTooltipPosition="above"
+    >
         <fa-icon [icon]="faXmark"></fa-icon>
-    </button> 
+    </button>
 
     <!-- Save button -->
-    <button 
-        class="edit_button" 
-        type="button" 
-        (click)="onSave()" 
+    <button
+        class="edit_button"
+        type="button"
+        (click)="onSave()"
         *ngIf="isEditing && dataChanged"
-        aria-label="save button" 
+        aria-label="save button"
         matTooltip="Save description"
-        matTooltipPosition="above">
-
+        matTooltipPosition="above"
+    >
         <fa-icon [icon]="faSave"></fa-icon>
     </button>
 
     <!-- Cancel editing button -->
-    <button 
-        class="edit_button" 
-        type="button" 
+    <button
+        class="edit_button"
+        type="button"
         *ngIf="isEditing && dataChanged"
-        (click)="cancelEditing()" 
-        aria-label="undo button" 
+        (click)="cancelEditing()"
+        aria-label="undo button"
         matTooltip="Cancel edit"
-        matTooltipPosition="above">
-
-        <fa-icon [icon]="faXmark" ></fa-icon>
+        matTooltipPosition="above"
+    >
+        <fa-icon [icon]="faXmark"></fa-icon>
     </button>
 
     <!-- Undo button: restore original value -->
-    <button 
-        class="edit_button" 
-        type="button" 
+    <button
+        class="edit_button"
+        type="button"
         *ngIf="!isEditing && updated"
-        (click)="undoEditing()" 
-        aria-label="undo button" 
+        (click)="undoEditing()"
+        aria-label="undo button"
         matTooltip="Restore original description"
-        matTooltipPosition="above">
+        matTooltipPosition="above"
+    >
         <fa-icon [icon]="faUndo"></fa-icon>
-    </button>                
+    </button>
 </div>

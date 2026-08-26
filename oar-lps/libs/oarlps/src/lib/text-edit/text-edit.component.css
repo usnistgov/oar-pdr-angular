@@ -44,3 +44,12 @@
     width: calc(100% - 100px);
 }
 
+.action-icon {
+    cursor: pointer;
+}
+
+.action-icon.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}

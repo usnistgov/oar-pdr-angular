@@ -1,4 +1,4 @@
-.ec-status-bar {
+/* .ec-status-bar {
     width: 100%;
     height: fit-content; 
     font-size: 15px; 
@@ -18,4 +18,36 @@
     margin: 4px 5px 0px 0px;
     border-radius: 20px;
     float: right;
+} */
+
+.ec-status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    width: 100%;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    color: #ffffff;
+    background-color: var(--nist-green-default);
+    padding: 2px 8px;
+    margin: 4px 5px 0px 0px;
+    border-radius: 20px;    
+}
+
+.status-message {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ec-status-spinner {
+    display: inline-flex;
+    align-items: center;
+    color: rgb(22, 20, 59);
 }

@@ -1,6 +1,6 @@
 <div class="table-wraper">
     <table width="100%">
-        <tr style="width: 100% !important; padding-top: 10px;">
+        <tr style="width: 100% !important; padding-top: 10px">
             <!-- Drag drop icon -->
             <td
                 *ngIf="dragDropIcon"
@@ -60,29 +60,35 @@
                 [style.border-left]="controlBorderStyle()"
             >
                 <!-- Edit/Save button-->
-                <button
+                <fa-icon
                     *ngIf="editButton"
-                    class="edit_button"
-                    mat-button
-                    type="button"
-                    (click)="editSave()"
-                    [disabled]="disableControl"
+                    class="edit_button action-icon"
+                    [class.disabled]="disableControl"
+                    [icon]="['fas', getEditIconClass()]"
+                    size="sm"
+                    (click)="!disableControl && editSave()"
+                    [attr.aria-disabled]="disableControl"
                     [aria-label]="getTooltip('edit')"
                     [matTooltip]="getTooltip('edit')"
                     matTooltipPosition="above"
-                >
-                    <fa-icon
-                        [icon]="['fas', getEditIconClass()]"
-                        size="sm"
-                        [style.opacity]="iconOpacity()"
-                    ></fa-icon>
-
-                    <!-- <fa-icon [icon]="['fas', getEditIconClass()]" size="sm" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" ></fa-icon> -->
-                </button>
+                ></fa-icon>
 
                 <!-- Custom button -->
-                <button
+                <fa-icon
+                    *ngIf="customButton"
+                    class="edit_button action-icon"
+                    [class.disabled]="disableControl"
+                    [icon]="['fas', custBtnIcon]"
+                    [style.opacity]="iconOpacity()"
+                    size="sm"
+                    (click)="!disableControl && cust()"
+                    [attr.aria-disabled]="disableControl"
+                    [aria-label]="custBtnTooltip"
+                    [matTooltip]="custBtnTooltip"
+                    matTooltipPosition="above"
+                ></fa-icon>
+
+                <!-- <button
                     *ngIf="customButton"
                     class="edit_button"
                     mat-button
@@ -98,8 +104,7 @@
                         size="sm"
                         [style.opacity]="iconOpacity()"
                     ></fa-icon>
-                    <!-- <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" ></i> -->
-                </button>
+                </button> -->
 
                 <!-- Edit only button-->
                 <fa-icon
@@ -117,19 +122,6 @@
                 >
                 </fa-icon>
 
-                <!-- <button
-                    *ngIf="editOnlyButton"
-                    class="edit_button"
-                    mat-button
-                    (click)="edit()"
-                    [disabled]="editing || disableControl"
-                    aria-label="Edit button"
-                    matTooltip="Edit this item"
-                    matTooltipPosition="above" >
-
-                    <fa-icon [icon]="['fas', editIcon]" size="sm" [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity()"></fa-icon>
-                </button> -->
-
                 <!-- Delete/undoEdit button-->
                 <fa-icon
                     *ngIf="deleteButton"
@@ -144,20 +136,6 @@
                     matTooltipPosition="above"
                 >
                 </fa-icon>
-
-                <!-- <button
-                    *ngIf="deleteButton"
-                    class="edit_button"
-                    mat-button
-                    (click)="removeUndo()"
-                    [disabled]="disableControl"
-                    [aria-label]="getTooltip('delete')"
-                    [matTooltip]="getTooltip('delete')"
-                    matTooltipPosition="above">
-
-                    <fa-icon [icon]="['fas', getDelIconClass()]" size="sm" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" ></fa-icon>
-                </button> -->
 
                 <!-- Restore button-->
                 <fa-icon
@@ -176,29 +154,21 @@
                     matTooltipPosition="above"
                 ></fa-icon>
 
-                <!-- <button
-                    *ngIf="restoreButton"
-                    class="edit_button"
-                    mat-button
-                    type="button"
-                    (click)="restore()"
-                    [disabled]="
-                        disableControl || !dataChanged || isNew || editing
-                    "
-                    aria-label="Restore button"
-                    matTooltip="Restore from original value"
-                    data-container="body"
-                    matTooltipPosition="above"
-                >
-                    <fa-icon
-                        [icon]="['fas', undoIcon]"
-                        size="sm"
-                        [style.opacity]="iconOpacity(editing)"
-                    ></fa-icon>
-                </button> -->
-
                 <!-- Plus button-->
-                <button
+                <fa-icon
+                    *ngIf="plusButton"
+                    [icon]="['fas', addIcon]"
+                    class="edit_button action-icon"
+                    [class.disabled]="disableControl"
+                    size="sm"
+                    [style.opacity]="iconOpacity()"
+                    (click)="add()"
+                    aria-label="Add button"
+                    matTooltip="Add new item"
+                    matTooltipPosition="above"                    
+                ></fa-icon>
+
+                <!-- <button
                     *ngIf="plusButton"
                     class="edit_button"
                     mat-button
@@ -214,12 +184,23 @@
                         size="sm"
                         [style.opacity]="iconOpacity()"
                     ></fa-icon>
-                    <!-- <i class="faa faa-plus" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="Add"></i> -->
-                </button>
+                </button> -->
 
                 <!-- Submit button-->
-                <button
+                <fa-icon
+                    *ngIf="submitButton"
+                    class="edit_button action-icon"
+                    [icon]="['fas', submitIcon]"
+                    [class.disabled]="disableControl"
+                    size="sm"
+                    [style.opacity]="iconOpacity()"
+                    (click)="submit()"
+                    aria-label="submit button"
+                    [matTooltip]="submitTooltip"
+                    matTooltipPosition="above"
+                ></fa-icon>
+
+                <!-- <button
                     *ngIf="submitButton"
                     class="edit_button"
                     type="button"
@@ -234,10 +215,7 @@
                         size="sm"
                         [style.opacity]="iconOpacity()"
                     ></fa-icon>
-
-                    <!-- <i [class]="submitIcon" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" ></i> -->
-                </button>
+                </button> -->
             </td>
         </tr>
     </table>

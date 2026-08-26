@@ -65,6 +65,7 @@ export class RefEditComponent implements OnInit {
     defaultText: string = "Enter citation here";
     reftype: string = "1";
     fieldName: string = "references";
+    previousCitation = "";
 
     // Input method. 1 = DOI, 2=Ref data, 3=Citation text
     inputMethod: string = "2";
@@ -304,7 +305,8 @@ export class RefEditComponent implements OnInit {
      * Reset citation value to original.
      */
     resetCitation() {
-        this.ref.citation = this.originalRef.citation;
+        // this.ref.citation = this.originalRef.citation;
+        this.ref.citation = this.previousCitation;
     }
 
     /**

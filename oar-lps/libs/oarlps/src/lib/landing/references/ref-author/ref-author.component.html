@@ -19,7 +19,7 @@
                 <div style="width: 100%;">
                     <lib-text-edit 
                         [textField]="author" 
-                        [dragDropIcon]="true" 
+                        [dragDropIcon]="ref['authors'].length==1?false:true" 
                         [showBorder]="false" 
                         placeHolderText="Put author's name here"
                         [disableControl]="(editingAuthorIndex!=-1) && (editingAuthorIndex!=i)" 

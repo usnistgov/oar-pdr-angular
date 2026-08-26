@@ -6,21 +6,21 @@
                         *ngIf="currentStep?.stepIndex === stepIndex" 
                         [icon]="faWrench"
                         class="fa-stack-1x" 
-                        style="scale: 1.6; width: 100px; position:relative; margin-top: -7px;">
+                        style="scale: 1.6; width: 100px; position:relative; margin-top: -9px;">
                     </fa-icon>
 
                     <fa-icon 
                         *ngIf="getStep(stepIndex).isComplete && currentStep?.stepIndex != stepIndex" 
                         [icon]="faCheck"
                         class="fa-stack-1x" 
-                        style="scale: 2; width: 100px; position:relative; margin-top: -6px;">
+                        style="scale: 2; width: 100px; position:relative; margin-top: -9px;">
                     </fa-icon>
                     
                     <fa-icon 
                         *ngIf="currentStep?.stepIndex != stepIndex && !getStep(stepIndex).isComplete" 
                         [icon]="faGear" 
                         class="fa-stack-1x" 
-                        style="scale: 2; width: 100px; position:relative; margin-top: -6px;">
+                        style="scale: 2; width: 100px; position:relative; margin-top: -9px;">
                     </fa-icon>
                 </div>
                 <div *ngIf="i < steps.length - 1 && getStep(stepIndex).active" class="step-divider"></div>

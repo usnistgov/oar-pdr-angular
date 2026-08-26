@@ -24,7 +24,7 @@
 }
 
 .menu-item:hover {
-    background-color: var(--background-hover);;
+    background-color: var(--background-hover);
 }
 
 .menu-body {

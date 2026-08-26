@@ -380,8 +380,19 @@
                         >
                         </textarea>
                     </td>
-                    <td style="width: 30px !important; vertical-align: top">
-                        <button
+                    <td style="width: 60px !important; vertical-align: top">
+                        <fa-icon
+                            class="edit_button action-icon"
+                            [icon]="faUndo"
+                            size="sm"
+                            (click)="resetCitation()"
+                            aria-label="reset button"
+                            matTooltip="Reset"
+                            matTooltipPosition="above"
+                            [class.disabled]="!citationLocked"
+                        ></fa-icon>
+
+                        <!-- <button
                             class="edit_button"
                             type="button"
                             (click)="resetCitation()"
@@ -393,10 +404,21 @@
                                 [icon]="faUndo"
                                 size="sm"
                             ></fa-icon>
-                            <!-- <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i> -->
-                        </button>
+                        </button> -->
 
-                        <button
+                        <fa-icon
+                            class="edit_button action-icon"
+                            *ngIf="(isEditing || !useCitationData) && lockIcon && undoIcon"
+                            [icon]="['fas', citationLockClass()]"
+                            size="sm"
+                            (click)="citationLocked = !citationLocked; previousCitation = ref.citation;"
+                            aria-label="lock/unlock button"
+                            [matTooltip]="citationLockTooltip()"
+                            matTooltipPosition="above"                            
+                            >
+                        </fa-icon>
+
+                        <!-- <button
                             class="edit_button"
                             type="button"
                             *ngIf="isEditing || !useCitationData"
@@ -411,11 +433,7 @@
                                 size="sm"
                             >
                             </fa-icon>
-
-                            <!-- <i [class]="citationLockClass()" 
-                                data-toggle="tooltip" 
-                                [title]="citationLockTooltip()"></i> -->
-                        </button>
+                        </button> -->
                     </td>
                 </tr>
 

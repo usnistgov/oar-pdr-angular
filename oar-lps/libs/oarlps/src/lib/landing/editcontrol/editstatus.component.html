@@ -1,22 +1,43 @@
 <!-- <div class="ec-status-bar" *ngIf="_editmode != EDIT_MODES.PREVIEW_MODE && _editmode != EDIT_MODES.VIEWONLY_MODE && showMsg"> -->
-<div class="ec-status-bar" *ngIf="forceDisplay || _editmode != EDIT_MODES.PREVIEW_MODE">
+<div
+    class="ec-status-bar"
+    *ngIf="forceDisplay || _editmode != EDIT_MODES.PREVIEW_MODE"
+>
+    <span class="badge">
+        {{ action }}
+    </span>
+
+    <span class="status-message">
+        <span
+            [ngStyle]="{ color: messageColor }"
+            [innerHTML]="message">
+        </span>
+
+        <fa-icon
+            *ngIf="isProcessing"
+            [icon]="faSpinner"
+            class="ec-status-spinner"
+            [animation]="'spin'">
+        </fa-icon>
+    </span>
+</div>
+<!-- 
+<div class="ec-status-bar">
     <span style="text-align: right;float: right;">
         <span
             [ngStyle]="{'color': messageColor}" 
             [innerHTML]="message"></span>
-        <!-- <i [hidden]="!isProcessing" class="faa faa-spinner faa-spin faa-stack-1x ec-status-spinner" style="width:2em;height:2em;position: inherit;"></i> -->
 
         <fa-icon 
-            [hidden]="!isProcessing" 
+            *ngIf="isProcessing"
             [icon]="faSpinner" 
             class="ec-status-spinner" 
             style="width:2em;height:2em;position: inherit;"
             [animation]="'spin'">
         </fa-icon>
-
     </span>
 
     <span class="badge">
         {{action}}
     </span>
-</div>
+</div> -->

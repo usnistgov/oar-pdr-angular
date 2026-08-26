@@ -323,9 +323,9 @@ export class MenuComponent implements OnInit {
         }
 
         return {
-            '--background-default': defaultColor,
-            '--background-lighter': this.colorScheme.lighterVar,
-            '--background-hover': this.colorScheme.hoverVar
+            "--background-default": defaultColor,
+            "--background-lighter": this.colorScheme.lighterVar,
+            "--background-hover": this.colorScheme.lightVar
         };
     }
 }
