@@ -111,7 +111,7 @@ export class PeopleComponent {
     }
 
     getFullRecord(ev: any) {
-        let sugg = ev.value as SDSuggestion;
+        let sugg = ev as SDSuggestion;
 
         sugg.getRecord().subscribe({
             next: (rec) => {
