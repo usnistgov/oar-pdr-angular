@@ -120,7 +120,6 @@ export class DatafilesMidasComponent {
   refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
   // revisionType: string = ""
   // arrRevisionTypes: any[] = [];
-  _editType: string;
   EDIT_TYPES: any = LandingConstants.editTypes;
   authorized: boolean = false;
 
@@ -152,32 +151,12 @@ export class DatafilesMidasComponent {
       { field: "download", header: "Status", width: "auto" },
     ];
 
-    // if (typeof (window) !== 'undefined') {
-    //     window.onresize = (e) => {
-    //         ngZone.run(() => {
-    //             this.appWidth = window.innerWidth;
-    //             this.appHeight = window.innerHeight;
-    //             this.setWidth(this.appWidth);
-    //         });
-    //     };
-    // }
-
-    this.EDIT_MODES = LandingConstants.editModes;
-    this.fileManagerBaseUrl = this.cfg.get(
-      "fileManagerAPI",
-      "https://nextcloud-dev.nist.gov",
-    );
-
     this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
       if (fileManagerUrl) {
         this.fileManagerUrl = fileManagerUrl;
       }
     });
   }
-
-  // get isRevisionType() {
-  //     return this._editType == this.EDIT_TYPES.REVISE;
-  // }
 
   ngOnInit() {
     // this.arrRevisionTypes = LandingConstants.reviseTypes;
@@ -189,10 +168,6 @@ export class DatafilesMidasComponent {
 
     this.globalService.watchAuthorized((authorized) => {
       this.authorized = authorized;
-    });
-
-    this.editstatsvc.watchEditType((editType) => {
-      this._editType = editType;
     });
 
     // Bootstrap breakpoint observer (to switch between desktop/mobile mode)

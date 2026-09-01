@@ -31,6 +31,7 @@ import {
 export class MetricsinfoComponent implements OnInit {
     allCollections: any = {};
     colorScheme: any;
+    spinnerTimeout: boolean = false;
     
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;
@@ -55,8 +56,6 @@ export class MetricsinfoComponent implements OnInit {
     fileLevelMetrics: any;
     recordLevelMetrics : RecordLevelMetrics;
 
-    //Default: wait 5 minutes (300sec) after user download a file then refresh metrics data
-    delayTimeForMetricsRefresh: number = 300; 
     time: any;
 
     //Icons
@@ -78,8 +77,6 @@ export class MetricsinfoComponent implements OnInit {
         //     faChartBar
         // );
         
-        this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
-
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
         })         
@@ -88,18 +85,16 @@ export class MetricsinfoComponent implements OnInit {
     ngOnInit(): void {
         this.allCollections = this.collectionService.loadAllCollections();
 
+        //Set spinner timeout to 10 sec
+        setTimeout(() => {
+            if(!this.metricsData.dataReady)
+                this.spinnerTimeout = true;
+        }, 10000);
+
     }
 
     get totalUsers() {
         return this.metricsData.totalUsers > 1? this.metricsData.totalUsers.toString() + ' unique users': this.metricsData.totalUsers.toString() + ' unique user';
-    }
-
-    displayMetrics() {
-        if(!this.metricsData.hasCurrentMetrics){
-            this.metricsInfo = ['Metrics not available'];
-        }
-
-        this.showMetrics = true;
     }
 
     /**

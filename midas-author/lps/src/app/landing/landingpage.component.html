@@ -8,9 +8,10 @@
 
 @if(!isPublicSite && cfg_editEnabled){
     <pdr-edit-control
-      [inBrowser]="inBrowser"
-      [(mdrec)]="md"
-      [imageURL]="imageURL">
+        *ngIf="_showContent"
+        [inBrowser]="inBrowser"
+        [(mdrec)]="md"
+        [imageURL]="imageURL">
     </pdr-edit-control>
 }
 
@@ -44,7 +45,7 @@
 
                 <fa-icon [icon]="faList"></fa-icon>
             </button>
-
+            
             <app-menu
                 [record]="md"
                 [ngClass]="windowScrolled ? 'sticky-menu-popup' : 'sticky-menu-popup-top'"
@@ -55,6 +56,7 @@
                 [inBrowser]="inBrowser"
                 [metricsData]="metricsData"
                 [showMetrics]="showMetrics"
+                [submitStatus]="submitStatus"
                 (scroll)="goToSection($event)"
                 (toggle_citation)="toggleCitation('large')">
             </app-menu>
@@ -71,18 +73,18 @@
               [@togglemain]="{value:mainBodyStatus, params:{lps_width: lpsWidth + 'px'}}"
               [ngStyle]="{'width': lpsWidth + 'px'}">
                 <landing-body
-                  [md]="md"
-                  [inBrowser]="inBrowser"
-                  [editEnabled]="cfg_editEnabled"
-                  [mobileMode]="mobileMode"
-                  [metricsData]="metricsData"
-                  [showJsonViewer]="showJsonViewer"
-                  [theme]="theme"
-                  [isPublicSite]="isPublicSite"
-                  [edstatsvc]="edstatsvc"
-                  [landingPageURL]="landingPageURL"
-                  [landingPageServiceStr]="landingPageServiceStr"
-                  (dlStatus)="onDownloadStatusChanged($event)">
+                    [md]="md"
+                    [inBrowser]="inBrowser"
+                    [editEnabled]="cfg_editEnabled"
+                    [mobileMode]="mobileMode"
+                    [metricsData]="metricsData"
+                    [showJsonViewer]="showJsonViewer"
+                    [theme]="theme"
+                    [isPublicSite]="isPublicSite"
+                    [edstatsvc]="edstatsvc"
+                    [landingPageURL]="landingPageURL"
+                    [landingPageServiceStr]="landingPageServiceStr"
+                    (dlStatus)="onDownloadStatusChanged($event)">
                 </landing-body>
 
             </div>
@@ -91,43 +93,45 @@
             <!-- <div #stickyMenu></div> -->
             <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
                 <app-menu
-                [record]="md"
-                [collection]="collection"
-                [theme]="theme"
-                [inBrowser]="inBrowser"
-                [metricsData]="metricsData"
-                [showMetrics]="showMetrics"
-                (scroll)="goToSection($event)"
-                (toggle_citation)="toggleCitation('large')">
+                    [record]="md"
+                    [collection]="collection"
+                    [theme]="theme"
+                    [inBrowser]="inBrowser"
+                    [metricsData]="metricsData"
+                    [showMetrics]="showMetrics"
+                    [submitStatus]="submitStatus"
+                    (scroll)="goToSection($event)"
+                    (toggle_citation)="toggleCitation('large')">
                 </app-menu>
 
                 <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>
             </div>
 
             @if(isEditMode) {
-              <!-- Drag bar to resize the help box -->
-              <div #splitter
-                *ngIf="showSplitter"
-                class="splitter"
-                (mousedown)="onMousedown($event)"
-                (mouseup)="onMouseUp($event)"
-                [ngStyle]="{'height': splitterHeight + 'px','padding-top': splitterPaddingTop + 'px'}">
-                  <div id="separator" style="opacity: .3;">||</div>
-              </div>
+                <!-- Drag bar to resize the help box -->
+                <div #splitter
+                    *ngIf="showSplitter"
+                    class="splitter"
+                    (mousedown)="onMousedown($event)"
+                    (mouseup)="onMouseUp($event)"
+                    [ngStyle]="{'height': splitterHeight + 'px','padding-top': splitterPaddingTop + 'px'}">
+                    <div id="separator" style="opacity: .3;">||</div>
+                </div>
 
-              <!-- The help box at the right side -->
-              <app-sidebar
-                *ngIf="hideToolMenu"
-                class='normal-sdbar'
-                [record]="md"
-                [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}"
-                [@togglesbar]="{value: mainBodyStatus, params:{help_width: helpWidth + 'px'}}"
-                [helpContentAll]="helpContentAll"
-                [resourceType]="resourceType"
-                [suggestions]="suggestions"
-                (sbarvisible_out)="updateSidebarStatus($event)"
-                (scroll)="goToSection($event)">
-              </app-sidebar>
+                <!-- The help box at the right side -->
+                <app-sidebar
+                    *ngIf="hideToolMenu"
+                    class='normal-sdbar'
+                    [record]="md"
+                    [ngStyle]="{'top': sidebarY + 'px', 'width': helpWidth + 'px', 'height': sidebarHeight + 'px'}"
+                    [@togglesbar]="{value: mainBodyStatus, params:{help_width: helpWidth + 'px'}}"
+                    [helpContentAll]="helpContentAll"
+                    [resourceType]="resourceType"
+                    [suggestions]="suggestions"
+                    [submitStatus]="submitStatus"
+                    (sbarvisible_out)="updateSidebarStatus($event)"
+                    (scroll)="goToSection($event)">
+                </app-sidebar>
             }
 
             <!-- citation pop-up -->

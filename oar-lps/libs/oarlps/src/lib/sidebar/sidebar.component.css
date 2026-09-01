@@ -78,3 +78,10 @@
 .general-help-content {
     overflow: hidden;
 }
+
+.content-completed {
+    background-color: rgb(231, 231, 231);
+    font-size: small;
+    text-align: left;
+    padding: 10px;
+}

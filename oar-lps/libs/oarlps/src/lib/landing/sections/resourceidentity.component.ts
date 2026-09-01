@@ -105,11 +105,6 @@ export class ResourceIdentityComponent implements OnChanges {
         this.globalService.watchLpsLeftWidth((width) => {
             this.onResize(width + 20);
         });
-
-        effect(() => {
-            this.isEditMode = this.editstatsvc.isEditMode();
-            // this.chref.detectChanges();
-        });
     }
 
     ngOnInit(): void {
@@ -120,6 +115,7 @@ export class ResourceIdentityComponent implements OnChanges {
         // Watch current edit mode set by edit controls
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
+            this.isEditMode = this.editMode == this.EDIT_MODES.EDIT_MODE;
         });
 
         // this.landingPageURL = this.cfg.get('landingPageService','/od/id/') + this.record['@id'];

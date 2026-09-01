@@ -1,8 +1,8 @@
 <div class="contact-rapper">
     <div class="editable_container">
         <!-- Display required field indicator -->
-        <div class="editable_field" *ngIf="edstatsvc.isEditMode()">
-            <span *ngIf="edstatsvc.isEditMode()" class="red-star">
+        <div class="editable_field" *ngIf="isEditMode">
+            <span *ngIf="isEditMode" class="red-star">
                 *
             </span>
         </div>
@@ -14,7 +14,7 @@
         </div>
 
         <!-- Control buttons -->
-        @if(edstatsvc.isEditMode()){
+        @if(isEditMode){
             <div class="editable_field" style="white-space: nowrap;">
                 @if(!isEditing) {
                     <!-- Edit button -->
@@ -86,7 +86,7 @@
                     <!-- Save button -->
                     <button 
                         class="edit_button" 
-                        *ngIf="edstatsvc.isEditMode()" 
+                        *ngIf="isEditMode" 
                         type="button" 
                         (click)="saveCurrentContact()" 
                         aria-label="edit button" 
@@ -103,7 +103,7 @@
                     <!-- Undo button -->
                     <button 
                         class="edit_button" 
-                        *ngIf="edstatsvc.isEditMode() && dataChanged" 
+                        *ngIf="isEditMode && dataChanged" 
                         type="button"
                         (click)="undoCurContactChanges()" 
                         aria-label="undo button" 

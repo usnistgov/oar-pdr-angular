@@ -9,7 +9,7 @@ import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
 import { NerdmRes, NERDResource, ReviewResponse } from 'oarlps';
 import { NERDmResourceService, EditStatusService, MetadataUpdateService, GlobalService,
-         MetricsService, LandingConstants, IDNotFound } from 'oarlps';
+         MetricsService, LandingpageService, LandingConstants, IDNotFound } from 'oarlps';
 import { AppConfig, DataCartStatus, RecordLevelMetrics, formatBytes, CartActions,
          MetricsData } from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
@@ -19,12 +19,14 @@ import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 import { CommonModule } from '@angular/common';
-import { DownloadStatusModule, SearchresultModule, DoneModule, LandingpageService } from 'oarlps';
-import { MetricsinfoComponent, MessageBarComponent, SidebarComponent, CitationPopupComponent,
+import { DownloadStatusModule, SearchresultModule, DoneModule } from 'oarlps';
+import { MetricsinfoComponent, SubmitStatusComponent, SidebarComponent, CitationPopupComponent,
          MenuComponent, EditControlComponent, LandingBodyComponent, FrameModule
  } from 'oarlps';
 import { AuthenticationService } from 'oarng';
 import { MatButtonModule } from '@angular/material/button';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faList } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -55,7 +57,10 @@ import { MatButtonModule } from '@angular/material/button';
         LandingBodyComponent,
         EditControlComponent,
         FrameModule,
-        MatButtonModule
+        MatButtonModule,
+        SubmitStatusComponent,
+        FrameModule,
+        FontAwesomeModule
     ],
     providers: [
         Title
@@ -114,7 +119,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     paramEditEnabled: boolean = false;
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
-    editTypes = LandingConstants.editTypes;
+    recStates = LandingConstants.recStates;
+    curRecState: string;    // Current record state
     // reviseTypes: any = Globals.LandingConstants.reviseTypes;
     arrRevisionTypes: any[] = [];
     editRequested: boolean = false;
@@ -206,7 +212,13 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     landingPageServiceStr: string;
     pubLandingPageURL: string = ""
     suggestions: ReviewResponse = {} as ReviewResponse;
+
+    submitStatus: any = {};
+    submitStatusPopup: boolean = false;
     
+    //Icons
+    faList = faList;
+
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
         event.stopPropagation();
@@ -261,13 +273,22 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         });
 
         if (this.cfg_editEnabled) {
+            this.edstatsvc.watchRecState((recState) => {
+                this.curRecState = recState;
+            })
+
+            this.edstatsvc.watchIsEditMode((isEditMode) => {
+                this.isEditMode = isEditMode;
+            })
+
             this.edstatsvc.watchEditMode((editMode) => {
                 this.editMode = editMode;
 
-                this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE || this.editMode == this.EDIT_MODES.REVISE_MODE);
+                //Hide the right side menu bar if we are in edit mode
+                this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE || (this.curRecState == this.recStates.REVISE && this.editMode == this.EDIT_MODES.EDIT_MODE));
 
                 if( this.hideToolMenu && this.editMode != this.EDIT_MODES.PREVIEW_MODE && this.editMode != this.EDIT_MODES.VIEWONLY_MODE){
-                  this.helpWidth = this.helpWidthDefault;
+                    this.helpWidth = this.helpWidthDefault;
                 }
 
                 this.updateSidebarStatus(true);
@@ -279,8 +300,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     // this._showContent = true;
                     this.setMessage();
                 }                
-
-                this.isEditMode = this.editMode == this.EDIT_MODES.EDIT_MODE;
             });
 
             this.mdupdsvc.subscribe(
@@ -294,10 +313,17 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                             this.updateHelpContent();
                         else {
                             //Load suggestions:
-                            this.mdupdsvc.validate().subscribe((suggestions) => {
-                                this.suggestions = suggestions as ReviewResponse;
+                            this.mdupdsvc.validate().subscribe((suggestions: ReviewResponse) => {
+                                this.suggestions = suggestions;
                                 this.lpService.setSubmitResponse(this.suggestions);
                             })
+                        }
+
+                        //If status is "submitted", get external_review property from record status
+                        if (this.mdupdsvc.submitted || this.mdupdsvc.resubmit) {
+                            this.submitStatus = this.mdupdsvc.recStatus.external_review;    
+                            if (!this.submitStatus) this.submitStatus = {};
+                        
                         }
                     }
 
@@ -307,20 +333,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             );
 
             this.edstatsvc.watchShowLPContent((showContent) => {
-                this._showContent = showContent;
+                this._showContent = showContent && this._showContent;
             });
         }
-
-        effect(() => {
-          // Triggered by isEditMode()
-          this.edstatsvc.isEditMode();
-        })
     }
 
     get showSplitter() {
         return (this.mainBodyStatus == "mainsquished") && !this.mobileMode && this.hideToolMenu;
     }
 
+   
     getCollection() {
         let keys = Object.keys(Collections);
         let collectionKey: string = "";
@@ -429,60 +451,61 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             if(this.authsvc.isAuthenticated) {
                 this.globalService.setAuthenticated(true);
                 this.mdupdsvc.startEditing(this.reqId).subscribe({
-                next: (success) => {
-                    this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
+                    next: (success) => {
+                        this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
 
-                    if(this.inBrowser){
-                        if(this.cfg_editEnabled){
-                            this.metricsData.hasCurrentMetrics = false;
-                            this.showMetrics = true;
-                        }else{
-                            if(this.theme == Themes.DEFAULT_THEME){
-                                this.getMetrics();
+                        if(this.inBrowser){
+                            if(this.cfg_editEnabled){
+                                this.metricsData.hasCurrentMetrics = false;
+                                this.showMetrics = true;
+                            }else{
+                                if(this.theme == Themes.DEFAULT_THEME){
+                                    this.getMetrics();
+                                }
+
+                            }
+                        }
+
+                        // proceed with rendering of the component
+                        this.useMetadata(true, true);
+
+                        let showError: boolean;
+                        // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                        // in editing mode.  This is done in concert with the authentication process that can involve
+                        // redirection to an authentication server; on successful authentication, the server can
+                        // redirect the browser back to this landing page with editing turned on.
+                        if (this.inBrowser) {
+                            this.edstatsvc.setShowLPContent(true);
+
+                                if (this.editRequested) {
+                                    showError = false;
+                                    // Need to pass reqID (resID) because the resID in editControlComponent
+                                    // has not been set yet and the startEditing function relies on it.
+                                    this.edstatsvc.startEditing(this.reqId);
+                                }
+                                else
+                                    showError = true;
+                            }
+                            //Display error if any
+                            if(showError) {
+
                             }
 
-                        }
+                            this.mdupdsvc.loadDBIOrecord().subscribe({
+                                next: (dbio) => {
+                                    // console.log("dbio", dbio)
+                                },
+                                error: (err) => {
+                                    console.error(err);
+                                }
+                            });
+
+                    },
+                    error: (err) => {
+                        this.globalService.setAuthorized(false);
+                        console.log("Load error", err);
                     }
-
-                    // proceed with rendering of the component
-                    this.useMetadata();
-
-                    let showError: boolean;
-                    // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                    // in editing mode.  This is done in concert with the authentication process that can involve
-                    // redirection to an authentication server; on successful authentication, the server can
-                    // redirect the browser back to this landing page with editing turned on.
-                    if (this.inBrowser) {
-                        this.edstatsvc.setShowLPContent(true);
-
-                            if (this.editRequested) {
-                                showError = false;
-                                // Need to pass reqID (resID) because the resID in editControlComponent
-                                // has not been set yet and the startEditing function relies on it.
-                                this.edstatsvc.startEditing(this.reqId);
-                            }
-                            else
-                                showError = true;
-                        }
-                        //Display error if any
-                        if(showError) {
-
-                        }
-
-                        this.mdupdsvc.loadDBIOrecord().subscribe({
-                            next: (dbio) => {
-                                // console.log("dbio", dbio)
-                            },
-                            error: (err) => {
-                                console.error(err);
-                            }
-                        });
-
-                },
-                error: (err) => {
-                    this.globalService.setAuthorized(false);
-                    console.log("Load error", err);
-                }})
+                })
             }else{
                 //Not authenticated:
                 this.globalService.setAuthenticated(false);
@@ -494,12 +517,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     displayOnly() {
-      this._showContent = false;
-      this.editRequested = false;
-      this.loadPublicData();
-      this.isPublicSite = true;
-      this.edstatsvc.setShowLPContent(true);
-      this._showContent = true;
+        this._showContent = false;
+        this.editRequested = false;
+        this.loadPublicData();
+        this.isPublicSite = true;
+        this.edstatsvc.setShowLPContent(true);
+        this._showContent = true;
     }
 
     /**
@@ -565,7 +588,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
               if (metadataError == "not-found") {
                   if (this.editRequested) {
                       console.log("ID not found...");
-                      this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                      this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                       this.setMessage();
                       this.displaySpecialMessage = true;
                   }
@@ -881,7 +904,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * This method will:
      *  * set the page's title (as displayed in the browser title bar).
      */
-    useMetadata(): void {
+    useMetadata(authenticated: boolean = false, authorized:boolean=false): void {
         this.metricsData.url = "/metrics/" + this.reqId;
         this.recordType = (new NERDResource(this.md)).resourceLabel();
 
@@ -889,7 +912,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.setDocumentTitle();
         this.mdupdsvc.cacheMetadata(this.md);
 
-        if (this.paramEditEnabled){
+        if (this.paramEditEnabled && authenticated && authorized){
             this.editRequested = true;
 
             this.mdupdsvc.isAuthorized(this.reqId).subscribe((result) => {
@@ -897,22 +920,30 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 if (result) {
                     // Check revision mode
                     if (this.mdupdsvc.published) {
-                        this.edstatsvc._setEditType(this.editTypes.REVISE);
+                        this.edstatsvc.setRecState(this.recStates.PUBLISHED);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    } else if (this.mdupdsvc.revision) {
+                        this.edstatsvc.setRecState(this.recStates.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    } else if (this.mdupdsvc.submitted) {
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    } else if( this.mdupdsvc.submitted ) {
+                        this.edstatsvc.setRecState(this.recStates.SUBMITTED);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);                        
+                    } else if( this.mdupdsvc.resubmit ) {
+                        this.edstatsvc.setRecState(this.recStates.RESUBMIT);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
                     } else {
                         this.editRequested = true;
                         // this.isEditMode = true;
-                        this.edstatsvc._setEditMode(this.EDIT_MODES.EDIT_MODE);
-                        this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                        this.edstatsvc._setEditType(this.editTypes.NORMAL);
+                        this.edstatsvc.setRecState(this.recStates.EDIT);                        
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
+                        // this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
                     }
                 }
                 else {
                     this.editRequested = false;
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                    this.edstatsvc.setRecState(this.recStates.EDIT);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
                     // this._showContent = true;
                     // this.edstatsvc.setShowLPContent(true);
                 }
@@ -922,7 +953,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             });
         }else{
             this.editRequested = false;
-            this.edstatsvc._setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+            this.edstatsvc.setRecState(this.recStates.EDIT);
+            this.edstatsvc.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
             this.edstatsvc.setShowLPContent(true);
             this._showContent = true;
             this.globalService.setAuthorized(false);

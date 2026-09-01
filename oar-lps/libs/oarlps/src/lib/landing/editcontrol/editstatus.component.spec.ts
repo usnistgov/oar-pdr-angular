@@ -55,7 +55,7 @@ describe('EditStatusComponent', () => {
 
         fixture = TestBed.createComponent(EditStatusComponent);
         component = fixture.componentInstance;
-        component._editmode = EDIT_MODES.EDIT_MODE;
+        component.editmode = EDIT_MODES.EDIT_MODE;
         component.forceDisplay = false;
     }
     let dapsvc : DAPService = new LocalDAPService();
@@ -70,7 +70,7 @@ describe('EditStatusComponent', () => {
 
     it('should initialize', () => {
         expect(component).toBeDefined();
-        expect(component.updateDetails).toBe(null);
+        expect(component.updateDetails).toBeFalsy();
         expect(component.message).toBe("Hello");
         expect(component.messageColor).toBe("black");
         expect(component.isProcessing).toBeFalsy();
@@ -84,7 +84,7 @@ describe('EditStatusComponent', () => {
     });
 
     it('showMessage()', () => {
-        component._editmode = EDIT_MODES.EDIT_MODE;
+        component.editmode = EDIT_MODES.EDIT_MODE;
         component.showMessage("Okay, Boomer.", false, "sicklyGreen");
         expect(component.message).toBe("Okay, Boomer.");
         expect(component.messageColor).toBe("sicklyGreen");
@@ -106,17 +106,19 @@ describe('EditStatusComponent', () => {
     });
 
     it('showLastUpdate()', () => {
-        expect(component.updateDetails).toBe(null);
+        expect(component.updateDetails).toBeFalsy();
 
-        component._editmode = EDIT_MODES.PREVIEW_MODE;
+        component.editmode = EDIT_MODES.PREVIEW_MODE;
         component.showLastUpdate();
         expect(component.message).toContain("To see any previously");
+        
+        component.editmode = EDIT_MODES.EDIT_MODE;
         fixture.detectChanges();
         let cmpel = fixture.nativeElement;
         let bardiv = cmpel.querySelector(".ec-status-bar");
         expect(bardiv).toBeNull();
         
-        component._editmode = EDIT_MODES.EDIT_MODE;
+        component.editmode = EDIT_MODES.EDIT_MODE;
         fixture.detectChanges();
         cmpel = fixture.nativeElement;
         bardiv = cmpel.querySelector(".ec-status-bar");
@@ -124,7 +126,7 @@ describe('EditStatusComponent', () => {
 
         component.setLastUpdateDetails(updateDetails);
 
-        component._editmode = EDIT_MODES.DONE_MODE;
+        component.editmode = EDIT_MODES.DONE_MODE;
         component.showLastUpdate();
         expect(component.message).toBe('');
     });

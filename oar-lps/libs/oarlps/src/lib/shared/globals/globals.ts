@@ -1,12 +1,13 @@
 import { Inject, Injectable, signal } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 import { DOCUMENT } from "@angular/common";
+import { UpdateDetails } from "../../landing/editcontrol/interfaces";
 
 @Injectable({
     providedIn: "root",
 })
 export class GlobalService {
-    public message = signal("");
+    // public message = signal("");
     public sectionMode = signal<SectionMode>({} as SectionMode);
     public collection = signal<string>("");
     public sectionHelp = signal<SectionHelp>({} as SectionHelp);
@@ -58,6 +59,18 @@ export class GlobalService {
     }
     public watchMessage(subscriber: any) {
         this._message.subscribe(subscriber);
+    }
+
+    /**
+     * Set/get UpdateDetails
+     */
+    _updateDetails: BehaviorSubject<UpdateDetails | null> =
+        new BehaviorSubject<UpdateDetails | null>(null);
+    public setUpdateDetails(val: UpdateDetails) {
+        this._updateDetails.next(val);
+    }
+    public watchUpdateDetails(subscriber) {
+        this._updateDetails.subscribe(subscriber);
     }
 
     /**
@@ -453,6 +466,21 @@ export class SubmissionData {
     }
 }
 
+export interface SubmissionFeedback {
+    id: number;
+    description: string;
+    reviewer: string;
+    type: string;
+}
+
+export interface SubmissionStatus {
+    id: string;
+    phase: string;
+    updated: number;
+    info_at: string;
+    feedback: SubmissionFeedback[];
+}
+
 export class RevisionTypes {
     data: RevisionDetails[];
 
@@ -519,16 +547,20 @@ export class RevisionTypes {
     }
 }
 
+/**
+ * Constants for landing page
+ */
 export class LandingConstants {
     public static get editModes(): any {
         return {
-            EDIT_MODE: "editMode",
-            PREVIEW_MODE: "previewMode",
-            DONE_MODE: "doneMode",
-            VIEWONLY_MODE: "viewOnlyMode",
-            OUTSIDE_MIDAS_MODE: "outsideMidasMode",
-        };
-    }
+            EDIT_MODE: 'editMode',
+            PREVIEW_MODE: 'previewMode',
+            DONE_MODE: 'doneMode',
+            VIEWONLY_MODE: 'viewOnlyMode',
+            VIEWONLY_WITH_CONTROL_MODE: 'viewOnlyControlMode',
+            OUTSIDE_MIDAS_MODE: 'outsideMidasMode'
+        }
+    };
 
     public static get editTypes(): any {
         return {
@@ -536,6 +568,16 @@ export class LandingConstants {
             REVISE: "revise",
         };
     }
+
+    public static get recStates(): any { 
+        return {
+            EDIT: 'edit', //
+            SUBMITTED: 'submitted',    //submitted
+            PUBLISHED: 'published',    //published
+            REVISE: 'revise',       //Back to edit after publication
+            RESUBMIT: 'resubmit'    //Back to edit after submission
+        }
+    }; 
 }
 
 export interface ColorScheme {
@@ -611,6 +653,26 @@ export interface Topic {
     tag: string;
     scheme: string;
     "@type": string;
+}
+
+/**
+ * This function removes the version info in a given URI.
+ * @param uri
+ */
+export function removeLastPathIfVersion(uri: string): string {
+    const lastSlash = uri.lastIndexOf('/');
+
+    if (lastSlash === -1) {
+        return uri;
+    }
+
+    const lastSegment = uri.substring(lastSlash + 1);
+
+    if (/^[vV]/.test(lastSegment)) {
+        return uri.substring(0, lastSlash);
+    }
+
+    return uri;
 }
 
 /**
@@ -706,20 +768,11 @@ export class FilterTreeNode implements AppTreeNode {
                             for (let topic of resultItem.topic) {
                                 if (
                                     topic["scheme"] &&
-                                    topic["scheme"].indexOf(
-                                        taxonomyURI[collection],
-                                    ) >= 0
+                                    removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(taxonomyURI[collection])
                                 ) {
-                                    if (collection == Collections.DEFAULT) {
-                                        if (topic.tag.includes(item[0])) {
-                                            found = true;
-                                            break;
-                                        }
-                                    } else {
-                                        if (topic.tag == item[0]) {
-                                            found = true;
-                                            break;
-                                        }
+                                    if (topic.tag == item[0]) {
+                                        found = true;
+                                        break;
                                     }
                                 }
                             }
@@ -814,12 +867,13 @@ export class FilterTreeNode implements AppTreeNode {
     private topicMatches(
         topic: any,
         taxonomy: string,
-        taxonomyURI: string[],
+        taxonomyURI: string,
         collection: string,
         tree: FilterTreeNode,
     ): boolean {
         //Check if topic has scheme value and topic.scheme matches taxonomyURI. Skip if false.
-        if (!topic.scheme || topic.scheme.indexOf(taxonomyURI) < 0) {
+        if (!topic.scheme || removeLastPathIfVersion(topic["scheme"]) != removeLastPathIfVersion(taxonomyURI)) {
+            // topic.scheme.indexOf(taxonomyURI) < 0) {
             return false;
         }
 

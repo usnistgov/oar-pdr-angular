@@ -65,6 +65,7 @@ export class ContactMidasComponent {
 
     LoadEditComp: boolean = false;
     globalsvc = inject(GlobalService);
+    isEditMode: boolean = false;
 
     //icon class names
     // editIcon = iconClass.EDIT;
@@ -99,6 +100,9 @@ export class ContactMidasComponent {
         //     faUndo,
         //     faTrashCan
         // );
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        })
     }
 
     /**
@@ -136,12 +140,8 @@ export class ContactMidasComponent {
                         }
                         this.hideEditBlock(false);
                     }
-                } else {
-                    if (
-                        !this.isEditing &&
-                        sectionMode.section == this.fieldName &&
-                        this.edstatsvc.isEditMode()
-                    ) {
+                }else{
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
                         this.startEditing();
                     }
                 }
@@ -205,11 +205,11 @@ export class ContactMidasComponent {
      * @returns the background color of the whole record
      */
     get getRecordBackgroundColor() {
-        if (this.edstatsvc.isEditMode()) {
-            this.backgroundColor = "var(--editable)";
-
-            if (this.mdupdsvc.fieldUpdated(this.fieldName)) {
-                this.backgroundColor = "var(--data-changed-saved)";
+        if(this.isEditMode){
+            this.backgroundColor = 'var(--editable)';
+            
+            if(this.mdupdsvc.fieldUpdated(this.fieldName)){
+                this.backgroundColor = 'var(--data-changed-saved)';
             }
 
             if (this.dataChanged) {

@@ -10,7 +10,7 @@ import * as daperrs from '../../errors/error';
 import { Observable, map, switchMap, tap, of, catchError, throwError, Subscriber } from 'rxjs';
 import { UpdateDetails, DBIOrecord } from './interfaces';
 import { AuthService } from './auth.service';
-import { LandingConstants } from '../../shared/globals/globals';
+import { GlobalService, LandingConstants } from '../../shared/globals/globals';
 import { EditStatusService } from './editstatus.service';
 import { AnyObj, AuthenticationService, Credentials, StaffDirectoryService } from 'oarng';
 import { LandingpageService } from '../landingpage.service';
@@ -51,6 +51,7 @@ export class MetadataUpdateService {
     set lastUpdate(updateDetails: UpdateDetails) {
         this._lastUpdate = updateDetails;
         this.updated.emit(this._lastUpdate);
+        this.globalService?.setUpdateDetails(updateDetails);
     }
 
     private _fileManagerUrl: BehaviorSubject<string> = new BehaviorSubject<string>("");
@@ -60,12 +61,40 @@ export class MetadataUpdateService {
         return this._recStatus;
     }
 
+    /**
+     * Consider this is a published record if:
+     * state = 'published'
+     */
     get published() {
         return this._recStatus.state == 'published';
     }
 
+    /**
+     * Consider this is a record for revision if:
+     * state = 'edit'
+     * or there is a published date and published date is newer than submitted date 
+     * (submitted date should always exist if there is a published date).
+     */    
+    get revision() {
+        return this._recStatus.state == 'edit' && (this._recStatus.published && this._recStatus.published != '' && this._recStatus.published > this._recStatus.submitted);
+    }
+
+    /**
+     * Consider this is a submitted record if:
+     * state = 'submitted' 
+     */
     get submitted() {
         return this._recStatus.state == 'submitted';
+    }
+
+    /**
+     * Consider this is a resubmit record after review if:
+     * state = 'edit' and
+     * there is a submitted date but no publish date
+     * or there are submitted date and published date but submitted date is newer than published date
+     */
+    get resubmit() {
+        return this._recStatus.state == 'edit' && ((this._recStatus.submitted && !this._recStatus.published) || (this._recStatus.submitted && this._recStatus.submitted > this._recStatus.published));
     }
 
     private _authorized: boolean = false;
@@ -85,7 +114,7 @@ export class MetadataUpdateService {
      * Watch the number of files downloaded
      * @param subscriber 
      */
-    watchFileManagerUrl(subscriber) {
+    watchFileManagerUrl(subscriber: any) {
         return this._fileManagerUrl.subscribe(subscriber);
     }
 
@@ -118,13 +147,14 @@ export class MetadataUpdateService {
                 private edstatsvc: EditStatusService,
                 protected dapsvc: DAPService,
                 private datePipe: DatePipe,
+                public globalService?: GlobalService,
                 protected authsvc?: AuthenticationService,
                 protected staffsvc?: StaffDirectoryService,
                 public lpService?: LandingpageService ) 
     { 
         this.EDIT_MODES = LandingConstants.editModes;
 
-        this.edstatsvc.watchEditMode((editMode) => {
+        this.edstatsvc.watchEditMode((editMode: string) => {
             this.editMode = editMode;
         });
 
@@ -145,7 +175,7 @@ export class MetadataUpdateService {
      * subscribe to updates to the metadata.  This is intended for connecting the 
      * service to the EditControlPanel.
      */
-    public subscribe(controller): void {
+    public subscribe(controller: any): void {
         this.mdres.subscribe(controller);
     }
 
@@ -171,17 +201,20 @@ export class MetadataUpdateService {
     public startEditing(recid: string) : Observable<boolean> {
         return this.dapsvc.edit(recid).pipe(
             tap((recsvc) => {
-                if (! recsvc.canEdit())
+                if (!recsvc.canEdit())
                     throw new daperrs.NotAuthorizedError(recid, "write");
+
                 this.dapUpdtSvc = recsvc as MIDASDAPUpdateService;
-                
-                let rec = this.dapUpdtSvc.getRecord()
+                let rec = this.dapUpdtSvc.getRecord();
+
                 this._recStatus = rec.status;
 
-                if (rec.status?.modified) 
+                if (rec.status?.modified)
                     this.lastUpdate = {
                         userAttributes: { userName: rec.status?.byWho },
-                        _updateDate: (new Date(rec.status.modified * 1000)).toLocaleString()
+                        _updateDate: new Date(
+                            rec.status.modified * 1000,
+                        ).toLocaleString(),
                     };
                 if (rec.status?.byWho && this.staffsvc) {
                     // TODO: use staff directory to look up user who made last edit
@@ -196,18 +229,22 @@ export class MetadataUpdateService {
             }),
             map((data) => {
                 this._authorized = true;
+                this.globalService?.setAuthorized(true);
                 return true;
             }),
             catchError((err) => {
-                if (err instanceof daperrs.NotAuthorizedError) 
+                if (err instanceof daperrs.NotAuthorizedError) {
+                    this.globalService?.setAuthorized(false);
                     return of(false);
+                }
                 throw err;
             })
         );
     }
 
     isAuthorized(ediid: string) : Observable<any>  {
-        return this.dapsvc.isAuthorized(ediid);
+        // return this.dapsvc.isAuthorized(ediid);
+        return of(this._authorized);
     }
 
     public discardEdits() : Observable<boolean> {
@@ -715,7 +752,7 @@ export class MetadataUpdateService {
                   
                 if (err instanceof daperrs.IDNotFound) {
                     this.resetMetadata();
-                    this.edstatsvc._setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
+                    this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
                 }
                 else {
                     console.error("Failed to retrieve draft metadata changes: server error:" + err.message);

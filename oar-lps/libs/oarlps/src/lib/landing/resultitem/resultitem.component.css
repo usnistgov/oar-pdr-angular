@@ -1,4 +1,4 @@
-.result-contsiner {
+.result-container {
         width: 100%;
 }
 
@@ -19,35 +19,6 @@
         border-radius: 0 0 10px 10px;
         border: 1px solid rgb(95, 95, 95);
 }
-
-/* .title-btn {
-        border-radius: 5px;
-        padding: -5px 0px 20px 10px;
-        margin-left: 10px;
-        margin-right: 12px;
-} */
-
-/* .btn-parent:hover {
-        border: 1px solid #00f7ff;
-} */
-
-/* .btn-parent {
-        display: table; 
-        border-spacing:5px;
-        color: white;
-        border: 1px solid rgb(255, 255, 255);
-        border-radius: 5px;
-        cursor: pointer;
-} */
-
-/* .title-btn {
-        width: 100%;
-        padding-right: 10px;
-} */
-
-/* .home-btn {
-        width: 130px;
-} */
 
 /* .btn-icon {
         display: table-cell;

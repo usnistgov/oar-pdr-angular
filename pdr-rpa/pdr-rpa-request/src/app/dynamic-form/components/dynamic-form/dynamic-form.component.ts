@@ -1,10 +1,9 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup, FormGroupDirective } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 
 import { FormConfig, DatasetConfig, FieldOption } from '../../models';
@@ -20,7 +19,6 @@ import { FormSectionComponent } from '../form-section/form-section.component';
     MatCardModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule,
     MatIconModule,
     FormSectionComponent
   ],
@@ -243,13 +241,16 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   @Output() formSubmit = new EventEmitter<Record<string, any>>();
   @Output() formCancel = new EventEmitter<void>();
   @Output() formValid = new EventEmitter<boolean>();
+  // Parent renders these as toast notifications
+  @Output() notify = new EventEmitter<{ message: string; type: 'success' | 'error' | 'info' }>();
+
+  @ViewChild(FormGroupDirective) private formGroupDirective?: FormGroupDirective;
 
   form!: FormGroup;
   isLoading = false;
 
   constructor(
-    private formBuilder: DynamicFormBuilderService,
-    private snackBar: MatSnackBar
+    private formBuilder: DynamicFormBuilderService
   ) {}
 
   ngOnInit(): void {
@@ -295,24 +296,9 @@ export class DynamicFormComponent implements OnInit, OnChanges {
 
   resetForm(): void {
     this.formBuilder.resetForm(this.form, this.formConfig);
-  }
-
-  showSuccess(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['success-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
-  }
-
-  showError(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 5000,
-      panelClass: ['error-snackbar'],
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
+    // Also clear the directive's submitted flag, otherwise mat-form-field
+    // keeps the emptied required fields styled red after a successful submit.
+    this.formGroupDirective?.resetForm(this.form.getRawValue());
   }
 
   private markAllAsTouched(): void {
@@ -324,6 +310,6 @@ export class DynamicFormComponent implements OnInit, OnChanges {
   private showValidationError(): void {
     const message = this.formConfig.errorMessage ||
       'Please correct the errors in the form before submitting.';
-    this.showError(message);
+    this.notify.emit({ message, type: 'error' });
   }
 }

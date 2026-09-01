@@ -12,6 +12,7 @@ import { AppConfig } from "../../config/config";
 import { GoogleAnalyticsService } from "../../shared/ga-service/google-analytics.service";
 import {
     Collections,
+    removeLastPathIfVersion,
     ColorScheme,
     GlobalService,
     iconClass,
@@ -473,31 +474,22 @@ export class ResultlistComponent implements OnInit {
 
                                         if (
                                             oTopic["scheme"] &&
-                                            oTopic["scheme"].indexOf(
-                                                this.taxonomyURI[collection],
-                                            ) >= 0
+                                            removeLastPathIfVersion(
+                                                oTopic["scheme"],
+                                            ) ==
+                                                removeLastPathIfVersion(
+                                                    this.taxonomyURI[
+                                                        collection
+                                                    ],
+                                                )
                                         ) {
                                             if (
-                                                collection ==
-                                                Collections.DEFAULT
-                                            ) {
-                                                if (
-                                                    oTopic["tag"]
-                                                        .toLowerCase()
-                                                        .includes(
-                                                            topicValue.toLowerCase(),
-                                                        )
+                                                this.areStringsEqual(
+                                                    oTopic["tag"],
+                                                    topicValue,
                                                 )
-                                                    resultItem.active = true;
-                                            } else {
-                                                if (
-                                                    this.areStringsEqual(
-                                                        oTopic["tag"],
-                                                        topicValue,
-                                                    )
-                                                )
-                                                    resultItem.active = true;
-                                            }
+                                            )
+                                                resultItem.active = true;
                                         }
                                     }
                                 }

@@ -43,6 +43,7 @@ export class TitleEditComponent {
     borderStatus: string = "show";
     placeholder: string = "Please add a title here.";
     dataChanged: boolean = false;
+    isEditMode: boolean = false;
 
     isPublicSite: boolean = false; //Will be decided by config: editEnabled
     // globalsvc = inject(GlobalService);
@@ -77,11 +78,9 @@ export class TitleEditComponent {
         //     faUndo
         // );
 
-        effect(() => {
-            if (this.edstatsvc.isEditMode()) {
-                this.chref.detectChanges();
-            }
-        });
+        this.edstatsvc.watchIsEditMode((isEditMode: boolean) => {
+            this.isEditMode = isEditMode;
+        })
     }
 
     get updated() {
@@ -124,7 +123,7 @@ export class TitleEditComponent {
                     if (
                         !this.isEditing &&
                         sectionMode.section == this.fieldName &&
-                        this.edstatsvc.isEditMode()
+                        this.isEditMode
                     ) {
                         this.startEditing();
                     }

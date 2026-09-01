@@ -43,7 +43,7 @@ import {
     faAnglesUp,
     faXmark,
 } from "@fortawesome/free-solid-svg-icons";
-import { iconClass } from "../../shared/globals/globals";
+import { iconClass, removeLastPathIfVersion } from "../../shared/globals/globals";
 import SampleResult from "../../../assets/sample-data/searchResult04.json";
 import { FormControl } from '@angular/forms';
 import { Observable, startWith, map } from 'rxjs';
@@ -547,6 +547,7 @@ export class FiltersComponent implements OnInit {
      */
     onSuccess(searchResults: any[]) {
         this.resultStatus = this.RESULT_STATUS.success;
+
         // this.themesWithCount = [];
         this.componentsWithCount = [];
         this.searchResults = searchResults;
@@ -1167,32 +1168,23 @@ export class FiltersComponent implements OnInit {
                         topicLabel = topic.tag;
                     }
 
-                    if (
-                        topic["scheme"] &&
-                        topic["scheme"].indexOf(
-                            this.taxonomyURI[Collections.AM],
-                        ) >= 0
+                    if (topic["scheme"] && 
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.AM])
                     ) {
                         collection = Collections.AM;
                     } else if (
                         topic["scheme"] &&
-                        topic["scheme"].indexOf(
-                            this.taxonomyURI[Collections.SEMICONDUCTORS],
-                        ) >= 0
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.SEMICONDUCTORS])
                     ) {
                         collection = Collections.SEMICONDUCTORS;
                     } else if (
                         topic["scheme"] &&
-                        topic["scheme"].indexOf(
-                            this.taxonomyURI[Collections.FORENSICS],
-                        ) >= 0
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.FORENSICS])
                     ) {
                         collection = Collections.FORENSICS;
                     } else if (
                         topic["scheme"] &&
-                        topic["scheme"].indexOf(
-                            this.taxonomyURI[Collections.DEFAULT],
-                        ) >= 0
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.DEFAULT])
                     ) {
                         collection = Collections.DEFAULT;
                     } else {

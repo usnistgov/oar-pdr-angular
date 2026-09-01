@@ -1,47 +1,20 @@
 <!-- Edit Control button bar -->
-<div
-    class="control-wrapper science-theme-background"
-    *ngIf="_editMode != EDIT_MODES.VIEWONLY_MODE"
-    [ngStyle]="{ 'background-image': 'url(' + imageURL + ')' }"
->
+<div class="control-wrapper science-theme-background" *ngIf="editMode != EDIT_MODES.VIEWONLY_MODE" [ngStyle]="{ 'background-image': 'url(' + imageURL + ')'}">
+
     <div class="current-mode">
-        <div
-            *ngIf="
-                screenWidth > screenSizeBreakPoint &&
-                _editMode != EDIT_MODES.DONE_MODE
-            "
-        >
-            <span
-                *ngIf="message"
-                style="margin-left: 1em; margin-right: 1em; font-size: 12px"
-                >{{ message }}</span
-            >
-            <span
-                *ngIf="message"
-                style="border: 1px solid white; color: white; cursor: pointer"
-                (click)="message = ''"
-            >
+        <div *ngIf="screenWidth > screenSizeBreakPoint && editMode != EDIT_MODES.DONE_MODE">
+            <span *ngIf="message" style="margin-left: 1em;margin-right: 1em;font-size:12px">{{message}}</span>
+            <span 
+                *ngIf="message" 
+                style="border: 1px solid white; color: white;cursor: pointer;" 
+                (click)="message=''">
                 <!-- <i class="fas fa-times"></i> -->
                 <fa-icon [icon]="faTimes"></fa-icon>
             </span>
-            {{ currentMode }}
-            <span
-                *ngIf="
-                    mdupdsvc.recStatus.state == 'submitted' ||
-                    mdupdsvc.recStatus.state == 'published'
-                "
-                class="splitter1"
-            >
-                |
-            </span>
-            <span
-                *ngIf="
-                    mdupdsvc.recStatus.state == 'submitted' ||
-                    mdupdsvc.recStatus.state == 'published'
-                "
-                id="submitted"
-            >
-                {{ mdupdsvc.recStatus.state }}
+            {{currentMode}}
+            <span *ngIf="mdupdsvc.submitted || mdupdsvc.published" class="splitter1"> | </span>
+            <span *ngIf="mdupdsvc.submitted || mdupdsvc.published" id="submitted">
+                {{stateForDisplay}}
                 <!-- <i class="fas fa-info-circle" id="ec-info-btn-sm" (click)="toogleMessage()" data-toggle="tooltip"
                     title="Show message"></i> -->
 
@@ -59,7 +32,7 @@
         <div
             *ngIf="
                 screenWidth <= screenSizeBreakPoint &&
-                _editMode != EDIT_MODES.DONE_MODE
+                editMode != EDIT_MODES.DONE_MODE
             "
             style="
                 color: white;
@@ -129,7 +102,7 @@
             class="btn btn-labeled"
             id="ec-review-btn"
             (click)="submitReview()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable"
             label="Submit for Review"
         >
             <fa-icon [icon]="faCircleArrowUp"></fa-icon> Submit for Review
@@ -146,8 +119,8 @@
             matTooltipPosition="above"
             class="btn btn-labeled"
             id="ec-review-btn-sm"
-            (click)="openDialog_mat()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+            (click)="submitReview()"
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable"
             label="Submit"
         >
             <fa-icon [icon]="faCircleArrowUp"></fa-icon>
@@ -162,7 +135,7 @@
             class="btn btn-labeled"
             id="ec-review-btn-mo"
             (click)="openDialog()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable"
         >
             <fa-icon [icon]="faCircleArrowUp"></fa-icon>
         </button>
@@ -176,7 +149,7 @@
             class="btn btn-labeled"
             id="ec-discard-btn"
             (click)="confirmDiscardEdits()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable"
         >
             <fa-icon [icon]="faTrashCan"></fa-icon>
             Discard
@@ -190,7 +163,7 @@
             class="btn btn-labeled"
             id="ec-discard-btn-sm"
             (click)="confirmDiscardEdits()"
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit"
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable"
         >
             <fa-icon [icon]="faTrashCan"></fa-icon>
         </button>
@@ -222,7 +195,6 @@
             matTooltip="Edit"
             matTooltipPosition="above"
             *ngIf="mobileMode && isPreviewMode"
-            type="button"
             class="btn btn-labeled ec-edit-btn"
             (click)="onEdit()"
             id="ec-edit-btn-sm"
@@ -242,7 +214,7 @@
             matTooltipPosition="above"
             [ngClass]="buttonSize"
             (click)="preview()"
-            [disabled]="!readyEdit"
+            [disabled]="!readyEdit || !editEnable"
         >
             <mat-icon>visibility</mat-icon>
             Preview
@@ -255,7 +227,7 @@
             id="ec-files-btn"
             [ngClass]="beanSize"
             (click)="preview()"
-            [disabled]="!readyEdit"
+            [disabled]="!readyEdit || !editEnable"
             aria-label="Preview"
             matTooltip="Preview"
             matTooltipPosition="above"
@@ -279,11 +251,12 @@
         <!-- <button
             type="button"
             matTooltip="Preview"
+            matTooltipPosition="above"
             *ngIf="mobileMode && isEditMode"
             class="btn btn-labeled"
             (click)="preview()"
             id="ec-preview-btn-mo"
-            [disabled]="!readyEdit">
+            [disabled]="!readyEdit || !editEnable">
 
             <fa-icon [icon]="faEye"></fa-icon>
         </button> -->
@@ -298,7 +271,7 @@
             matTooltipPosition="above"
             [ngClass]="beanSize"
             (click)="openFileManager()"
-            [disabled]="!readyEdit"
+            [disabled]="!readyEdit || !editEnable"
         >
             <mat-icon>open_in_new</mat-icon>
             {{ fileManagerBtnLabel }}
@@ -311,9 +284,9 @@
             id="ec-files-btn"
             [ngClass]="beanSize"
             (click)="openFileManager()"
-            [disabled]="!readyEdit"
+            [disabled]="!readyEdit || !editEnable"
             aria-label="Open external site"
-            matTooltip="Open in a new tab"
+            [matTooltip]="fileManagerTooltip"
             matTooltipPosition="above"
         >
             <mat-icon class="btn-icon">open_in_new</mat-icon>
@@ -324,6 +297,7 @@
 <!-- status message bar -->
 <div id="statusbar">
     <pdr-edit-status
+        *ngIf="authorized && (editMode==EDIT_MODES.EDIT_MODE || forceDisplay)"
         [(mdrec)]="mdrec"
         [forceDisplay]="forceDisplay"
     ></pdr-edit-status>

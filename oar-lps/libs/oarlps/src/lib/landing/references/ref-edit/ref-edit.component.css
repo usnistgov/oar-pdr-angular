@@ -31,4 +31,14 @@ td:first-child {
 
 .custom-size-icon:hover {
     color: rgb(0, 119, 255);
+ref-type {
+    width: 100%;
+}
+
+ref-type-label {
+    width: 20% !important;
+}
+
+table {
+    margin-top: .5em;
 }

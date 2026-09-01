@@ -33,7 +33,32 @@
                 </span>
             </div>
 
-            <table align="center" class="mt-3">
+            <table align="center">
+                <!-- Reference type -->
+                <tr class="ref-type">
+                    <td align="right">
+                        <span class="ref-type-label">Reference Type:</span>
+                    </td>
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td style="width: calc(100%-130px);">
+                                    Is this reference the one that best describes the data (or software) in this data publication?
+                                    <div style="height: 8px;"> </div>
+                                </td>
+                                <td align="right" style="width: 130px;vertical-align:top;">
+                                    <input type="radio" value="1" name="reftype" id="reftype1" [(ngModel)]="reftype"
+                                        (change)="onReftypeChanged($event)">
+                                    <label for="rftype1"> &nbsp;Yes&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="radio" value="2" name="reftype" id="reftype2" [(ngModel)]="reftype"
+                                        (change)="onReftypeChanged($event)">
+                                    <label for="reftype2"> &nbsp;No&nbsp;&nbsp;&nbsp;</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
                 <!-- doi -->
                 <tr *ngIf="(isAdding && useDOI) || isEditing">
                     <td align="right" style="width: 20% !important">
@@ -98,27 +123,6 @@
                             (command_out)="onDoiChange($event)"
                         >
                         </lib-text-edit> -->
-                    </td>
-                </tr>
-
-                <!-- Reference type -->
-                <tr style="width: 100%">
-                    <td
-                        align="right"
-                        style="vertical-align: top; width: 20% !important"
-                    >
-                        <span>Reference Type:</span>
-                    </td>
-                    <td colspan="2">
-                        <div style="width: calc(100%-130px)">
-                            Is this reference the one that best describes the
-                            data (or software) in this data publication?
-                            <div style="height: 8px"></div>
-                        </div>
-                        <mat-radio-group [(ngModel)]="reftype">
-                            <mat-radio-button value="1">Yes</mat-radio-button>
-                            <mat-radio-button value="2">No</mat-radio-button>
-                        </mat-radio-group>
                     </td>
                 </tr>
 
