@@ -49,27 +49,27 @@
     </div>
     <div class="editable_field" style="white-space: nowrap;">
         <!-- Save button -->
-        <button 
-            class="edit_button" 
-            type="button" 
-            (click)="commandOut('saveCurrentPage')" 
+        <fa-icon
+            class="edit_button action-icon"
+            [class.disabled]="noURL || !accessPage || !accessPage?.dataChanged"
+            [icon]="faSave"
+            size="sm"
+            (click)="commandOut('saveCurrentPage')"
             aria-label="edit button" 
-            [disabled]="noURL || !accessPage || !accessPage?.dataChanged" 
             matTooltip="Save current changes"
-            matTooltipPosition="above" >
-            <fa-icon [icon]="faSave"></fa-icon>
-        </button>
+            matTooltipPosition="above"
+        ></fa-icon>
 
         <!-- Cancel button -->
-        <button
-            class="edit_button" 
-            type="button"
-            (click)="commandOut('undoCurrentChanges')" 
+        <fa-icon
+            class="edit_button action-icon"
+            [icon]="faXmark"
+            size="sm"
+            (click)="commandOut('undoCurrentChanges')"
             aria-label="undo button" 
             matTooltip="Undo current changes"
-            matTooltipPosition="above">
-            <fa-icon [icon]="faXmark"></fa-icon>
-        </button>
+            matTooltipPosition="above"
+        ></fa-icon>        
     </div>
 </div>
 

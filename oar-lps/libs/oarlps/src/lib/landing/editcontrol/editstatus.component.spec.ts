@@ -112,7 +112,7 @@ describe('EditStatusComponent', () => {
         component.showLastUpdate();
         expect(component.message).toContain("To see any previously");
         
-        component.editmode = EDIT_MODES.EDIT_MODE;
+        component.editmode = EDIT_MODES.PREVIEW_MODE;
         fixture.detectChanges();
         let cmpel = fixture.nativeElement;
         let bardiv = cmpel.querySelector(".ec-status-bar");

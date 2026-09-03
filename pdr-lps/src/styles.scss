@@ -511,3 +511,24 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .mat-mdc-progress-bar .mdc-linear-progress__bar-inner {
     border-top-width: 20px !important;
 }
+
+.general-help-content p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+.general-help-content ul {
+    list-style-type: disc;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.general-help-content ol {
+    list-style-type: decimal;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.general-help-content li {
+    margin-bottom: 0.25em;
+}

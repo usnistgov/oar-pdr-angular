@@ -6,42 +6,41 @@
     <ng-template #contentTemplate let-data="data">
         <!-- Control buttons -->
         <!-- Edit button -->
-        <button 
+        <fa-icon
             *ngIf="!editingTopics(data)"
-            class="edit_button" 
+            class="edit_button action-icon"
+            [icon]="faPencil"
+            size="sm"
             (click)="startEditing(data)" 
             aria-label="edit button" 
             matTooltip="Edit topics"
-            matTooltipPosition="above">
-
-            <fa-icon [icon]="faPencil" size="sm"></fa-icon>
-        </button>
+            matTooltipPosition="above"
+        ></fa-icon>
 
         <!-- Close edit block -->
-        <button 
+        <fa-icon
             *ngIf="editingTopics(data)" 
-            class="edit_button" 
-            type="button" 
-            [disabled]="dataChanged" 
-            (click)="setMode()" 
+            class="edit_button action-icon"
+            [class.disabled]="dataChanged"
+            [icon]="faXmark"
+            size="sm"
+            (click)="setMode()"
             aria-label="Close edit block" 
             matTooltip="Close edit block"
-            matTooltipPosition="above">
-
-            <fa-icon [icon]="faXmark"></fa-icon>
-        </button>
+            matTooltipPosition="above"
+        ></fa-icon>
 
         <!-- Restore original -->
-        <button 
+        <fa-icon
             *ngIf="updated(data)" 
-            class="edit_button" 
-            type="button"
+            class="edit_button action-icon"
+            [icon]="faUndo"
+            size="sm"
             (click)="restoreOriginal(data)" 
-            aria-label="Restore original topics" 
-            matTooltip="Restore original topics"
-            matTooltipPosition="above">
-            <fa-icon [icon]="faUndo"></fa-icon>
-        </button>     
+            aria-label="Close edit block" 
+            matTooltip="Close edit block"
+            matTooltipPosition="above"
+        ></fa-icon>        
     </ng-template>
 </topic-pub>
 

@@ -131,3 +131,28 @@
     padding-top: 4px !important;
     padding-bottom: 4px !important;
 }
+
+.mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: var(--background-light-grey);
+}
+
+.sidebar-content p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+.sidebar-content ul {
+    list-style-type: disc;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.sidebar-content ol {
+    list-style-type: decimal;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.sidebar-content li {
+    margin-bottom: 0.25em;
+}

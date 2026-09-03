@@ -350,7 +350,7 @@ export class AccesspageListComponent implements OnInit {
     }
 
     /**
-     * When access page data changed, set the flag so
+     * When access page data changed, set the flag
      */
     onDataChange(event) {
         this.accessPages[this.currentApageIndex] = JSON.parse(

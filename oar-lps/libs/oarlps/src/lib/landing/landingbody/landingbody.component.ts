@@ -165,18 +165,34 @@ export class LandingBodyComponent {
      */
     showResourceData() {
         let show: boolean = false;
-        let hasDRS = (new NERDResource(this.md)).selectDynamicResourceComps().length > 0;
-        if (this.isPublicSite) {
-            show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
-        } else {
-            if (this.isEditMode) {
-                show = true;
+    
+        if(this.md) {
+            let hasDRS = (new NERDResource(this.md)).selectDynamicResourceComps().length > 0;
+            if (this.isPublicSite) {
+                show =
+                    (this.md["components"] &&
+                        this.md["components"].length > 0) ||
+                    this.md["accessLevel"] ||
+                    this.md["rights"] ||
+                    (this.md["landingPage"] &&
+                        this.md["landingPage"].indexOf("/od/id") === -1) ||
+                    hasDRS;
             } else {
-                show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
+                if (this.isEditMode) {
+                    show = true;
+                } else {
+                    show =
+                        (this.md["components"] &&
+                            this.md["components"].length > 0) ||
+                        this.md["accessLevel"] ||
+                        this.md["rights"] ||
+                        (this.md["landingPage"] &&
+                            this.md["landingPage"].indexOf("/od/id") === -1) ||
+                        hasDRS;
+                }
             }
         }
-
+        
         return show;
     }
-
 }

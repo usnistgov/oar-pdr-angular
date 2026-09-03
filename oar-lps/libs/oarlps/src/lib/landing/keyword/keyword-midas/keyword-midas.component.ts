@@ -233,7 +233,7 @@ export class KeywordMidasComponent {
      */
     currentKeywordChanged() {
         return this.keywords.filter(
-            (x) => !this.originalRecord[this.fieldName].includes(x),
+            (x) => !this.originalRecord[this.fieldName]?.includes(x),
         );
     }
 
@@ -244,7 +244,7 @@ export class KeywordMidasComponent {
     keywordChanged() {
         // let keywordChanged = this.record[this.fieldName].filter(x => !this.originalRecord[this.fieldName].includes(x));
         let keywordChanged2 = this.originalRecord[this.fieldName].filter(
-            (x) => !this.record[this.fieldName].includes(x),
+            (x) => !this.record[this.fieldName]?.includes(x),
         );
 
         return this.currentKeywordChanged() || keywordChanged2.length > 0;

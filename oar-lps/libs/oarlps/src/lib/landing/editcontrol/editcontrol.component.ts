@@ -14,14 +14,14 @@ import {
     RevisionTypes,
     SubmissionData,
     SubmitResponse,
-    Collections,
+    SectionMode,
     GlobalService,
     ReviewResponse,
     SectionHelp,
     iconClass,
     SubmissionStatus,
-    SubmissionFeedback
-} from '../../shared/globals/globals';
+    SubmissionFeedback,
+} from "../../shared/globals/globals";
 import { LandingpageService } from '../landingpage.service';
 import { SubmitConfirmComponent } from '../submission/submit-confirm/submit-confirm.component';
 import { SubmitStatusComponent } from '../submission/submit-status/submit-status.component';
@@ -505,7 +505,12 @@ export class EditControlComponent implements OnInit, OnChanges {
     setEditMode(editmode : string){
         this.editMode = editmode;
         //broadcast the editmode
+        let sectionMode: SectionMode = {} as SectionMode;
+        sectionMode.section = "";
+        sectionMode.mode = this.editMode;   
+
         this.edstatsvc.setEditMode(editmode);
+        this.lpService.setEditing(sectionMode);
         this.chref.detectChanges();
     }
 

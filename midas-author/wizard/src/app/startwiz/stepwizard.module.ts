@@ -20,12 +20,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         FrameModule,
         SidebarComponent,
         PeopleComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
     declarations: [StepWizardComponent],
-    providers: [
-        WizardService
-    ],
-    exports: [StepWizardComponent]
+    providers: [WizardService],
+    exports: [StepWizardComponent],
 })
-export class StepWizModule { }
+export class StepWizModule {}

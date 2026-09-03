@@ -247,7 +247,7 @@
         <!-- Control buttons -->
         <td style="width: 90px; vertical-align: top">
             <!-- Save button -->
-            <button
+            <!-- <button
                 class="edit_button"
                 type="button"
                 (click)="onSave()"
@@ -257,11 +257,22 @@
                 matTooltipPosition="above"
             >
                 <fa-icon [icon]="faSave"></fa-icon>
-            </button>
+            </button> -->
+
+            <fa-icon
+                class="edit_button action-icon"
+                [class.disabled]="!dataChanged"
+                [icon]="faSave"
+                size="sm"
+                (click)="onSave()"
+                aria-label="Save changes"
+                matTooltip="Save changes"
+                matTooltipPosition="above"
+            ></fa-icon>              
 
             <!-- Cancel button -->
             <!-- <button *ngIf="dataChanged" class="edit_button" type="button" -->
-            <button
+            <!-- <button
                 class="edit_button"
                 type="button"
                 (click)="undoCurrentChanges()"
@@ -270,7 +281,18 @@
                 matTooltipPosition="above"
             >
                 <fa-icon [icon]="faUndo"></fa-icon>
-            </button>
+            </button> -->
+
+            <fa-icon
+                *ngIf="dataChanged"
+                class="edit_button action-icon"
+                [icon]="faUndo"
+                size="sm"
+                (click)="undoCurrentChanges()"
+                aria-label="Undo button"
+                matTooltip="Undo current changes"
+                matTooltipPosition="above"
+            ></fa-icon>               
         </td>
     </tr>
 </table>

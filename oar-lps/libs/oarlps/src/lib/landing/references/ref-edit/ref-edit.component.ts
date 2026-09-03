@@ -9,7 +9,6 @@ import { RefAuthorComponent } from '../ref-author/ref-author.component';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { AppConfig } from '../../../config/config';
 import { AuthenticationService } from 'oarng';
-import { iconClass } from '../../../shared/globals/globals';
 import { SingleMsgBarComponent } from '../../../shared/single-msg-bar/single-msg-bar.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -29,6 +28,14 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatRadioModule } from "@angular/material/radio";
 import { MatIconModule } from '@angular/material/icon';
+import { LandingpageService } from "../../landingpage.service";
+import {
+    SectionMode,
+    MODE,
+    SectionPrefs,
+    Sections,
+    iconClass,
+} from "../../../shared/globals/globals";
 
 @Component({
     selector: "lib-ref-edit",
@@ -117,6 +124,7 @@ export class RefEditComponent implements OnInit {
         public authsvc: AuthenticationService,
         public iconLibrary: FaIconLibrary,
         public mdupdsvc: MetadataUpdateService,
+        public lpService: LandingpageService,
     ) {
         iconLibrary.addIcons(
             faPencil,
@@ -148,6 +156,28 @@ export class RefEditComponent implements OnInit {
             this.reftype =
                 this.currentRef.refType == "IsSupplementTo" ? "1" : "2";
         }
+
+       this.lpService.watchEditing((sectionMode: SectionMode) => {
+            if (sectionMode) {
+                if (
+                    sectionMode.sender !=
+                    SectionPrefs.getFieldName(Sections.SIDEBAR)
+                ) {
+                    if (
+                        sectionMode.section != this.fieldName &&
+                        sectionMode.mode != MODE.NORMAL
+                    ) {
+                        //Mode change request from other section. If data has been changed, save it and close the edit block.
+                        if (this.ref.dataChanged) {
+                            this.commandOut('saveCurrentChanges');
+                        }else{
+                            this.commandOut("closeEditBlock");
+                        }
+                            
+                    }
+                }
+            }
+        });        
     }
 
     ngOnChanges(changes: SimpleChanges): void {

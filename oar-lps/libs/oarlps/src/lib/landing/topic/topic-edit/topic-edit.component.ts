@@ -76,7 +76,7 @@ export class TopicEditComponent implements OnInit {
     taxonomyTree: TreeNode[] = [];
     filteredTaxonomy: TreeNode[] = [];
     toggle: Boolean = true;
-    originalSelectedTopicsTopics: any[] = [];
+    // originalSelectedTopicsTopics: any[] = [];
     collectionData: any;
     // selectedTopics: any[] = [];
 
@@ -286,6 +286,12 @@ export class TopicEditComponent implements OnInit {
      */
     onSave(refreshHelp: boolean = true) {
         this.dataChanged = false;
+
+        this.dataChangedOutput.emit({
+            action: "dataChanged",
+            data: this.selectedTopics,
+        });
+
         this.cmdOutput.emit({
             command: "saveTopics",
             selectedTopics: this.selectedTopics,
@@ -336,10 +342,10 @@ export class TopicEditComponent implements OnInit {
             // this.selectedTopics.push(rowNode.node.data.researchTopic);
 
             this.dataChanged = true;
-            this.dataChangedOutput.emit({
-                action: "dataChanged",
-                data: this.selectedTopics,
-            });
+            // this.dataChangedOutput.emit({
+            //     action: "dataChanged",
+            //     data: this.selectedTopics,
+            // });
             // Reset search text box
             if (this.searchText != "") {
                 this.searchText = "";

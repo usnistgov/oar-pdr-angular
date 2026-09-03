@@ -112,7 +112,7 @@ export class TitleEditComponent {
                         sectionMode.mode != MODE.NORMAL
                     ) {
                         if (this.isEditing) {
-                            // Do not refresh hekp content because other section already updated it.
+                            // Do not refresh help content because other section already updated it.
                             this.onSave(false);
                         } else {
                             this.setMode(MODE.NORMAL, false);

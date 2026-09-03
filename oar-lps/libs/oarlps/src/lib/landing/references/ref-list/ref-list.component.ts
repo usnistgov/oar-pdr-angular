@@ -520,6 +520,9 @@ export class RefListComponent implements OnInit {
             case 'undoCurrentChanges':
                 this.undoCurRefChanges();
                 break;
+            case 'closeEditBlock':
+                this.setMode(MODE.NORMAL, false);
+                break;
             default:
                 break;
         }

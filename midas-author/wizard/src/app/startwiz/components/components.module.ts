@@ -37,6 +37,8 @@ import { MatButtonModule } from '@angular/material/button';
         MatFormFieldModule,
         MatInputModule,
         MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
     ],
     exports: [
         AssociatedPapersComponent,

@@ -480,3 +480,38 @@ a:focus {
     padding-top: 4px !important;
     padding-bottom: 4px !important;
 }
+
+.mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: var(--background-light-grey);
+}
+
+.general-help-content p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+.general-help-content ul {
+    list-style-type: disc;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.general-help-content ol {
+    list-style-type: decimal;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.general-help-content li {
+    margin-bottom: 0.25em;
+}
+
+.action-icon {
+    cursor: pointer;
+}
+
+.action-icon.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
