@@ -1,65 +1,114 @@
-<div class="bottom-line" *ngIf="collectionThemesTree && collectionThemesTree.length > 0">
+<div *ngIf="collectionThemesTree && collectionThemesTree.length > 0">
     <!-- Header -->
-    <div style="padding: 5px;" [ngStyle]="{'background-color': colorScheme.lightVar}">
-        <b>
-            <i [class]="expandIcon()" 
-                style="margin-right: 5px; cursor: pointer;" 
-                (click)="collectionNodeExpanded = !collectionNodeExpanded;chref.detectChanges()">
-            </i>
-            <span style="float: right;margin-right: 5px;margin-top: -3px;">
-                <p-checkbox 
-                    class="ptree-checkbox"
-                    [(ngModel)]="allChecked" 
-                    [binary]="true" 
-                    inputId="binary" 
-                    (click)="updateCheckbox()" > 
-                </p-checkbox>
-                <!-- <i class="faa faa-minus-square" style="color: rgb(0, 157, 255);font-size: 20px;"></i> -->
-            </span>
-            <span style="cursor: pointer;" (click)="collectionNodeExpanded = !collectionNodeExpanded;chref.detectChanges()">
+
+    <div
+        class="w-full p-[5px] flex items-center justify-between h-8"
+        [ngStyle]="{'background-color': colorScheme.lightVar}">
+
+        <div class="flex items-center gap-2">
+            <mat-icon class="align-middle mr-[5px] cursor-pointer"
+                (click)="collectionNodeExpanded = !collectionNodeExpanded; chref.detectChanges()">
+                {{ expandIcon() }}
+            </mat-icon>
+
+            <span class="cursor-pointer" (click)="collectionNodeExpanded = !collectionNodeExpanded;chref.detectChanges()">
                 {{collectionThemesTree[0].label}}
             </span>
-        </b>
-    </div>
+        </div>
 
-    <!-- tree -->
-    <div class="filter-checkbox">
-        <div [@expand]="collectionNodeExpanded? collectionShowMoreLink ? 'collapsed':'expanded':'closed'">
-            <p-tree 
-                id="collectionThemes" 
-                [value]="collectionThemesTree[0].children" 
-                selectionMode="checkbox" 
-                [style]="researchTopicStyle" 
-                [(selection)]="collectionSelectedThemesNode" 
-                (onNodeUnselect)="filterResults()"
-                (onNodeSelect)="filterResults()"
-                (onNodeExpand)="chref.detectChanges()"
-                (onNodeCollapse)="chref.detectChanges()">
-                <ng-template let-node pTemplate="default">
-                    <div *ngIf="node.label != 'undefined---1'" class="text-nowrap" data-toggle="tooltip" [title]="filterTooltip(node)" >
-                        <span *ngIf="node.count > 0; else header1" class="invisible-scrollbar" > &nbsp;{{node.label.split("---")[0]}}&nbsp;</span>
-                        <ng-template #header1>
-                            <span><b> &nbsp;{{node.label.split("---")[0]}}&nbsp;</b></span>
-                        </ng-template>
-
-                        <span class="w3-badge badge-notify badge-style" [style.background-color]="colorScheme.defaultVar"
-                            *ngIf="node.count > 0">
-                            {{node.count}}</span> 
-                    </div>
-                </ng-template>
-            </p-tree>
+        <div class="inline-flex items-center pb-0.5 px-1">
+            <mat-checkbox
+                id="binary"
+                style="vertical-align: bottom;"
+                class="custom-rounded-checkbox"
+                [checked]="allChecked"
+                [indeterminate]="isIndeterminate"
+                (change)="updateCheckbox($event.checked)">
+            </mat-checkbox>
         </div>
     </div>
-    <div class="show-more-less" 
-        (click)="$event.preventDefault(); collectionShowMoreLink = false;chref.detectChanges()" 
-        [style.background-color]="colorScheme.lighterVar" 
+
+    <!-- Tree Content -->
+    <div 
+        [@expand]="collectionNodeExpanded? collectionShowMoreLink ? 'collapsed':'expanded':'closed'" 
+        *ngIf="collectionThemesTree[0].children?.length > 0; else emptyMessage" 
+        style="font-size: 14px;"
+        class="overflow-auto">
+        <!-- Recursive tree node template -->
+        <ng-container *ngFor="let node of collectionThemesTree[0].children; let i = index">
+            <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: node, level: 0}"></div>
+        </ng-container>      
+    </div>
+
+    <ng-template #emptyMessage>
+        <div style="text-align: center; padding: 24px; color: #666; font-size: 14px;">
+            No records found
+        </div>
+    </ng-template>
+
+    <!-- Tree Node Template -->
+    <ng-template #treeNodeTemplate let-node let-level="level">
+        <!-- <div class="mat-row" style="display: flex; align-items: center; background: #FFFFFF; border-bottom: 1px solid #e0e0e0; padding: 8px 12px;"> -->
+        <div style="padding-left: {{(level + 1) * 16}}px;"
+            class="text-[18px] px-[16px] items-center h-auto border-b border-gray-300">
+
+            <!-- Tree toggler and checkbox -->
+            <div class="flex flex-row items-center whitespace-nowrap overflow-x-auto overflow-y-hidden">
+                <button
+                    *ngIf="node.children?.length > 0"
+                    mat-icon-button
+                    (click)="node.isExpanded = !node.isExpanded"
+                    [attr.aria-label]="node.isExpanded ? 'Collapse' : 'Expand'"
+                    style="padding: 0px; min-width: 24px;">
+
+                    <mat-icon
+                        style="padding-top: 2px;">
+                        {{ node.isExpanded? 'expand_more': 'chevron_right' }}
+                    </mat-icon>
+                </button>
+                <span *ngIf="node.children?.length == 0" style="margin-right: 40px;"> </span>
+
+                <!-- Checkbox -->
+                <mat-checkbox
+                    style="vertical-align: bottom;"
+                    class="custom-rounded-checkbox ml-[-10px]"
+                    [indeterminate]="getNodeIndeterminate(node)"
+                    [checked]="isNodeSelected(node)"
+                    (change)="onCheckboxChange($event.checked, node)">
+                </mat-checkbox>
+
+                <!-- File Name -->
+                <div *ngIf="node.label != 'undefined---1'" class="text-nowrap" data-toggle="tooltip" [title]="filterTooltip(node)" >
+                    <span *ngIf="node.ediids.length > 0; else header1" class="invisible-scrollbar" > &nbsp;{{node.label.split("---")[0]}}&nbsp;</span>
+                    <ng-template #header1>
+                        <span><b> &nbsp;{{node.label.split("---")[0]}}&nbsp;</b></span>
+                    </ng-template>
+
+                    <span class="w3-badge badge-notify badge-style" [style.background-color]="colorScheme.defaultVar"
+                        *ngIf="node.ediids.length > 0">
+                        {{node.ediids.length}}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Children nodes -->
+        <div class="rounded-sm" *ngIf="node.isExpanded && node.children?.length > 0" >
+            <ng-container *ngFor="let child of node.children; let j = index">
+                <div *ngTemplateOutlet="treeNodeTemplate; context: {$implicit: child, level: level + 1}"></div>
+            </ng-container>
+        </div>
+    </ng-template>
+
+    <div class="show-more-less"
+        (click)="$event.preventDefault(); collectionShowMoreLink = false;chref.detectChanges()"
+        [style.background-color]="colorScheme.lighterVar"
         *ngIf="collectionNodeExpanded == true && collectionShowMoreLink == true && collectionThemesTree[0]?.children.length > 5">
         Show More...
     </div>
-    <div class="show-more-less" 
-        (click)="$event.preventDefault();collectionShowMoreLink = true;chref.detectChanges()" 
-        [style.background-color]="colorScheme.lighterVar" 
+    <div class="show-more-less"
+        (click)="$event.preventDefault();collectionShowMoreLink = true;chref.detectChanges()"
+        [style.background-color]="colorScheme.lighterVar"
         *ngIf="collectionNodeExpanded == true && collectionShowMoreLink == false && collectionThemesTree[0]?.children.length > 5">
         Show Less
-    </div>
+    </div>  
 </div>

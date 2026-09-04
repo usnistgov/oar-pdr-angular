@@ -24,6 +24,7 @@ import { MetricsinfoComponent, SubmitStatusComponent, SidebarComponent, Citation
          MenuComponent, EditControlComponent, LandingBodyComponent, FrameModule
  } from 'oarlps';
 import { AuthenticationService } from 'oarng';
+import { MatButtonModule } from '@angular/material/button';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 
@@ -55,6 +56,8 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
         MetricsinfoComponent,
         LandingBodyComponent,
         EditControlComponent,
+        FrameModule,
+        MatButtonModule,
         SubmitStatusComponent,
         FrameModule,
         FontAwesomeModule
@@ -852,7 +855,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     setMenuPosition() {
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
-        // The breakpoint for PrimeNG menu is 750. For some reason the following min-width
+        // The breakpoint for menu is 750. For some reason the following min-width
         // need to set to 768 to be able to change the state at 750px.
         if(this.inBrowser){
             this.breakpointObserver

@@ -1,5 +1,4 @@
 import { Component, Input, SimpleChanges, ViewChild, ChangeDetectorRef, inject } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
@@ -11,8 +10,7 @@ import { CommonModule } from '@angular/common';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { AuthorPubComponent } from '../author-pub/author-pub.component';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
     faPencil,
@@ -28,8 +26,7 @@ import {
         AuthorListComponent,
         AuthorPubComponent,
         CollapseModule,
-        ButtonModule,
-        TooltipModule,
+        MatTooltipModule,
         FontAwesomeModule
     ],
     templateUrl: './author-midas.component.html',
@@ -71,7 +68,6 @@ export class AuthorMidasComponent {
     @Input() isScienceTheme: boolean = false;
 
     constructor(public mdupdsvc : MetadataUpdateService,        
-                private ngbModal: NgbModal,
                 public edstatsvc: EditStatusService,
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
@@ -219,12 +215,14 @@ export class AuthorMidasComponent {
             this.lpService.setEditing(sectionMode);
         }
         
-        switch ( this.editMode ) {
+        switch (this.editMode) {
             case MODE.LIST:
+            case MODE.ADD:
+            case MODE.EDIT:
                 this.isEditing = true;
                 this.setOverflowStyle();
                 this.editingStarted = true;
-                this.editBlockStatus = "expanded";                            
+                this.editBlockStatus = "expanded";
                 break;
 
             default: // normal
@@ -232,7 +230,7 @@ export class AuthorMidasComponent {
                 this.setOverflowStyle();
                 this.isEditing = false;
                 this.editingStarted = false;
-                this.editBlockStatus = 'collapsed'
+                this.editBlockStatus = "collapsed";
                 break;
         }
 
@@ -302,10 +300,7 @@ export class AuthorMidasComponent {
      */
     setChildEditMode(editmode: string) {
         this.childEditMode = editmode;
-        setTimeout(() => {
-            this.chref.detectChanges();
-        }, 0);
-        
+        this.setMode(editmode);
     }
 
     /*

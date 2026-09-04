@@ -40,19 +40,19 @@
                 <div class="editable_field" *ngIf="mdupdsvc.isEditMode" style="white-space: nowrap;">
                     <!-- Edit button -->
                     <button class="edit_button" *ngIf="!isEditing" type="button" 
-                        (click)="startEditing()" aria-label="Edit author" ngbTooltip="Edit author" style="cursor: pointer">
+                        (click)="startEditing()" aria-label="Edit author" matTooltip="Edit author" matTooltipPosition="above" style="cursor: pointer">
                         <i class="fas fa-pencil fa-sm"></i>
                     </button> 
 
                     <!-- Hide button - hide edit block -->
                     <button class="edit_button" *ngIf="isEditing" [disabled]="childIsEditing || childIsAdding" type="button" 
-                        (click)="hideEditBlock()" aria-label="Hide edit block" ngbTooltip="Hide edit block">
+                        (click)="hideEditBlock()" aria-label="Hide edit block" matTooltip="Hide edit block" matTooltipPosition="above">
                         <i class="fas fa-times"></i>
                     </button> 
 
                     <!-- Undo all changes button -->
                     <button class="edit_button" *ngIf="authorsChanged || authorsUpdated" type="button"
-                        (click)="undoAllChanges()" aria-label="undo button" ngbTooltip="Undo">
+                        (click)="undoAllChanges()" aria-label="undo button" matTooltip="Undo" matTooltipPosition="above">
                         <i class="fas fa-undo fa-sm"></i>
                     </button>             
                 </div>

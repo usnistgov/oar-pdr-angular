@@ -1,37 +1,25 @@
 .title {
     background-color: rgb(28, 62, 126);
     color: white;
-    font-size: xx-large;
+    font-size: x-large;
     font-weight: bold;
     text-align: center;
     padding: 10px;
 }
 
-#btn-submit {
-    width:250px; 
-    background-color:var(--nist-green-default);
-    color:white;
-    margin-right: 1em;
-}
-
-#btn-cancel {
-    width:250px;
-    background-color:var(--nist-green-default);
-    color:white;
-    /* border-color: grey; */
-    margin-right: 20px;
-}
-
 .control-buttons {
-    width:fit-content;
-    height: 50px;
-    color:white;
-    margin: 1em;
-    margin-left: auto;
-    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
 }
 
 .controls {
     width: 100%;
     position: relative;
+}
+
+.cancel-btn {
+    color: white !important;
+    background-color: #939393 !important;
 }

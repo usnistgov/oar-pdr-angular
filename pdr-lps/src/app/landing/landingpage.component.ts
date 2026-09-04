@@ -13,8 +13,6 @@ import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 import { CommonModule } from '@angular/common';
-import { ButtonModule } from 'primeng/button';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NoidComponent } from './noid.component';
 import { CitationPopupComponent, DoneModule, SearchresultModule, DownloadStatusModule, FrameModule } from 'oarlps';
 import { SidebarComponent, MetricsinfoComponent, MessageBarComponent } from 'oarlps';
@@ -24,9 +22,9 @@ import { RecordLevelMetrics, MetricsService, MetricsData, formatBytes } from 'oa
 import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps';
 import { Themes, ThemesPrefs, Collections, CollectionService } from 'oarlps';
 import { HttpClient } from '@angular/common/http';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
+import { MatButtonModule } from '@angular/material/button';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -47,8 +45,6 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
     standalone: true,
     imports: [
         CommonModule,
-        ButtonModule,
-        NgbModule,
         SearchresultModule,
         DoneModule,
         DownloadStatusModule,
@@ -59,10 +55,11 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
         SidebarComponent,
         MenuComponent,
         FrameModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatButtonModule
     ],
     providers: [
-        Title, NgbActiveModal
+        Title
     ],
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss'],
@@ -614,7 +611,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     setMenuPosition() {
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
-        // The breakpoint for PrimeNG menu is 750. For some reason the following min-width
+        // The breakpoint for menu is 750. For some reason the following min-width
         // need to set to 768 to be able to change the state at 750px.
         if(this.inBrowser){
             this.breakpointObserver

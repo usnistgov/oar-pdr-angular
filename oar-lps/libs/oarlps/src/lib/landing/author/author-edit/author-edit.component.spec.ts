@@ -3,6 +3,7 @@ import { AuthorEditComponent } from './author-edit.component';
 import { StaffDirectoryService, StaffDirModule, AuthenticationService } from 'oarng';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 
 describe('AuthorEditComponent', () => {
@@ -15,8 +16,8 @@ describe('AuthorEditComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [AuthorEditComponent, HttpClientTestingModule, StaffDirModule, FontAwesomeTestingModule],
-      providers: [ AuthenticationService ]
+      imports: [AuthorEditComponent, HttpClientTestingModule, StaffDirModule, FontAwesomeTestingModule, NoopAnimationsModule],
+      providers: [ StaffDirectoryService, AuthenticationService ]
     }).compileComponents();
 
     httpMock = TestBed.inject(HttpTestingController);

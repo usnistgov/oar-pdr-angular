@@ -7,7 +7,6 @@ import { RouterModule } from '@angular/router';
 import { ComponentsModule } from './components/components.module';
 import { WizardService } from './services/wizard.service';
 import { FrameModule, SidebarComponent, PeopleComponent } from 'oarlps';
-import { ButtonModule } from 'primeng/button';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
@@ -19,15 +18,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         ComponentsModule,
         RouterModule,
         FrameModule,
-        ButtonModule,
         SidebarComponent,
         PeopleComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
     declarations: [StepWizardComponent],
-    providers: [
-        WizardService
-    ],
-    exports: [StepWizardComponent]
+    providers: [WizardService],
+    exports: [StepWizardComponent],
 })
-export class StepWizModule { }
+export class StepWizModule {}

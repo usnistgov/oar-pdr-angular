@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, firstValueFrom } from 'rxjs';
 
-import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from './confirmation-dialog.component';
 import { ManageFileConfirmComponent } from './manage-file-confirm/manage-file-confirm.component';
 
@@ -10,7 +10,7 @@ import { ManageFileConfirmComponent } from './manage-file-confirm/manage-file-co
 })
 export class ConfirmationDialogService {
 
-    constructor(private modalService: NgbModal) { }
+    constructor(private dialog: MatDialog) { }
 
     public confirm(
         title: string,
@@ -20,38 +20,70 @@ export class ConfirmationDialogService {
         btnOkText: string = 'YES',
         btnCancelText: string = 'NO',
         dialogSize: 'sm' | 'lg' = 'sm'): Promise<boolean> {
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "comfirmModalClass",
-            size: dialogSize
-        };
-        const modalRef = this.modalService.open(ConfirmationDialogComponent, ngbModalOptions);
-        modalRef.componentInstance.title = title;
-        modalRef.componentInstance.message = message;
-        modalRef.componentInstance.btnOkText = btnOkText;
-        modalRef.componentInstance.btnCancelText = btnCancelText;
-        modalRef.componentInstance.showWarningIcon = showWarningIcon;
-        modalRef.componentInstance.showCancelButton = showCancelButton;
+        let dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true; // equivalent to backdrop: 'static', keyboard: false
+        dialogConfig.panelClass = "comfirmModalClass";
+        dialogConfig.autoFocus = true;
 
-        return modalRef.result;
+        // Handle dialog size mapping
+        if (dialogSize === 'sm') {
+            dialogConfig.width = '500px';
+            dialogConfig.maxWidth = '95vw';
+        } else if (dialogSize === 'lg') {
+            dialogConfig.width = '800px';
+            dialogConfig.maxWidth = '95vw';
+        }
+
+        dialogConfig.data = {
+            title: title,
+            message: message,
+            btnOkText: btnOkText,
+            btnCancelText: btnCancelText,
+            showWarningIcon: showWarningIcon,
+            showCancelButton: showCancelButton,
+        };
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+        // dialogRef.componentInstance.title = title;
+        // dialogRef.componentInstance.message = message;
+        // dialogRef.componentInstance.btnOkText = btnOkText;
+        // dialogRef.componentInstance.btnCancelText = btnCancelText;
+        // dialogRef.componentInstance.showWarningIcon = showWarningIcon;
+        // dialogRef.componentInstance.showCancelButton = showCancelButton;
+
+        return firstValueFrom(dialogRef.afterClosed());
     }
 
+    /**
+     * Currently not been used.
+     * Open a popup dialog to confirm opening file manage page
+     * @param title 
+     * @param message 
+     * @param dialogSize 
+     * @returns 
+     */
     public confirmManageFiles(
         title: string,
         message: string,
         dialogSize: 'sm' | 'lg' = 'sm'): Promise<boolean> {
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "comfirmModalClass",
-            size: dialogSize
-        };
-        const modalRef = this.modalService.open(ManageFileConfirmComponent, ngbModalOptions);
-        modalRef.componentInstance.title = title;
-        modalRef.componentInstance.message = message;
+        let dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true; // equivalent to backdrop: 'static', keyboard: false
+        dialogConfig.panelClass = "comfirmModalClass";
 
-        return modalRef.result;
+        // Handle dialog size mapping
+        if (dialogSize === 'sm') {
+            dialogConfig.width = '500px';
+            dialogConfig.maxWidth = '95vw';
+        } else if (dialogSize === 'lg') {
+            dialogConfig.width = '800px';
+            dialogConfig.maxWidth = '95vw';
+        }
+
+        const dialogRef = this.dialog.open(ManageFileConfirmComponent, dialogConfig);
+        dialogRef.componentInstance.title = title;
+        dialogRef.componentInstance.message = message;
+
+        return firstValueFrom(dialogRef.afterClosed());
     }
 
     public displayMessage(
@@ -62,20 +94,28 @@ export class ConfirmationDialogService {
         btnOkText: string = 'Close',
         btnCancelText: string = 'NO',
         dialogSize: 'sm' | 'lg' = 'sm'): Promise<boolean> {
-        let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
-            keyboard: false,
-            windowClass: "myCustomModalClass",
-            size: dialogSize
-        };
-        const modalRef = this.modalService.open(ConfirmationDialogComponent, ngbModalOptions);
-        modalRef.componentInstance.title = title;
-        modalRef.componentInstance.message = message;
-        modalRef.componentInstance.btnOkText = btnOkText;
-        modalRef.componentInstance.btnCancelText = btnCancelText;
-        modalRef.componentInstance.showWarningIcon = showWarningIcon;
-        modalRef.componentInstance.showCancelButton = showCancelButton;
+        let dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true; // equivalent to backdrop: 'static', keyboard: false
+        dialogConfig.panelClass = "myCustomModalClass";
 
-        return modalRef.result;
+        // Handle dialog size mapping
+        if (dialogSize === 'sm') {
+            dialogConfig.width = '500px';
+            dialogConfig.maxWidth = '95vw';
+        } else if (dialogSize === 'lg') {
+            dialogConfig.width = '1200px'; // wider for display messages
+            dialogConfig.maxWidth = '95vw';
+        }
+
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, dialogConfig);
+        dialogRef.componentInstance.title = title;
+        dialogRef.componentInstance.message = message;
+        dialogRef.componentInstance.btnOkText = btnOkText;
+        dialogRef.componentInstance.btnCancelText = btnCancelText;
+        dialogRef.componentInstance.showWarningIcon = showWarningIcon;
+        dialogRef.componentInstance.showCancelButton = showCancelButton;
+
+        return firstValueFrom(dialogRef.afterClosed());
     }
+
 }

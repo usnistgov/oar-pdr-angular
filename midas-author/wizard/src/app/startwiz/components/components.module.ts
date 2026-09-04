@@ -9,11 +9,12 @@ import { NavigatorComponent } from './navigator/navigator.component';
 import { FilesComponent } from './files/files.component';
 import { ContactinfoComponent } from './contactinfo/contactinfo.component';
 import { RecordNameComponent } from './recordname/recordname.component';
-import { InputTextModule } from 'primeng/inputtext';
 import { CollectionComponent } from './collection/collection.component';
 import { PeopleComponent } from 'oarlps';
-import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
     declarations: [
@@ -24,17 +25,20 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
         FilesComponent,
         ContactinfoComponent,
         RecordNameComponent,
-        CollectionComponent
+        CollectionComponent,
     ],
     imports: [
-        CommonModule, 
+        CommonModule,
         FormsModule,
         ReactiveFormsModule,
         WizardModule,
-        InputTextModule,
         PeopleComponent,
-        AutoCompleteModule,
-        FontAwesomeModule
+        FontAwesomeModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
     ],
     exports: [
         AssociatedPapersComponent,
@@ -44,10 +48,8 @@ import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontaweso
         FilesComponent,
         ContactinfoComponent,
         RecordNameComponent,
-        CollectionComponent
+        CollectionComponent,
     ],
-    providers: [
-        FaIconLibrary
-    ]
+    providers: [FaIconLibrary],
 })
-export class ComponentsModule { }
+export class ComponentsModule {}

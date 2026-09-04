@@ -7,7 +7,6 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DataCart } from '../../datacart/cart';
 import { CartService } from '../../datacart/cart.service';
 import { TestDataService } from '../../shared/testdata-service/testDataService';
-import { BadgeModule } from 'primeng/badge';
 import * as env from '../../../environments/environment';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
@@ -25,8 +24,7 @@ describe('CartcontrolComponent', () => {
         declarations: [ CartcontrolComponent ],
         imports: [
             HttpClientTestingModule,
-            FontAwesomeTestingModule,
-            BadgeModule],
+            FontAwesomeTestingModule],
         providers: [
             CartService,
             DownloadService,

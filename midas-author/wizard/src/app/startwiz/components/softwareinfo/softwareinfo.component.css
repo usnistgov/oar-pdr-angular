@@ -1,3 +1,16 @@
 .input {
     width: 400px;
 }
+
+.software-link {
+    margin-top: 1em;
+}
+
+.software-link > label {
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+.software-link mat-form-field {
+    width: 100%;
+}

@@ -20,58 +20,10 @@
         border: 1px solid rgb(95, 95, 95);
 }
 
-/* .title-btn {
-        border-radius: 5px;
-        padding: -5px 0px 20px 10px;
-        margin-left: 10px;
-        margin-right: 12px;
-} */
-
-.title-text {
-    display: table-cell;
-}
-
-.title-btn:hover .title-text {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.title-btn:hover .pi{
-        color: #00f7ff;
-}
-
-.btn-parent {
-        display: table; /* table display*/
-        border-spacing:5px;
-        color: white;
-        border: 1px solid rgb(255, 255, 255);
-        border-radius: 5px;
-        cursor: pointer;
-        width: fit-content;
-}
-
-.title-btn {
-        width: 100%;
-        padding-right: 10px;
-}
-
-.home-btn {
-        width: 130px;
-}
-
-.home-btn:hover .title-text {
-    text-decoration: underline;
-    cursor: pointer;
-}
-
-.home-btn:hover .pi{
-        color: #00f7ff;
-}
-
-.btn-icon {
+/* .btn-icon {
         display: table-cell;
         width: 20px;
-}
+} */
 
 .vertical-center {
         display: table-cell; /* table-cell display*/
@@ -93,4 +45,75 @@
 
 .show-more-less:hover {
         text-decoration: underline;
+}
+
+.item-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Common button */
+.btn-parent {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    color: white;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 5px 8px;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.btn-parent:hover {
+    border-color: #00f7ff;
+}
+
+.btn-icon {
+    flex-shrink: 0;
+}
+
+/* LEFT SIDE - title */
+.title-btn {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Allow the title to wrap */
+.title-btn .btn-text {
+    white-space: normal;
+    overflow-wrap: break-word;
+    line-height: 1.25;
+}
+
+.title-btn:hover .btn-text {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.title-btn:hover .btn-icon{
+    color: #00f7ff;
+}
+
+/* RIGHT SIDE - Access Data */
+.home-btn {
+    flex: 0 0 auto;
+    flex-shrink: 0;
+}
+
+.home-btn .btn-text {
+    white-space: nowrap;
+}
+
+.home-btn:hover .btn-text {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.home-btn:hover .btn-icon{
+    color: #00f7ff;
 }

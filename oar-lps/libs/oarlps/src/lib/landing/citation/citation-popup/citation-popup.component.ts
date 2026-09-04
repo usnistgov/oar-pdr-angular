@@ -1,24 +1,18 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { SharedModule } from 'primeng/api';
-import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { CommonModule } from '@angular/common';
 import { CitationDisplayComponent } from '../citation-display/citation-display.component';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faCopy, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Themes, Collections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { animate, style, transition, trigger } from '@angular/animations';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faCopy, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-citation-popup',
     standalone: true,
     imports: [
-        CommonModule, 
-        ButtonModule, 
-        DialogModule, 
-        SharedModule,
+        CommonModule,
         CitationDisplayComponent,
         FontAwesomeModule
     ],
@@ -50,30 +44,30 @@ export class CitationPopupComponent {
 
     faCopy = faCopy;
     faXmark = faXmark;
-    
-    @Input() citetext : string;
-    @Input() visible : boolean;
-    @Input() width: number;
+
+    @Input() citetext : string = '';
+    @Input() visible : boolean = false;
+    @Input() width: number = 0;
     @Input() collection: string = Collections.DEFAULT;
     @Output() visibleChange = new EventEmitter<boolean>();
     textCopied: boolean;
 
     constructor(
-        public activeModal: NgbActiveModal,
+        public dialogRef: MatDialogRef<CitationPopupComponent>,
         public collectionService: CollectionService,
         public globalService: GlobalService,
         public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef) {
-        
+
         // iconLibrary.addIcons(faCopy, faXmark);
-        
+
         this.allCollections = this.collectionService.loadAllCollections();
 
         this.globalService.watchColorPalette((colorPalette) => {
         this.colorScheme = colorPalette;
-        })  
+        })
     }
-    
+
     ngOnInit() {
     }
 
@@ -86,7 +80,7 @@ export class CitationPopupComponent {
     _setVisible(yesno : boolean) : void {
         this.visible = yesno;
         this.visibleChange.emit(this.visible);
-    }        
+    }
 
     /** display the pop-up */
     show() : void { this._setVisible(true); }
@@ -96,15 +90,15 @@ export class CitationPopupComponent {
 
     /** dismiss the pop-up */
     toggle(): void { this._setVisible(!this.visible); }
-    
-    close() 
+
+    close()
     {
-        this.activeModal.close('Close click');
+        this.dialogRef.close();
     }
 
         /**
      * Return visit homepage button style
-     * @returns 
+     * @returns
      */
     btnStyle() {
         // let color = this.allCollections[this.collection].colorPalette;
@@ -140,5 +134,5 @@ export class CitationPopupComponent {
         setTimeout(() => {
             this.textCopied = false;
         }, 2000);
-    }    
+    }
 }

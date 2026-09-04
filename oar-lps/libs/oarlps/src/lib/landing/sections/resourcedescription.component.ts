@@ -4,7 +4,6 @@ import { animate, style, transition, trigger } from '@angular/animations';
 import { ColorScheme } from '../../shared/globals/globals';
 import { GlobalService } from '../../shared/globals/globals'
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DescriptionComponent } from '../description/description.component';
 import { TopicMidasComponent } from '../topic/topic-midas/topic-midas.component';
 import { TopicPubComponent } from '../topic/topic-pub/topic-pub.component';
@@ -27,8 +26,7 @@ import { KeywordMidasComponent } from '../keyword/keyword-midas/keyword-midas.co
         TopicMidasComponent,
         TopicPubComponent,
         KeywordPubComponent,
-        KeywordMidasComponent,
-        NgbModule
+        KeywordMidasComponent
     ],    
     templateUrl:   './resourcedescription.component.html',
     styleUrls:   [

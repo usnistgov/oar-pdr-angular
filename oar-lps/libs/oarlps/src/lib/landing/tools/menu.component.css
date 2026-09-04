@@ -24,7 +24,7 @@
 }
 
 .menu-item:hover {
-    background-color: var(--background-hover);;
+    background-color: var(--background-hover);
 }
 
 .menu-body {
@@ -41,4 +41,8 @@ a:focus {
 
 fa-icon {
     margin-right: 3px;
+}
+
+.citation-dialog .mat-mdc-dialog-surface {
+    @apply rounded-xl;
 }

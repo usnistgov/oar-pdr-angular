@@ -1,14 +1,7 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, ViewEncapsulation } from '@angular/core';
 import * as d3 from 'd3';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { TreeTableModule } from 'primeng/treetable';
-import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TreeModule } from 'primeng/tree';
-import { FieldsetModule } from 'primeng/fieldset';
-import { DialogModule } from 'primeng/dialog';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
 
 const barWidth: number = 30;
 
@@ -16,14 +9,7 @@ const barWidth: number = 30;
     selector: 'app-horizontal-barchart',
     standalone: true,
     imports: [
-        NgbModule, 
-        TreeModule, 
-        FieldsetModule, 
-        DialogModule, 
-        OverlayPanelModule, 
-        TreeTableModule, 
-        ButtonModule,
-        CommonModule, 
+        CommonModule,
         FormsModule
     ],
     templateUrl: './horizontal-barchart.component.html',

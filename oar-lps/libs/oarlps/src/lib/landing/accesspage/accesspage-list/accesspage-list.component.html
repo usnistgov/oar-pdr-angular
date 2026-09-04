@@ -1,46 +1,75 @@
-<div style="width: 100%;">
+<div style="width: 100%">
     <div *ngIf="errMessage">
-        <lib-single-msg-bar [message]="errMessage" (command_out)="clearMessage()">
+        <lib-single-msg-bar
+            [message]="errMessage"
+            (command_out)="clearMessage()"
+        >
         </lib-single-msg-bar>
     </div>
-    
-    <div style="width: 100%;">
-        <div class="editable_container" style="width: 100%; margin-bottom: .5em;">
-            <div class="editable_field" style="width: calc(100% - 100px);">
-                <div class="apage-text edit_box" [style.background-color]="getRecordBackgroundColor()">
+
+    <div style="width: 100%">
+        <div
+            class="editable_container"
+            style="width: 100%; margin-bottom: 0.5em"
+        >
+            <div class="editable_field" style="width: calc(100% - 100px)">
+                <div
+                    class="apage-text edit_box"
+                    [style.background-color]="getRecordBackgroundColor()"
+                >
                     <!-- <div style="margin-left: 10px;"><i>Use this area to add links to relevant websites including software repositories</i></div> -->
-                    <div *ngIf="accessPages && accessPages.length > 0; else noAccessPage" 
-                        #dropListContainer 
-                        class="example-container" 
-                        cdkDropListGroup>
-
-                        <div cdkDropList (cdkDropListDropped)="drop($event)" 
-                            class="list" 
-                            [style.background-color]="getRecordBackgroundColor()">
-
-                            <div class="list-item" 
-                                *ngFor="let apage of accessPages; let i = index" 
+                    <div
+                        *ngIf="
+                            accessPages && accessPages.length > 0;
+                            else noAccessPage
+                        "
+                        #dropListContainer
+                        class="example-container"
+                        cdkDropListGroup
+                    >
+                        <div
+                            cdkDropList
+                            (cdkDropListDropped)="drop($event)"
+                            class="list"
+                            [style.background-color]="
+                                getRecordBackgroundColor()
+                            "
+                        >
+                            <div
+                                class="list-item"
+                                *ngFor="let apage of accessPages; let i = index"
                                 cdkDrag
                                 [style.cursor]="dragDropCursor"
-                                [cdkDragDisabled]="isDragDisabled">
-                        
-                                <div (click)="selectApage(i)" 
-                                    [ngStyle]="getActiveApageStyle(i)" 
-                                    style="width: 100%;"
-                                    [style.background-color]="getApageBackgroundColor(i)">
-
-                                    <lib-text-edit [textField]="apage.title" 
-                                        [dragDropIcon]="accessPages.length==1?false:true" 
+                                [cdkDragDisabled]="isDragDisabled"
+                            >
+                                <div
+                                    (click)="selectApage(i)"
+                                    [ngStyle]="getActiveApageStyle(i)"
+                                    style="width: 100%"
+                                    [style.background-color]="
+                                        getApageBackgroundColor(i)
+                                    "
+                                >
+                                    <lib-text-edit
+                                        [textField]="apage.title"
+                                        [dragDropIcon]="
+                                            accessPages.length == 1
+                                                ? false
+                                                : true
+                                        "
                                         [editButton]="false"
-                                        [deleteButton]="true" 
-                                        [restoreButton]="true" 
-                                        [editOnlyButton]="true" 
+                                        [deleteButton]="true"
+                                        [restoreButton]="true"
+                                        [editOnlyButton]="true"
                                         [trashButton]="true"
-                                        [disableControl]="isAdding || isEditing" 
-                                        [placeHolderText]="placeholder" 
+                                        [disableControl]="isAdding || isEditing"
+                                        [placeHolderText]="placeholder"
                                         [isNew]="apage.isNew"
-                                        [dataChanged]="dataChanged(fieldName, i)" 
-                                        (command_out)="onApageChange($event, i)">
+                                        [dataChanged]="
+                                            dataChanged(fieldName, i)
+                                        "
+                                        (command_out)="onApageChange($event, i)"
+                                    >
                                     </lib-text-edit>
                                 </div>
                             </div>
@@ -49,32 +78,47 @@
                     <ng-template #noAccessPage>
                         Click on plus sign to add links.
                     </ng-template>
-                    
                 </div>
             </div>
-            <div class="editable_field" style="white-space: nowrap;">
+            <div class="editable_field" style="white-space: nowrap">
                 <!-- Add button -->
-                <button 
-                    class="edit_button" 
-                    type="button" 
-                    (click)="onAdd()" 
-                    aria-label="add button" 
-                    *ngIf="!isEditing && !isAdding" 
-                    pTooltip="Add access page"
-                    tooltipPosition="top">
+                <!-- <button
+                    class="edit_button"
+                    type="button"
+                    (click)="onAdd()"
+                    aria-label="add button"
+                    *ngIf="!isEditing && !isAdding"
+                    matTooltip="Add access page"
+                    matTooltipPosition="above"
+                >
                     <fa-icon [icon]="faPlus"></fa-icon>
-                </button>
+                </button> -->
+
+                <fa-icon
+                    class="edit_button action-icon"
+                    *ngIf="!isEditing && !isAdding"
+                    [icon]="faPlus"
+                    size="sm"
+                    (click)="onAdd()"
+                    aria-label="Add access page"
+                    matTooltip="Add access page"
+                    matTooltipPosition="above"
+                ></fa-icon>
             </div>
         </div>
-        <div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus"> 
-            <lib-accesspage-edit 
-                [currentApage]="currentApage" 
-                [editMode]="editMode" 
+        <div
+            style="overflow: hidden; width: 100%"
+            [@editExpand]="editBlockStatus"
+        >
+            <lib-accesspage-edit
+                [currentApage]="currentApage"
+                [editMode]="editMode"
                 [fieldName]="fieldName"
-                [forceReset]="forceReset" 
-                (dataChanged)="onDataChange($event)" 
-                (cmdOutput)="onCommandChanged($event)">
-            </lib-accesspage-edit> 
+                [forceReset]="forceReset"
+                (dataChanged)="onDataChange($event)"
+                (cmdOutput)="onCommandChanged($event)"
+            >
+            </lib-accesspage-edit>
         </div>
     </div>
 </div>

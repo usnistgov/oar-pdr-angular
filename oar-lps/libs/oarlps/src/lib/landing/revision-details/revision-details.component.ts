@@ -7,7 +7,6 @@ import {
     SubmissionData,
     iconClass
 } from '../../shared/globals/globals';
-import { CheckboxModule } from 'primeng/checkbox';
 // import { MatIconModule } from '@angular/material/icon';
 // import { MatCheckboxModule } from '@angular/material/checkbox';
 // import { MatFormFieldModule } from '@angular/material/form-field';
@@ -31,7 +30,6 @@ import {
         CommonModule,
         FormsModule,
         TextFieldModule,
-        CheckboxModule,
         MdsCheckboxComponent,
         FontAwesomeModule
     ],

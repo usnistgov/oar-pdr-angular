@@ -7,11 +7,11 @@ import { DataCartItem, DataCart } from '../../datacart/cart';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { TestDataService } from '../../shared/testdata-service/testDataService';
-import { TreeTableModule } from 'primeng/treetable';
 import { AppConfig } from '../../config/config';
 import * as env from '../../../environments/environment';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('CartTreeNode', () => {
     beforeEach(waitForAsync(() => {
@@ -72,10 +72,10 @@ describe('CartTreeNode', () => {
         dc.addFile("foo", { filePath: "bar/good", resTitle: "All About Foo", downloadURL: "http://here", size: 12536111 });
 
         let node: CartTreeNode = new CartTreeNode();
-        let item: DataCartItem = dc.findFile("foo", "readme");
-        node.upsertNodeFor(item);
+        let firstItem: DataCartItem = dc.findFile("foo", "readme");
+        node.upsertNodeFor(firstItem);
         expect(node.children.length).toEqual(1);
-        expect(node.data.cartItem).toBeNull();
+        expect(node.data.cartItem).toBeNull(); // Root node's cartItem remains null
         expect(node.children[0].data.key).toEqual("foo");
         expect(node.children[0].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].data.name).toEqual("foo");
@@ -85,60 +85,81 @@ describe('CartTreeNode', () => {
         expect(node.children[0].children[0].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[0].data.name).toEqual("readme");
         expect(node.children[0].children[0].keyname).toEqual("readme");
-        expect(node.children[0].children[0].data.cartItem).toBe(item);
+        expect(node.children[0].children[0].data.cartItem).toBe(firstItem); // This WILL be set
         expect(node.children[0].children[0].data.size).toEqual("12.5 kB");
         expect(node.children[0].children[0].children.length).toEqual(0);
 
-        item = dc.findFile("foo", "bar/goo");
-        node.upsertNodeFor(item);
+        let secondItem: DataCartItem = dc.findFile("foo", "bar/goo");
+        node.upsertNodeFor(secondItem);
         expect(node.children.length).toEqual(1);
-        expect(node.data.cartItem).toBeNull();
+        expect(node.data.cartItem).toBeNull(); // Root node's cartItem remains null
         expect(node.children[0].data.key).toEqual("foo");
+        expect(node.children[0].data.resTitle).toEqual("All About Foo");
+        expect(node.children[0].data.name).toEqual("foo");
+        expect(node.children[0].keyname).toEqual("foo");
         expect(node.children[0].children.length).toEqual(2);
         expect(node.children[0].children[0].data.key).toEqual("foo/readme");
         expect(node.children[0].children[0].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[0].data.name).toEqual("readme");
+        expect(node.children[0].children[0].keyname).toEqual("readme");
+        expect(node.children[0].children[0].data.cartItem).toBe(firstItem); // Still points to first item
+        expect(node.children[0].children[0].data.size).toEqual("12.5 kB");
+        expect(node.children[0].children[0].children.length).toEqual(0);
         expect(node.children[0].children[1].data.key).toEqual("foo/bar");
         expect(node.children[0].children[1].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[1].data.name).toEqual("bar");
-        expect(node.children[0].children[1].data.cartItem).toBeNull();
+        expect(node.children[0].children[1].data.cartItem).toBeNull(); // Intermediate node
         expect(node.children[0].children[1].children.length).toEqual(1);
         expect(node.children[0].children[1].children[0].data.key).toEqual("foo/bar/goo");
         expect(node.children[0].children[1].children[0].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[1].children[0].data.name).toEqual("goo");
         expect(node.children[0].children[1].children[0].keyname).toEqual("goo");
-        expect(node.children[0].children[1].children[0].data.cartItem).toBe(item);
+        expect(node.children[0].children[1].children[0].data.cartItem).toBe(secondItem); // This WILL be set
         expect(node.children[0].children[1].children[0].data.size).toEqual("54 Bytes");
         expect(node.children[0].children[1].children[0].children.length).toEqual(0);
 
-        item = dc.findFile("foo", "bar/good");
-        node.upsertNodeFor(item);
+        let thirdItem: DataCartItem = dc.findFile("foo", "bar/good");
+        node.upsertNodeFor(thirdItem);
         expect(node.children.length).toEqual(1);
-        expect(node.data.cartItem).toBeNull();
+        expect(node.data.cartItem).toBeNull(); // Root node's cartItem remains null
         expect(node.children[0].data.key).toEqual("foo");
+        expect(node.children[0].data.resTitle).toEqual("All About Foo");
+        expect(node.children[0].data.name).toEqual("foo");
+        expect(node.children[0].keyname).toEqual("foo");
         expect(node.children[0].children.length).toEqual(2);
         expect(node.children[0].children[0].data.key).toEqual("foo/readme");
-        expect(node.children[0].data.resTitle).toEqual("All About Foo");
+        expect(node.children[0].children[0].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[0].data.name).toEqual("readme");
+        expect(node.children[0].children[0].keyname).toEqual("readme");
+        expect(node.children[0].children[0].data.cartItem).toBe(firstItem); // Still points to first item
+        expect(node.children[0].children[0].data.size).toEqual("12.5 kB");
+        expect(node.children[0].children[0].children.length).toEqual(0);
         expect(node.children[0].children[1].data.key).toEqual("foo/bar");
         expect(node.children[0].children[1].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[1].data.name).toEqual("bar");
-        expect(node.children[0].children[1].data.cartItem).toBeNull();
+        expect(node.children[0].children[1].data.cartItem).toBeNull(); // Intermediate node
         expect(node.children[0].children[1].children.length).toEqual(2);
         expect(node.children[0].children[1].children[0].data.key).toEqual("foo/bar/goo");
         expect(node.children[0].children[1].children[0].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[1].children[0].data.name).toEqual("goo");
+        expect(node.children[0].children[1].children[0].keyname).toEqual("goo");
+        expect(node.children[0].children[1].children[0].data.cartItem).toBe(secondItem); // Still points to second item
+        expect(node.children[0].children[1].children[0].data.size).toEqual("54 Bytes");
+        expect(node.children[0].children[1].children[0].children.length).toEqual(0);
         expect(node.children[0].children[1].children[1].data.key).toEqual("foo/bar/good");
         expect(node.children[0].children[1].children[1].data.resTitle).toEqual("All About Foo");
         expect(node.children[0].children[1].children[1].data.name).toEqual("good");
         expect(node.children[0].children[1].children[1].keyname).toEqual("good");
-        expect(node.children[0].children[1].children[1].data.cartItem).toBe(item);
+        expect(node.children[0].children[1].children[1].data.cartItem).toBe(thirdItem); // This WILL be set
         expect(node.children[0].children[1].children[1].data.size).toEqual("12.5 MB");
         expect(node.children[0].children[1].children[1].data.zipFile).toEqual('');
 
         // now to an update
-        item.zipFile = "goob.zip";
-        node.upsertNodeFor(item);
+        // We need to get the item again since we're updating it
+        let updatedItem: DataCartItem = dc.findFile("foo", "bar/good");
+        // Update the zipFile property on the item in the cart
+        updatedItem.zipFile = "goob.zip";
+        node.upsertNodeFor(updatedItem);
         expect(node.children[0].children[1].children[1].data.size).toEqual("12.5 MB");
         expect(node.children[0].children[1].children[1].data.zipFile).toEqual('goob.zip');
     });
@@ -181,6 +202,7 @@ describe('CartTreeNode', () => {
         expect(node.findNode("foo")).not.toBeNull();
         expect(node.findNode("foo/bar")).not.toBeNull();
         expect(node.findNode("foo/bar/goo")).not.toBeNull();
+        expect(node.findNode("foo/bar/good")).not.toBeNull();
 
         expect(dc.removeFileById("foo", "bar/goo")).toBeTruthy();
         expect(dc.removeFileById("foo", "bar/good")).toBeTruthy();
@@ -208,25 +230,19 @@ describe('TreetableComponent', () => {
         dc.addFile("foo", { filePath: "readme", count: 3, downloadURL: "http://here", resTitle: "fooishness" },
                 false, false);
         dc.save();
-        
+
         TestBed.configureTestingModule({
             declarations: [ TreetableComponent ],
             schemas: [NO_ERRORS_SCHEMA],
             imports: [
-                TreeTableModule,
-                HttpClientTestingModule],
+                HttpClientTestingModule,
+                BrowserAnimationsModule],  // Added this to fix animation error
             providers: [
                 CartService,
                 DownloadService,
                 TestDataService,
                 GoogleAnalyticsService,
-                { provide: AppConfig, useValue: cfg },
-                // {
-                //     provide: FaTestingConfig,
-                //     useValue: {
-                //         circleIcon: 'undo'
-                //     }
-                // }
+                { provide: AppConfig, useValue: cfg }
             ]
         })
         .compileComponents();

@@ -1,11 +1,23 @@
-<div style="display: table;">
+<div style="display: table">
     <div class="editable_container">
-        <div class="editable_field" *ngIf="!record[fieldName] || record[fieldName].length==0 || isEditMode">
-            <div class="editable_field" *ngIf="isEditMode" [ngStyle]="mdupdsvc.getFieldStyle(fieldName, false, undefined, false)">
-                @if(isScienceTheme){
+        <div
+            class="editable_field"
+            *ngIf="
+                !record[fieldName] ||
+                record[fieldName].length == 0 ||
+                isEditMode
+            "
+        >
+            <div
+                class="editable_field"
+                *ngIf="isEditMode"
+                [ngStyle]="
+                    mdupdsvc.getFieldStyle(fieldName, false, undefined, false)
+                "
+            >
+                @if (isScienceTheme) {
                     Facilitators:
-                }
-                @else {
+                } @else {
                     Authors:
                 }
             </div>
@@ -15,65 +27,64 @@
             <author-pub [record]="record" [fieldName]="fieldName"></author-pub>
         </div>
 
-        @if(isEditMode) {
+        @if (isEditMode) {
             <!-- Control buttons -->
-            <div class="editable_field" style="white-space: nowrap;">
+            <div class="editable_field" style="white-space: nowrap">
                 <!-- Edit button -->
-                <button 
-                    class="edit_button" 
-                    *ngIf="!isEditing" 
-                    type="button" 
-                    (click)="startEditing()" 
-                    aria-label="Edit author" 
-                    pTooltip="Edit author" 
-                    tooltipPosition="top" 
-                    style="cursor: pointer">
-                    <fa-icon [icon]="faPencil" size="sm" [style.opacity]="iconOpacity()"></fa-icon>
-                </button> 
+                <fa-icon
+                    *ngIf="!childIsEditing && !childIsAdding"
+                    class="edit_button action-icon"
+                    [icon]="faPencil"
+                    size="sm"
+                    (click)="startEditing()"
+                    aria-label="Edit author"
+                    matTooltip="Edit author"
+                    matTooltipPosition="above"
+                ></fa-icon>
 
                 <!-- Hide button - hide edit block -->
-                <button 
-                    class="edit_button" 
-                    *ngIf="isEditing" 
-                    [disabled]="childIsEditing || childIsAdding" 
-                    type="button" 
-                    (click)="hideEditBlock()" 
-                    aria-label="Hide edit block" 
-                    pTooltip="Hide edit block"
-                    tooltipPosition="top" >                     
-                    <fa-icon [icon]="faXmark" [style.opacity]="iconOpacity()"></fa-icon>
-                </button> 
+                <fa-icon
+                    *ngIf="isEditing"
+                    class="edit_button action-icon"
+                    [class.disabled]="childIsEditing || childIsAdding"
+                    [icon]="faXmark"
+                    size="sm"
+                    (click)="hideEditBlock()"
+                    aria-label="Hide edit block"
+                    matTooltip="Hide edit block"
+                    matTooltipPosition="above"
+                ></fa-icon>
 
                 <!-- Undo all changes button -->
-                <button
-                    class="edit_button" 
-                    *ngIf="authorsChanged || authorsUpdated" 
-                    type="button"
-                    (click)="undoAllChanges()" 
-                    [disabled]="childIsEditing || childIsAdding"
-                    aria-label="undo button" 
-                    pTooltip="Undo"
-                    tooltipPosition="top">
-                    <fa-icon [icon]="faUndo" [style.opacity]="iconOpacity()"></fa-icon>
-                </button>             
+                 <fa-icon
+                    *ngIf="editBlockStatus == 'collapsed' && (authorsChanged || authorsUpdated)"
+                    class="edit_button action-icon"
+                    [class.disabled]="childIsEditing || childIsAdding"
+                    [icon]="faUndo"
+                    size="sm"
+                    (click)="undoAllChanges()"
+                    aria-label="Undo button"
+                    matTooltip="Undo"
+                    matTooltipPosition="above"
+                ></fa-icon>                
             </div>
         }
     </div>
 </div>
 
-<!-- Lazy loading in edit mode. Never get loaded in public mode -->
-
-@if(isEditing) {
-    <!-- Author editor -->
-    <div [@editExpand]="editBlockStatus" 
-        style = "width: 100%;" 
-        [style.overflow] = "overflowStyle">
-        <lib-author-list #authorlist 
-            [record]="record" 
-            [fieldName]="fieldName"
-            [startEditing]="editingStarted"
-            (dataChanged)="onAuthorChange($event)" 
-            (editmodeOutput)="setChildEditMode($event)">
-        </lib-author-list>
-    </div>
-}
+<!-- Author editor -->
+<div
+    [@editExpand]="editBlockStatus"
+    style="width: 100%"
+    [style.overflow]="overflowStyle"
+>
+    <lib-author-list
+        #authorlist
+        [record]="record"
+        [fieldName]="fieldName"
+        [startEditing]="editingStarted"
+        (dataChanged)="onAuthorChange($event)"
+        (editmodeOutput)="setChildEditMode($event)"
+    >
+    </lib-author-list>
+</div>

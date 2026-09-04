@@ -2,43 +2,47 @@ import { Component, OnInit, Inject, PLATFORM_ID, ViewChild, ElementRef } from '@
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { ButtonModule } from 'primeng/button';
 import { AppConfig } from '../config/config';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faDownload, faCartPlus, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { faCircle } from '@fortawesome/free-regular-svg-icons';
 import { iconClass } from '../shared/globals/globals';
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
-    selector: 'app-bulk-download',
+    selector: "app-bulk-download",
     standalone: true,
-    imports: [ CommonModule, FontAwesomeModule ],
-    templateUrl: './bulk-download.component.html',
-    styleUrls: ['./bulk-download.component.css'],
+    imports: [CommonModule, FontAwesomeModule, MatTooltipModule],
+    templateUrl: "./bulk-download.component.html",
+    styleUrls: ["./bulk-download.component.css"],
     animations: [
-        trigger(
-        'enterAnimation', [
-            transition(':enter', [
-            style({height: '0px', opacity: 0}),
-            animate('700ms', style({height: '100%', opacity: 1}))
+        trigger("enterAnimation", [
+            transition(":enter", [
+                style({ height: "0px", opacity: 0 }),
+                animate("700ms", style({ height: "100%", opacity: 1 })),
             ]),
-            transition(':leave', [
-            style({height: '100%', opacity: 1}),
-            animate('700ms', style({height: 0, opacity: 0}))
-            //   animate('500ms', style({transform: 'translateY(0)', opacity: 1}))
-            ])
-        ]
-        )
-    ]
+            transition(":leave", [
+                style({ height: "100%", opacity: 1 }),
+                animate("700ms", style({ height: 0, opacity: 0 })),
+                //   animate('500ms', style({transform: 'translateY(0)', opacity: 1}))
+            ]),
+        ]),
+    ],
 })
 export class BulkDownloadComponent implements OnInit {
     inBrowser: boolean = false;
     ediid: string = "dataset-id";
-    rcloneCommand: string = "rclone copy :http: ./"+this.ediid+"/ --http-url http://data.nist.gov/od/ds/"+this.ediid+"/ -P";
+    rcloneCommand: string =
+        "rclone copy :http: ./" +
+        this.ediid +
+        "/ --http-url http://data.nist.gov/od/ds/" +
+        this.ediid +
+        "/ -P";
     rcloneCopied: boolean = false;
     previewCommand: string = "python pdrdownload.py -I " + this.ediid;
     previewCopied: boolean = false;
-    startDownloadCommand: string = "python pdrdownload.py -I " + this.ediid + " -D";
+    startDownloadCommand: string =
+        "python pdrdownload.py -I " + this.ediid + " -D";
     startDownloadCopied: boolean = false;
     helpCommand: string = "python pdrdownload.py --help";
     helpCopied: boolean = false;
@@ -56,41 +60,40 @@ export class BulkDownloadComponent implements OnInit {
     faCopy = faCopy;
     faCircle = faCircle;
 
-    @ViewChild('downloadall') downloadAll: ElementRef;
-    @ViewChild('rclone') rclone: ElementRef;
-    @ViewChild('pyscript') pyscript: ElementRef;
-    @ViewChild('addtocart') addToCart: ElementRef;
-    @ViewChild('downloadAPI') downloadAPI: ElementRef;
-    
+    @ViewChild("downloadall") downloadAll: ElementRef;
+    @ViewChild("rclone") rclone: ElementRef;
+    @ViewChild("pyscript") pyscript: ElementRef;
+    @ViewChild("addtocart") addToCart: ElementRef;
+    @ViewChild("downloadAPI") downloadAPI: ElementRef;
 
     constructor(
         private route: ActivatedRoute,
         public iconLibrary: FaIconLibrary,
         @Inject(PLATFORM_ID) private platformId: Object,
-        private cfg : AppConfig){
-
-        iconLibrary.addIcons(
-            faCircle,
-            faDownload,
-            faCartPlus,
-            faCopy
-        );  
+        private cfg: AppConfig,
+    ) {
+        iconLibrary.addIcons(faCircle, faDownload, faCartPlus, faCopy);
 
         this.inBrowser = isPlatformBrowser(platformId);
         this.pdrbase = cfg.get<string>("links.portalBase", "/");
-        if (! this.pdrbase.endsWith('/'))
-            this.pdrbase += '/';
+        if (!this.pdrbase.endsWith("/")) this.pdrbase += "/";
     }
 
     ngOnInit(): void {
         if (this.inBrowser) {
-            this.route.params.subscribe(queryParams => {
+            this.route.params.subscribe((queryParams) => {
                 if (queryParams.id) {
                     this.ediid = queryParams.id;
-                    this.previewCommand = "python pdrdownload.py -I " + this.ediid;
-                    this.startDownloadCommand = "python pdrdownload.py -I " + this.ediid + " -D";
-                    this.rcloneCommand = "rclone copy :http: ./" + this.ediid +
-                        "/ --http-url http://data.nist.gov/od/ds/" + this.ediid + "/ -P";
+                    this.previewCommand =
+                        "python pdrdownload.py -I " + this.ediid;
+                    this.startDownloadCommand =
+                        "python pdrdownload.py -I " + this.ediid + " -D";
+                    this.rcloneCommand =
+                        "rclone copy :http: ./" +
+                        this.ediid +
+                        "/ --http-url http://data.nist.gov/od/ds/" +
+                        this.ediid +
+                        "/ -P";
                 }
             });
         }
@@ -101,33 +104,33 @@ export class BulkDownloadComponent implements OnInit {
      * @param val - input string to be copied to clipboard
      * @param command - indicate which command was copied so the command will be highlighted.
      */
-    copyToClipboard(val: string, command: string){
-        const selBox = document.createElement('textarea');
-        selBox.style.position = 'fixed';
-        selBox.style.left = '0';
-        selBox.style.top = '0';
-        selBox.style.opacity = '0';
+    copyToClipboard(val: string, command: string) {
+        const selBox = document.createElement("textarea");
+        selBox.style.position = "fixed";
+        selBox.style.left = "0";
+        selBox.style.top = "0";
+        selBox.style.opacity = "0";
         selBox.value = val;
         document.body.appendChild(selBox);
         selBox.focus();
         selBox.select();
-        document.execCommand('copy');
+        document.execCommand("copy");
         document.body.removeChild(selBox);
 
         switch (command) {
-            case ("rclone"): 
+            case "rclone":
                 this.rcloneCopied = true;
                 setTimeout(() => {
                     this.rcloneCopied = false;
                 }, 2000);
-                break;            
-            case ("preview"): 
+                break;
+            case "preview":
                 this.previewCopied = true;
                 setTimeout(() => {
                     this.previewCopied = false;
                 }, 2000);
                 break;
-            case ('startDownload'):
+            case "startDownload":
                 this.startDownloadCopied = true;
                 setTimeout(() => {
                     this.startDownloadCopied = false;
@@ -147,57 +150,68 @@ export class BulkDownloadComponent implements OnInit {
      * @param sectionId - the section the page will scroll to.
      */
     goToSection(sectionId) {
-        if(sectionId == null) sectionId = "top";
+        if (sectionId == null) sectionId = "top";
 
-        switch(sectionId) { 
-            case "downloadAll": { 
-                this.downloadAll.nativeElement.scrollIntoView({behavior: 'smooth'}); 
-                break; 
-            } 
-            case "rclone": { 
-                this.rclone.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+        switch (sectionId) {
+            case "downloadAll": {
+                this.downloadAll.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+                break;
+            }
+            case "rclone": {
+                this.rclone.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
                 this.downloadscriptCopied = true;
                 setTimeout(() => {
                     this.downloadscriptCopied = false;
                 }, 2000);
-                break; 
-            } 
-            case "pyscript": { 
-                this.pyscript.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                break;
+            }
+            case "pyscript": {
+                this.pyscript.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
                 this.downloadscriptCopied = true;
                 setTimeout(() => {
                     this.downloadscriptCopied = false;
                 }, 2000);
-                break; 
-            } 
+                break;
+            }
             case "addToCart": {
-                this.addToCart.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                this.addToCart.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
                 break;
             }
             case "downloadAPI": {
-                this.downloadAPI.nativeElement.scrollIntoView({behavior: 'smooth'}); 
+                this.downloadAPI.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
                 break;
             }
-            default: { // GO TOP
+            default: {
+                // GO TOP
                 window.scrollTo({
                     top: 0,
                     left: 0,
-                    behavior: 'smooth'
-                  });
-                break; 
-            } 
-        } 
+                    behavior: "smooth",
+                });
+                break;
+            }
+        }
     }
 
     btnStyle() {
         // let color = this.allCollections[this.collection].colorPalette;
 
         return {
-            '--button-text-color': 'white',
-            '--button-color': 'var(--science-theme-background-default)',
-            '--hover-color': 'var(--science-theme-background-hover)',
-            '--disable-color': 'var(--disabled-grey)',
-            '--disable-text-color': 'var(--disabled-grey-text)'
+            "--button-text-color": "white",
+            "--button-color": "var(--science-theme-background-default)",
+            "--hover-color": "var(--science-theme-background-hover)",
+            "--disable-color": "var(--disabled-grey)",
+            "--disable-text-color": "var(--disabled-grey-text)",
         };
-    }    
+    }
 }

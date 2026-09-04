@@ -201,7 +201,7 @@ export class MetadataUpdateService {
     public startEditing(recid: string) : Observable<boolean> {
         return this.dapsvc.edit(recid).pipe(
             tap((recsvc) => {
-                if (! recsvc.canEdit())
+                if (!recsvc.canEdit())
                     throw new daperrs.NotAuthorizedError(recid, "write");
 
                 this.dapUpdtSvc = recsvc as MIDASDAPUpdateService;
@@ -209,10 +209,12 @@ export class MetadataUpdateService {
 
                 this._recStatus = rec.status;
 
-                if (rec.status?.modified) 
+                if (rec.status?.modified)
                     this.lastUpdate = {
                         userAttributes: { userName: rec.status?.byWho },
-                        _updateDate: (new Date(rec.status.modified * 1000)).toLocaleString()
+                        _updateDate: new Date(
+                            rec.status.modified * 1000,
+                        ).toLocaleString(),
                     };
                 if (rec.status?.byWho && this.staffsvc) {
                     // TODO: use staff directory to look up user who made last edit
@@ -361,11 +363,11 @@ export class MetadataUpdateService {
         }
 
         // If no body, remove this field from curent record
-        // if(!body) {
-        //     delete this.currentRec[fieldName];
-        //     body = JSON.stringify(this.currentRec);
-        //     updateWholeRecord = true;
-        // }
+        if(!body) {
+            delete this.currentRec[fieldName];
+            body = JSON.stringify(this.currentRec);
+            updateWholeRecord = true;
+        }
 
         let obs; 
         if (updateWholeRecord) 

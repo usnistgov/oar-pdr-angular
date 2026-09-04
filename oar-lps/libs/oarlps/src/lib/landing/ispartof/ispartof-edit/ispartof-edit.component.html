@@ -1,81 +1,107 @@
 <div class="editable_field">
-    @if(this.savedCollection == 'None') {
-        @if(isEditMode){
+    @if (this.savedCollection == "None") {
+        @if (isEditMode) {
             Add to domain collection
         }
     } @else {
-        <ispartof-pub [record]="record" [landingPageServiceStr]="landingPageServiceStr"></ispartof-pub>
+        <ispartof-pub
+            [record]="record"
+            [landingPageServiceStr]="landingPageServiceStr"
+        ></ispartof-pub>
     }
 </div>
 
 <!-- Control buttons -->
-<div *ngIf="isEditMode" class="editable_field" style="white-space: nowrap;">
-
+<div *ngIf="isEditMode" class="editable_field" style="white-space: nowrap; margin: -4px 10px 0 10px;">
     <!-- Edit button -->
-    <button class="edit_button" 
-        type="button" 
-        (click)="startEditing()" 
-        aria-label="Edit collection" 
-        ngbTooltip="Edit collection" 
-        style="cursor: pointer">
-        <fa-icon [icon]="faPencil" [class]="getEditIconClass()" size="sm"></fa-icon>
-    </button> 
-    
+    <fa-icon
+        class="edit_button action-icon"
+        [icon]="faPencil"
+        [class.disabled]="isEditing"
+        size="sm"
+        (click)="startEditing()"
+        aria-label="Edit collection"
+        matTooltip="Edit collection"
+        matTooltipPosition="above"
+    ></fa-icon>
+
     <!-- Undo button -->
-    <button class="edit_button" 
-        *ngIf="collectionHistory.length > 1" 
-        type="button"
-        ngbTooltip="Undo Current Change"
-        (click)="undo()">
-        <fa-icon [icon]="faUndo" [class]="getUndoIconClass()" size="sm"></fa-icon>
-    </button>              
+    <fa-icon
+        *ngIf="collectionDiff && !isEditing"
+        class="edit_button action-icon"
+        [icon]="faUndo"
+        size="sm"
+        (click)="undo()"
+        aria-label="Undo Current Change"
+        matTooltip="Undo Current Change"
+        matTooltipPosition="above"
+    ></fa-icon>
 </div>
 
 <!-- Editor -->
 <!-- Lazy loading in edit mode. Never get loaded in public mode -->
-@if(isEditing){
-    <div [@editExpand]="editBlockStatus" [style.overflow] = "overflowStyle">
+@if (isEditing) {
+    <div [@editExpand]="editBlockStatus" [style.overflow]="overflowStyle">
         <table>
-            <tr  style="width: 100%;">
+            <tr style="width: 100%">
                 <!-- Text edit area -->
-                <td style="padding: 10px 0px;">
+                <td style="padding: 10px 0px">
                     <div class="radio-group editing-block">
                         <div *ngFor="let col of collectionData" class="radio">
                             <label [title]="col.displayName">
-                                <input type="radio" 
-                                    required name="col" 
-                                    [value]="col.value" 
-                                    [(ngModel)]="selectedCollection" 
+                                <input
+                                    type="radio"
+                                    required
+                                    name="col"
+                                    [value]="col.value"
+                                    [(ngModel)]="selectedCollection"
                                     [checked]="col.value === selectedCollection"
-                                    (change)="colChanged($event)">
-                                {{col.displayName}}
+                                    (change)="colChanged($event)"
+                                />
+                                {{ col.displayName }}
                             </label>
                         </div>
-                    </div>  
+                    </div>
                 </td>
 
                 <!-- Control buttons -->
-                <td style="padding: 10px 0px;width: 90px;vertical-align: top;">
+                <td style="padding: 10px 0px; width: 90px; vertical-align: top">
                     <!-- Save button -->
-                    <button class="edit_button" 
-                        type="button" 
-                        (click)="saveCollection()" 
-                        aria-label="edit button" 
-                        [disabled]="!dataChanged" 
-                        ngbTooltip="Save collection and close editing block">
-                        <fa-icon [icon]="faSave"></fa-icon>
-                    </button>
-            
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [icon]="faSave"
+                        [class.disabled]="!dataChanged"
+                        size="sm"
+                        (click)="saveCollection()"
+                        aria-label="Save collection and close editing block"
+                        matTooltip="Save collection and close editing block"
+                        matTooltipPosition="above"
+                    ></fa-icon>  
+                                        
                     <!-- Cancel button -->
-                    <button class="edit_button" 
-                        type="button"
-                        (click)="undoCurCollectionChanges()" 
-                        aria-label="undo button" 
-                        ngbTooltip="Undo and close editing block">
-                        <fa-icon [icon]="faXmark"></fa-icon>
-                    </button>
-                </td>          
+                    <fa-icon
+                        *ngIf="!dataChanged"
+                        class="edit_button action-icon"
+                        [icon]="faXmark"
+                        size="sm"
+                        (click)="undoCurCollectionChanges()"
+                        aria-label="close editing block"
+                        matTooltip="close editing block"
+                        matTooltipPosition="above"
+                    ></fa-icon>  
+
+                    <fa-icon
+                        *ngIf="dataChanged"
+                        class="edit_button action-icon"
+                        [icon]="faUndo"
+                        size="sm"
+                        (click)="undoCurCollectionChanges()"
+                        aria-label="Undo and close editing block"
+                        matTooltip="Undo and close editing block"
+                        matTooltipPosition="above"
+                    ></fa-icon>                      
+                </td>
             </tr>
-        </table>    
+        </table>
     </div>
 }

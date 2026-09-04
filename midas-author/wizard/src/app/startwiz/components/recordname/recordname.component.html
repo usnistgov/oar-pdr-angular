@@ -1,39 +1,63 @@
 <div class="full-height">
-    <oar-pushing-sidebar [marginLeft]="marginLeft" style="width: 100%; height: fit-content;">
+    <oar-pushing-sidebar
+        [marginLeft]="marginLeft"
+        style="width: 100%; height: fit-content"
+    >
         <div class="main-content">
-            <div style="margin-top: 1em;margin-right: 1em;">
-                <div style="margin-bottom: .5em;">
-                    We're just about finished setting up your draft publication...<p></p>
-                    Give this draft a nickname that will remind you what this publication will be about.  This nickname will not appear in the publication; instead, it will appear as a label in the MIDAS portal in your list of draft publications.<p></p>
+            <div style="margin-top: 1em; margin-right: 1em">
+                <div style="margin-bottom: 0.5em">
+                    We're just about finished setting up your draft
+                    publication...
+                    <p></p>
+                    Give this draft a nickname that will remind you what this
+                    publication will be about. This nickname will not appear in
+                    the publication; instead, it will appear as a label in the
+                    MIDAS portal in your list of draft publications.
+                    <p></p>
+                    Enter a nickname:
                 </div>
-                <label for="name">Enter a nickname:</label><br>
-                <input #name
-                    id="name"
-                    class="input input-box"
-                    type="text"
-                    pInputText
-                    name="recordname"
-                    [(ngModel)]="dataModel.recordname"
-                    (input)="onRecordNameChanged($event)"
-                    [ngStyle]="inputStyle()">
 
-                <button type="button" class="common-btn form-btn" (click)="toggleNames()" style="height: 30px;">
-                    {{showNames ? 'Hide' : 'Show'}} existing names 
-                </button>  
+                <mat-form-field class="mat-form-field input mr-1" appearance="fill">
+                    <input
+                        #name
+                        matInput
+                        type="text"
+                        name="recordname"
+                        [(ngModel)]="dataModel.recordname"
+                        (input)="onRecordNameChanged($event)"
+                        [ngStyle]="inputStyle()"
+                    />
+                </mat-form-field>
+
+                <button
+                    mat-raised-button
+                    class="showNameBtn"
+                    type="button"
+                    (click)="toggleNames()"
+                    style="height: 30px"
+                >
+                    {{ showNames ? "Hide" : "Show" }} existing names
+                </button>
 
                 <div *ngIf="dataModel.recordname && nameTaken()">
-                    <p  style="color: red;">This name is already taken. Please choose another name.</p>
+                    <p style="color: red">
+                        This name is already taken. Please choose another name.
+                    </p>
                 </div>
 
-                <div *ngIf="showNames" style="margin-top: .5em;">
-                    Used record names:<p>
-                    <div *ngFor="let name of existingRecordNamesForDisplay" style="margin-top: .5em;margin-left: 20px;">
-                        {{name}}
+                <div *ngIf="showNames" style="margin-top: 0.5em">
+                    Used record names:
+                    <p></p>
+                    <div
+                        *ngFor="let name of existingRecordNamesForDisplay"
+                        style="margin-top: 0.5em; margin-left: 20px"
+                    >
+                        {{ name }}
                     </div>
                 </div>
             </div>
         </div>
-        <span class="sidebar-title">{{helpText["label"]}}</span>
+        <span class="sidebar-title">{{ helpText["label"] }}</span>
         <div class="sidebar-content" [innerHTML]="sanitizedHtml"></div>
     </oar-pushing-sidebar>
 </div>

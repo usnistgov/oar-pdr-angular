@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges, inject } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { Themes, ThemesPrefs, Collections, GlobalService, iconClass, LandingConstants } from '../../shared/globals/globals';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
@@ -8,12 +8,10 @@ import * as _ from 'lodash-es';
 import { isPlatformBrowser } from '@angular/common';
 import { MetricsData } from "../metrics-data";
 import { CommonModule } from '@angular/common';
-import { MenuModule } from 'primeng/menu';
 import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
 import { CitationPopupComponent } from '../citation/citation-popup/citation-popup.component';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { SubmitStatusComponent } from '../submission/submit-status/submit-status.component';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import {
     faArrowCircleRight,
     faAnglesRight,
@@ -52,10 +50,8 @@ export class menuItem {
     standalone: true,
     imports: [
         CommonModule,
-        MenuModule,
         MetricsinfoComponent,
-        FontAwesomeModule,
-        SubmitStatusComponent
+        FontAwesomeModule
     ],
     templateUrl: './menu.component.html',
     styleUrls: ['./menu.component.css']
@@ -76,10 +72,8 @@ export class MenuComponent implements OnInit {
     inBrowser: boolean = false;
     bulkDownloadBase: string | null | undefined = "";
     bulkDownloadURL: string = "";
-    // globalsvc = inject(GlobalService);
     hasDataFiles: boolean = false;
     colorScheme: any;
-    modalRef: any; //For citation pop up
     citetext: string = null;
 
     recStates = LandingConstants.recStates;
@@ -117,10 +111,10 @@ export class MenuComponent implements OnInit {
                 @Inject(PLATFORM_ID) private platformId: Object,
         public globalService: GlobalService,
                 public edstatsvc: EditStatusService,
-                private modalService: NgbModal,
                 public iconLibrary: FaIconLibrary,
-                private cfg : AppConfig) 
-    { 
+                private cfg : AppConfig,
+                private dialog: MatDialog)
+    {
         iconLibrary.addIcons(
             faArrowCircleRight,
             faAnglesRight,
@@ -287,12 +281,16 @@ export class MenuComponent implements OnInit {
      * (currently implemented as a pop-up).  
      */
     toggleCitation() {
-        this.modalRef = this.modalService.open(CitationPopupComponent, { size: 'lg', backdrop: 'static' });
-        this.modalRef.componentInstance.citetext = this.citetext;
-        this.modalRef.result.then(
-            (result) => { },
-            (reason) => { }
-        ); 
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '80vw';
+        dialogConfig.maxWidth = '900px';
+        dialogConfig.panelClass = 'citation-dialog';
+
+        const dialogRef = this.dialog.open(CitationPopupComponent, dialogConfig);
+        dialogRef.componentInstance.citetext = this.citetext;
+        dialogRef.afterClosed().subscribe(() => {
+            // Handle close if needed
+        });
     }
 
     /**
@@ -351,9 +349,9 @@ export class MenuComponent implements OnInit {
         }
 
         return {
-            '--background-default': defaultColor,
-            '--background-lighter': this.colorScheme.lighterVar,
-            '--background-hover': this.colorScheme.hoverVar
+            "--background-default": defaultColor,
+            "--background-lighter": this.colorScheme.lighterVar,
+            "--background-hover": this.colorScheme.lightVar
         };
     }
 }

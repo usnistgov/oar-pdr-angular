@@ -21,6 +21,16 @@ td:first-child {
     padding-right:20px;
 }
 
+.custom-size-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  color: rgb(63, 143, 209);
+}
+
+.custom-size-icon:hover {
+    color: rgb(0, 119, 255);
 ref-type {
     width: 100%;
 }

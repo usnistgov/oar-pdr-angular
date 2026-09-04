@@ -1,18 +1,24 @@
-import { Component, OnInit, Input, SimpleChanges, inject } from '@angular/core';
-import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
-import { SearchService } from '../../shared/search-service/index';
-import { AppConfig } from '../../config/config';
-import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
+import { Component, OnInit, Input, SimpleChanges, inject } from "@angular/core";
+import {
+    trigger,
+    state,
+    style,
+    animate,
+    transition,
+} from "@angular/animations";
+import { NerdmRes, NERDResource } from "../../nerdm/nerdm";
+import { SearchService } from "../../shared/search-service/index";
+import { AppConfig } from "../../config/config";
+import { GoogleAnalyticsService } from "../../shared/ga-service/google-analytics.service";
 import {
     Collections,
+    removeLastPathIfVersion,
     ColorScheme,
     GlobalService,
-    removeLastPathIfVersion,
+    iconClass,
 } from "../../shared/globals/globals";
-import { CollectionService } from '../../shared/collection-service/collection.service';
-import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faMagnifyingGlass, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { CollectionService } from "../../shared/collection-service/collection.service";
+
 
 @Component({
     selector: "app-resultlist",
@@ -94,8 +100,6 @@ export class ResultlistComponent implements OnInit {
     // spinnerIcon = iconClass.SPINNER;
     // searchIcon = iconClass.SEARCH;
 
-    faMagnifyingGlass = faMagnifyingGlass;
-    faSpinner = faSpinner;
 
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
@@ -110,11 +114,8 @@ export class ResultlistComponent implements OnInit {
         private searchService: SearchService,
         private cfg: AppConfig,
         public globalService: GlobalService,
-        public iconLibrary: FaIconLibrary,
         public gaService: GoogleAnalyticsService,
     ) {
-        // iconLibrary.addIcons(faMagnifyingGlass, faSpinner);
-
         this.searchService.watchClearAll((clearAll: boolean) => {
             if (clearAll) {
                 this.searchPhases = "";

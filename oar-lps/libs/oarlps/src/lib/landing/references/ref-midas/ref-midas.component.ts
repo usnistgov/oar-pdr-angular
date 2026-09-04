@@ -1,7 +1,6 @@
 import { Component, Input, ViewChild, ElementRef, SimpleChanges, ChangeDetectorRef, inject } from '@angular/core';
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { trigger, state, style, animate, transition } from '@angular/animations';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
 import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
@@ -10,44 +9,53 @@ import { RefListComponent } from '../ref-list/ref-list.component';
 import { CommonModule } from '@angular/common';
 import { ConfirmationDialogComponent } from '../../../shared/confirmation-dialog/confirmation-dialog.component';
 import { RefPubComponent } from '../ref-pub/ref-pub.component';
-import { ButtonModule } from 'primeng/button';				
-import { TooltipModule } from 'primeng/tooltip';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import {
+    FontAwesomeModule,
+    FaIconLibrary,
+} from "@fortawesome/angular-fontawesome";
 import {
     faPencil,
     faXmark,
     faSave,
-    faUndo
-} from '@fortawesome/free-solid-svg-icons';
+    faUndo,
+} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-    selector: 'ref-midas',
+    selector: "ref-midas",
     standalone: true,
     imports: [
         CommonModule,
         RefListComponent,
-        ButtonModule,
-        TooltipModule,
+        MatButtonModule,
+        MatTooltipModule,
+        MatIconModule,
         ConfirmationDialogComponent,
         RefPubComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    templateUrl: './ref-midas.component.html',
-    styleUrls: ['../../landing.component.scss', './ref-midas.component.scss'],
+    templateUrl: "./ref-midas.component.html",
+    styleUrls: ["../../landing.component.scss", "./ref-midas.component.scss"],
     animations: [
-        trigger('editExpand', [
-        state('false', style({height: '0px', minHeight: '0'})),
-        state('true', style({height: '*'})),
-        transition('true <=> false', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ])
-    ]
+        trigger("editExpand", [
+            state("false", style({ height: "0px", minHeight: "0" })),
+            state("true", style({ height: "*" })),
+            transition(
+                "true <=> false",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+    ],
 })
 export class RefMidasComponent {
-    fieldName: string = 'references';
+    fieldName: string = "references";
     editBlockExpanded: boolean = false;
-    editMode: string = MODE.NORMAL; 
+    editMode: string = MODE.NORMAL;
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
-    overflowStyle: string = 'hidden';
+    overflowStyle: string = "hidden";
     dataChanged: boolean = false;
     currentRef: Reference = {} as Reference;
     currentRefIndex: number = 0;
@@ -55,43 +63,26 @@ export class RefMidasComponent {
     orderChanged: boolean = false;
     loadEditRefBlock: boolean = false;
     globalsvc = inject(GlobalService);
-    
-    // For warning pop up
-    modalRef: any;
-
-    //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
 
     faPencil = faPencil;
     faXmark = faXmark;
     faSave = faSave;
     faUndo = faUndo;
-
+    
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
     @Input() isEditMode: boolean = true;
 
-    @ViewChild('undo') undo: ElementRef;
-    @ViewChild('reflist') reflist: RefListComponent;
+    @ViewChild("undo") undo: ElementRef;
+    @ViewChild("reflist") reflist: RefListComponent;
 
-    constructor(public mdupdsvc : MetadataUpdateService,        
-        private modalService: NgbModal,       
-        private chref: ChangeDetectorRef,  
-        public iconLibrary: FaIconLibrary,
-        public lpService: LandingpageService) { 
-
-        iconLibrary.addIcons(
-            faPencil,
-            faXmark,
-            faSave,
-            faUndo
-        );   
-    }
+    constructor(
+        public mdupdsvc: MetadataUpdateService,
+        private dialog: MatDialog,
+        private chref: ChangeDetectorRef,
+        public lpService: LandingpageService,
+    ) {}
 
     ngOnInit(): void {
         this.resetOrigin();
@@ -99,26 +90,35 @@ export class RefMidasComponent {
         // effect(() => {
         //     let sectionMode = this.globalsvc.sectionMode();
         this.lpService.watchEditing((sectionMode: SectionMode) => {
-            if(this.reflist)
-                this.reflist.onSectionModeChange(sectionMode);
+            if (this.reflist) this.reflist.onSectionModeChange(sectionMode);
 
-            if(sectionMode){
-                if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                    if( sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
-                        if(this.editBlockExpanded == true)
-                        this.setMode(MODE.NORMAL, false);
+            if (sectionMode) {
+                if (
+                    sectionMode.sender !=
+                    SectionPrefs.getFieldName(Sections.SIDEBAR)
+                ) {
+                    if (
+                        sectionMode.section != this.fieldName &&
+                        sectionMode.mode != MODE.NORMAL
+                    ) {
+                        if (this.editBlockExpanded == true)
+                            this.setMode(MODE.NORMAL, false);
                     }
-                }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName && this.mdupdsvc.isEditMode) {
+                } else {
+                    if (
+                        !this.isEditing &&
+                        sectionMode.section == this.fieldName &&
+                        this.mdupdsvc.isEditMode
+                    ) {
                         this.startEditing();
                     }
                 }
             }
-        })
+        });
     }
 
-    ngOnChanges(ch : SimpleChanges) {
-        if (ch.record){
+    ngOnChanges(ch: SimpleChanges) {
+        if (ch.record) {
             this.resetOrigin();
         }
 
@@ -127,12 +127,12 @@ export class RefMidasComponent {
 
     resetOrigin() {
         // if(this.record && this.record['references'] && this.record['references'].length > 0) {
-        if(this.record){
+        if (this.record) {
             // this.currentRef = this.record['references'][0];
 
             //Keep a copy of the record for undo purpose
             this.orig_record = JSON.parse(JSON.stringify(this.record));
-        }else{
+        } else {
             this.orig_record = undefined;
         }
     }
@@ -142,19 +142,19 @@ export class RefMidasComponent {
      * @param dataChanged parameter passed from child component
      */
     onRefChange(dataChanged: any) {
-        switch(dataChanged.action) {
-            case 'hideEditBlock':
+        switch (dataChanged.action) {
+            case "hideEditBlock":
                 this.setMode(MODE.NORMAL);
                 break;
-            case 'dataChanged':
+            case "dataChanged":
                 this.dataChanged = true;
                 break;
-            case 'orderChanged':
+            case "orderChanged":
                 this.orderChanged = true;
                 break;
-            case 'orderReset':
+            case "orderReset":
                 this.orderChanged = false;
-                break;                
+                break;
             default:
                 break;
         }
@@ -169,13 +169,23 @@ export class RefMidasComponent {
         this.setMode(MODE.NORMAL);
     }
 
-    get isNormal() { return this.editMode==MODE.NORMAL }
-    get isListing() { return this.editMode==MODE.LIST }
-    get isEditing() { return this.editMode==MODE.EDIT }
-    get childIsEditing() { return this.childEditMode==MODE.EDIT }
-    get childIsAdding() { return this.childEditMode==MODE.ADD }
-    
-    @ViewChild('reflist') refList: RefListComponent;
+    get isNormal() {
+        return this.editMode == MODE.NORMAL;
+    }
+    get isListing() {
+        return this.editMode == MODE.LIST;
+    }
+    get isEditing() {
+        return this.editMode == MODE.EDIT;
+    }
+    get childIsEditing() {
+        return this.childEditMode == MODE.EDIT;
+    }
+    get childIsAdding() {
+        return this.childEditMode == MODE.ADD;
+    }
+
+    @ViewChild("reflist") refList: RefListComponent;
 
     /**
      * Check if any author data changed or author order changed
@@ -183,12 +193,12 @@ export class RefMidasComponent {
     get refChanged() {
         let changed: boolean = false;
 
-        if(this.record[this.fieldName]) {
-            this.record[this.fieldName].forEach(author => {
+        if (this.record[this.fieldName]) {
+            this.record[this.fieldName].forEach((author) => {
                 changed = changed || author.dataChanged;
-            })
+            });
         }
-        
+
         return changed || this.orderChanged;
     }
 
@@ -209,12 +219,12 @@ export class RefMidasComponent {
      * If edit mode is normal, display edit icon.
      * Otherwise display check icon.
      * @returns edit button icon class
-     */   
+     */
     editIconClass() {
-        if(!this.isEditing){
-            return "fas fa-pencil icon_enabled";
-        }else{
-            return "fas fa-pencil icon_disabled";
+        if (!this.isEditing) {
+            return "edit icon_enabled";
+        } else {
+            return "edit icon_disabled";
         }
     }
 
@@ -222,11 +232,21 @@ export class RefMidasComponent {
      * Get the section style based on different modes
      * @returns div style
      */
-    getStyle(){
-        if(this.mdupdsvc.isEditMode){
-            return this.mdupdsvc.getFieldStyle(this.fieldName, this.dataChanged, undefined, this.isEditing);
-        }else{
-            return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
+    getStyle() {
+        if (this.mdupdsvc.isEditMode) {
+            return this.mdupdsvc.getFieldStyle(
+                this.fieldName,
+                this.dataChanged,
+                undefined,
+                this.isEditing,
+            );
+        } else {
+            return {
+                border: "0px solid white",
+                "background-color": "white",
+                "padding-right": "1em",
+                cursor: "default",
+            };
         }
     }
 
@@ -237,13 +257,13 @@ export class RefMidasComponent {
         this.editBlockExpanded = true;
 
         //Broadcast current edit section so landing page will scroll to the section
-        this.lpService.setCurrentSection('references');
+        this.lpService.setCurrentSection("references");
     }
 
     /**
      * Refresh the help text
      */
-    refreshHelpText(help_topic: string = MODE.LIST){
+    refreshHelpText(help_topic: string = MODE.LIST) {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[help_topic];
@@ -260,14 +280,14 @@ export class RefMidasComponent {
         this.editMode = editmode;
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
-            
-        switch ( this.editMode ) {
+
+        switch (this.editMode) {
             case MODE.LIST:
                 this.openEditBlock();
                 this.setOverflowStyle();
 
                 // Update help text
-                if(refreshHelp){
+                if (refreshHelp) {
                     this.refreshHelpText(MODE.LIST);
                 }
                 break;
@@ -278,95 +298,100 @@ export class RefMidasComponent {
                 this.setOverflowStyle();
 
                 // Update help text
-                if(refreshHelp){
+                if (refreshHelp) {
                     this.refreshHelpText(MODE.NORMAL);
-                }                
+                }
                 break;
         }
 
         //Broadcast the current section and mode
-        //refreshHelp=false means this widget is closed by other widget, 
+        //refreshHelp=false means this widget is closed by other widget,
         //do not broadcast the section mode because other widget already did that.
         if (refreshHelp) {
             // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
         }
-        
+
         this.chref.detectChanges();
     }
 
     /**
      * This function trys to resolve the following problem: If overflow style is hidden, the tooltip of the top row
      * will be cut off. But if overflow style is visible, the animation is not working.
-     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish. 
-     * Then tooltip will not be cut off. 
+     * This function set delay to 1 second when user expands the edit block. This will allow animation to finish.
+     * Then tooltip will not be cut off.
      */
     setOverflowStyle() {
-        if(!this.editBlockExpanded) {
-            this.overflowStyle = 'hidden';
-        }else {
-            this.overflowStyle = 'hidden';
+        if (!this.editBlockExpanded) {
+            this.overflowStyle = "hidden";
+        } else {
+            this.overflowStyle = "hidden";
             setTimeout(() => {
-                this.overflowStyle = 'visible';
+                this.overflowStyle = "visible";
             }, 1000);
-        } 
+        }
     }
 
     /**
      * Function to Check whether given record has references that need to be displayed
      */
     hasDisplayableReferences() {
-        if (this.record && this.record['references'] && this.record['references'].length > 0) 
+        if (
+            this.record &&
+            this.record["references"] &&
+            this.record["references"].length > 0
+        )
             return true;
         return false;
     }
 
     /**
-     * Update the edit status of child component 
+     * Update the edit status of child component
      * so we can set the status of the close button
      * @param editmode editmode from child component
      */
     setChildEditMode(editmode: string) {
         this.childEditMode = editmode;
-    }    
+    }
 
     /*
      *  Undo editing. If no more field was edited, delete the record in staging area.
      */
     undoAllChanges() {
-        var message = 'This will undo all reference changes.';
-
-        this.modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true });
-        this.modalRef.componentInstance.title = 'Please confirm';
-        this.modalRef.componentInstance.btnOkText = 'Confirm';
-        this.modalRef.componentInstance.btnCancelText = 'Cancel';
-        this.modalRef.componentInstance.message = message;
-        this.modalRef.componentInstance.showWarningIcon = true;
-        this.modalRef.componentInstance.showCancelButton = true;
-        
-        this.modalRef.result.then(
-            (result) => {
-                if ( result ) {
-                    this.refList.undoChanges();
-                }else{
-                    console.log("User changed mind.");
-                }
-            }, (reason) => {
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            width: "500px",
+            maxWidth: "95vw",
+            data: {
+                title: "Please confirm",
+                btnOkText: "Confirm",
+                btnCancelText: "Cancel",
+                message: "This will undo all reference changes.",
+                showWarningIcon: true,
+                showCancelButton: true,
+            },
         });
 
-        this.orderChanged = false; 
-        this.hideEditBlock();
-    }   
+        dialogRef.afterClosed().subscribe((result) => {
+            if (result) {
+                this.refList.undoChanges();
+            } else {
+                console.log("User changed mind.");
+            }
+        });
 
-   /**
+        this.orderChanged = false;
+        this.hideEditBlock();
+    }
+
+    /**
      * Return the opacity of dragdrop icon to indicate enable/disable status
      * @returns opacity
      */
     iconOpacity() {
-        if (this.childIsEditing || this.childIsAdding){
+        if (this.childIsEditing || this.childIsAdding) {
             return 0.3;
-        }else{
+        } else {
             return 1;
-        } 
-    }           
+        }
+    }
 }

@@ -1,27 +1,18 @@
-:host ::ng-deep .autocomplete{ 
-    height: 30px; 
-    width: 100%;
-    margin-top: 5px;
-    padding-left: 0px;
+.autocomplete {
+  width: 100%;
 }
 
-.inner-addon { 
-    width: 100%;
-    position: relative; 
-    margin-bottom: 10px;
-    padding-top: -10px;
-    height: 20px;
+/* Set input box height */
+.compact-autocomplete {
+  --mat-form-field-container-height: 36px;
+  --mat-form-field-container-vertical-padding: 6px;
 }
 
-/* style icon */
-.inner-addon .fa-user {
-  position: absolute;
-  top: 22px;
-  pointer-events: none;
-  z-index: 999 !important;
+/* Scale image to fit inside input */
+.search-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  margin-left: 8px;
+  margin-right: 6px;
 }
-
-/* align icon */
-.left-addon .fa-user  { left:  5px;}
-.right-addon .fa-user { right: 10px; top: 20px}
-

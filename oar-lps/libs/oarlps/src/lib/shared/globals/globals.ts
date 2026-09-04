@@ -1,8 +1,7 @@
-import { Inject, Injectable, signal } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { SelectItem, TreeNode } from 'primeng/api';
-import { DOCUMENT } from '@angular/common';
-import { UpdateDetails } from '../../landing/editcontrol/interfaces';
+import { Inject, Injectable, signal } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
+import { DOCUMENT } from "@angular/common";
+import { UpdateDetails } from "../../landing/editcontrol/interfaces";
 
 @Injectable({
     providedIn: "root",
@@ -24,7 +23,7 @@ export class GlobalService {
     public setColorPalette(val: any) {
         this._colorPalette.next(val);
     }
-    public watchColorPalette(subscriber) {
+    public watchColorPalette(subscriber: any) {
         this._colorPalette.subscribe(subscriber);
     }
 
@@ -36,7 +35,7 @@ export class GlobalService {
     public setCollection(val: string) {
         this._collection.next(val);
     }
-    public watchCollection(subscriber) {
+    public watchCollection(subscriber: any) {
         this._collection.subscribe(subscriber);
     }
 
@@ -47,7 +46,7 @@ export class GlobalService {
     public setLpsLeftWidth(val: number) {
         this._lpsLeftWidth.next(val);
     }
-    public watchLpsLeftWidth(subscriber) {
+    public watchLpsLeftWidth(subscriber: any) {
         this._lpsLeftWidth.subscribe(subscriber);
     }
 
@@ -58,30 +57,30 @@ export class GlobalService {
     public setMessage(val: string) {
         this._message.next(val);
     }
-    public watchMessage(subscriber) {
+    public watchMessage(subscriber: any) {
         this._message.subscribe(subscriber);
     }
 
     /**
-     * Set/get UpdateDetails 
+     * Set/get UpdateDetails
      */
-    _updateDetails : BehaviorSubject<UpdateDetails> =
+    _updateDetails: BehaviorSubject<UpdateDetails | null> =
         new BehaviorSubject<UpdateDetails | null>(null);
-    public setUpdateDetails(val : UpdateDetails) { 
-        this._updateDetails.next(val); 
+    public setUpdateDetails(val: UpdateDetails) {
+        this._updateDetails.next(val);
     }
     public watchUpdateDetails(subscriber) {
         this._updateDetails.subscribe(subscriber);
-    }  
+    }
 
     /**
-     * Set/get user's authorization info 
+     * Set/get user's authorization info
      */
     _authorized: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     public setAuthorized(val: boolean) {
         this._authorized.next(val);
     }
-    public watchAuthorized(subscriber) {
+    public watchAuthorized(subscriber: any) {
         this._authorized.subscribe(subscriber);
     }
 
@@ -94,7 +93,7 @@ export class GlobalService {
     public setAuthenticated(val: boolean) {
         this._authenticated.next(val);
     }
-    public watchAuthenticated(subscriber) {
+    public watchAuthenticated(subscriber: any) {
         this._authenticated.subscribe(subscriber);
     }
 
@@ -105,7 +104,7 @@ export class GlobalService {
     public setCurrentRec(val: any) {
         this._currentRec.next(val);
     }
-    public watchCurrentRec(subscriber) {
+    public watchCurrentRec(subscriber: any) {
         this._currentRec.subscribe(subscriber);
     }
 
@@ -120,7 +119,7 @@ export class GlobalService {
     public setShowLPContent(val: boolean) {
         this._showLPContent.next(val);
     }
-    public watchShowLPContent(subscriber) {
+    public watchShowLPContent(subscriber: any) {
         this._showLPContent.subscribe(subscriber);
     }
 
@@ -130,7 +129,7 @@ export class GlobalService {
     public setHasDataFiles(val: boolean) {
         this._hasDataFiles.next(val);
     }
-    public watchHasDataFiles(subscriber) {
+    public watchHasDataFiles(subscriber: any) {
         this._hasDataFiles.subscribe(subscriber);
     }
 
@@ -142,7 +141,7 @@ export class GlobalService {
     public setSubmissionData(val: SubmissionData) {
         this._submissionData.next(val);
     }
-    public watchSubmissionData(subscriber) {
+    public watchSubmissionData(subscriber: any) {
         this._submissionData.subscribe(subscriber);
     }
 
@@ -208,11 +207,11 @@ export class Themes {
     static readonly DEFAULT_THEME = "DefaultTheme";
 }
 
-let _theme = {};
+let _theme: { [key: string]: string } = {};
 _theme[Themes.SCIENCE_THEME] = "ScienceTheme";
 _theme[Themes.DEFAULT_THEME] = "DefaultTheme";
 
-let _sourceLabel = {};
+let _sourceLabel: { [key: string]: string } = {};
 _sourceLabel[Themes.SCIENCE_THEME] = "Domain Collection";
 _sourceLabel[Themes.DEFAULT_THEME] = "Dataset";
 
@@ -302,7 +301,7 @@ export class Sections {
 }
 
 //_fieldName is the field name in Nerdm record
-let _fieldName = {};
+let _fieldName: { [key: string]: string } = {};
 _fieldName[Sections.DEFAULT_SECTION] = "title";
 _fieldName[Sections.TITLE] = "title";
 _fieldName[Sections.ACCESS_PAGES] = "components"; //component
@@ -327,7 +326,7 @@ _fieldName[Sections.VERSION] = "version";
 _fieldName[Sections.FILES] = "files";
 _fieldName[Sections.ISPARTOF] = "isPartOf";
 
-let _displayName = {};
+let _displayName: { [key: string]: string } = {};
 _displayName[GENERAL] = Sections.GENERAL;
 _displayName["title"] = Sections.TITLE;
 // _displayName["links"] = Sections.ACCESS_PAGES;
@@ -355,23 +354,19 @@ export class SectionPrefs {
     private static readonly _lDispName = _displayName;
 
     public static getFieldName(section: string) {
-        if (!_fieldName || _fieldName == "") {
+        if (!_fieldName) {
             return SectionPrefs._lSectionID[Sections.DEFAULT_SECTION];
         }
 
         if (!SectionPrefs._lSectionID[section]) {
-            return SectionPrefs._lSectionID[Themes.DEFAULT_THEME];
+            return SectionPrefs._lSectionID[Sections.DEFAULT_SECTION];
         }
 
         return SectionPrefs._lSectionID[section];
     }
 
     public static getDispName(section: string) {
-        if (
-            !_displayName ||
-            _displayName == "" ||
-            !SectionPrefs._lDispName[section]
-        ) {
+        if (!_displayName || !SectionPrefs._lDispName[section]) {
             return SectionPrefs._lDispName[GENERAL];
         }
 
@@ -567,6 +562,13 @@ export class LandingConstants {
         }
     };
 
+    public static get editTypes(): any {
+        return {
+            NORMAL: "normal",
+            REVISE: "revise",
+        };
+    }
+
     public static get recStates(): any { 
         return {
             EDIT: 'edit', //
@@ -627,6 +629,14 @@ export interface ColorScheme {
     hover: string;
 }
 
+/**
+ * Interface for selectable items with label and value properties
+ */
+export interface SelectItem {
+    label: string;
+    value: any;
+}
+
 export interface CollectionThemes {
     collectionThemes: SelectItem[];
     collectionThemesAllArray: string[];
@@ -668,17 +678,18 @@ export function removeLastPathIfVersion(uri: string): string {
 /**
  * A TreeNode that knows how to insert and update items from a data cart
  */
-export class FilterTreeNode implements TreeNode {
-    children = [];
+export class FilterTreeNode implements AppTreeNode {
+    children: FilterTreeNode[] = [];
     count: number = 0;
     data: string[] = [];
     label: string = "";
     ediids: string[] = [];
     expanded = false;
+    leaf: boolean = false;
     keyname: string = "";
     key: string = "";
     taxonomy: string = ""; // Only for this node
-    parent = null;
+    parent: FilterTreeNode | null = null;
     level: number = 1;
     selectable: boolean = true;
     unspecified: boolean[] = [];
@@ -686,8 +697,9 @@ export class FilterTreeNode implements TreeNode {
     constructor(
         label: string = "",
         expanded: boolean = false,
-        key: string = null,
-        keyname: string = null,
+        leaf: boolean = false,
+        key: string | null = null,
+        keyname: string | null = null,
         data: string = "",
         count: number = 0,
         selectable: boolean = true,
@@ -707,19 +719,21 @@ export class FilterTreeNode implements TreeNode {
             this.key = label;
         }
         this.taxonomy = taxonomy;
+        this.expanded = expanded;
+        this.leaf = leaf;
     }
 
     /**
-     * insert or update a node within this tree corresponding to the given data cart item
-     * @return CartTreeNode   the node that was inserted or updated
+     * insert or update a node within this tree corresponding to the given data tree item
+     * @return TreeNode   the node that was inserted or updated
      */
     upsertNodeFor(
         item: any[],
         level: number = 1,
         searchResults: any = null,
-        collection: string = null,
+        collection: string | null = null,
         taxonomyURI: any = {},
-    ): TreeNode {
+    ): AppTreeNode<any> {
         let levels = item[0].split(":");
         for (let i = 0; i < levels.length; i++) {
             levels[i] = levels[i].trim();
@@ -743,7 +757,7 @@ export class FilterTreeNode implements TreeNode {
         collection: string = null,
         taxonomyURI: any = {},
         parentKey: string = "",
-    ): TreeNode {
+    ): AppTreeNode<any> {
         // find the node corresponding to the given item in the tree
         for (let child of this.children) {
             if (child.keyname == levels[0] && child.children.length > 0) {
@@ -815,6 +829,7 @@ export class FilterTreeNode implements TreeNode {
         let child = new FilterTreeNode(
             label,
             false,
+            false, // leaf
             key,
             keyname,
             data,
@@ -867,7 +882,7 @@ export class FilterTreeNode implements TreeNode {
             return topic.tag?.includes(taxonomy);
         }
 
-        //If tree label is "Other" which means topic (search result topic) must be exactly the same as taxonomy 
+        //If tree label is "Other" which means topic (search result topic) must be exactly the same as taxonomy
         if (tree.label.startsWith("Other")) {
             return topic.tag === taxonomy;
         }
@@ -986,7 +1001,7 @@ export class FilterTreeNode implements TreeNode {
     }
 
     _refreshTaxonomy(tree: FilterTreeNode) {
-        let parent: FilterTreeNode = tree.parent;
+        let parent: FilterTreeNode | null = tree.parent;
         tree.taxonomy = tree.keyname;
 
         if (parent && parent.level > 1) {
@@ -1048,3 +1063,17 @@ export class iconClass {
     static readonly REPEAT = "repeat";
     static readonly GLOBE = "globe";
 }
+
+export interface AppTreeNode<T = any> {
+    label?: string;
+    key?: string;
+    data?: T;
+    children?: AppTreeNode<T>[];
+    parent?: AppTreeNode<T> | null;
+    expanded?: boolean;
+    leaf?: boolean;
+    selectable?: boolean;
+}
+
+// Backward compatibility alias
+export { AppTreeNode as TreeNode };

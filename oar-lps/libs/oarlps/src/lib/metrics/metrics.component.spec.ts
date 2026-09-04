@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MetricsComponent } from './metrics.component';
-import { MetricsModule } from './metrics.module';
 import { ActivatedRoute, Router, Routes } from '@angular/router';
 import * as mock from '../testing/mock.services';
 import { AppConfig, LPSConfig } from '../config/config'
@@ -96,7 +95,7 @@ describe('MetricsComponent', () => {
 
         TestBed.configureTestingModule({
             declarations: [  ],
-            imports: [FormsModule, MetricsModule, HttpClientTestingModule, FontAwesomeTestingModule],
+            imports: [FormsModule, HttpClientTestingModule, FontAwesomeTestingModule],
             providers: [
                 NERDmResourceService,
                 GoogleAnalyticsService,

@@ -597,7 +597,10 @@ export class DataCart {
     /**
      * return a list of the files in the cart
      */
-    getFiles() : DataCartItem[] { return Object.values(this.contents); }
+    getFiles() : DataCartItem[] {
+        const keys = Object.keys(this.contents).sort();
+        return keys.map(key => this.contents[key]);
+    }
 
     /**
      * return a list of the selected files in the cart

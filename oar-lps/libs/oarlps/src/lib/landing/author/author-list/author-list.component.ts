@@ -15,9 +15,8 @@ import { AuthorEditComponent } from '../author-edit/author-edit.component';
 import { CommonModule } from '@angular/common';
 import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
-import { ButtonModule } from 'primeng/button';				
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';		
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
     faPencil,
@@ -28,42 +27,44 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'lib-author-list',
+    selector: "lib-author-list",
     standalone: true,
     imports: [
         CommonModule,
         AuthorEditComponent,
         TextEditComponent,
-        ButtonModule,
-        NgbModule,
+        MatTooltipModule,
         DragDropModule,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    templateUrl: './author-list.component.html',
-    styleUrls: ['../../landing.component.scss', './author-list.component.css'],
+    templateUrl: "./author-list.component.html",
+    styleUrls: ["../../landing.component.scss", "./author-list.component.css"],
     animations: [
-        trigger('editExpand', [
-        state('collapsed', style({height: '0px', minHeight: '0'})),
-        state('expanded', style({height: '*'})),
-        transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ])
-    ]
+        trigger("editExpand", [
+            state("collapsed", style({ height: "0px", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
+            transition(
+                "expanded <=> collapsed",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+    ],
 })
 export class AuthorListComponent implements OnInit {
     currentAuthorIndex: number = 0;
-    currentAuthor: Author; // for drag drop
+    currentAuthor: Author | null = null; // for drag drop
     currentAuthors: Author[] = [];
     savedRecord: any = {}; // Previously saved record
     originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
     newAuthor: Author = {} as Author;
     placeholder: string = "Enter author data below";
-    editBlockStatus: string = 'collapsed';
+    editBlockStatus: string = "collapsed";
     orderChanged: boolean = false;
     originalRecordLoaded: boolean = false;
 
     // "add", "edit" or "normal" mode. In edit mode, "How would you enter author data?" will not display.
     // Default is "normal" mode.
-    editMode: string = MODE.NORMAL; 
+    editMode: string = MODE.NORMAL;
     globalsvc = inject(GlobalService);
 
     //icon class names
@@ -75,7 +76,7 @@ export class AuthorListComponent implements OnInit {
     faXmark = faXmark;
     faSave = faSave;
     faUndo = faUndo;
-    faPlus = faPlus
+    faPlus = faPlus;
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
@@ -83,9 +84,9 @@ export class AuthorListComponent implements OnInit {
     @Input() startEditing: boolean = false;
     @Output() dataChanged: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
-    
+
     //Drag and drop
-    @ViewChild('dropListContainer') dropListContainer?: ElementRef;
+    @ViewChild("dropListContainer") dropListContainer?: ElementRef;
 
     dropListReceiverElement?: HTMLElement;
     dragDropInfo?: {
@@ -93,40 +94,54 @@ export class AuthorListComponent implements OnInit {
         dropIndex: number;
     };
 
-    constructor(public mdupdsvc : MetadataUpdateService,
-                private notificationService: NotificationService,
-                public edstatsvc: EditStatusService,
-                private chref: ChangeDetectorRef,
-                public iconLibrary: FaIconLibrary,
-                public lpService: LandingpageService) { 
-
+    constructor(
+        public mdupdsvc: MetadataUpdateService,
+        private notificationService: NotificationService,
+        public edstatsvc: EditStatusService,
+        private chref: ChangeDetectorRef,
+        public iconLibrary: FaIconLibrary,
+        public lpService: LandingpageService,
+    ) {
         // iconLibrary.addIcons(
         //     faPencil,
         //     faXmark,
         //     faSave,
         //     faUndo,
         //     faPlus
-        // );        
-     }
-
-    ngOnInit(): void {
+        // );
     }
 
+    ngOnInit(): void {}
+
     onSectionModeChanged(sectionMode: SectionMode) {
-        if( sectionMode ) {
-            if(sectionMode.sender != SectionPrefs.getFieldName(Sections.SIDEBAR)) {
-                if( sectionMode.sender != Sections.SIDEBAR && sectionMode.section != this.fieldName && sectionMode.mode != MODE.NORMAL) {
+        if (sectionMode) {
+            if (
+                sectionMode.sender !=
+                SectionPrefs.getFieldName(Sections.SIDEBAR)
+            ) {
+                if (
+                    sectionMode.sender != Sections.SIDEBAR &&
+                    sectionMode.section != this.fieldName &&
+                    sectionMode.mode != MODE.NORMAL
+                ) {
                     //If is adding but nothing changed, undo adding
-                    if(this.isAdding && !this.currentAuthor.dataChanged){
+                    if (this.isAdding && !this.currentAuthor?.dataChanged) {
                         this.undoCurAuthorChanges();
-                    //If is adding or editing and something changed, save it
-                    }else if((this.isEditing || this.isAdding) && this.currentAuthor.dataChanged){
-                        this.saveCurrentAuthor(false, true); // Do not refresh help text 
+                        //If is adding or editing and something changed, save it
+                    } else if (
+                        (this.isEditing || this.isAdding) &&
+                        this.currentAuthor?.dataChanged
+                    ) {
+                        this.saveCurrentAuthor(false, true); // Do not refresh help text
                     }
                     this.hideEditBlock();
                 }
-            }else{
-                if(sectionMode.section == this.fieldName && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+            } else {
+                if (
+                    sectionMode.section == this.fieldName &&
+                    (!this.record[this.fieldName] ||
+                        this.record[this.fieldName].length == 0)
+                ) {
                     this.onAdd();
                 }
             }
@@ -134,47 +149,63 @@ export class AuthorListComponent implements OnInit {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes.record){
+        if (changes.record) {
             this.updateSavedRecord();
             this.onRecordChanged();
 
-            if(!this.originalRecordLoaded) {
+            if (!this.originalRecordLoaded) {
                 this.originalRecord = JSON.parse(JSON.stringify(this.record));
             }
             this.originalRecordLoaded = true;
         }
 
-        if(changes.forceReset){
+        if (changes.forceReset) {
             this.orderChanged = false;
-            this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
+            this.dataChanged.next({
+                authors: this.record[this.fieldName],
+                action: "orderReset",
+            });
         }
 
-        if(changes.startEditing){
-            if(!this.record[this.fieldName] || this.record[this.fieldName].length == 0)
+        if (changes.startEditing?.currentValue) {
+            if (
+                !this.record[this.fieldName] ||
+                this.record[this.fieldName].length == 0
+            )
                 this.onAdd();
         }
 
-        this.chref.detectChanges();
+        // this.chref.detectChanges();
     }
 
-    get isNormal() { return this.editMode==MODE.NORMAL || this.editMode==MODE.LIST }
-    get isEditing() { return this.editMode==MODE.EDIT }
-    get isAdding() { return this.editMode==MODE.ADD }
-    get isDragDisabled() { return this.isEditing || this.isAdding; }
-    get dragDropCursor() { return this.isDragDisabled ? 'not-allowed' : 'move'; }
-    
+    get isNormal() {
+        return this.editMode == MODE.NORMAL || this.editMode == MODE.LIST;
+    }
+    get isEditing() {
+        return this.editMode == MODE.EDIT;
+    }
+    get isAdding() {
+        return this.editMode == MODE.ADD;
+    }
+    get isDragDisabled() {
+        return this.isEditing || this.isAdding;
+    }
+    get dragDropCursor() {
+        return this.isDragDisabled ? "not-allowed" : "move";
+    }
+
     /**
      * Check if any author data changed or author order changed
      */
     get authorsChanged() {
         let changed: boolean = false;
 
-        if(this.record[this.fieldName]) {
-            this.record[this.fieldName].forEach(author => {
+        if (this.record[this.fieldName]) {
+            this.record[this.fieldName].forEach((author) => {
                 changed = changed || author.dataChanged;
-            })
+            });
         }
-        
+
         return changed || this.orderChanged;
     }
 
@@ -184,13 +215,18 @@ export class AuthorListComponent implements OnInit {
 
     // Background color of the text edit area
     get editAreabackgroundColor() {
-        let bkColor = 'white';
+        let bkColor = "white";
 
-        if(this.currentAuthor) {
-            if(this.mdupdsvc.fieldUpdated(this.fieldName, this.currentAuthor["@id"])){
-                bkColor = 'var(--data-changed-saved)';
-            }else if(this.currentAuthor.dataChanged){
-                bkColor = 'var(--data-changed)';
+        if (this.currentAuthor) {
+            if (
+                this.mdupdsvc.fieldUpdated(
+                    this.fieldName,
+                    this.currentAuthor["@id"]
+                )
+            ) {
+                bkColor = "var(--data-changed-saved)";
+            } else if (this.currentAuthor.dataChanged) {
+                bkColor = "var(--data-changed)";
             }
         }
 
@@ -198,8 +234,13 @@ export class AuthorListComponent implements OnInit {
     }
 
     onRecordChanged() {
-        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0){
-            this.currentAuthors = JSON.parse(JSON.stringify(this.record[this.fieldName]));
+        if (
+            this.record[this.fieldName] &&
+            this.record[this.fieldName].length > 0
+        ) {
+            this.currentAuthors = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
 
             this.currentAuthor = this.record[this.fieldName].at(-1); // last author
             this.currentAuthorIndex = this.record[this.fieldName].length - 1;
@@ -207,25 +248,39 @@ export class AuthorListComponent implements OnInit {
     }
 
     authorUpdated(index: number) {
-        return this.mdupdsvc.fieldUpdated(this.fieldName, this.record[this.fieldName][index]['@id']);
-    }    
+        return this.mdupdsvc.fieldUpdated(
+            this.fieldName,
+            this.record[this.fieldName][index]["@id"],
+        );
+    }
 
     getAuthorName(index: number) {
-        if(!this.record || !this.record[this.fieldName] || this.record[this.fieldName].length == 0) return "";
+        if (
+            !this.record ||
+            !this.record[this.fieldName] ||
+            this.record[this.fieldName].length == 0
+        )
+            return "";
 
-        if(this.record[this.fieldName][index].fn) {
+        if (this.record[this.fieldName][index].fn) {
             return this.record[this.fieldName][index].fn;
         }
 
-        if(this.record[this.fieldName][index].givenName && this.record[this.fieldName][index].familyName)  
-            return this.record[this.fieldName][index].givenName + " " + this.record[this.fieldName][index].familyName;
+        if (
+            this.record[this.fieldName][index].givenName &&
+            this.record[this.fieldName][index].familyName
+        )
+            return (
+                this.record[this.fieldName][index].givenName +
+                " " +
+                this.record[this.fieldName][index].familyName
+            );
 
-        if(this.record[this.fieldName][index].familyName)  
-        return this.record[this.fieldName][index].familyName;
+        if (this.record[this.fieldName][index].familyName)
+            return this.record[this.fieldName][index].familyName;
 
-        if(this.record[this.fieldName][index].givenName)  
-        return this.record[this.fieldName][index].givenName;
-
+        if (this.record[this.fieldName][index].givenName)
+            return this.record[this.fieldName][index].givenName;
 
         return "";
     }
@@ -234,19 +289,25 @@ export class AuthorListComponent implements OnInit {
      * Update originalAuthors for unde purpose
      */
     updateSavedRecord() {
-        if(this.record[this.fieldName]) {
-            if(this.record[this.fieldName].length < 1) {
+        if (this.record[this.fieldName]) {
+            if (this.record[this.fieldName].length < 1) {
                 this.currentAuthorIndex = -1;
                 this.currentAuthor = {} as Author;
-            }else if(this.currentAuthorIndex >= this.record[this.fieldName].length){
+            } else if (
+                this.currentAuthorIndex >= this.record[this.fieldName].length
+            ) {
                 this.currentAuthorIndex = 0;
-                this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-            }else{
-                this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+                this.currentAuthor =
+                    this.record[this.fieldName][this.currentAuthorIndex];
+            } else {
+                this.currentAuthor =
+                    this.record[this.fieldName][this.currentAuthorIndex];
             }
-            
-            this.savedRecord[this.fieldName] = JSON.parse(JSON.stringify(this.record[this.fieldName]));
-        }else{
+
+            this.savedRecord[this.fieldName] = JSON.parse(
+                JSON.stringify(this.record[this.fieldName]),
+            );
+        } else {
             this.currentAuthorIndex = -1;
             this.currentAuthor = {} as Author;
         }
@@ -254,14 +315,17 @@ export class AuthorListComponent implements OnInit {
 
     /**
      * Once author info changed, update parent component
-     * @param updateCitation 
+     * @param updateCitation
      */
     onOrderChange() {
         this.updateMetadata().then((success) => {
-            if(success){
+            if (success) {
                 this.orderChanged = true;
-                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderChanged"});
-            }else{
+                this.dataChanged.next({
+                    authors: this.record[this.fieldName],
+                    action: "orderChanged",
+                });
+            } else {
                 let msg = "Update failed";
                 console.error(msg);
             }
@@ -270,12 +334,16 @@ export class AuthorListComponent implements OnInit {
 
     /**
      * When author data changed (child component), set the flag in record level.
-     * Also update the author data. 
+     * Also update the author data.
      */
     onAuthorChange(event) {
-        this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(event.author));
-        this.record[this.fieldName][this.currentAuthorIndex].dataChanged = event.dataChanged;
-        this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+        this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(
+            JSON.stringify(event.author),
+        );
+        this.record[this.fieldName][this.currentAuthorIndex].dataChanged =
+            event.dataChanged;
+        this.currentAuthor =
+            this.record[this.fieldName][this.currentAuthorIndex];
         this.editmodeOutput.next(this.editMode);
         this.chref.detectChanges();
     }
@@ -289,7 +357,9 @@ export class AuthorListComponent implements OnInit {
     }
 
     onEdit(index) {
-        this.currentAuthor = JSON.parse(JSON.stringify(this.record[this.fieldName][index]));
+        this.currentAuthor = JSON.parse(
+            JSON.stringify(this.record[this.fieldName][index]),
+        );
         setTimeout(() => {
             this.setMode(MODE.EDIT);
         }, 0);
@@ -297,52 +367,59 @@ export class AuthorListComponent implements OnInit {
 
     /**
      * Save current author to the server
-     */    
+     */
     saveCurrentAuthor(refreshHelp: boolean = true, closeAll: boolean = false) {
-        let postMessage: any = {}; 
+        let postMessage: any = {};
 
-        if(this.isAdding) {  // Temp disable this function
+        if (this.isAdding) {
+            // Temp disable this function
             postMessage = JSON.parse(JSON.stringify(this.currentAuthor));
 
             this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
-                if (rec){
-                    this.currentAuthor.dataChanged = false;
+                if (rec) {
+                    if (this.currentAuthor)
+                        this.currentAuthor.dataChanged = false;
 
-                    if(closeAll)
-                        this.setMode(MODE.NORMAL, refreshHelp);
-                    else
-                        this.setMode(MODE.LIST, refreshHelp);
+                    if (closeAll) this.setMode(MODE.NORMAL, refreshHelp);
+                    else this.setMode(MODE.LIST, refreshHelp);
 
-                    this.notificationService.showSuccessWithTimeout("Author added.", "", 3000);
-                }else{
+                    this.notificationService.showSuccessWithTimeout(
+                        "Author added.",
+                        "",
+                        3000,
+                    );
+                } else {
                     let msg = "Failed to add author.";
                     console.error(msg);
                     return;
                 }
-            })
-        }else{
-            if(this.currentAuthor.dataChanged){
-                this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
-                    if(success){
-                        if(closeAll)
-                            this.setMode(MODE.NORMAL, refreshHelp);
-                        else
-                            this.setMode(MODE.LIST, refreshHelp);
+            });
+        } else {
+            if (this.currentAuthor && this.currentAuthor.dataChanged) {
+                this.updateMetadata(
+                    this.currentAuthor,
+                    this.currentAuthor["@id"],
+                ).then((success) => {
+                    if (success) {
+                        if (closeAll) this.setMode(MODE.NORMAL, refreshHelp);
+                        else this.setMode(MODE.LIST, refreshHelp);
                         // this.chref.detectChanges();
-                        
-                        this.notificationService.showSuccessWithTimeout("Author updated.", "", 3000);
 
-                    }else{
+                        this.notificationService.showSuccessWithTimeout(
+                            "Author updated.",
+                            "",
+                            3000,
+                        );
+                    } else {
                         let msg = "Update failed";
                         console.error(msg);
                         this.chref.detectChanges();
                     }
-                })
-            }else{
+                });
+            } else {
                 this.setMode(MODE.NORMAL, refreshHelp);
             }
         }
-
     }
 
     /**
@@ -354,45 +431,62 @@ export class AuthorListComponent implements OnInit {
 
         return new Promise<boolean>((resolve, reject) => {
             // Only update certain author
-            if(id) {  
-                let foundAuthor = this.record[this.fieldName].find(element => element['@id'].trim() == id.trim());
-                if(foundAuthor) {
+            if (id) {
+                let foundAuthor = this.record[this.fieldName].find(
+                    (element) => element["@id"].trim() == id.trim(),
+                );
+                if (foundAuthor) {
                     foundAuthor = JSON.parse(JSON.stringify(author));
 
-                    this.mdupdsvc.update(this.fieldName, foundAuthor, id).then((updateSuccess) => {
-                        if (updateSuccess){
-                            this.notificationService.showSuccessWithTimeout("Author updated.", "", 3000);
-                            resolve(true);
-                        }else{
-                            let msg = "Author update failed";
-                            console.error(msg);
-                            resolve(true);
-                        }
-                    });
-                }else{
+                    this.mdupdsvc
+                        .update(this.fieldName, foundAuthor, id)
+                        .then((updateSuccess) => {
+                            if (updateSuccess) {
+                                this.notificationService.showSuccessWithTimeout(
+                                    "Author updated.",
+                                    "",
+                                    3000,
+                                );
+                                resolve(true);
+                            } else {
+                                let msg = "Author update failed";
+                                console.error(msg);
+                                resolve(true);
+                            }
+                        });
+                } else {
                     let msg = "Author not found";
-                    console.error(msg, author['@id']);
+                    console.error(msg, author["@id"]);
                 }
-            }else{  // Update all authors
+            } else {
+                // Update all authors
                 postMessage[this.fieldName] = [];
-                if(this.record[this.fieldName]){
-                    this.record[this.fieldName].forEach(author => {
-                        postMessage[this.fieldName].push(JSON.parse(JSON.stringify(author)))
+                if (this.record[this.fieldName]) {
+                    this.record[this.fieldName].forEach((author) => {
+                        postMessage[this.fieldName].push(
+                            JSON.parse(JSON.stringify(author)),
+                        );
                     });
                 }
 
-                this.mdupdsvc.update(this.fieldName, postMessage, id).then((updateSuccess) => {
-                    if (updateSuccess){
-                        this.notificationService.showSuccessWithTimeout("Authors updated.", "", 3000);
-                        resolve(true);
-                    }else{
-                        let msg = "Authors update failed.";
-                        console.error(msg);
-                        resolve(false);
-                    }
-                });
+                this.mdupdsvc
+                    .update(this.fieldName, postMessage, id)
+                    .then((updateSuccess) => {
+                        if (updateSuccess) {
+                            this.notificationService.showSuccessWithTimeout(
+                                "Authors updated.",
+                                "",
+                                3000,
+                            );
+                            resolve(true);
+                        } else {
+                            let msg = "Authors update failed.";
+                            console.error(msg);
+                            resolve(false);
+                        }
+                    });
             }
-        })
+        });
     }
 
     /*
@@ -400,76 +494,70 @@ export class AuthorListComponent implements OnInit {
      */
     undoAllChanges() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
+            if (success) {
                 this.setMode(MODE.NORMAL, true);
                 this.orderChanged = false;
                 this.forceReset = true;
-                this.notificationService.showSuccessWithTimeout("Reverted changes to authors.", "", 3000);
+                this.notificationService.showSuccessWithTimeout(
+                    "Reverted changes to authors.",
+                    "",
+                    3000,
+                );
                 // this.dataChanged.next({"authors": this.record[this.fieldName], "action": "orderReset"});
-                this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
-            }else{
+                this.dataChanged.next({
+                    authors: this.record[this.fieldName],
+                    action: "hideEditBlock",
+                });
+            } else {
                 let msg = "Failed to undo author's metadata";
-                console.error(msg);   
+                console.error(msg);
             }
-                
         });
     }
 
     undoCurAuthorChanges() {
-        if(this.isAdding) {
-            // this.removeAuthor(this.currentAuthorIndex);
-            if(this.savedRecord[this.fieldName] == undefined) {
-                delete this.record[this.fieldName];
-            }else {
-                this.record[this.fieldName] = JSON.parse(JSON.stringify(this.savedRecord[this.fieldName]));
+        let editMode = MODE.LIST;
+        if (this.isAdding) {
+            this.removeAuthor(this.currentAuthorIndex);
+        } else {
+            if (this.currentAuthor && this.currentAuthor.dataChanged) {
+                this.record[this.fieldName][this.currentAuthorIndex] =
+                    JSON.parse(
+                        JSON.stringify(
+                            this.savedRecord[this.fieldName][
+                                this.currentAuthorIndex
+                            ],
+                        ),
+                    );
             }
-        }else{
-            this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(JSON.stringify(this.savedRecord[this.fieldName][this.currentAuthorIndex]));
         }
 
-        // this.editBlockStatus = 'collapsed';
-
-        // Back to add mode
-        // this.editMode = MODE.NORMAL;
-        // this.refreshHelpText(MODE.ADD);
-        this.setMode(MODE.LIST, true)
+        this.setMode(editMode, true);
     }
-
 
     /**
      * Hide the edit block
      */
     hideEditBlock() {
-        if(this.record){
-            this.dataChanged.next({"authors": this.record[this.fieldName], "action": "hideEditBlock"});
-        }
-
-    }
-
-    /**
-     * Determine icon class of add button
-     * If edit mode is normal, display enabled icon.
-     * Otherwise display disabled icon.
-     * @returns add button icon class
-     */    
-    addIconClass() {
-        if(this.isNormal){
-            return "icon_enabled";
-        }else{
-            return "icon_disabled";
+        if (this.record) {
+            this.dataChanged.next({
+                authors: this.record[this.fieldName],
+                action: "hideEditBlock",
+            });
         }
     }
 
     removeAuthor(index: number) {
         this.record[this.fieldName].splice(index, 1);
 
-        if(this.record[this.fieldName].length <= 0){
+        if (this.record[this.fieldName].length <= 0) {
             this.currentAuthorIndex = -1;
             this.currentAuthor = {} as Author;
             // this.editingAuthorIndex = -1;
-        }else{
+        } else {
             this.currentAuthorIndex = 0;
-            this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+            this.currentAuthor =
+                this.record[this.fieldName][this.currentAuthorIndex];
             // this.editingAuthorIndex = 0;
         }
 
@@ -481,30 +569,35 @@ export class AuthorListComponent implements OnInit {
      * @param index The index of the target author
      * @returns background color
      */
-    getBackgroundColor(index: number){
-        let bkColor = 'white';
+    getBackgroundColor(index: number) {
+        let bkColor = "white";
 
-        if(this.mdupdsvc.fieldUpdated(this.fieldName, this.record[this.fieldName][index]["@id"])){
-            bkColor = 'var(--data-changed-saved)';
-        }else if(this.record[this.fieldName][index].dataChanged){
-            bkColor = 'var(--data-changed)';
+        if (
+            this.mdupdsvc.fieldUpdated(
+                this.fieldName,
+                this.record[this.fieldName][index]["@id"],
+            )
+        ) {
+            bkColor = "var(--data-changed-saved)";
+        } else if (this.record[this.fieldName][index].dataChanged) {
+            bkColor = "var(--data-changed)";
         }
 
         return bkColor;
     }
-   
+
     /**
-     * Retuen background color of the whole record (the container of all authors) 
+     * Retuen background color of the whole record (the container of all authors)
      * based on the dataChanged flag of the record.
      * @returns the background color of the whole record
      */
     getRecordBackgroundColor() {
-        let bkColor = 'var(--editable)';
+        let bkColor = "var(--editable)";
 
-        if(this.authorsUpdated){
-            bkColor = 'var(--data-changed-saved)';
-        }else if(this.authorsChanged){
-            bkColor = 'var(--data-changed)';
+        if (this.authorsUpdated) {
+            bkColor = "var(--data-changed-saved)";
+        } else if (this.authorsChanged) {
+            bkColor = "var(--data-changed)";
         }
 
         return bkColor;
@@ -515,14 +608,20 @@ export class AuthorListComponent implements OnInit {
      * If this is the active author, set border color to blue. Otherwise set border color to grey.
      * If this author's data changed, set background color to yellow. Otherwise set to white.
      * @param index The index of the active author
-     * @returns 
+     * @returns
      */
     getActiveItemStyle(index: number) {
-        if(index == this.currentAuthorIndex) {
+        if (index == this.currentAuthorIndex) {
             // return { 'background-color': 'var(--background-light-grey)'};
-            return { 'background-color': this.getBackgroundColor(index), 'border': '1px solid var(--active-item)'};
+            return {
+                "background-color": this.getBackgroundColor(index),
+                border: "1px solid var(--active-item)",
+            };
         } else {
-            return {'background-color': this.getBackgroundColor(index), 'border':'1px solid var(--background-light-grey)'};
+            return {
+                "background-color": this.getBackgroundColor(index),
+                border: "1px solid var(--background-light-grey)",
+            };
         }
     }
 
@@ -531,25 +630,34 @@ export class AuthorListComponent implements OnInit {
      * @param index The index of the selected author
      */
     selectAuthor(index: number) {
-        if(index != this.currentAuthorIndex) { // user selected different author
+        if (index != this.currentAuthorIndex) {
+            // user selected different author
             // If current author changed but not updated to the server, update first
-            if(this.currentAuthor["dataChanged"] && !this.authorUpdated(this.currentAuthorIndex)) {
-                this.updateMetadata(this.currentAuthor, this.currentAuthor['@id']).then((success) => {
-                    if(success){
+            if (
+                this.currentAuthor["dataChanged"] &&
+                !this.authorUpdated(this.currentAuthorIndex)
+            ) {
+                this.updateMetadata(
+                    this.currentAuthor,
+                    this.currentAuthor["@id"],
+                ).then((success) => {
+                    if (success) {
                         this.setCurrentAuthor(index);
 
-                        if(this.editMode==MODE.ADD || this.editMode==MODE.EDIT)
+                        if (
+                            this.editMode == MODE.ADD ||
+                            this.editMode == MODE.EDIT
+                        )
                             this.editMode = MODE.EDIT;
-                        else    
-                            this.editMode = MODE.NORMAL;
+                        else this.editMode = MODE.NORMAL;
 
                         this.editmodeOutput.next(this.editMode);
-                    }else{
+                    } else {
                         let msg = "Update failed";
                         console.error(msg);
                     }
-                })
-            }else{
+                });
+            } else {
                 this.setCurrentAuthor(index);
             }
         }
@@ -561,9 +669,13 @@ export class AuthorListComponent implements OnInit {
         // this.lpService.setSectionHelp(sectionHelp);
     }
 
-    setCurrentAuthor(index: number){
-        if(this.record[this.fieldName] && this.record[this.fieldName].length > 0 && !this.isAdding){
-            this.forceReset = (this.currentAuthorIndex != -1);
+    setCurrentAuthor(index: number) {
+        if (
+            this.record[this.fieldName] &&
+            this.record[this.fieldName].length > 0 &&
+            !this.isAdding
+        ) {
+            this.forceReset = this.currentAuthorIndex != -1;
 
             this.currentAuthorIndex = index;
             this.currentAuthor = this.record[this.fieldName][index];
@@ -573,7 +685,7 @@ export class AuthorListComponent implements OnInit {
     /**
      * Refresh the help text
      */
-    refreshHelpText(help_topic: string = MODE.LIST){
+    refreshHelpText(help_topic: string = MODE.LIST) {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = this.fieldName;
         sectionHelp.topic = HelpTopic[help_topic];
@@ -591,11 +703,11 @@ export class AuthorListComponent implements OnInit {
         sectionMode.section = this.fieldName;
         sectionMode.mode = this.editMode;
 
-        switch ( this.editMode ) {
+        switch (this.editMode) {
             case MODE.LIST:
-                this.editBlockStatus = 'collapsed';
+                this.editBlockStatus = "collapsed";
 
-                if(refreshHelp){
+                if (refreshHelp) {
                     this.refreshHelpText(MODE.LIST);
                 }
                 break;
@@ -603,57 +715,61 @@ export class AuthorListComponent implements OnInit {
                 this.openEditBlock();
 
                 // Update help text
-                if(refreshHelp){
+                if (refreshHelp) {
                     this.refreshHelpText(MODE.EDIT);
-                }                
+                }
                 break;
             case MODE.ADD:
                 //Append a blank author to the record and set current author.
-                if(!this.record[this.fieldName]){
+                if (!this.record[this.fieldName]) {
                     this.record[this.fieldName] = [];
                 }
 
                 // let newAuthor: Author = {} as Author;
-                let newAuthor: Author = new Author("", "", "", "", null)
+                let newAuthor: Author = new Author("", "", "", "", null);
+                newAuthor["@id"] = "new";
                 newAuthor["isNew"] = true;
                 // newAuthor["familyName"] = "";
                 // newAuthor["givenName"] = "";
                 // newAuthor["fn"] = "";
 
                 this.record[this.fieldName].push(newAuthor);
-                
-                this.currentAuthorIndex = this.record[this.fieldName].length - 1;
 
-                this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-                this.currentAuthor.dataChanged = false;
+                this.currentAuthorIndex =
+                    this.record[this.fieldName].length - 1;
+
+                this.currentAuthor =
+                    this.record[this.fieldName][this.currentAuthorIndex];
+
+                if (this.currentAuthor) this.currentAuthor.dataChanged = false;
 
                 this.openEditBlock();
 
                 // Update help text
-                if(refreshHelp){
+                if (refreshHelp) {
                     this.refreshHelpText(MODE.ADD);
-                }                
+                }
                 break;
             default: // normal
                 // Collapse the edit block
-                this.editBlockStatus = 'collapsed';
+                this.editBlockStatus = "collapsed";
                 this.hideEditBlock();
 
                 // Update help text
-                if(refreshHelp){
+                if (refreshHelp) {
                     this.refreshHelpText(MODE.NORMAL);
-                }                
+                }
                 break;
         }
 
         //Broadcast the current section and mode
-        //refreshHelp=false means this widget is closed by other widget, 
+        //refreshHelp=false means this widget is closed by other widget,
         //do not broadcast the section mode because other widget already did that.
         if (refreshHelp) {
             // this.globalsvc.sectionMode.set(sectionMode);
             this.lpService.setEditing(sectionMode);
         }
-        
+
         this.editmodeOutput.next(this.editMode);
 
         this.chref.detectChanges();
@@ -663,7 +779,7 @@ export class AuthorListComponent implements OnInit {
      * Expand the edit block that user can edit author data
      */
     openEditBlock() {
-        this.editBlockStatus = 'expanded';
+        this.editBlockStatus = "expanded";
         //Broadcast current edit section so landing page will scroll to the section
         this.lpService.setCurrentSection(this.fieldName);
     }
@@ -674,37 +790,49 @@ export class AuthorListComponent implements OnInit {
      * @param index The index of the author the action is taking place
      */
     onAuthorCommand(action: any, index: number = 0) {
-        switch ( action.command.toLowerCase() ) {
-            case 'edit':
+        switch (action.command.toLowerCase()) {
+            case "edit":
                 this.onEdit(index);
                 break;
-            case 'delete':
+            case "delete":
                 this.removeAuthor(index);
-                break;    
-            case 'restore':
+                break;
+            case "restore":
                 // If original record does not have this field, delete it. Otherwise if this is a new added item. delete it as well. Otherwise restore original.
-                if(this.originalRecord[this.fieldName]){
-                    let foundAuthorIndex = this.originalRecord[this.fieldName].findIndex(element => element['@id'].trim() == this.record[this.fieldName][index]['@id'].trim());
+                if (this.originalRecord[this.fieldName]) {
+                    let foundAuthorIndex = this.originalRecord[
+                        this.fieldName
+                    ].findIndex(
+                        (element) =>
+                            element["@id"].trim() ==
+                            this.record[this.fieldName][index]["@id"].trim(),
+                    );
 
-                    // Remove if it's new author                    
-                    if(foundAuthorIndex < 0)
-                        this.removeAuthor(index);
+                    // Remove if it's new author
+                    if (foundAuthorIndex < 0) this.removeAuthor(index);
                     // Otherwise, restore original value
-                    else{
+                    else {
                         // Restore original
-                        this.mdupdsvc.undo(this.fieldName, this.record[this.fieldName][index]['@id']).then((success) => {
-                            if (success) {
-                                this.record[this.fieldName][index]['dataChanged'] = false;
-                                // this.currentAuthorIndex = 0;
-                                // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
-                                this.forceReset = true; // Force author editor to reset data
-                            } else {
-                                let msg = "Failed to restore authors";
-                                console.error(msg);
-                            }
-                        })
+                        this.mdupdsvc
+                            .undo(
+                                this.fieldName,
+                                this.record[this.fieldName][index]["@id"],
+                            )
+                            .then((success) => {
+                                if (success) {
+                                    this.record[this.fieldName][index][
+                                        "dataChanged"
+                                    ] = false;
+                                    // this.currentAuthorIndex = 0;
+                                    // this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+                                    this.forceReset = true; // Force author editor to reset data
+                                } else {
+                                    let msg = "Failed to restore authors";
+                                    console.error(msg);
+                                }
+                            });
                     }
-                }else{
+                } else {
                     this.removeAuthor(index);
                 }
 
@@ -716,13 +844,18 @@ export class AuthorListComponent implements OnInit {
 
     /**
      * After drop, update author array and other variables. Notify parent component about the change.
-     * @param event 
+     * @param event
      */
     drop(event: CdkDragDrop<string[]>) {
-        moveItemInArray(this.record[this.fieldName], event.previousIndex, event.currentIndex);
+        moveItemInArray(
+            this.record[this.fieldName],
+            event.previousIndex,
+            event.currentIndex,
+        );
         this.onOrderChange();
 
         this.currentAuthorIndex = event.currentIndex;
-        this.currentAuthor = this.record[this.fieldName][this.currentAuthorIndex];
+        this.currentAuthor =
+            this.record[this.fieldName][this.currentAuthorIndex];
     }
 }

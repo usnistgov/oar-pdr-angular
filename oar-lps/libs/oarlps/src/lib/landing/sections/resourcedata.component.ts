@@ -5,9 +5,7 @@ import { trigger, style, animate, transition } from '@angular/animations';
 import { Themes, ColorScheme, GlobalService, iconClass } from '../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { SearchresultModule } from '../searchresult/searchresult.module';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusService } from '../editcontrol/editstatus.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { AccesspageMidasComponent } from '../accesspage/accesspage-midas/accesspage-midas.component';
 import { AccesspagePubComponent } from '../accesspage/accesspage-pub/accesspage-pub.component';
@@ -21,7 +19,7 @@ import { faGlobe, faLock } from '@fortawesome/free-solid-svg-icons';
  * the list of data files, links to data access pages, and access policies.  
  */
 @Component({
-    selector:      'pdr-resource-data',
+    selector: 'pdr-resource-data',
     standalone: true,
     imports: [
         SectionTitleComponent,
@@ -31,7 +29,6 @@ import { faGlobe, faLock } from '@fortawesome/free-solid-svg-icons';
         DatafilesMidasComponent,
         SearchresultModule,
         AccesspagePubComponent,
-        NgbModule,
         FontAwesomeModule
     ],
     templateUrl:   './resourcedata.component.html',
@@ -201,21 +198,5 @@ export class ResourceDataComponent implements OnChanges {
      googleAnalytics(url: string, event, title) {
         this.gaService.gaTrackEvent('homepage', event, title, url);
      }
-    
-    showSectionTitle() {
-        let show: boolean = false;
-
-        if (this.isPublicSite) {
-            show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
-        } else {
-            if (this.isEditMode) {
-                show = true;
-            } else {
-                show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
-            }
-        }
-
-        return show;
-    }
 }
 

@@ -1,7 +1,6 @@
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
 import { CommonModule } from '@angular/common';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AboutdatasetComponent } from './aboutdataset.component';
 import { AppConfig, LPSConfig } from '../../config/config.module';

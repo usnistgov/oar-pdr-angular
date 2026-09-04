@@ -47,19 +47,41 @@
 
 .btn {
     margin-bottom:10px;
-    height:35px;
+    height: 30px !important;
 }
 
-#ec-files-btn {
+/* #ec-files-btn {
     background-color:var(--nist-blue-light);
     color:rgb(255, 255, 255);
     width: 180px;
     margin-top: 6px;
     margin-right: 6px;
+} */
+
+/* #ec-files-btn:hover {
+    background-color: var(--nist-blue-lighter) !important;
+} */
+
+.normal-btn {
+    width: 180px;
 }
 
-#ec-files-btn:hover {
-    background-color: var(--nist-blue-lighter) !important;
+.small-btn {
+    width: 80px;
+}
+
+.mobil-btn {
+    width: 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
 }
 
 #ec-files-btn-sm {
@@ -72,6 +94,23 @@
     background-color:var(--nist-blue-light);
     color:rgb(255, 255, 255);
     width: 40px;
+}
+
+#ec-files-btn {
+    background-color: var(--nist-blue-light);
+    color: white;
+    margin-top: 6px;
+    margin-right: 6px;
+}
+
+#ec-files-btn:hover {
+    background-color: var(--nist-blue-lighter)
+}
+
+#ec-files-btn:disabled {
+    background-color: #d3d3d3;
+    color: #888;
+    opacity: .5;
 }
 
 /* #ec-files-btn.hover {

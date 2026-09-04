@@ -6,41 +6,37 @@ import { ConfigModule } from './config/config.module';
 import { DatacartModule } from './datacart/datacart.module';
 import { DirectivesModule } from './directives/directives.module';
 import { ErrorsModule } from './errors/errors.module';
-import { SectionsModule } from './landing/sections/sections.module';
 import { DoneModule } from './landing/done/done.module';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { TextEditModule } from './text-edit/text-edit.module';
 import { HttpClientModule } from '@angular/common/http';
 import { TextareaAutoresizeModule } from './textarea-autoresize/textarea-autoresize.module';
-import { NgSelectModule } from '@ng-select/ng-select';
 import { SectionTitleModule } from './landing/section-title/section-title.module';
 import { ToastrModule } from 'ngx-toastr';
+import { NerdmModule } from './nerdm/nerdm.module';
 
 @NgModule({
-    declarations: [ ],
+    declarations: [],
     imports: [
-        CommonModule, 
-        FrameModule, 
+        CommonModule,
+        FrameModule,
         ConfigModule,
         DirectivesModule,
         ErrorsModule,
-        SectionsModule,
         DoneModule,
         DragDropModule,
-        TextEditModule,
         HttpClientModule,
         TextareaAutoresizeModule,
-        NgSelectModule,
         SectionTitleModule,
         DatacartModule,
-        ToastrModule.forRoot()
+        NerdmModule,
+        ToastrModule.forRoot(),
     ],
     providers: [
         provideZoneChangeDetection({ ignoreChangesOutsideZone: true }),
-        GoogleAnalyticsService
+        GoogleAnalyticsService,
     ],
-    exports: []
+    exports: [],
 })
-export class OARLPSModule { 
-    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) { } 
+export class OARLPSModule {
+    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) {}
 }

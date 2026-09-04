@@ -69,28 +69,31 @@
                 [innerHTML]="sanitizedHtml">
             </div>
             
-            <div class="help-title headerbar" (click)="this.showNextSteps = !this.showNextSteps">
-                <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
-                    {{msgCompleted}}
+            <div (click)="this.showNextSteps = !this.showNextSteps">
+                <div class="content-completed"
+                    *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps"
+                    [innerHTML]="msgCompletedHtml">
                 </div>
                 <ng-template #nextSteps>
-                    Next Steps:
-                    <fa-icon 
-                        *ngIf="!clickContact && caretRightIcon" 
-                        [class.amplified]="isMouseOverNextSteps"
-                        [icon]="['fas', showNextSteps? caretDownIcon : caretRightIcon]" 
-                        class="amplifiable"
-                        (mouseover)="isMouseOverNextSteps = true" 
-                        (mouseleave)="isMouseOverNextSteps = false">
-                    </fa-icon>
+                    <div class="help-title headerbar">
+                        Next Steps:
+                        <fa-icon 
+                            *ngIf="!clickContact && caretRightIcon" 
+                            [class.amplified]="isMouseOverNextSteps"
+                            [icon]="['fas', showNextSteps? caretDownIcon : caretRightIcon]" 
+                            class="amplifiable"
+                            (mouseover)="isMouseOverNextSteps = true" 
+                            (mouseleave)="isMouseOverNextSteps = false">
+                        </fa-icon>
 
-                    <!-- <i class="fas expand-btn amplifiable" 
-                        [class.amplified]="isMouseOverNextSteps" 
-                        (mouseover)="isMouseOverNextSteps = true"
-                        (mouseleave)="isMouseOverNextSteps = false"
-                        [ngClass]="{'fa-caret-right': !showNextSteps, 'fa-caret-down': showNextSteps}" 
-                        aria-label="Show warning steps">
-                    </i> -->
+                        <!-- <i class="fas expand-btn amplifiable" 
+                            [class.amplified]="isMouseOverNextSteps" 
+                            (mouseover)="isMouseOverNextSteps = true"
+                            (mouseleave)="isMouseOverNextSteps = false"
+                            [ngClass]="{'fa-caret-right': !showNextSteps, 'fa-caret-down': showNextSteps}" 
+                            aria-label="Show warning steps">
+                        </i> -->
+                    </div>
                 </ng-template>
             </div>
             

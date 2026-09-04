@@ -5,14 +5,12 @@ import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs } from '../../sh
 import { MetadataUpdateService } from '../editcontrol/metadataupdate.service';
 import { CommonModule } from '@angular/common';
 import { AuthorListComponent } from '../author/author-list/author-list.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'app-facilitators',
     standalone: true,
     imports: [
         CommonModule, 
-        NgbModule,
         AuthorListComponent
     ],    
     templateUrl: './facilitators.component.html',

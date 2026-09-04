@@ -50,24 +50,23 @@
                             
                             <div *ngIf="apage['description']">
                                 <div style="cursor: pointer;color: #1471AE;" 
-                                     (click)="apage[showDesc] = !apage[showDesc];chref.detectChanges()">
+                                     (click)="apage['showDesc'] = !apage['showDesc'];chref.detectChanges()">
                                      About this link
                                      <!-- <i class="fas fa-caret-right"
                                         *ngIf="!apage[showDesc]"></i> -->
                                     <fa-icon 
                                         *ngIf="caretRightIcon && caretDownIcon" 
-                                        [class.amplified]="isMouseOver" 
+                                        [class.amplified]="isMouseOver && mouseOverIndex == i" 
                                         [icon]="['fas', iconName(apage)]"
                                         class="amplifiable" 
-                                        (mouseover)="isMouseOver = true" 
-                                        (mouseleave)="isMouseOver = false">
+                                        (mouseover)="isMouseOver = true; mouseOverIndex = i;" 
+                                        (mouseleave)="isMouseOver = false; mouseOverIndex = -1;">
                                     </fa-icon>
-
                                      <!-- <i class="fas fa-caret-down"  
                                         *ngIf="apage[showDesc]"></i>  -->
                                 </div>
                                 <div class="description" 
-                                     *ngIf="apage[showDesc]" 
+                                     *ngIf="apage['showDesc']" 
                                      [@enterAnimation]>
                                      {{apage['description']}}
                                 </div>
@@ -92,7 +91,7 @@
         
                                 <div *ngIf="apage['description']">
                                     <div style="cursor: pointer;color: #1471AE;" 
-                                         (click)="apage[showDesc] = !apage[showDesc];chref.detectChanges()">
+                                         (click)="apage['showDesc'] = !apage['showDesc'];chref.detectChanges()">
                                          
                                         About downloading restricted public data
                                         <!-- <i class="fas fa-caret-right" 
@@ -103,15 +102,15 @@
                                         </i>  -->
                                         <fa-icon 
                                             *ngIf="caretRightIcon && caretDownIcon" 
-                                            [class.amplified]="isMouseOver" 
+                                            [class.amplified]="isMouseOver && mouseOverIndex == i" 
                                             [icon]="['fas', iconName(apage)]"
                                             class="amplifiable" 
-                                            (mouseover)="isMouseOver = true" 
-                                            (mouseleave)="isMouseOver = false">
+                                            (mouseover)="isMouseOver = true; mouseOverIndex = i" 
+                                            (mouseleave)="isMouseOver = false; mouseOverIndex = -1">
                                         </fa-icon>
                                     </div>
                                     <div class="description" 
-                                         *ngIf="apage[showDesc]" 
+                                         *ngIf="apage['showDesc']" 
                                          [@enterAnimation]>
                                          {{apage['description']}}
                                     </div>

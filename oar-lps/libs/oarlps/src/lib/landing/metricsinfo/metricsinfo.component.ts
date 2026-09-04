@@ -2,7 +2,6 @@ import { Component, OnInit, OnChanges, Input, Output, SimpleChanges, EventEmitte
 import { NerdmRes } from '../../nerdm/nerdm';
 import { RecordLevelMetrics } from '../../metrics/metrics';
 import { CommonFunctionService } from '../../shared/common-function/common-function.service';
-import { MenuItem } from 'primeng/api';
 import { MetricsService } from '../../shared/metrics-service/metrics.service';
 import { Observable, of, Observer } from "rxjs";
 import { AppConfig } from '../../config/config';

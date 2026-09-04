@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { AppConfig } from '../../config/config';
-import { SelectItem } from 'primeng/api';
 import * as _ from 'lodash-es';
 import { Observable, of, throwError } from 'rxjs';
+import { SelectItem } from '../globals/globals';
 
 @Injectable({
   providedIn: 'root'

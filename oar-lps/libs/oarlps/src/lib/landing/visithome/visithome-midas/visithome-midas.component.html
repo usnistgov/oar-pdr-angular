@@ -1,37 +1,88 @@
-<span *ngIf="inBrowser; else visitHomeOnServer" style="float: right;">
-    <div style="display: table;">
+<span *ngIf="inBrowser; else visitHomeOnServer" style="float: right">
+    <div style="display: table">
         <div class="editable_container">
-            <div class="editable_field" [pTooltip]="record[fieldName]" tooltipPosition="bottom" tooltipStyleClass="tooltip-style">
-                <Visithome-pub 
-                    [record]="record" 
+            <div
+                class="editable_field"
+                [pTooltip]="record[fieldName]"
+                tooltipPosition="bottom"
+                tooltipStyleClass="tooltip-style"
+            >
+                <Visithome-pub
+                    [record]="record"
                     [inBrowser]="inBrowser"
                     [inViewMode]="inViewMode"
                     [theme]="theme"
-                    [isPublicSite]="isPublicSite">
+                    [isPublicSite]="isPublicSite"
+                >
                 </Visithome-pub>
-            </div>    
+            </div>
 
-            @if(isEditMode && !inViewMode) {
-                <div class="editable_field" style="margin-left: 5px; margin-top: 2px;">
-                    @if(!isEditing) {
-                        <button class="edit_button" (click)="startEditing()" aria-label="edit button" ngbTooltip="Edit URL">
-                            <fa-icon [icon]="faPencil" size="sm" title="Edit URL" aria-label="edit URL"></fa-icon>
-                        </button>  
-                        
-                        @if(updated) {
+            @if (isEditMode && !inViewMode) {
+                <div
+                    class="editable_field"
+                    style="margin-left: 5px; margin-top: 2px"
+                >
+                    @if (!isEditing) {
+                        <!-- <button
+                            class="edit_button"
+                            (click)="startEditing()"
+                            aria-label="edit button"
+                            matTooltip="Edit URL"
+                            matTooltipPosition="above"
+                        >
+                            <fa-icon
+                                [icon]="faPencil"
+                                size="sm"
+                                title="Edit URL"
+                                aria-label="edit URL"
+                            ></fa-icon>
+                        </button> -->
+
+                        <fa-icon
+                            class="edit_button action-icon"
+                            [icon]="faPencil"
+                            size="sm"
+                            (click)="startEditing()"
+                            aria-label="Edit button"
+                            matTooltip="Edit URL"
+                            matTooltipPosition="above"
+                        ></fa-icon>
+
+                        @if (updated) {
                             <!-- Restore button -->
-                            <button class="edit_button" type="button"
-                            (click)="restoreOriginal()" aria-label="Restore button" ngbTooltip="Restore original URL">
+                            <!-- <button
+                                class="edit_button"
+                                type="button"
+                                (click)="restoreOriginal()"
+                                aria-label="Restore button"
+                                matTooltip="Restore original URL"
+                                matTooltipPosition="above"
+                            >
                                 <fa-icon [icon]="faUndo"></fa-icon>
-                            </button>   
+                            </button> -->
+
+                            <fa-icon
+                                class="edit_button action-icon"
+                                [icon]="faUndo"
+                                size="sm"
+                                (click)="restoreOriginal()"
+                                aria-label="Restore button"
+                                matTooltip="Restore original URL"
+                                matTooltipPosition="above"
+                            ></fa-icon>
                         }
-                    }
-                    @else {
+                    } @else {
                         <!-- Hide edit window button -->
-                        <button class="edit_button" type="button"
-                            (click)="hideEditBlock()" aria-label="Close button" ngbTooltip="Hide edit block">
+                        <!-- <button
+                            class="edit_button"
+                            type="button"
+                            (click)="hideEditBlock()"
+                            aria-label="Close button"
+                            matTooltip="Hide edit block"
+                            matTooltipPosition="above"
+                        >
                             <fa-icon [icon]="faXmark"></fa-icon>
-                        </button>    
+                        </button> -->
                     }
                 </div>
             }
@@ -41,16 +92,21 @@
 <ng-template #visitHomeOnServer>Visit Home Page</ng-template>
 
 <!-- Visit homepage editor -->
-<div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px;margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
-    <lib-visithome-edit 
-        #visithomeedit 
-        [visitHomeURL]="visitHomeURL" 
-        [editMode]="editMode" 
-        [dataChanged]="dataChanged" 
-        [updated]='updated' 
+<div
+    [@editExpand]="editBlockStatus"
+    style="width: 100%; max-width: 800px; margin: 0px; padding: 0px"
+    [style.overflow]="overflowStyle"
+>
+    <lib-visithome-edit
+        #visithomeedit
+        [visitHomeURL]="visitHomeURL"
+        [editMode]="editMode"
+        [dataChanged]="dataChanged"
+        [updated]="updated"
         [startEditing]="editStarted"
-        [backgroundColor]="backgroundColor" 
-        (dataChangedOutput)="onDataChange($event)" 
-        (cmdOutput)="onCommandChanged($event)">
+        [backgroundColor]="backgroundColor"
+        (dataChangedOutput)="onDataChange($event)"
+        (cmdOutput)="onCommandChanged($event)"
+    >
     </lib-visithome-edit>
 </div>

@@ -1,32 +1,40 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ColorScheme } from '../../shared/globals/globals';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import {
+    faDatabase,
+    faExternalLink
+} from "@fortawesome/free-solid-svg-icons";
 
 @Component({
-  selector: 'app-resultitem',
-  templateUrl: './resultitem.component.html',
-  styleUrls: ['./resultitem.component.css'],
-  animations: [
-    trigger('detailExpand', [
-    state('void', style({height: '*', minHeight: '0'})),
-    state('collapsed', style({height: '*', minHeight: '0'})),
-    state('expanded', style({height: '*'})),
-    transition('expanded <=> collapsed', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    transition('expanded <=> void', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-    ]),
-    trigger(
-        'enterAnimation', [
-            transition(':enter', [
-                style({height: '0px', opacity: 0}),
-                animate('700ms', style({height: '100%', opacity: 1}))
+    selector: "app-resultitem",
+    templateUrl: "./resultitem.component.html",
+    styleUrls: ["./resultitem.component.css"],
+    animations: [
+        trigger("detailExpand", [
+            state("void", style({ height: "*", minHeight: "0" })),
+            state("collapsed", style({ height: "*", minHeight: "0" })),
+            state("expanded", style({ height: "*" })),
+            transition(
+                "expanded <=> collapsed",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+            transition(
+                "expanded <=> void",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+        trigger("enterAnimation", [
+            transition(":enter", [
+                style({ height: "0px", opacity: 0 }),
+                animate("700ms", style({ height: "100%", opacity: 1 })),
             ]),
-            transition(':leave', [
-                style({height: '100%', opacity: 1}),
-                animate('700ms', style({height: 0, opacity: 0}))
-            ])
-        ]
-    )
-  ] 
+            transition(":leave", [
+                style({ height: "100%", opacity: 1 }),
+                animate("700ms", style({ height: 0, opacity: 0 })),
+            ]),
+        ]),
+    ],
 })
 export class ResultitemComponent implements OnInit {
     homeIconClass: string;
@@ -34,65 +42,73 @@ export class ResultitemComponent implements OnInit {
     contentShort: string = "";
     expanded: boolean = false;
 
+    faDatabase = faDatabase;
+    faExternalLink = faExternalLink;
+
     @Input() resultItem: any;
     @Input() PDRAPIURL: string = "/od/id/";
     @Input() colorScheme: any;
 
-    constructor() { }
+    constructor() {}
+
+    homeIconName: string = "";
 
     ngOnInit(): void {
-      if(this.resultItem.landingPage) {
-        this.homeBtnURL = this.resultItem.landingPage;
+        if (this.resultItem.landingPage) {
+            this.homeBtnURL = this.resultItem.landingPage;
 
-        if(this.resultItem.landingPage.indexOf(this.resultItem.ediid.split("/").at(-1)) >= 0) {
-          this.homeIconClass = "pi pi-database btn-icon";
+            if (
+                this.resultItem.landingPage.indexOf(
+                    this.resultItem.ediid.split("/").at(-1),
+                ) >= 0
+            ) {
+                this.homeIconName = "database"; // Database icon for landing page matching ediid
+            } else {
+                this.homeIconName = "link"; // External link icon for other landing pages
+            }
         } else {
-          this.homeIconClass = "pi pi-external-link vertical-center";
+            this.homeBtnURL = this.PDRAPIURL + this.resultItem.ediid;
+            this.homeIconName = "link"; // External link icon when no landing page
         }
-      }else{
-        this.homeBtnURL = this.PDRAPIURL + this.resultItem.ediid;
-        this.homeIconClass = "pi pi-external-link vertical-center";
-      }
 
-      if(this.resultItem.description)
-        this.contentShort = this.resultItem.description[0].substring(0, 200) + "...";
+        if (this.resultItem.description)
+            this.contentShort =
+                this.resultItem.description[0].substring(0, 200) + "...";
     }
 
     /**
      * Determine if a given dataset has contact point email
-     * @param dataset 
-     * @returns 
+     * @param dataset
+     * @returns
      */
     hasEmail(dataset: any) {
-      if(dataset['contactPoint'])
-          return 'hasEmail' in dataset['contactPoint'];
-      else
-          return false;
-  }    
-
-  /**
-   * Get the doi url from the given dataset. If not available, return blank.
-   * @param dataset 
-   * @returns doi url. Return blank if not available.
-   */
-  doiUrl(dataset: any) {
-    if (dataset['doi'] !== undefined && dataset['doi'] !== "")
-        return "https://doi.org/" + dataset['doi'].substring(4);
-    else    
-        return "";
-  }
-
-  lastModified(dataset: any) {
-    let lastDate: Date;
-    if(dataset.modified) {
-        lastDate = new Date(dataset.modified.slice(0,10));
-        return lastDate.toLocaleDateString();
-    }else{
-        return "None";
+        if (dataset["contactPoint"])
+            return "hasEmail" in dataset["contactPoint"];
+        else return false;
     }
-  }
 
-  toggleDetails() {
-    this.expanded = !this.expanded;
-  }
+    /**
+     * Get the doi url from the given dataset. If not available, return blank.
+     * @param dataset
+     * @returns doi url. Return blank if not available.
+     */
+    doiUrl(dataset: any) {
+        if (dataset["doi"] !== undefined && dataset["doi"] !== "")
+            return "https://doi.org/" + dataset["doi"].substring(4);
+        else return "";
+    }
+
+    lastModified(dataset: any) {
+        let lastDate: Date;
+        if (dataset.modified) {
+            lastDate = new Date(dataset.modified.slice(0, 10));
+            return lastDate.toLocaleDateString();
+        } else {
+            return "None";
+        }
+    }
+
+    toggleDetails() {
+        this.expanded = !this.expanded;
+    }
 }

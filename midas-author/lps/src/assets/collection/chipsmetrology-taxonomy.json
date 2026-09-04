@@ -1,6 +1,6 @@
 {
     "_schema": "https://data.nist.gov/od/dm/simple-taxonomy/v1.0",
-    "@id": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+    "@id": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v1.0",
     "title": "The NIST Research Theme Chips Metrology Taxonomy",
     "version": "2.0",
     "description": "terms for tagging resources with research themes",

@@ -1,62 +1,84 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { TitleEditComponent } from './title-edit.component';
-import { UserMessageService } from '../../../frame/usermessage.service';
-import { AppConfig } from '../../../config/config';
-import { TransferState } from '@angular/core';
-import { AuthService, MockAuthService } from '../../editcontrol/auth.service';
-import { DatePipe } from '@angular/common';
-import { ToastrModule } from 'ngx-toastr';
-import { FormsModule } from '@angular/forms';
-import { env } from '../../../../environments/environment';
-import { HttpClient, HttpHandler } from '@angular/common/http';
-import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
-import { environment } from '../../../../environments/environment-impl';
-import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { CommonModule } from '@angular/common';
-import { LandingConstants } from '../../../shared/globals/globals';
-import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
-import { BehaviorSubject } from 'rxjs';
+import { ComponentFixture, TestBed, waitForAsync } from "@angular/core/testing";
+import { MetadataUpdateService } from "../../editcontrol/metadataupdate.service";
+import { TitleEditComponent } from "./title-edit.component";
+import { UserMessageService } from "../../../frame/usermessage.service";
+import { AppConfig } from "../../../config/config";
+import { TransferState } from "@angular/core";
+import { AuthService, MockAuthService } from "../../editcontrol/auth.service";
+import { DatePipe } from "@angular/common";
+import { ToastrModule } from "ngx-toastr";
+import { FormsModule } from "@angular/forms";
+import { env } from "../../../../environments/environment";
+import { HttpClient, HttpHandler } from "@angular/common/http";
+import {
+    DAPService,
+    createDAPService,
+    LocalDAPService,
+} from "../../../nerdm/dap.service";
+import { environment } from "../../../../environments/environment-impl";
+import { EditStatusService } from "../../editcontrol/editstatus.service";
+import { CommonModule } from "@angular/common";
+import { LandingConstants } from "../../../shared/globals/globals";
+import { FontAwesomeTestingModule } from "@fortawesome/angular-fontawesome/testing"; // Import the testing module
+import { BehaviorSubject } from "rxjs";
 
-describe('TitleEditComponent', () => {
+describe("TitleEditComponent", () => {
     let component: TitleEditComponent;
     let fixture: ComponentFixture<TitleEditComponent>;
     let cfg = new AppConfig(null);
-    cfg.loadConfig(env.config)
+    cfg.loadConfig(env.config);
     let plid: Object = "browser";
     let ts: TransferState = new TransferState();
-    let authsvc : AuthService = new MockAuthService(undefined);
-    let dapsvc : DAPService = new LocalDAPService();
+    let authsvc: AuthService = new MockAuthService(undefined);
+    let dapsvc: DAPService = new LocalDAPService();
     let edstatsvc = new EditStatusService();
-    let mockWatchIsEditMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    
+    let mockWatchIsEditMode: BehaviorSubject<boolean> =
+        new BehaviorSubject<boolean>(false);
+
     beforeEach(waitForAsync(() => {
         mockWatchIsEditMode = new BehaviorSubject<boolean>(false);
 
         TestBed.configureTestingModule({
-            imports: [CommonModule, FormsModule, ToastrModule.forRoot(), FontAwesomeTestingModule],
+            imports: [
+                CommonModule,
+                FormsModule,
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule,
+            ],
             providers: [
-                UserMessageService, 
+                UserMessageService,
                 HttpHandler,
                 DatePipe,
                 { provide: AppConfig, useValue: cfg },
                 { provide: AuthService, useValue: authsvc },
-                { provide: DAPService, useFactory: createDAPService, 
-                    deps: [ environment, HttpClient, AppConfig ] },
-                { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
-                }, 
+                {
+                    provide: DAPService,
+                    useFactory: createDAPService,
+                    deps: [environment, HttpClient, AppConfig],
+                },
+                {
+                    provide: MetadataUpdateService,
+                    useValue: new MetadataUpdateService(
+                        new UserMessageService(),
+                        edstatsvc,
+                        dapsvc,
+                        null,
+                    ),
+                },
                 {
                     provide: EditStatusService,
-                    useValue: { watchIsEditMode(subscriber: any) { mockWatchIsEditMode.subscribe(subscriber) } }
-                }
-            ]
-        })
-            .compileComponents();
+                    useValue: {
+                        watchIsEditMode(subscriber: any) {
+                            mockWatchIsEditMode.subscribe(subscriber);
+                        },
+                    },
+                },
+            ],
+        }).compileComponents();
     }));
 
     beforeEach(() => {
-        let record: any = require('../../../../assets/sampleRecord.json');
+        let record: any = require("../../../../assets/sampleRecord.json");
         fixture = TestBed.createComponent(TitleEditComponent);
         component = fixture.componentInstance;
         component.record = record;
@@ -65,19 +87,27 @@ describe('TitleEditComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 
-    it('editMode', () => {
+    it("should show edit control when edit mode is enabled", () => {
         mockWatchIsEditMode.next(true);
         fixture.detectChanges();
-        let buttonElement = fixture.nativeElement.querySelector('button');
-        expect(buttonElement).toBeTruthy();
+
+        let editControl = fixture.nativeElement.querySelector(
+            '[aria-label="Edit title"]',
+        );
+
+        expect(editControl).toBeTruthy();
 
         mockWatchIsEditMode.next(false);
         fixture.detectChanges();
-        buttonElement = fixture.nativeElement.querySelector('button');
-        expect(buttonElement).toBeFalsy();
-    })
+
+        editControl = fixture.nativeElement.querySelector(
+            '[aria-label="Edit title"]',
+        );
+
+        expect(editControl).toBeFalsy();
+    });
 });

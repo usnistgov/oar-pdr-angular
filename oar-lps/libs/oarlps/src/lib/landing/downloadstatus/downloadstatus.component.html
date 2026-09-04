@@ -1,17 +1,85 @@
-<div *ngIf="showDownloadStatus" style="background-color: #1E6BA1; color: white; width: 100%;margin-top: 1em;border-radius: 4px 4px 0px 0px; font-weight: bold; padding-left: .7em;">Data Cart Status</div>
-<div *ngFor="let key of getKeys; let i=index" style="width: 100%;border: 1px solid rgb(231, 231, 231); border-radius: 0px 0px 4px 4px;">
-    <span *ngIf="dataCartStatus.dataCartStatusItems[key].downloadPercentage > 0" style="display:inline-block;padding: 0.5em; width: 100%;">
-        <span style="font-size:smaller ;font-weight: 300; color:black">{{cartName(key)}}</span>
-        <div style="width: 100%;">
-            <span style="display:inline-block;width: calc(100% - 20px);">
-                <ngb-progressbar type="info" [value]="dataCartStatus.dataCartStatusItems[key].downloadPercentage" textType="white" [showValue]="true"
-                    [striped]="true"></ngb-progressbar>
-            </span>
-            <span (click)="removeStatusItem(key)" style="float: right;cursor: pointer;padding-left:5px;" data-toggle="tooltip" title="Cancel all downloads">
-                <!-- <i class="fas fa-times"></i> -->
+<div
+    *ngIf="showDownloadStatus"
+    [ngStyle]="menuStyle()"
+    style="
+        background-color: var(--background-default);
+        color: white;
+        width: 100%;
+        margin-top: 1em;
+        border-radius: 4px 4px 0px 0px;
+        font-weight: bold;
+        padding-left: 0.7em;
+    "
+>
+    Data Cart Status
+</div>
+<div
+    *ngFor="let key of getKeys; let i = index"
+    style="
+        width: 100%;
+        border: 1px solid rgb(231, 231, 231);
+        border-radius: 0px 0px 4px 4px;
+    "
+>
+    <span
+        *ngIf="dataCartStatus.dataCartStatusItems[key].downloadPercentage > 0"
+        class="download-status"
+    >
+        <span class="cart-name">
+            {{ cartName(key) }}
+        </span>
 
+        <div class="progress-row">
+            <div class="progress-container">
+                <mat-progress-bar
+                    [value]="
+                        dataCartStatus.dataCartStatusItems[key]
+                            .downloadPercentage
+                    "
+                    mode="determinate"
+                >
+                </mat-progress-bar>
+
+                <span class="progress-value">
+                    {{
+                        dataCartStatus.dataCartStatusItems[key]
+                            .downloadPercentage
+                    }}%
+                </span>
+            </div>
+
+            <span
+                class="cancel-download"
+                (click)="removeStatusItem(key)"
+                matTooltip="Cancel all downloads"
+                matTooltipPosition="above"
+            >
                 <fa-icon [icon]="faXmark"></fa-icon>
             </span>
         </div>
     </span>
+
+    <!-- <span *ngIf="dataCartStatus.dataCartStatusItems[key].downloadPercentage > 0" style="display:inline-block;padding: 0.5em; width: 100%;">
+        <span style="font-size:smaller ;font-weight: 300; color:black">{{cartName(key)}}</span>
+        <div class="progress-container">
+            <mat-progress-bar 
+                [value]="dataCartStatus.dataCartStatusItems[key].downloadPercentage" 
+                mode="determinate"
+                color="primary" 
+                style="height: 100%;">
+            </mat-progress-bar>
+            
+            <span class="progress-value" *ngIf="dataCartStatus.dataCartStatusItems[key].downloadPercentage > 0" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.8em;">
+                {{dataCartStatus.dataCartStatusItems[key].downloadPercentage}}%
+            </span>
+        </div>
+        <span
+            (click)="removeStatusItem(key)"
+            style="float: right;cursor: pointer;padding-left:5px;"
+            matTooltip="Home"
+            matTooltipPosition="Cancel all downloads">
+
+            <fa-icon [icon]="faXmark"></fa-icon>
+        </span>
+    </span> -->
 </div>

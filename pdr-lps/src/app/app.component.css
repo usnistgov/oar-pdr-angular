@@ -74,3 +74,8 @@
       stroke-dashoffset: -124px;
     }
   }
+
+.cart-button .mat-badge-content {
+    color: white !important;
+    background-color: #dc2626 !important;
+}

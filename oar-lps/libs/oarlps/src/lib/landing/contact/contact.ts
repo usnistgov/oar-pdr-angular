@@ -5,5 +5,6 @@ export interface Contact {
     fn: string,
     hasEmail: string,
     dataChanged: boolean,
-    isCollapsed: boolean
+    isCollapsed: boolean,
+    address: string
 }

@@ -32,111 +32,153 @@ import {
 library.add(faPencil, faXmark, faSave, faUndo, faPlus, faTrashCan, faRecycle, faCircleQuestion, faCaretDown, faCaretRight);
 
 @Component({
-    selector: 'app-sidebar',
+    selector: "app-sidebar",
     standalone: true,
     imports: [
         CommonModule,
         SuggestionsComponent,
         RevisionDetailsComponent,
         FontAwesomeModule,
-        SubmitStatusComponent
+        SubmitStatusComponent,
     ],
-    templateUrl: './sidebar.component.html',
-    styleUrls: ['./sidebar.component.css', '../landing/landing.component.scss'],
+    templateUrl: "./sidebar.component.html",
+    styleUrls: ["./sidebar.component.css", "../landing/landing.component.scss"],
     animations: [
-        trigger('slideToggle', [
+        trigger("slideToggle", [
             state(
-                'visible',
+                "visible",
                 style({
-                    transform: 'translateX(0)',
+                    transform: "translateX(0)",
                     opacity: 1,
-                    display: 'block',
-                })
+                    display: "block",
+                }),
             ),
             state(
-                'hidden',
+                "hidden",
                 style({
-                    transform: 'translateX(100%)',
+                    transform: "translateX(100%)",
                     opacity: 0,
-                    display: 'none',
-                })
+                    display: "none",
+                }),
             ),
-            transition('visible => hidden', [animate('300ms ease-in')]),
-            transition('hidden => visible', [animate('300ms ease-out')]),
+            transition("visible => hidden", [animate("300ms ease-in")]),
+            transition("hidden => visible", [animate("300ms ease-out")]),
         ]),
         trigger("togglesbar", [
-            state('sbvisible', style({
-                position: 'absolute',
-                right: '0%',
-                top: "20px",
-                bottom: "100%",
-                overflow: "auto"
-            })),
-            state('sbhidden', style({
-                position: 'absolute',
-                right: '-450%',
-                top: "20px",
-                bottom: "100%",
-                overflow: "hidden"
-            })),
-            transition('sbvisible <=> sbhidden', [
-                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
-            ])
+            state(
+                "sbvisible",
+                style({
+                    position: "absolute",
+                    right: "0%",
+                    top: "20px",
+                    bottom: "100%",
+                    overflow: "auto",
+                }),
+            ),
+            state(
+                "sbhidden",
+                style({
+                    position: "absolute",
+                    right: "-450%",
+                    top: "20px",
+                    bottom: "100%",
+                    overflow: "hidden",
+                }),
+            ),
+            transition("sbvisible <=> sbhidden", [
+                animate(".5s cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ]),
         ]),
-        trigger('generalHelpExpand', [
-            state('hidden', style({
-                height: '0px',
-                minHeight: '0',
-                padding: '0px'
-            })),
-            state('visible', style({
-                height: '*',
-                padding: '10px'
-            })),
-            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        trigger("generalHelpExpand", [
+            state(
+                "hidden",
+                style({
+                    height: "0px",
+                    minHeight: "0",
+                    padding: "0px",
+                }),
+            ),
+            state(
+                "visible",
+                style({
+                    height: "*",
+                    padding: "10px",
+                }),
+            ),
+            transition(
+                "visible <=> hidden",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
         ]),
-        trigger('nextStepsExpand', [
-            state('hidden', style({
-                height: '0px',
-                minHeight: '0',
-                padding: '0px'
-            })),
-            state('visible', style({
-                height: '*',
-                padding: '10px'
-            })),
-            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),        
-        trigger('revisionExpand', [
-            state('hidden', style({
-                height: '0px',
-                minHeight: '0',
-                padding: '0px'
-            })),
-            state('visible', style({
-                height: '*',
-                padding: '10px'
-            })),
-            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),   
-        trigger('submitStatusExpand', [
-            state('hidden', style({
-                height: '0px',
-                minHeight: '0',
-                padding: '0px'
-            })),
-            state('visible', style({
-                height: '*',
-                padding: '10px'
-            })),
-            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),              
-    ]
+        trigger("nextStepsExpand", [
+            state(
+                "hidden",
+                style({
+                    height: "0px",
+                    minHeight: "0",
+                    padding: "0px",
+                }),
+            ),
+            state(
+                "visible",
+                style({
+                    height: "*",
+                    padding: "10px",
+                }),
+            ),
+            transition(
+                "visible <=> hidden",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+        trigger("revisionExpand", [
+            state(
+                "hidden",
+                style({
+                    height: "0px",
+                    minHeight: "0",
+                    padding: "0px",
+                }),
+            ),
+            state(
+                "visible",
+                style({
+                    height: "*",
+                    padding: "10px",
+                }),
+            ),
+            transition(
+                "visible <=> hidden",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+        trigger("submitStatusExpand", [
+            state(
+                "hidden",
+                style({
+                    height: "0px",
+                    minHeight: "0",
+                    padding: "0px",
+                }),
+            ),
+            state(
+                "visible",
+                style({
+                    height: "*",
+                    padding: "10px",
+                }),
+            ),
+            transition(
+                "visible <=> hidden",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+    ],
 })
 export class SidebarComponent implements OnInit {
     sbarvisible: boolean = true;
     hideSidebarBody: boolean = false;
-    sidebarState: string = 'sbvisible';
+    sidebarState: string = "sbvisible";
     helpContent: string = "";
     fieldName: string = "sidebar";
     DEFAULT_TITLE: string = "General Help";
@@ -156,7 +198,7 @@ export class SidebarComponent implements OnInit {
     reviewSystems: string[] = [];
 
     //Revision
-    public revisionHelp:{} = revisionhelp;
+    public revisionHelp: {} = revisionhelp;
     showRevisionHelp: boolean = false;
     // ignoreRevisionType: boolean = false;
     showRevisionData: boolean = true;
@@ -182,6 +224,7 @@ export class SidebarComponent implements OnInit {
     circleXmarkIcon = iconClass.CIRCLE_XMARK;
 
     sanitizedHtml: SafeHtml;
+    msgCompletedHtml: SafeHtml;
 
     @Input() record: NerdmRes = null;
     @Input() helpContentAll: any = {};
@@ -201,8 +244,8 @@ export class SidebarComponent implements OnInit {
         @Self() private element: ElementRef,
         private sanitizer: DomSanitizer,
         public iconLibrary: FaIconLibrary,
-        public sidebarService: SidebarService) { 
-        
+        public sidebarService: SidebarService,
+    ) {
         iconLibrary.addIcons(
             faPencil,
             faXmark,
@@ -214,59 +257,74 @@ export class SidebarComponent implements OnInit {
             faCircleQuestion,
             faCaretDown,
             faCaretRight,
-            faCircleXmark
-        );  
-        
+            faCircleXmark,
+        );
+
         this.edstatsvc.watchRecState((recState: any) => {
             this.curRecState = recState;
             this.updateShowHelpToogler();
-            
+
             //When general help expanded, it will only be controlled manually
             // if (this.showGeneralHelp) {
-            //     this.ignoreRevisionType = true;                
+            //     this.ignoreRevisionType = true;
             // }
-        })
-    
-        this.globalService.watchSubmissionData(
-            (data) => {
-                this.submissionData = new SubmissionData(data);
-        })
+        });
+
+        this.globalService.watchSubmissionData((data) => {
+            this.submissionData = new SubmissionData(data);
+        });
     }
 
     get maxHeight(): number {
         return this.element.nativeElement.firstChild.offsetHeight;
     }
-    
+
     ngOnInit(): void {
-        this.editIcon = icon({ iconName: 'pencil', prefix: 'fas' }).html.join('');
-        this.saveIcon = icon({ iconName: 'save', prefix: 'fas' }).html.join('');
-        this.closeIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
-        this.cancelIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
-        this.undoIcon = icon({ iconName: 'undo', prefix: 'fas' }).html.join('');
-        this.addIcon = icon({ iconName: 'plus', prefix: 'fas' }).html.join('');
-        this.delIcon = icon({ iconName: 'trash-can', prefix: 'fas' }).html.join('');
-        this.resetIcon = icon({ iconName: 'recycle', prefix: 'fas' }).html.join('');
+        this.editIcon = icon({ iconName: "pencil", prefix: "fas" }).html.join(
+            "",
+        );
+        this.saveIcon = icon({ iconName: "save", prefix: "fas" }).html.join("");
+        this.closeIcon = icon({ iconName: "xmark", prefix: "fas" }).html.join(
+            "",
+        );
+        this.cancelIcon = icon({ iconName: "xmark", prefix: "fas" }).html.join(
+            "",
+        );
+        this.undoIcon = icon({ iconName: "undo", prefix: "fas" }).html.join("");
+        this.addIcon = icon({ iconName: "plus", prefix: "fas" }).html.join("");
+        this.delIcon = icon({ iconName: "trash-can", prefix: "fas" }).html.join(
+            "",
+        );
+        this.resetIcon = icon({ iconName: "recycle", prefix: "fas" }).html.join(
+            "",
+        );
 
         this.reviewSystems = Object.keys(this.submitStatus);
 
-        this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
+        this.msgCompleted = this.helpContentAll["completed"]
+            ? this.helpContentAll["completed"]
+            : "Default help text.<p>";
+
+        this.msgCompletedHtml = this.sanitizer.bypassSecurityTrustHtml(
+            this.msgCompleted,
+        );
 
         //Will be removed later
         this.lpService.watchSectionHelp((sectionHelp) => {
             this.updateHelpContent(sectionHelp);
         });
-        
+
         //Use sidebar service so both step wizard and landing page can use
         this.sidebarService.watchSectionHelp((sectionHelp) => {
             this.updateHelpContent(sectionHelp);
         });
 
         if (this.record && this.record["@id"]) this.ediid = this.record["@id"];
-        
+
         this.lpService.watchSubmitResponse((suggestions) => {
             this.suggestions = suggestions as ReviewResponse;
-            this.chref.detectChanges();
-        })
+            // this.chref.detectChanges();
+        });
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -276,9 +334,9 @@ export class SidebarComponent implements OnInit {
         //     this.mdupdsvc.validate().subscribe((suggestions) => {
         //         this.suggestions = suggestions as ReviewResponse;
         //     })
-    
+
         this.updateShowHelpToogler();
-        this.chref.detectChanges();
+        // this.chref.detectChanges();
         // }
     }
 
@@ -287,15 +345,27 @@ export class SidebarComponent implements OnInit {
     }
 
     get hasRequiredItems() {
-        return this.suggestions && this.suggestions['req'] && this.suggestions['req'].length > 0;
+        return (
+            this.suggestions &&
+            this.suggestions["req"] &&
+            this.suggestions["req"].length > 0
+        );
     }
 
     get hasWarnItems() {
-        return this.suggestions && this.suggestions['warn'] && this.suggestions['warn'].length > 0;
+        return (
+            this.suggestions &&
+            this.suggestions["warn"] &&
+            this.suggestions["warn"].length > 0
+        );
     }
 
     get hasRecommendedItems() {
-        return this.suggestions && this.suggestions['warn'] && this.suggestions['warn'].length > 0;
+        return (
+            this.suggestions &&
+            this.suggestions["warn"] &&
+            this.suggestions["warn"].length > 0
+        );
     }
 
     get expandWarning() {
@@ -303,7 +373,11 @@ export class SidebarComponent implements OnInit {
     }
 
     get expandRec() {
-        return !this.hasRequiredItems && !this.hasWarnItems && this.hasRecommendedItems;
+        return (
+            !this.hasRequiredItems &&
+            !this.hasWarnItems &&
+            this.hasRecommendedItems
+        );
     }
 
     get isRevision() {
@@ -326,8 +400,11 @@ export class SidebarComponent implements OnInit {
     }
 
     updateShowHelpToogler() {
-        this.showSubmitStatus = this.hasSubmitStatusData && this.curRecState == this.REC_STATES.RESUBMIT;
-        this.showRevisionData = this.curRecState == this.REC_STATES.REVISE && this.hasRevisionData;
+        this.showSubmitStatus =
+            this.hasSubmitStatusData &&
+            this.curRecState == this.REC_STATES.RESUBMIT;
+        this.showRevisionData =
+            this.curRecState == this.REC_STATES.REVISE && this.hasRevisionData;
 
         this.showGeneralHelp = !this.showRevisionData && !this.showSubmitStatus;
         this.showNextSteps = this.showGeneralHelp;
@@ -340,78 +417,158 @@ export class SidebarComponent implements OnInit {
      */
     updateHelpContent(sectionHelp: SectionHelp) {
         // Update help content
-        let generalHelp = this.helpContentAll[GENERAL]? this.helpContentAll[GENERAL] : "Default help text.<p>";
+        let generalHelp = this.helpContentAll[GENERAL]
+            ? this.helpContentAll[GENERAL]
+            : "Default help text.<p>";
 
         if (sectionHelp.showGeneral != false) {
-            if(sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
+            if (sectionHelp.topic == HelpTopic[MODE.NORMAL]) {
                 sectionHelp.section = GENERAL;
             }
-    
+
             this.helpContent = generalHelp;
         } else {
             this.helpContent = "";
         }
 
-        if(sectionHelp.section && sectionHelp.section != GENERAL) {
+        if (sectionHelp.section && sectionHelp.section != GENERAL) {
             // Add general help of the section first
-            if(this.helpContentAll[sectionHelp.section]){
-                if(this.helpContentAll[sectionHelp.section][GENERAL]) {
-                    this.helpContent = this.helpContentAll[sectionHelp.section][GENERAL]+ "<p><p>";
+            if (this.helpContentAll[sectionHelp.section]) {
+                if (this.helpContentAll[sectionHelp.section][GENERAL]) {
+                    this.helpContent =
+                        this.helpContentAll[sectionHelp.section][GENERAL] +
+                        "<p><p>";
                 }
             }
 
             // Add topic help
-            if(sectionHelp.topic) {
-                if(sectionHelp.topic != GENERAL && this.helpContentAll[sectionHelp.section]){
-                    if(this.helpContentAll[sectionHelp.section][sectionHelp.topic])
-                        this.helpContent += this.helpContentAll[sectionHelp.section][sectionHelp.topic] + "<p><p>";
+            if (sectionHelp.topic) {
+                if (
+                    sectionHelp.topic != GENERAL &&
+                    this.helpContentAll[sectionHelp.section]
+                ) {
+                    if (
+                        this.helpContentAll[sectionHelp.section][
+                            sectionHelp.topic
+                        ]
+                    )
+                        this.helpContent +=
+                            this.helpContentAll[sectionHelp.section][
+                                sectionHelp.topic
+                            ] + "<p><p>";
 
-                    if(sectionHelp.topic == HelpTopic[MODE.LIST] && this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]])
-                        this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["dragdrop"]] + "<p><p>";
+                    if (
+                        sectionHelp.topic == HelpTopic[MODE.LIST] &&
+                        this.helpContentAll[sectionHelp.section][
+                            HelpTopic["dragdrop"]
+                        ]
+                    )
+                        this.helpContent +=
+                            this.helpContentAll[sectionHelp.section][
+                                HelpTopic["dragdrop"]
+                            ] + "<p><p>";
                 }
             }
 
             // Add "see also" if available
-            if(this.helpContentAll[sectionHelp.section] &&this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]])
-                        this.helpContent += this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]] + "<p><p>";
-            
-        }else {
+            if (
+                this.helpContentAll[sectionHelp.section] &&
+                this.helpContentAll[sectionHelp.section][HelpTopic["seealso"]]
+            )
+                this.helpContent +=
+                    this.helpContentAll[sectionHelp.section][
+                        HelpTopic["seealso"]
+                    ] + "<p><p>";
+        } else {
             this.helpContent = generalHelp;
-        }   
+        }
 
         // Update help title
-        if(this.helpContentAll[sectionHelp.section] && this.helpContentAll[sectionHelp.section]["label"])
-            this.title = this.helpContentAll[sectionHelp.section]["label"].trim();
-        else
-            this.title = SectionPrefs.getDispName(sectionHelp.section);
+        if (
+            this.helpContentAll[sectionHelp.section] &&
+            this.helpContentAll[sectionHelp.section]["label"]
+        )
+            this.title =
+                this.helpContentAll[sectionHelp.section]["label"].trim();
+        else this.title = SectionPrefs.getDispName(sectionHelp.section);
 
         // Replace all icon names with real icon ones so innerHtml will display
-        this.helpContent = this.helpContent.replaceAll("<i class='editIcon'></i>", this.editIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-pencil'></i>", this.editIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='editIcon'></i>",
+            this.editIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-pencil'></i>",
+            this.editIcon,
+        );
 
-        this.helpContent = this.helpContent.replaceAll("<i class='closeIcon'></i>", this.closeIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-times'></i>", this.closeIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='closeIcon'></i>",
+            this.closeIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-times'></i>",
+            this.closeIcon,
+        );
 
-        this.helpContent = this.helpContent.replaceAll("<i class='saveIcon'></i>", this.saveIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-check'></i>", this.saveIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='saveIcon'></i>",
+            this.saveIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-check'></i>",
+            this.saveIcon,
+        );
 
-        this.helpContent = this.helpContent.replaceAll("<i class='cancelIcon'></i>", this.cancelIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-times'></i>", this.cancelIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='cancelIcon'></i>",
+            this.cancelIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-times'></i>",
+            this.cancelIcon,
+        );
 
-        this.helpContent = this.helpContent.replaceAll("<i class='undoIcon'></i>", this.undoIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-undo'></i>", this.undoIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='undoIcon'></i>",
+            this.undoIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-undo'></i>",
+            this.undoIcon,
+        );
 
-        this.helpContent = this.helpContent.replaceAll("<i class='addIcon'></i>", this.addIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-plus'></i>", this.addIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='addIcon'></i>",
+            this.addIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-plus'></i>",
+            this.addIcon,
+        );
 
-        this.helpContent = this.helpContent.replaceAll("<i class='delIcon'></i>", this.delIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-trash-alt'></i>", this.delIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='delIcon'></i>",
+            this.delIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-trash-alt'></i>",
+            this.delIcon,
+        );
 
-        this.helpContent = this.helpContent.replaceAll("<i class='resetIcon'></i>", this.resetIcon);
-        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-recycle'></i>", this.resetIcon);
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='resetIcon'></i>",
+            this.resetIcon,
+        );
+        this.helpContent = this.helpContent.replaceAll(
+            "<i class='fas fa-recycle'></i>",
+            this.resetIcon,
+        );
 
-        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.helpContent);
-        this.chref.detectChanges();
+        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(
+            this.helpContent,
+        );
+        // this.chref.detectChanges();
     }
 
     gotoSection(section: string) {
@@ -435,30 +592,30 @@ export class SidebarComponent implements OnInit {
 
         this.scroll.emit(sectionID);
 
-        this.chref.detectChanges();
+        // this.chref.detectChanges();
     }
 
     /**
-     * toggle whether the sidebar is visible.  When this is called, a change in 
+     * toggle whether the sidebar is visible.  When this is called, a change in
      * in the visiblity of the sidebar will be animated (either opened or closed).
      */
     toggleSbarView() {
-        this.sbarvisible = ! this.sbarvisible;
+        this.sbarvisible = !this.sbarvisible;
 
-        this.sidebarState = this.sbarvisible ? 'sbvisible' : 'sbhidden';
-        
+        this.sidebarState = this.sbarvisible ? "sbvisible" : "sbhidden";
+
         if (!this.sbarvisible) {
             setTimeout(() => {
                 this.hideSidebarBody = true;
                 //Refresh screen
-                this.chref.detectChanges();
+                // this.chref.detectChanges();
             }, 350);
         } else {
             this.hideSidebarBody = false;
         }
-        
+
         this.sbarvisible_out.next(this.sbarvisible);
-        this.chref.detectChanges();
+        // this.chref.detectChanges();
     }
 
     updateSubmissionData(event) {
@@ -478,7 +635,7 @@ export class SidebarComponent implements OnInit {
                 setTimeout(() => {
                     this.showGeneralHelp = true;
                     //Refresh screen
-                    this.chref.detectChanges();
+                    // this.chref.detectChanges();
                 }, 350);
             }
         }
@@ -488,7 +645,7 @@ export class SidebarComponent implements OnInit {
         this.showGeneralHelp = !this.showGeneralHelp;
         setTimeout(() => {
             //Refresh screen
-            this.chref.detectChanges();
+            // this.chref.detectChanges();
         }, 0);
     }
 }

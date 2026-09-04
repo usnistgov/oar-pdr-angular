@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter, SimpleChanges, ChangeDetectorRef } from '@angular/core';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { FormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { iconClass } from '../shared/globals/globals';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
@@ -21,26 +23,32 @@ import {
     faSquareCheck
 } from '@fortawesome/free-solid-svg-icons';
 @Component({
-    selector: 'lib-text-edit',
+    selector: "lib-text-edit",
     standalone: true,
     imports: [
-        ButtonModule,
-        TooltipModule,
+        MatButtonModule,
+        MatTooltipModule,
         CommonModule,
         FormsModule,
-        FontAwesomeModule
+        MatFormFieldModule,
+        MatInputModule,
+        FontAwesomeModule,
     ],
-    templateUrl: './text-edit.component.html',
-    styleUrls: ['../landing/landing.component.scss', './text-edit.component.css']
+    templateUrl: "./text-edit.component.html",
+    styleUrls: [
+        "../landing/landing.component.scss",
+        "./text-edit.component.css",
+    ],
 })
 export class TextEditComponent implements OnInit {
     prevVal: string = "";
     currentVal: string = "";
     // editboxWidth: string = "calc(100% - 60px)"; // Default only text box and two icon buttons
-    controlBoxWidth: string = "60px !important"
+    controlBoxWidth: string = "60px !important";
     editing: boolean = false;
 
     //icon class names
+    addIcon = iconClass.ADD;
     editIcon = iconClass.EDIT;
     closeIcon = iconClass.CLOSE;
     saveIcon = iconClass.SAVE;
@@ -55,7 +63,7 @@ export class TextEditComponent implements OnInit {
     @Input() editButton: boolean = true; // Default button
     @Input() editOnlyButton: boolean = false; // Default button
     @Input() deleteButton: boolean = true; // Default button
-    @Input() customButton: boolean = false; 
+    @Input() customButton: boolean = false;
     @Input() custBtnIcon: string = "pencil";
     @Input() custBtnFunc: string = "add()";
     @Input() custBtnTooltip: string = "Save changes";
@@ -76,8 +84,8 @@ export class TextEditComponent implements OnInit {
 
     constructor(
         public iconLibrary: FaIconLibrary,
-        private chref: ChangeDetectorRef) { 
-        
+        private chref: ChangeDetectorRef,
+    ) {
         iconLibrary.addIcons(
             faPencil,
             faXmark,
@@ -91,12 +99,12 @@ export class TextEditComponent implements OnInit {
             faTrashCan,
             faArrowUpRightFromSquare,
             faCheck,
-            faSquareCheck
+            faSquareCheck,
         );
     }
 
     ngOnInit(): void {
-        if(this.plusButton){
+        if (this.plusButton) {
             this.editing = true;
             this.editButton = false;
             this.deleteButton = false;
@@ -104,7 +112,7 @@ export class TextEditComponent implements OnInit {
             this.dragDropIcon = false;
             this.submitButton = false;
             this.controlBoxWidth = "27px !important";
-        } else if(this.submitButton || this.customButton) {
+        } else if (this.submitButton || this.customButton) {
             this.editing = true;
             this.editButton = false;
             this.deleteButton = false;
@@ -115,26 +123,30 @@ export class TextEditComponent implements OnInit {
         }
 
         let buttonCount = 0;
-        if(this.plusButton) buttonCount += 1;
-        if(this.submitButton) buttonCount += 1;
-        if(this.editButton) buttonCount += 1;
-        if(this.editOnlyButton) buttonCount += 1;
-        if(this.deleteButton) buttonCount += 1;
-        if(this.restoreButton) buttonCount += 1;
+        if (this.plusButton) buttonCount += 1;
+        if (this.submitButton) buttonCount += 1;
+        if (this.editButton) buttonCount += 1;
+        if (this.editOnlyButton) buttonCount += 1;
+        if (this.deleteButton) buttonCount += 1;
+        if (this.restoreButton) buttonCount += 1;
 
         this.controlBoxWidth = buttonCount * 29 + "px !important";
-        if(this.dragDropIcon) buttonCount += 1;
+        if (this.dragDropIcon) buttonCount += 1;
 
         this.prevVal = this.textField;
         this.currentVal = this.textField;
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes.forceReset && changes.forceReset.currentValue && this.editing){
+        if (
+            changes.forceReset &&
+            changes.forceReset.currentValue &&
+            this.editing
+        ) {
             this.reset();
         }
 
-        if(changes.textField) {
+        if (changes.textField) {
             this.prevVal = this.textField;
             this.currentVal = this.textField;
         }
@@ -147,12 +159,13 @@ export class TextEditComponent implements OnInit {
      */
     editSave() {
         // If we are editing, save changes
-        if(this.editing){
+        if (this.editing) {
             this.onSave();
-        }else{ // Otherwise, set to editing mode
+        } else {
+            // Otherwise, set to editing mode
             this.prevVal = this.currentVal; // For undo purpose
             this.editing = true;
-            this.command_out.next({"value":this.currentVal, "command":"Edit"});
+            this.command_out.next({ value: this.currentVal, command: "Edit" });
         }
     }
 
@@ -160,23 +173,23 @@ export class TextEditComponent implements OnInit {
      * Edit/Save based on current edit status
      */
     edit() {
-        this.command_out.next({"value":this.currentVal, "command":"Edit"});
+        this.command_out.next({ value: this.currentVal, command: "Edit" });
     }
 
-    onSave(cmd: string = 'Save') {
+    onSave(cmd: string = "Save") {
         this.editing = false;
-        this.command_out.next({"value":this.currentVal, "command":cmd});
+        this.command_out.next({ value: this.currentVal, command: cmd });
     }
 
     onUpdate() {
-        this.command_out.next({"value":this.currentVal, "command":"Update"});
+        this.command_out.next({ value: this.currentVal, command: "Update" });
     }
 
     controlBorderStyle() {
-        if(this.showBorder){
+        if (this.showBorder) {
             return "1px solid var(--background-light-grey02)";
-        }else{
-            return "0px solid var(--background-light-grey02)"
+        } else {
+            return "0px solid var(--background-light-grey02)";
         }
     }
 
@@ -184,13 +197,19 @@ export class TextEditComponent implements OnInit {
      * Remove/Undo based on current edit status
      */
     removeUndo() {
-        if(this.editing){
+        if (this.editing) {
             this.currentVal = this.prevVal;
-            this.command_out.next({ "value": this.currentVal, "command": "UndoEdit" });
-        }else{
-            this.command_out.next({"value":this.currentVal, "command":"Delete"});
+            this.command_out.next({
+                value: this.currentVal,
+                command: "UndoEdit",
+            });
+        } else {
+            this.command_out.next({
+                value: this.currentVal,
+                command: "Delete",
+            });
         }
-        
+
         this.editing = false;
     }
 
@@ -198,7 +217,7 @@ export class TextEditComponent implements OnInit {
      * Restore - tell parent component to restore original value
      */
     restore() {
-        this.command_out.next({"value":this.currentVal, "command":"Restore"});
+        this.command_out.next({ value: this.currentVal, command: "Restore" });
 
         this.editing = false;
     }
@@ -207,20 +226,20 @@ export class TextEditComponent implements OnInit {
      * Add this item
      */
     add() {
-        this.command_out.next({"value":this.currentVal, "command":"Add"});
+        this.command_out.next({ value: this.currentVal, command: "Add" });
         this.prevVal = "";
         this.currentVal = "";
     }
 
     cust() {
-        eval('this.'+this.custBtnFunc);
+        eval("this." + this.custBtnFunc);
     }
 
     /**
      * Submit this item
      */
     submit() {
-        this.command_out.next({ "value": this.currentVal, "command": "submit" });
+        this.command_out.next({ value: this.currentVal, command: "submit" });
     }
 
     resetValue() {
@@ -238,9 +257,9 @@ export class TextEditComponent implements OnInit {
      * @returns icon class
      */
     getEditIconClass() {
-        if(this.editing){
+        if (this.editing) {
             return "check";
-        }else{
+        } else {
             return "pencil";
         }
     }
@@ -250,9 +269,9 @@ export class TextEditComponent implements OnInit {
      * @returns icon class
      */
     getEditOnlyIconClass() {
-        if(this.editing || this.disableControl){
+        if (this.editing || this.disableControl) {
             return "icon_disabled";
-        }else{
+        } else {
             return "icon_enabled";
         }
     }
@@ -262,11 +281,11 @@ export class TextEditComponent implements OnInit {
      * @returns opacity
      */
     iconOpacity(editing: boolean = false) {
-        if (editing || this.disableControl){
+        if (editing || this.disableControl) {
             return 0.3;
-        }else{
+        } else {
             return 1;
-        } 
+        }
     }
 
     /**
@@ -274,61 +293,60 @@ export class TextEditComponent implements OnInit {
      * @returns icon class
      */
     getDelIconClass() {
-        if(this.editing){
+        if (this.editing) {
             return this.undoIcon;
-        }else{
+        } else {
             return this.deleteIcon;
         }
-    }    
+    }
 
     /**
      * Return tooltip text of edit/save button
-     * @returns 
+     * @returns
      */
     getTooltip(item: string) {
-        switch ( item ) {
-            case 'edit':
-                if(this.editing){
+        switch (item) {
+            case "edit":
+                if (this.editing) {
                     return "Save changes";
-                }else{
+                } else {
                     return "Edit this item";
                 }
 
                 break;
-            case 'delete':
-                if(this.editing){
+            case "delete":
+                if (this.editing) {
                     return "Undo changes";
-                }else{
+                } else {
                     return "Remove this item";
                 }
 
                 break;
 
-            case 'restore':
+            case "restore":
                 return "Restore from saved value";
 
                 break;
-            default: 
+            default:
                 return "";
                 break;
-         }
-    }    
+        }
+    }
 
     onKeyEnter(action: string = "Submit") {
-        switch ( action ) {
-            case 'Save':
+        switch (action) {
+            case "Save":
                 this.onSave();
                 break;
-            case 'Submit':
+            case "Submit":
                 this.submit();
                 break;
-            case 'Add':
+            case "Add":
                 this.add();
                 break;
             default:
                 this.submit();
                 break;
         }
-
     }
 }

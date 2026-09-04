@@ -1,4 +1,6 @@
-/* @import '../node_modules/angular-archwizard/styles/archwizard'; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
     /* Colors */
@@ -7,7 +9,7 @@
     --science-theme-background-light: #f5fbfd;
     --science-theme-background-light2: #e3f7fd;
     --science-theme-background-blue: #017abb;
-    --science-theme-background-blue-hover: #2db2fa;
+    --science-theme-background-blue-hover:  #0197b1;
     --nist-green-default: #257a2d;
     --nist-green-dark: #1c6022;
     --nist-green-light: #6bad73;
@@ -18,6 +20,48 @@
     --white: #fff;
 
     font-family: sans-serif;
+
+   /* Brown */
+    --background-orange-default: #e53b10;
+    --background-orange-light: #ffd49d;
+    --background-orange-lighter: #fff2e1;
+    --background-orange-dark: rgb(43, 28, 0);
+    --background-orange-hover: #f34d23;
+    /* Beach Sunset */ 
+    --background-beach-sunset-default: #1b4965;
+    --background-beach-sunset-light: #5fa8d3;
+    --background-beach-sunset-lighter: #cae9ff;
+    --background-beach-sunset-dark: #0d3046;
+    --background-beach-sunset-hover: #225c80;
+    /* Rosy Flamingo */ 
+    --background-orange1-default: #67595e;
+    --background-orange1-light: #f1e8e8;
+    --background-orange1-lighter: #faf6f5;
+    --background-orange1-dark: rgb(43, 16, 0);
+    --background-orange1-hover: #857178;
+    /* Purple */ 
+    --background-purple-default: #bf619e;
+    --background-purple-light: #ffe6f6;
+    --background-purple-lighter: #fdf3f9;
+    --background-purple-dark: #71385d;
+    --background-purple-hover: #d369ae;
+    /* AM Green */ 
+    --background-am-green-default: #2f983a;
+    --background-am-green-dark: #1c6022;
+    --background-am-green-light: color-mix(in srgb, var(--background-am-green-default) 25%, transparent);
+    --background-am-green-lighter: color-mix(in srgb, var(--background-am-green-default) 5%, transparent);
+    --background-am-green-hover: #32a43d;
+
+    /* Material buttons */
+    --mdc-filled-button-container-shape: 5px;
+    --mdc-outlined-button-container-shape: 5px;
+    --mdc-text-button-container-shape: 5px;
+    --mdc-protected-button-container-shape: 5px;      
+}
+
+.mat-btn {
+    border-radius: 3px !important;
+    height: 30px;
 }
 
 .textbox {
@@ -32,4 +76,83 @@
 .amplified {
     transform: scale(3);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.icon32-centered {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    line-height: 1;
+    /* Force font baseline to collapse to exact element box */
+}
+
+.white-icon-button {
+    color: #ffffff;
+
+    /* Optional: Adjust the hover ripple effect state color to look good on dark backgrounds */
+    --mat-icon-button-state-layer-color: #ffffff;
+}
+
+.custom-rounded-checkbox  {
+    .mdc-checkbox__background {
+        /* Set border radius */
+        --mdc-checkbox-container-shape: 6px;
+        border-radius: 3px !important;
+        border-width: 1px !important;
+        border-color: #2196F3 !important;
+    }
+
+    /* 2. ACTIVE / CHECKED STATE: Background Color & Border Color */
+    .mdc-checkbox .mdc-checkbox__native-control:enabled:checked~.mdc-checkbox__background,
+    .mdc-checkbox__native-control:enabled:indeterminate~.mdc-checkbox__background {
+        background-color: var(--nist-blue-default) !important;
+        /* Custom Active Box Fill Color */
+        border-color: var(--nist-blue-default) !important;
+        /* Custom Active Box Border Color */
+    }
+}
+
+.mat-form-field {
+  --mat-form-field-container-height: 32px;
+  --mat-form-field-container-vertical-padding: 6px;
+}
+
+:host ::ng-deep .compact-field .mat-mdc-text-field-wrapper {
+    height: 32px !important;
+}
+
+:host ::ng-deep .compact-field .mat-mdc-form-field-flex {
+    height: 32px !important;
+    align-items: center !important;
+}
+
+:host ::ng-deep .compact-field .mat-mdc-form-field-infix {
+    min-height: 32px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+.mat-mdc-form-field {
+    --mdc-filled-text-field-container-color: var(--background-light-grey);
+}
+
+.sidebar-content p {
+    margin-top: 0;
+    margin-bottom: 1em;
+}
+
+.sidebar-content ul {
+    list-style-type: disc;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.sidebar-content ol {
+    list-style-type: decimal;
+    margin: 0 0 1em;
+    padding-left: 2em;
+}
+
+.sidebar-content li {
+    margin-bottom: 0.25em;
 }

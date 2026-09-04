@@ -1,0 +1,21 @@
+.contact-display {
+    display: inline-block;
+    width: auto;
+    max-width: none;
+}
+
+.contact-summary {
+    display: inline-block;
+    white-space: nowrap;
+    padding-right: 0;
+}
+
+:host {
+    display: inline-block;
+    width: auto;
+}
+
+.card {
+    border: 1px solid lightgray;
+    padding: 10px;
+}

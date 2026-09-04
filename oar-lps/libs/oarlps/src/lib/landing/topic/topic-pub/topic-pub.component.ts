@@ -1,19 +1,20 @@
 import { ChangeDetectorRef, Component, Input, SimpleChanges, AfterContentInit, ContentChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatTooltipModule } from "@angular/material/tooltip";
 import { NerdmRes } from '../../../nerdm/nerdm';
 import { SectionPrefs, Sections, Collections, CollectionDisplay, GlobalService } from '../../../shared/globals/globals';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 
 @Component({
-    selector: 'topic-pub',
+    selector: "topic-pub",
     standalone: true,
-    imports: [ 
-        CommonModule, 
-        NgbModule
+    imports: [CommonModule, MatTooltipModule],
+    templateUrl: "./topic-pub.component.html",
+    styleUrls: [
+        "./topic-pub.component.css",
+        "../topic.component.css",
+        "../../landing.component.scss",
     ],
-    templateUrl: './topic-pub.component.html',
-    styleUrls: ['./topic-pub.component.css','../topic.component.css','../../landing.component.scss']
 })
 export class TopicPubComponent implements AfterContentInit {
     collectionOrder: string[] = [Collections.DEFAULT];
@@ -32,47 +33,53 @@ export class TopicPubComponent implements AfterContentInit {
     maxBubbleLabelLength: number = 100; //Limit the number of characters inside a bubble. May define it in the config later.
 
     @Input() record: NerdmRes = null;
-    @Input() inBrowser: boolean;   // false if running server-side
+    @Input() inBrowser: boolean; // false if running server-side
     @Input() isEditMode: boolean = false;
 
-    @ContentChild('contentTemplate') contentTemplate!: TemplateRef<any>;
-    componentData = { message: 'Initial data from child' };
+    @ContentChild("contentTemplate") contentTemplate!: TemplateRef<any>;
+    componentData = { message: "Initial data from child" };
 
-    constructor(private chref: ChangeDetectorRef,
+    constructor(
+        private chref: ChangeDetectorRef,
         public collectionService: CollectionService,
-        public globalService: GlobalService)
-    {
+        public globalService: GlobalService,
+    ) {
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
-        })          
+        });
     }
 
     /**
      * This logic was removed on 08/13/2025. Will be deleted later.
-     * @param collection 
-     * @returns 
+     * @param collection
+     * @returns
      */
     showTopics(collection) {
         //Always display NIST R&D, then only display the collection terms that the article is part of
-        if(this.isDefaultCollection(collection))
-            return true;
+        if (this.isDefaultCollection(collection)) return true;
         else {
             //Decide which collection topic to display
-            if(this.record['isPartOf'] && Array.isArray(this.record['isPartOf']) && 
-            this.record['isPartOf'].length > 0) {
-                for (let c of this.record['isPartOf']) {
-                    if (c['@id'] && c['@id'].split('/').pop() == this.allCollections[collection].id) {
+            if (
+                this.record["isPartOf"] &&
+                Array.isArray(this.record["isPartOf"]) &&
+                this.record["isPartOf"].length > 0
+            ) {
+                for (let c of this.record["isPartOf"]) {
+                    if (
+                        c["@id"] &&
+                        c["@id"].split("/").pop() ==
+                            this.allCollections[collection].id
+                    ) {
                         return true;
                     } else {
                         return false;
                     }
                 }
-            }else{
+            } else {
                 return false;
             }
         }
-
-    }    
+    }
 
     ngOnInit() {
         this.collectionOrder = this.collectionService.getCollectionForDisplay();
@@ -82,13 +89,13 @@ export class TopicPubComponent implements AfterContentInit {
 
     ngAfterContentInit() {
         setTimeout(() => {
-          this.componentData = { message: 'Updated data from child' };
+            this.componentData = { message: "Updated data from child" };
         }, 2000);
     }
 
     /**
-     * Once input record changed, refresh the topic list 
-     * @param changes 
+     * Once input record changed, refresh the topic list
+     * @param changes
      */
     ngOnChanges(changes: SimpleChanges): void {
         //Load collectionOrder and allCollections in case ngOnChanges is called before ngOnInit and the collection data is not loaded yet.
@@ -105,19 +112,19 @@ export class TopicPubComponent implements AfterContentInit {
 
     /**
      * Set bubble color based on content
-     * @param topic 
+     * @param topic
      */
     bubbleColor(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+        if (topic.tag == "Show more..." || topic.tag == "Show less...") {
             return "#e6ecff";
-        }else{
+        } else {
             return this.colorScheme.lighterVar;
         }
     }
 
     /**
-     * Return bubble label. If topic tag 
-     * @param topic 
+     * Return bubble label. If topic tag
+     * @param topic
      */
     bubbleLabel(topic) {
         if (topic.tag.length > this.maxBubbleLabelLength) {
@@ -129,57 +136,61 @@ export class TopicPubComponent implements AfterContentInit {
 
     /**
      * Set border for "More..." and "Less..." button when mouse over
-     * @param keyword 
-     * @returns 
-     */    
+     * @param keyword
+     * @returns
+     */
     borderStyle(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
-            if(this.hovered){
+        if (topic.tag == "Show more..." || topic.tag == "Show less...") {
+            if (this.hovered) {
                 return "1px solid blue";
-            }else{
+            } else {
                 return "1px solid #ededed";
             }
-        }else{
+        } else {
             return "1px solid #ededed";
         }
-    }  
-    
+    }
+
     mouseEnter(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+        if (topic.tag == "Show more..." || topic.tag == "Show less...") {
             this.hovered = true;
         }
     }
 
     mouseOut(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+        if (topic.tag == "Show more..." || topic.tag == "Show less...") {
             this.hovered = false;
         }
     }
 
     /**
      * Set cursor type for "More..." and "Less..." button
-     * @param topic 
-     * @returns 
+     * @param topic
+     * @returns
      */
     setCursor(topic) {
-        if(topic.tag == "Show more..." || topic.tag == "Show less..." ) {
+        if (topic.tag == "Show more..." || topic.tag == "Show less...") {
             return "pointer";
-        }else{
+        } else {
             return "";
         }
     }
 
     /**
      * Display short/long list based on which button was clicked.
-     * @param topic 
+     * @param topic
      */
     topicClick(topic, collection) {
-        if(topic.tag == "Show more...") {
-            this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicLong[collection]));
+        if (topic.tag == "Show more...") {
+            this.topicDisplay[collection] = JSON.parse(
+                JSON.stringify(this.topicLong[collection]),
+            );
         }
 
-        if(topic.tag == "Show less...") {
-            this.topicDisplay[collection] = JSON.parse(JSON.stringify(this.topicShort[collection]));
+        if (topic.tag == "Show less...") {
+            this.topicDisplay[collection] = JSON.parse(
+                JSON.stringify(this.topicShort[collection]),
+            );
         }
 
         this.hovered = false;
@@ -190,25 +201,40 @@ export class TopicPubComponent implements AfterContentInit {
      */
     updateResearchTopics() {
         this.topics = {};
-        if(this.record) {
+        if (this.record) {
             if (this.record[this.fieldName]) {
-                this.record[this.fieldName].forEach(topic => {
-                    if (topic['scheme'] && topic.tag) {
+                this.record[this.fieldName].forEach((topic) => {
+                    if (topic["scheme"] && topic.tag) {
                         for (let col of this.collectionOrder) {
                             //Check if the topic scheme contains the collection taxonomy URI. If so, assign the topic to the collection.
                             //Remove the version number in the URI to make sure the topic is still displayed when the taxonomy is updated to a new version.
                             //The taxonomyURI must have the version number at the end of the URI and separated by a "/" for this to work.
                             //Remove ending "/" if any for the comparison.
-                            let URI2Compare = this.allCollections[col].taxonomyURI;
-                            if(URI2Compare[URI2Compare.length - 1] == "/") {
-                                URI2Compare = URI2Compare.substring(0, URI2Compare.length - 1);
+                            let URI2Compare =
+                                this.allCollections[col].taxonomyURI;
+                            if (URI2Compare[URI2Compare.length - 1] == "/") {
+                                URI2Compare = URI2Compare.substring(
+                                    0,
+                                    URI2Compare.length - 1,
+                                );
                             }
 
-                            let URI_without_version = URI2Compare.substring(0, URI2Compare.lastIndexOf("/"));
-                            if(topic['scheme'] && topic['scheme'].substring(0, topic['scheme'].lastIndexOf("/")) == URI_without_version){
-                                if(!this.topics[col]) {
+                            let URI_without_version = URI2Compare.substring(
+                                0,
+                                URI2Compare.lastIndexOf("/"),
+                            );
+                            if (
+                                topic["scheme"] &&
+                                topic["scheme"].substring(
+                                    0,
+                                    topic["scheme"].lastIndexOf("/"),
+                                ) == URI_without_version
+                            ) {
+                                if (!this.topics[col]) {
                                     this.topics[col] = [topic];
-                                }else if(this.topics[col].indexOf(topic) < 0) {
+                                } else if (
+                                    this.topics[col].indexOf(topic) < 0
+                                ) {
                                     this.topics[col].push(topic);
                                 }
                             }
@@ -219,23 +245,41 @@ export class TopicPubComponent implements AfterContentInit {
         }
 
         //For display
-        for(let col of this.collectionOrder) {
-            if(this.topics[col]) {
-                if(this.topics[col].length > 5) {
-                    this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col].slice(0, this.topicBreakPoint)));
-                    this.topicShort[col].push({tag:"Show more...", "@type":"", scheme:""});
-                    this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));
-                    this.topicLong[col].push({tag:"Show less...", "@type":"", scheme:""});                
-                }else {
-                    this.topicShort[col] = JSON.parse(JSON.stringify(this.topics[col]));
-                    this.topicLong[col] = JSON.parse(JSON.stringify(this.topics[col]));
+        for (let col of this.collectionOrder) {
+            if (this.topics[col]) {
+                if (this.topics[col].length > 5) {
+                    this.topicShort[col] = JSON.parse(
+                        JSON.stringify(
+                            this.topics[col].slice(0, this.topicBreakPoint),
+                        ),
+                    );
+                    this.topicShort[col].push({
+                        tag: "Show more...",
+                        "@type": "",
+                        scheme: "",
+                    });
+                    this.topicLong[col] = JSON.parse(
+                        JSON.stringify(this.topics[col]),
+                    );
+                    this.topicLong[col].push({
+                        tag: "Show less...",
+                        "@type": "",
+                        scheme: "",
+                    });
+                } else {
+                    this.topicShort[col] = JSON.parse(
+                        JSON.stringify(this.topics[col]),
+                    );
+                    this.topicLong[col] = JSON.parse(
+                        JSON.stringify(this.topics[col]),
+                    );
                 }
-            }else {
+            } else {
                 this.topicShort[col] = [];
-                this.topicLong[col] = []
+                this.topicLong[col] = [];
             }
         }
 
         this.topicDisplay = JSON.parse(JSON.stringify(this.topicShort));
-    }        
+    }
 }

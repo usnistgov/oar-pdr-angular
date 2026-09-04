@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@
 import { Contact } from '../contact';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { PeopleComponent } from '../../people/people.component';
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
     standalone: true,
@@ -11,7 +11,7 @@ import { PeopleComponent } from '../../people/people.component';
     imports: [        
         CommonModule,
         FormsModule,
-        ButtonModule,
+        MatTooltipModule,
         PeopleComponent],
     templateUrl: './contact-edit.component.html',
     styleUrls: ['./contact-edit.component.css']

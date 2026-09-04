@@ -18,7 +18,12 @@ import { OARLPSModule, ConfigModule, EditControlModule, CollectionService, Confi
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule } from '@angular/common';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MAT_TOOLTIP_DEFAULT_OPTIONS } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export class LowerCaseUrlSerializer extends DefaultUrlSerializer {
   parse(url: string): UrlTree {
@@ -43,9 +48,7 @@ enableProdMode();
  * The Landing Page Service Application
  */
 @NgModule({
-    declarations: [
-      AppComponent
-    ],
+    declarations: [AppComponent],
     imports: [
         OARLPSModule,
         ErrorsModule,
@@ -60,21 +63,31 @@ enableProdMode();
         LandingPageComponent,
         CommonModule,
         BrowserAnimationsModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        MatIconModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatBadgeModule,
+        MatTooltipModule,
     ],
     exports: [AppComponent],
     providers: [
         AppErrorHandler,
         { provide: ErrorHandler, useClass: AppErrorHandler },
         {
-          provide: UrlSerializer,
-          useClass: LowerCaseUrlSerializer
+            provide: UrlSerializer,
+            useClass: LowerCaseUrlSerializer,
         },
         GoogleAnalyticsService,
         DatePipe,
         CollectionService,
-        NgbActiveModal,
-        ConfirmationDialogService
+        ConfirmationDialogService,
+        {
+            provide: MAT_TOOLTIP_DEFAULT_OPTIONS,
+            useValue: {
+                position: 'above',
+            },
+        },
         // {
         //     provide: APP_INITIALIZER,
         //     useFactory: initializeApp,
@@ -82,12 +95,11 @@ enableProdMode();
         //     multi: true
         // }
     ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+    schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
 })
-
 export class AppModule {
     // We inject the service here to keep it alive whole time
-    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) { }
+    constructor(protected _googleAnalyticsService: GoogleAnalyticsService) {}
 }
 
 

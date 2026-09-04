@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap' ; 
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { DownloadstatusComponent } from './downloadstatus.component';
 import { DataCartStatus, DataCartStatusLookup, DataCartStatusItem, DataCartStatusData, stringifyCart, parseCartStatus } from '../../datacart/cartstatus';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
@@ -15,7 +15,7 @@ describe('DownloadstatusComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ DownloadstatusComponent ],
       imports: [
-        NgbModule,
+        MatProgressBarModule,
         FontAwesomeTestingModule
       ]
     })

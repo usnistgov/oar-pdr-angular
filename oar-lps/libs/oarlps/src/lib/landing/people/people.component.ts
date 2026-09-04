@@ -2,58 +2,62 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
-import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
 import { tap } from 'rxjs';
-
+import { MatAutocompleteModule } from "@angular/material/autocomplete";
+import { MatFormFieldModule } from "@angular/material/form-field";
+import { MatInputModule } from "@angular/material/input";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @Component({
-  selector: 'lib-people',
-  standalone:true,
-  imports: [
-    CommonModule, AutoCompleteModule, FormsModule
-  ],
-  templateUrl: './people.component.html',
-  styleUrls: ['./people.component.css']
+    selector: "lib-people",
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+    ],
+    templateUrl: "./people.component.html",
+    styleUrls: ["./people.component.css"],
 })
 export class PeopleComponent {
     minPromptLength = 2;
 
     // the index we will download after the first minPromptLength (2) characters are typed
-    index: SDSIndex|null = null;
+    index: SDSIndex | null = null;
 
     // the current list of suggested completions matching what has been typed so far.
     suggestions: SDSuggestion[] = [];
 
     // the suggested completion that was picked; it contains a reference to the full record
-    selectedSuggestion: SDSuggestion|null = null;
+    selectedSuggestion: SDSuggestion | null = null;
 
     // the full record for the selected person
     selected: any = null;
 
     // the organizations that the selected person is a member of
-    selectedOrgs: any[]|null = null;
+    selectedOrgs: any[] | null = null;
 
     placeHolderText: string;
 
     // @Input() existingPeople: SDSuggestion[] = [];
-    @Output() dataChanged: EventEmitter<any> = new EventEmitter();    
-    
+    @Output() dataChanged: EventEmitter<any> = new EventEmitter();
+
     constructor(
         private ps: StaffDirectoryService,
         private chref: ChangeDetectorRef,
-        public authsvc: AuthenticationService) {
-        
-        this.authsvc.getCredentials().subscribe(
-            (creds) => {
-                ps.setAuthToken(creds.token);
-            }
-        )
-     }
+        public authsvc: AuthenticationService,
+    ) {
+        this.authsvc.getCredentials().subscribe((creds) => {
+            ps.setAuthToken(creds.token);
+        });
+    }
 
     ngOnInit(): void {
         // this.selectedSuggestion = new SDSuggestion(0, this.originalValue, null);
-        this.placeHolderText = "Enter at least " + this.minPromptLength + " chars to search...";
-        
+        this.placeHolderText =
+            "Enter at least " + this.minPromptLength + " chars to search...";
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -62,33 +66,41 @@ export class PeopleComponent {
         // }
     }
 
-    set_suggestions(ev: AutoCompleteCompleteEvent) {
+    set_suggestions(ev: any) {
         if (ev.query) {
-            this.dataChanged.next({"value": ev.query, action:"fieldChanged"});
- 
-            if (ev.query.length >= this.minPromptLength) {  // don't do anything unless we have 2 chars
-                if (! this.index) {
+            this.dataChanged.next({ value: ev.query, action: "fieldChanged" });
+
+            if (ev.query.length >= this.minPromptLength) {
+                // don't do anything unless we have 2 chars
+                if (!this.index) {
                     // retrieve initial index
                     this.ps.getPeopleIndexFor(ev.query).subscribe({
-                        next:(pi) => {
+                        next: (pi) => {
                             // save it to use with subsequent typing
                             this.index = pi;
                             if (this.index != null) {
                                 // pull out the matching suggestions
-                                this.suggestions = (this.index as SDSIndex).getSuggestions(ev.query);
+                                this.suggestions = (
+                                    this.index as SDSIndex
+                                ).getSuggestions(ev.query);
                                 this.index = null;
                             }
                         },
-                        error:(e) => {
-                            console.error('Failed to pull people index for "'+ev.query+'": '+e)
-                        }
+                        error: (e) => {
+                            console.error(
+                                'Failed to pull people index for "' +
+                                    ev.query +
+                                    '": ' +
+                                    e,
+                            );
+                        },
                     });
-                }
-                else
+                } else
                     // pull out the matching suggestions
-                    this.suggestions = (this.index as SDSIndex).getSuggestions(ev.query);
-            }
-            else if (this.index) {
+                    this.suggestions = (this.index as SDSIndex).getSuggestions(
+                        ev.query,
+                    );
+            } else if (this.index) {
                 this.index = null;
                 this.suggestions = [];
             }
@@ -96,25 +108,30 @@ export class PeopleComponent {
             this.chref.detectChanges();
             this.chref.markForCheck();
         }
-    }    
+    }
 
-    getFullRecord(ev: AutoCompleteSelectEvent) {
-        let sugg = ev.value as SDSuggestion;
-        
+    getFullRecord(ev: any) {
+        let sugg = ev as SDSuggestion;
+
         sugg.getRecord().subscribe({
-            next: (rec) => { 
+            next: (rec) => {
                 this.selected = rec;
-                if(this.selected.lastName && this.selected.firstName){
-                    this.dataChanged.next({"selectedPeopleRecord": JSON.parse(JSON.stringify(this.selected)), action:"peopleChanged"});
+                if (this.selected.lastName && this.selected.firstName) {
+                    this.dataChanged.next({
+                        selectedPeopleRecord: JSON.parse(
+                            JSON.stringify(this.selected),
+                        ),
+                        action: "peopleChanged",
+                    });
 
                     this.getOrgs(this.selectedSuggestion);
                 }
             },
             error: (err) => {
                 console.error("Failed to resolve suggestion into person data");
-            }
+            },
         });
-    }    
+    }
 
     getOrgs(selected: SDSuggestion) {
         if (selected) {
@@ -122,14 +139,31 @@ export class PeopleComponent {
                 next: (recs) => {
                     //Get first 3 units and then reverse the order
                     this.selectedOrgs = recs.slice(0, 3).reverse();
-                    this.dataChanged.next({"selectedPeopleOrg": JSON.parse(JSON.stringify(this.selectedOrgs)), action:"orgChanged"});
+                    this.dataChanged.next({
+                        selectedPeopleOrg: JSON.parse(
+                            JSON.stringify(this.selectedOrgs),
+                        ),
+                        action: "orgChanged",
+                    });
                     this.selectedSuggestion = null;
                 },
                 error: (err) => {
                     console.error("Failed to resolve person id into org data");
-                }
+                },
             });
         }
     }
 
+    setSuggestions(event: Event): void {
+        const value = (event.target as HTMLInputElement).value;
+
+        // Call your existing search/filter logic here.
+        this.set_suggestions({
+            query: value,
+        });
+    }
+
+    displaySuggestion(suggestion: SDSuggestion | null): string {
+        return suggestion?.display ?? "";
+    }
 }

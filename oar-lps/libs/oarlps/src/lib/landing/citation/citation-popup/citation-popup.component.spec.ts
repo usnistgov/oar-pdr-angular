@@ -1,8 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
 import { CitationPopupComponent } from './citation-popup.component';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { MatDialogRef } from '@angular/material/dialog';
+import { GlobalService } from '../../../shared/globals/globals';
+import { ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { provideHttpClient } from '@angular/common/http';
@@ -15,13 +19,27 @@ describe('CitationPopupComponent', () => {
         await TestBed.configureTestingModule({
         imports: [
                 CitationPopupComponent,
+                CommonModule,
                 FontAwesomeTestingModule,
                 NoopAnimationsModule],
             providers: [
-                NgbActiveModal,
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                CollectionService]
+                CollectionService,
+                { provide: MatDialogRef, useValue: { close: () => {} } },
+                { provide: GlobalService, useValue: {
+    watchColorPalette: (callback) => {
+        // Call the callback with a mock color palette
+        callback({
+            defaultVar: '#ffffff',
+            lighterVar: '#f0f0f0',
+            hoverVar: '#e0e0e0'
+        });
+    }
+} },
+                { provide: ElementRef, useValue: { nativeElement: { contains: () => false } } },
+                { provide: ChangeDetectorRef, useValue: { detectChanges: () => {} } }
+            ]
         })
         .compileComponents();
 
@@ -66,7 +84,7 @@ describe('CitationPopupComponent', () => {
                     "colorPalette": "AMGreen",
                     "displayOrder": 3,
                     "landingPage": true
-                }      
+                }
             }
         fixture.detectChanges();
     });

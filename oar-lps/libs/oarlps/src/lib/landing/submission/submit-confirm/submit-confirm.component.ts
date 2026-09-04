@@ -9,8 +9,7 @@ import {
     Reviewers,
     GlobalService
 } from '../../../shared/globals/globals';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ButtonModule } from 'primeng/button';
+import { MatDialogRef } from '@angular/material/dialog';
 import revisionhelp from '../../../../assets/site-constants/revision-help.json';
 import { TooltipPosition, MatTooltipModule } from '@angular/material/tooltip';
 import { SuggestionsComponent } from '../../../sidebar/suggestions/suggestions.component';
@@ -20,24 +19,12 @@ import { RevisionDetailsComponent } from '../../revision-details/revision-detail
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { iconClass } from '../../../shared/globals/globals';
 import { PeopleComponent } from '../../people/people.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
-import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import {
-    faPencil,
-    faXmark,
-    faCircleXmark,
-    faSave,
-    faUndo,
-    faTimes,
-    faCircleInfo,
-    faDownload,
-    faCircleArrowUp,
-    faEye,
-    faTrashCan,
-    faArrowUpRightFromSquare
-} from '@fortawesome/free-solid-svg-icons';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface PeriodicElement {
     situation: string;
@@ -59,47 +46,49 @@ const ELEMENT_DATA: PeriodicElement[] = [
 ];
 
 @Component({
-    selector: 'lib-submit-confirm',
+    selector: "lib-submit-confirm",
     standalone: true,
     imports: [
         CommonModule,
         SuggestionsComponent,
         FormsModule,
-        ButtonModule,
-        TextFieldModule,
+        MatButtonModule,
+        MatIconModule,
+        MatInputModule,
         RevisionDetailsComponent,
         PeopleComponent,
-        NgbModule,
-        AutoCompleteModule,
-        FontAwesomeModule
-],
+        MatAutocompleteModule,
+        MatFormFieldModule,
+    ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    templateUrl: './submit-confirm.component.html',
-    styleUrls: ['./submit-confirm.component.css', '../../landing.component.scss'],
+    templateUrl: "./submit-confirm.component.html",
+    styleUrls: [
+        "./submit-confirm.component.css",
+        "../../landing.component.scss",
+    ],
     animations: [
-        trigger('slideToggle', [
+        trigger("slideToggle", [
             state(
-                'visible',
+                "visible",
                 style({
-                    transform: 'translateX(0)',
+                    transform: "translateX(0)",
                     opacity: 1,
-                    display: 'block',
-                })
+                    display: "block",
+                }),
             ),
             state(
-                'hidden',
+                "hidden",
                 style({
-                    transform: 'translateX(100%)',
+                    transform: "translateX(100%)",
                     opacity: 0,
-                    display: 'none',
-                })
+                    display: "none",
+                }),
             ),
-            transition('visible => hidden', [animate('300ms ease-in')]),
-            transition('hidden => visible', [animate('300ms ease-out')]),
+            transition("visible => hidden", [animate("300ms ease-in")]),
+            transition("hidden => visible", [animate("300ms ease-out")]),
         ]),
-    ]
+    ],
 })
-    
 export class SubmitConfirmComponent implements OnInit {
     // readonly dialogRef = inject(MatDialogRef<SubmitConfirmComponent>);
     suggestions: ReviewResponse;
@@ -111,10 +100,15 @@ export class SubmitConfirmComponent implements OnInit {
     showSuggestion: boolean = true; // Used to control display of suggestion section within the component
     showReviewersWidget: boolean = false; // Used to control display of reviewers widget
     componentHeight: number;
-    public revisionHelp:{} = revisionhelp;
+    public revisionHelp: {} = revisionhelp;
 
-    displayedColumns: string[] = ['position', 'situation', 'examples'];
+    displayedColumns: string[] = ["position", "situation", "examples"];
     dataSource = ELEMENT_DATA;
+
+    //Display
+    colorScheme: any;
+    okButtonHover: boolean = false;
+    cancelButtonHover: boolean = false;
 
     //icon class names
     editIcon = iconClass.EDIT;
@@ -127,52 +121,48 @@ export class SubmitConfirmComponent implements OnInit {
     placeHolderText: string;
 
     // the index we will download after the first minPromptLength (2) characters are typed
-    index: SDSIndex|null = null;
+    index: SDSIndex | null = null;
 
     // the current list of suggested completions matching what has been typed so far.
     peopleSuggestions: SDSuggestion[] = [];
 
-    query: string = '';
+    query: string = "";
     // the suggested completion that was picked; it contains a reference to the full record
-    selectedSuggestion: SDSuggestion|null = null;
+    selectedSuggestion: SDSuggestion | null = null;
 
     // the full record for the selected person
     selected: any = null;
 
     // the organizations that the selected person is a member of
-    selectedOrgs: any[]|null = null;
+    selectedOrgs: any[] | null = null;
 
-    //Icons
-    faPencil = faPencil;
-    faCircleArrowUp = faCircleArrowUp;
-    faXmark = faXmark;
-    faCircleXmark = faCircleXmark
-
-    @ViewChild('autosize') autosize: CdkTextareaAutosize;
-    @ViewChild('container') container!: ElementRef;
+    @ViewChild("autosize") autosize: CdkTextareaAutosize;
+    @ViewChild("container") container!: ElementRef;
     @Output() returnValue: EventEmitter<SubmissionData> = new EventEmitter();
 
     constructor(
         private mdupdsvc: MetadataUpdateService,
-        public activeModal: NgbActiveModal,
+        public dialogRef: MatDialogRef<SubmitConfirmComponent>,
         public globalService: GlobalService,
         private ps: StaffDirectoryService,
         @Self() private element: ElementRef,
         public authsvc: AuthenticationService,
         private eRef: ElementRef,
-        private chref: ChangeDetectorRef){
+        private chref: ChangeDetectorRef,
+    ) {
         // @Inject(MAT_DIALOG_DATA) public data) {
 
-        this.globalService.watchSubmissionData(
-            (data) => {
-                this.submissionData = new SubmissionData(data);
-            })
-        
-        this.authsvc.getCredentials().subscribe(
-            (creds) => {
-                ps.setAuthToken(creds.token);
-            }
-        )
+        this.globalService.watchSubmissionData((data) => {
+            this.submissionData = new SubmissionData(data);
+        });
+
+        this.authsvc.getCredentials().subscribe((creds) => {
+            ps.setAuthToken(creds.token);
+        });
+
+        this.globalService.watchColorPalette((colorPalette) => {
+            this.colorScheme = colorPalette;
+        });
     }
 
     ngOnInit(): void {
@@ -181,7 +171,8 @@ export class SubmitConfirmComponent implements OnInit {
         this.allRevisionTypes = this.revisionTypes.getAllTypes();
         this.suggestions = this.mdupdsvc.getSuggestions();
         this.submissionData.reviewers = [] as Reviewers[];
-        this.placeHolderText = "Enter at least " + this.minPromptLength + " chars to search...";
+        this.placeHolderText =
+            "Enter at least " + this.minPromptLength + " chars to search...";
 
         // this.submissionData.reviewers = [{
         //     nistId: '12345678',
@@ -194,19 +185,24 @@ export class SubmitConfirmComponent implements OnInit {
         //     lastName: 'Doe',
         //     eMail: 'test1@nist.gov'
         // }]
-        
     }
 
     ngAfterViewInit() {
         this.chref.detectChanges();
     }
-    
+
     get maxHeight(): number {
-        return this.element.nativeElement.firstChild.offsetHeight-150;
+        return this.element.nativeElement.firstChild.offsetHeight - 150;
     }
 
     get isMetadataRevisionType() {
-        return this.submissionData && this.submissionData.isRevision && this.submissionData.revisionIDs.includes(this.revisionTypes.getIDbyName('metadata'));
+        return (
+            this.submissionData &&
+            this.submissionData.isRevision &&
+            this.submissionData.revisionIDs.includes(
+                this.revisionTypes.getIDbyName("metadata"),
+            )
+        );
     }
 
     get hasRequiredItems() {
@@ -222,9 +218,13 @@ export class SubmitConfirmComponent implements OnInit {
     }
 
     get reviewerPrompt() {
-        if(this.submissionData && this.submissionData.reviewers && this.submissionData.reviewers.length > 0) {
+        if (
+            this.submissionData &&
+            this.submissionData.reviewers &&
+            this.submissionData.reviewers.length > 0
+        ) {
             return "Edit technical reviewers";
-        }else {
+        } else {
             return "Add technical reviewers (optional)";
         }
     }
@@ -232,24 +232,20 @@ export class SubmitConfirmComponent implements OnInit {
     /**
      * When user clicks on Continue Download, close the pop up dialog and continue downloading.
      */
-    continueSubmit() 
-    {
+    continueSubmit() {
         this.submissionData.goSubmit = true;
-        // this.dialogRef.close(this.submissionData);
         this.returnValue.emit(this.submissionData);
-        this.activeModal.close('Close click');
+        this.dialogRef.close();
     }
 
-    /** 
+    /**
      * When user click on Cancel, close the pop up dialog and do nothing.
      */
-    cancelSubmit() 
-    {
+    cancelSubmit() {
         this.submissionData.goSubmit = false;
-        // this.dialogRef.close(this.submissionData);
         this.returnValue.emit(this.submissionData);
-        this.activeModal.close('Close click');
-    }    
+        this.dialogRef.close();
+    }
 
     updateSubmissionData(event) {
         this.submissionData = event;
@@ -277,10 +273,10 @@ export class SubmitConfirmComponent implements OnInit {
             }
         }
     }
-    
+
     /**
-     * When user click on the "Add technical reviewers" link, 
-     * toggle the display of the reviewers widget. 
+     * When user click on the "Add technical reviewers" link,
+     * toggle the display of the reviewers widget.
      * The reviewers widget allows users to edit/add technical reviewers to their submission.
      */
     toggleReviewersWidget() {
@@ -301,15 +297,16 @@ export class SubmitConfirmComponent implements OnInit {
     }
 
     /**
-     * Set the list of suggestions for the autocomplete widget based on the current input. 
-     * If the input is at least minPromptLength characters, 
-     * then pull the suggestions from the server (if we haven't already) 
-     * and filter them based on the current input. If the input is less than minPromptLength characters, 
+     * Set the list of suggestions for the autocomplete widget based on the current input.
+     * If the input is at least minPromptLength characters,
+     * then pull the suggestions from the server (if we haven't already)
+     * and filter them based on the current input. If the input is less than minPromptLength characters,
      * clear the suggestions.
-     * @param ev 
+     * @param ev
      */
     set_suggestions(ev: any) {
-        if (ev.target.value.length >= this.minPromptLength) {  // don't do anything unless we have 2 chars
+        if (ev.target.value.length >= this.minPromptLength) {
+            // don't do anything unless we have 2 chars
             if (!this.index) {
                 let lQuery = ev.target.value as string;
                 // retrieve initial index
@@ -319,52 +316,62 @@ export class SubmitConfirmComponent implements OnInit {
                         this.index = pi;
                         if (this.index != null) {
                             // pull out the matching suggestions
-                            this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.target.value);
+                            this.peopleSuggestions = (
+                                this.index as SDSIndex
+                            ).getSuggestions(ev.target.value);
                             this.index = null;
                         }
                     },
                     (e) => {
-                        console.error('Failed to pull people index for "'+ev.target.value+'": '+e)
-                    }                    
+                        console.error(
+                            'Failed to pull people index for "' +
+                                ev.target.value +
+                                '": ' +
+                                e,
+                        );
+                    },
                 );
-            }
-            else
+            } else
                 // pull out the matching suggestions
-                this.peopleSuggestions = (this.index as SDSIndex).getSuggestions(ev.target.value);
-        }
-        else if (this.index) {
+                this.peopleSuggestions = (
+                    this.index as SDSIndex
+                ).getSuggestions(ev.target.value);
+        } else if (this.index) {
             this.index = null;
             this.peopleSuggestions = [];
         }
 
-        this.showDropdown = this.peopleSuggestions.length > 0 && ev.target.value.length > 0;
+        this.showDropdown =
+            this.peopleSuggestions.length > 0 && ev.target.value.length > 0;
         this.chref.detectChanges();
-    }    
+    }
 
     /**
-     * Get the full person record for the selected suggestion and add that person to the list of reviewers 
+     * Get the full person record for the selected suggestion and add that person to the list of reviewers
      * for this submission.
      * @param ev selected suggestion for a person to add as a reviewer for this submission
      */
     getFullRecord(ev: SDSuggestion) {
         let sugg = ev;
-        
+
         sugg.getRecord().subscribe({
-            next: (rec) => { 
+            next: (rec) => {
                 this.selected = rec;
-                if(this.selected.lastName && this.selected.firstName){
+                if (this.selected.lastName && this.selected.firstName) {
                     this.getOrgs(this.selectedSuggestion);
                 }
 
                 this.query = "";
-                    
+
                 this.submissionData.reviewers.push({
                     nistId: this.selected.id,
                     firstName: this.selected.firstName,
                     lastName: this.selected.lastName,
-                    eMail: this.selected.emailAddress ? this.selected.emailAddress : ""
+                    eMail: this.selected.emailAddress
+                        ? this.selected.emailAddress
+                        : "",
                 });
-                
+
                 this.globalService.setSubmissionData(this.submissionData);
                 this.index = null;
                 this.peopleSuggestions = [];
@@ -373,15 +380,15 @@ export class SubmitConfirmComponent implements OnInit {
             },
             error: (err) => {
                 console.error("Failed to resolve suggestion into person data");
-            }
+            },
         });
-    }    
+    }
 
     /**
-     * Get the organizations that the selected reviewer is a member of 
+     * Get the organizations that the selected reviewer is a member of
      * and save those as part of the submission data for this submission.
-     * @param selected: selected suggestion for a person to add as a reviewer for this submission; 
-     * contains reference to the full person record for that reviewer, 
+     * @param selected: selected suggestion for a person to add as a reviewer for this submission;
+     * contains reference to the full person record for that reviewer,
      * which is used to pull the organizations that reviewer is a member of.
      */
     getOrgs(selected: SDSuggestion) {
@@ -394,13 +401,13 @@ export class SubmitConfirmComponent implements OnInit {
                 },
                 error: (err) => {
                     console.error("Failed to resolve person id into org data");
-                }
+                },
             });
         }
-    }    
+    }
 
     /**
-     * Determine whether to enable scrolling for the list of suggestions for people based on 
+     * Determine whether to enable scrolling for the list of suggestions for people based on
      * the number of suggestions returned;
      * if there are more than 5 suggestions, enable scrolling; otherwise, disable scrolling.
      */
@@ -409,24 +416,24 @@ export class SubmitConfirmComponent implements OnInit {
     }
 
     // Close dropdown when clicking outside
-    @HostListener('document:click', ['$event'])
+    @HostListener("document:click", ["$event"])
     onDocumentClick(event: MouseEvent) {
         const clickedInside = this.container?.nativeElement.contains(
-        event.target as Node
+            event.target as Node,
         );
 
         if (!clickedInside) {
-        this.showDropdown = false;
+            this.showDropdown = false;
         }
-    }  
+    }
 
     /**
-     * Hide the dropdown list of suggestions for people after a short delay 
+     * Hide the dropdown list of suggestions for people after a short delay
      * to allow time for a click on a suggestion to register before the dropdown is hidden.
      */
     hideDropdown() {
         setTimeout(() => {
             this.showDropdown = false;
         }, 150);
-    }    
+    }
 }

@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitStatusComponent } from './submit-status.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
@@ -60,7 +59,7 @@ describe('SubmitStatusComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
         imports: [ SubmitStatusComponent, BrowserAnimationsModule ],
-        providers: [ NgbActiveModal, GoogleAnalyticsService ],
+        providers: [ GoogleAnalyticsService ],
         schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();

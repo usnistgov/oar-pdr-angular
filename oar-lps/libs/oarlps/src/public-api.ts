@@ -34,7 +34,6 @@ export * from './lib/landing/nerdm.component';
 
 export * from './lib/landing/author/author.service';
 
-export * from './lib/landing/tools/tools.module';
 export * from './lib/landing/tools/menu.component';
 
 export * from './lib/datacart/cart.service';
@@ -46,7 +45,6 @@ export * from './lib/datacart/datacart.routes';
 export * from './lib/datacart/leave.guard';
 
 export * from './lib/metrics/metrics';
-export * from './lib/metrics/metrics.module';
 export * from './lib/metrics/horizontal-barchart/horizontal-barchart.component';
 export * from './lib/metrics/metrics.component';
 export * from './lib/landing/metricsinfo/metricsinfo.module';
@@ -99,7 +97,6 @@ export * from './lib/shared/confirmation-dialog/confirmation-dialog.service';
 export * from './lib/landing/editcontrol/metadataupdate.service';
 export * from './lib/landing/landingpage.service';
 
-export * from './lib/text-edit/text-edit.module';
 export * from './lib/text-edit/text-edit.component';
 
 export * from  './lib/textarea-autoresize/textarea-autoresize.directive';

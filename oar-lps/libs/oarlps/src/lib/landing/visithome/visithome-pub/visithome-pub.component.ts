@@ -4,7 +4,7 @@ import { Themes, Collections, iconClass } from '../../../shared/globals/globals'
 import { Sections, SectionPrefs, GlobalService } from '../../../shared/globals/globals';
 import { CommonModule } from '@angular/common';
 import { CollectionService } from '../../../shared/collection-service/collection.service';
-import { ButtonModule } from 'primeng/button';
+import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,7 @@ import { faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
   selector: 'Visithome-pub',
   standalone: true,
   imports: [
-    CommonModule, ButtonModule, FormsModule, FontAwesomeModule
+    CommonModule, MatButtonModule, FormsModule, FontAwesomeModule
   ],
   templateUrl: './visithome-pub.component.html',
   styleUrls: ['./visithome-pub.component.scss', '../../landing.component.scss']
@@ -62,6 +62,7 @@ export class VisithomePubComponent {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        console.log("this.record", this.record);
     }
 
     updateOriginal(){
@@ -90,15 +91,14 @@ export class VisithomePubComponent {
 
     /**
      * Return visit homepage button style
-     * @returns 
+     * @returns
      */
     visitHomePageBtnStyle() {
         return {
-            '--button-text-color': 'white',
-            '--button-color': this.colorScheme.defaultVar,
-            '--hover-color': this.colorScheme.hoverVar,
-            '--disable-color': 'var(--disabled-grey)',
-            '--disable-text-color': 'var(--disabled-grey-text)'
+            'background-color': this.colorScheme.defaultVar,
+            'color': 'white',
+            'border-radius': '4px',
+            'opacity': this.hasVisitHomeURL ? 1 : 0.5
         };
     }
 

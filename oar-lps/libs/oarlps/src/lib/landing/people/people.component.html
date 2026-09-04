@@ -1,20 +1,32 @@
 <div class="inner-addon right-addon">
-    <img 
-    class="fa-user"
-    src="assets/images/PeopleSearch.png" 
-    style="width: 17px;" ngbTooltip="People lookup">
-
-    <p-autoComplete 
-        [inputStyle]="{'width': '100%'}"
-        styleClass="autocomplete"
-        [placeholder]="placeHolderText"
-        [(ngModel)]="selectedSuggestion" 
-        [suggestions]="suggestions" 
-        (completeMethod)="set_suggestions($event)"
-        (onSelect)="getFullRecord($event)"
-        field="display"
-        inputId="person"
-        appendTo="body"
-        id="searchicon"
+  <mat-form-field class="autocomplete">
+    <img
+      matPrefix
+      class="search-icon"
+      src="assets/images/PeopleSearch.png"
+      matTooltip="People lookup"
+      alt="People lookup"
     />
-</div>
+
+    <input
+      matInput
+      id="person"
+      [placeholder]="placeHolderText"
+      [(ngModel)]="selectedSuggestion"
+      [matAutocomplete]="auto"
+      (input)="setSuggestions($event)"
+    />
+
+    <mat-autocomplete
+      #auto="matAutocomplete"
+      [displayWith]="displaySuggestion"
+      (optionSelected)="getFullRecord($event.option.value)"
+    >
+      <mat-option
+        *ngFor="let suggestion of suggestions"
+        [value]="suggestion"
+      >
+        {{ suggestion.display }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>

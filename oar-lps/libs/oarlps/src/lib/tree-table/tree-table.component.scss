@@ -1,0 +1,104 @@
+.tree-table {
+  width: 100%;
+  font-family: inherit;
+  font-size: 14px;
+
+  .tree-table-header {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns:
+      auto /* indentation column */
+      auto /* toggler column */
+      auto /* checkbox column (if present) */
+      repeat(auto-fill, minmax(100px, 1fr)) /* data columns */;
+    background-color: #1E6BA1;
+    color: white;
+    font-weight: bold;
+    padding: 8px 12px;
+
+    .tree-table-header-cell {
+      padding: 4px 8px;
+      text-align: left;
+
+      &:first-child {
+        /* indentation column in header - empty */
+        width: 0;
+      }
+
+      .tree-table-toggler-col &,
+      .tree-table-checkbox-col & {
+        text-align: center;
+        min-width: 40px;
+      }
+    }
+  }
+
+  .tree-table-body {
+    display: grid;
+    gap: 0;
+  }
+
+  .tree-table-row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns:
+      auto /* indentation column */
+      auto /* toggler column */
+      auto /* checkbox column (if present) */
+      repeat(auto-fill, minmax(100px, 1fr)) /* data columns */;
+    align-items: center;
+    padding: 8px 12px;
+    border-bottom: 1px solid #e0e0e0;
+
+    &:hover {
+      background-color: #f5f5f5;
+    }
+
+    &.selected {
+      background-color: #e3f2fd;
+    }
+
+    .tree-table-indent-col {
+      /* This column's width is set by the inner div's width in the template */
+      padding: 0;
+    }
+
+    .tree-table-toggler-col {
+      text-align: center;
+      min-width: 40px;
+
+      button {
+        min-width: 36px;
+        height: 36px;
+        padding: 0;
+      }
+
+      .tree-table-toggler-placeholder {
+        width: 36px;
+        height: 36px;
+        display: inline-block;
+      }
+    }
+
+    .tree-table-checkbox-col {
+      text-align: center;
+      min-width: 40px;
+
+      mat-checkbox {
+        margin: 0;
+      }
+    }
+
+    .tree-table-data-cell {
+      padding: 4px 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .tree-table-children {
+    /* Indent the children block */
+    padding-left: 24px; /* Same as one level of indentation */
+  }
+}

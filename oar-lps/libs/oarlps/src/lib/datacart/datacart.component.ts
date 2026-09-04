@@ -2,7 +2,6 @@ import { Component, OnInit, AfterViewInit, PLATFORM_ID, Inject, ViewChild, HostL
 import { ActivatedRoute, Router } from '@angular/router';
 // import 'rxjs/add/operator/map';
 import { map, switchMap } from 'rxjs/operators';
-import { TreeNode } from 'primeng/api';
 import { DownloadStatus } from './cartconstants';
 import { ZipData } from '../shared/download-service/zipData';
 import { isPlatformBrowser } from '@angular/common';

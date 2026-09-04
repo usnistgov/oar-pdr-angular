@@ -1,4 +1,6 @@
 import { ComponentFixture, TestBed, ComponentFixtureAutoDetect, waitForAsync  } from '@angular/core/testing';
+import { CommonModule } from '@angular/common';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { AppConfig } from '../../config/config';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { VersionComponent, compare_versions, normalize_date, compare_dates, compare_histories }
@@ -19,7 +21,7 @@ describe('VersionComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ VersionComponent, FontAwesomeTestingModule ],
+            imports: [ VersionComponent, FontAwesomeTestingModule, CommonModule, NoopAnimationsModule ],
             declarations: [  ],
             providers: [
                 {
@@ -42,6 +44,7 @@ describe('VersionComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
+        imports: [ CommonModule, NoopAnimationsModule ],
         providers: [
             GoogleAnalyticsService
         ]})
@@ -135,9 +138,11 @@ describe('VersionComponent', () => {
         expect(component).toBeDefined();
         expect(component.visibleHistory).toBeFalsy();
         let cmpel = fixture.nativeElement;
-        let divs = cmpel.querySelectorAll("div"); 
-        expect(divs.length).toBe(3);
-        expect(divs[1].style.display).toBe("none");
+        let divs = cmpel.querySelectorAll("div");
+        expect(divs.length).toBe(4);
+        // Log the display styles of all divs for debugging
+        // console.log('Div display styles:', Array.from(divs).map((d, i) => `${i}: ${getComputedStyle(d).display}`));
+        expect(getComputedStyle(divs[0]).display).toBe("table");
 
         component.expandHistory();
         expect(component.visibleHistory).toBeTruthy();

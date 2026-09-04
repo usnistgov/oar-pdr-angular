@@ -22,22 +22,32 @@
                         <div style="margin-bottom: 5px;">
                             Name of group or individual contact:
                         </div>
-                        <input type="text" 
-                            [(ngModel)]="name" 
-                            (input)="onContactChanged('name')" 
-                            id="lastname-input"
-                            placeholder="Name is required." 
-                            style="width: 100%;height: 2em;" />
+
+                        <mat-form-field class="mat-form-field input mr-1" appearance="fill">
+                            <input 
+                                type="text" 
+                                matInput
+                                [(ngModel)]="name" 
+                                (input)="onContactChanged('name')" 
+                                id="lastname-input"
+                                placeholder="Name is required." 
+                                style="width: 100%;height: 2em;" />
                         
+                        </mat-form-field>
+
                         <div style="margin-top: 1em;margin-bottom: 5px;">
                             Contact's email address:
                         </div>
-                        <input type="text" 
-                            [(ngModel)]="email" 
-                            (input)="onContactChanged('email')" 
-                            id="email-input" 
-                            placeholder="Email"
-                            style="width: 100%;height: 2em;" />
+                        <mat-form-field class="mat-form-field input mr-1" appearance="fill">
+                            <input 
+                                matInput
+                                type="text" 
+                                [(ngModel)]="email" 
+                                (input)="onContactChanged('email')" 
+                                id="email-input" 
+                                placeholder="Email"
+                                style="width: 100%;height: 2em;" />
+                        </mat-form-field>
                     </div>
                     <div id="right">
                         Type in contact's name and select the appropriate match:

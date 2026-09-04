@@ -18,9 +18,9 @@
             </a>
 
             <!-- If feedback is hidden (the case in the side menu bar), 
-                 display a link to open the popup window whick always displays feedback. -->
+                 display a link to open the popup window which always displays feedback. -->
             <div *ngIf="!showFeedback && hasFeedback"
-                (click)="openPopup()"
+                (click)="openSubmitStatusPopup()"
                 class="view-feedback">
                 View Feedback...
             </div>

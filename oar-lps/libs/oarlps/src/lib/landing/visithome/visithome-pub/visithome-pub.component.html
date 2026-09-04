@@ -3,8 +3,7 @@
         <div class="editable_container">
             @if(hasVisitHomeURL) {
                 <a href={{record[fieldName]}} target="_blank">
-                    <button type="button" 
-                            class="oar-button home_button" 
+                    <button mat-flat-button
                             [ngStyle]="visitHomePageBtnStyle()"
                             (click)="googleAnalytics(record.landingPage, $event, 'Resource title: '+record.title)">
                     
@@ -18,9 +17,8 @@
                 </a>
             }
             @else if(!isPublicSite){
-                    <button type="button" 
+                    <button mat-flat-button
                             disabled=true
-                            class="oar-button home_button"
                             [ngStyle]="visitHomePageBtnStyle()">
 
                         <!-- <i class="fas fa-external-link-alt" pButtonIcon

@@ -13,9 +13,8 @@ import { AppConfig } from '../../../config/config';
 import { TransferState } from '@angular/core';
 import { GoogleAnalyticsService } from '../../../shared/ga-service/google-analytics.service';
 import { ToastrModule } from 'ngx-toastr';
-import { TreeTableModule } from 'primeng/treetable';
 import { EditStatusService } from '../../../landing/editcontrol/editstatus.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as env from '../../../../environments/environment';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -64,18 +63,17 @@ describe('DatafilesMidasComponent', () => {
                 RouterTestingModule,
                 HttpClientTestingModule,
                 DatafilesMidasComponent,
-                TreeTableModule,
                 BrowserAnimationsModule,
                 ToastrModule.forRoot(),
                 FontAwesomeTestingModule],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                UserMessageService, 
+                UserMessageService,
                 HttpHandler,
                 DatePipe,
                 { provide: AppConfig, useValue: cfg },
                 { provide: AuthService, useValue: authsvc },
-                { provide: DAPService, useFactory: createDAPService, 
+                { provide: DAPService, useFactory: createDAPService,
                     deps: [ env, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
                     new UserMessageService(), edstatsvc, dapsvc, null)
@@ -89,7 +87,7 @@ describe('DatafilesMidasComponent', () => {
                     useValue: {
                         circleIcon: 'undo'
                     }
-                }                
+                }
             ]
         })
         .compileComponents();
@@ -101,6 +99,7 @@ describe('DatafilesMidasComponent', () => {
         component = fixture.componentInstance;
         component.record = record;
         component.inBrowser = true;
+        // Test with default isPublicSite value (false) since the template bug is now fixed
         component.ngOnChanges({});
         fixture.detectChanges();
     });
@@ -114,12 +113,15 @@ describe('DatafilesMidasComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('Should have title Files', () => {
+    it('Should have title Files', fakeAsync(() => {
         component.editEnabled = true;
         fixture.detectChanges();
-        fakeAsync(() => {
-            expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
-            expect(fixture.nativeElement.querySelector('#filelist-heading').innerText).toEqual('Files ');
-        });
-    });
+        expect(fixture.nativeElement.querySelectorAll('#filelist-heading').length).toEqual(1);
+        const headerEl = fixture.nativeElement.querySelector('#filelist-heading');
+        expect(headerEl).toBeTruthy();
+        // With isPublicSite = false (default), we expect "Files" without trailing space
+        const textContent = headerEl.textContent || headerEl.innerText;
+        expect(textContent.trim()).toEqual('Files');
+        tick();
+    }));
 });
