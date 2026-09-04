@@ -276,8 +276,12 @@ export class TopicEditComponent implements OnInit {
     undoCurrentChanges() {
         //Revert this.nistTaxonomyTopics
         // this.cloneArray(this.originalSelectedTopicsTopics ,this.selectedTopics);
-        this.cmdOutput.emit({ command: "undoCurrentChanges" });
-        this.reset();
+        if(this.dataChanged) {
+            this.cmdOutput.emit({ command: "undoCurrentChanges" });
+            this.reset();
+        }else{
+            this.cmdOutput.emit({ command: "closeEditBlock" });
+        }
     }
 
     /**

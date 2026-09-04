@@ -363,11 +363,11 @@ export class MetadataUpdateService {
         }
 
         // If no body, remove this field from curent record
-        // if(!body) {
-        //     delete this.currentRec[fieldName];
-        //     body = JSON.stringify(this.currentRec);
-        //     updateWholeRecord = true;
-        // }
+        if(!body) {
+            delete this.currentRec[fieldName];
+            body = JSON.stringify(this.currentRec);
+            updateWholeRecord = true;
+        }
 
         let obs; 
         if (updateWholeRecord) 

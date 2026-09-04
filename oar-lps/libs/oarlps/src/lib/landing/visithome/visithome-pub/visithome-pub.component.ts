@@ -62,6 +62,7 @@ export class VisithomePubComponent {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
+        console.log("this.record", this.record);
     }
 
     updateOriginal(){
@@ -97,7 +98,7 @@ export class VisithomePubComponent {
             'background-color': this.colorScheme.defaultVar,
             'color': 'white',
             'border-radius': '4px',
-            'opacity': this.isPublicSite && this.hasVisitHomeURL ? 1 : 0.5
+            'opacity': this.hasVisitHomeURL ? 1 : 0.5
         };
     }
 

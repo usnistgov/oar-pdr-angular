@@ -1,69 +1,146 @@
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../../frame/usermessage.service';
-import { AuthorMidasComponent } from './author-midas.component';
-import { AppConfig } from '../../../config/config';
-import { TransferState } from '@angular/core';
-import * as env from '../../../../environments/environment';
-import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
-import { DatePipe } from '@angular/common';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ToastrModule } from 'ngx-toastr';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
-import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { HttpClient, HttpHandler, HttpRequest } from '@angular/common/http';
-import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
-import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
+import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { FontAwesomeTestingModule } from "@fortawesome/angular-fontawesome/testing";
+import { FaTestingConfig } from "@fortawesome/angular-fontawesome/testing";
 
-describe('AuthorMidasComponent', () => {
+import { AuthorMidasComponent } from "./author-midas.component";
+import { AuthorListComponent } from "../author-list/author-list.component";
+import { AuthorPubComponent } from "../author-pub/author-pub.component";
+
+import { MetadataUpdateService } from "../../editcontrol/metadataupdate.service";
+import { EditStatusService } from "../../editcontrol/editstatus.service";
+import { LandingpageService } from "../../landingpage.service";
+import { NotificationService } from "../../../shared/notification-service/notification.service";
+import { GlobalService } from "../../../shared/globals/globals";
+
+/**
+ * Stub AuthorListComponent.
+ *
+ * We don't want AuthorMidasComponent's unit test to initialize the
+ * real AuthorListComponent and all of its dependencies.
+ */
+@Component({
+    selector: "lib-author-list",
+    standalone: true,
+    template: "",
+})
+class MockAuthorListComponent {
+    @Input() record: any;
+    @Input() fieldName: string;
+    @Input() startEditing = false;
+
+    @Output() dataChanged = new EventEmitter<any>();
+    @Output() editmodeOutput = new EventEmitter<any>();
+
+    onSectionModeChanged = jest.fn();
+    undoAllChanges = jest.fn();
+}
+
+/**
+ * Stub AuthorPubComponent.
+ */
+@Component({
+    selector: "author-pub",
+    standalone: true,
+    template: "",
+})
+class MockAuthorPubComponent {
+    @Input() record: any;
+    @Input() fieldName: string;
+}
+
+describe("AuthorMidasComponent", () => {
     let component: AuthorMidasComponent;
     let fixture: ComponentFixture<AuthorMidasComponent>;
-    let cfg: AppConfig = new AppConfig(null);
-    cfg.loadConfig(env.config);
-    let plid: Object = "browser";
-    let ts: TransferState = new TransferState();
-    let authsvc: AuthService = new MockAuthService(undefined);
-    let svcep : string = "https://mds.nist.gov/midas/nsd";
-    let dapsvc : DAPService = new LocalDAPService();
-    let edstatsvc = new EditStatusService();
 
-    beforeEach(waitForAsync(() => {
-        TestBed.configureTestingModule({
-        imports: [
-            AuthorMidasComponent, 
-            FormsModule, 
-            ToastrModule.forRoot(),
-            FontAwesomeTestingModule],
-        providers: [
-            UserMessageService, 
-            HttpHandler,
-            DatePipe,
-            { provide: AppConfig, useValue: cfg },
-            { provide: AuthService, useValue: authsvc },
-            { provide: DAPService, useFactory: createDAPService, 
-                deps: [ env, HttpClient, AppConfig ] },
-            { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                new UserMessageService(), edstatsvc, dapsvc, null)
-            },
-            {
-                provide: FaTestingConfig,
-                useValue: {
-                    circleIcon: 'undo'
-                }
-            }
-        ]
+    let metadataUpdateService: any;
+    let editStatusService: any;
+    let landingpageService: any;
+    let notificationService: any;
+    let globalService: any;
+
+    beforeEach(async () => {
+        metadataUpdateService = {
+            anyFieldUpdated: jest.fn().mockReturnValue(false),
+            undo: jest.fn().mockResolvedValue(true),
+            getFieldStyle: jest.fn().mockReturnValue({}),
+        };
+
+        editStatusService = {};
+
+        landingpageService = {
+            watchEditing: jest.fn(),
+            setEditing: jest.fn(),
+            setSectionHelp: jest.fn(),
+            setCurrentSection: jest.fn(),
+        };
+
+        notificationService = {
+            showSuccessWithTimeout: jest.fn(),
+        };
+
+        globalService = {};
+
+        await TestBed.configureTestingModule({
+            imports: [
+                AuthorMidasComponent,
+                NoopAnimationsModule,
+                FontAwesomeTestingModule,
+            ],
+
+            providers: [
+                {
+                    provide: MetadataUpdateService,
+                    useValue: metadataUpdateService,
+                },
+                {
+                    provide: EditStatusService,
+                    useValue: editStatusService,
+                },
+                {
+                    provide: LandingpageService,
+                    useValue: landingpageService,
+                },
+                {
+                    provide: NotificationService,
+                    useValue: notificationService,
+                },
+                {
+                    provide: GlobalService,
+                    useValue: globalService,
+                },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: "undo",
+                    },
+                },
+            ],
         })
-        .compileComponents();
+            .overrideComponent(AuthorMidasComponent, {
+                remove: {
+                    imports: [AuthorListComponent, AuthorPubComponent],
+                },
+                add: {
+                    imports: [MockAuthorListComponent, MockAuthorPubComponent],
+                },
+            })
+            .compileComponents();
 
         fixture = TestBed.createComponent(AuthorMidasComponent);
         component = fixture.componentInstance;
-        component.record = require('../../../../assets/sampleRecord.json');
-        fixture.detectChanges();
-    }));
 
-    it('should create', () => {
+        component.record = require("../../../../assets/sampleRecord.json");
+
+        // Supply the other @Inputs expected by the component.
+        component.fieldName = "authors";
+        component.isEditMode = true;
+
+        fixture.detectChanges();
+    });
+
+    it("should create", () => {
         expect(component).toBeTruthy();
     });
 });

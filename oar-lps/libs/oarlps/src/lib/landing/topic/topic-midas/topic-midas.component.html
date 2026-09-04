@@ -17,19 +17,6 @@
             matTooltipPosition="above"
         ></fa-icon>
 
-        <!-- Close edit block -->
-        <fa-icon
-            *ngIf="editingTopics(data)" 
-            class="edit_button action-icon"
-            [class.disabled]="dataChanged"
-            [icon]="faXmark"
-            size="sm"
-            (click)="setMode()"
-            aria-label="Close edit block" 
-            matTooltip="Close edit block"
-            matTooltipPosition="above"
-        ></fa-icon>
-
         <!-- Restore original -->
         <fa-icon
             *ngIf="updated(data)" 

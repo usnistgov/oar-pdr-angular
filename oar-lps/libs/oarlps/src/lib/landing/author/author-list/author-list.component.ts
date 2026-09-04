@@ -52,7 +52,7 @@ import {
 })
 export class AuthorListComponent implements OnInit {
     currentAuthorIndex: number = 0;
-    currentAuthor: Author; // for drag drop
+    currentAuthor: Author | null = null; // for drag drop
     currentAuthors: Author[] = [];
     savedRecord: any = {}; // Previously saved record
     originalRecord: any = {}; // Original record. Shouldn't be updated after initial load
@@ -125,12 +125,12 @@ export class AuthorListComponent implements OnInit {
                     sectionMode.mode != MODE.NORMAL
                 ) {
                     //If is adding but nothing changed, undo adding
-                    if (this.isAdding && !this.currentAuthor.dataChanged) {
+                    if (this.isAdding && !this.currentAuthor?.dataChanged) {
                         this.undoCurAuthorChanges();
                         //If is adding or editing and something changed, save it
                     } else if (
                         (this.isEditing || this.isAdding) &&
-                        this.currentAuthor.dataChanged
+                        this.currentAuthor?.dataChanged
                     ) {
                         this.saveCurrentAuthor(false, true); // Do not refresh help text
                     }
@@ -167,7 +167,7 @@ export class AuthorListComponent implements OnInit {
             });
         }
 
-        if (changes.startEditing) {
+        if (changes.startEditing?.currentValue) {
             if (
                 !this.record[this.fieldName] ||
                 this.record[this.fieldName].length == 0
@@ -175,7 +175,7 @@ export class AuthorListComponent implements OnInit {
                 this.onAdd();
         }
 
-        this.chref.detectChanges();
+        // this.chref.detectChanges();
     }
 
     get isNormal() {
@@ -221,7 +221,7 @@ export class AuthorListComponent implements OnInit {
             if (
                 this.mdupdsvc.fieldUpdated(
                     this.fieldName,
-                    this.currentAuthor["@id"],
+                    this.currentAuthor["@id"]
                 )
             ) {
                 bkColor = "var(--data-changed-saved)";
@@ -377,7 +377,8 @@ export class AuthorListComponent implements OnInit {
 
             this.mdupdsvc.add(postMessage, this.fieldName).subscribe((rec) => {
                 if (rec) {
-                    this.currentAuthor.dataChanged = false;
+                    if (this.currentAuthor)
+                        this.currentAuthor.dataChanged = false;
 
                     if (closeAll) this.setMode(MODE.NORMAL, refreshHelp);
                     else this.setMode(MODE.LIST, refreshHelp);
@@ -394,7 +395,7 @@ export class AuthorListComponent implements OnInit {
                 }
             });
         } else {
-            if (this.currentAuthor.dataChanged) {
+            if (this.currentAuthor && this.currentAuthor.dataChanged) {
                 this.updateMetadata(
                     this.currentAuthor,
                     this.currentAuthor["@id"],
@@ -515,29 +516,23 @@ export class AuthorListComponent implements OnInit {
     }
 
     undoCurAuthorChanges() {
+        let editMode = MODE.LIST;
         if (this.isAdding) {
-            // this.removeAuthor(this.currentAuthorIndex);
-            if (this.savedRecord[this.fieldName] == undefined) {
-                delete this.record[this.fieldName];
-            } else {
-                this.record[this.fieldName] = JSON.parse(
-                    JSON.stringify(this.savedRecord[this.fieldName]),
-                );
-            }
+            this.removeAuthor(this.currentAuthorIndex);
         } else {
-            this.record[this.fieldName][this.currentAuthorIndex] = JSON.parse(
-                JSON.stringify(
-                    this.savedRecord[this.fieldName][this.currentAuthorIndex],
-                ),
-            );
+            if (this.currentAuthor && this.currentAuthor.dataChanged) {
+                this.record[this.fieldName][this.currentAuthorIndex] =
+                    JSON.parse(
+                        JSON.stringify(
+                            this.savedRecord[this.fieldName][
+                                this.currentAuthorIndex
+                            ],
+                        ),
+                    );
+            }
         }
 
-        // this.editBlockStatus = 'collapsed';
-
-        // Back to add mode
-        // this.editMode = MODE.NORMAL;
-        // this.refreshHelpText(MODE.ADD);
-        this.setMode(MODE.LIST, true);
+        this.setMode(editMode, true);
     }
 
     /**
@@ -549,20 +544,6 @@ export class AuthorListComponent implements OnInit {
                 authors: this.record[this.fieldName],
                 action: "hideEditBlock",
             });
-        }
-    }
-
-    /**
-     * Determine icon class of add button
-     * If edit mode is normal, display enabled icon.
-     * Otherwise display disabled icon.
-     * @returns add button icon class
-     */
-    addIconClass() {
-        if (this.isNormal) {
-            return "icon_enabled";
-        } else {
-            return "icon_disabled";
         }
     }
 
@@ -746,6 +727,7 @@ export class AuthorListComponent implements OnInit {
 
                 // let newAuthor: Author = {} as Author;
                 let newAuthor: Author = new Author("", "", "", "", null);
+                newAuthor["@id"] = "new";
                 newAuthor["isNew"] = true;
                 // newAuthor["familyName"] = "";
                 // newAuthor["givenName"] = "";
@@ -758,7 +740,8 @@ export class AuthorListComponent implements OnInit {
 
                 this.currentAuthor =
                     this.record[this.fieldName][this.currentAuthorIndex];
-                this.currentAuthor.dataChanged = false;
+
+                if (this.currentAuthor) this.currentAuthor.dataChanged = false;
 
                 this.openEditBlock();
 

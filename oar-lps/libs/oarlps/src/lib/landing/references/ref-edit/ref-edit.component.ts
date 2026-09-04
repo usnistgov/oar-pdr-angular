@@ -349,8 +349,7 @@ export class RefEditComponent implements OnInit {
     }
 
     setInputMethod(event) {
-        var target = event.target;
-        this.inputMethod = event.target.value;
+        this.inputMethod = event.value;
 
         switch (this.inputMethod) {
             case "1": //useDOI

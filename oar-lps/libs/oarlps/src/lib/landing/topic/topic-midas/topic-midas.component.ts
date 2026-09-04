@@ -366,6 +366,9 @@ export class TopicMidasComponent implements OnInit {
             case "undoCurrentChanges":
                 this.cancelEditing();
                 break;
+            case "closeEditBlock":
+                this.setMode();
+                break;
             default:
                 break;
         }

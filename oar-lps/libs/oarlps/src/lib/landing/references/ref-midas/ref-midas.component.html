@@ -43,7 +43,7 @@
             *ngIf="isEditMode"
             style="white-space: nowrap; width: 1.65em"
         >
-            <button
+            <!-- <button
                 class="edit_button"
                 *ngIf="isNormal"
                 (click)="startEditing()"
@@ -51,11 +51,27 @@
                 matTooltip="Edit reference"
                 matTooltipPosition="above"
             >
-                <fa-icon [icon]="faPencil" size="sm"  data-toggle="tooltip" title="Edit description"></fa-icon>
-            </button>
+                <fa-icon
+                    [icon]="faPencil"
+                    size="sm"
+                    data-toggle="tooltip"
+                    title="Edit description"
+                ></fa-icon>
+            </button> -->
+
+            <fa-icon
+                class="edit_button action-icon"
+                *ngIf="isNormal"
+                [icon]="faPencil"
+                size="sm"
+                (click)="startEditing()"
+                aria-label="Edit button"
+                matTooltip="Edit reference"
+                matTooltipPosition="above"
+            ></fa-icon>
 
             <!-- Hide button - hide edit block -->
-            <button
+            <!-- <button
                 class="edit_button"
                 *ngIf="!isNormal"
                 [disabled]="childIsEditing || childIsAdding"
@@ -65,10 +81,21 @@
                 matTooltipPosition="above"
             >
                 <fa-icon [icon]="faXmark"></fa-icon>
-            </button>
+            </button> -->
+
+            <fa-icon
+                class="edit_button action-icon"
+                *ngIf="!isNormal && !childIsEditing && !childIsAdding"
+                [icon]="faXmark"
+                size="sm"
+                (click)="hideEditBlock()"
+                aria-label="Hide edit block"
+                matTooltip="Hide edit block"
+                matTooltipPosition="above"
+            ></fa-icon>
 
             <!-- Undo all changes button -->
-            <button
+            <!-- <button
                 #undo
                 class="edit_button"
                 *ngIf="refChanged || refUpdated"
@@ -78,8 +105,24 @@
                 matTooltip="Undo"
                 matTooltipPosition="above"
             >
-                <fa-icon [icon]="faUndo" data-toggle="tooltip" title="Undo description changes"></fa-icon>
-            </button>
+                <fa-icon
+                    [icon]="faUndo"
+                    data-toggle="tooltip"
+                    title="Undo description changes"
+                ></fa-icon>
+            </button> -->
+
+            <fa-icon
+                *ngIf="!editBlockExpanded && (refChanged || refUpdated)"
+                class="edit_button action-icon"
+                [class.disabled]="childIsEditing || childIsAdding"
+                [icon]="faUndo"
+                size="sm"
+                (click)="undoAllChanges()"
+                aria-label="Undo button"
+                matTooltip="Undo"
+                matTooltipPosition="above"
+            ></fa-icon>
         </div>
     </div>
 }

@@ -374,6 +374,9 @@ export class AccesspageListComponent implements OnInit {
             case "undoCurrentChanges":
                 this.undoCurApageChanges();
                 break;
+            case "closeEditBlock":
+                this.setMode();
+                break;
             default:
                 break;
         }

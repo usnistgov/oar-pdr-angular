@@ -225,12 +225,13 @@ export class RefListComponent implements OnInit {
 
                 let newRef = {} as Reference;
                 newRef["isNew"] = true;
+                newRef["@id"] = "tempID";
                 this.record[this.fieldName].push(newRef);
                 
                 this.currentRefIndex = this.record.references.length - 1;
 
                 this.currentRef = this.record[this.fieldName][this.currentRefIndex];
-                this.currentRef.dataChanged = true;
+                this.currentRef.dataChanged = false;
                 // this.orderChanged = true;
 
                 this.openEditBlock();
@@ -521,6 +522,9 @@ export class RefListComponent implements OnInit {
                 this.undoCurRefChanges();
                 break;
             case 'closeEditBlock':
+                if(this.isAdding){
+                    this.removeRef(this.currentRefIndex);
+                }
                 this.setMode(MODE.NORMAL, false);
                 break;
             default:

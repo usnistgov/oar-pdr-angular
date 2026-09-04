@@ -156,12 +156,14 @@ export class TitleEditComponent {
     }
 
     cancelEditing() {
-        //Replace title with saved value
-        this.mdupdsvc
-            .loadSavedSubsetFromMemory(this.fieldName)
-            .subscribe((title) => {
-                this.record["title"] = title;
-            });
+        if (this.dataChanged) {
+            //Replace title with saved value
+            this.mdupdsvc
+                .loadSavedSubsetFromMemory(this.fieldName)
+                .subscribe((title) => {
+                    this.record["title"] = title;
+                });
+        }
 
         this.setMode(MODE.NORMAL);
         this.isEditing = false;
@@ -171,6 +173,8 @@ export class TitleEditComponent {
     }
 
     onSave(refreshHelp: boolean = true) {
+        if (!this.dataChanged) return;
+
         if (this.record["title"] != this.originalRecord[this.fieldName]) {
             var postMessage: any = {};
             postMessage[this.fieldName] = JSON.parse(
@@ -181,7 +185,7 @@ export class TitleEditComponent {
                 .update(this.fieldName, postMessage)
                 .then((updateSuccess) => {
                     if (updateSuccess) {
-                        this.dataChanged = true;
+                        this.dataChanged = false;
                         this.notificationService.showSuccessWithTimeout(
                             "Title updated.",
                             "",

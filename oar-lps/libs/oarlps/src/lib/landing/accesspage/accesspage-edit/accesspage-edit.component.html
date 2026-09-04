@@ -62,10 +62,23 @@
 
         <!-- Cancel button -->
         <fa-icon
+            *ngIf="accessPage?.dataChanged"
+            class="edit_button action-icon"
+            [icon]="faUndo"
+            size="sm"
+            (click)="commandOut('undoCurrentChanges')"
+            aria-label="undo button" 
+            matTooltip="Undo current changes"
+            matTooltipPosition="above"
+        ></fa-icon>  
+
+        <!-- Close button -->
+        <fa-icon
+            *ngIf="!accessPage?.dataChanged"
             class="edit_button action-icon"
             [icon]="faXmark"
             size="sm"
-            (click)="commandOut('undoCurrentChanges')"
+            (click)="commandOut('closeEditBlock')"
             aria-label="undo button" 
             matTooltip="Undo current changes"
             matTooltipPosition="above"

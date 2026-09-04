@@ -233,6 +233,9 @@ export class VisithomeMidasComponent {
             case "restoreOriginal":
                 this.restoreOriginal();
                 break;
+            case "closeEditBlock":
+                this.hideEditBlock();
+                break;
             default:
                 this.setMode();
                 break;
@@ -261,6 +264,7 @@ export class VisithomeMidasComponent {
         }
 
         this.dataChanged = false;
+        this.hideEditBlock();
         this.chref.detectChanges();
     }
 
@@ -269,7 +273,12 @@ export class VisithomeMidasComponent {
             this.visitHomeURL = "";
         }
 
-        this.record[this.fieldName] = this.visitHomeURL;
+        if (this.visitHomeURL == "") {
+            delete this.record[this.fieldName];
+        }else{
+            this.record[this.fieldName] = this.visitHomeURL;
+        }
+            
         let postMessage: any = {};
         postMessage[this.fieldName] = this.visitHomeURL;
 

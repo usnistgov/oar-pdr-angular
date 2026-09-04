@@ -42,17 +42,38 @@
                     <td colspan="2">
                         <table>
                             <tr>
-                                <td style="width: calc(100%-130px);">
-                                    Is this reference the one that best describes the data (or software) in this data publication?
-                                    <div style="height: 8px;"> </div>
+                                <td style="width: calc(100%-130px)">
+                                    Is this reference the one that best
+                                    describes the data (or software) in this
+                                    data publication?
+                                    <div style="height: 8px"></div>
                                 </td>
-                                <td align="right" style="width: 130px;vertical-align:top;">
-                                    <input type="radio" value="1" name="reftype" id="reftype1" [(ngModel)]="reftype"
-                                        (change)="onReftypeChanged($event)">
-                                    <label for="rftype1"> &nbsp;Yes&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" value="2" name="reftype" id="reftype2" [(ngModel)]="reftype"
-                                        (change)="onReftypeChanged($event)">
-                                    <label for="reftype2"> &nbsp;No&nbsp;&nbsp;&nbsp;</label>
+                                <td
+                                    align="right"
+                                    style="width: 130px; vertical-align: top"
+                                >
+                                    <input
+                                        type="radio"
+                                        value="1"
+                                        name="reftype"
+                                        id="reftype1"
+                                        [(ngModel)]="reftype"
+                                        (change)="onReftypeChanged($event)"
+                                    />
+                                    <label for="rftype1">
+                                        &nbsp;Yes&nbsp;&nbsp;&nbsp;</label
+                                    >
+                                    <input
+                                        type="radio"
+                                        value="2"
+                                        name="reftype"
+                                        id="reftype2"
+                                        [(ngModel)]="reftype"
+                                        (change)="onReftypeChanged($event)"
+                                    />
+                                    <label for="reftype2">
+                                        &nbsp;No&nbsp;&nbsp;&nbsp;</label
+                                    >
                                 </td>
                             </tr>
                         </table>
@@ -65,32 +86,35 @@
                         <span>DOI:</span>
                     </td>
                     <td colspan="2">
-                        <mat-form-field 
+                        <mat-form-field
                             class="compact-field mr-1 w-full"
                             appearance="fill"
-                            subscriptSizing="dynamic">
+                            subscriptSizing="dynamic"
+                        >
                             <input
                                 matInput
                                 type="text"
                                 placeholder="Place DOI here"
                                 [(ngModel)]="ref.doi"
                             />
-                            <mat-icon 
+                            <mat-icon
                                 *ngIf="ref.doi"
-                                matSuffix 
+                                matSuffix
                                 class="w-2 custom-size-icon"
                                 matTooltip="Clear DOI"
                                 matTooltipPosition="above"
-                                (click)="ref.doi = ''">
+                                (click)="ref.doi = ''"
+                            >
                                 close
                             </mat-icon>
-                            <mat-icon 
+                            <mat-icon
                                 *ngIf="ref.doi"
-                                matSuffix 
+                                matSuffix
                                 class="w-2 custom-size-icon"
                                 matTooltip="Accept"
                                 matTooltipPosition="above"
-                                (click)="onDoiChange()">
+                                (click)="onDoiChange()"
+                            >
                                 check
                             </mat-icon>
                             <!-- <button
@@ -412,14 +436,21 @@
 
                         <fa-icon
                             class="edit_button action-icon"
-                            *ngIf="(isEditing || !useCitationData) && lockIcon && undoIcon"
+                            *ngIf="
+                                (isEditing || !useCitationData) &&
+                                lockIcon &&
+                                undoIcon
+                            "
                             [icon]="['fas', citationLockClass()]"
                             size="sm"
-                            (click)="citationLocked = !citationLocked; previousCitation = ref.citation;"
+                            (click)="
+                                citationLocked = !citationLocked;
+                                previousCitation = ref.citation
+                            "
                             aria-label="lock/unlock button"
                             [matTooltip]="citationLockTooltip()"
-                            matTooltipPosition="above"                            
-                            >
+                            matTooltipPosition="above"
+                        >
                         </fa-icon>
 
                         <!-- <button
@@ -476,7 +507,7 @@
     <div class="editable_field" style="white-space: nowrap">
         <!-- Save button -->
 
-        <button
+        <!-- <button
             class="edit_button"
             type="button"
             (click)="commandOut('saveCurrentChanges')"
@@ -486,10 +517,21 @@
             matTooltipPosition="above"
         >
             <fa-icon [icon]="faSave" size="sm"></fa-icon>
-        </button>
+        </button> -->
+
+        <fa-icon
+            class="edit_button action-icon"
+            [class.disabled]="!ref.dataChanged"
+            [icon]="faSave"
+            size="sm"
+            (click)="commandOut('saveCurrentChanges')"
+            aria-label="Save current changes"
+            matTooltip="Save current changes"
+            matTooltipPosition="above"
+        ></fa-icon>
 
         <!-- Cancel button -->
-        <button
+        <!-- <button
             class="edit_button"
             type="button"
             (click)="commandOut('undoCurrentChanges'); reset()"
@@ -498,6 +540,29 @@
             matTooltipPosition="above"
         >
             <fa-icon [icon]="faUndo" size="sm"></fa-icon>
-        </button>
+        </button> -->
+
+        <fa-icon
+            class="edit_button action-icon"
+            *ngIf="ref.dataChanged"
+            [icon]="faUndo"
+            size="sm"
+            (click)="commandOut('undoCurrentChanges'); reset()"
+            aria-label="Undo button"
+            matTooltip="Undo current changes"
+            matTooltipPosition="above"
+        ></fa-icon>
+
+        <!-- Close button-->
+        <fa-icon
+            class="edit_button action-icon"
+            *ngIf="!ref.dataChanged"
+            [icon]="faXmark"
+            size="sm"
+            (click)="commandOut('closeEditBlock')"
+            aria-label="Close button"
+            matTooltip="Close edit block"
+            matTooltipPosition="above"
+        ></fa-icon>
     </div>
 </div>

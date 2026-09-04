@@ -28,7 +28,7 @@
         <!-- Control buttons -->
         <td style="width: 30px;vertical-align: top; white-space: nowrap;">
             <!-- Save button -->
-            <button class="edit_button" 
+            <!-- <button class="edit_button" 
                     type="button" 
                     (click)="commandOut('saveURL')" 
                     aria-label="edit button" 
@@ -36,10 +36,20 @@
                     matTooltip="Save changes"
                     matTooltipPosition="above">
                 <fa-icon [icon]="faSave"></fa-icon>
-            </button>
+            </button> -->
     
+            <fa-icon
+                class="edit_button action-icon"
+                [class.disabled]="!currentValueChanged"
+                [icon]="faSave"
+                size="sm"
+                (click)="commandOut('saveURL')" 
+                aria-label="Save button"
+                matTooltip="Save changes"
+                matTooltipPosition="above"
+            ></fa-icon>
             <!-- Undo button -->
-            <button 
+            <!-- <button 
                 *ngIf="currentValueChanged" 
                 class="edit_button" 
                 style="margin: -1px 0px 0px 0px" 
@@ -48,7 +58,30 @@
                 matTooltip="Undo current changes"
                 matTooltipPosition="above">
                 <fa-icon [icon]="faUndo"></fa-icon>
-            </button>
+            </button> -->
+
+            <fa-icon
+                *ngIf="currentValueChanged" 
+                class="edit_button action-icon"
+                [icon]="faUndo"
+                size="sm"
+                (click)="commandOut('undoCurrentChanges')" 
+                aria-label="Undo button"
+                matTooltip="Undo current changes"
+                matTooltipPosition="above"
+            ></fa-icon>
+
+            <!-- Close button -->
+            <fa-icon
+                *ngIf="!currentValueChanged" 
+                class="edit_button action-icon"
+                [icon]="faXmark"
+                size="sm"
+                (click)="commandOut('closeEditBlock')" 
+                aria-label="Close button"
+                matTooltip="Close edit block"
+                matTooltipPosition="above"
+            ></fa-icon>
         </td>          
     </tr>
 </table>

@@ -51,7 +51,7 @@ export class IspartofEditComponent {
     editBlockStatus: string = "collapsed";
     editMode: string = MODE.NORMAL;
     overflowStyle: string = "hidden";
-    selectedCollection: string = "None"; // currently selected collection
+    selectedCollection: string | undefined = "None"; // currently selected collection
     savedCollection: string = "None"; // currently saved collection
     collectionHistory: string[] = []; // history of selected collections for undo purposes
     originalCollection: string = null;
@@ -160,6 +160,9 @@ export class IspartofEditComponent {
         this.chref.detectChanges();
     }
 
+    get collectionDiff() {
+        return this.selectedCollection != this.originalCollection;
+    }
     getSelectedCollectionName() {
         let collectionID = "";
         if (
@@ -353,7 +356,7 @@ export class IspartofEditComponent {
     }
 
     undoCurCollectionChanges() {
-        this.selectedCollection = this.originalCollection;
+        this.selectedCollection = this.collectionHistory.at(-1);
         this.dataChanged = false;
         this.setMode(MODE.NORMAL, true);
     }
@@ -361,29 +364,5 @@ export class IspartofEditComponent {
     colChanged(event) {
         this.selectedCollection = event.target.value;
         this.dataChanged = true;
-    }
-
-    /**
-     * Return icon class of edit button
-     * @returns icon class
-     */
-    getEditIconClass() {
-        if (this.isEditing) {
-            return "icon_disabled";
-        } else {
-            return "icon_enabled";
-        }
-    }
-
-    /**
-     * Return icon class of edit button
-     * @returns icon class
-     */
-    getUndoIconClass() {
-        if (this.isEditing) {
-            return "icon_disabled";
-        } else {
-            return "icon_enabled";
-        }
     }
 }

@@ -2,66 +2,95 @@
     <div class="editable_container">
         <!-- Display required field indicator -->
         <div class="editable_field" *ngIf="isEditMode">
-            <span *ngIf="isEditMode" class="red-star">
-                *
-            </span>
+            <span *ngIf="isEditMode" class="red-star"> * </span>
         </div>
 
         <div class="editable_field">
-            <contact-pub 
+            <contact-pub
                 [record]="record"
-                [isPublicSite]="isPublicSite"></contact-pub>
+                [isPublicSite]="isPublicSite"
+            ></contact-pub>
         </div>
 
         <!-- Control buttons -->
-        @if(isEditMode){
-            <div class="editable_field" style="white-space: nowrap;">
-                @if(!isEditing) {
+        @if (isEditMode) {
+            <div class="editable_field" style="white-space: nowrap">
+                @if (!isEditing) {
                     <!-- Edit button -->
-                    <button 
-                        class="edit_button" 
-                        type="button" 
-                        (click)="startEditing()" 
-                        aria-label="Edit contact" 
-                        matTooltip="Edit contact" 
+                    <!-- <button
+                        class="edit_button"
+                        type="button"
+                        (click)="startEditing()"
+                        aria-label="Edit contact"
+                        matTooltip="Edit contact"
                         matTooltipPosition="above"
-                        style="cursor: pointer">
-
+                        style="cursor: pointer"
+                    >
                         <fa-icon [icon]="faPencil" size="sm"></fa-icon>
-                    </button> 
+                    </button> -->
 
-                    @if(updated) {
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [icon]="faPencil"
+                        size="sm"
+                        (click)="startEditing()"
+                        aria-label="Edit contact"
+                        matTooltip="Edit contact"
+                        matTooltipPosition="above"
+                    ></fa-icon>
+
+                    @if (updated) {
                         <!-- Restore button -->
-                        <button 
-                            class="edit_button" 
+                        <!-- <button
+                            class="edit_button"
                             type="button"
                             (click)="restoreOriginal()"
                             matTooltip="Restore original"
-                            matTooltipPosition="above">
-
-                            <fa-icon 
-                                [icon]="faUndo" 
-                                aria-label="Restore original">
+                            matTooltipPosition="above"
+                        >
+                            <fa-icon
+                                [icon]="faUndo"
+                                aria-label="Restore original"
+                            >
                             </fa-icon>
-                        </button>  
-                    }
-                }
-                @else{
-                    <!-- Close button -->
-                    <button 
-                        class="edit_button" 
-                        *ngIf="isEditing" 
-                        type="button" 
-                        [disabled]="currentContact.dataChanged"
-                        (click)="closeEditBlock()" 
-                        aria-label="close button" 
-                        matTooltip="Close edit block"
-                        matTooltipPosition="above">
+                        </button> -->
 
-                        <fa-icon 
-                            [icon]="faXmark">
-                        </fa-icon>
-                    </button>  
+                        <fa-icon
+                            class="edit_button action-icon"
+                            [icon]="faUndo"
+                            size="sm"
+                            (click)="restoreOriginal()"
+                            aria-label="Restore original"
+                            matTooltip="Restore original"
+                            matTooltipPosition="above"
+                        ></fa-icon>
+                    }
+                } @else {
+                    <!-- Close button -->
+                    <!-- <button
+                        class="edit_button"
+                        *ngIf="isEditing"
+                        type="button"
+                        [disabled]="currentContact.dataChanged"
+                        (click)="closeEditBlock()"
+                        aria-label="close button"
+                        matTooltip="Close edit block"
+                        matTooltipPosition="above"
+                    >
+                        <fa-icon [icon]="faXmark"> </fa-icon>
+                    </button> -->
+
+                    <!-- <fa-icon
+                        *ngIf="isEditing"
+                        class="edit_button action-icon"
+                        [class.disabled]="currentContact.dataChanged"
+                        [icon]="faXmark"
+                        size="sm"
+                        (click)="closeEditBlock()"
+                        aria-label="Close button"
+                        matTooltip="Close edit block"
+                        matTooltipPosition="above"
+                    ></fa-icon> -->
                 }
             </div>
         }
@@ -69,52 +98,91 @@
 </div>
 
 @defer (when LoadEditComp) {
-    <div [@editExpand]="editBlockStatus" style = "width: 100%;max-width: 800px; margin: 0px;padding: 0px;" [style.overflow] = "overflowStyle">
-        <table style="width: 100%;">
-            <tr  style="width: 100%;">
+    <div
+        [@editExpand]="editBlockStatus"
+        style="width: 100%; max-width: 800px; margin: 0px; padding: 0px"
+        [style.overflow]="overflowStyle"
+    >
+        <table style="width: 100%">
+            <tr style="width: 100%">
                 <td class="edit-block">
-                    <lib-contact-edit 
-                        #contactedit 
-                        [contact]="currentContact" 
-                        [backgroundColor]="getRecordBackgroundColor" 
-                        [editMode]="editMode" 
-                        (dataChanged)="onContactChange($event)">
+                    <lib-contact-edit
+                        #contactedit
+                        [contact]="currentContact"
+                        [backgroundColor]="getRecordBackgroundColor"
+                        [editMode]="editMode"
+                        (dataChanged)="onContactChange($event)"
+                    >
                     </lib-contact-edit>
                 </td>
-    
-                <td style="width: 90px;vertical-align: top;">
+
+                <td style="width: 90px; vertical-align: top">
                     <!-- Save button -->
-                    <button 
-                        class="edit_button" 
-                        *ngIf="isEditMode" 
-                        type="button" 
-                        (click)="saveCurrentContact()" 
-                        aria-label="edit button" 
-                        [disabled]="!currentContact.dataChanged || !currentContact.fn" 
-                        matTooltip="Save contact"
-                        matTooltipPosition="above">
-
-                        <fa-icon 
-                            [icon]="faSave" 
-                            aria-label="Save button">
-                        </fa-icon>
-                    </button>
-            
-                    <!-- Undo button -->
-                    <button 
-                        class="edit_button" 
-                        *ngIf="isEditMode && dataChanged" 
+                    <!-- <button
+                        class="edit_button"
+                        *ngIf="isEditMode"
                         type="button"
-                        (click)="undoCurContactChanges()" 
-                        aria-label="undo button" 
-                        matTooltip="Undo current changes"
-                        matTooltipPosition="above">
-
-                        <fa-icon 
-                            [icon]="faUndo">
+                        (click)="saveCurrentContact()"
+                        aria-label="edit button"
+                        [disabled]="
+                            !currentContact.dataChanged || !currentContact.fn
+                        "
+                        matTooltip="Save contact"
+                        matTooltipPosition="above"
+                    >
+                        <fa-icon [icon]="faSave" aria-label="Save button">
                         </fa-icon>
-                    </button>
-                </td>          
+                    </button> -->
+
+                    <fa-icon
+                        class="edit_button action-icon"
+                        *ngIf="isEditMode"
+                        [class.disabled]="
+                            !currentContact.dataChanged || !currentContact.fn
+                        "
+                        [icon]="faSave"
+                        size="sm"
+                        (click)="saveCurrentContact()"
+                        aria-label="Save contact"
+                        matTooltip="Save contact"
+                        matTooltipPosition="above"
+                    ></fa-icon>
+
+                    <!-- Undo button -->
+                    <!-- <button
+                        class="edit_button"
+                        *ngIf="isEditMode && dataChanged"
+                        type="button"
+                        (click)="undoCurContactChanges()"
+                        aria-label="undo button"
+                        matTooltip="Undo current changes"
+                        matTooltipPosition="above"
+                    >
+                        <fa-icon [icon]="faUndo"> </fa-icon>
+                    </button> -->
+
+                    <fa-icon
+                        class="edit_button action-icon"
+                        *ngIf="isEditMode && dataChanged"
+                        [icon]="faUndo"
+                        size="sm"
+                        (click)="undoCurContactChanges()"
+                        aria-label="Undo button"
+                        matTooltip="Undo current changes"
+                        matTooltipPosition="above"
+                    ></fa-icon>
+
+                    <fa-icon
+                        class="edit_button action-icon"
+                        *ngIf="isEditMode && !dataChanged"
+                        [icon]="faXmark"
+                        size="sm"
+                        (click)="closeEditBlock()"
+                        aria-label="Close button"
+                        matTooltip="Close edit block"
+                        matTooltipPosition="above"
+                    ></fa-icon>
+                </td>
             </tr>
         </table>
     </div>

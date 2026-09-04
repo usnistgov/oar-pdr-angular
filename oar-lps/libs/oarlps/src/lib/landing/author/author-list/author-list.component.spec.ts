@@ -16,6 +16,7 @@ import { Configuration } from 'oarng';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
+import { of } from 'rxjs';
 
 describe('AuthorListComponent', () => {
     let component: AuthorListComponent;
@@ -37,42 +38,70 @@ describe('AuthorListComponent', () => {
         }
     };
 
+    const mockConfigService = {
+        config: {
+            staffdir: {
+                serviceEndpoint: "https://mds.nist.gov/midas/nsd",
+            },
+        },
+        fetchConfig: jest.fn().mockReturnValue(of(mockConfig)),
+    };
+
+    const mockStaffDirectoryService = {
+        search: jest.fn(),
+    };
+
     configService.config = mockConfig;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-        declarations: [  ],
-        imports: [ 
-            AuthorListComponent, 
-            HttpClientTestingModule, 
-            NoopAnimationsModule, 
-            StaffDirModule,
-            ToastrModule.forRoot(),
-            FontAwesomeTestingModule ],
-        providers: [ 
-                    UserMessageService, 
-                    HttpHandler,
-                    DatePipe,
-                    { provide: AppConfig, useValue: cfg },
-                    { provide: AuthService, useValue: authsvc },
-                    { provide: DAPService, useFactory: createDAPService, 
-                        deps: [ env, HttpClient, AppConfig ] },
-                    { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                        new UserMessageService(), edstatsvc, dapsvc, null)
+            declarations: [],
+            imports: [
+                AuthorListComponent,
+                HttpClientTestingModule,
+                NoopAnimationsModule,
+                ToastrModule.forRoot(),
+                FontAwesomeTestingModule,
+            ],
+            providers: [
+                UserMessageService,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+                {
+                    provide: DAPService,
+                    useFactory: createDAPService,
+                    deps: [env, HttpClient, AppConfig],
+                },
+                {
+                    provide: MetadataUpdateService,
+                    useValue: new MetadataUpdateService(
+                        new UserMessageService(),
+                        edstatsvc,
+                        dapsvc,
+                        null,
+                    ),
+                },
+                // { provide: StaffDirectoryService,useValue: new StaffDirectoryService(
+                //     httpClient, configService
+                // )},
+                {
+                    provide: ConfigurationService,
+                    useValue: mockConfigService,
+                },
+                {
+                    provide: StaffDirectoryService,
+                    useValue: mockStaffDirectoryService,
+                },
+                AuthenticationService,
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: "undo",
                     },
-                    { provide: StaffDirectoryService,useValue: new StaffDirectoryService(
-                        httpClient, configService
-                    )},
-                    AuthenticationService,
-                    {
-                        provide: FaTestingConfig,
-                        useValue: {
-                            circleIcon: 'undo'
-                        }
-                    }
-                ]
-        })
-        .compileComponents();
+                },
+            ],
+        }).compileComponents();
 
     });
 
@@ -85,6 +114,13 @@ describe('AuthorListComponent', () => {
         fixture = TestBed.createComponent(AuthorListComponent);
         component = fixture.componentInstance;
         component.record = record;
+
+        console.log(
+            "fieldName:",
+            component.fieldName,
+            "authors:",
+            record[component.fieldName],
+        );
         fixture.detectChanges();
     });
 

@@ -215,12 +215,14 @@ export class AuthorMidasComponent {
             this.lpService.setEditing(sectionMode);
         }
         
-        switch ( this.editMode ) {
+        switch (this.editMode) {
             case MODE.LIST:
+            case MODE.ADD:
+            case MODE.EDIT:
                 this.isEditing = true;
                 this.setOverflowStyle();
                 this.editingStarted = true;
-                this.editBlockStatus = "expanded";                            
+                this.editBlockStatus = "expanded";
                 break;
 
             default: // normal
@@ -228,7 +230,7 @@ export class AuthorMidasComponent {
                 this.setOverflowStyle();
                 this.isEditing = false;
                 this.editingStarted = false;
-                this.editBlockStatus = 'collapsed'
+                this.editBlockStatus = "collapsed";
                 break;
         }
 
@@ -298,10 +300,7 @@ export class AuthorMidasComponent {
      */
     setChildEditMode(editmode: string) {
         this.childEditMode = editmode;
-        setTimeout(() => {
-            this.chref.detectChanges();
-        }, 0);
-        
+        this.setMode(editmode);
     }
 
     /*

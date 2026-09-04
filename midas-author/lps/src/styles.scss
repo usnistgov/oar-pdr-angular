@@ -511,7 +511,8 @@ a:focus {
 }
 
 .action-icon.disabled {
-    opacity: 0.4;
+    opacity: 0.5 !important;
+    color: #000000 !important;
     cursor: not-allowed;
     pointer-events: none;
 }

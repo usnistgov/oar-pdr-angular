@@ -1,98 +1,134 @@
 <!-- <div style="width: 100%;"> -->
-    <div class="editable_container" style="width: 100%;">
-        <div class="editable_field" style="width: calc(100% - 30px); min-height: 1.65em;" [style.background-color]="getRecordBackgroundColor()">
-            <div class="edit_box" >
-                <!-- Existing authors -->
-                <div #dropListContainer class="example-container" cdkDropListGroup>
-                    <div cdkDropList 
-                        (cdkDropListDropped)="drop($event)" 
-                        class="list" 
-                        [style.background-color]="getRecordBackgroundColor()">
-
-                        <div class="list-item" 
-                            *ngFor="let author of record[fieldName]; let i = index"
-                            cdkDrag
-                            [cdkDragDisabled]="isDragDisabled">
-                    
-                            <div (click)="selectAuthor(i)" [ngStyle]="getActiveItemStyle(i)" style="width: 100%;"
-                                [style.background-color]="getBackgroundColor(i)">
-                                <lib-text-edit 
-                                    [textField]="getAuthorName(i)" 
-                                    [dragDropIcon]="record[fieldName].length==1?false:true"
-                                    [editButton]="false" 
-                                    [editOnlyButton]="true" 
-                                    [deleteButton]="true" 
-                                    [restoreButton]="true"
-                                    [disableControl]="isAdding || isEditing" 
-                                    [placeHolderText]="placeholder" 
-                                    [isNew]="author.isNew"
-                                    [dataChanged]="onAuthorListChanged(fieldName, author['@id'])" 
-                                    (command_out)="onAuthorCommand($event, i)">
-                                </lib-text-edit>
-                            </div>
+<div class="editable_container" style="width: 100%">
+    <div
+        class="editable_field"
+        style="width: calc(100% - 30px); min-height: 1.65em"
+        [style.background-color]="getRecordBackgroundColor()"
+    >
+        <div class="edit_box">
+            <!-- Existing authors -->
+            <div #dropListContainer class="example-container" cdkDropListGroup>
+                <div
+                    cdkDropList
+                    (cdkDropListDropped)="drop($event)"
+                    class="list"
+                    [style.background-color]="getRecordBackgroundColor()"
+                >
+                    <div
+                        class="list-item"
+                        *ngFor="let author of record[fieldName]; let i = index"
+                        cdkDrag
+                        [cdkDragDisabled]="isDragDisabled"
+                    >
+                        <div
+                            (click)="selectAuthor(i)"
+                            [ngStyle]="getActiveItemStyle(i)"
+                            style="width: 100%"
+                            [style.background-color]="getBackgroundColor(i)"
+                        >
+                            <lib-text-edit
+                                [textField]="getAuthorName(i)"
+                                [dragDropIcon]="
+                                    record[fieldName].length == 1 ? false : true
+                                "
+                                [editButton]="false"
+                                [editOnlyButton]="true"
+                                [deleteButton]="true"
+                                [restoreButton]="true"
+                                [disableControl]="isAdding || isEditing"
+                                [placeHolderText]="placeholder"
+                                [isNew]="author.isNew"
+                                [dataChanged]="
+                                    onAuthorListChanged(
+                                        fieldName,
+                                        author['@id']
+                                    )
+                                "
+                                (command_out)="onAuthorCommand($event, i)"
+                            >
+                            </lib-text-edit>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Control buttons for drag and drop sectioon -->
-        <div class="editable_field" style="white-space: nowrap;">
-            <!-- Add button -->
-            <button 
-                class="edit_button" 
-                type="button" 
-                (click)="onAdd()" 
-                aria-label="add button" 
-                [disabled]="isEditing || isAdding" 
-                matTooltip="Add author"
-                matTooltipPosition="above" >
-                <fa-icon [icon]="faPlus" [class]="addIconClass()"></fa-icon>
-            </button>
-        </div>
     </div>
+
+    <!-- Control buttons for drag and drop sectioon -->
+    <div class="editable_field" style="white-space: nowrap">
+        <!-- Add button -->
+        <fa-icon
+            class="edit_button action-icon"
+            [class.disabled]="!isNormal"
+            [icon]="faPlus"
+            size="sm"
+            (click)="onAdd()"
+            aria-label="Add author"
+            matTooltip="Add author"
+            matTooltipPosition="above"
+        ></fa-icon>
+    </div>
+</div>
 <!-- </div> -->
 
 <!-- This is editing area. Will open up in add or edit mode -->
-<div style="overflow: hidden; width: 100%;" [@editExpand]="editBlockStatus">  
-    <table style="width: 100%;">
-        <tr style="width: 100%;">
+<div style="overflow: hidden; width: 100%" [@editExpand]="editBlockStatus">
+    <table style="width: 100%">
+        <tr style="width: 100%">
             <!-- Text edit area -->
-            <td class="edit-block" style="width: calc(100%-60px);">
-                <lib-author-edit 
-                    [author]="currentAuthor" 
+            <td class="edit-block" style="width: calc(100%-60px)">
+                <lib-author-edit
+                    [author]="currentAuthor"
                     [fieldName]="fieldName"
-                    [backgroundColor]="editAreabackgroundColor" 
-                    [editMode]="editMode" 
-                    [forceReset]="forceReset" 
-                    (dataChanged)="onAuthorChange($event)">
+                    [backgroundColor]="editAreabackgroundColor"
+                    [editMode]="editMode"
+                    [forceReset]="forceReset"
+                    (dataChanged)="onAuthorChange($event)"
+                >
                 </lib-author-edit>
             </td>
 
             <!-- Control buttons -->
-            <td style="width: 60px;vertical-align: top; ">
-                <div style="margin-top: 1em;white-space: nowrap;">
+            <td style="width: 60px; vertical-align: top">
+                <div style="margin-top: 1em; white-space: nowrap">
                     <!-- Save button -->
-                    <button class="edit_button" 
-                            type="button" 
-                            (click)="saveCurrentAuthor()" 
-                            aria-label="edit button" 
-                            [disabled]="!currentAuthor || !currentAuthor.dataChanged" 
-                            matTooltip="Save authors"
-                            matTooltipPosition="above" >
-                        <fa-icon [icon]="faSave"></fa-icon>
-                    </button>
+                    <fa-icon
+                        class="edit_button action-icon"
+                        [class.disabled]="!currentAuthor || !currentAuthor.dataChanged"
+                        [icon]="faSave"
+                        size="sm"
+                        (click)="saveCurrentAuthor()"
+                        aria-label="Save authors"
+                        matTooltip="Save authors"
+                        matTooltipPosition="above"
+                    ></fa-icon>
 
                     <!-- Cancel button -->
-                    <button class="edit_button" type="button"
-                        (click)="undoCurAuthorChanges()" 
-                        aria-label="undo button" 
+                    <fa-icon
+                        *ngIf="currentAuthor?.dataChanged"
+                        class="edit_button action-icon"
+                        [icon]="faUndo"
+                        size="sm"
+                        (click)="undoCurAuthorChanges()"
+                        aria-label="undo button"
                         matTooltip="Undo current changes"
-                        matTooltipPosition="above" >
-                        <fa-icon [icon]="faUndo"></fa-icon>
-                    </button>
+                        matTooltipPosition="above"
+                    ></fa-icon>
+
+                    <!-- Close button -->
+                    <fa-icon
+                        *ngIf="!currentAuthor?.dataChanged"
+                        class="edit_button action-icon"
+                        [icon]="faXmark"
+                        size="sm"
+                        (click)="undoCurAuthorChanges()"
+                        aria-label="Close button"
+                        matTooltip="Close edit block"
+                        matTooltipPosition="above"
+                    ></fa-icon>
+
                 </div>
             </td>
         </tr>
-    </table>      
+    </table>
 </div>

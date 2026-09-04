@@ -36,6 +36,7 @@ export class VisithomeEditComponent implements OnInit {
     faSave = faSave;
     faUndo = faUndo;
     faEraser = faEraser;
+    faXmark = faXmark;
 
     @Input() visitHomeURL: any;
     @Input() editMode: string;
@@ -90,17 +91,17 @@ export class VisithomeEditComponent implements OnInit {
         // this.inputValue[this.field] = event;
         this.currentValueChanged = this.originalURL != this.visitHomeURL;
 
-        if (this.currentValueChanged) {
-            this.dataChangedOutput.emit({
-                visitHomeURL: this.visitHomeURL,
-                action: "dataChanged",
-            });
-        } else {
-            this.dataChangedOutput.emit({
-                visitHomeURL: this.visitHomeURL,
-                action: "dataReset",
-            });
-        }
+        // if (this.currentValueChanged) {
+        //     this.dataChangedOutput.emit({
+        //         visitHomeURL: this.visitHomeURL,
+        //         action: "dataChanged",
+        //     });
+        // } else {
+        //     this.dataChangedOutput.emit({
+        //         visitHomeURL: this.visitHomeURL,
+        //         action: "dataReset",
+        //     });
+        // }
     }
 
     clearText() {
@@ -108,17 +109,17 @@ export class VisithomeEditComponent implements OnInit {
 
         this.currentValueChanged = this.originalURL != this.visitHomeURL;
 
-        if (this.currentValueChanged) {
-            this.dataChangedOutput.emit({
-                visitHomeURL: this.visitHomeURL,
-                action: "dataChanged",
-            });
-        } else {
-            this.dataChangedOutput.emit({
-                visitHomeURL: this.visitHomeURL,
-                action: "dataReset",
-            });
-        }
+        // if (this.currentValueChanged) {
+        //     this.dataChangedOutput.emit({
+        //         visitHomeURL: this.visitHomeURL,
+        //         action: "dataChanged",
+        //     });
+        // } else {
+        //     this.dataChangedOutput.emit({
+        //         visitHomeURL: this.visitHomeURL,
+        //         action: "dataReset",
+        //     });
+        // }
     }
 
     /**
@@ -131,6 +132,12 @@ export class VisithomeEditComponent implements OnInit {
                 if (!this.visitHomeURL || this.isValidUrl(this.visitHomeURL)) {
                     this.msg = "";
                     this.currentValueChanged = false;
+
+                    this.dataChangedOutput.emit({
+                        visitHomeURL: this.visitHomeURL,
+                        action: "dataChanged",
+                    });
+
                     this.cmdOutput.emit({ command: cmd });
                 } else {
                     this.msg = "Please enter a valid url.";
@@ -141,10 +148,17 @@ export class VisithomeEditComponent implements OnInit {
             case "undoCurrentChanges":
                 this.msg = "";
                 this.currentValueChanged = false;
+
+                this.dataChangedOutput.emit({
+                    visitHomeURL: this.visitHomeURL,
+                    action: "dataReset",
+                });
+
                 this.cmdOutput.emit({ command: cmd });
                 break;
 
             default:
+                this.cmdOutput.emit({ command: cmd });
                 break;
         }
     }
