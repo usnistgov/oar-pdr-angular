@@ -1,37 +1,37 @@
 .card {
     margin-bottom: 0em;
     box-shadow: none;
-  }
-  
-  a {
+}
+
+a {
     font-family: sans-serif;
-  }
+}
 
-  body .p-highlight {
-    background-color: #FFFFFF;
-  }
-  
-  .p-menu .p-menu-list {
+body .p-highlight {
+    background-color: #ffffff;
+}
+
+.p-menu .p-menu-list {
     color: #000;
-    background-color: #B8D4E6;
+    background-color: #b8d4e6;
     font-weight: bold;
-  }
-  
-  body,
-  html {
-    height: 100%;
-  }
+}
 
-  .app-loading {
+body,
+html {
+    height: 100%;
+}
+
+.app-loading {
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 90%;
-  }
+}
 
-  .app-loading .spinner {
+.app-loading .spinner {
     height: 200px;
     width: 200px;
     animation: rotate 2s linear infinite;
@@ -42,35 +42,87 @@
     left: 0;
     right: 0;
     margin: auto;
-  }
+}
 
-  .app-loading .spinner .path {
+.app-loading .spinner .path {
     stroke-dasharray: 1, 200;
     stroke-dashoffset: 0;
     animation: dash 1.5s ease-in-out infinite;
     stroke-linecap: round;
     stroke: #ddd;
-  }
+}
 
-  @keyframes rotate {
+@keyframes rotate {
     100% {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
+}
 
-  @keyframes dash {
+@keyframes dash {
     0% {
-      stroke-dasharray: 1, 200;
-      stroke-dashoffset: 0;
+        stroke-dasharray: 1, 200;
+        stroke-dashoffset: 0;
     }
 
     50% {
-      stroke-dasharray: 89, 200;
-      stroke-dashoffset: -35px;
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -35px;
     }
 
     100% {
-      stroke-dasharray: 89, 200;
-      stroke-dashoffset: -124px;
+        stroke-dasharray: 89, 200;
+        stroke-dashoffset: -124px;
     }
-  }
+}
+
+.custom-navbar {
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+
+.custom-navbar a {
+    display: inline-flex;
+    align-items: center;
+
+    color: white;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+/* Desktop separators */
+.custom-navbar a:not(:last-child)::after {
+    content: "|";
+    margin: 0 6px;
+    color: white;
+}
+
+@media (max-width: 1023px) {
+
+    .custom-navbar {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+    }
+
+    /* Remove desktop separators */
+    .custom-navbar a:not(:last-child)::after {
+        content: none;
+    }
+
+    .custom-navbar a {
+        display: flex;
+        align-items: center;
+
+        min-width: 160px;
+        padding: 10px 16px;
+
+        color: white;
+        text-decoration: none;
+    }
+
+    .custom-navbar a:hover {
+        background-color: rgba(255, 255, 255, 0.12);
+    }
+}

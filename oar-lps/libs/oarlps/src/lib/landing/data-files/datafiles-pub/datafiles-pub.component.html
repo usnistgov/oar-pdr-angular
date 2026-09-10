@@ -43,10 +43,10 @@
                     <!-- <span class="fa-stack fa-lg icon-cart addalltocart grey-color" style="margin-right:-0.5em;"
                         aria-label="Add all to data cart" ngbTooltip="Add all to data cart disabled in edit mode">
                     </span> -->
-                    <span class="w3-badge badge-notify" style="background-color:rgb(107, 107, 107);">{{cartLength}}</span>
+                    <span class="badge-notify badge-position" style="background-color:rgb(107, 107, 107);">{{cartLength}}</span>
                 </div>
             }
-            @else {
+            @else { 
                 <div style="flex: 0 0 120px; text-align: left; padding-bottom: 0em;height: 35px;">
                     <span><b id="filelist-heading">Files </b> </span>
                     <!-- <a class="fa-stack fa-lg icon-download" style="width: 30px;" (click)="downloadAllFiles()" aria-label="Download all" -->
@@ -122,7 +122,7 @@
                             </ng-template>
                         </span>
 
-                        <span class="w3-badge badge-notify">{{cartLength}}</span>
+                        <span class="badge-notify badge-position">{{cartLength}}</span>
                     </span>
                 </div>
             }
