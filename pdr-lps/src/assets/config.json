@@ -5,7 +5,7 @@
         "pdrHome": "/",
         "pdrSearch": "https://data.nist.gov/sdp/",
         "mdService": "https://data.nist.gov/rmm/",
-        "collectionMetrics": "https://data.nist.gov/metrics/collections/"
+        "collectionMetrics": "https://data.nist.gov/metrics-dashboard/collections/"
     },
     "PDRAPIs": {
         "mdSearch": "https://data.nist.gov/rmm/",
