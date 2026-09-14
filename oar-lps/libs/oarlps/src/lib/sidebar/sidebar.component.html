@@ -2,8 +2,15 @@
     <div>
         @if(showRevisionHelp){
             <div class="headerbar">
-                <i class="faa faa-times-circle btn-hide-help" 
-                    (click)="processCommand('getHelp')" aria-hidden="true"></i>
+                <fa-icon 
+                    *ngIf="circleXmarkIcon" 
+                    [icon]="['fas', circleXmarkIcon]" 
+                    class="btn-hide-help"
+                    (click)="processCommand('getHelp')" 
+                    aria-hidden="true"
+                    data-toggle="tooltip" 
+                    title="Hide Help"></fa-icon>
+    
                 <div class="help-title">
                     Revision Help
                 </div>
@@ -19,18 +26,28 @@
         <div >
             <div class="headerbar">
                 <div style="float: right; margin: 0px 5px 5px 5px;">
-                    <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i class="faa faa-times-circle faa-lg"
-                            aria-hidden="true" style="color: orange; cursor: pointer;"></i></a>
+                    <fa-icon 
+                        *ngIf="circleXmarkIcon" 
+                        [icon]="['fas', circleXmarkIcon]" 
+                        (click)="toggleSbarView()"
+                        style="color: orange; cursor: pointer;"
+                        aria-label="Close Help" 
+                        title="Close Help"
+                        data-toggle="tooltip">
+                    </fa-icon>
+
                 </div>
                 <div class="help-title" (click)="this.showGeneralHelp = !this.showGeneralHelp">
                     {{title}}
-                    <i class="fas expand-btn amplifiable" 
+
+                    <fa-icon 
+                        *ngIf="!clickContact && caretRightIcon" 
                         [class.amplified]="isMouseOverGeneralHeader" 
-                        (mouseover)="isMouseOverGeneralHeader = true"
-                        (mouseleave)="isMouseOverGeneralHeader = false"
-                        [ngClass]="{'fa-caret-right': !showGeneralHelp, 'fa-caret-down': showGeneralHelp}" 
-                        aria-label="Show warning steps">
-                    </i>
+                        [icon]="['fas', showGeneralHelp? caretDownIcon : caretRightIcon]"
+                        class="amplifiable" 
+                        (mouseover)="isMouseOverGeneralHeader = true" 
+                        (mouseleave)="isMouseOverGeneralHeader = false">
+                    </fa-icon>
                 </div>
             </div>
             <div class="general-help-content" 
@@ -39,18 +56,23 @@
             </div>
             
             <div class="help-title headerbar" (click)="this.showNextSteps = !this.showNextSteps">
-                Next Steps:
-                <i class="fas expand-btn amplifiable" 
-                    [class.amplified]="isMouseOverNextSteps" 
-                    (mouseover)="isMouseOverNextSteps = true"
-                    (mouseleave)="isMouseOverNextSteps = false"
-                    [ngClass]="{'fa-caret-right': !showNextSteps, 'fa-caret-down': showNextSteps}" 
-                    aria-label="Show warning steps">
-                </i>
+                <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
+                    {{msgCompleted}}
+                </div>
+                <ng-template #nextSteps>
+                    Next Steps:
+                    <fa-icon 
+                        *ngIf="!clickContact && caretRightIcon" 
+                        [class.amplified]="isMouseOverNextSteps"
+                        [icon]="['fas', showNextSteps? caretDownIcon : caretRightIcon]" 
+                        class="amplifiable"
+                        (mouseover)="isMouseOverNextSteps = true" 
+                        (mouseleave)="isMouseOverNextSteps = false">
+                    </fa-icon>
+                </ng-template>
             </div>
             
             <!-- Suggestions -->
-            <!-- @if(!isTestData){ -->
             <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps"
                 style="padding: 10px"
                 [innerHTML]="msgCompleted">
@@ -63,10 +85,6 @@
                                         && (!suggestions['rec'] || suggestions['rec'].length == 0)">
                         {{msgCompleted}}
                     </div>
-                    <!-- <ng-template #nextSteps>
-                                        Next Steps:
-                                    </ng-template> -->
-                
                 
                     <div *ngIf="hasRequiredItems">
                         <suggestions suggestionLabel="Required" [suggestions]="suggestions['req']" showSug="true"
@@ -87,17 +105,25 @@
                     </div>
                 </div>       
             </ng-template>
-            <!-- } -->
         </div>
     </div>
 
 
     @if(isRevision) {
-        <div class="help-title headerbar">
+        <div class="help-title headerbar"  (click)="showRevisionData = !showRevisionData">
             Revision Data (Placeholder)
+
+            <fa-icon *ngIf="!clickContact && caretRightIcon" [class.amplified]="isMouseOverSubmitStatus"
+                [icon]="['fas', showRevisionData? caretDownIcon : caretRightIcon]" class="amplifiable"
+                (mouseover)="isMouseOverRevision = true" (mouseleave)="isMouseOverRevision = false">
+            </fa-icon>
         </div>
 
-        <div class="section-content" style="padding: 10px;">
+        <div 
+            class="section-content" 
+            style="padding: 10px;"
+            [@revisionExpand]="showRevisionData ? 'visible' : 'hidden'">
+
             <revision-details 
                 [submissionData]="submissionData" 
                 (changedData)="updateSubmissionData($event)"
@@ -106,14 +132,43 @@
         </div>
     }
 
-
+    <!-- Show submit status -->
+    @if(isResubmit) {
+        @if( hasSubmitStatusData ) {
+            <div class="help-title headerbar" (click)="showSubmitStatus = !showSubmitStatus">
+                Submit Status
+            
+                <fa-icon *ngIf="!clickContact && caretRightIcon" [class.amplified]="isMouseOverSubmitStatus"
+                    [icon]="['fas', showSubmitStatus? caretDownIcon : caretRightIcon]" class="amplifiable"
+                    (mouseover)="isMouseOverSubmitStatus = true" (mouseleave)="isMouseOverSubmitStatus = false">
+                </fa-icon>
+            </div>
+            
+            <div class="section-content" style="padding: 10px;" [@submitStatusExpand]="showSubmitStatus ? 'visible' : 'hidden'">
+                <!-- Submit status: only display when record state is submitted or resubmit -->
+                <submit-status [submitStatus]="submitStatus" [showFeedback]="showFeedback">
+                </submit-status>
+            </div>
+        }@else {
+            <div class="help-title headerbar">
+                Submit Status (No Data)
+            </div>
+        }
+ 
+    }
 
 </div>
 <!-- Side bar invisible -->
 <div *ngIf="!sbarvisible" style="float:right; margin: 44px 20px 20px 20px;">
     <a (click)="toggleSbarView()" aria-label="Help"
     title="{{(sbarvisible) ? 'Close Help' : 'Open Help'}}">
-    <i class="faa faa-question-circle-o faa-lg" aria-hidden="true"
-        style="color: orange; cursor: pointer;"></i>
+
+        <fa-icon 
+            *ngIf="circleQuestionIcon" 
+            [icon]="['fas', circleQuestionIcon]" 
+            style="color: orange; cursor: pointer;"
+            aria-hidden="true"
+            data-toggle="tooltip" 
+            title="Help"></fa-icon>
     </a>
 </div>

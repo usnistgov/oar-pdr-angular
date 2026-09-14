@@ -12,13 +12,19 @@ import * as _ from 'lodash-es';
 import { formatBytes } from '../../utils';
 import { CommonModule } from '@angular/common';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Collections, GlobalService } from '../../shared/globals/globals';
+import { Collections, GlobalService, iconClass } from '../../shared/globals/globals';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faSpinner,
+    faChartBar
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-metricsinfo',
     standalone: true,
     imports: [
-        CommonModule
+        CommonModule,
+        FontAwesomeModule
     ],
     templateUrl: './metricsinfo.component.html',
     styleUrls: ['./metricsinfo.component.css']
@@ -26,6 +32,7 @@ import { Collections, GlobalService } from '../../shared/globals/globals';
 export class MetricsinfoComponent implements OnInit {
     allCollections: any = {};
     colorScheme: any;
+    spinnerTimeout: boolean = false;
     
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;
@@ -50,18 +57,27 @@ export class MetricsinfoComponent implements OnInit {
     fileLevelMetrics: any;
     recordLevelMetrics : RecordLevelMetrics;
 
-    //Default: wait 5 minutes (300sec) after user download a file then refresh metrics data
-    delayTimeForMetricsRefresh: number = 300; 
     time: any;
+
+    //Icons
+    // spinnerIcon = iconClass.SPINNER;
+    // chartBarIcon = iconClass.CHART_BAR;
+
+    faSpinner = faSpinner;
+    faChartBar = faChartBar;
 
     constructor(public commonFunctionService: CommonFunctionService,
                 public metricsService: MetricsService,
-        public collectionService: CollectionService,
+                public collectionService: CollectionService,
                 public globalService: GlobalService,
+                public iconLibrary: FaIconLibrary,
                 private cfg: AppConfig) 
     { 
-        this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
-
+        // iconLibrary.addIcons(
+        //     faSpinner,
+        //     faChartBar
+        // );
+        
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
         })         
@@ -70,18 +86,16 @@ export class MetricsinfoComponent implements OnInit {
     ngOnInit(): void {
         this.allCollections = this.collectionService.loadAllCollections();
 
+        //Set spinner timeout to 10 sec
+        setTimeout(() => {
+            if(!this.metricsData.dataReady)
+                this.spinnerTimeout = true;
+        }, 10000);
+
     }
 
     get totalUsers() {
         return this.metricsData.totalUsers > 1? this.metricsData.totalUsers.toString() + ' unique users': this.metricsData.totalUsers.toString() + ' unique user';
-    }
-
-    displayMetrics() {
-        if(!this.metricsData.hasCurrentMetrics){
-            this.metricsInfo = ['Metrics not available'];
-        }
-
-        this.showMetrics = true;
     }
 
     /**

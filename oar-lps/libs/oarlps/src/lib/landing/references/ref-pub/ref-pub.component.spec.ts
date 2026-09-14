@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { RefPubComponent } from './ref-pub.component';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('RefPubComponent', () => {
     let component: RefPubComponent;
@@ -8,7 +8,7 @@ describe('RefPubComponent', () => {
 
     beforeEach(waitForAsync(() => {
         TestBed.configureTestingModule({
-            imports: [RefPubComponent]
+            imports: [RefPubComponent, FontAwesomeTestingModule]
         })
         .compileComponents();
 

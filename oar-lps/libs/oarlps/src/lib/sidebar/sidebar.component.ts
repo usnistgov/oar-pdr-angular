@@ -7,11 +7,29 @@ import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse, 
 import { HelpTopic } from '../landing/landingpage.service';
 import { CommonModule } from '@angular/common';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
+import { SubmitStatusComponent } from '../landing/submission/submit-status/submit-status.component';
 import { LandingConstants, SubmissionData, GlobalService } from '../shared/globals/globals';
 import { EditStatusService } from '../landing/editcontrol/editstatus.service';
 import { RevisionDetailsComponent } from '../landing/revision-details/revision-details.component';
 import revisionhelp from '../../assets/site-constants/revision-help.json';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { icon, library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faPlus,
+    faTrashCan,
+    faRecycle,
+    faCircleQuestion,
+    faCaretDown,
+    faCaretRight,
+    faCircleXmark
+} from '@fortawesome/free-solid-svg-icons';
+
+library.add(faPencil, faXmark, faSave, faUndo, faPlus, faTrashCan, faRecycle, faCircleQuestion, faCaretDown, faCaretRight);
 
 @Component({
     selector: 'app-sidebar',
@@ -19,7 +37,9 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
     imports: [
         CommonModule,
         SuggestionsComponent,
-        RevisionDetailsComponent
+        RevisionDetailsComponent,
+        FontAwesomeModule,
+        SubmitStatusComponent
     ],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css', '../landing/landing.component.scss'],
@@ -87,6 +107,30 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
             })),
             transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),        
+        trigger('revisionExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),   
+        trigger('submitStatusExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),              
     ]
 })
 export class SidebarComponent implements OnInit {
@@ -102,24 +146,40 @@ export class SidebarComponent implements OnInit {
     showGeneralHelp: boolean = true;
     showNextSteps: boolean = true;
     ediid: string = "";
-    _editType: string;
-    EDIT_TYPES: any = LandingConstants.editTypes;
+    curRecState: string;
+    REC_STATES: any = LandingConstants.recStates;
+
+    //Submisison
     submissionData = new SubmissionData();
+    showSubmitStatus: boolean = false; // Show/hide submit status
+    showFeedback = true;
+    reviewSystems: string[] = [];
+
+    //Revision
     public revisionHelp:{} = revisionhelp;
     showRevisionHelp: boolean = false;
-    ignoreRevisionType: boolean = false;
+    // ignoreRevisionType: boolean = false;
+    showRevisionData: boolean = true;
+
     isMouseOverGeneralHeader = false;
     isMouseOverNextSteps = false;
+    isMouseOverSubmitStatus = false;
+    isMouseOverRevision = false;
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
-    addIcon = iconClass.ADD;
-    delIcon = iconClass.DELETE;
-    resetIcon = iconClass.RESET;
+    editIcon: string = "";
+    closeIcon: string = "";
+    saveIcon: string = "";
+    cancelIcon: string = "";
+    undoIcon: string = "";
+    addIcon: string = "";
+    delIcon: string = "";
+    resetIcon: string = "";
+
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
+    circleQuestionIcon = iconClass.CIRCLE_QUESTION;
+    circleXmarkIcon = iconClass.CIRCLE_XMARK;
 
     sanitizedHtml: SafeHtml;
 
@@ -127,6 +187,7 @@ export class SidebarComponent implements OnInit {
     @Input() helpContentAll: any = {};
     @Input() resourceType: string = "resource";
     @Input() suggestions: ReviewResponse = {} as ReviewResponse;
+    @Input() submitStatus: any = {};
     @Output() sbarvisible_out = new EventEmitter<boolean>();
 
     // signal for scrolling to a section within the page
@@ -139,23 +200,37 @@ export class SidebarComponent implements OnInit {
         public globalService: GlobalService,
         @Self() private element: ElementRef,
         private sanitizer: DomSanitizer,
+        public iconLibrary: FaIconLibrary,
         public sidebarService: SidebarService) { 
         
-            this.edstatsvc.watchEditType((editType) => {
-                this._editType = editType;
-                this.showGeneralHelp = this._editType != this.EDIT_TYPES.REVISE;
-                this.showNextSteps = this.showGeneralHelp;
-
-                //When general help expanded, it will only be controlled manually
-                if (this.showGeneralHelp) {
-                    this.ignoreRevisionType = true;                
-                }
-            })
+        iconLibrary.addIcons(
+            faPencil,
+            faXmark,
+            faSave,
+            faUndo,
+            faPlus,
+            faTrashCan,
+            faRecycle,
+            faCircleQuestion,
+            faCaretDown,
+            faCaretRight,
+            faCircleXmark
+        );  
         
-            this.globalService.watchSubmissionData(
-                (data) => {
-                    this.submissionData = new SubmissionData(data);
-            })
+        this.edstatsvc.watchRecState((recState: any) => {
+            this.curRecState = recState;
+            this.updateShowHelpToogler();
+            
+            //When general help expanded, it will only be controlled manually
+            // if (this.showGeneralHelp) {
+            //     this.ignoreRevisionType = true;                
+            // }
+        })
+    
+        this.globalService.watchSubmissionData(
+            (data) => {
+                this.submissionData = new SubmissionData(data);
+        })
     }
 
     get maxHeight(): number {
@@ -163,6 +238,17 @@ export class SidebarComponent implements OnInit {
     }
     
     ngOnInit(): void {
+        this.editIcon = icon({ iconName: 'pencil', prefix: 'fas' }).html.join('');
+        this.saveIcon = icon({ iconName: 'save', prefix: 'fas' }).html.join('');
+        this.closeIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
+        this.cancelIcon = icon({ iconName: 'xmark', prefix: 'fas' }).html.join('');
+        this.undoIcon = icon({ iconName: 'undo', prefix: 'fas' }).html.join('');
+        this.addIcon = icon({ iconName: 'plus', prefix: 'fas' }).html.join('');
+        this.delIcon = icon({ iconName: 'trash-can', prefix: 'fas' }).html.join('');
+        this.resetIcon = icon({ iconName: 'recycle', prefix: 'fas' }).html.join('');
+
+        this.reviewSystems = Object.keys(this.submitStatus);
+
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
 
         //Will be removed later
@@ -191,7 +277,8 @@ export class SidebarComponent implements OnInit {
         //         this.suggestions = suggestions as ReviewResponse;
         //     })
     
-            this.chref.detectChanges();
+        this.updateShowHelpToogler();
+        this.chref.detectChanges();
         // }
     }
 
@@ -220,7 +307,30 @@ export class SidebarComponent implements OnInit {
     }
 
     get isRevision() {
-        return this._editType == this.EDIT_TYPES.REVISE;
+        return this.curRecState == this.REC_STATES.REVISE;
+    }
+
+    get isResubmit() {
+        return this.curRecState == this.REC_STATES.RESUBMIT;
+    }
+
+    // Indicate if submitStatus is not empty
+    get hasSubmitStatusData() {
+        let reviewSystems = Object.keys(this.submitStatus);
+        return reviewSystems && reviewSystems.length > 0;
+    }
+
+    get hasRevisionData() {
+        let data = Object.keys(this.submissionData);
+        return data && data.length > 0;
+    }
+
+    updateShowHelpToogler() {
+        this.showSubmitStatus = this.hasSubmitStatusData && this.curRecState == this.REC_STATES.RESUBMIT;
+        this.showRevisionData = this.curRecState == this.REC_STATES.REVISE && this.hasRevisionData;
+
+        this.showGeneralHelp = !this.showRevisionData && !this.showSubmitStatus;
+        this.showNextSteps = this.showGeneralHelp;
     }
 
     /**
@@ -276,14 +386,29 @@ export class SidebarComponent implements OnInit {
             this.title = SectionPrefs.getDispName(sectionHelp.section);
 
         // Replace all icon names with real icon ones so innerHtml will display
-        this.helpContent = this.helpContent.replaceAll("editIcon", this.editIcon);
-        this.helpContent = this.helpContent.replaceAll("closeIcon", this.closeIcon);
-        this.helpContent = this.helpContent.replaceAll("saveIcon", this.saveIcon);
-        this.helpContent = this.helpContent.replaceAll("cancelIcon", this.cancelIcon);
-        this.helpContent = this.helpContent.replaceAll("undoIcon", this.undoIcon);
-        this.helpContent = this.helpContent.replaceAll("addIcon", this.addIcon);
-        this.helpContent = this.helpContent.replaceAll("delIcon", this.delIcon);
-        this.helpContent = this.helpContent.replaceAll("resetIcon", this.resetIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='editIcon'></i>", this.editIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-pencil'></i>", this.editIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='closeIcon'></i>", this.closeIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-times'></i>", this.closeIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='saveIcon'></i>", this.saveIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-check'></i>", this.saveIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='cancelIcon'></i>", this.cancelIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-times'></i>", this.cancelIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='undoIcon'></i>", this.undoIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-undo'></i>", this.undoIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='addIcon'></i>", this.addIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-plus'></i>", this.addIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='delIcon'></i>", this.delIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-trash-alt'></i>", this.delIcon);
+
+        this.helpContent = this.helpContent.replaceAll("<i class='resetIcon'></i>", this.resetIcon);
+        this.helpContent = this.helpContent.replaceAll("<i class='fas fa-recycle'></i>", this.resetIcon);
 
         this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(this.helpContent);
         this.chref.detectChanges();

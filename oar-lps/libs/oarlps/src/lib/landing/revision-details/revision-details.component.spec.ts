@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RevisionDetailsComponent } from './revision-details.component';
 import { SubmissionData } from '../../shared/globals/globals';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('RevisionDetailsComponent', () => {
   let component: RevisionDetailsComponent;
@@ -9,7 +10,7 @@ describe('RevisionDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RevisionDetailsComponent]
+      imports: [RevisionDetailsComponent, FontAwesomeTestingModule]
     })
     .compileComponents();
 

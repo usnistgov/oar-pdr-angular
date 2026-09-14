@@ -21,6 +21,8 @@ import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-accesspage-list',
@@ -32,7 +34,8 @@ import { NotificationService } from '../../../shared/notification-service/notifi
         TextEditComponent,
         ButtonModule,
         TooltipModule,
-        DragDropModule
+        DragDropModule,
+        FontAwesomeModule
     ],
     templateUrl: './accesspage-list.component.html',
     styleUrls: ['../../landing.component.scss', './accesspage-list.component.css'],
@@ -67,7 +70,8 @@ export class AccesspageListComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     //icon class names
-    addIcon = iconClass.ADD;
+    // addIcon = iconClass.ADD;
+    faPlus = faPlus;
 
     @ViewChild('dropListContainer') dropListContainer?: ElementRef;
 
@@ -87,8 +91,10 @@ export class AccesspageListComponent implements OnInit {
     constructor(private notificationService: NotificationService,
                 private toastrService: ToastrService,
                 public lpService: LandingpageService,
+                public iconLibrary: FaIconLibrary,
                 private chref: ChangeDetectorRef) { 
 
+        // iconLibrary.addIcons(faPlus);          
     }
 
     ngOnInit(): void {

@@ -177,4 +177,11 @@
     vertical-align: top;
 }
 
+.menu-button {
+    background: var(--nist-green-default) !important;
+}
+
+.menu-button:hover {
+    background: var(--nist-green-light) !important;
+}
 

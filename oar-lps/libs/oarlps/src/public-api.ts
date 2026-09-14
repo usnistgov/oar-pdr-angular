@@ -129,3 +129,6 @@ export * from './lib/landing/landingpage.service';
 export * from './lib/shared/spinner/spinner.component';
 export * from './lib/shared/spinner/spinner.service';
 export * from './lib/shared/spinner/spinner-interceptor';
+export * from './lib/landing/submission/submit-feedback/submit-feedback.component';
+export * from './lib/landing/submission/submit-status/submit-status.component';
+export * from './lib/landing/submission/submit-status-nps/submit-status-nps.component';

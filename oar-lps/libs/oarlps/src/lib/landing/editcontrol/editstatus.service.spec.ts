@@ -38,7 +38,6 @@ describe('EditStatusService', () => {
         expect(svc.lastUpdated).toEqual(null);
         expect(svc.userID).toBeNull();
         expect(svc.authenticated).toBe(false);
-        expect(svc.authorized).toBe(false);
         // expect(svc.editingEnabled()).toBe(true);
     });
 
@@ -52,7 +51,7 @@ describe('EditStatusService', () => {
         expect(svc.lastUpdated.userAttributes).toEqual(userAttributes);
         expect(svc.userID).toEqual("Hank");
         expect(svc.authenticated).toBe(true);
-        expect(svc.authorized).toBe(false);
+        // expect(svc.authorized).toBe(false);
     });
 
     it('watchable remote start', () => {
@@ -63,6 +62,18 @@ describe('EditStatusService', () => {
         expect(resID).toEqual("");
         svc.startEditing("testid");
         expect(resID).toEqual("testid");
+    });
+
+    it('setEditMode', () => {
+        svc.setEditMode(LandingConstants.editModes.EDIT_MODE);
+        svc._isEditMode.subscribe((value) => {
+            expect(value).toBeTruthy();
+        });        
+
+        svc.setEditMode(LandingConstants.editModes.DONE_MODE);
+        svc._isEditMode.subscribe((value) => {
+            expect(value).toBeFalsy();
+        });
     });
 });
 

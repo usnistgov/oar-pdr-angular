@@ -9,7 +9,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 // Angular Material Modules
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -47,7 +46,6 @@ import { ServiceModule } from './service/service.module';
     // Angular Material
     MatCardModule,
     MatProgressSpinnerModule,
-    MatSnackBarModule,
     MatIconModule,
     MatButtonModule,
 

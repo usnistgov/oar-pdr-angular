@@ -1,0 +1,38 @@
+.control-btn {
+    width: 200px;
+    float: right;
+    border: 0px;
+    border-radius: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 2.5em;
+    margin-right: 10px;
+    width: max-content;
+}
+
+#fc-refresh-btn {
+    background-color: var(--science-theme-background-default);
+    color: white;
+}
+
+#fc-refresh-btn:hover {
+    background-color: var(--science-theme-background-hover);
+}
+
+#fc-manage-btn {
+    background-color: var(--nist-green-default);
+    color: white;
+}
+
+#fc-manage-btn:hover {
+    background-color: var(--nist-green-hover);
+}
+
+.large-collection-upload-help {
+    color: default;
+    cursor: pointer;
+}
+
+.large-collection-upload-help:hover {
+    color: var(--nist-blue-light);
+}

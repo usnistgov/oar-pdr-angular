@@ -1,4 +1,4 @@
-import { Component, Input, effect } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, effect } from '@angular/core';
 import { NerdmRes } from '../../nerdm/nerdm';
 import { SectionTitleComponent } from '../section-title/section-title.component';
 import { CommonModule } from '@angular/common';
@@ -39,10 +39,12 @@ export class ResourceRefsComponent {
     /**
      * create an instance of the Identity section
      */
-    constructor(public edstatsvc: EditStatusService)
+    constructor(
+        public edstatsvc: EditStatusService,
+        private chref: ChangeDetectorRef)
     { 
-        effect(() => {
-            this.isEditMode = this.edstatsvc.isEditMode();
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
         })
     }
 

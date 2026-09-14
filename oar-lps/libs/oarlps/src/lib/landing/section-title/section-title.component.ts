@@ -22,6 +22,7 @@ export class SectionTitleComponent {
     sectionWidth: number;
     backColor: string = '#003c97';
     maxWidth: number = 1000;
+    sectionHeaderSetup: boolean = false;
 
     @Input() sectionTitle: string = "Hello"; 
     @Input() inBrowser: boolean = false;
@@ -41,6 +42,9 @@ export class SectionTitleComponent {
 
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
+
+            if(!this.sectionHeaderSetup)
+                this.updateSectionHeaderBackground();
         })
     }
 
@@ -51,8 +55,14 @@ export class SectionTitleComponent {
         let width = this.globalService.getTextWidth(this.sectionTitle)
         this.sectionWidth = width;
 
-        if(this.inBrowser && this.colorScheme)
-            this.d3Service.drawSectionHeaderBackground(this.svg, this.sectionTitle, this.sectionWidth, this.colorScheme.defaultVar, width, "#"+this.sectionTag);    
+        if (this.colorScheme && this.colorScheme.defaultVar && !this.sectionHeaderSetup) {
+            this.updateSectionHeaderBackground();
+            this.sectionHeaderSetup = true;
+        }
     }
 
+    updateSectionHeaderBackground(){
+        if(this.inBrowser && this.colorScheme)
+            this.d3Service.drawSectionHeaderBackground(this.svg, this.sectionTitle, this.sectionWidth, this.colorScheme.defaultVar, this.sectionWidth, "#"+this.sectionTag);    
+    }
 }

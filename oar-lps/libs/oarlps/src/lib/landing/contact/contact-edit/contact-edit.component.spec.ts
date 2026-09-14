@@ -3,6 +3,7 @@ import { ContactEditComponent } from './contact-edit.component';
 import { PeopleModule } from '../../people/people.module';
 import { StaffDirectoryService, StaffDirModule, AuthenticationService } from 'oarng';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 
 describe('ContactEditComponent', () => {
@@ -15,7 +16,7 @@ describe('ContactEditComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-        imports: [ HttpClientTestingModule, ContactEditComponent, PeopleModule, StaffDirModule ],
+        imports: [ HttpClientTestingModule, ContactEditComponent, PeopleModule, StaffDirModule, FontAwesomeTestingModule ],
         providers: [ 
             StaffDirectoryService,
             AuthenticationService

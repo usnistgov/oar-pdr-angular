@@ -13,6 +13,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CollectionComponent } from './collection/collection.component';
 import { PeopleComponent } from 'oarlps';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     declarations: [
@@ -32,7 +33,8 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent 
         WizardModule,
         InputTextModule,
         PeopleComponent,
-        AutoCompleteModule
+        AutoCompleteModule,
+        FontAwesomeModule
     ],
     exports: [
         AssociatedPapersComponent,
@@ -43,6 +45,9 @@ import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent 
         ContactinfoComponent,
         RecordNameComponent,
         CollectionComponent
+    ],
+    providers: [
+        FaIconLibrary
     ]
 })
 export class ComponentsModule { }

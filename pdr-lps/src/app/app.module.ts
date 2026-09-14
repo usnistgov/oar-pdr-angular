@@ -15,6 +15,7 @@ import { LandingAboutModule, SharedModule, DatacartModule, DirectivesModule,
 import { GoogleAnalyticsService, CollectionService, ConfirmationDialogService } from 'oarlps';
 import { ErrorsModule, AppErrorHandler } from 'oarlps';
 import { HeaderPubComponent, FooterComponent } from 'oarng';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 enableProdMode();
 
@@ -54,7 +55,8 @@ enableProdMode();
         HeaderPubComponent,
         LandingPageComponent,
         FooterComponent,
-        BrowserMetadataTransferModule
+        BrowserMetadataTransferModule,
+        FontAwesomeModule
     ],
     exports: [],
     providers: [

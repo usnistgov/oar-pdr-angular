@@ -16,7 +16,7 @@
                     aria-label="edit button"
                     pTooltip="Edit access page"
                     tooltipPosition="top" >
-                    <i [class]="editIcon"></i>
+                    <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                 </button>
             }
             @else {            
@@ -29,7 +29,7 @@
                     aria-label="Hide edit block" 
                     pTooltip="Hide edit block"
                     tooltipPosition="top">
-                    <i [class]="closeIcon" [style.opacity]="iconOpacity()"></i>
+                    <fa-icon [icon]="faXmark" size="sm"></fa-icon>
                 </button> 
             }
 
@@ -42,7 +42,7 @@
                     aria-label="undo button" 
                     pTooltip="Undo changes"
                     tooltipPosition="top">
-                    <i [class]="undoIcon"></i>
+                    <fa-icon [icon]="faUndo" size="sm"></fa-icon>
                 </button>
             }
         }

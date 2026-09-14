@@ -18,6 +18,14 @@ import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { ButtonModule } from 'primeng/button';				
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo,
+    faPlus
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-author-list',
@@ -28,7 +36,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
         TextEditComponent,
         ButtonModule,
         NgbModule,
-        DragDropModule
+        DragDropModule,
+        FontAwesomeModule
     ],
     templateUrl: './author-list.component.html',
     styleUrls: ['../../landing.component.scss', './author-list.component.css'],
@@ -58,9 +67,15 @@ export class AuthorListComponent implements OnInit {
     globalsvc = inject(GlobalService);
 
     //icon class names
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    addIcon = iconClass.ADD;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // addIcon = iconClass.ADD;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
+    faPlus = faPlus
 
     @Input() record: any[];
     @Input() forceReset: boolean = false;
@@ -82,8 +97,16 @@ export class AuthorListComponent implements OnInit {
                 private notificationService: NotificationService,
                 public edstatsvc: EditStatusService,
                 private chref: ChangeDetectorRef,
+                public iconLibrary: FaIconLibrary,
                 public lpService: LandingpageService) { 
 
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo,
+        //     faPlus
+        // );        
      }
 
     ngOnInit(): void {
@@ -431,9 +454,9 @@ export class AuthorListComponent implements OnInit {
      */    
     addIconClass() {
         if(this.isNormal){
-            return this.addIcon + " icon_enabled";
+            return "icon_enabled";
         }else{
-            return this.addIcon + " icon_disabled";
+            return "icon_disabled";
         }
     }
 

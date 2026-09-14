@@ -6,6 +6,8 @@ import { VersionComponent, compare_versions, normalize_date, compare_dates, comp
 import { config, testdata } from '../../../environments/environment';
 import { GoogleAnalyticsService } from '../../shared/ga-service/google-analytics.service';
 import { LandingConstants } from '../../shared/globals/globals';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('VersionComponent', () => {
     let component : VersionComponent;
@@ -17,11 +19,17 @@ describe('VersionComponent', () => {
 
     let makeComp = function() {
         TestBed.configureTestingModule({
-            imports: [ VersionComponent ],
+            imports: [ VersionComponent, FontAwesomeTestingModule ],
             declarations: [  ],
             providers: [
                 {
                     provide: AppConfig, useValue: cfg
+                },
+                {
+                    provide: FaTestingConfig,
+                    useValue: {
+                        circleIcon: 'undo'
+                    }
                 }
             ]
         }).compileComponents();

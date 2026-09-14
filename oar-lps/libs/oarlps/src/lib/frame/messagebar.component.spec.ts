@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync  } from '@angular/core/testing';
-
 import { MessageBarComponent } from './messagebar.component';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
 
 describe('MessageBarComponent', () => {
     let component : MessageBarComponent;
@@ -9,6 +9,7 @@ describe('MessageBarComponent', () => {
     let makeComp = function() {
         TestBed.configureTestingModule({
             declarations: [ MessageBarComponent ],
+            imports: [ FontAwesomeTestingModule ],
             providers: []
         }).compileComponents();
 

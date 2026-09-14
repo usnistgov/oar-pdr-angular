@@ -10,17 +10,12 @@ import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { AppConfig } from '../../config/config';
 import { Collections, Collection, CollectionThemes, FilterTreeNode, GlobalService, ColorScheme } from '../../shared/globals/globals';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { CommonModule } from '@angular/common';
-import { TreeModule } from 'primeng/tree';
-import { AutoCompleteModule } from 'primeng/autocomplete';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { MultiSelectModule } from 'primeng/multiselect';
-import { FormsModule } from '@angular/forms';
-import { TaxonomyModule } from '../taxonomy/taxonomy.module';
-import { ButtonModule } from 'primeng/button';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { CheckboxRequiredValidator } from '@angular/forms';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faSpinner, faAnglesDown, faAnglesLeft, faAnglesRight, faAnglesUp, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+    iconClass,
+    removeLastPathIfVersion,
+} from "../../shared/globals/globals";
 
 const SEARCH_SERVICE = 'SEARCH_SERVICE';
 
@@ -146,6 +141,21 @@ export class FiltersComponent implements OnInit {
 
     globalsvc = inject(GlobalService);
 
+    //icon class names
+    spinnerIcon = iconClass.SPINNER;
+    anglesUpIcon = iconClass.ANGLES_UP;
+    anglesDownIcon = iconClass.ANGLES_DOWN;
+    anglesLeftIcon = iconClass.ANGLES_LEFT;
+    anglesRightIcon = iconClass.ANGLES_RIGHT;
+    closeIcon = iconClass.CLOSE;
+
+    faSpinner = faSpinner;
+    faAnglesDown = faAnglesDown;
+    faAnglesLeft = faAnglesLeft;
+    faAnglesRight = faAnglesRight;
+    faAnglesUp = faAnglesUp;
+    faXmark = faXmark;
+
     @Input() md: NerdmRes = null;
     @Input() searchValue: string;
     @Input() searchTaxonomyKey: string;
@@ -165,8 +175,11 @@ export class FiltersComponent implements OnInit {
         public searchService: SearchService,
         public collectionService: CollectionService,
         private chref: ChangeDetectorRef,
-        private cfg: AppConfig
-    ) { 
+        public iconLibrary: FaIconLibrary,
+        private cfg: AppConfig) { 
+        
+        iconLibrary.addIcons(faSpinner, faAnglesDown, faAnglesLeft, faAnglesRight, faAnglesUp, faXmark);
+
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
             // Set colors
@@ -456,6 +469,7 @@ export class FiltersComponent implements OnInit {
      */
     onSuccess(searchResults: any[]) {
         this.resultStatus = this.RESULT_STATUS.success;
+
         // this.themesWithCount = [];
         this.componentsWithCount = [];
         this.searchResults = searchResults;
@@ -704,15 +718,15 @@ export class FiltersComponent implements OnInit {
     getFilterImgClass(){
         if(this.isActive){
             if(this.mobileMode){
-               return "faa faa-angle-double-up"; 
+               return "angles-up"; 
             }else{
-                return "faa faa-angle-double-left";
+                return "angles-left";
             }
         }else{
             if(this.mobileMode){
-                return "faa faa-angle-double-down";
+                return "angles-down";
             }else{
-                return "faa faa-angle-double-right";
+                return "angles-right";
             }
         }
     }
@@ -953,16 +967,27 @@ export class FiltersComponent implements OnInit {
                         topicLabel = topic.tag;
                     }
 
-                    if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.AM]) >= 0) {
+                    if (topic["scheme"] && 
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.AM])
+                    ) {
                         collection = Collections.AM;
-                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.SEMICONDUCTORS]) >= 0) {
+                    } else if (
+                        topic["scheme"] &&
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.SEMICONDUCTORS])
+                    ) {
                         collection = Collections.SEMICONDUCTORS;
-                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.FORENSICS]) >= 0) {
+                    } else if (
+                        topic["scheme"] &&
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.FORENSICS])
+                    ) {
                         collection = Collections.FORENSICS;
-                    } else if (topic['scheme'] && topic['scheme'].indexOf(this.taxonomyURI[Collections.DEFAULT]) >= 0) {
+                    } else if (
+                        topic["scheme"] &&
+                        removeLastPathIfVersion(topic["scheme"]) == removeLastPathIfVersion(this.taxonomyURI[Collections.DEFAULT])
+                    ) {
                         collection = Collections.DEFAULT;
                     } else {
-                        collection = '';
+                        collection = "";
                     }
                     
                     if (collection != '') {
@@ -1097,24 +1122,34 @@ export class FiltersComponent implements OnInit {
      * @param collectionThemesWithCountCol - input array of tree nodes
      */
     deDup(collectionThemesWithCountCol: any, searchResults: any, collection: string) {
-        if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 1) {
+        if (collectionThemesWithCountCol && collectionThemesWithCountCol.children && collectionThemesWithCountCol.children.length > 0) {
             collectionThemesWithCountCol.children.forEach(child => {
-                if (child.children && child.children.length > 1) {
+                if (child.children && child.children.length > 0) {
                     this.deDup(child, searchResults, collection);
                 } else {
                     //For a leaf, loop through siblings to see if any node has the same taxonomy (data field)
                     for (var i = 0; i < collectionThemesWithCountCol.children.length; i++) {
                         let sibling = collectionThemesWithCountCol.children[i];
-                        if (sibling["data"][0] != child["data"][0] && sibling.children.length > child.children.length && sibling["data"][0].includes(child["data"][0])) {
+                        if (
+                            sibling["data"][0] != child["data"][0] &&
+                            sibling.children.length > child.children.length &&
+                            sibling["data"][0].startsWith(child["data"][0])
+                        ) {
                             child["data"][0] = child["data"][0] + ":Other";
-                            child["key"] = sibling.key+"Other";
+                            child["key"] = sibling.key + "Other";
                             child["label"] = "Other---1";
-                            child["level"]++; 
+                            child["level"]++;
                             child.parent = sibling;
 
                             //Remove child from current parent and make it a child of the sibling
-                            collectionThemesWithCountCol.children = collectionThemesWithCountCol.children.filter(cc => cc["data"][0] != child.data[0]);
-                            collectionThemesWithCountCol["ediids"] = collectionThemesWithCountCol["ediids"].filter(ediid => ediid != child.ediid);
+                            collectionThemesWithCountCol.children =
+                                collectionThemesWithCountCol.children.filter(
+                                    (cc) => cc["data"][0] != child.data[0],
+                                );
+                            collectionThemesWithCountCol["ediids"] =
+                                collectionThemesWithCountCol["ediids"].filter(
+                                    (ediid) => ediid != child.ediid,
+                                );
                             sibling.children.push(child);
                             if (!sibling["ediids"].includes(child.ediid)) {
                                 sibling["ediids"].push(child.ediid);

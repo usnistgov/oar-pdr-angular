@@ -23,7 +23,21 @@ import { PeopleComponent } from '../../people/people.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
 import { AutoCompleteCompleteEvent, AutoCompleteModule, AutoCompleteSelectEvent } from 'primeng/autocomplete';
-
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faCircleXmark,
+    faSave,
+    faUndo,
+    faTimes,
+    faCircleInfo,
+    faDownload,
+    faCircleArrowUp,
+    faEye,
+    faTrashCan,
+    faArrowUpRightFromSquare
+} from '@fortawesome/free-solid-svg-icons';
 
 export interface PeriodicElement {
     situation: string;
@@ -56,7 +70,8 @@ const ELEMENT_DATA: PeriodicElement[] = [
         RevisionDetailsComponent,
         PeopleComponent,
         NgbModule,
-        AutoCompleteModule
+        AutoCompleteModule,
+        FontAwesomeModule
 ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './submit-confirm.component.html',
@@ -126,6 +141,12 @@ export class SubmitConfirmComponent implements OnInit {
 
     // the organizations that the selected person is a member of
     selectedOrgs: any[]|null = null;
+
+    //Icons
+    faPencil = faPencil;
+    faCircleArrowUp = faCircleArrowUp;
+    faXmark = faXmark;
+    faCircleXmark = faCircleXmark
 
     @ViewChild('autosize') autosize: CdkTextareaAutosize;
     @ViewChild('container') container!: ElementRef;

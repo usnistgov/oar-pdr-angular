@@ -21,6 +21,7 @@
     margin-top:1em;
     text-align: right; 
     height: fit-content;
+    border-radius: 3px;
 }
 
 .button-badge{
@@ -34,4 +35,41 @@
     width:25px;
     padding:3px 3px 3px 3px ;
     border-radius: 100%;
+}
+
+#cc-download-btn {
+    background-color: #307F38;
+    color: white;
+}
+
+#cc-download-btn:hover {
+    background-color: #3daf48;
+}
+
+#cc-remove-downloaded-btn {
+    background-color: rgb(82, 82, 82);
+    color: white;       
+}
+
+#cc-remove-downloaded-btn:hover {
+    background-color: #cbcbcb;
+}
+
+#cc-remove-selected-btn {
+    background-color: var(--science-theme-background-default);
+    color: white;       
+}
+
+#cc-remove-selected-btn:hover {
+    background-color: var(--science-theme-background-hover);
+}
+
+.cbtn {
+    border: 0px;
+    border-radius: 5px;
+    padding-left: 15px;
+    padding-right: 15px;
+    height: 2.5em;
+    margin-right: 1em;
+    width: max-content;
 }

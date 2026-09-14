@@ -7,8 +7,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TextareaAutoresizeModule } from '../../../textarea-autoresize/textarea-autoresize.module';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'title-edit',
@@ -16,9 +22,9 @@ import { TooltipModule } from 'primeng/tooltip';
   imports: [ 
     CommonModule, 
     FormsModule, 
-    ButtonModule,
-    TooltipModule,
-    TextareaAutoresizeModule
+    TextareaAutoresizeModule,
+    FontAwesomeModule,
+    NgbModule
   ],
   templateUrl: './title-edit.component.html',
   styleUrls: ['./title-edit.component.css', '../../landing.component.scss']
@@ -37,32 +43,43 @@ export class TitleEditComponent {
     borderStatus: string = "show";
     placeholder: string = "Please add a title here.";
     dataChanged: boolean = false;
+    isEditMode: boolean = false;
 
     isPublicSite: boolean = false; //Will be decided by config: editEnabled
     // globalsvc = inject(GlobalService);
 
     fileManagerTooltip: string = "testing";
 
-    //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;    
+    //icon class
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;    
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
 
     constructor(public mdupdsvc: MetadataUpdateService,
                 public edstatsvc: EditStatusService,
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
                 public globalsvc: GlobalService,
+                public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) 
     {
-        effect(() => {
-            console.log("isEditMode", this.edstatsvc.isEditMode());
-            if(this.edstatsvc.isEditMode()){
-                this.chref.detectChanges();
-            }
-        });
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );
+
+        this.edstatsvc.watchIsEditMode((isEditMode: boolean) => {
+            this.isEditMode = isEditMode;
+        })
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }
@@ -93,7 +110,7 @@ export class TitleEditComponent {
                         }
                     }
                 }else { // Request from side bar, if not edit mode, start editing
-                    if( !this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                    if( !this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
                         this.startEditing();
                     }
                 }

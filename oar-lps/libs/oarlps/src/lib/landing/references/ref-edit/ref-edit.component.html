@@ -28,6 +28,31 @@
             </div>
 
             <table align="center">
+                <!-- Reference type -->
+                <tr class="ref-type">
+                    <td align="right">
+                        <span class="ref-type-label">Reference Type:</span>
+                    </td>
+                    <td colspan="2">
+                        <table>
+                            <tr>
+                                <td style="width: calc(100%-130px);">
+                                    Is this reference the one that best describes the data (or software) in this data publication?
+                                    <div style="height: 8px;"> </div>
+                                </td>
+                                <td align="right" style="width: 130px;vertical-align:top;">
+                                    <input type="radio" value="1" name="reftype" id="reftype1" [(ngModel)]="reftype"
+                                        (change)="onReftypeChanged($event)">
+                                    <label for="rftype1"> &nbsp;Yes&nbsp;&nbsp;&nbsp;</label>
+                                    <input type="radio" value="2" name="reftype" id="reftype2" [(ngModel)]="reftype"
+                                        (change)="onReftypeChanged($event)">
+                                    <label for="reftype2"> &nbsp;No&nbsp;&nbsp;&nbsp;</label>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+
                 <!-- doi -->
                 <tr *ngIf="(isAdding && useDOI) || isEditing">
                     <td align="right" style="width: 20% !important;">
@@ -45,29 +70,6 @@
                     </td>
                 </tr>
 
-                <!-- Reference type -->
-                <tr style="width: 100%;">
-                    <td align="right" style="vertical-align:top;width: 20% !important;" >
-                        <span>Reference Type:</span>
-                    </td>
-                    <td colspan="2">
-                         <table>
-                            <tr>
-                                <td style="width: calc(100%-130px);">
-                                    Is this reference the one that best describes the data (or software) in this data publication?
-                                    <div style="height: 8px;"> </div>
-                                </td>
-                                <td align="right" style="width: 130px;vertical-align:top;">
-                                    <input type="radio" value="1" name="reftype" id="reftype1" [(ngModel)]="reftype" (change)="onReftypeChanged($event)">
-                                    <label for="rftype1"> &nbsp;Yes&nbsp;&nbsp;&nbsp;</label>
-                                    <input type="radio" value="2" name="reftype" id="reftype2" [(ngModel)]="reftype" (change)="onReftypeChanged($event)">
-                                    <label for="reftype2"> &nbsp;No&nbsp;&nbsp;&nbsp;</label>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-
                 <!-- Author list -->
                 <tr *ngIf="isEditing || (isAdding && useRefData) || showAllFields">
                     <td align="right" style="vertical-align:top;">
@@ -78,14 +80,30 @@
                             <!-- Author list -->
                             <span *ngFor="let author of ref['authors']; let i = index">
                                 {{ author }}                 
-                                <i [class]="deleteIcon" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
-                                        data-toggle="tooltip" title="Remove author"></i> 
-                                
+                                <!-- <i [class]="deleteIcon" (click)="removeAuthor(i)" style="cursor: pointer;color: var(--nist-blue-default);"
+                                        data-toggle="tooltip" title="Remove author"></i>  -->
+
+                                <fa-icon 
+                                    [icon]="faTrashCan" 
+                                    size="sm"
+                                    (click)="removeAuthor(i)" 
+                                    style="cursor: pointer;color: var(--nist-blue-default);"
+                                    data-toggle="tooltip" 
+                                    title="Remove author">
+                                </fa-icon>
+
                                 <span *ngIf="i < ref['authors'].length-1 ">,</span>
                             </span>
                             <!-- expand button -->
-                            <i style="margin-left: 1rem;" class="fas"
-                                [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" (click)="authorExpandClick();"></i>
+                            <!-- <i style="margin-left: 1rem;" class="fas"
+                                [ngClass]="{'fa-caret-right': editBlockStatus == 'collapsed', 'fa-caret-down': editBlockStatus == 'expanded'}" (click)="authorExpandClick();"></i> -->
+
+                            <fa-icon 
+                                *ngIf="caretRightIcon && caretDownIcon" 
+                                [icon]="['fas', expandIconClass()]" 
+                                size="sm"
+                                (click)="authorExpandClick()">
+                            </fa-icon>
                         </div>
                         <!-- Author editor -->
                         <div [@editExpand]="editBlockStatus" [ngStyle]="getAuthorStyle()">
@@ -191,7 +209,8 @@
                             aria-label="reset button"
                             pTooltip="Reset" 
                             tooltipPosition="top" >
-                            <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i>
+                            <fa-icon [icon]="faUndo" size="sm" data-toggle="tooltip" title="Reset citation"></fa-icon>
+                            <!-- <i [class]="undoIcon" data-toggle="tooltip" title="Reset citation"></i> -->
                         </button>
 
                         <button 
@@ -202,9 +221,17 @@
                             aria-label="lock/unlock button"
                             [pTooltip]="citationLockTooltip()" 
                             tooltipPosition="top">
-                            <i [class]="citationLockClass()" 
+                            <fa-icon 
+                                *ngIf="lockIcon && undoIcon" 
+                                [icon]="['fas', citationLockClass()]" 
+                                size="sm"
                                 data-toggle="tooltip" 
-                                [title]="citationLockTooltip()"></i>
+                                [title]="citationLockTooltip()">
+                            </fa-icon>
+
+                            <!-- <i [class]="citationLockClass()" 
+                                data-toggle="tooltip" 
+                                [title]="citationLockTooltip()"></i> -->
                         </button>
                     </td>
                 </tr>
@@ -240,7 +267,8 @@
             [disabled]="!ref.dataChanged" 
             pTooltip="Save current changes"
             tooltipPosition="top" >
-            <i [class]="saveIcon"></i>
+            <!-- <i [class]="saveIcon"></i> -->
+            <fa-icon [icon]="faSave" size="sm"></fa-icon>
         </button>
 
         <!-- Cancel button -->
@@ -251,7 +279,8 @@
             aria-label="undo button" 
             pTooltip="Undo current changes"
             tooltipPosition="top" >
-            <i [class]="cancelIcon"></i>
+            <!-- <i [class]="cancelIcon"></i> -->
+            <fa-icon [icon]="faUndo" size="sm"></fa-icon>
         </button>
     </div>
 </div>

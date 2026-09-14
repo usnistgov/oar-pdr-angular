@@ -21,6 +21,8 @@ import { TitleEditComponent } from './title-edit/title-edit.component';
     styleUrls: ['./title.component.css', '../landing.component.scss']
 })
 export class TitleComponent implements OnInit {
+    isEditMode: boolean = false;
+
     @Input() record: any[];
     @Input() isPublicSite: boolean = true;   
 
@@ -30,10 +32,9 @@ export class TitleComponent implements OnInit {
                 private chref: ChangeDetectorRef,
                 public globalsvc: GlobalService ) 
     {
-        effect(() => {
-            const term = this.edstatsvc.isEditMode();
-            this.chref.detectChanges();
-        });
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        })
     }
 
     ngOnInit() {

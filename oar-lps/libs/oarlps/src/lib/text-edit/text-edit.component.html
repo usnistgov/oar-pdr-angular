@@ -30,8 +30,12 @@
                     [aria-label]="getTooltip('edit')"
                     [pTooltip]="getTooltip('edit')"
                     tooltipPosition="top" >
-                    <i [class]="getEditIconClass()" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="getTooltip('edit')"></i>
+
+                    <fa-icon [icon]="['fas', getEditIconClass()]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
+                        [title]="getTooltip('edit')"></fa-icon>
+
+                    <!-- <fa-icon [icon]="['fas', getEditIconClass()]" size="sm" [style.opacity]="iconOpacity()"
+                        data-toggle="tooltip" [title]="getTooltip('edit')"></fa-icon> -->
                 </button>
 
                 <!-- Custom button -->
@@ -44,7 +48,10 @@
                     [aria-label]="custBtnTooltip"
                     [pTooltip]="custBtnTooltip"
                     tooltipPosition="top" >
-                    <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" [title]="Costom"></i>
+
+                    <fa-icon [icon]="['fas', custBtnIcon]" size="sm"  [style.opacity]="iconOpacity()" data-toggle="tooltip"
+                        [title]="Costom"></fa-icon>
+                    <!-- <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" [title]="Costom"></i> -->
                 </button>
 
                 <!-- Edit only button-->
@@ -57,8 +64,11 @@
                     aria-label="Edit button" 
                     pTooltip="Edit this item"
                     tooltipPosition="top" >
-                    <i [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity(editing)"
-                        data-toggle="tooltip" [title]="getTooltip('edit')"></i>
+
+                    <fa-icon [icon]="['fas', editIcon]" size="sm" [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity()" data-toggle="tooltip"
+                        [title]="getTooltip('edit')"></fa-icon>
+                    <!-- <i [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity(editing)"
+                        data-toggle="tooltip" [title]="getTooltip('edit')"></i> -->
                 </button>
 
                 <!-- Delete/undoEdit button-->
@@ -71,8 +81,11 @@
                     [aria-label]="getTooltip('delete')"
                     [pTooltip]="getTooltip('delete')"
                     tooltipPosition="top">
-                    <i [class]="getDelIconClass()" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="getTooltip('delete')"></i>
+
+                    <fa-icon [icon]="['fas', getDelIconClass()]" size="sm" [style.opacity]="iconOpacity()"
+                        data-toggle="tooltip" [title]="getTooltip('delete')"></fa-icon>
+                    <!-- <i [class]="getDelIconClass()" [style.opacity]="iconOpacity()"
+                        data-toggle="tooltip" [title]="getTooltip('delete')"></i> -->
                 </button>
 
                 <!-- Restore button-->
@@ -86,8 +99,12 @@
                     pTooltip="Restore from original value" 
                     data-container="body"
                     tooltipPosition="top">
-                    <i [class]="undoIcon" [style.opacity]="iconOpacity(editing)"
-                        data-toggle="tooltip" [title]="getTooltip('restore')"></i>
+
+                    <fa-icon [icon]="['fas', undoIcon]" size="sm" [style.opacity]="iconOpacity(editing)" data-toggle="tooltip"
+                        [title]="getTooltip('restore')"></fa-icon>
+
+                    <!-- <i [class]="undoIcon" [style.opacity]="iconOpacity(editing)"
+                        data-toggle="tooltip" [title]="getTooltip('restore')"></i> -->
                 </button>
 
                 <!-- Plus button-->
@@ -100,8 +117,11 @@
                     aria-label="Add button" 
                     pTooltip="Add new item"
                     tooltipPosition="top">
-                    <i class="faa faa-plus" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="Add"></i>
+
+                    <fa-icon [icon]="['fas', addIcon]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
+                        [title]="Add"></fa-icon>
+                    <!-- <i class="faa faa-plus" [style.opacity]="iconOpacity()"
+                        data-toggle="tooltip" [title]="Add"></i> -->
                 </button>
 
                 <!-- Submit button-->
@@ -114,8 +134,12 @@
                     aria-label="submit button" 
                     [pTooltip]="submitTooltip"
                     tooltipPosition="top">
-                    <i [class]="submitIcon" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="submit"></i>
+
+                    <fa-icon [icon]="['fas', submitIcon]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
+                        [title]="submit"></fa-icon>
+
+                    <!-- <i [class]="submitIcon" [style.opacity]="iconOpacity()"
+                        data-toggle="tooltip" [title]="submit"></i> -->
                 </button>
             </td>
         </tr>

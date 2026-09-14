@@ -10,6 +10,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { VisithomePubComponent } from '../visithome-pub/visithome-pub.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faPencil,
+    faXmark,
+    faSave,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'Visithome-midas',
@@ -19,7 +26,8 @@ import { VisithomePubComponent } from '../visithome-pub/visithome-pub.component'
         FormsModule,
         VisithomeEditComponent,
         VisithomePubComponent,
-        NgbModule
+        NgbModule,
+        FontAwesomeModule
     ],
     templateUrl: './visithome-midas.component.html',
     styleUrls: ['./visithome-midas.component.scss', '../../landing.component.scss'],
@@ -48,13 +56,19 @@ export class VisithomeMidasComponent {
     globalsvc = inject(GlobalService);
     editStarted: boolean = false;
     isPublicSite: boolean = false;
+    isEditMode: boolean = false;
 
     //icon class names
-    editIcon = iconClass.EDIT;
-    closeIcon = iconClass.CLOSE;
-    saveIcon = iconClass.SAVE;
-    cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;
+    // editIcon = iconClass.EDIT;
+    // closeIcon = iconClass.CLOSE;
+    // saveIcon = iconClass.SAVE;
+    // cancelIcon = iconClass.CANCEL;
+    // undoIcon = iconClass.UNDO;
+
+    faPencil = faPencil;
+    faXmark = faXmark;
+    faSave = faSave;
+    faUndo = faUndo;
 
     @ViewChild('visithomeedit') visitHomeEdit: VisithomeEditComponent;
     
@@ -62,15 +76,19 @@ export class VisithomeMidasComponent {
                 public edstatsvc: EditStatusService,        
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
+                public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) 
     { 
-        effect(() => {
-            // When edit mode changed, refresh the screen
-            // Need to tell effect which signal trigger this function
-            const term = this.edstatsvc.isEditMode(); 
-            // Then refresh the screen
-            this.chref.detectChanges();
-        });
+        // iconLibrary.addIcons(
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faUndo
+        // );
+
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        })
     }
 
     ngOnInit(): void {
@@ -86,7 +104,7 @@ export class VisithomeMidasComponent {
                         this.setMode(MODE.NORMAL,false);
                     }
                 }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName && this.edstatsvc.isEditMode()) {
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
                         this.startEditing();
                     }
                 }

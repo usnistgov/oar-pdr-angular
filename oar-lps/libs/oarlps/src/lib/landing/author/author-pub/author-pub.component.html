@@ -22,14 +22,24 @@
                 }
 
                 <span style="cursor: pointer;">
-                    <i  class="fas expand-btn amplifiable"
+                    <!-- <i  class="fas expand-btn amplifiable"
                         [class.amplified]="isMouseOver"
                         (mouseover)="isMouseOver = true"
                         (mouseleave)="isMouseOver = false"
                         [ngClass]="{'fa-caret-right': !clickAuthors, 'fa-caret-down': clickAuthors}"
                         aria-label="Show author details"
                         (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();">
-                    </i>
+                    </i> -->
+
+                    <fa-icon 
+                        *ngIf="!clickContact && caretRightIcon && caretDownIcon" 
+                        [class.amplified]="isMouseOver" 
+                        [icon]="['fas', clickAuthors? caretDownIcon : caretRightIcon]"
+                        class="amplifiable expand-btn" 
+                        (mouseover)="isMouseOver = true" 
+                        (mouseleave)="isMouseOver = false"
+                        (click)="isCollapsedContent = !isCollapsedContent; clickAuthors = expandClick();">
+                    </fa-icon>
                 </span>
             </div>
             <div [collapse]="!isCollapsedContent" 

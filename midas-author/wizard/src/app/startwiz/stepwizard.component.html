@@ -83,17 +83,44 @@
     </div>
     <div class="bottom-control-container">
         <div class="bottom-btn-container">
-            <button (click)="onCancel()" class="form-cancel-btn common-btn">
+            <button 
+                (click)="onCancel()" 
+                class="form-cancel-btn common-btn">
+                <fa-icon [icon]="faTimes" style="margin-right: 10px;"></fa-icon>
                 Cancel
             </button>
 
-            <button id="prevbtn" pButton type="button" class="btn-labeled form-nav-btn common-btn" (click)="onPrevStep()"
-                [disabled]="!currentStep?.canGoPrev" iconPos="left" icon="faa faa-long-arrow-left icon-white" label="Prev">
+            <button 
+                id="prevbtn" 
+                type="button" 
+                class="btn-labeled form-nav-btn common-btn" 
+                (click)="onPrevStep()"
+                [disabled]="!currentStep?.canGoPrev">
+
+                <fa-icon [icon]="faArrowLeft" style="margin-right: 10px;"></fa-icon>Prev
             </button>
 
-            <button id="nextbtn" pButton type="button" class="form-nav-btn common-btn btn-labeled" (click)="onNextStep()"
-                [disabled]="!currentStep?.canGoNext"
-                [icon]="nextBtnIcon" iconPos="right" [label]="nextBtnText">
+            <button 
+                id="nextbtn" 
+                type="button" 
+                class="form-nav-btn common-btn btn-labeled" 
+                (click)="onNextStep()"
+                [disabled]="!currentStep?.canGoNext">
+
+                @switch (nextBtnIcon) {
+                    @case ('arrow-right') {
+                        {{nextBtnText}}<fa-icon [icon]="faArrowRight" style="margin-left: 10px;"></fa-icon>
+                    }
+                    @case ('spinner') {
+                        <fa-icon [icon]="faSpinner" [animation]="'spin'"></fa-icon>
+                    }
+                    @case ('exclamation-triangle') {
+                        {{nextBtnText}}<fa-icon [icon]="faExclamationTriangle" style="margin-left: 10px;"></fa-icon>
+                    }
+                    @default {
+                        {{nextBtnText}}<fa-icon [icon]="faArrowRight" style="margin-left: 10px;"></fa-icon>
+                    }
+                }
             </button>
         </div>
     </div>

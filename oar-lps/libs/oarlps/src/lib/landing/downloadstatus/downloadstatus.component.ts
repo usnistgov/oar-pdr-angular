@@ -1,7 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { DataCartStatus } from '../../datacart/cartstatus';
 import { CartConstants } from '../../datacart/cartconstants';
-
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faXmark } from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../shared/globals/globals';
 
 @Component({
   selector: 'app-downloadstatus',
@@ -13,10 +15,15 @@ export class DownloadstatusComponent implements OnInit {
     public CART_CONSTANTS: any = CartConstants.cartConst;
     inited: boolean = false;
 
+    //icon class names
+    // closeIcon = iconClass.CLOSE;
+
+    faXmark = faXmark;
+    
     @Input() inBrowser: boolean;
 
-    constructor() { 
-
+    constructor(public iconLibrary: FaIconLibrary) { 
+        // iconLibrary.addIcons(faXmark);
     }
 
     ngOnInit() {

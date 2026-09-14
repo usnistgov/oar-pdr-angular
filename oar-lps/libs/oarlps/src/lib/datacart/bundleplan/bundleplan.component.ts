@@ -15,6 +15,18 @@ import { DisplayPrefs } from '../displayprefs';
 import { CartConstants, DownloadStatus } from '../cartconstants';
 import { DataCartStatus } from '../cartstatus';
 import { isPlatformBrowser } from '@angular/common';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faSpinner,
+    faCircleArrowDown,
+    faCircleArrowUp,
+    faXmark,
+    faTriangleExclamation,
+    faDownload,
+    faRepeat,
+    faUndo
+} from '@fortawesome/free-solid-svg-icons';
+import { iconClass } from '../../shared/globals/globals';
 
 class BundlePlanStatus {
     static readonly COMPLETED : string = "complete";
@@ -86,6 +98,26 @@ export class BundleplanComponent implements OnInit {
         downloadTime: 0
     };
 
+    //icon class names
+    circleUpIcon = iconClass.CIRCLE_ARROW_UP;
+    circleDownIcon = iconClass.CIRCLE_ARROW_DOWN;
+    spinnerIcon = iconClass.SPINNER;
+    cloudDownloadIcon = iconClass.CLOUD_DOWNLOAD;
+    downloadIcon = iconClass.DOWNLOAD;
+    cancelIcon = iconClass.CANCEL;
+    warningIcon = iconClass.WARNING;
+    repeatIcon = iconClass.REPEAT;
+    undoIcon = iconClass.UNDO;
+
+    faSpinner = faSpinner;
+    faCircleArrowDown = faCircleArrowDown;
+    faCircleArrowUp = faCircleArrowUp;
+    faXmark = faXmark;
+    faTriangleExclamation = faTriangleExclamation;
+    faDownload = faDownload;
+    faRepeat = faRepeat;
+    faUndo = faUndo;
+
     @Input() cartName: string;
     @Output() outputOverallStatus = new EventEmitter<string>();
 
@@ -94,8 +126,20 @@ export class BundleplanComponent implements OnInit {
         public gaService: GoogleAnalyticsService,
         public cartService: CartService,
         private modalService: NgbModal,
-        @Inject(PLATFORM_ID) private platformId: Object
-    ) { 
+        public iconLibrary: FaIconLibrary,
+        @Inject(PLATFORM_ID) private platformId: Object) { 
+
+        iconLibrary.addIcons(
+            faSpinner,
+            faCircleArrowDown,
+            faCircleArrowUp,
+            faXmark,
+            faTriangleExclamation,
+            faDownload,
+            faRepeat,
+            faUndo
+        ); 
+
         this.inBrowser = isPlatformBrowser(platformId);
     }
 

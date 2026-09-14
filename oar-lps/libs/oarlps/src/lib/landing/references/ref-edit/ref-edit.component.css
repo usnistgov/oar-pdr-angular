@@ -20,3 +20,15 @@ textarea {
 td:first-child {
     padding-right:20px;
 }
+
+ref-type {
+    width: 100%;
+}
+
+ref-type-label {
+    width: 20% !important;
+}
+
+table {
+    margin-top: .5em;
+}

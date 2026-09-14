@@ -15,14 +15,23 @@ _label[DownloadStatus.FAILED]      = 'Failed';
 _label[DownloadStatus.ERROR]       = 'Error';
 
 let _iconcl = {};
-_iconcl[DownloadStatus.DOWNLOADED]  = 'fas fa-check';
-_iconcl[DownloadStatus.COMPLETED]   = 'fas fa-check';
-_iconcl[DownloadStatus.DOWNLOADING] = 'fas fa-clock fa-spin';
-_iconcl[DownloadStatus.PENDING]     = 'fas fa-clock fa-spin';
-_iconcl[DownloadStatus.CANCELED]    = 'fas fa-times';
-_iconcl[DownloadStatus.WARNING]     = 'fas fa-exclamation-triangle';
-_iconcl[DownloadStatus.FAILED]      = 'fas fa-exclamation-triangle';
-_iconcl[DownloadStatus.ERROR]       = 'fas fa-exclamation-triangle';
+// _iconcl[DownloadStatus.DOWNLOADED]  = 'fas fa-check';
+// _iconcl[DownloadStatus.COMPLETED]   = 'fas fa-check';
+// _iconcl[DownloadStatus.DOWNLOADING] = 'fas fa-clock fa-spin';
+// _iconcl[DownloadStatus.PENDING]     = 'fas fa-clock fa-spin';
+// _iconcl[DownloadStatus.CANCELED]    = 'fas fa-times';
+// _iconcl[DownloadStatus.WARNING]     = 'fas fa-exclamation-triangle';
+// _iconcl[DownloadStatus.FAILED]      = 'fas fa-exclamation-triangle';
+// _iconcl[DownloadStatus.ERROR] = 'fas fa-exclamation-triangle';
+
+_iconcl[DownloadStatus.DOWNLOADED]  = 'check';
+_iconcl[DownloadStatus.COMPLETED]   = 'check';
+_iconcl[DownloadStatus.DOWNLOADING] = 'spinner';
+_iconcl[DownloadStatus.PENDING]     = 'spinner';
+_iconcl[DownloadStatus.CANCELED]    = 'xmark';
+_iconcl[DownloadStatus.WARNING]     = 'triangle-exclamation';
+_iconcl[DownloadStatus.FAILED]      = 'triangle-exclamation';
+_iconcl[DownloadStatus.ERROR]       = 'triangle-exclamation';
 
 let _color = {};
 _color[DownloadStatus.DOWNLOADED]  = 'green';

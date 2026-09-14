@@ -1,13 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
-import { ReviewResponse, Suggestion } from '../../shared/globals/globals';
+import { ReviewResponse, Suggestion, iconClass } from '../../shared/globals/globals';
 import { SuggestionDetailsComponent } from '../suggestion-details/suggestion-details.component';
 import { state, style, trigger, transition, animate } from '@angular/animations';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faCaretDown,
+    faCaretRight
+} from '@fortawesome/free-solid-svg-icons';
+
 
 @Component({
     selector: 'suggestions',
     standalone: true,
-    imports: [CommonModule, SuggestionDetailsComponent],
+    imports: [CommonModule, SuggestionDetailsComponent, FontAwesomeModule],
     templateUrl: './suggestions.component.html',
     styleUrls: ['./suggestions.component.css', '../sidebar.component.css', '../../landing/landing.component.scss'],
     animations: [
@@ -40,6 +46,9 @@ import { state, style, trigger, transition, animate } from '@angular/animations'
 export class SuggestionsComponent {
     showSuggestions: boolean = false;
     isMouseOver = false;
+    //icon class names
+    caretRightIcon = iconClass.CARET_RIGHT;
+    caretDownIcon = iconClass.CARET_DOWN;
 
     @Input() suggestionLabel: string;
     @Input() suggestions: Suggestion[]
@@ -47,7 +56,15 @@ export class SuggestionsComponent {
     @Input() textOnly: boolean = false;
     @Output() gotoSectionName = new EventEmitter<string>();
 
-    constructor(private chref: ChangeDetectorRef) { }
+    constructor(
+        private chref: ChangeDetectorRef,
+        public iconLibrary: FaIconLibrary) { 
+        
+        iconLibrary.addIcons(
+            faCaretDown,
+            faCaretRight
+        ); 
+    }
     
     ngOnInit() {
         this.showSuggestions = this.showSug;

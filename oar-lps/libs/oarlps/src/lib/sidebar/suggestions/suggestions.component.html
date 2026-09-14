@@ -3,13 +3,23 @@
         &#8226;
     </span>
     {{suggestionLabel}}:
-    <i class="fas expand-btn amplifiable"
+    <!-- <i class="fas expand-btn amplifiable"
        [class.amplified]="isMouseOver"
        (mouseover)="isMouseOver = true"
        (mouseleave)="isMouseOver = false"
        [ngClass]="{'fa-caret-right': !showSuggestions, 'fa-caret-down': showSuggestions}"
        aria-label="Show warning steps">
-    </i>
+    </i> -->
+
+    <fa-icon 
+        *ngIf="caretRightIcon && caretDownIcon" 
+        [class.amplified]="isMouseOver" 
+        [icon]="['fas', showSuggestions? caretDownIcon : caretRightIcon]"
+        class="amplifiable" 
+        (mouseover)="isMouseOver = true" 
+        (mouseleave)="isMouseOver = false"
+        aria-label="Show warning steps">
+    </fa-icon>
 </div>
 
 <div class="steps" [@suggestionExpand]="showSuggestions ? 'expanded' : 'collapsed'">

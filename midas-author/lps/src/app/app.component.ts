@@ -10,6 +10,26 @@ import { DefaultUrlSerializer, UrlTree } from '@angular/router';
 import { GlobalService, SectionMode, MODE } from 'oarlps';
 import { Title } from '@angular/platform-browser';
 import { LandingpageService } from 'oarlps';
+import { FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faUser,
+    faArrowCircleRight,
+    faAnglesRight,
+    faArrowUpRightFromSquare,
+    faCartPlus,
+    faDownload,
+    faChartColumn,
+    faSpinner,
+    faPencil,
+    faXmark,
+    faSave,
+    faCheckSquare,
+    faUndo,
+    faTrashCan,
+    faRecycle,
+    faCircleXmark,
+    faPlus
+} from '@fortawesome/free-solid-svg-icons';
 
 declare const gtag: Function;
 
@@ -36,7 +56,8 @@ export class AppComponent {
     gaCode: string;
     inBrowser: boolean = false;
     appVersion: string = "1.0"
-    authToken: string|null = null;
+    authToken: string | null = null;
+    useNewIcons: boolean = true;
     
     homeButtonLink: string = "";
     ga4Code: string = null;
@@ -54,6 +75,25 @@ export class AppComponent {
                 @Inject(PLATFORM_ID) private platformId: Object)
     {
         this.inBrowser = isPlatformBrowser(platformId);
+        // library.addIcons(
+        //     faUser,
+        //     faArrowCircleRight,
+        //     faAnglesRight,
+        //     faArrowUpRightFromSquare,
+        //     faCartPlus,
+        //     faDownload,
+        //     faChartColumn,
+        //     faSpinner,
+        //     faPencil,
+        //     faXmark,
+        //     faSave,
+        //     faCheckSquare,
+        //     faUndo,
+        //     faTrashCan,
+        //     faRecycle,
+        //     faCircleXmark,
+        //     faPlus
+        // )
     }
 
     ngOnInit() {

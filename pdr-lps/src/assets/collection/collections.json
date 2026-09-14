@@ -7,8 +7,7 @@
         "colorPalette": "Green",
         "displayOrder": 4,
         "landingPage": true,
-        "displayName": "NIST",
-        "theme": "default",        
+        "displayName": "NIST",    
         "value": "NIST",
         "taxonomyFileName": "default-taxonomy.json"
     },
@@ -22,7 +21,6 @@
         "landingPage": true,
         "displayName": "Forensics",
         "value": "Forensics",
-        "theme": "ScienceTheme",
         "taxonomyFileName": "forensics-taxonomy.json"
     },
     "Semiconductors": {
@@ -34,7 +32,6 @@
         "displayOrder": 1,
         "landingPage": true,
         "displayName": "Chips Metrology (METIS)",
-        "theme": "ScienceTheme",
         "value": "Metrology",
         "taxonomyFileName": "chipsmetrology-taxonomy.json"
     },
@@ -47,7 +44,6 @@
         "displayOrder": 3,
         "landingPage": true,
         "displayName": "Additive Manufacturing",
-        "theme": "ScienceTheme",
         "value": "AdditiveManufacturing",
         "taxonomyFileName": "AM_taxonomy.json"
     }      

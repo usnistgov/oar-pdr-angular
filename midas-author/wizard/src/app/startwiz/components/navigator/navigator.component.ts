@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
+import { faGear, faCheck, faCircleArrowRight, faWrench } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'wiz-navigator',
@@ -12,9 +13,16 @@ export class NavigatorComponent implements OnInit {
     currentStep!: StepModel;
     stepOrder: number[];
 
+    //Icons
+    faGear = faGear;
+    faCheck = faCheck;
+    faCircleArrowRight = faCircleArrowRight;
+    faWrench = faWrench;
+
     @Input() steps: StepModel[] = [];
 
-    constructor(private stepService: StepService) { }
+    constructor(
+        private stepService: StepService) { }
 
     ngOnInit(): void {
         // this.updateNavigator();

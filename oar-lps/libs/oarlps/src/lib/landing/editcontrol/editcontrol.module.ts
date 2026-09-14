@@ -8,6 +8,7 @@ import { AuthenticationService, AuthModule, StaffDirectoryService } from 'oarng'
 import { DAPModule } from '../../nerdm/dap.module';
 import { MetadataUpdateService } from './metadataupdate.service';
 import { EditStatusService } from './editstatus.service';
+import { GlobalService } from '../../shared/globals/globals';
 
 @NgModule({
     declarations: [ ],
@@ -20,6 +21,7 @@ import { EditStatusService } from './editstatus.service';
         HttpClient,
         MetadataUpdateService,
         EditStatusService,
+        GlobalService,
         { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService, StaffDirectoryService ] }
     ]
 })

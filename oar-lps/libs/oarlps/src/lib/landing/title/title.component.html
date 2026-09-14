@@ -5,7 +5,7 @@
 }
 
 @else {
-    @if(edstatsvc.isEditMode()) {
+    @if(isEditMode) {
         <!-- Editing -->
         <title-edit [record]="record" [inBrowser]="inBrowser"></title-edit>
     }

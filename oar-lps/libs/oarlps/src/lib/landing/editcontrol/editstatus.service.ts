@@ -16,11 +16,7 @@ import { LandingConstants } from '../../shared/globals/globals';
 })
 export class EditStatusService {
     public EDIT_MODES: any = LandingConstants.editModes;
-    public editMode = signal("");
 
-    // isEditMode: Signal<boolean> = computed(() => {
-    //     return (this.editMode() == this.EDIT_MODES.EDIT_MODE)
-    // });
 
     isEditMode() {
         return this._editMode.value == this.EDIT_MODES.EDIT_MODE;
@@ -36,7 +32,7 @@ export class EditStatusService {
      * the date of the last update to the draft landing page.  
      */
     get lastUpdated() : UpdateDetails { return this._lastupdate; }
-    private _lastupdate : UpdateDetails = null;   // null object means unknown
+    private _lastupdate : UpdateDetails | null = null;   // null object means unknown
     public setLastUpdated(updateDetails : UpdateDetails) { this._lastupdate = updateDetails; }
 
     /**
@@ -46,46 +42,33 @@ export class EditStatusService {
      */
     _editMode : BehaviorSubject<string> =
         new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
+    
+    _isEditMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     public setEditMode(val : string) { 
         this._editMode.next(val); 
         this._isEditMode.next(val == this.EDIT_MODES.EDIT_MODE);
     }
-    public watchEditMode(subscriber) {
+    public watchEditMode(subscriber: any) {
         this._editMode.subscribe(subscriber);
     }
 
-    _isEditMode : BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    public watchIsEditMode(subscriber) {
+    public watchIsEditMode(subscriber: any) {
         this._isEditMode.subscribe(subscriber);
     }
 
     /**
-     * flag indicating the current edit type (normal or revise).  
-     * Make editType observable so any component that subscribe to it will
-     * get an update once the type changed.
+     * flag indicating the current record state (normal, edit, submitted, resubmit or revise).  
+     * Make recState observable so any component that subscribe to it will
+     * get an update once the state changed.
      */
-    _editType : BehaviorSubject<string> =
-        new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
-    public setEditType(val : string) { 
-        this._editType.next(val); 
+    _recState : BehaviorSubject<string> =
+        new BehaviorSubject<string>(LandingConstants.recStates.EDIT);
+    public setRecState(val : string) { 
+        this._recState.next(val); 
     }
-    public watchEditType(subscriber) {
-        this._editType.subscribe(subscriber);
+    public watchRecState(subscriber: any) {
+        this._recState.subscribe(subscriber);
     }
-
-    /**
-     * flag indicating the current edit mode.  
-     * Make editMode observable so any component that subscribe to it will
-     * get an update once the mode changed.
-     */
-    // _reviseType : BehaviorSubject<string> =
-    //     new BehaviorSubject<string>(LandingConstants.editModes.VIEWONLY_MODE);
-    // public setReviseType(val : string) { 
-    //     this._reviseType.next(val); 
-    // }
-    // public watchReviseType(subscriber) {
-    //     this._reviseType.subscribe(subscriber);
-    // }
 
     /**
      * Flag to tell the app to hide the content display or not. 
@@ -96,7 +79,7 @@ export class EditStatusService {
     public setShowLPContent(val: boolean){
         this._showLPContent.next(val);
     }
-    public watchShowLPContent(subscriber) {
+    public watchShowLPContent(subscriber: any) {
         this._showLPContent.subscribe(subscriber);
     }
 

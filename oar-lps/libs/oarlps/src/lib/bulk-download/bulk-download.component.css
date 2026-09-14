@@ -23,3 +23,12 @@
     padding-bottom: 2px;
     margin-right: 10px;
 }
+
+fa-icon.small svg {
+    transform: scale(0.7);
+}
+
+.clone-icon {
+    color: var(--nist-blue-default);
+    cursor: pointer;
+}

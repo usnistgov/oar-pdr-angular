@@ -2,8 +2,16 @@
   <div *ngIf="msg.type == 'syserror'; else elseFormat">
     <div class="messagebar">
       <div style="float: right">
-        <a (click)="dismiss(msg.id)" title="dismiss" style="cursor: pointer"><i 
-           class="faa faa-times fa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i></a>
+        <a (click)="dismiss(msg.id)" title="dismiss" style="cursor: pointer">
+            <!-- <i class="faa faa-times fa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i> -->
+            
+            <fa-icon 
+                [icon]="faXmark" 
+                class="msg-dismiss"
+                style="margin-right: 8px; margin-left: 12px;"
+                aria-hidden="true">
+            </fa-icon>
+        </a>
       </div>
       <div  [class]="msg.type">
         Oops! {{msg.prefix || defSysErrorPrefix}} {{msg.text}} Please try to edit and save again.
@@ -16,8 +24,16 @@
   <ng-template #elseFormat>
   <div class="messagebar">
       <div style="float: right">
-        <a (click)="dismiss(msg.id)" title="dismiss" style="cursor: pointer"><i 
-           class="faa faa-times faa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i></a>
+        <a (click)="dismiss(msg.id)" title="dismiss" style="cursor: pointer">
+            <!-- <i class="faa faa-times faa-lg msg-dismiss" style="margin-right: 8px; margin-left: 12px;"></i> -->
+        
+            <fa-icon 
+                [icon]="faXmark" 
+                class="msg-dismiss"
+                style="margin-right: 8px; margin-left: 12px;" 
+                aria-hidden="true">
+            </fa-icon>
+        </a>
       </div>
       <div [class]="msg.type">{{msg.text}}</div>
     </div>

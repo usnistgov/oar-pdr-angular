@@ -25,6 +25,8 @@ import { LandingBodyComponent, LandingpageService, MenuComponent } from 'oarlps'
 import { Themes, ThemesPrefs, Collections, CollectionService } from 'oarlps';
 import { HttpClient } from '@angular/common/http';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import { faList } from '@fortawesome/free-solid-svg-icons';
 
 /**
  * A component providing the complete display of landing page content associated with
@@ -56,7 +58,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
         NoidComponent,
         SidebarComponent,
         MenuComponent,
-        FrameModule
+        FrameModule,
+        FontAwesomeModule
     ],
     providers: [
         Title, NgbActiveModal
@@ -108,7 +111,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationVisible: boolean = false;
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
-    editTypes = LandingConstants.editTypes;
+    recStates = LandingConstants.recStates;
     // reviseTypes: any = Globals.LandingConstants.reviseTypes;
     arrRevisionTypes: any[] = [];
     _showData: boolean = false;
@@ -119,7 +122,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationDialogWith: number = 550; // Default width
     recordLevelMetrics : RecordLevelMetrics;
 
-    loadingMessage = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+    loadingMessage = 'Loading...';
 
     dataCartStatus: DataCartStatus;
     fileLevelMetrics: any;
@@ -192,8 +195,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     showStickMenu: boolean = false;
     landingPageURL: string;
     landingPageServiceStr: string;
+    pdrHomeURL: string | null | undefined = null;
 
-
+    //Icons
+    faList = faList;
     @HostListener('document:click', ['$event'])
     documentClick(event: MouseEvent) {
         event.stopPropagation();
@@ -243,6 +248,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.inBrowser = isPlatformBrowser(platformId);
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
         this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+        this.pdrHomeURL = this.cfg.get("links.pdrHome", "/");
 
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
@@ -279,7 +285,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let cp: any;
         let colorPalettes: any;
 
-        this.collectionService.loadColorPalettesFromJson().subscribe({
+        this.collectionService.loadColorPalettesFromJson(this.pdrHomeURL).subscribe({
             next: (data) => {
                 colorPalettes = data;
 
@@ -338,7 +344,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
         this.getCollection();
         this.loadBannerUrl();
-        this.loadColorPalette();   
         
         if(this.inBrowser){
             this.cartChangeHandler = this.cartChanged.bind(this);
@@ -346,8 +351,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }
         this.metricsData = new MetricsData();
 
-        // Clean up cart status storage
         if(this.inBrowser){
+            this.loadColorPalette();   
+
+            // Clean up cart status storage
             this.dataCartStatus = DataCartStatus.openCartStatus();
             this.dataCartStatus.cleanUpStatusStorage();
         }

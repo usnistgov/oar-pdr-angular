@@ -19,6 +19,7 @@ import { FooterComponent, HeaderComponent } from 'oarng';
 import { PeopleComponent } from 'oarlps';
 import { SDSuggestion, SDSIndex, StaffDirectoryService, AuthenticationService } from 'oarng';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
     declarations: [
@@ -43,7 +44,8 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
         FooterComponent,
         HeaderComponent,
         PeopleComponent,
-        SpinnerComponent
+        SpinnerComponent,
+        FontAwesomeModule
     ],
     providers: [
         { provide: RELEASE_INFO, useValue: RELEASE },

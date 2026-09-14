@@ -1,11 +1,10 @@
-
 <!-- Go To menu-->
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of gotoMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
             [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
-            <i [class]="menuitem.icon"></i>
+            <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" ></fa-icon>
             {{menuitem.title}}
         </td>
     </tr>
@@ -14,18 +13,10 @@
 <!-- Use menu-->
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of useMenu">
-        <!-- <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [style.--background-default]="menuitem.isHeader? defaultColor: lighterColor"
-            [style.--background-lighter]="lighterColor" 
-            [style.--background-hover]="hoverColor"
-            (click)="goToSection(menuitem.sectionName, menuitem.url)">
-            <i [class]="menuitem.icon"></i>
-            {{menuitem.title}}
-        </td> -->
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
             [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
-            <i [class]="menuitem.icon"></i>
+            <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" ></fa-icon>
             {{menuitem.title}}
         </td>
     </tr>
@@ -33,7 +24,7 @@
         <td class="menu-item menu-body" scope="row" 
             [ngStyle]="menuStyle(false)">
             <a href="{{bulkDownloadURL}}" target="_blank">
-                <i class="faa faa-download"></i>
+                <fa-icon [icon]="['fas', downloadIcon]" ></fa-icon>
                 Bulk Download
             </a>
         </td>
@@ -46,7 +37,7 @@
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
             [ngStyle]="menuStyle(menuitem.isHeader)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
-            <i [class]="menuitem.icon"></i>
+            <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" ></fa-icon>
             {{menuitem.title}}
         </td>
     </tr>
@@ -61,3 +52,12 @@
     [metricsData]="metricsData" 
     [showMetrics]="showMetrics">
 </app-metricsinfo>
+
+<!-- Submit status: only display when record state is submitted or resubmit -->
+@if(hasSubmitStatusData) {
+    <submit-status 
+        *ngIf="curRecState==recStates.SUBMITTED || curRecState==recStates.RESUBMIT"
+        [submitStatus]="submitStatus" 
+        [showFeedback]="showFeedback">
+    </submit-status>
+}

@@ -126,32 +126,6 @@ export class RefAuthorComponent implements OnInit {
         }
     }
 
-    /**
-     * Return icon class of edit/save button
-     * @param index index of authors
-     * @returns icon class
-     */
-     getEditIconClass(index: number) {
-        if(this.editingAuthorIndex == index){
-            return "faa faa-check";
-        }else{
-            return "fas fa-pencil fa-sm";
-        }
-    }
-
-    /**
-     * Return icon class of delete/cancel button
-     * @param index index of authors
-     * @returns icon class
-     */
-    getDelIconClass(index: number) {
-        if(this.editingAuthorIndex == index){
-            return "fas fa-times";
-        }else{
-            return "fas fa-trash-alt";
-        }
-    }
-
     removeAuthor(index: number) {
         if(this.editingAuthorIndex == index){ // Cancel editing
             this.ref["authors"][index] = this.originalRef["authors"][index];

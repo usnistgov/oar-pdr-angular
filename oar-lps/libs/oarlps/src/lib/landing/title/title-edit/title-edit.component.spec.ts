@@ -15,6 +15,8 @@ import { environment } from '../../../../environments/environment-impl';
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { CommonModule } from '@angular/common';
 import { LandingConstants } from '../../../shared/globals/globals';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { BehaviorSubject } from 'rxjs';
 
 describe('TitleEditComponent', () => {
     let component: TitleEditComponent;
@@ -26,10 +28,13 @@ describe('TitleEditComponent', () => {
     let authsvc : AuthService = new MockAuthService(undefined);
     let dapsvc : DAPService = new LocalDAPService();
     let edstatsvc = new EditStatusService();
+    let mockWatchIsEditMode: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     
     beforeEach(waitForAsync(() => {
+        mockWatchIsEditMode = new BehaviorSubject<boolean>(false);
+
         TestBed.configureTestingModule({
-            imports: [CommonModule, FormsModule, ToastrModule.forRoot()],
+            imports: [CommonModule, FormsModule, ToastrModule.forRoot(), FontAwesomeTestingModule],
             providers: [
                 UserMessageService, 
                 HttpHandler,
@@ -40,7 +45,11 @@ describe('TitleEditComponent', () => {
                     deps: [ environment, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
                     new UserMessageService(), edstatsvc, dapsvc, null)
-                } 
+                }, 
+                {
+                    provide: EditStatusService,
+                    useValue: { watchIsEditMode(subscriber: any) { mockWatchIsEditMode.subscribe(subscriber) } }
+                }
             ]
         })
             .compileComponents();
@@ -61,16 +70,12 @@ describe('TitleEditComponent', () => {
     });
 
     it('editMode', () => {
-        edstatsvc.setEditMode(LandingConstants.editModes.EDIT_MODE);
-        expect(edstatsvc.isEditMode()).toBeTruthy();
-
+        mockWatchIsEditMode.next(true);
         fixture.detectChanges();
         let buttonElement = fixture.nativeElement.querySelector('button');
         expect(buttonElement).toBeTruthy();
 
-        edstatsvc.setEditMode(LandingConstants.editModes.DONE_MODE);
-        expect(edstatsvc.isEditMode()).toBeFalsy();
-
+        mockWatchIsEditMode.next(false);
         fixture.detectChanges();
         buttonElement = fixture.nativeElement.querySelector('button');
         expect(buttonElement).toBeFalsy();

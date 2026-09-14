@@ -88,6 +88,7 @@
         [dataset]="selectedDataset"
         [countryOptions]="countryOptions"
         (formSubmit)="onFormSubmit($event)"
+        (notify)="showToast($event.message, $event.type)"
       ></app-dynamic-form>
     </div>
   </div>
@@ -107,8 +108,20 @@
   <mat-icon>{{ isDarkMode ? 'light_mode' : 'dark_mode' }}</mat-icon>
 </button>
 
-<!-- Copy Toast Notification -->
-<div class="copy-toast" [class.visible]="showCopyToast">
-  <mat-icon>check_circle</mat-icon>
-  <span>ID copied to clipboard</span>
+<!-- Toast Notification (bottom-right, non-blocking) -->
+<div class="rpa-toast" *ngIf="toastVisible"
+     [class.toast-success]="toastType === 'success'"
+     [class.toast-error]="toastType === 'error'"
+     [class.toast-info]="toastType === 'info'"
+     role="status" aria-live="polite">
+  <mat-icon class="toast-icon">
+    {{ toastType === 'success' ? 'check_circle' : toastType === 'error' ? 'error' : 'info' }}
+  </mat-icon>
+  <div class="toast-content">
+    <h4 class="toast-title" *ngIf="toastTitle">{{ toastTitle }}</h4>
+    <p class="toast-message">{{ toastMessage }}</p>
+  </div>
+  <button class="toast-close" (click)="hideToast()" aria-label="Dismiss notification">
+    <mat-icon>close</mat-icon>
+  </button>
 </div>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output,  Inject, PLATFORM_ID, SimpleChanges, inject } from '@angular/core';
 import { CollectionService } from '../../shared/collection-service/collection.service';
-import { Themes, ThemesPrefs, Collections, GlobalService } from '../../shared/globals/globals';
+import { Themes, ThemesPrefs, Collections, GlobalService, iconClass, LandingConstants } from '../../shared/globals/globals';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { CartConstants } from '../../datacart/cartconstants';
 import { AppConfig } from '../../config/config';
@@ -12,14 +12,23 @@ import { MenuModule } from 'primeng/menu';
 import { MetricsinfoComponent } from '../metricsinfo/metricsinfo.component';
 import { CitationPopupComponent } from '../citation/citation-popup/citation-popup.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-
+import { SubmitStatusComponent } from '../submission/submit-status/submit-status.component';
+import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    faArrowCircleRight,
+    faAnglesRight,
+    faArrowUpRightFromSquare,
+    faCartPlus,
+    faDownload
+} from '@fortawesome/free-solid-svg-icons';
+import { EditStatusService } from '../editcontrol/editstatus.service';
 
 export class menuItem {
     title: string;
     backgroundColor: string;
     isHeader: boolean;
     sectionName: string;
-    icon: string;
+    icon: any;
     url: string;
 
     constructor(title: string, 
@@ -27,7 +36,7 @@ export class menuItem {
                 url: string,
                 backgroundColor: string = "white", 
                 isHeader: boolean = false,
-                icon: string = "")
+                icon: any = null)
     {
         this.title = title;
         this.sectionName = sectionName;
@@ -39,15 +48,17 @@ export class menuItem {
 } 
 
 @Component({
-  selector: 'app-menu',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MenuModule,
-    MetricsinfoComponent
-  ],
-  templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+    selector: 'app-menu',
+    standalone: true,
+    imports: [
+        CommonModule,
+        MenuModule,
+        MetricsinfoComponent,
+        FontAwesomeModule,
+        SubmitStatusComponent
+    ],
+    templateUrl: './menu.component.html',
+    styleUrls: ['./menu.component.css']
 })
 export class MenuComponent implements OnInit {
     defaultColor: string;
@@ -63,13 +74,26 @@ export class MenuComponent implements OnInit {
     recordType: string = "";
     scienceTheme = Themes.SCIENCE_THEME;
     inBrowser: boolean = false;
-    bulkDownloadBase: string = "";
+    bulkDownloadBase: string | null | undefined = "";
     bulkDownloadURL: string = "";
-    globalsvc = inject(GlobalService);
+    // globalsvc = inject(GlobalService);
     hasDataFiles: boolean = false;
     colorScheme: any;
     modalRef: any; //For citation pop up
     citetext: string = null;
+
+    recStates = LandingConstants.recStates;
+    curRecState: string = LandingConstants.recStates.EDIT;
+    editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
+
+    showFeedback: boolean = false;
+
+    //Icons
+    arrowCircleRightIcon = iconClass.ARROW_CIRCLE_RIGHT;
+    anglesRightIcon = iconClass.ANGLES_RIGHT;
+    arrowUpRightFromSquareIcon = iconClass.ARROW_UP_RIGHT_FROM_SQUARE;
+    cartPlusIcon = iconClass.CART_PLUS;
+    downloadIcon = iconClass.DOWNLOAD;
 
     // the resource record metadata that the tool menu data is drawn from
     @Input() record : NerdmRes|null = null;    
@@ -82,7 +106,7 @@ export class MenuComponent implements OnInit {
     // flag if metrics is ready to display
     @Input() showMetrics: boolean = false;
     
-    // @Input() citetext: string;
+    @Input() submitStatus: any = {};
 
     @Output() scroll = new EventEmitter<string>();
     
@@ -91,24 +115,42 @@ export class MenuComponent implements OnInit {
 
     constructor(public collectionService: CollectionService,
                 @Inject(PLATFORM_ID) private platformId: Object,
-                public globalService: GlobalService,
+        public globalService: GlobalService,
+                public edstatsvc: EditStatusService,
                 private modalService: NgbModal,
+                public iconLibrary: FaIconLibrary,
                 private cfg : AppConfig) 
     { 
+        iconLibrary.addIcons(
+            faArrowCircleRight,
+            faAnglesRight,
+            faArrowUpRightFromSquare,
+            faCartPlus,
+            faDownload
+        );
+
         this.inBrowser = isPlatformBrowser(platformId);
         this.bulkDownloadBase = cfg.get('links.pdrHome');
-        if (! this.bulkDownloadBase.endsWith('/'))
+        if (this.bulkDownloadBase && !this.bulkDownloadBase.endsWith('/'))
             this.bulkDownloadBase += '/';
         this.bulkDownloadBase += "bulkdownload/";
 
-        this.globalsvc.watchHasDataFiles((value) => {
+        this.globalService.watchHasDataFiles((value: boolean) => {
             this.hasDataFiles = value;
         });
         
-        this.globalService.watchColorPalette((colorPalette) => {
+        this.globalService.watchColorPalette((colorPalette: any) => {
             this.colorScheme = colorPalette;
             this.setColor();
         })         
+
+        this.edstatsvc.watchRecState((recState: string) => {
+            this.curRecState = recState;
+        })        
+
+        this.edstatsvc.watchEditMode((editMode: string) => {
+            this.editMode = editMode;
+        })
     }
 
     ngOnInit(): void {
@@ -121,7 +163,7 @@ export class MenuComponent implements OnInit {
 
         this.buildMenu();
 
-        this.citetext = (new NERDResource(this.record)).getCitation();
+        this.citetext = this.record? (new NERDResource(this.record)).getCitation() : "";
     }
 
     ngOnChanges(ch: SimpleChanges) {
@@ -129,23 +171,30 @@ export class MenuComponent implements OnInit {
             this.bulkDownloadURL = this.bulkDownloadBase + this.record.ediid.replace('ark:/88434/', '');
     }
     
+    // Indicate if submitStatus is not empty
+    get hasSubmitStatusData() {
+        let reviewSystems = Object.keys(this.submitStatus);
+        return reviewSystems && reviewSystems.length > 0;
+    }
+
+
     buildMenu() {
         this.gotoMenu.push(new menuItem("Go To...", "", "", this.defaultColor, true));
-        this.gotoMenu.push(new menuItem("Top", "top", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
-        this.gotoMenu.push(new menuItem("Description", "description", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
-        this.gotoMenu.push(new menuItem("Data Access", "dataAccess", "", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
-        this.gotoMenu.push(new menuItem("About This "+this.resourceType, "about","", this.lighterColor, false, "faa faa-arrow-circle-right menuicon"));
+        this.gotoMenu.push(new menuItem("Top", "top", "", this.lighterColor, false, this.arrowCircleRightIcon));
+        this.gotoMenu.push(new menuItem("Description", "description", "", this.lighterColor, false, this.arrowCircleRightIcon));
+        this.gotoMenu.push(new menuItem("Data Access", "dataAccess", "", this.lighterColor, false, this.arrowCircleRightIcon));
+        this.gotoMenu.push(new menuItem("About This "+this.resourceType, "about","", this.lighterColor, false, this.arrowCircleRightIcon));
 
         this.useMenu.push(new menuItem("Use", "", "", this.defaultColor, true));
-        this.useMenu.push(new menuItem("Citation", "citation", "", this.lighterColor, false, "faa faa-angle-double-right"));
-        this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, "faa faa-angle-double-right"));
-        this.useMenu.push(new menuItem("Fair Use Statement","", this.record['license'], this.lighterColor, false, "faa faa-external-link"));
-        this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, "faa faa-cart-plus"));
+        this.useMenu.push(new menuItem("Citation", "citation", "", this.lighterColor, false, this.anglesRightIcon));
+        this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, this.anglesRightIcon));
+        this.useMenu.push(new menuItem("Fair Use Statement","", this.record? this.record['license']:"", this.lighterColor, false, this.arrowUpRightFromSquareIcon));
+        this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, this.cartPlusIcon));
 
         let searchbase = this.cfg.get("links.pdrSearch","/sdp/");
-        if (searchbase.slice(-1) != '/') searchbase += "/";
+        if (searchbase && searchbase.slice(-1) != '/') searchbase += "/";
         let authlist = "";
-        if (this.record['authors']) {
+        if (this.record && this.record['authors']) {
             for (let i = 0; i < this.record['authors'].length; i++) {
                 if(i > 0) authlist += ',';
                 let fn = this.record['authors'][i]['fn'];
@@ -158,7 +207,7 @@ export class MenuComponent implements OnInit {
         }
 
         let facilitatorlist = "";
-        if (this.record['facilitators']) {
+        if (this.record && this.record['facilitators']) {
             for (let i = 0; i < this.record['facilitators'].length; i++) {
                 if(i > 0) facilitatorlist += ',';
                 let facilitator_fn = this.record['facilitators'][i]['fn'];
@@ -171,7 +220,7 @@ export class MenuComponent implements OnInit {
         }
 
         let contactPoint = "";
-        if (this.record['contactPoint'] && this.record['contactPoint'].fn) {
+        if (this.record && this.record['contactPoint'] && this.record['contactPoint'].fn) {
             contactPoint = this.record['contactPoint'].fn.trim();
             if(contactPoint && contactPoint.indexOf(" ") > 0){
                 contactPoint = '"' + contactPoint + '"';
@@ -195,21 +244,24 @@ export class MenuComponent implements OnInit {
         }
 
         if (!authlist) {
-            if (this.record['contactPoint'] && this.record['contactPoint'].fn) {
+            if (this.record && this.record['contactPoint'] && this.record['contactPoint'].fn) {
                 let splittedName = this.record['contactPoint'].fn.split(' ');
                 authlist = splittedName[splittedName.length - 1];
             }
         }
 
-        let keywords: string[] = this.record['keyword'];
         let keywordString: string = "";
-        for(let i = 0; i < keywords.length; i++){
-            if(i > 0) keywordString += ',';
+        if (this.record && this.record['keyword'] && this.record['keyword'].length > 0) {
+            let keywords: string[] = this.record['keyword'];
 
-            if(keywords[i] && keywords[i].trim().indexOf(" ") > 0)
-                keywordString += '"' + keywords[i].trim() + '"';
-            else
-            keywordString += keywords[i].trim();
+            for (let i = 0; i < keywords.length; i++) {
+                if (i > 0) keywordString += ',';
+
+                if (keywords[i] && keywords[i].trim().indexOf(" ") > 0)
+                    keywordString += '"' + keywords[i].trim() + '"';
+                else
+                    keywordString += keywords[i].trim();
+            }
         }
 
         let resourceLabel: string = "Similar Resources";
@@ -219,8 +271,8 @@ export class MenuComponent implements OnInit {
 
         this.findMenu.push(new menuItem("Find", "", "", this.defaultColor, true));
 
-        this.findMenu.push(new menuItem(resourceLabel, "", searchbase + "#/search?q=keyword%3D" + keywordString, this.lighterColor, false, "faa faa-external-link" ))
-        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("links.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "faa faa-external-link" ))
+        this.findMenu.push(new menuItem(resourceLabel, "", searchbase + "#/search?q=keyword%3D" + keywordString, this.lighterColor, false, "arrow-up-right-from-square" ))
+        this.findMenu.push(new menuItem('Resources by Authors', "", this.cfg.get("links.pdrSearch", "/sdp/") + authorSearchString, this.lighterColor, false,  "arrow-up-right-from-square" ))
 
 
     }

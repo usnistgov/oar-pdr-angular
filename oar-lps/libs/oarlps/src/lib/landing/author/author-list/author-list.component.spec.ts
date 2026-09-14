@@ -14,6 +14,8 @@ import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/da
 import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { Configuration } from 'oarng';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { FontAwesomeTestingModule } from '@fortawesome/angular-fontawesome/testing'; // Import the testing module
+import { FaTestingConfig } from '@fortawesome/angular-fontawesome/testing';
 
 describe('AuthorListComponent', () => {
     let component: AuthorListComponent;
@@ -45,7 +47,8 @@ describe('AuthorListComponent', () => {
             HttpClientTestingModule, 
             NoopAnimationsModule, 
             StaffDirModule,
-            ToastrModule.forRoot() ],
+            ToastrModule.forRoot(),
+            FontAwesomeTestingModule ],
         providers: [ 
                     UserMessageService, 
                     HttpHandler,
@@ -60,7 +63,13 @@ describe('AuthorListComponent', () => {
                     { provide: StaffDirectoryService,useValue: new StaffDirectoryService(
                         httpClient, configService
                     )},
-                    AuthenticationService 
+                    AuthenticationService,
+                    {
+                        provide: FaTestingConfig,
+                        useValue: {
+                            circleIcon: 'undo'
+                        }
+                    }
                 ]
         })
         .compileComponents();

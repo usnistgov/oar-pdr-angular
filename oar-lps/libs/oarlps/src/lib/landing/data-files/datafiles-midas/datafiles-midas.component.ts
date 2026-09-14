@@ -14,7 +14,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
-import { SectionPrefs, Sections, GlobalService } from '../../../shared/globals/globals';
+import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
 import { OverlayPanel } from 'primeng/overlaypanel';
 import { UserMessageService } from '../../../frame/usermessage.service';
@@ -28,9 +28,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FrameModule } from '../../../frame/frame.module';
-import { DataFileItem } from '../data-files-to-be-deleted.component';
 import { DatafilesPubComponent } from '../datafiles-pub/datafiles-pub.component';
 import { ConfirmationDialogService } from '../../../shared/confirmation-dialog/confirmation-dialog.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleInfo, faRefresh, faArrowUpRightFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 declare var _initAutoTracker: Function;
 
@@ -47,7 +48,8 @@ declare var _initAutoTracker: Function;
         ButtonModule, 
         TooltipModule, 
         NgbModule,
-        DatafilesPubComponent
+        DatafilesPubComponent,
+        FontAwesomeModule
     ],
     templateUrl: './datafiles-midas.component.html',
     styleUrls: [
@@ -90,6 +92,7 @@ export class DatafilesMidasComponent {
     fontSize: string = "16px";
     EDIT_MODES: any;
     editMode: string;
+    curRecState: string;    // Current record state (normal, edit, submitted, resubmit, revesion, etc)
     mobileMode: boolean = false;
     hashCopied: boolean = false;
     fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
@@ -99,13 +102,17 @@ export class DatafilesMidasComponent {
     refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
     // revisionType: string = ""
     // arrRevisionTypes: any[] = [];
-    _editType: string;
-    EDIT_TYPES: any = LandingConstants.editTypes;
+    REC_STATE: any = LandingConstants.recStates;
     authorized: boolean = false;
 
     // The key of treenode whose details is currently displayed
     currentKey: string = '';
         
+    //icon class names
+    faCircleInfo = faCircleInfo;
+    faRefresh = faRefresh;
+    faArrowUpRightFromSquare = faArrowUpRightFromSquare;
+    
     constructor(private cfg: AppConfig,
                 public editstatsvc: EditStatusService,
                 public breakpointObserver: BreakpointObserver,
@@ -143,10 +150,6 @@ export class DatafilesMidasComponent {
         });
     }
 
-    // get isRevisionType() {
-    //     return this._editType == this.EDIT_TYPES.REVISE;
-    // }
-
     ngOnInit() {
         // this.arrRevisionTypes = LandingConstants.reviseTypes;
         // if(this.record && !this.record["keyword"]) this.record["keyword"] = [];
@@ -159,8 +162,8 @@ export class DatafilesMidasComponent {
             this.authorized = authorized;
         })
 
-        this.editstatsvc.watchEditType((editType) => {
-            this._editType = editType;
+        this.editstatsvc.watchRecState((recState) => {
+            this.curRecState = recState;
         })
 
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
@@ -303,4 +306,22 @@ export class DatafilesMidasComponent {
     setDownloadStatus(downloadStatus){
         this.dlStatus.emit(downloadStatus);
     }    
+
+    /**
+     * Button style
+     * @returns 
+     */
+    btnStyle() {
+        // let color = this.allCollections[this.collection].colorPalette;
+
+        return {
+            '--button-text-color': 'white',
+            '--button-color': 'var(--nist-green-default)',
+            '--hover-color': 'var(--nist-green-hover)',
+            '--disable-color': 'var(--disabled-grey)',
+            '--disable-text-color': 'var(--disabled-grey-text)',
+            'margin-bottom': '.5em',
+            'width': '200px'
+        };
+    }         
 }

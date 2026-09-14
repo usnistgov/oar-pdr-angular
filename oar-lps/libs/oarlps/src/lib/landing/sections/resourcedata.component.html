@@ -6,11 +6,14 @@
     <dl >
         <dt>
             <span style="margin-left:0em" *ngIf="record['accessLevel'] === 'public'">
-                <i class="faa faa-globe"></i> These data are public.
+                <!-- <i class="faa faa-globe"></i>  -->
+                <fa-icon [icon]="faGlobe" size="sm"></fa-icon>
+                These data are public.
             </span>
 
             <span *ngIf="record['accessLevel'] === 'restricted public'">
-                <i class="faa faa-lock"></i> This data has access restrictions.
+                <fa-icon [icon]="faLock" size="sm"></fa-icon>
+                This data has access restrictions.
             </span>
 
             <!-- Display access right -->

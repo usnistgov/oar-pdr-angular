@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, Input } from '@angular/core';
 import { DataModel, ContactDataModel } from '../../models/data.model';
 import { StepModel } from "../../models/step.model";
 import { StepService } from '../../services/step.service';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-contactinfo',
@@ -14,6 +15,8 @@ export class ContactinfoComponent implements OnInit {
     // the full record for the selected person
     selected: any = null;
 
+    sanitizedHtml: SafeHtml;
+
     // Using dataModel for two way binding causes issues with laypout,
     // so we use local variables and update dataModel on change events.
     name: string = '';
@@ -25,10 +28,14 @@ export class ContactinfoComponent implements OnInit {
     @Input() marginLeft: number = 40;
 
     constructor(
+        private sanitizer: DomSanitizer,
         private cdr: ChangeDetectorRef,
         private stepService: StepService) { }
 
     ngOnInit(): void {
+        let helpContent = this.stepService.iconHandler(this.helpText['general']);
+        this.sanitizedHtml = this.sanitizer.bypassSecurityTrustHtml(helpContent);
+
         this.thisStep = this.stepService.getStep("Contact Info");
         this.lastStep = this.stepService.getLastStep();
     }
