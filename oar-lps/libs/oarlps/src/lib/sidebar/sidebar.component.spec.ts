@@ -62,26 +62,26 @@ describe('SidebarComponent', () => {
             { provide: DAPService, useFactory: createDAPService, 
                 deps: [ environment, HttpClient, AppConfig ] },
             { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                new UserMessageService(), edstatsvc, dapsvc, null)
+                edstatsvc, dapsvc, null, null)
             },
-        {
-            provide: FaTestingConfig,
-            useValue: {
-                editIcon: 'undo',
-                closeIcon: 'undo',
-                saveIcon: 'undo',
-                cancelIcon: 'undo',
-                undoIcon: 'undo',
-                addIcon: 'undo',
-                delIcon: 'undo',
-                resetIcon: 'undo',
+            {
+                provide: FaTestingConfig,
+                useValue: {
+                    editIcon: 'undo',
+                    closeIcon: 'undo',
+                    saveIcon: 'undo',
+                    cancelIcon: 'undo',
+                    undoIcon: 'undo',
+                    addIcon: 'undo',
+                    delIcon: 'undo',
+                    resetIcon: 'undo',
 
-                caretRightIcon: 'undo',
-                caretDownIcon: 'undo',
-                circleQuestionIcon: 'undo',
-                circleXmarkIcon: 'undo',
-            }
-        }            
+                    caretRightIcon: 'undo',
+                    caretDownIcon: 'undo',
+                    circleQuestionIcon: 'undo',
+                    circleXmarkIcon: 'undo',
+                }
+            }            
         ]
     })
     .compileComponents();

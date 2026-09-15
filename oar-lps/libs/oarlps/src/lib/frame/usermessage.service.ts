@@ -1,4 +1,4 @@
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Injectable } from "@angular/core";
 
 export interface Message {
@@ -24,13 +24,17 @@ export interface Message {
 })
 export class UserMessageService {
 
-    private msg : Subject<Message> = new Subject<Message>();
+    private msg : BehaviorSubject<Message> = new BehaviorSubject<Message>({ type: "instruction", text: "" });
 
     /*
      * connect a receiver to this service that will display the messages
      */
     public subscribe(receiver) : void {
         this.msg.subscribe(receiver);
+    }
+
+    public watchMessage(subscriber) {
+        this.msg.subscribe(subscriber);
     }
     
     /**

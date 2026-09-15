@@ -2,7 +2,7 @@
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of gotoMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [ngStyle]="menuStyle(menuitem.isHeader)"
+            [ngStyle]="menuStyle(menuitem)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" ></fa-icon>
             {{menuitem.title}}
@@ -14,7 +14,7 @@
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of useMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [ngStyle]="menuStyle(menuitem.isHeader)"
+            [ngStyle]="menuStyle(menuitem)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" ></fa-icon>
             {{menuitem.title}}
@@ -22,11 +22,17 @@
     </tr>
     <tr *ngIf="hasDataFiles">
         <td class="menu-item menu-body" scope="row" 
-            [ngStyle]="menuStyle(false)">
-            <a href="{{bulkDownloadURL}}" target="_blank">
-                <fa-icon [icon]="['fas', downloadIcon]" ></fa-icon>
+            [ngStyle]="menuStyle(bulkDownloadMenu)">
+            @if(bulkDownloadMenu.url) {
+                <a href="{{bulkDownloadMenu.url}}" target="_blank">
+                    <fa-icon [icon]="['fas', bulkDownloadMenu.icon]" size="xs"></fa-icon>
+                    Bulk Download
+                </a>
+            } @else {
+                <fa-icon [icon]="['fas', bulkDownloadMenu.icon]" size="xs"></fa-icon>
                 Bulk Download
-            </a>
+            }
+
         </td>
     </tr>
 </table>
@@ -35,7 +41,7 @@
 <table style="width: 100%;">
     <tr *ngFor="let menuitem of findMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [ngStyle]="menuStyle(menuitem.isHeader)"
+            [ngStyle]="menuStyle(menuitem)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" ></fa-icon>
             {{menuitem.title}}

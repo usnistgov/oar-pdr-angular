@@ -16,7 +16,7 @@
 }
 
 <!-- error messages go here -->
-<div [ngStyle]="{'width': lpsWidth + 'px'}">
+<div [ngStyle]="{'width': lpsWidth + 'px', 'margin': '20px 0 20px 4em'}">
   <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message>
 </div>
 
@@ -56,6 +56,7 @@
                 [inBrowser]="inBrowser"
                 [metricsData]="metricsData"
                 [showMetrics]="showMetrics"
+                [isPublicSite]="isPublicSite"
                 [submitStatus]="submitStatus"
                 (scroll)="goToSection($event)"
                 (toggle_citation)="toggleCitation('large')">
@@ -93,15 +94,16 @@
             <!-- <div #stickyMenu></div> -->
             <div *ngIf="!hideToolMenu && !mobileMode" [ngClass]="windowScrolled ? 'sticky-menu' : 'rightmenu'">
                 <app-menu
-                    [record]="md"
-                    [collection]="collection"
-                    [theme]="theme"
-                    [inBrowser]="inBrowser"
-                    [metricsData]="metricsData"
-                    [showMetrics]="showMetrics"
-                    [submitStatus]="submitStatus"
-                    (scroll)="goToSection($event)"
-                    (toggle_citation)="toggleCitation('large')">
+                [record]="md"
+                [collection]="collection"
+                [theme]="theme"
+                [inBrowser]="inBrowser"
+                [metricsData]="metricsData"
+                [showMetrics]="showMetrics"
+                [isPublicSite]="isPublicSite"
+                [submitStatus]="submitStatus"
+                (scroll)="goToSection($event)"
+                (toggle_citation)="toggleCitation('large')">
                 </app-menu>
 
                 <app-downloadstatus [inBrowser]="inBrowser"></app-downloadstatus>

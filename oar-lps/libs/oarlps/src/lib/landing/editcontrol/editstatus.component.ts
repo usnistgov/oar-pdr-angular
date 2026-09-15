@@ -77,7 +77,7 @@ export class EditStatusComponent implements OnInit {
         //     this.cdr.detectChanges();
         // });
 
-        this.globalService.watchMessage((message: string) => {
+        this.globalService.watchMessage1((message: string) => {
             this.showMessage(message);
         });
 

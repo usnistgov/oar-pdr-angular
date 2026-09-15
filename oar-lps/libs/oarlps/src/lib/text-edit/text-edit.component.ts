@@ -331,4 +331,76 @@ export class TextEditComponent implements OnInit {
         }
 
     }
+
+    /**
+     * Add/close button disabled when in edit/add mode. 
+     * @param button The type of the button
+    * @returns icon class name for the button
+     */
+    iconClass(button: string) {
+        let Returnclass: string ="icon_disabled";
+
+        switch (button) {
+            case 'restore':
+                if (this.disableControl || !this.dataChanged || this.isNew || this.editing) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'delete':
+                if (this.disableControl) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;
+            case 'editOnly':
+                if (this.disableControl) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;        
+            case 'custom':
+                if (this.disableControl) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;         
+            case 'editOrSave':
+                if (this.disableControl) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;        
+            case 'add':
+                if (this.disableControl) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;        
+            case 'submit':
+                if (this.disableControl) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;              
+            default:
+                break;
+        }
+
+        return Returnclass;
+    }          
 }

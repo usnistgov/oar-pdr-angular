@@ -8,7 +8,7 @@ export * from './lib/frame/frame.module'
 export * from './lib/frame/headbar.component';
 export * from './lib/frame/footbar.component';
 export * from './lib/frame/messagebar.component';
-export * from './lib/frame/usermessage.service';
+// export * from './lib/frame/usermessage.service';
 export * from './lib/sidebar/sidebar.module';
 export * from './lib/sidebar/sidebar.component';
 export * from './lib/landing/aboutdataset/aboutdataset.component';
@@ -109,7 +109,7 @@ export * from './lib/landing/accesspage/accesspage-list/accesspage-list.componen
 export * from './lib/landing/accesspage/accesspage-edit/accesspage-edit.component';
 export * from './lib/shared/testdata-service/testDataService';
 
-export * as Globals from './lib/shared/globals/globals';
+// export * as Globals from './lib/shared/globals/globals';
 
 export * from './lib/landing/citation/citation-popup/citation-popup.component';
 export * from './lib/landing/citation/citation-display/citation-display.component';
@@ -117,7 +117,7 @@ export * from './lib/landing/citation/citation-display/citation-display.componen
 export * from './lib/nerdm/dap.module';
  
 export * from './lib/frame/messagebar.component';
-export * from './lib/frame/usermessage.service';
+// export * from './lib/frame/usermessage.service';
 
 export * from './lib/bulk-download/bulk-download.component';
 export * from './lib/shared/collection-service/collection.service';

@@ -17,7 +17,6 @@ import { LandingConstants } from '../../shared/globals/globals';
 export class EditStatusService {
     public EDIT_MODES: any = LandingConstants.editModes;
 
-
     /**
      * construct the service
      */
