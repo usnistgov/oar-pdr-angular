@@ -40,7 +40,7 @@ describe('MetadataUpdateService', () => {
         let cfgdata = JSON.parse(JSON.stringify(config));
         edstatsvc = new EditStatusService();
 
-        svc = new MetadataUpdateService(edstatsvc, dapsvc, dp, null, new GlobalService(document,null));
+        svc = new MetadataUpdateService(edstatsvc, dapsvc, dp, null);
         debugger;
         dapsvc.create("testrec", {}, rec).subscribe((x) => {
             debugger;

@@ -1,0 +1,1954 @@
+[
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3463"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3463",
+        "ediid": "ark:/88434/mds2-3463",
+        "version": "1.0.2",
+        "doi": "doi:10.18434/mds2-3463",
+        "title": "AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design ",
+        "contactPoint": {
+            "fn": "Daniel Wines",
+            "hasEmail": "mailto:daniel.wines@nist.gov"
+        },
+        "modified": "2024-06-01 00:00:00",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3463",
+        "description": [
+            "AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design"
+        ],
+        "keyword": ["Large language models", "Materials design", "JARVIS"],
+        "topic": [
+             {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal",
+                "@type": "Concept"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "theme": [
+            "Materials: Modeling and computational material science",
+            "Information Technology: Data and informatics"
+        ],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.1021/acs.jpclett.4c01126",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.1021/acs.jpclett.4c01126",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design",
+                "issued": "2024-06-27",
+                "citation": "Choudhary, K. (2024). AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design. The Journal of Physical Chemistry Letters, 15(27), 6909â6917. https://doi.org/10.1021/acs.jpclett.4c01126\n"
+            }
+        ],
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/atomgpt",
+                "description": "Large language models (LLMs) such as generative pretrained transformers (GPTs) have shown potential for various commercial applications, but their applicability for materials design remains underexplored. In this Letter, AtomGPT is introduced as a model specifically developed for materials design based on transformer architectures, demonstrating capabilities for both atomistic property prediction and structure generation. This study shows that a combination of chemical and structural text descriptions can efficiently predict material properties with accuracy comparable to graph neural network models, including formation energies, electronic bandgaps from two different methods, and superconducting transition temperatures. Furthermore, AtomGPT can generate atomic structures for tasks such as designing new superconductors, with the predictions validated through density functional theory calculations. This work paves the way for leveraging LLMs in forward and inverse materials design, offering an efficient approach to the discovery and optimization of materials.",
+                "title": "AtomGPT: Atomistic Generative Pretrained Transformer for Forward and Inverse Materials Design",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/atomgpt",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "_editStatus": "done",
+        "authors": [
+            {
+                "familyName": "Choudhary",
+                "fn": "Kamal  Choudhary",
+                "givenName": "Kamal",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "subunits": ["MSED"],
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-9737-8074",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-11-25T14:30:28.868878",
+        "revised": "2024-11-22T12:22:36.441066",
+        "issued": null,
+        "firstIssued": "2024-11-22T12:22:36.441066",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3463/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2024-11-22",
+                    "@id": "ark:/88434/mds2-3463/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3463/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3463/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3463/pdr:v/1.0.1",
+                    "description": "added to CHIPS Metrology collection"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2024-06-01 00:00:00",
+                    "@id": "ark:/88434/mds2-3463/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3463/pdr:v/1.0.2",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3170"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3170",
+        "ediid": "ark:/88434/mds2-3170",
+        "version": "1.0.2",
+        "doi": "doi:10.18434/mds2-3170",
+        "title": "ALIGNN: Atomistic Line Graph Neural Network",
+        "contactPoint": {
+            "fn": "Daniel Wines",
+            "hasEmail": "mailto:daniel.wines@nist.gov"
+        },
+        "modified": "2024-02-07 00:00:00",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3170",
+        "description": [
+            "Graph neural networks (GNN) have been shown to provide substantial performance improvements for atomistic material representation and modeling compared with descriptor-based machine learning models. While most existing GNN models for atomistic predictions are based on atomic distance information, they do not explicitly incorporate bond angles, which are critical for distinguishing many atomic structures. Furthermore, many material properties are known to be sensitive to slight changes in bond angles. We present an Atomistic Line Graph Neural Network (ALIGNN), a GNN architecture that performs message passing on both the interatomic bond graph and its line graph corresponding to bond angles. We demonstrate that angle information can be explicitly and efficiently included, leading to improved performance on multiple atomistic prediction tasks. We ALIGNN models for predicting 52 solid-state and molecular properties available in the JARVIS-DFT, Materials project, and QM9 databases. ALIGNN can outperform some previously reported GNN models on atomistic prediction tasks with better or comparable model training speed."
+        ],
+        "keyword": ["graph neural networks", "atomistic modeling"],
+        "theme": [
+            "Physics: Condensed matter",
+            "Materials: Modeling and computational material science",
+            "Chemistry: Theoretical chemistry and modeling"
+        ],
+        "topic": [
+             {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.1038/s41524-021-00650-1",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.1038/s41524-021-00650-1",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "Atomistic Line Graph Neural Network for improved materials property predictions",
+                "issued": "2021-11-15",
+                "citation": "Choudhary, K., & DeCost, B. (2021). Atomistic Line Graph Neural Network for improved materials property predictions. Npj Computational Materials, 7(1). https://doi.org/10.1038/s41524-021-00650-1\n"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/alignn",
+                "title": "ALIGNN-GitHub",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/alignn",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            },
+            {
+                "accessURL": "https://jarvis.nist.gov/jalignn/",
+                "title": "ALIGNN-WebApp",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#jalignn/",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "_editStatus": "done",
+        "authors": [
+            {
+                "familyName": "Choudhary",
+                "fn": "Kamal  Choudhary",
+                "givenName": "Kamal",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "subunits": ["MSED"],
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-9737-8074",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "DeCost",
+                "fn": "Brian  DeCost",
+                "givenName": "Brian",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "subunits": ["MMSD"],
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0002-3459-5888",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-11-25T14:27:18.199520",
+        "revised": "2024-11-22T11:40:06.391507",
+        "issued": null,
+        "firstIssued": "2024-11-22T11:40:06.391507",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3170/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2024-02-07",
+                    "@id": "ark:/88434/mds2-3170/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3170/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3170/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3170/pdr:v/1.0.1",
+                    "description": "added to CHIPS Metrology collection"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2024-02-07 00:00:00",
+                    "@id": "ark:/88434/mds2-3170/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3170/pdr:v/1.0.2",
+                    "description": "metadata update"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3691"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3691",
+        "ediid": "ark:/88434/mds2-3691",
+        "version": "1.0.5",
+        "doi": "doi:10.18434/mds2-3691",
+        "title": "CHIPS-FF: Evaluating Universal Machine Learning Force Fields for Material Properties",
+        "contactPoint": {
+            "fn": "Daniel Wines",
+            "hasEmail": "mailto:daniel.wines@nist.gov"
+        },
+        "modified": "2025-01-14 00:00:00",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3691",
+        "description": [
+            "Data types to include: formation energy, bandgaps, band offsets, work function, surface energy, defect formation energy, IV-curves, STEM images, electrical measurements, surface roughness, thermal properties, phonons"
+        ],
+        "keyword": [
+            "Density functional theory",
+            "force-field",
+            "machine learning",
+            "semiconductors",
+            "interfaces",
+            "defects"
+        ],
+        "topic": [
+             {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal",
+                "@type": "Concept"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "theme": [
+            "Chemistry: Theoretical chemistry and modeling",
+            "Materials: Modeling and computational material science",
+            "Physics: Atomic, molecular, and quantum",
+            "Physics: Condensed matter"
+        ],
+        "_editStatus": "done",
+        "references": [
+            {
+                "@type": ["schema:Article"],
+                "@id": "#ref:10.48550/arXiv.2412.10516",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.48550/arXiv.2412.10516",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "CHIPS-FF: Evaluating Universal Machine Learning Force Fields for Material Properties",
+                "issued": "2024",
+                "citation": "Wines, D., & Choudhary, K. (2024). CHIPS-FF: Evaluating Universal Machine Learning Force Fields for Material Properties (Version 2). arXiv. https://doi.org/10.48550/ARXIV.2412.10516"
+            }
+        ],
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/chipsff",
+                "title": "CHIPS-FF GitHub",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/chipsff",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "authors": [
+            {
+                "familyName": "Wines",
+                "fn": "Daniel  Wines",
+                "givenName": "Daniel",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0003-3855-3754",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Choudhary",
+                "fn": "Kamal  Choudhary",
+                "givenName": "Kamal",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-9737-8074",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-11-05T21:02:16.079281",
+        "revised": "2025-03-20T13:44:09.089555",
+        "issued": null,
+        "firstIssued": "2025-03-20T13:44:09.089555",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3691.rel",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2025-03-20",
+                    "@id": "ark:/88434/mds2-3691/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3691/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-08-12",
+                    "@id": "ark:/88434/mds2-3691/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3691/pdr:v/1.0.1",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2025-08-12",
+                    "@id": "ark:/88434/mds2-3691/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3691/pdr:v/1.0.2",
+                    "description": "metadata update"
+                },
+                {
+                    "version": "1.0.3",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3691/pdr:v/1.0.3",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3691/pdr:v/1.0.3",
+                    "description": "added to CHIPS Metrology collection"
+                },
+                {
+                    "version": "1.0.4",
+                    "issued": "2025-11-05",
+                    "@id": "ark:/88434/mds2-3691/pdr:v/1.0.4",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3691/pdr:v/1.0.4",
+                    "description": "curator: fix topic metadata"
+                },
+                {
+                    "version": "1.0.5",
+                    "issued": "2025-11-05",
+                    "@id": "ark:/88434/mds2-3691/pdr:v/1.0.5",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3691/pdr:v/1.0.5",
+                    "description": "curator: fix ref citation formatting, rev. history"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3998"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3998",
+        "ediid": "ark:/88434/mds2-3998",
+        "version": "1.0.2",
+        "doi": "doi:10.18434/mds2-3998",
+        "title": "ThreeBodyTB.jl code for fast and accurate tight binding band structure and total energy calculations across the periodic table.",
+        "contactPoint": {
+            "fn": "Kevin Garrity",
+            "hasEmail": "mailto:kevin.garrity@nist.gov"
+        },
+        "modified": "2025-09-16",
+        "status": "available",
+        "landingPage": "https://github.com/usnistgov/ThreeBodyTB.jl",
+        "description": [
+            "This includes the code for the ThreeBodyTB.jl project as well as a set of Quantum Espresso density functional theory calculations used to fit the tight binding coefficients."
+        ],
+        "keyword": [
+            "DFT",
+            "density functional theory",
+            "quantum espresso",
+            "tight-binding",
+            "first principles",
+            "pbesol",
+            "ThreeBodyTB.jl",
+            "jarvis"
+        ],
+        "topic": [
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal",
+                "@type": "Concept"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.1103/PhysRevMaterials.7.044603",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.1103/PhysRevMaterials.7.044603",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "Fast and accurate prediction of material properties with three-body tight-binding model for the periodic table",
+                "issued": "2023-04-14",
+                "citation": "Garrity, K. F., & Choudhary, K. (2023). Fast and accurate prediction of material properties with three-body tight-binding model for the periodic table. Physical Review Materials, 7(4). https://doi.org/10.1103/physrevmaterials.7.044603"
+            }
+        ],
+        "theme": [
+            "Physics: Condensed matter",
+            "Materials: Modeling and computational material science",
+            "Electronics: Semiconductors",
+            "Chemistry: Theoretical chemistry and modeling"
+        ],
+        "_editStatus": "done",
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/ThreeBodyTB.jl",
+                "format": {
+                    "description": "Julia programming language and markdown"
+                },
+                "description": "Github for the ThreeBodyTB.jl project on usnistgov. Follow links to documentation at https://pages.nist.gov/ThreeBodyTB.jl/",
+                "title": "Github for the code",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/ThreeBodyTB.jl",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "authors": [
+            {
+                "familyName": "Garrity",
+                "fn": "Kevin F. Garrity",
+                "givenName": "Kevin",
+                "middleName": "F.",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "subunits": ["MML/MMSD"],
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0003-0263-4157",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-11-04T22:08:06.165176",
+        "revised": "2025-09-29T16:58:51.154226",
+        "issued": null,
+        "firstIssued": "2025-09-29T16:58:51.154226",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3998/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2025-09-16",
+                    "@id": "ark:/88434/mds2-3998/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3998/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3998/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3998/pdr:v/1.0.1",
+                    "description": "added to CHIPS Metrology collection"
+                },
+                {
+                    "version": "1.0.2",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3998/pdr:v/1.0.2",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3998/pdr:v/1.0.2",
+                    "description": "curator: fix references"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3989"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3989",
+        "ediid": "ark:/88434/mds2-3989",
+        "version": "1.0.1",
+        "doi": "doi:10.18434/mds2-3989",
+        "title": "Yabadaba: Yay, a base database",
+        "contactPoint": {
+            "fn": "Lucas Hale",
+            "hasEmail": "mailto:lucas.hale@nist.gov"
+        },
+        "modified": "2025-07-07",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3989",
+        "description": [
+            "The yabadaba Python package provides an abstraction of database and data interactions. This makes it possible to interact with multiple different database infrastructures, and to manage the data interpretation and transformations of multiple different data schemas.  The end goal is to provide a tool that makes it easy for data generators and maintainers to build user-friendly APIs that use common query methods and can be added in a modular fashion."
+        ],
+        "keyword": ["database", "data", "high throughput", "FAIR"],
+        "theme": [
+            "Information Technology: Data and informatics",
+            "Information Technology: Computational science"
+        ],
+        "topic": [
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal",
+                "@type": "Concept"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/yabadaba",
+                "format": {
+                    "description": "Github source code"
+                },
+                "description": "The primary Git repository for the yabadaba source code.",
+                "title": "yabadaba: Yay, a base database",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/yabadaba",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            }
+        ],
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "_editStatus": "done",
+        "authors": [
+            {
+                "familyName": "Hale",
+                "fn": "Lucas M Hale",
+                "givenName": "Lucas",
+                "middleName": "M",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0003-3127-4568",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-11-04T21:33:34.753632",
+        "revised": "2025-09-19T17:36:28.079447",
+        "issued": null,
+        "firstIssued": "2025-09-19T17:36:28.079447",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3989/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2025-07-07",
+                    "@id": "ark:/88434/mds2-3989/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3989/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3989/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3989/pdr:v/1.0.1",
+                    "description": "added to CHIPS Metrology collection"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3174"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3174",
+        "ediid": "ark:/88434/mds2-3174",
+        "version": "1.0.1",
+        "doi": "doi:10.18434/mds2-3174",
+        "title": "JARVIS-Tools: an open-source software package for data-driven atomistic materials design.",
+        "contactPoint": {
+            "fn": "Daniel Wines",
+            "hasEmail": "mailto:daniel.wines@nist.gov"
+        },
+        "modified": "2024-02-07",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3174",
+        "description": [
+            "The JARVIS-Tools is an open-access software package for atomistic data-driven materials design. JARVIS-Tools can be used for a) setting up calculations, b) analysis and informatics, c) plotting, d) database development and e) web-page development."
+        ],
+        "keyword": ["Workflow", "materials modeling"],
+        "theme": [
+            "Chemistry: Theoretical chemistry and modeling",
+            "Materials: Modeling and computational material science",
+            "Physics: Condensed matter"
+        ],
+        "topic": [
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.1038/s41524-020-00440-1",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.1038/s41524-020-00440-1",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "The joint automated repository for various integrated simulations (JARVIS) for data-driven materials design",
+                "issued": "2020-11-12",
+                "citation": "Choudhary, K., Garrity, K. F., Reid, A. C. E., DeCost, B., Biacchi, A. J., Hight Walker, A. R., Trautt, Z., Hattrick-Simpers, J., Kusne, A. G., Centrone, A., Davydov, A., Jiang, J., Pachter, R., Cheon, G., Reed, E., Agrawal, A., Qian, X., Sharma, V., Zhuang, H., â¦ Tavazza, F. (2020). The joint automated repository for various integrated simulations (JARVIS) for data-driven materials design. Npj Computational Materials, 6(1). https://doi.org/10.1038/s41524-020-00440-1\n"
+            },
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.1063/5.0159299",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.1063/5.0159299",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "Recent progress in the JARVIS infrastructure for next-generation data-driven materials design",
+                "issued": "2023-10-18",
+                "citation": "Wines, D., Gurunathan, R., Garrity, K. F., DeCost, B., Biacchi, A. J., Tavazza, F., & Choudhary, K. (2023). Recent progress in the JARVIS infrastructure for next-generation data-driven materials design. Applied Physics Reviews, 10(4). https://doi.org/10.1063/5.0159299\n"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/jarvis",
+                "title": "JARVIS-Tools",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/jarvis",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            },
+            {
+                "@id": "cmps/jarvis-master.zip",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "jarvis-master.zip",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3174/jarvis-master.zip",
+                "mediaType": "application/x-zip-compressed",
+                "title": "JARVIS-Tools: an open-source software package for data-driven atomistic materials design. ",
+                "size": 84871932,
+                "checksum": {
+                    "hash": "f16bcfe4f40651d0157a14e259ee688688730df40072f3aeeee87fc2d26dd452",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            }
+        ],
+        "_editStatus": "done",
+        "authors": [
+            {
+                "familyName": "Wines",
+                "fn": "Daniel  Wines",
+                "givenName": "Daniel",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0003-3855-3754",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Gurunathan",
+                "fn": "Ramya  Gurunathan",
+                "givenName": "Ramya",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-7705-4654",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Garrity",
+                "fn": "Kevin F. Garrity",
+                "givenName": "Kevin",
+                "middleName": "F.",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0003-0263-4157",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "DeCost",
+                "fn": "Brian  DeCost",
+                "givenName": "Brian",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0002-3459-5888",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Biacchi",
+                "fn": "Adam J. Biacchi",
+                "givenName": "Adam",
+                "middleName": "J.",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-5663-2048",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Tavazza",
+                "fn": "Francesca  Tavazza",
+                "givenName": "Francesca",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0002-5602-180X",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Choudhary",
+                "fn": "Kamal  Choudhary",
+                "givenName": "Kamal",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-9737-8074",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-11-04T20:02:28.287190",
+        "revised": "2025-09-24T15:34:21.119233",
+        "issued": null,
+        "firstIssued": "2025-09-24T15:34:21.119233",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3174/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2024-02-07",
+                    "@id": "ark:/88434/mds2-3174/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3174/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3174/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3174/pdr:v/1.0.1",
+                    "description": "added to CHIPS Metrology collection"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3172"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3172",
+        "ediid": "ark:/88434/mds2-3172",
+        "version": "1.0.1",
+        "doi": "doi:10.18434/mds2-3172",
+        "title": "JARVIS-Leaderboard: Large Scale Benchmark of Materials Design Methods",
+        "contactPoint": {
+            "fn": "Daniel Wines",
+            "hasEmail": "mailto:daniel.wines@nist.gov"
+        },
+        "modified": "2024-02-07",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3172",
+        "description": [
+            "Lack of rigorous reproducibility and validation are major hurdles for scientific development across many fields. Materials science in particular encompasses a variety of experimental and theoretical approaches that require careful benchmarking. Leaderboard efforts have been developed previously to mitigate these issues. However, a comprehensive comparison and benchmarking on an integrated platform with multiple data modalities with both perfect and defect materials data is still lacking. This work introduces JARVIS-Leaderboard, an open-source and community-driven platform that facilitates benchmarking and enhances reproducibility. The platform allows users to set up benchmarks with custom tasks and enables contributions in the form of dataset, code, and meta-data submissions. We cover the following materials design categories: Artificial Intelligence (AI), Electronic Structure (ES), Force-fields (FF), Quantum Computation (QC) and Experiments (EXP). For AI, we cover several types of input data, including atomic structures, atomistic images, spectra, and text. For ES, we consider multiple ES approaches, software packages, pseudopotentials, materials, and properties, comparing results to experiment. For FF, we compare multiple approaches for material property predictions. For QC, we benchmark Hamiltonian simulations using various quantum algorithms and circuits. Finally, for experiments, we use the inter-laboratory approach to establish benchmarks. There are 1281 contributions to 274 benchmarks using 152 methods with more than 8 million data-points, and the leaderboard is continuously expanding."
+        ],
+        "keyword": ["benchamrks", "materials science"],
+        "theme": [
+            "Chemistry: Theoretical chemistry and modeling",
+            "Materials: Modeling and computational material science"
+        ],
+        "topic": [
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal",
+                "@type": "Concept"
+            }
+        ],
+        "references": [
+            {
+                "@type": ["npg:Document"],
+                "@id": "#ref:10.1038/s41524-024-01259-w",
+                "refType": "IsSupplementTo",
+                "location": "https://doi.org/10.1038/s41524-024-01259-w",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/bib/v0.7#/definitions/DCiteReference"
+                ],
+                "title": "JARVIS-Leaderboard: a large scale benchmark of materials design methods",
+                "issued": "2024-05-07",
+                "citation": "Choudhary, K., Wines, D., Li, K., Garrity, K. F., Gupta, V., Romero, A. H., Krogel, J. T., Saritas, K., Fuhr, A., Ganesh, P., Kent, P. R. C., Yan, K., Lin, Y., Ji, S., Blaiszik, B., Reiser, P., Friederich, P., Agrawal, A., Tiwary, P., â¦ Tavazza, F. (2024). JARVIS-Leaderboard: a large scale benchmark of materials design methods. Npj Computational Materials, 10(1). https://doi.org/10.1038/s41524-024-01259-w\n"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "components": [
+            {
+                "accessURL": "https://github.com/usnistgov/jarvis_leaderboard",
+                "title": "JARVIS-Leaderboard",
+                "@type": ["nrdp:AccessPage", "dcat:Distribution"],
+                "@id": "#usnistgov/jarvis_leaderboard",
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/AccessPage"
+                ]
+            },
+            {
+                "@id": "cmps/jarvis_leaderboard-main.zip",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "jarvis_leaderboard-main.zip",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3172/jarvis_leaderboard-main.zip",
+                "mediaType": "application/x-zip-compressed",
+                "title": "Large Scale Benchmark of Materials Design Methods",
+                "size": 236786213,
+                "checksum": {
+                    "hash": "453c68b6a131c322cb3d816e67a9dabc7ed4e0bbd463e34949fd1eb4ae2876e5",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            }
+        ],
+        "_editStatus": "done",
+        "authors": [
+            {
+                "familyName": "Choudhary",
+                "fn": "Kamal  Choudhary",
+                "givenName": "Kamal",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Johns Hopkins University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0001-9737-8074",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Wines",
+                "fn": "Daniel  Wines",
+                "givenName": "Daniel",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0003-3855-3754",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Li",
+                "fn": "Kangming   Li",
+                "givenName": "Kangming ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "University of Toronto",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0003-4471-8527",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Garrity",
+                "fn": "Kevin F. Garrity",
+                "givenName": "Kevin",
+                "middleName": "F.",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0003-0263-4157",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Gupta",
+                "fn": "Vishu  Gupta",
+                "givenName": "Vishu",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Northwestern University",
+                        "@type": "org:Organization"
+                    },
+                    {
+                        "title": "Princeton University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-4931-7194",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Romero",
+                "fn": "Aldo H. Romero",
+                "givenName": "Aldo",
+                "middleName": "H.",
+                "affiliation": [
+                    {
+                        "title": "West Virginia University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0001-5968-0571",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Krogel",
+                "fn": "Jaron T. Krogel",
+                "givenName": "Jaron",
+                "middleName": "T.",
+                "affiliation": [
+                    {
+                        "title": "Oak Ridge National Laboratory ",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-1859-181X",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Saritas",
+                "fn": "Kayahan  Saritas",
+                "givenName": "Kayahan",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Oak Ridge National Laboratory ",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-2240-8520",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Fuhr",
+                "fn": "Addis  Fuhr",
+                "givenName": "Addis",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Oak Ridge National Laboratory ",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-8819-8255",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Ganesh",
+                "fn": "Panchapakesan  Ganesh",
+                "givenName": "Panchapakesan",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Oak Ridge National Laboratory ",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-7170-2902",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Kent",
+                "fn": "Paul R.C. Kent",
+                "givenName": "Paul",
+                "middleName": "R.C.",
+                "affiliation": [
+                    {
+                        "title": "Oak Ridge National Laboratory ",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0001-5539-4017",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Yang",
+                "fn": "Keqiang  Yang",
+                "givenName": "Keqiang",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Texas A&M University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0009-0009-9286-9259",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Lin",
+                "fn": "Yuchao  Lin",
+                "givenName": "Yuchao",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Texas A&M University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0009-0003-6271-6397",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Ji",
+                "fn": "Shuiwang  Ji",
+                "givenName": "Shuiwang",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Texas A&M University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-4205-4563",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Blaiszik",
+                "fn": "Ben  Blaiszik",
+                "givenName": "Ben",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "University of Chicago",
+                        "@type": "org:Organization"
+                    },
+                    {
+                        "title": "Argonne National Laboratory",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-5326-4902",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Reiser",
+                "fn": "Patrick  Reiser",
+                "givenName": "Patrick",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Karlsruhe Institute of Technology",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-7052-696X",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Friederich",
+                "fn": "Pascal  Friederich",
+                "givenName": "Pascal",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Karlsruhe Institute of Technology",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0003-4465-1465",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Agrawal",
+                "fn": "Ankit  Agrawal",
+                "givenName": "Ankit",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Northwestern University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-5519-0302",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Tiwary",
+                "fn": "Pratyush   Tiwary",
+                "givenName": "Pratyush ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "University of Maryland, College Park",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-2412-6922",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Beyerle",
+                "fn": "Eric  Beyerle",
+                "givenName": "Eric",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "University of Maryland, College Park",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0001-5717-3197",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Minch",
+                "fn": "Peter  Minch",
+                "givenName": "Peter",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Rensselaer Polytechnic Institute",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Rhone",
+                "fn": "Trevor  David Rhone",
+                "givenName": "Trevor ",
+                "middleName": "David",
+                "affiliation": [
+                    {
+                        "title": "Rensselaer Polytechnic Institute",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-0198-9952",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Takeuchi",
+                "fn": "Ichiro   Takeuchi",
+                "givenName": "Ichiro ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "University of Maryland, College Park",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0003-2625-0553",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Wexler",
+                "fn": "Robert  B. Wexler",
+                "givenName": "Robert ",
+                "middleName": "B.",
+                "affiliation": [
+                    {
+                        "title": "Washington University in St. Louis",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-6861-6421",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Mannodi-Kanakkithodi",
+                "fn": "Arun   Mannodi-Kanakkithodi",
+                "givenName": "Arun ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Purdue University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0003-0780-1583",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Ertekin",
+                "fn": "Elif  Ertekin",
+                "givenName": "Elif",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "University of Illinois Urbana-Champaign",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-7816-1803",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Mishra",
+                "fn": "Avanish   Mishra",
+                "givenName": "Avanish ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Los Alamos National Laboratory",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0003-3997-0445",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Mathew",
+                "fn": "Nithin   Mathew",
+                "givenName": "Nithin ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Los Alamos National Laboratory",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-2316-3190",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Wood",
+                "fn": "Mitchell   Wood",
+                "givenName": "Mitchell ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Sandia National Laboratories",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0001-5878-4096",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Rohskopf",
+                "fn": "Andrew   Rohskopf",
+                "givenName": "Andrew ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Sandia National Laboratories",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0002-2712-8296",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Hattrick-Simpers",
+                "fn": "Jason   Hattrick-Simpers",
+                "givenName": "Jason ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "University of Toronto",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0003-2937-3188",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Wang",
+                "fn": "Shih-Han   Wang",
+                "givenName": "Shih-Han ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Virginia Polytechnic Institute and State University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0003-4418-2080",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Achenie",
+                "fn": "Luke  E. K.  Achenie",
+                "givenName": "Luke ",
+                "middleName": "E. K. ",
+                "affiliation": [
+                    {
+                        "title": "Virginia Polytechnic Institute and State University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0001-9850-5346",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Xin",
+                "fn": "Hongliang   Xin",
+                "givenName": "Hongliang ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "Virginia Polytechnic Institute and State University",
+                        "@type": "org:Organization"
+                    }
+                ],
+                "orcid": "0000-0001-9344-1697",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Williams",
+                "fn": "Maureen   Williams",
+                "givenName": "Maureen ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-9144-0551",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Biacchi",
+                "fn": "Adam  J. Biacchi",
+                "givenName": "Adam ",
+                "middleName": "J.",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-5663-2048",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Tavazza",
+                "fn": "Francesca   Tavazza",
+                "givenName": "Francesca ",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0002-5602-180X",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-11-04T18:02:04.815289",
+        "revised": "2025-09-24T15:26:57.200120",
+        "issued": null,
+        "firstIssued": "2025-09-24T15:26:57.200120",
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3172/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2025-09-24",
+                    "@id": "ark:/88434/mds2-3172/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3172/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-11-04",
+                    "@id": "ark:/88434/mds2-3172/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3172/pdr:v/1.0.1",
+                    "description": "added to CHIPS Metrology collection"
+                }
+            ]
+        },
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ]
+    },
+    {
+        "_schema": "https://data.nist.gov/od/dm/nerdm-schema/v0.7#",
+        "@context": [
+            "https://data.nist.gov/od/dm/nerdm-pub-context.jsonld",
+            {
+                "@base": "ark:/88434/mds2-3867"
+            }
+        ],
+        "@type": [
+            "nrdp:DataPublication",
+            "nrdp:PublicDataResource",
+            "dcat:Dataset"
+        ],
+        "_extensionSchemas": [
+            "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/PublicDataResource"
+        ],
+        "@id": "ark:/88434/mds2-3867",
+        "ediid": "ark:/88434/mds2-3867",
+        "version": "1.0.1",
+        "doi": "doi:10.18434/mds2-3867",
+        "title": "Elastic-plastic AFM indentation on copper",
+        "contactPoint": {
+            "fn": "Gheorghe Stan",
+            "hasEmail": "mailto:gheorghe.stan@nist.gov"
+        },
+        "modified": "2025-06-25",
+        "status": "available",
+        "landingPage": "https://data.nist.gov/od/id/mds2-3867",
+        "description": [
+            "Dataset from AFM single-step and multi-step indentations performed on hybrid-bonding copper patterns at room temperature"
+        ],
+        "keyword": [
+            "AFM",
+            "indentation",
+            "contact resonance",
+            "nanoscale plasticity",
+            "copper",
+            "advanced packaging",
+            "hybrid bonding"
+        ],
+        "topic": [
+            {
+                "scheme": "https://data.nist.gov/od/dm/nist-themes-chipsmetrology/v2.0",
+                "tag": "Materials Research: Metal: Cu",
+                "@type": "Concept"
+            }
+        ],
+        "accessLevel": "public",
+        "license": "https://www.nist.gov/open/license",
+        "publisher": {
+            "name": "National Institute of Standards and Technology",
+            "@type": "org:Organization"
+        },
+        "language": ["en"],
+        "bureauCode": ["006:55"],
+        "programCode": ["006:052"],
+        "_editStatus": "done",
+        "theme": [
+            "Electronics: Semiconductors",
+            "Materials: Materials characterization",
+            "Materials: Metals",
+            "Nanotechnology: Nanomechanics",
+            "Nanotechnology: Nanometrology"
+        ],
+        "components": [
+            {
+                "@id": "cmps/3867_README.txt",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "3867_README.txt",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/3867_README.txt",
+                "mediaType": "text/plain",
+                "title": "3867_README",
+                "size": 13414,
+                "checksum": {
+                    "hash": "87398bb90b9584b85a2a6be83df374ce2e5725ac3609fc445e9e7660086b7045",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            },
+            {
+                "@id": "cmps/Data_Figure_5.csv",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "Data_Figure_5.csv",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_5.csv",
+                "mediaType": "text/csv",
+                "format": {
+                    "description": "csv"
+                },
+                "description": " Multi-step AFM-indentation experiments. (i) Topographic line scan covering two indents within a Cu pad; (ii) A subset of force-indentation depth curves with the Hertzian fits superimposed on the unloading segments; (iii) Indentation stress-strain curve with stress-strain pairs from all experiments; (iv) Empirical cumulative distribution function of the indentation yield stress from all the experiments; (v) Average force-depth envelope curve for multi-step indentation experiments.",
+                "title": "Data for Figure 5",
+                "size": 226063,
+                "checksum": {
+                    "hash": "70dea99a4e902f27b163ba5a9503961d2186d5502c1a4421604a884403a76333",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            },
+            {
+                "@id": "cmps/Data_Figure_2.csv",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "Data_Figure_2.csv",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_2.csv",
+                "mediaType": "text/csv",
+                "format": {
+                    "description": "csv"
+                },
+                "description": "CR-AFM measurements. (i) Indentation moduli over SiO2 and Cu regions as determined from CR-AFM mapping; (ii) Cross-section along the dashed line in (i); (iii) Histogram of the indentation moduli from the map shown in (a).",
+                "title": "Data for Figure 2",
+                "size": 11250,
+                "checksum": {
+                    "hash": "1510e024ed287bf9c9af233ea23d44cb4d10cc7cd2afbc43ff20d6d177ee96ea",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            },
+            {
+                "@id": "cmps/Data_Figure_1.csv",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "Data_Figure_1.csv",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_1.csv",
+                "mediaType": "text/csv",
+                "format": {
+                    "description": "csv"
+                },
+                "description": "Representative experimental curves obtained by i) Contact Resonance AFM (CR-AFM), ii) single-step, and iii) multi-step AFM indentation.",
+                "title": "Data for Figure 1",
+                "size": 237524,
+                "checksum": {
+                    "hash": "e42d8ed4e8076986f036e90ddafe025b92ca50e9144165e7453ede383c2863ac",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            },
+            {
+                "@id": "cmps/Data_Figure_4.csv",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "Data_Figure_4.csv",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_4.csv",
+                "mediaType": "text/csv",
+                "format": {
+                    "description": "csv"
+                },
+                "description": "AFM single-step indentation comparison of grain boundary (GBdry) and grain interior (GInt) plasticity. (i) Average force-indentation depth curves; (ii) Histogram fits for plastic metrics (number of pop-ins per indentation curve, plasticity index, cumulative excursion length, plastic work); (iii) Empirical cumulative distribution (ecdf) of maximum shear stress at fist pop-in.",
+                "title": "Data for Figure 4",
+                "size": 324277,
+                "checksum": {
+                    "hash": "4c29bb6b5d349d3cf2dd8e0607ab180a8efcee8671653fc06673965af86a094e",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            },
+            {
+                "@id": "cmps/Data_Figure_3.csv",
+                "@type": [
+                    "nrdp:DataFile",
+                    "nrdp:DownloadableFile",
+                    "dcat:Distribution"
+                ],
+                "_extensionSchemas": [
+                    "https://data.nist.gov/od/dm/nerdm-schema/pub/v0.7#/definitions/DataFile"
+                ],
+                "filepath": "Data_Figure_3.csv",
+                "downloadURL": "https://data.nist.gov/od/ds/mds2-3867/Data_Figure_3.csv",
+                "mediaType": "text/csv",
+                "format": {
+                    "description": "csv"
+                },
+                "description": "AFM single-step indentation characterization on Cu pads. (a) Characteristic force-displacement curve; (b) Average force-indentation depth curves, with one standard deviation; (c) Histogram fits for plastic metrics: number of pop-ins per indentation curve, plasticity index, cumulative excursion length, and plastic work; (d) Empirical cumulative distribution (ecdf) of maximum shear stress at the first pop-in event.",
+                "title": "Data for Figure 3",
+                "size": 340357,
+                "checksum": {
+                    "hash": "124343cb1760b4f4e76740850b85c1b8464345bd36901120f09da407cc987976",
+                    "algorithm": {
+                        "tag": "sha256",
+                        "@type": "Thing"
+                    }
+                }
+            }
+        ],
+        "authors": [
+            {
+                "familyName": "Stan",
+                "fn": "Gheorghe  Stan",
+                "givenName": "Gheorghe",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "subunits": ["Materials Science Measurement Division"],
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0001-5773-0328",
+                "@type": "foaf:Person"
+            },
+            {
+                "familyName": "Alderete",
+                "fn": "Nicolas  Alderete",
+                "givenName": "Nicolas",
+                "middleName": "",
+                "affiliation": [
+                    {
+                        "title": "National Institute of Standards and Technology",
+                        "subunits": ["Materials Science Measurement Division"],
+                        "@type": "org:Organization",
+                        "@id": "ror:05xpvk416"
+                    }
+                ],
+                "orcid": "0000-0002-2145-8825",
+                "@type": "foaf:Person"
+            }
+        ],
+        "annotated": "2025-10-11T13:44:58.099408",
+        "revised": "2025-08-21T14:18:19.187020",
+        "issued": null,
+        "firstIssued": "2025-08-21T14:18:19.187020",
+        "isPartOf": [
+            {
+                "@type": ["nrda:ScienceTheme", "nrdp:PublicDataResource"],
+                "@id": "ark:/88434/pdr0-0002",
+                "title": "CHIPS Metrology Data"
+            }
+        ],
+        "releaseHistory": {
+            "@id": "ark:/88434/mds2-3867/pdr:v",
+            "@type": ["nrdr:ReleaseHistory"],
+            "hasRelease": [
+                {
+                    "version": "1.0.0",
+                    "issued": "2025-06-25",
+                    "@id": "ark:/88434/mds2-3867/pdr:v/1.0.0",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3867/pdr:v/1.0.0",
+                    "description": "initial release"
+                },
+                {
+                    "version": "1.0.1",
+                    "issued": "2025-10-11",
+                    "@id": "ark:/88434/mds2-3867/pdr:v/1.0.1",
+                    "location": "https://data.nist.gov/od/id/ark:/88434/mds2-3867/pdr:v/1.0.1",
+                    "description": "initial release"
+                }
+            ]
+        }
+    }
+]

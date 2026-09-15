@@ -81,6 +81,9 @@
 #ec-edit-btn {
     background-color:rgb(245, 198, 54);
     color:black;
+    border-color: white;
+    margin-top: 6px;
+    margin-right: 6px;
 }
 
 #ec-edit-btn-sm {
@@ -159,7 +162,7 @@
 }
 
 #ec-preview-btn:hover {
-    background-color: var(--science-theme-background-hover) !important;
+    background-color: var(--nist-blue-dark3) !important;
 }
 
 #ec-preview-btn-mo {
@@ -173,6 +176,10 @@
     font-size: 30px;
     cursor: pointer;
     float: right;
+}
+
+#ec-info-btn:hover {
+    color: var(--science-theme-background-blue-hover);
 }
 
 #ec-info-btn-sm {

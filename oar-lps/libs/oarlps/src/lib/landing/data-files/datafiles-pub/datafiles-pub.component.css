@@ -80,3 +80,31 @@ fa-icon.small svg {
 .badge {
     left: 0px;
 }
+
+.search-wrapper {
+    /* display: inline-block; */
+    flex-grow: 8;
+    position: relative;
+    max-height: 37px;
+    overflow: hidden;
+    height: 30px;
+}
+
+.search-wrapper fa-icon {
+    position: absolute;
+    left: 10px;
+    top: 15px;
+    transform: translateY(-50%);
+    color: #888;
+    margin: 4px 4px 0 0
+}
+
+.search-wrapper input {
+    width: 100%;
+    padding: 0px 8px 0px 35px;
+    /* left padding makes space for icon */
+    box-sizing: border-box;
+    height: 25px;
+    background-color: #f0f0f0;
+    margin: 5px 0 0 0;
+}

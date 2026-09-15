@@ -3,8 +3,8 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    // Set the module format to "commonjs":
-    "module": "commonjs",
+    // Set the module format to "preserve":
+    "module": "preserve",
     "types": [
       "node"
     ]

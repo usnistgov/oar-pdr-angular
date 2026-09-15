@@ -1,0 +1,51 @@
+<!-- This component display submit status from one review system that passed in from parent component
+     Only display this component if there is submit status data -->
+@if( hasSubmitStatusData ) {
+    <div class="wrapper">
+        <div [ngClass]="showFeedback? 'submission-card' : 'submission-card-sb'">
+            <div><strong>Phase:</strong> 
+                <span class="bubble">{{ submitStatus.phase }}</span>
+            </div>
+            <div><strong>Last Updated:</strong> {{ submitStatus.updated | date:'medium' }}</div>
+
+            <!-- Link to NPS page -->
+            <a *ngIf="submitStatus.info_at" href={{submitStatus.info_at}} target="_blank">
+                <span title="Review Status" (click)="googleAnalytics(submitStatus.info_at, $event, 'NPS')">
+                    <fa-icon [icon]="faArrowUpRightFromSquare" style="padding-right: 3px;">
+                    </fa-icon>
+                    View Full Review Status
+                </span>
+            </a>
+
+            <!-- If feedback is hidden (the case in the side menu bar), 
+                 display a link to open the popup window whick always displays feedback. -->
+            <div *ngIf="!showFeedback && hasFeedback"
+                (click)="openPopup()"
+                class="view-feedback">
+                View Feedback...
+            </div>
+
+            <!-- Display feedback -->
+            <div class="feedback-wrapper" *ngIf="showFeedback">
+                <div class="subtitle">
+                    <fa-icon [icon]="faComments" class="btn-icon"></fa-icon>
+                    Feedback
+                </div>
+
+                <div class="feedback-details" *ngIf="hasFeedback; else noFeedback">
+                    <feedback class="feedback" [feedback]="req" type="req"></feedback>
+
+                    <feedback class="feedback" [feedback]="warn" type="warn"></feedback>
+
+                    <feedback class="feedback" [feedback]="comment" type="comment"></feedback>
+
+                    <feedback class="feedback" [feedback]="noType" type="noType"></feedback>
+                </div>
+
+                <ng-template #noFeedback>
+                    <div class="subtitle">No feedback available.</div>
+                </ng-template>
+            </div>
+        </div>
+    </div>
+}

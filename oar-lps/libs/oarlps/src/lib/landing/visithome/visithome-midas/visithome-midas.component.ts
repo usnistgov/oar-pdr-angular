@@ -88,15 +88,7 @@ export class VisithomeMidasComponent {
 
         this.edstatsvc.watchIsEditMode((isEditMode) => {
             this.isEditMode = isEditMode;
-        }); 
-
-        // effect(() => {
-        //     // When edit mode changed, refresh the screen
-        //     // Need to tell effect which signal trigger this function
-        //     const term = this.edstatsvc.isEditMode(); 
-        //     // Then refresh the screen
-        //     this.chref.detectChanges();
-        // });
+        })
     }
 
     ngOnInit(): void {

@@ -7,6 +7,7 @@ import { SectionMode, SectionHelp, MODE, SectionPrefs, GENERAL, ReviewResponse, 
 import { HelpTopic } from '../landing/landingpage.service';
 import { CommonModule } from '@angular/common';
 import { SuggestionsComponent } from './suggestions/suggestions.component';
+import { SubmitStatusComponent } from '../landing/submission/submit-status/submit-status.component';
 import { LandingConstants, SubmissionData, GlobalService } from '../shared/globals/globals';
 import { EditStatusService } from '../landing/editcontrol/editstatus.service';
 import { RevisionDetailsComponent } from '../landing/revision-details/revision-details.component';
@@ -37,7 +38,8 @@ library.add(faPencil, faXmark, faSave, faUndo, faPlus, faTrashCan, faRecycle, fa
         CommonModule,
         SuggestionsComponent,
         RevisionDetailsComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
+        SubmitStatusComponent
     ],
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.css', '../landing/landing.component.scss'],
@@ -105,6 +107,30 @@ library.add(faPencil, faXmark, faSave, faUndo, faPlus, faTrashCan, faRecycle, fa
             })),
             transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
         ]),        
+        trigger('revisionExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),   
+        trigger('submitStatusExpand', [
+            state('hidden', style({
+                height: '0px',
+                minHeight: '0',
+                padding: '0px'
+            })),
+            state('visible', style({
+                height: '*',
+                padding: '10px'
+            })),
+            transition('visible <=> hidden', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),              
     ]
 })
 export class SidebarComponent implements OnInit {
@@ -120,14 +146,25 @@ export class SidebarComponent implements OnInit {
     showGeneralHelp: boolean = true;
     showNextSteps: boolean = true;
     ediid: string = "";
-    _editType: string;
-    EDIT_TYPES: any = LandingConstants.editTypes;
+    curRecState: string;
+    REC_STATES: any = LandingConstants.recStates;
+
+    //Submisison
     submissionData = new SubmissionData();
+    showSubmitStatus: boolean = false; // Show/hide submit status
+    showFeedback = true;
+    reviewSystems: string[] = [];
+
+    //Revision
     public revisionHelp:{} = revisionhelp;
     showRevisionHelp: boolean = false;
-    ignoreRevisionType: boolean = false;
+    // ignoreRevisionType: boolean = false;
+    showRevisionData: boolean = true;
+
     isMouseOverGeneralHeader = false;
     isMouseOverNextSteps = false;
+    isMouseOverSubmitStatus = false;
+    isMouseOverRevision = false;
 
     //icon class names
     editIcon: string = "";
@@ -150,6 +187,7 @@ export class SidebarComponent implements OnInit {
     @Input() helpContentAll: any = {};
     @Input() resourceType: string = "resource";
     @Input() suggestions: ReviewResponse = {} as ReviewResponse;
+    @Input() submitStatus: any = {};
     @Output() sbarvisible_out = new EventEmitter<boolean>();
 
     // signal for scrolling to a section within the page
@@ -179,15 +217,14 @@ export class SidebarComponent implements OnInit {
             faCircleXmark
         );  
         
-        this.edstatsvc.watchEditType((editType) => {
-            this._editType = editType;
-            this.showGeneralHelp = this._editType != this.EDIT_TYPES.REVISE;
-            this.showNextSteps = this.showGeneralHelp;
-
+        this.edstatsvc.watchRecState((recState: any) => {
+            this.curRecState = recState;
+            this.updateShowHelpToogler();
+            
             //When general help expanded, it will only be controlled manually
-            if (this.showGeneralHelp) {
-                this.ignoreRevisionType = true;                
-            }
+            // if (this.showGeneralHelp) {
+            //     this.ignoreRevisionType = true;                
+            // }
         })
     
         this.globalService.watchSubmissionData(
@@ -210,6 +247,8 @@ export class SidebarComponent implements OnInit {
         this.delIcon = icon({ iconName: 'trash-can', prefix: 'fas' }).html.join('');
         this.resetIcon = icon({ iconName: 'recycle', prefix: 'fas' }).html.join('');
 
+        this.reviewSystems = Object.keys(this.submitStatus);
+
         this.msgCompleted = this.helpContentAll['completed']? this.helpContentAll['completed'] : "Default help text.<p>";
 
         //Will be removed later
@@ -228,8 +267,6 @@ export class SidebarComponent implements OnInit {
             this.suggestions = suggestions as ReviewResponse;
             this.chref.detectChanges();
         })
-
-
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -240,7 +277,8 @@ export class SidebarComponent implements OnInit {
         //         this.suggestions = suggestions as ReviewResponse;
         //     })
     
-            this.chref.detectChanges();
+        this.updateShowHelpToogler();
+        this.chref.detectChanges();
         // }
     }
 
@@ -269,7 +307,30 @@ export class SidebarComponent implements OnInit {
     }
 
     get isRevision() {
-        return this._editType == this.EDIT_TYPES.REVISE;
+        return this.curRecState == this.REC_STATES.REVISE;
+    }
+
+    get isResubmit() {
+        return this.curRecState == this.REC_STATES.RESUBMIT;
+    }
+
+    // Indicate if submitStatus is not empty
+    get hasSubmitStatusData() {
+        let reviewSystems = Object.keys(this.submitStatus);
+        return reviewSystems && reviewSystems.length > 0;
+    }
+
+    get hasRevisionData() {
+        let data = Object.keys(this.submissionData);
+        return data && data.length > 0;
+    }
+
+    updateShowHelpToogler() {
+        this.showSubmitStatus = this.hasSubmitStatusData && this.curRecState == this.REC_STATES.RESUBMIT;
+        this.showRevisionData = this.curRecState == this.REC_STATES.REVISE && this.hasRevisionData;
+
+        this.showGeneralHelp = !this.showRevisionData && !this.showSubmitStatus;
+        this.showNextSteps = this.showGeneralHelp;
     }
 
     /**

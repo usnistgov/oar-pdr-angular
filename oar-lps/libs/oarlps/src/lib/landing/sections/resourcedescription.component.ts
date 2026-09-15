@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input, effect } from '@angular/core';
+import { Component, OnChanges, Input, effect, ChangeDetectorRef } from '@angular/core';
 import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { ColorScheme } from '../../shared/globals/globals';
@@ -65,21 +65,17 @@ export class ResourceDescriptionComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(
-        public globalService: GlobalService,
-        public edstatsvc: EditStatusService) {
-        
+    constructor(public globalService: GlobalService,
+                private chref: ChangeDetectorRef,
+                public edstatsvc: EditStatusService ) 
+    {
         this.globalService.watchLpsLeftWidth(width => {
             this.maxWidth = width + 20;
         })
 
         this.edstatsvc.watchIsEditMode((isEditMode) => {
             this.isEditMode = isEditMode;
-        });        
-
-        // effect(() => {
-        //     this.isEditMode = this.edstatsvc.isEditMode();
-        // })
+        })
     }
 
     ngOnInit(): void {

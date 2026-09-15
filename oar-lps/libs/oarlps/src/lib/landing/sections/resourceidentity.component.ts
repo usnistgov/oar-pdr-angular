@@ -10,9 +10,6 @@ import { CommonModule } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TitleComponent } from '../title/title.component';
 import { IspartofComponent } from '../ispartof/ispartof.component';
-import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
-import { FacilitatorsPubComponent } from '../facilitators-to be removed/facilitators-pub/facilitators-pub.component';
-import { FacilitatorsMidasComponent } from '../facilitators-to be removed/facilitators-midas/facilitators-midas.component';
 import { AuthorPubComponent } from '../author/author-pub/author-pub.component';
 import { AuthorMidasComponent } from '../author/author-midas/author-midas.component';
 import { ContactPubComponent } from '../contact/contact-pub/contact-pub.component';
@@ -33,14 +30,11 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
         CommonModule,
         TitleComponent,
         IspartofComponent,
-        FacilitatorsComponent,
         ContactPubComponent,
         ContactMidasComponent,
         VersionComponent,
         VisithomePubComponent,
         VisithomeMidasComponent,
-        FacilitatorsPubComponent,
-        FacilitatorsMidasComponent,
         AuthorPubComponent,
         AuthorMidasComponent,
         NgbModule,
@@ -91,6 +85,8 @@ export class ResourceIdentityComponent implements OnChanges {
                 public globalService: GlobalService,
                 public gaService: GoogleAnalyticsService,
                 public iconLibrary: FaIconLibrary,
+                private chref: ChangeDetectorRef,
+                public edstatsvc: EditStatusService,
                 public lpService: LandingpageService)
     { 
         // iconLibrary.addIcons(
@@ -105,13 +101,9 @@ export class ResourceIdentityComponent implements OnChanges {
             this.onResize(width + 20);
         })
 
-        this.editstatsvc.watchIsEditMode((isEditMode) => {
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
             this.isEditMode = isEditMode;
-        });
-        // effect(() => {
-        //     this.isEditMode = this.editstatsvc.isEditMode();
-        //     // this.chref.detectChanges();
-        // })
+        })
     }
 
     ngOnInit(): void {

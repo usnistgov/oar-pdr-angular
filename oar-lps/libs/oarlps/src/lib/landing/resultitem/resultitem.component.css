@@ -1,4 +1,4 @@
-.result-contsiner {
+.result-container {
         width: 100%;
 }
 
@@ -27,9 +27,17 @@
         margin-right: 12px;
 } */
 
-.btn-parent:hover {
-        /* background-color: #0079c9; */
-        border: 1px solid #00f7ff;
+.title-text {
+    display: table-cell;
+}
+
+.title-btn:hover .title-text {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.title-btn:hover .pi{
+        color: #00f7ff;
 }
 
 .btn-parent {
@@ -39,8 +47,7 @@
         border: 1px solid rgb(255, 255, 255);
         border-radius: 5px;
         cursor: pointer;
-        /* margin-left: 10px;
-        margin-right: 3px; */
+        width: fit-content;
 }
 
 .title-btn {
@@ -50,6 +57,15 @@
 
 .home-btn {
         width: 130px;
+}
+
+.home-btn:hover .title-text {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.home-btn:hover .pi{
+        color: #00f7ff;
 }
 
 .btn-icon {

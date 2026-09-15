@@ -111,7 +111,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     citationVisible: boolean = false;
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
-    editTypes = LandingConstants.editTypes;
+    recStates = LandingConstants.recStates;
     // reviseTypes: any = Globals.LandingConstants.reviseTypes;
     arrRevisionTypes: any[] = [];
     _showData: boolean = false;

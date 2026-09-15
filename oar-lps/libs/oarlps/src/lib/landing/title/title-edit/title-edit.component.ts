@@ -76,15 +76,9 @@ export class TitleEditComponent {
         //     faUndo
         // );
 
-        this.edstatsvc.watchIsEditMode((isEditMode) => {
+        this.edstatsvc.watchIsEditMode((isEditMode: boolean) => {
             this.isEditMode = isEditMode;
-        }); 
-        
-        // effect(() => {
-        //     if(this.edstatsvc.isEditMode()){
-        //         this.chref.detectChanges();
-        //     }
-        // });
+        })
     }
 
     get updated() { return this.mdupdsvc.fieldUpdated(this.fieldName); }

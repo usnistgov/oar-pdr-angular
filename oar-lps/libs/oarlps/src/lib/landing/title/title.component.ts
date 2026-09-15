@@ -30,16 +30,11 @@ export class TitleComponent implements OnInit {
 
     constructor(public edstatsvc: EditStatusService,
                 private chref: ChangeDetectorRef,
-                public globalsvc: GlobalService) {
-        
+                public globalsvc: GlobalService ) 
+    {
         this.edstatsvc.watchIsEditMode((isEditMode) => {
             this.isEditMode = isEditMode;
-        });  
-        
-        // effect(() => {
-        //     const term = this.edstatsvc.isEditMode();
-        //     this.chref.detectChanges();
-        // });
+        })
     }
 
     ngOnInit() {

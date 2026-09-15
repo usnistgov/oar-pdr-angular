@@ -29,7 +29,6 @@ import {
     faSave,
     faUndo
 } from '@fortawesome/free-solid-svg-icons';
-import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -97,7 +96,6 @@ export class RefMidasComponent {
         private modalService: NgbModal,       
         private chref: ChangeDetectorRef,  
         public iconLibrary: FaIconLibrary,
-        private notificationService: NotificationService,
         public lpService: LandingpageService) { 
 
         iconLibrary.addIcons(
@@ -411,7 +409,6 @@ export class RefMidasComponent {
                     }
             
                     this.orderChanged = false;
-                    this.notificationService.showSuccessWithTimeout("Reverted changes to reference.", "", 3000);
                     this.setMode(MODE.NORMAL);
                 }else{
                     //Error was handled in metadata service.

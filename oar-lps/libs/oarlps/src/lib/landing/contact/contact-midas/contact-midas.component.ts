@@ -88,13 +88,9 @@ export class ContactMidasComponent {
                 public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService){
 
-        // iconLibrary.addIcons(
-        //     faPencil,
-        //     faXmark,
-        //     faSave,
-        //     faUndo,
-        //     faTrashCan
-        // );    
+        this.edstatsvc.watchIsEditMode((isEditMode) => {
+            this.isEditMode = isEditMode;
+        })
     }
 
     /**
@@ -129,7 +125,7 @@ export class ContactMidasComponent {
                         this.hideEditBlock(false);
                     }
                 }else{
-                    if(!this.isEditing && sectionMode.section == this.fieldName) {
+                    if(!this.isEditing && sectionMode.section == this.fieldName && this.isEditMode) {
                         this.startEditing();
                     }
                 }
