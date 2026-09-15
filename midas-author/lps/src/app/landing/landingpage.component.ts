@@ -464,7 +464,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                         }
 
                         // proceed with rendering of the component
-                        this.useMetadata(true, true);
+                        this.useMetadata(true);
 
                         let showError: boolean;
                         // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
@@ -902,7 +902,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * This method will:
      *  * set the page's title (as displayed in the browser title bar).
      */
-    useMetadata(authenticated: boolean = false, authorized:boolean=false): void {
+    useMetadata(authenticated: boolean = false): void {
         this.metricsData.url = "/metrics/" + this.reqId;
         this.recordType = (new NERDResource(this.md)).resourceLabel();
 
@@ -910,7 +910,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.setDocumentTitle();
         this.mdupdsvc.cacheMetadata(this.md);
 
-        if (this.paramEditEnabled && authenticated && authorized){
+        if (this.paramEditEnabled && authenticated){
             this.editRequested = true;
 
             this.mdupdsvc.isAuthorized(this.reqId).subscribe((result) => {
