@@ -17,6 +17,10 @@ import { LandingConstants } from '../../shared/globals/globals';
 export class EditStatusService {
     public EDIT_MODES: any = LandingConstants.editModes;
 
+
+    isEditMode() {
+        return this._editMode.value == this.EDIT_MODES.EDIT_MODE;
+    }
     /**
      * construct the service
      */
@@ -27,9 +31,9 @@ export class EditStatusService {
     /**
      * the date of the last update to the draft landing page.  
      */
-    get lastUpdated() : UpdateDetails | null { return this._lastupdate; }
+    get lastUpdated() : UpdateDetails { return this._lastupdate; }
     private _lastupdate : UpdateDetails | null = null;   // null object means unknown
-    _setLastUpdated(updateDetails : UpdateDetails) { this._lastupdate = updateDetails; }
+    public setLastUpdated(updateDetails : UpdateDetails) { this._lastupdate = updateDetails; }
 
     /**
      * flag indicating the current edit mode.  
@@ -85,28 +89,36 @@ export class EditStatusService {
      */
     get hasError() : boolean { return this._error; }
     private _error : boolean = false;
-    _setError(val : boolean) { this._error = val; }
+    public setError(val : boolean) { this._error = val; }
 
     /**
      * Behavior subject to remotely start the edit function. This is used when user login
      * and the page was redirected to current page with parameter 'editmode' set to true.
      */
     private _remoteStart : BehaviorSubject<object> = new BehaviorSubject<object>({resID: "", nologin: false});
-    _watchRemoteStart(subscriber: any) {
+     public watchRemoteStart(subscriber) {
         this._remoteStart.subscribe(subscriber);
     }
 
     /**
      * the ID of the user currently logged in.  
      */
-    get userID() : string | null { return this._userid; }
-    private _userid : string | null = null;
-    _setUserID(id : string) { this._userid = id; }
+    get userID() : string { return this._userid; }
+    private _userid : string = null;
+    public setUserID(id : string) { this._userid = id; }
     
     /**
      * a flag indicating whether the current user has been authenticated.
      */
     get authenticated() : boolean { return Boolean(this._userid); }
+
+    /**
+     * a flag indicating whether the current user has been authorized to edit the landing page.  
+     */
+    get authorized() : boolean { return this._authzd; }
+    private _authzd : boolean = false;
+    public setAuthorized(val : boolean) { this._authzd = val; }
+
 
     /**
      * turn on editing controls allowing the user to edit the metadata

@@ -437,79 +437,86 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 // Use parameter "editEnabled". Need to decide the edit mode when backend is ready.
                 // For now, always go to edit mode.
                 // let param = queryParams.get("editmode");
-                    let param = queryParams.get("editenabled");
+                let param = queryParams.get("editenabled");
+                if(param)
                     this.paramEditEnabled = param.toLocaleLowerCase() == 'true';
+                else
+                    this.paramEditEnabled = false;
 
             });
 
             // Retrive Nerdm record and keep it in case we need to display it in preview mode
             // use case: user manually open PDR landing page but the record was not edited by MIDAS
             // This part will only be executed if "editEnabled=true" is not in URL parameter.
-            if(this.authsvc.isAuthenticated) {
-                this.globalService.setAuthenticated(true);
-                this.mdupdsvc.startEditing(this.reqId).subscribe({
-                    next: (success) => {
-                        this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
+            this.authsvc.getCredentials().subscribe(
+                cred => {
+                    if(!!cred && !!cred.token &&
+                        (!cred.expires || (new Date()) < cred.expires)) {
 
-                        if(this.inBrowser){
-                            if(this.cfg_editEnabled){
-                                this.metricsData.hasCurrentMetrics = false;
-                                this.showMetrics = true;
-                            }else{
-                                if(this.theme == Themes.DEFAULT_THEME){
-                                    this.getMetrics();
+                        this.globalService.setAuthenticated(true);
+                        this.mdupdsvc.startEditing(this.reqId).subscribe({
+                            next: (success) => {
+                                this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
+
+                                if(this.inBrowser){
+                                    if(this.cfg_editEnabled){
+                                        this.metricsData.hasCurrentMetrics = false;
+                                        this.showMetrics = true;
+                                    }else{
+                                        if(this.theme == Themes.DEFAULT_THEME){
+                                            this.getMetrics();
+                                        }
+
+                                    }
                                 }
 
+                                // proceed with rendering of the component
+                                this.useMetadata(true);
+
+                                let showError: boolean;
+                                // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                                // in editing mode.  This is done in concert with the authentication process that can involve
+                                // redirection to an authentication server; on successful authentication, the server can
+                                // redirect the browser back to this landing page with editing turned on.
+                                if (this.inBrowser) {
+                                    this.edstatsvc.setShowLPContent(true);
+
+                                        if (this.editRequested) {
+                                            showError = false;
+                                            // Need to pass reqID (resID) because the resID in editControlComponent
+                                            // has not been set yet and the startEditing function relies on it.
+                                            this.edstatsvc.startEditing(this.reqId);
+                                        }
+                                        else
+                                            showError = true;
+                                    }
+                                    //Display error if any
+                                    if(showError) {
+
+                                    }
+
+                                    this.mdupdsvc.loadDBIOrecord().subscribe({
+                                        next: (dbio) => {
+                                            // console.log("dbio", dbio)
+                                        },
+                                        error: (err) => {
+                                            console.error(err);
+                                        }
+                                    });
+
+                            },
+                            error: (err) => {
+                                this.globalService.setAuthorized(false);
+                                console.log("Load error", err);
+                                this.loadingMessage = "Failed to load data for editing. " + err.message;
                             }
-                        }
-
-                        // proceed with rendering of the component
-                        this.useMetadata(true);
-
-                        let showError: boolean;
-                        // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                        // in editing mode.  This is done in concert with the authentication process that can involve
-                        // redirection to an authentication server; on successful authentication, the server can
-                        // redirect the browser back to this landing page with editing turned on.
-                        if (this.inBrowser) {
-                            this.edstatsvc.setShowLPContent(true);
-
-                                if (this.editRequested) {
-                                    showError = false;
-                                    // Need to pass reqID (resID) because the resID in editControlComponent
-                                    // has not been set yet and the startEditing function relies on it.
-                                    this.edstatsvc.startEditing(this.reqId);
-                                }
-                                else
-                                    showError = true;
-                            }
-                            //Display error if any
-                            if(showError) {
-
-                            }
-
-                            this.mdupdsvc.loadDBIOrecord().subscribe({
-                                next: (dbio) => {
-                                    // console.log("dbio", dbio)
-                                },
-                                error: (err) => {
-                                    console.error(err);
-                                }
-                            });
-
-                    },
-                    error: (err) => {
-                        this.globalService.setAuthorized(false);
-                        console.log("Load error", err);
+                        })
+                    }else{
+                        //Not authenticated:
+                        this.globalService.setAuthenticated(false);
+                        this.displayOnly();
                     }
                 })
-            }else{
-                //Not authenticated:
-                this.globalService.setAuthenticated(false);
-                this.globalService.error('User is not authenticated.');
-
-                this.displayOnly();
-            }
         }else{
             this.displayOnly();
         }
@@ -955,6 +962,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             this.edstatsvc.setShowLPContent(true);
             this._showContent = true;
             this.globalService.setAuthorized(false);
+            this.showData();
         }
 
         //For fakebackend use

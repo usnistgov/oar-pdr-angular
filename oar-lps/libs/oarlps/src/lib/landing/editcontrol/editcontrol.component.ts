@@ -233,17 +233,18 @@ export class EditControlComponent implements OnInit, OnChanges {
                 if (md && md != this.mdrec) {
                     if(md && !md["keyword"]) md["keyword"] = [];
                     this.mdrec = md as NerdmRes;
-                    this.edstatsvc._setLastUpdated(this.mdupdsvc.lastUpdate);
+                    this.edstatsvc.setLastUpdated(this.mdupdsvc.lastUpdate);
                     // this.mdrecChange.emit(md as NerdmRes);
                 }
             }
         );
 
-        this.edstatsvc._setLastUpdated(this.mdupdsvc.lastUpdate);
+        this.edstatsvc.setLastUpdated(this.mdupdsvc.lastUpdate);
+        // this.edstatsvc.setAuthorized(this.isAuthorized());
 
         this.authsvc.getCredentials().subscribe((cred) => {
             this.cred = cred;
-            this.edstatsvc._setUserID(this.cred.userID);
+            this.edstatsvc.setUserID(this.cred.userID);
         })
 
         //Load suggestions:
@@ -265,7 +266,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         // set edit mode to view only on init
         // this.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
         this.ngOnChanges();
-        this.edstatsvc._watchRemoteStart((remoteObj) => {
+        this.edstatsvc.watchRemoteStart((remoteObj) => {
             // To remote start editing, resID need be set otherwise authorizeEditing()
             // will do nothing and the app won't change to edit mode
             if (remoteObj.resID) {
@@ -278,7 +279,7 @@ export class EditControlComponent implements OnInit, OnChanges {
             if (fileManagerUrl) {
                 this.fileManagerUrl = fileManagerUrl;
             }
-        });     
+        });
         
         this.edstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
@@ -705,92 +706,6 @@ export class EditControlComponent implements OnInit, OnChanges {
         return Boolean(this.mdupdsvc.lastUpdate);
     }
 
-    /**
-     * obtain authorization to edit the metadata and pass that authorization to the editing widgets.
-     *
-     * Authorization in this context mean a CustomizationService with a valid authorization token 
-     * embedded in it.  The CustomizationService will be passed to the MetadataUpdateService so 
-     * that it can send updates from the editing widgets to the remote customization web service.  
-     *
-     * Note that calling this method may cause the browser to redirect to an authorization server, 
-     * and, thus, this function would not return to its caller.  The authorization server should 
-     * return the browser to the landing page which should trigger calling this function again.  
-     * 
-     * @param nologin   if false (default) and the user is not logged in, the browser will be redirected 
-     *                  to the authentication service.  If true, redirection will not occur; instead, 
-     *                  false is returned if the user is not logged in.  
-     * @return Observable<boolean>   this will resolve to true if the application is authorized; 
-     *                               false, if either the user could not authenticate or is otherwise 
-     *                               not allowed to edit this record.  
-     */
-/*    public authorizeEditing(nologin: boolean = false): Observable<boolean> {
-        if (this._dapUpdtsvc) return of<boolean>(true);   // We're already authorized
-        if (!this.resID) {
-            console.warn("Warning: Initial metadata record not established yet in EditControlComponent");
-            return of<boolean>(false);
-        }
-
-        return new Observable<boolean>(subscriber => {
-            console.log("obtaining editing authorization");
-            this.statusbar.showMessage("Authenticating/authorizing access...", true)
-            // this.globalService.setMessage("Authenticating/authorizing access...");
-
-            this.mdupdsvc.authsvc.authorizeEditing(this.resID, nologin).subscribe(  // might cause redirect (see above)
-                (custsvc) => {
-                    // this.globalService.setMessage("");
-                    this._dapUpdtsvc = custsvc;    // could be null, indicating user is not authorized.
-                    this.mdupdsvc._setCustomizationService(custsvc);
-
-                    var msg: string = "";
-                    var authenticated: boolean = false;
-
-                    if (!this.mdupdsvc.authsvc.userID) {
-                        msg = "authentication failed";
-                        this.msgsvc.error("User log in cancelled or failed.")
-                    }
-                    else if (!custsvc) {
-                        msg = "authorization denied for user " + this.mdupdsvc.authsvc.userID;
-                        if(this.mdupdsvc.authsvc.errorMessage)
-                            this.msgsvc.error(this.mdupdsvc.authsvc.errorMessage);
-                        else    // Default message
-                            this.msgsvc.error("Sorry, you are not authorized to edit this submission.")
-                    }
-                    else{
-                        msg = "authorization granted for user " + this.mdupdsvc.authsvc.userID;
-                        authenticated = true;
-                    }
-
-                    console.log(msg);
-                    this.statusbar.showMessage(msg, false); 
-                    // this.globalService.setMessage(msg);
-
-                    if(authenticated){
-                      subscriber.next(Boolean(this._dapUpdtsvc));
-                      this.edstatsvc._setUserID(this.mdupdsvc.authsvc.userID);
-                      this.edstatsvc._setAuthorized(true);
-                    }else{
-                      subscriber.next(false);
-                      this.edstatsvc._setAuthorized(false);
-                      this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
-                    }
-                    
-                    subscriber.complete();
-                },
-                (err) => {
-                    let msg = "Failure during authorization: " + err.message;
-                    this.statusbar.showMessage(msg, false); 
-                    // this.globalService.setMessage(msg);
-                    console.error(msg);
-                    this.msgsvc.syserror(msg);
-                    subscriber.next(false);
-                    subscriber.complete();
-                    this.edstatsvc._setAuthorized(false);
-                    this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE)
-                }
-            );
-        });
-    }
-*/
     /**
      * Open url in a new tab. Before opening the url, check if this is a revidion mode and if yes,
      * if revidion type is "Metadata Update". If so, display a pop up warning window.
