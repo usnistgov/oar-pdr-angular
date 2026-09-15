@@ -12,6 +12,7 @@ import { DatePipe } from '@angular/common';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { iconClass } from '../../shared/globals/globals';
+import { SpinnerService } from '../../shared/spinner/spinner.service';
 
 /**
  * A panel inside the EditControlComponent that displays information about the status of 
@@ -46,6 +47,7 @@ export class EditStatusComponent implements OnInit {
     contentStatusColer: string = "var(--nist-green-default);"
     resourceType: string = "resource";
 
+    loading: boolean = false;
     //icon class names
     // spinnerIcon = iconClass.SPINNER;
     faSpinner = faSpinner;
@@ -65,17 +67,10 @@ export class EditStatusComponent implements OnInit {
         public globalsvc: GlobalService,
         private cdr: ChangeDetectorRef,
         private datePipe: DatePipe,
+        public spinner: SpinnerService,
         public globalService: GlobalService,
         public iconLibrary: FaIconLibrary,
         public lpService: LandingpageService) {
-
-        // iconLibrary.addIcons(faSpinner);
-        
-        // effect(() => {
-        //     this.message = this.globalsvc.message();
-        //     this.showMessage(this.message);
-        //     this.cdr.detectChanges();
-        // });
 
         this.globalService.watchMessage((message: string) => {
             this.showMessage(message);
@@ -119,6 +114,10 @@ export class EditStatusComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.spinner.watchLoading((loading) => {
+            this.loading = loading;
+        });
+        
         if(this.mdrec)
             this.setContentStatusColor(this.mdrec);
 

@@ -2,9 +2,6 @@
     <div>
         @if(showRevisionHelp){
             <div class="headerbar">
-                <!-- <i class="faa faa-times-circle btn-hide-help" 
-                    (click)="processCommand('getHelp')" aria-hidden="true"></i> -->
-
                 <fa-icon 
                     *ngIf="circleXmarkIcon" 
                     [icon]="['fas', circleXmarkIcon]" 
@@ -29,9 +26,6 @@
         <div >
             <div class="headerbar">
                 <div style="float: right; margin: 0px 5px 5px 5px;">
-                    <!-- <a (click)="toggleSbarView()" aria-label="Close Help" title="Close Help"><i class="faa faa-times-circle faa-lg"
-                            aria-hidden="true" style="color: orange; cursor: pointer;"></i></a> -->
-
                     <fa-icon 
                         *ngIf="circleXmarkIcon" 
                         [icon]="['fas', circleXmarkIcon]" 
@@ -54,14 +48,6 @@
                         (mouseover)="isMouseOverGeneralHeader = true" 
                         (mouseleave)="isMouseOverGeneralHeader = false">
                     </fa-icon>
-
-                    <!-- <i class="fas expand-btn amplifiable" 
-                        [class.amplified]="isMouseOverGeneralHeader" 
-                        (mouseover)="isMouseOverGeneralHeader = true"
-                        (mouseleave)="isMouseOverGeneralHeader = false"
-                        [ngClass]="{'fa-caret-right': !showGeneralHelp, 'fa-caret-down': showGeneralHelp}" 
-                        aria-label="Show warning steps">
-                    </i> -->
                 </div>
             </div>
             <div class="general-help-content" 
@@ -83,19 +69,15 @@
                         (mouseover)="isMouseOverNextSteps = true" 
                         (mouseleave)="isMouseOverNextSteps = false">
                     </fa-icon>
-
-                    <!-- <i class="fas expand-btn amplifiable" 
-                        [class.amplified]="isMouseOverNextSteps" 
-                        (mouseover)="isMouseOverNextSteps = true"
-                        (mouseleave)="isMouseOverNextSteps = false"
-                        [ngClass]="{'fa-caret-right': !showNextSteps, 'fa-caret-down': showNextSteps}" 
-                        aria-label="Show warning steps">
-                    </i> -->
                 </ng-template>
             </div>
             
             <!-- Suggestions -->
-            <!-- @if(!isTestData){ -->
+            <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps"
+                style="padding: 10px"
+                [innerHTML]="msgCompleted">
+            </div>
+            <ng-template #nextSteps>
                 <div class="section-content" [@nextStepsExpand]="showNextSteps ? 'visible' : 'hidden'">
                 
                     <div *ngIf="(!suggestions['req'] || suggestions['req'].length == 0) 
@@ -103,10 +85,6 @@
                                         && (!suggestions['rec'] || suggestions['rec'].length == 0)">
                         {{msgCompleted}}
                     </div>
-                    <!-- <ng-template #nextSteps>
-                                        Next Steps:
-                                    </ng-template> -->
-                
                 
                     <div *ngIf="hasRequiredItems">
                         <suggestions suggestionLabel="Required" [suggestions]="suggestions['req']" showSug="true"
@@ -126,7 +104,7 @@
                         </suggestions>
                     </div>
                 </div>       
-            <!-- } -->
+            </ng-template>
         </div>
     </div>
 
@@ -184,8 +162,6 @@
 <div *ngIf="!sbarvisible" style="float:right; margin: 44px 20px 20px 20px;">
     <a (click)="toggleSbarView()" aria-label="Help"
     title="{{(sbarvisible) ? 'Close Help' : 'Open Help'}}">
-        <!-- <i class="faa faa-question-circle-o faa-lg" aria-hidden="true"
-            style="color: orange; cursor: pointer;"></i> -->
 
         <fa-icon 
             *ngIf="circleQuestionIcon" 

@@ -1,0 +1,7 @@
+<div class="overlay" *ngIf="loading && !local">
+    <div class="spinner"></div>
+</div>
+
+<div class="normal-spinner" *ngIf="loading && local">
+    <fa-icon [icon]="faSpinner" [animation]="'spin'" size="sm"></fa-icon>
+</div>
