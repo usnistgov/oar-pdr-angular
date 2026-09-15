@@ -56,20 +56,15 @@
             </div>
             
             <div class="help-title headerbar" (click)="this.showNextSteps = !this.showNextSteps">
-                <div *ngIf="!hasRequiredItems && !hasWarnItems && !hasRecommendedItems; else nextSteps">
-                    {{msgCompleted}}
-                </div>
-                <ng-template #nextSteps>
-                    Next Steps:
-                    <fa-icon 
-                        *ngIf="!clickContact && caretRightIcon" 
-                        [class.amplified]="isMouseOverNextSteps"
-                        [icon]="['fas', showNextSteps? caretDownIcon : caretRightIcon]" 
-                        class="amplifiable"
-                        (mouseover)="isMouseOverNextSteps = true" 
-                        (mouseleave)="isMouseOverNextSteps = false">
-                    </fa-icon>
-                </ng-template>
+                Next Steps:
+                <fa-icon 
+                    *ngIf="!clickContact && caretRightIcon" 
+                    [class.amplified]="isMouseOverNextSteps"
+                    [icon]="['fas', showNextSteps? caretDownIcon : caretRightIcon]" 
+                    class="amplifiable"
+                    (mouseover)="isMouseOverNextSteps = true" 
+                    (mouseleave)="isMouseOverNextSteps = false">
+                </fa-icon>
             </div>
             
             <!-- Suggestions -->
