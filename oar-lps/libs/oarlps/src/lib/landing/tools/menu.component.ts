@@ -170,7 +170,7 @@ export class MenuComponent implements OnInit {
 
         this.collectionMetricsURLBase = cfg.get(
             "links.collectionMetrics",
-            "/metrics/collections",
+            "/metrics-dashboard/collections",
         );
 
         this.globalService.watchHasDataFiles((value: boolean) => {
