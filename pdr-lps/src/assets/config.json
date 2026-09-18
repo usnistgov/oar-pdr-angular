@@ -5,7 +5,11 @@
         "pdrHome": "/",
         "pdrSearch": "https://data.nist.gov/sdp/",
         "mdService": "https://data.nist.gov/rmm/",
+<<<<<<< HEAD
         "collectionMetrics": "https://data.nist.gov/metrics-dashboard/collections/"
+=======
+        "collectionMetrics": "https://data.nist.gov/metrics/collections/"
+>>>>>>> 08414ca4 (Added collection metrics to the right side menu in collection page.)
     },
     "PDRAPIs": {
         "mdSearch": "https://data.nist.gov/rmm/",
