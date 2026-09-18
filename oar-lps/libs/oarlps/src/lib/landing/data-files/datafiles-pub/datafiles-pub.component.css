@@ -81,6 +81,11 @@ fa-icon.small svg {
     left: 0px;
 }
 
+.badge-position {
+    transform: translateX(-15px);
+    transform: translateY(-15px);
+}
+
 .search-wrapper {
     /* display: inline-block; */
     flex-grow: 8;
