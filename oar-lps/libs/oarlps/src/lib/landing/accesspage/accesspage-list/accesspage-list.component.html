@@ -1,12 +1,7 @@
 <div style="width: 100%;">
-    <div *ngIf="errMessage">
-        <lib-single-msg-bar [message]="errMessage" (command_out)="clearMessage()">
-        </lib-single-msg-bar>
-    </div>
-    
     <div style="width: 100%;">
         <div class="editable_container" style="width: 100%; margin-bottom: .5em;">
-            <div class="editable_field" style="width: calc(100% - 100px);">
+            <div class="editable_field" style="width: calc(100% - 100px); margin-right: 5px;">
                 <div class="apage-text edit_box" [style.background-color]="getRecordBackgroundColor()">
                     <!-- <div style="margin-left: 10px;"><i>Use this area to add links to relevant websites including software repositories</i></div> -->
                     <div *ngIf="accessPages && accessPages.length > 0; else noAccessPage" 
@@ -59,10 +54,30 @@
                     type="button" 
                     (click)="onAdd()" 
                     aria-label="add button" 
-                    *ngIf="!isEditing && !isAdding" 
+                    [disabled]='isEditing || isAdding'
                     pTooltip="Add access page"
                     tooltipPosition="top">
-                    <fa-icon [icon]="faPlus"></fa-icon>
+                    <fa-icon 
+                        [icon]="faPlus"
+                        [class]="iconClass('add')">
+                    </fa-icon>
+                </button>
+
+                <!-- Hide button - hide edit block -->
+                <button 
+                    class="edit_button" 
+                    type="button" 
+                    [disabled]='isEditing || isAdding' 
+                    (click)="setMode()"
+                    aria-label="Hide edit block" 
+                    pTooltip="Hide edit block" 
+                    tooltipPosition="top">
+
+                    <fa-icon 
+                        [icon]="faXmark" 
+                        size="sm"
+                        [class]="iconClass('hideList')">
+                    </fa-icon>
                 </button>
             </div>
         </div>

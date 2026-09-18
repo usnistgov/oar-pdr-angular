@@ -1,6 +1,5 @@
 import { Component, OnInit, OnChanges, ViewChild, Input, HostListener, ChangeDetectorRef, inject, Inject } from '@angular/core';
 import { ConfirmationDialogService } from '../../shared/confirmation-dialog/confirmation-dialog.service';
-import { UserMessageService } from '../../frame/usermessage.service';
 import { MessageBarComponent } from '../../frame/messagebar.component';
 import { EditStatusComponent } from './editstatus.component';
 import { MetadataUpdateService } from './metadataupdate.service';
@@ -36,6 +35,8 @@ import { AuthenticationService, Credentials } from 'oarng';
 import { CollectionService } from '../../shared/collection-service/collection.service';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ConfirmationDialogComponent } from '../../shared/confirmation-dialog/confirmation-dialog.component';
+import { NotificationService } from '../../shared/notification-service/notification.service';
+  
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import {
     faPencil,
@@ -174,7 +175,7 @@ export class EditControlComponent implements OnInit, OnChanges {
      *                           metadata).
      * @param confirmDialogSvc   a ConfirmationDialogService for displaying pop-up confirmation windows 
      *                           (provided by local injector)
-     * @param msgsvc             a UserMessageService used to receive messages for display in the error 
+     * @param globalService      a GlobalService used to receive messages for display in the error 
      *                           message bar
      */
     public constructor( private mdupdsvc: MetadataUpdateService,
@@ -187,8 +188,8 @@ export class EditControlComponent implements OnInit, OnChanges {
                         private modalService: NgbModal,
                         public globalService: GlobalService,
                         public collectionService: CollectionService,
-                        public iconLibrary: FaIconLibrary,
-                        private msgsvc: UserMessageService) {
+                        private notificationService: NotificationService,
+                        public iconLibrary: FaIconLibrary) {
 
         iconLibrary.addIcons(
             faPencil,
@@ -209,7 +210,7 @@ export class EditControlComponent implements OnInit, OnChanges {
             this.collection = collection;
         });
 
-        this.globalService.watchMessage((message) => {
+        this.globalService.watchInfo((message) => {
             this.message = message;
             //Display message for 3 seconds
             setTimeout(() => {
@@ -323,6 +324,10 @@ export class EditControlComponent implements OnInit, OnChanges {
     get isPreviewMode() {
         return this.editMode == this.EDIT_MODES.PREVIEW_MODE || this.editMode == this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE;
     }
+
+    get isViewonlyMode() {
+        return this.editMode == this.EDIT_MODES.VIEWONLY_MODE;
+    }    
 
     get isDoneMode() {
         return this.editMode == this.EDIT_MODES.DONE_MODE;
