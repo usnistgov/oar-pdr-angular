@@ -22,16 +22,16 @@
     "landingPage": {
         "label": "Visit Home Page",
         "general": "<p>The Home Page is the user's entry point for this publication. It provides contextual information and access to the resource itself (e.g., download links for data). Importantly, the DOI (digital object identifier) will point to this URL. </p><p> If you wish for this NIST Public Data Repository page to be your home page, leave this box blank and click <i class='fas fa-times'></i> to close the entry field. If you would like to point to another home page (which you maintain), enter the URL here.</p>",
-        "add": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes. </p><p> <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#doi-homepage'>FAQ: Can I have the DOI link to my own home page/destination?</a></i>",
-        "edit": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes. </p><p> See also the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#doi-homepage'>FAQ: Can I have the DOI link to my own home page/destination?</a></i></p>"
+        "add": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes. </p><p> <i><a href='https://inet.nist.gov/node/2331921#doi-homepage'>FAQ: Can I have the DOI link to my own home page/destination?</a></i>",
+        "edit": "<p>Enter a working URL for a home page other than this repository landing page. Click <i class='fas fa-check'></i> to save changes. </p><p> See also the <i><a href='https://inet.nist.gov/node/2331921#doi-homepage'>FAQ: Can I have the DOI link to my own home page/destination?</a></i></p>"
     },
     "doi": {
         "label": "Identifier",
-        "general": "Normally, the identifier shown here is a digital object identifier (DOI). Use this identifier to reference this publication in other publications. For more information on what a DOI is and how to use it, see the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#what-is-doi'>FAQ: What's a DOI and why do I care?</a></i>"
+        "general": "Normally, the identifier shown here is a digital object identifier (DOI). Use this identifier to reference this publication in other publications. For more information on what a DOI is and how to use it, see the <i><a href='https://inet.nist.gov/node/2331921#what-is-doi'>FAQ: What's a DOI and why do I care?</a></i>"
     },
     "version": {
         "label": "Version",
-        "general": "<p>You can update this publication after it's been published for the first time with both minor edits (like tweaking the abstract) or major changes, like adding or updating files. We track the changes by assigning a version to the publication. Readers will have access to past versions by opening up the version history displayed here. </p> <p> Version labels follow a semantic pattern; for more information on the meaning of each digit, see the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#what-is-doi'>FAQ: What does the version label refer to and how is it assigned?</a></i></p>"
+        "general": "<p>You can update this publication after it's been published for the first time with both minor edits (like tweaking the abstract) or major changes, like adding or updating files. We track the changes by assigning a version to the publication. Readers will have access to past versions by opening up the version history displayed here. </p> <p> Version labels follow a semantic pattern; for more information on the meaning of each digit, see the <i><a href='https://inet.nist.gov/node/2331921#version'>FAQ: What does the version label refer to and how is it assigned?</a></i></p>"
     },
     "description": {
         "label": "Description",
@@ -52,7 +52,7 @@
     },
     "components": {
         "label": "External Links",
-        "general": "In this section, you can add links to artifacts that should be considered part of this publication but are not stored directly in the NIST Public Data Repository. This can include: <ul><li> a public software repository (e.g. in GitHub), </li><li> externally hosted documentation </li><li> an external web site where one can download data </li><li> a specialized web tool (e.g. an on-line database) where one can find or calculate data </li><li> an approved site that mirrors copies of data you are uploading as part of this publication </li></ul> Do not include links to published articles; these should be added to the References section below. All links added here must exist and be publicly accessible at submission time. Do not include links to sites restricted to the NIST-internal intranet (e.g. inet pages, NIST-GitLab repositories).",
+        "general": "In this section, you can add links to artifacts that should be considered part of this publication but are not stored directly in the NIST Public Data Repository. This can include: <ul><li> a public software repository (e.g. in GitHub), </li><li> externally hosted documentation </li><li> an external web site where one can download data </li><li> a specialized web tool (e.g. an on-line database) where one can find or calculate data </li><li> an approved site that mirrors copies of data you are uploading as part of this publication </li></ul> Do not include links to published articles; these should be added to the References section below. All links added here must exist and be publicly accessible at submission time. Do not include links to sites restricted to the NIST-internal intranet (e.g. INET pages, NIST-GitLab repositories).",
         "list": "Click <i class='fas fa-plus'></i> to enter a URL to an external site with information related to this resource. To edit an previously added link, click <i class='fas fa-pencil'></i> by it label.",
         "add": "Enter a URL for the external site into <b>Link URL</b>. A brief title for the link (used as the link's text label) is recommended. You can provide a description of what's available at the link via <b>About this link</b>. Click <i class='fas fa-check'></i> to save the link. To <i>not</i> save the link, click <i class='undoIcon'>.",
         "edit": "Update the selected URL as needed. A brief title for the link (used as the link's text label) is recommended. You can provide a description of what's available at the link via <b>About this link</b>. Click <i class='fas fa-check'></i> to save the link. To abort the update, click <i class='undoIcon'>.",
@@ -73,7 +73,7 @@
     "isPartOf": {
         "label": "Collection Membership",
         "general": "If this publication should be part of one of our special-purpose domain collections, you can request for inclusion here. Note that if you do, the collection maintainer will be asked to approve that your publication should be added.",
-        "edit": "<p>Click on one of the named collections to request that this publication be added to it. Then click <i class='saveIcon'></i> to save. </p><p> See also the <i><a href='https://inet.nist.gov/mr/library/midas-user-guides#curated-collection'>FAQ: What is a Curated Collection?</a></i></p>"
+        "edit": "<p>Click on one of the named collections to request that this publication be added to it. Then click <i class='saveIcon'></i> to save. </p><p> See also the <i><a href='https://inet.nist.gov/node/2331921#curated-collection'>FAQ: What is a Curated Collection?</a></i></p>"
     },
     "completed": "<p>This publication looks good! We have no more suggestions. </p><p> If you are satisfied with the content, click on 'Submit for Review' to proceed with review and publication.</p>"
 }
