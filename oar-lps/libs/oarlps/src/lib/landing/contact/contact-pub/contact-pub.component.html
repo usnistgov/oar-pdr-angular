@@ -15,7 +15,7 @@
                 *ngIf="!clickContact" 
                 [class.amplified]="isMouseOver"
                 [icon]="faCaretRight"
-                class="amplifiable"
+                class="amplifiable expand-btn"
                 (mouseover)="isMouseOver = true"
                 (mouseleave)="isMouseOver = false"
                 (click)="closeContent = !closeContent; clickContact=expandContact();">
@@ -25,7 +25,7 @@
                 *ngIf="clickContact" 
                 [class.amplified]="isMouseOver"
                 [icon]="faCaretDown" 
-                class="amplifiable"
+                class="amplifiable expand-btn"
                 (mouseover)="isMouseOver = true" 
                 (mouseleave)="isMouseOver = false"
                 (click)="closeContent = !closeContent; clickContact=expandContact();">

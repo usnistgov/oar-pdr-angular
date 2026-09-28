@@ -169,11 +169,7 @@ export class LandingBodyComponent {
         if (this.isPublicSite) {
             show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
         } else {
-            if (this.isEditMode) {
-                show = true;
-            } else {
-                show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
-            }
+            show = true;
         }
 
         return show;

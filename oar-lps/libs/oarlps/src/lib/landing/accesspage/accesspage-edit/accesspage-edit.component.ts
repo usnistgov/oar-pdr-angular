@@ -114,4 +114,41 @@ export class AccesspageEditComponent implements OnInit {
     commandOut(cmd: string) {
         this.cmdOutput.emit({"command": cmd});
     }    
+
+    close() {
+        this.commandOut('closeEditBlock');
+    }
+
+    /**
+     * Add/close button disabled when in edit/add mode. 
+     * @param button The type of the button
+     * @returns icon class name for the button
+     */
+    iconClass(button: string) {
+        let Returnclass: string ="icon_disabled";
+
+        switch (button) {
+            case 'close':
+                if (this.accessPage && this.accessPage.dataChanged) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'save':
+                if (this.noURL || !this.accessPage || !this.accessPage?.dataChanged) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;         
+            default:
+                break;
+        }
+
+        return Returnclass;
+    }      
+
 }

@@ -19,7 +19,7 @@ import { GlobalService } from '../../shared/globals/globals';
     exports: [ ],
     providers: [
         HttpClient,
-        MetadataUpdateService,
+        // MetadataUpdateService,
         EditStatusService,
         GlobalService,
         { provide: AuthService, useFactory: createAuthService, deps: [ environment, AppConfig, HttpClient, AuthenticationService, StaffDirectoryService ] }

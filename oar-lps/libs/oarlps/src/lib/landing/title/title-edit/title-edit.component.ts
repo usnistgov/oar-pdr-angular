@@ -67,7 +67,6 @@ export class TitleEditComponent {
                 public lpService: LandingpageService, 
                 private chref: ChangeDetectorRef,
                 public globalsvc: GlobalService,
-                public iconLibrary: FaIconLibrary,
                 private notificationService: NotificationService) 
     {
         // iconLibrary.addIcons(
@@ -93,7 +92,6 @@ export class TitleEditComponent {
 
     ngOnInit() {
         this.originalRecord = JSON.parse(JSON.stringify(this.record));
-
         // this.lpService.watchEditing((sectionMode: SectionMode) => {
 
         // effect(() => {
@@ -153,6 +151,10 @@ export class TitleEditComponent {
         // this.chref.detectChanges();
     }
 
+    hideEditBlock() {
+        this.setMode(MODE.NORMAL);
+    }
+
     onSave(refreshHelp: boolean = true) {
         if(this.record['title'] != this.originalRecord[this.fieldName]) {
             var postMessage: any = {};
@@ -168,7 +170,8 @@ export class TitleEditComponent {
                     // this.mdupdsvc.validate().subscribe(response => {
                     //     this.lpService.setSubmitResponse(response as SubmitResponse);
                     // })
-                }else{
+                } else {
+                    // Error was handled in metadata update service, just log here for debugging purpose.
                     let msg = "Title update failed.";
                     console.error(msg);
                 }
@@ -186,10 +189,11 @@ export class TitleEditComponent {
      */
     restoreOriginal() {
         this.mdupdsvc.undo(this.fieldName).then((success) => {
-            if (success){
+            if (success) {
                 this.setMode(MODE.NORMAL);
                 this.notificationService.showSuccessWithTimeout("Reverted changes to title.", "", 3000);
-            }else{
+            } else {
+                // Error was handled in metadata update service, just log here for debugging purpose.
                 let msg = "Failed to undo title metadata";
                 console.error(msg);
             }
@@ -254,29 +258,23 @@ export class TitleEditComponent {
 
     flash: any;
 
-    flashBorder(stopFlash)
-    { 
-        if(stopFlash)
-        {
+    flashBorder(stopFlash) {
+        if (stopFlash) {
             clearInterval(this.flash);
         }
-        else
-        {
+        else {
             var borderPattern = false;
-            this.flash = setInterval(setBorder,2000);
+            this.flash = setInterval(setBorder, 2000);
 
-            function setBorder()
-            {
-                if(borderPattern)
-                {
+            function setBorder() {
+                if (borderPattern) {
                     this.borderStatus = "hide";
                     setTimeout(() => {
                         borderPattern = false;
                     }, 0);
                     
                 }
-                else
-                {
+                else {
                     this.borderStatus = "show";
                     setTimeout(() => {
                         borderPattern = true;
@@ -285,4 +283,36 @@ export class TitleEditComponent {
             }
         }
     }
+        
+    /**
+         * There are diferent type of buttons whose styling will be different based on the edit mode and data change status. This function will return the opacity of the button icon based on those factors. If in edit/add mode but no data changed, display enabled icon. Otherwise, display disabled icon.
+         * Type 1: disabled when data changed. Such as close button.
+         * Type 2: enabled when data changed. Such as save button and undo button.
+         * @param type The type of the button
+        * @returns opacity
+        */
+    iconClass(type: string) {
+        let Returnclass: string ="icon_disabled";
+
+        switch (type) {
+            case 'close':
+                if (!this.dataChanged) {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'save':
+                if (this.dataChanged) {
+                    Returnclass = "icon_enabled";
+                }
+
+                break;
+         
+            default:
+                break;
+        }
+
+        return Returnclass;
+    }      
+
 }

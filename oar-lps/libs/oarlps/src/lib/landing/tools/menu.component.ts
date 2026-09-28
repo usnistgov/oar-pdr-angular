@@ -45,6 +45,7 @@ import { EditStatusService } from "../editcontrol/editstatus.service";
 
 export class menuItem {
     title: string;
+    color: string
     backgroundColor: string;
     isHeader: boolean;
     sectionName: string;
@@ -52,19 +53,21 @@ export class menuItem {
     url: string;
 
     constructor(
-        title: string,
+        title: string, 
         sectionName: string = "",
         url: string,
-        backgroundColor: string = "white",
+        backgroundColor: string = "white", 
         isHeader: boolean = false,
         icon: any = null,
-    ) {
+        color: string = "black") {
+        
         this.title = title;
         this.sectionName = sectionName;
         this.url = url;
         this.backgroundColor = backgroundColor;
         this.isHeader = isHeader;
-        this.icon = icon;
+        this.icon = icon;   
+        this.color = color;
     }
 }
 
@@ -90,6 +93,7 @@ export class MenuComponent implements OnInit {
     gotoMenu: menuItem[] = [] as menuItem[];
     useMenu: menuItem[] = [] as menuItem[];
     findMenu: menuItem[] = [] as menuItem[];
+    bulkDownloadMenu: menuItem = {} as menuItem;
     collectionMetricsMenu: menuItem[] = [] as menuItem[];
     collectionID: string = "";
     public CART_CONSTANTS: any = CartConstants.cartConst;
@@ -130,7 +134,10 @@ export class MenuComponent implements OnInit {
 
     // flag if metrics is ready to display
     @Input() showMetrics: boolean = false;
+    
+    @Input() isPublicSite: boolean = true; 
 
+    // @Input() citetext: string;
     @Input() submitStatus: any = {};
 
     @Output() scroll = new EventEmitter<string>();
@@ -281,46 +288,17 @@ export class MenuComponent implements OnInit {
         );
 
         this.useMenu.push(new menuItem("Use", "", "", this.defaultColor, true));
-        this.useMenu.push(
-            new menuItem(
-                "Citation",
-                "citation",
-                "",
-                this.lighterColor,
-                false,
-                this.anglesRightIcon,
-            ),
-        );
-        this.useMenu.push(
-            new menuItem(
-                "Repository Metadata",
-                "Metadata",
-                "",
-                this.lighterColor,
-                false,
-                this.anglesRightIcon,
-            ),
-        );
-        this.useMenu.push(
-            new menuItem(
-                "Fair Use Statement",
-                "",
-                this.record ? this.record["license"] : "",
-                this.lighterColor,
-                false,
-                this.arrowUpRightFromSquareIcon,
-            ),
-        );
-        this.useMenu.push(
-            new menuItem(
-                "Data Cart",
-                "",
-                this.globalCartUrl,
-                this.lighterColor,
-                false,
-                this.cartPlusIcon,
-            ),
-        );
+        this.useMenu.push(new menuItem("Citation", "citation", "", this.lighterColor, false, this.anglesRightIcon));
+        this.useMenu.push(new menuItem("Repository Metadata", "Metadata", "", this.lighterColor, false, this.anglesRightIcon));
+        this.useMenu.push(new menuItem("Fair Use Statement","", this.record?this.record['license']:'license', this.lighterColor, false, this.arrowUpRightFromSquareIcon));
+
+        if (this.isPublicSite) {
+            this.useMenu.push(new menuItem("Data Cart", "", this.globalCartUrl, this.lighterColor, false, this.cartPlusIcon));
+            this.bulkDownloadMenu = new menuItem("Bulk Download", "", this.bulkDownloadURL, this.lighterColor, false, this.downloadIcon);
+        } else {
+            this.useMenu.push(new menuItem("Data Cart", "", "", this.lighterColor, false, this.cartPlusIcon, "grey"));
+            this.bulkDownloadMenu = new menuItem("Bulk Download", "", "", this.lighterColor, false, this.downloadIcon, "grey");
+        }
 
         this.collectionMetricsMenu.push(
             new menuItem("Collection Metrics", "", "", this.defaultColor, true),
@@ -535,17 +513,23 @@ export class MenuComponent implements OnInit {
         window.open(this.bulkDownloadURL, "_blank");
     }
 
-    menuStyle(header: boolean) {
+    menuStyle(menuitem: menuItem) {
+        let header = menuitem.isHeader;
         let defaultColor = this.colorScheme.defaultVar;
+        let fontColor = "black";
 
         if (!header) {
             defaultColor = this.colorScheme.lighterVar;
+            if (!this.isPublicSite && menuitem) {
+                fontColor = menuitem.color ? menuitem.color : "black";
+            }
         }
 
         return {
-            "--background-default": defaultColor,
-            "--background-lighter": this.colorScheme.lighterVar,
-            "--background-hover": this.colorScheme.hoverVar,
+            '--background-default': defaultColor,
+            '--background-lighter': this.colorScheme.lighterVar,
+            '--background-hover': this.colorScheme.hoverVar,
+            '--font-color': fontColor
         };
     }
 }

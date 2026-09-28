@@ -14,6 +14,7 @@
 }
 
 .menu-item {
+    color: var(--font-color);
     background-color: var(--background-lighter);
     word-wrap: break-word;
     font-family: Sans-Serif;

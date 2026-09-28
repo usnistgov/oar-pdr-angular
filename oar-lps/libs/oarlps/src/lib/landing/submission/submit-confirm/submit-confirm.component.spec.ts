@@ -8,6 +8,8 @@ import { EditStatusService } from '../../editcontrol/editstatus.service';
 import { BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { StaffDirectoryService, StaffDirModule, AuthenticationService } from 'oarng';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { NotificationService } from '../../../shared/notification-service/notification.service';
+import { ToastrService } from 'ngx-toastr';
 
 describe('SubmitConfirmComponent', () => {
     let component: SubmitConfirmComponent;
@@ -23,13 +25,12 @@ describe('SubmitConfirmComponent', () => {
         await TestBed.configureTestingModule({
             imports: [ SubmitConfirmComponent, BrowserAnimationsModule, StaffDirModule, HttpClientTestingModule ],
             providers: [ 
-                UserMessageService, 
                 NgbActiveModal, 
                 StaffDirectoryService,
                 AuthenticationService,
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
-                }
+                                        edstatsvc, dapsvc, null, null)
+                                    }
             ]
         })
         .compileComponents();
