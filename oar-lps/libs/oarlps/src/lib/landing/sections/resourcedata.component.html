@@ -1,28 +1,28 @@
-<div id="dataAccess" [ngStyle]="{'max-width': maxWidth+'px'}">
-    <div class="section-header" *ngIf="showSectionTitle()">
+<div *ngIf="showDataSection" id="dataAccess" [ngStyle]="{'max-width': maxWidth+'px'}">
+    <div class="section-header" >
         <lib-section-title [sectionTitle]="sectionTitle" [inBrowser]="inBrowser" sectionTag="dataAccessHeader" id="dataAccessHeader" #dataAccessHeader></lib-section-title>
     </div>
 
-    <dl >
+    <dl *ngIf="accessLevelPublic || accessLevelRestricted || accessRights">
         <dt>
-            <span style="margin-left:0em" *ngIf="record['accessLevel'] === 'public'">
+            <span style="margin-left:0em" *ngIf="accessLevelPublic">
                 <!-- <i class="faa faa-globe"></i>  -->
                 <fa-icon [icon]="faGlobe" size="sm"></fa-icon>
                 These data are public.
             </span>
 
-            <span *ngIf="record['accessLevel'] === 'restricted public'">
+            <span *ngIf="accessLevelRestricted">
                 <fa-icon [icon]="faLock" size="sm"></fa-icon>
                 This data has access restrictions.
             </span>
 
             <!-- Display access right -->
-            <span id="accessRights" *ngIf="record['rights']">
+            <span id="accessRights" *ngIf="accessRights">
                 Access rights statement:
             </span>
         </dt>
 
-        <dd *ngIf="record['rights']">
+        <dd *ngIf="accessRights">
             {{record['rights']}}
         </dd>
     </dl>
@@ -35,21 +35,23 @@
             page</a>.
     </div>
 
-    <!-- Access pages -->
-    <div id="accessPages">
+    <!-- Access pages. Hidden if no content -->
+    <div id="accessPages" [style.display]="hasAccessPageContent ? null : 'none'">
         <div style="width: 100%;">
             @if(isPublicSite) {
                 <accesspage-pub 
                     [record]="record" 
                     [theme]="theme"
-                    [isPublicSite]="isPublicSite">
+                    [isPublicSite]="isPublicSite"
+                    (hasContentChange)="setAccesspaeContent($event)">
                 </accesspage-pub>
             }
             @else {
                 <accesspage-midas 
                     [record]="record" 
                     [theme]="theme" 
-                    [isEditMode]="isEditMode">
+                    [isEditMode]="isEditMode"
+                    (hasContent)="setAccesspaeContent($event)">
                 </accesspage-midas>
             }
         </div>
@@ -74,14 +76,6 @@
             </lib-datafiles-midas>
         }
     }
-    <!-- <pdr-data-files *ngIf="theme == defaultTheme" 
-        [record]="record" 
-        [inBrowser]="inBrowser" 
-        [editEnabled]="editEnabled"
-        [isEditMode]="isEditMode"
-        [isPublicSite]="isPublicSite"
-        (dlStatus)="setDownloadStatus($event)">
-    </pdr-data-files> -->
 
     <div *ngIf="hasDRS" style="margin-top: 2em;margin-right: 0px;">
         <app-searchresult [record]="record" [inBrowser]="inBrowser" [collection]="collection">

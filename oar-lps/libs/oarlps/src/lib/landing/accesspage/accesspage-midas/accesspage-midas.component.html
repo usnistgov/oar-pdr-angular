@@ -1,47 +1,53 @@
-<accesspage-pub [record]="record" [theme]="theme" [isPublicSite]="isPublicSite">
-    <div class="message" style="margin-right: 10px;">
-        @if(isEditMode) {
+<accesspage-pub 
+    [record]="record" 
+    [theme]="theme" 
+    [isPublicSite]="isPublicSite"
+    (hasContentChange)="childContent($event)">
+    <div class="message" style="margin-right: 10px">
+        @if (isEditMode) {
             Add links to relevant websites including software repositories.
         }
     </div>
 
     <!-- Control buttons -->
-    <div class="controls" style="white-space: nowrap;">
-        @if(isEditMode) {
-            @if(isNormal) {
+    <div class="controls" style="white-space: nowrap">
+        @if (isEditMode) {
+            @if (isNormal) {
                 <!-- Edit button -->
                 <button
                     class="edit_button"
-                    (click)="startEditing()" 
+                    (click)="startEditing()"
                     aria-label="edit button"
                     pTooltip="Edit access page"
-                    tooltipPosition="top" >
+                    tooltipPosition="top"
+                >
                     <fa-icon [icon]="faPencil" size="sm"></fa-icon>
                 </button>
-            }
-            @else {            
+            } @else {
                 <!-- Hide button - hide edit block -->
-                <button 
-                    class="edit_button" 
-                    type="button" 
-                    [disabled] = 'isEditing || isAdding'
+                <button
+                    class="edit_button"
+                    type="button"
+                    [disabled]="isEditing || isAdding"
                     (click)="setMode()"
-                    aria-label="Hide edit block" 
+                    aria-label="Hide edit block"
                     pTooltip="Hide edit block"
-                    tooltipPosition="top">
+                    tooltipPosition="top"
+                >
                     <fa-icon [icon]="faXmark" size="sm"></fa-icon>
-                </button> 
+                </button>
             }
 
-            @if(!isEditing && updated) {
+            @if (!isEditing && updated) {
                 <!-- Restore original value-->
-                <button 
-                    class="edit_button" 
-                    type="button"       
-                    (click)="restoreOriginal()" 
-                    aria-label="undo button" 
+                <button
+                    class="edit_button"
+                    type="button"
+                    (click)="restoreOriginal()"
+                    aria-label="undo button"
                     pTooltip="Undo changes"
-                    tooltipPosition="top">
+                    tooltipPosition="top"
+                >
                     <fa-icon [icon]="faUndo" size="sm"></fa-icon>
                 </button>
             }
@@ -49,18 +55,24 @@
     </div>
 
     <div class="editor">
-        @defer(when isListing) {
-            <div style="width: 100%;" [@editExpanded]="editBlockExpanded" [style.overflow] = "overflowStyle">
-                <lib-accesspage-list 
-                    #accesspagelist 
-                    [record]="record" 
-                    [theme]="theme" 
+        @defer (when isListing) {
+            <div
+                style="width: 100%"
+                [@editExpanded]="editBlockExpanded"
+                [style.overflow]="overflowStyle"
+            >
+                <lib-accesspage-list
+                    #accesspagelist
+                    [record]="record"
+                    [theme]="theme"
                     [fieldName]="fieldName"
                     [mdupdsvc]="mdupdsvc"
-                    (dataCommand)="onStatusChange($event); setChildEditMode($event)">
+                    (dataCommand)="
+                        onStatusChange($event); setChildEditMode($event)
+                    "
+                >
                 </lib-accesspage-list>
             </div>
-        }   
+        }
     </div>
 </accesspage-pub>
-

@@ -21,7 +21,7 @@ import { faGlobe, faLock } from '@fortawesome/free-solid-svg-icons';
  * the list of data files, links to data access pages, and access policies.  
  */
 @Component({
-    selector:      'pdr-resource-data',
+    selector: "pdr-resource-data",
     standalone: true,
     imports: [
         SectionTitleComponent,
@@ -32,35 +32,31 @@ import { faGlobe, faLock } from '@fortawesome/free-solid-svg-icons';
         SearchresultModule,
         AccesspagePubComponent,
         NgbModule,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    templateUrl:   './resourcedata.component.html',
-    styleUrls:   [
-        './resourcedata.component.css',
-        '../landing.component.scss'
-    ],
+    templateUrl: "./resourcedata.component.html",
+    styleUrls: ["./resourcedata.component.css", "../landing.component.scss"],
     animations: [
-        trigger(
-          'enterAnimation', [
-            transition(':enter', [
-              style({height: '0px', opacity: 0}),
-              animate('500ms', style({height: '100%', opacity: 1}))
+        trigger("enterAnimation", [
+            transition(":enter", [
+                style({ height: "0px", opacity: 0 }),
+                animate("500ms", style({ height: "100%", opacity: 1 })),
             ]),
-            transition(':leave', [
-              style({height: '100%', opacity: 1}),
-              animate('500ms', style({height: 0, opacity: 0}))
-            //   animate('500ms', style({transform: 'translateY(0)', opacity: 1}))
-            ])
-          ]
-        )
-    ]
+            transition(":leave", [
+                style({ height: "100%", opacity: 1 }),
+                animate("500ms", style({ height: 0, opacity: 0 })),
+                //   animate('500ms', style({transform: 'translateY(0)', opacity: 1}))
+            ]),
+        ]),
+    ],
 })
 export class ResourceDataComponent implements OnChanges {
     accessPages: NerdmComp[] = [];
     hasDRS: boolean = false;
     showDescription: boolean = false;
     showRestrictedDescription: boolean = false;
-    currentState = 'initial';
+    showDataSection: boolean = true;
+    currentState = "initial";
     recordType: string = "";
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
@@ -70,9 +66,10 @@ export class ResourceDataComponent implements OnChanges {
     collection: string;
     maxWidth: number = 1000;
     isEditMode: boolean = true;
+    hasAccessPageContent: boolean = false;
 
     //icon class
-    globeIcon = iconClass.GLOBE;   
+    globeIcon = iconClass.GLOBE;
     lockIcon = iconClass.LOCK;
 
     faGlobe = faGlobe;
@@ -81,7 +78,7 @@ export class ResourceDataComponent implements OnChanges {
     // passed in by the parent component:
     @Input() record: NerdmRes = null;
     @Input() inBrowser: boolean = false;
-    @Input() editEnabled: boolean; 
+    @Input() editEnabled: boolean;
     @Input() theme: string = "default";
     @Input() isPublicSite: boolean = true;
 
@@ -93,94 +90,115 @@ export class ResourceDataComponent implements OnChanges {
     /**
      * create an instance of the Identity section
      */
-    constructor(public globalService: GlobalService,
+    constructor(
+        public globalService: GlobalService,
         public edstatsvc: EditStatusService,
         public iconLibrary: FaIconLibrary,
         private chref: ChangeDetectorRef,
-        private gaService: GoogleAnalyticsService){ 
-
+        private gaService: GoogleAnalyticsService,
+    ) {
         // iconLibrary.addIcons(
         //     faGlobe, faLock
         // );
-        
+
         this.globalService.watchCollection((collection) => {
             this.collection = collection;
         });
 
-        this.globalService.watchLpsLeftWidth(width => {
+        this.globalService.watchLpsLeftWidth((width) => {
             this.maxWidth = width + 20;
         });
 
         this.edstatsvc.watchIsEditMode((isEditMode) => {
             this.isEditMode = isEditMode;
-        })
+            this.updateDataSection();
+        });
     }
 
     ngOnInit(): void {
-        this.recordType = (new NERDResource(this.record)).resourceLabel();
+        this.recordType = new NERDResource(this.record).resourceLabel();
+        this.updateDataSection();
 
         this.colorScheme = {
-            "default": "#257a2d",
-            "light": "#6bad73",
-            "lighter": "#f0f7f1",
-            "dark": "#1c6022",
-            "hover": "#ffffff" 
+            default: "#257a2d",
+            light: "#6bad73",
+            lighter: "#f0f7f1",
+            dark: "#1c6022",
+            hover: "#ffffff",
         };
     }
 
-    ngOnChanges(ch : SimpleChanges) {
-        if (this.record)
-            this.useMetadata();  // initialize internal component data based on metadata
+    ngOnChanges(ch: SimpleChanges) {
+        if (this.record) {
+            this.useMetadata(); // initialize internal component data based on metadata
+        }
     }
 
     /**
-     * initial this component's internal data used to drive the display based on the 
+     * initial this component's internal data used to drive the display based on the
      * input resource metadata
      */
     useMetadata(): void {
         this.accessPages = [];
-        if (this.record['components']) {
+        if (this.record["components"]) {
             this.accessPages = this.selectAccessPages();
 
             // If this is a science theme and the collection contains one or more components that contain both AccessPage (or SearchPage) and DynamicSourceSet, we want to remove it from accessPages array since it's already displayed in the search result.
-            if(this.theme == this.scienceTheme) 
-                this.accessPages = this.accessPages.filter(cmp => ! cmp['@type'].includes("nrda:DynamicResourceSet"));
+            if (this.theme == this.scienceTheme)
+                this.accessPages = this.accessPages.filter(
+                    (cmp) => !cmp["@type"].includes("nrda:DynamicResourceSet"),
+                );
 
             this.hasDRS = this.hasDynamicResourceSets();
         }
+
+        this.updateDataSection();
+    }
+
+    /**
+     * Set hasAccessPageContent so the app can decide if access page block can be hidden.
+     * @param hasChildContent if child component has content
+     */
+    setAccesspaeContent(hasChildContent: boolean) {
+        this.hasAccessPageContent = hasChildContent;
     }
 
     /**
      * select the AccessPage components to display, adding special disply options
      */
-    selectAccessPages() : NerdmComp[] {
-        let use: NerdmComp[] = (new NERDResource(this.record)).selectAccessPages();
-        use = (JSON.parse(JSON.stringify(use))) as NerdmComp[];
+    selectAccessPages(): NerdmComp[] {
+        let use: NerdmComp[] = new NERDResource(
+            this.record,
+        ).selectAccessPages();
+        use = JSON.parse(JSON.stringify(use)) as NerdmComp[];
 
         return use.map((cmp) => {
-            if (! cmp['title']) cmp['title'] = cmp['accessURL'];
+            if (!cmp["title"]) cmp["title"] = cmp["accessURL"];
 
-            cmp['showDesc'] = false;
-            cmp['backcolor'] = 'white';
+            cmp["showDesc"] = false;
+            cmp["backcolor"] = "white";
 
             return cmp;
         });
     }
 
     /**
-     * return true if the components include non-hidden DynamicResourceSets.  If there are, the 
-     * results from the DynamicResourceSet searches will be display in a special in-page 
+     * return true if the components include non-hidden DynamicResourceSets.  If there are, the
+     * results from the DynamicResourceSet searches will be display in a special in-page
      * search results display.
      */
     hasDynamicResourceSets(): boolean {
-        return (new NERDResource(this.record)).selectDynamicResourceComps().length > 0;
+        return (
+            new NERDResource(this.record).selectDynamicResourceComps().length >
+            0
+        );
     }
 
     /**
      * Emit download status
      * @param downloadStatus
      */
-    setDownloadStatus(downloadStatus){
+    setDownloadStatus(downloadStatus) {
         this.dlStatus.emit(downloadStatus);
     }
     /**
@@ -189,7 +207,8 @@ export class ResourceDataComponent implements OnChanges {
      * final - mouse in
      */
     changeState() {
-        this.currentState = this.currentState === 'initial' ? 'final' : 'initial';
+        this.currentState =
+            this.currentState === "initial" ? "final" : "initial";
     }
 
     /**
@@ -198,24 +217,56 @@ export class ResourceDataComponent implements OnChanges {
      * @param event - action event
      * @param title - action title
      */
-     googleAnalytics(url: string, event, title) {
-        this.gaService.gaTrackEvent('homepage', event, title, url);
-     }
-    
-    showSectionTitle() {
-        let show: boolean = false;
+    googleAnalytics(url: string, event, title) {
+        this.gaService.gaTrackEvent("homepage", event, title, url);
+    }
+
+    updateDataSection() {
+        if (!this.record) return;
+
+        this.showDataSection = false;
 
         if (this.isPublicSite) {
-            show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
+            this.showDataSection =
+                this.record["accessLevel"] ||
+                this.record["rights"] ||
+                (this.record["landingPage"] &&
+                    this.record["landingPage"].indexOf("/od/id") === -1) ||
+                this.hasDRS;
         } else {
             if (this.isEditMode) {
-                show = true;
+                this.showDataSection = true;
             } else {
-                show = this.record['accessLevel'] || this.record['rights'] || (this.record['landingPage'] && this.record['landingPage'].indexOf('/od/id') === -1) || this.hasDRS;
+                this.showDataSection =
+                    this.record["accessLevel"] ||
+                    this.record["rights"] ||
+                    (this.record["landingPage"] &&
+                        this.record["landingPage"].indexOf("/od/id") === -1) ||
+                    this.hasDRS ||
+                    (this.record["components"] &&
+                        this.record["components"].length > 0);
             }
         }
 
-        return show;
+        return this.showDataSection;
+    }
+
+    get accessLevelPublic() {
+        return (
+            this.record["accessLevel"] &&
+            this.record["accessLevel"] === "public"
+        );
+    }
+
+    get accessLevelRestricted() {
+        return (
+            this.record["accessLevel"] &&
+            this.record["accessLevel"] === "restricted public"
+        );
+    }
+
+    get accessRights() {
+        return this.record["rights"];
     }
 }
 

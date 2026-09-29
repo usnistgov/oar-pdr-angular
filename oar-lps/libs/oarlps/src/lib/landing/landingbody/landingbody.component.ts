@@ -1,15 +1,32 @@
-import { Component, Input, ViewChild, ElementRef, Output, EventEmitter, inject, effect, SimpleChanges } from '@angular/core';
-import { NerdmRes, NERDResource } from '../../nerdm/nerdm';
+import {
+    Component,
+    Input,
+    ViewChild,
+    ElementRef,
+    Output,
+    EventEmitter,
+    inject,
+    effect,
+    SimpleChanges,
+} from "@angular/core";
+import { NerdmRes, NERDResource } from "../../nerdm/nerdm";
 import { MetricsData } from "../metrics-data";
-import { SectionMode, SectionHelp, MODE, SectionPrefs, Sections, GlobalService } from '../../shared/globals/globals';
-import { CommonModule } from '@angular/common';
-import { EditStatusService } from '../editcontrol/editstatus.service';
-import { ResourceIdentityComponent } from '../sections/resourceidentity.component';
-import { ResourceDataComponent } from '../sections/resourcedata.component';
-import { ResourceDescriptionComponent } from '../sections/resourcedescription.component';
-import { ResourceMetadataComponent } from '../sections/resourcemetadata.component';
-import { ResourceRefsComponent } from '../sections/resourcerefs.component';
-import { LandingpageService, HelpTopic } from '../landingpage.service';
+import {
+    SectionMode,
+    SectionHelp,
+    MODE,
+    SectionPrefs,
+    Sections,
+    GlobalService,
+} from "../../shared/globals/globals";
+import { CommonModule } from "@angular/common";
+import { EditStatusService } from "../editcontrol/editstatus.service";
+import { ResourceIdentityComponent } from "../sections/resourceidentity.component";
+import { ResourceDataComponent } from "../sections/resourcedata.component";
+import { ResourceDescriptionComponent } from "../sections/resourcedescription.component";
+import { ResourceMetadataComponent } from "../sections/resourcemetadata.component";
+import { ResourceRefsComponent } from "../sections/resourcerefs.component";
+import { LandingpageService, HelpTopic } from "../landingpage.service";
 
 /**
  * a component that presents the landing page's presentation of the resource description
@@ -34,7 +51,7 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
  *  * Metadata
  */
 @Component({
-    selector:    'landing-body',
+    selector: "landing-body",
     standalone: true,
     imports: [
         CommonModule,
@@ -42,18 +59,15 @@ import { LandingpageService, HelpTopic } from '../landingpage.service';
         ResourceDataComponent,
         ResourceDescriptionComponent,
         ResourceMetadataComponent,
-        ResourceRefsComponent
+        ResourceRefsComponent,
     ],
-    templateUrl: './landingbody.component.html',
-    styleUrls:   [
-        '../landing.component.scss'
-    ]
+    templateUrl: "./landingbody.component.html",
+    styleUrls: ["../landing.component.scss"],
 })
 export class LandingBodyComponent {
     recordType: string = "";
     globalsvc = inject(GlobalService);
     isEditMode: boolean = false;
-
 
     // passed in by the parent component:
     @Input() md: NerdmRes = null;
@@ -63,7 +77,7 @@ export class LandingBodyComponent {
     // Pass out download status
     @Output() dlStatus: EventEmitter<string> = new EventEmitter();
     // Flag to tell if current screen size is mobile or small device
-    @Input() mobileMode : boolean|null = false;
+    @Input() mobileMode: boolean | null = false;
 
     @Input() metricsData: MetricsData;
     @Input() showJsonViewer: boolean = false;
@@ -77,25 +91,25 @@ export class LandingBodyComponent {
     @ViewChild(ResourceMetadataComponent)
     resourceMetadataComponent: ResourceMetadataComponent;
 
-    @ViewChild('description') description: ElementRef;
-    @ViewChild('dataAccess') dataAccess: ElementRef;
-    @ViewChild('references') references: ElementRef;
-    @ViewChild('about') about: ElementRef;
+    @ViewChild("description") description: ElementRef;
+    @ViewChild("dataAccess") dataAccess: ElementRef;
+    @ViewChild("references") references: ElementRef;
+    @ViewChild("about") about: ElementRef;
 
     /**
      * create an instance of the Identity section
      */
-    constructor(public lpService: LandingpageService){ }
+    constructor(public lpService: LandingpageService) {}
 
     ngOnInit(): void {
-        this.recordType = (new NERDResource(this.md)).resourceLabel();
+        this.recordType = new NERDResource(this.md).resourceLabel();
     }
 
     ngOnChanges(ch: SimpleChanges) {
-        if (this.edstatsvc){
+        if (this.edstatsvc) {
             this.edstatsvc.watchIsEditMode((isEditMode) => {
                 this.isEditMode = isEditMode;
-            })
+            });
         }
     }
 
@@ -105,47 +119,62 @@ export class LandingBodyComponent {
      * (Note that the "references" section may be omitted if there are no references to be displayed.)
      */
     goToSection(sectionID) {
-        if(!sectionID) sectionID = "top";
+        if (!sectionID) sectionID = "top";
 
-        switch(sectionID) {
+        switch (sectionID) {
             case SectionPrefs.getFieldName(Sections.DESCRIPTION): {
-                this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
-               break;
+                this.description.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+                break;
             }
             case SectionPrefs.getFieldName(Sections.TOPICS): {
-                this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
-               break;
+                this.description.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+                break;
             }
             case SectionPrefs.getFieldName(Sections.KEYWORDS): {
-                this.description.nativeElement.scrollIntoView({behavior: 'smooth'});
-               break;
+                this.description.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+                break;
             }
             case SectionPrefs.getFieldName(Sections.DATA_ACCESS): {
-                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
-               break;
+                this.dataAccess.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+                break;
             }
             case SectionPrefs.getFieldName(Sections.ACCESS_PAGES): {
-                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
-               break;
+                this.dataAccess.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+                break;
             }
             case SectionPrefs.getFieldName(Sections.FILES): {
-                this.dataAccess.nativeElement.scrollIntoView({behavior: 'smooth'});
-               break;
+                this.dataAccess.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
+                break;
             }
             case SectionPrefs.getFieldName(Sections.REFERENCES): {
-                this.references.nativeElement.scrollIntoView({behavior: 'smooth'});
+                this.references.nativeElement.scrollIntoView({
+                    behavior: "smooth",
+                });
                 break;
             }
             case SectionPrefs.getFieldName(Sections.ABOUT): {
-                this.about.nativeElement.scrollIntoView({behavior: 'smooth'});
+                this.about.nativeElement.scrollIntoView({ behavior: "smooth" });
                 break;
             }
-            default: { // GO TOP
+            default: {
+                // GO TOP
                 window.scrollTo({
                     top: 0,
                     left: 0,
-                    behavior: 'smooth'
-                  });
+                    behavior: "smooth",
+                });
                 break;
             }
         }
@@ -155,28 +184,39 @@ export class LandingBodyComponent {
      * Emit the download status
      * @param downloadStatus - download status ('downloading' or 'downloaded')
      */
-     setDownloadStatus(downloadStatus){
+    setDownloadStatus(downloadStatus) {
         this.dlStatus.emit(downloadStatus);
-     }
-    
+    }
+
     /**
      * In public side or MIDAS side preview mode, if nothing to display, hide the whole section.
      * @returns show resource data section or not.
      */
     showResourceData() {
         let show: boolean = false;
-        let hasDRS = (new NERDResource(this.md)).selectDynamicResourceComps().length > 0;
+        let hasDRS =
+            new NERDResource(this.md).selectDynamicResourceComps().length > 0;
         if (this.isPublicSite) {
-            show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
+            show =
+                this.md["accessLevel"] ||
+                this.md["rights"] ||
+                (this.md["landingPage"] &&
+                    this.md["landingPage"].indexOf("/od/id") === -1) ||
+                hasDRS;
         } else {
             if (this.isEditMode) {
                 show = true;
             } else {
-                show = this.md['accessLevel'] || this.md['rights'] || (this.md['landingPage'] && this.md['landingPage'].indexOf('/od/id') === -1) || hasDRS;
+                show =
+                    this.md["accessLevel"] ||
+                    this.md["rights"] ||
+                    (this.md["landingPage"] &&
+                        this.md["landingPage"].indexOf("/od/id") === -1) ||
+                    hasDRS ||
+                    (this.md["components"] && this.md["components"].length > 0);
             }
         }
 
         return show;
     }
-
 }
