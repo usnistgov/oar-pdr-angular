@@ -36,67 +36,68 @@ import { faCircleInfo, faRefresh, faArrowUpRightFromSquare } from '@fortawesome/
 declare var _initAutoTracker: Function;
 
 @Component({
-    selector: 'lib-datafiles-midas',
+    selector: "lib-datafiles-midas",
     standalone: true,
     imports: [
-        CommonModule, 
-        RouterModule, 
+        CommonModule,
+        RouterModule,
         BadgeModule,
-        TreeTableModule, 
-        OverlayPanelModule, 
-        ProgressSpinnerModule, 
-        ButtonModule, 
-        TooltipModule, 
+        TreeTableModule,
+        OverlayPanelModule,
+        ProgressSpinnerModule,
+        ButtonModule,
+        TooltipModule,
         NgbModule,
         DatafilesPubComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    templateUrl: './datafiles-midas.component.html',
+    templateUrl: "./datafiles-midas.component.html",
     styleUrls: [
-        '../../landing.component.scss', 
-        '../data-files.component.css',
-        './datafiles-midas.component.css'
-    ]
+        "../../landing.component.scss",
+        "../data-files.component.css",
+        "./datafiles-midas.component.css",
+    ],
 })
 export class DatafilesMidasComponent {
-
     @Input() record: NerdmRes;
-    @Input() inBrowser: boolean;   // false if running server-side
+    @Input() inBrowser: boolean; // false if running server-side
 
     // Flag to tell if this is a publishing platform
-    @Input() editEnabled: boolean;    //Disable download all functionality if edit is enabled
+    @Input() editEnabled: boolean; //Disable download all functionality if edit is enabled
     @Input() isEditMode: boolean;
-    // Download status to trigger metrics refresh in parent component
-    @Output() dlStatus: EventEmitter<string> = new EventEmitter();  
 
-    ediid: string = '';
-    files: TreeNode[] = [];           // the hierarchy of collections and files
-    fileCount: number = 0;            // number of files being displayed
-    downloadStatus: string = '';      // the download status for the dataset collection as a whole
+    // Download status to trigger metrics refresh in parent component
+    @Output() dlStatus: EventEmitter<string> = new EventEmitter();
+
+    ediid: string = "";
+    files: TreeNode[] = []; // the hierarchy of collections and files
+    fileCount: number = 0; // number of files being displayed
+    downloadStatus: string = ""; // the download status for the dataset collection as a whole
     globalDataCart: DataCart = null;
     dataCartStatus: DataCartStatus;
     allInCart: boolean = false;
     isAddingToDownloadAllCart: boolean = false;
     isTogglingAllInGlobalCart: boolean = false;
     isPublicSite: boolean = false;
+    fromMidasSide: boolean = true; // Tell datafiles-pub that this is from Midas side.
 
     cols: any[];
-    fileNode: any;               // the node whose description has been opened
+    fileNode: any; // the node whose description has been opened
     isExpanded: boolean = false;
     visible: boolean = true;
     cartLength: number;
-    showZipFileNames: boolean = false;    // zip file display is currently disabled
+    showZipFileNames: boolean = false; // zip file display is currently disabled
     showDownloadProgress: boolean = false;
-    appWidth: number = 800;   // default value used in server context
-    appHeight: number = 900;  // default value used in server context
+    appWidth: number = 800; // default value used in server context
+    appHeight: number = 900; // default value used in server context
     fontSize: string = "16px";
     EDIT_MODES: any;
     editMode: string;
-    curRecState: string;    // Current record state (normal, edit, submitted, resubmit, revesion, etc)
+    curRecState: string; // Current record state (normal, edit, submitted, resubmit, revesion, etc)
     mobileMode: boolean = false;
     hashCopied: boolean = false;
-    fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
-    fileManagerBaseUrl: string = 'https://nextcloud-dev.nist.gov';
+    fileManagerUrl: string = "https://nextcloud-dev.nist.gov";
+    fileManagerBaseUrl: string = "https://nextcloud-dev.nist.gov";
     fieldName: string = SectionPrefs.getFieldName(Sections.AUTHORS);
     overlaypanelOn: boolean = false;
     refreshFilesIcon: string = "faa faa-repeat fa-1x icon-white";
@@ -106,42 +107,37 @@ export class DatafilesMidasComponent {
     authorized: boolean = false;
 
     // The key of treenode whose details is currently displayed
-    currentKey: string = '';
-        
+    currentKey: string = "";
+
     //icon class names
     faCircleInfo = faCircleInfo;
     faRefresh = faRefresh;
     faArrowUpRightFromSquare = faArrowUpRightFromSquare;
-    
-    constructor(private cfg: AppConfig,
-                public editstatsvc: EditStatusService,
-                public breakpointObserver: BreakpointObserver,
-                public mdupdsvc : MetadataUpdateService, 
-                public lpService: LandingpageService, 
-                private msgsvc: UserMessageService,
-                private chref: ChangeDetectorRef,
-                public globalService: GlobalService,
-                private confirmDialogSvc: ConfirmationDialogService,
-                private ngZone: NgZone)
-    {
-        this.cols = [
-            { field: 'name', header: 'Name', width: '60%' },
-            { field: 'mediaType', header: 'Media Type', width: 'auto' },
-            { field: 'size', header: 'Size', width: 'auto' },
-            { field: 'download', header: 'Status', width: 'auto' }];
 
-        // if (typeof (window) !== 'undefined') {
-        //     window.onresize = (e) => {
-        //         ngZone.run(() => {
-        //             this.appWidth = window.innerWidth;
-        //             this.appHeight = window.innerHeight;
-        //             this.setWidth(this.appWidth);
-        //         });
-        //     };
-        // }
-        
+    constructor(
+        private cfg: AppConfig,
+        public editstatsvc: EditStatusService,
+        public breakpointObserver: BreakpointObserver,
+        public mdupdsvc: MetadataUpdateService,
+        public lpService: LandingpageService,
+        private msgsvc: UserMessageService,
+        private chref: ChangeDetectorRef,
+        public globalService: GlobalService,
+        private confirmDialogSvc: ConfirmationDialogService,
+        private ngZone: NgZone,
+    ) {
+        this.cols = [
+            { field: "name", header: "Name", width: "60%" },
+            { field: "mediaType", header: "Media Type", width: "auto" },
+            { field: "size", header: "Size", width: "auto" },
+            { field: "download", header: "Status", width: "auto" },
+        ];
+
         this.EDIT_MODES = LandingConstants.editModes;
-        this.fileManagerBaseUrl = this.cfg.get("fileManagerAPI", "https://nextcloud-dev.nist.gov");
+        this.fileManagerBaseUrl = this.cfg.get(
+            "fileManagerAPI",
+            "https://nextcloud-dev.nist.gov",
+        );
 
         this.mdupdsvc.watchFileManagerUrl((fileManagerUrl) => {
             if (fileManagerUrl) {
@@ -151,41 +147,36 @@ export class DatafilesMidasComponent {
     }
 
     ngOnInit() {
-        // this.arrRevisionTypes = LandingConstants.reviseTypes;
-        // if(this.record && !this.record["keyword"]) this.record["keyword"] = [];
-
         this.editstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
         });
 
         this.globalService.watchAuthorized((authorized) => {
             this.authorized = authorized;
-        })
+        });
 
         this.editstatsvc.watchRecState((recState) => {
             this.curRecState = recState;
-        })
+        });
 
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
         this.breakpointObserver
-        .observe(['(min-width: 766px)'])
-        .subscribe((state: BreakpointState) => {
-            if (state.matches) {
-                this.mobileMode = false;
-            } else {
-                this.mobileMode = true;
-            }
-        });
+            .observe(["(min-width: 766px)"])
+            .subscribe((state: BreakpointState) => {
+                if (state.matches) {
+                    this.mobileMode = false;
+                } else {
+                    this.mobileMode = true;
+                }
+            });
 
-        if(this.inBrowser){
+        if (this.inBrowser) {
             // this.appHeight = (window.innerHeight);
             // this.appWidth = (window.innerWidth);
             // this.setWidth(this.appWidth);
-            
             // this.globalDataCart = this.cartService.getGlobalCart();
             // this.cartLength = this.globalDataCart.size();
             // this.globalDataCart.watchForChanges((ev) => { this.cartChanged(); })
-
             // this.dataCartStatus = DataCartStatus.openCartStatus();
         }
 
@@ -193,9 +184,9 @@ export class DatafilesMidasComponent {
         //     this.useMetadata();
     }
 
-    get fileManagerTooltip(){
-        if(this.fileManagerUrl) return this.fileManagerUrl;
-        else return "File Manager URL is not available."
+    get fileManagerTooltip() {
+        if (this.fileManagerUrl) return this.fileManagerUrl;
+        else return "File Manager URL is not available.";
     }
 
     ngOnChanges(ch: SimpleChanges) {
@@ -207,23 +198,6 @@ export class DatafilesMidasComponent {
      */
     openFileManager() {
         window.open(this.fileManagerUrl);
-
-        // if (this.isRevisionType && this.revisionType == "Metadata Update") {
-        //     let message = "Current revision type is 'Metadata Update'. Would you like to select a type from following and proceed?";
-
-        //     this.confirmDialogSvc.confirmManageFiles(
-        //         'Please confirm',
-        //         message, 'sm')
-        //         .then((confirmed) => {
-        //             if (confirmed) {
-        //                 this.revisionType = this.arrRevisionTypes[4];
-        //                 window.open(this.fileManagerUrl);
-        //             }
-        //         })
-        //         .catch(() => {
-        //             console.log("User canceled request (indirectly)");
-        //         });
-        // }     
     }
 
     /**
@@ -235,53 +209,61 @@ export class DatafilesMidasComponent {
             next: (fsdata) => {
                 this.mdupdsvc.loadDraft(true).subscribe({
                     next: (md) => {
-                        if(md) {
+                        if (md) {
                             this.mdupdsvc.cacheMetadata(md as NerdmRes);
                             this.mdupdsvc.checkUpdatedFields(md as NerdmRes);
 
-                            if (md['components']) 
-                                this.record['components'] = JSON.parse(JSON.stringify(md['components']));
-                            else
-                                this.record['components'] = []
-                        
+                            if (md["components"])
+                                this.record["components"] = JSON.parse(
+                                    JSON.stringify(md["components"]),
+                                );
+                            else this.record["components"] = [];
+
                             // this.buildTree(this.record['components']); // Will rebuild in pub component
-                        }else{
-                            this.msgsvc.error("Fail to retrive updated dataset.");
+                        } else {
+                            this.msgsvc.error(
+                                "Fail to retrive updated dataset.",
+                            );
                         }
-                        this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
+                        this.refreshFilesIcon =
+                            "faa faa-repeat fa-1x icon-white";
                     },
                     error: (err) => {
                         console.error("Failed to pull updated record: ", err);
-                        this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-                    }
+                        this.refreshFilesIcon =
+                            "faa faa-repeat fa-1x icon-white";
+                    },
                 });
             },
             error: (err) => {
                 console.error("Failed to trigger file sync: ", err);
                 this.refreshFilesIcon = "faa faa-repeat fa-1x icon-white";
-            }
+            },
         });
     }
 
     /**
-     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert 
+     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert
      * the data to its previous state.
      */
-    public showLargeFileManagerHelpPopup(event, overlaypanel: OverlayPanel): void {
-        if(!this.overlaypanelOn){
+    public showLargeFileManagerHelpPopup(
+        event,
+        overlaypanel: OverlayPanel,
+    ): void {
+        if (!this.overlaypanelOn) {
             overlaypanel.hide();
             setTimeout(() => {
                 overlaypanel.show(event);
                 this.overlaypanelOn = true;
                 this.chref.detectChanges();
-            }, 100);    
-        }else{
+            }, 100);
+        } else {
             overlaypanel.hide();
             setTimeout(() => {
                 this.chref.detectChanges();
             }, 0);
         }
-    }    
+    }
 
     onHide() {
         this.overlaypanelOn = false;
@@ -294,34 +276,35 @@ export class DatafilesMidasComponent {
         overlaypanel.hide();
         this.overlaypanelOn = false;
 
-        setTimeout(()=>{ // this will make the execution after the above boolean has changed
+        setTimeout(() => {
+            // this will make the execution after the above boolean has changed
             event.chref.detectChanges();
-        },0);          
+        }, 0);
     }
 
     /**
      * Emit download status
      * @param downloadStatus
      */
-    setDownloadStatus(downloadStatus){
+    setDownloadStatus(downloadStatus) {
         this.dlStatus.emit(downloadStatus);
-    }    
+    }
 
     /**
      * Button style
-     * @returns 
+     * @returns
      */
     btnStyle() {
         // let color = this.allCollections[this.collection].colorPalette;
 
         return {
-            '--button-text-color': 'white',
-            '--button-color': 'var(--nist-green-default)',
-            '--hover-color': 'var(--nist-green-hover)',
-            '--disable-color': 'var(--disabled-grey)',
-            '--disable-text-color': 'var(--disabled-grey-text)',
-            'margin-bottom': '.5em',
-            'width': '200px'
+            "--button-text-color": "white",
+            "--button-color": "var(--nist-green-default)",
+            "--hover-color": "var(--nist-green-hover)",
+            "--disable-color": "var(--disabled-grey)",
+            "--disable-text-color": "var(--disabled-grey-text)",
+            "margin-bottom": ".5em",
+            width: "200px",
         };
-    }         
+    }
 }
