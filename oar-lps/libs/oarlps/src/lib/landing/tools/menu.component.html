@@ -69,6 +69,7 @@
 @if(hasSubmitStatusData) {
     <submit-status 
         *ngIf="curRecState==recStates.SUBMITTED || curRecState==recStates.RESUBMIT"
+        [showHeader]="true"
         [submitStatus]="submitStatus" 
         [showFeedback]="showFeedback">
     </submit-status>
