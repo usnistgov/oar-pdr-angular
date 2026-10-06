@@ -461,6 +461,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                 if(this.inBrowser){
                                     if(this.cfg_editEnabled){
                                         this.metricsData.hasCurrentMetrics = false;
+                                        this.metricsData.dataReady = true; //Signal UI to display "Metrics not available"
                                         this.showMetrics = true;
                                     }else{
                                         if(this.theme == Themes.DEFAULT_THEME){
@@ -555,6 +556,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
               if(this.inBrowser){
                   if(this.cfg_editEnabled){
                       this.metricsData.hasCurrentMetrics = false;
+                      this.metricsData.dataReady = true; //Signal UI to display "Metrics not available"
                       this.showMetrics = true;
                   }else{
                       if(this.theme == Themes.DEFAULT_THEME)
