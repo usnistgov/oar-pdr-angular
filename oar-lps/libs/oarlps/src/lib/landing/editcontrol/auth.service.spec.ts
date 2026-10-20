@@ -28,14 +28,14 @@ describe('WebAuthService', () => {
         cfg.loadConfig(env.config)
 
         TestBed.configureTestingModule({
-        imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
-        providers: [ 
-            MetadataUpdateService, 
-            AuthenticationService,
-            DatePipe,
-            { provide: AppConfig, useValue: cfg },
-            { provide: AuthService, useValue: authsvc },
-            UserMessageService ]
+            imports: [ HttpClientTestingModule, ToastrModule.forRoot() ],
+            providers: [ 
+                MetadataUpdateService, 
+                AuthenticationService,
+                DatePipe,
+                { provide: AppConfig, useValue: cfg },
+                { provide: AuthService, useValue: authsvc },
+            ]
         });
         svc = TestBed.inject(AuthenticationService);
     });

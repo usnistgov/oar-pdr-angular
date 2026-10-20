@@ -78,8 +78,15 @@ export abstract class DAPUpdateService {
      * return true if the current user has write-access to the current record.  
      */
     canEdit() : Observable<boolean> {
-        if (this._rec['userPerms'])
-            return of(this._rec['userPerms'].findIndex((el) => el == "write") >= 0);
+        if (this._rec &&
+            this._rec["userPerms"] &&
+            this._rec["userPerms"].findIndex((el) => el == "write") >= 0
+        ) {
+            throw new Error("Un authorized.");
+        }
+            // return of(
+            //     this._rec["userPerms"].findIndex((el) => el == "write") >= 0,
+            // );
         return of(true);
     }
 

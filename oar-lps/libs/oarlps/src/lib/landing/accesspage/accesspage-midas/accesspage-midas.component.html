@@ -1,11 +1,22 @@
+<!-- Display error message if any-->
+<!-- <div *ngIf="errMessage" style="margin-bottom: 10px;">
+    <lib-single-msg-bar [message]="errMessage" (command_out)="clearMessage()">
+    </lib-single-msg-bar>
+</div> -->
+
 <accesspage-pub 
     [record]="record" 
     [theme]="theme" 
     [isPublicSite]="isPublicSite"
     (hasContentChange)="childContent($event)">
-    <div class="message" style="margin-right: 10px">
-        @if (isEditMode) {
-            Add links to relevant websites including software repositories.
+    <div class="message" style="margin-right: 10px;">
+        @if(isEditMode) {
+            <span *ngIf="accessPages.length === 0; else editAccessPage">
+                Add links to relevant websites including software repositories.
+            </span>
+            <ng-template #editAccessPage>
+                 Edit links to relevant websites including software repositories.
+            </ng-template>
         }
     </div>
 
@@ -26,7 +37,8 @@
             } @else {
                 <!-- Hide button - hide edit block -->
                 <button
-                    class="edit_button"
+                    class="edit_button action-icon"
+                    [class.disabled]="isEditing || isAdding"
                     type="button"
                     [disabled]="isEditing || isAdding"
                     (click)="setMode()"

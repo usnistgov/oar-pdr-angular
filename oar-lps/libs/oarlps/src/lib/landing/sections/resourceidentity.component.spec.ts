@@ -8,7 +8,6 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { Component } from '@angular/core';
 import { TitleComponent } from '../title/title.component';
 import { IspartofComponent } from '../ispartof/ispartof.component';
-import { FacilitatorsComponent } from '../facilitators-to be removed/facilitators.component';
 import { ContactPubComponent } from '../contact/contact-pub/contact-pub.component';
 import { ContactMidasComponent } from '../contact/contact-midas/contact-midas.component';
 import { AuthorPubComponent } from '../author/author-pub/author-pub.component';

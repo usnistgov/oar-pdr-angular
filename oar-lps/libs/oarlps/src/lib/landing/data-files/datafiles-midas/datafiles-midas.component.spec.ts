@@ -18,7 +18,6 @@ import { EditStatusService } from '../../../landing/editcontrol/editstatus.servi
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import * as env from '../../../../environments/environment';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
-import { UserMessageService } from '../../../frame/usermessage.service';
 import { AuthService, WebAuthService, MockAuthService } from '../../editcontrol/auth.service';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { DAPService, createDAPService, LocalDAPService } from '../../../nerdm/dap.service';
@@ -70,7 +69,6 @@ describe('DatafilesMidasComponent', () => {
                 FontAwesomeTestingModule],
             schemas: [NO_ERRORS_SCHEMA],
             providers: [
-                UserMessageService, 
                 HttpHandler,
                 DatePipe,
                 { provide: AppConfig, useValue: cfg },
@@ -78,7 +76,7 @@ describe('DatafilesMidasComponent', () => {
                 { provide: DAPService, useFactory: createDAPService, 
                     deps: [ env, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
+                    edstatsvc, dapsvc, null, null)
                 },
                 CartService,
                 DownloadService,

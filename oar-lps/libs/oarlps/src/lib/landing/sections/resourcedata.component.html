@@ -36,7 +36,7 @@
     </div>
 
     <!-- Access pages. Hidden if no content -->
-    <div id="accessPages" [style.display]="hasAccessPageContent ? null : 'none'">
+    <div id="accessPages" [style.display]="displayAccessPage ? null : 'none'">
         <div style="width: 100%;">
             @if(isPublicSite) {
                 <accesspage-pub 
