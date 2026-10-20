@@ -53,7 +53,7 @@
 <table style="width: 100%;" *ngIf="theme == scienceTheme">
     <tr *ngFor="let menuitem of collectionMetricsMenu">
         <td [ngClass]="menuitem.isHeader? 'menu-header menu-body' : 'menu-item menu-body'" scope="row"
-            [ngStyle]="menuStyle(menuitem.isHeader)"
+            [ngStyle]="menuStyle(menuitem)"
             (click)="goToSection(menuitem.sectionName, menuitem.url)">
             <fa-icon *ngIf="menuitem.icon" [icon]="['fas', menuitem.icon]" ></fa-icon>
             {{menuitem.title}}

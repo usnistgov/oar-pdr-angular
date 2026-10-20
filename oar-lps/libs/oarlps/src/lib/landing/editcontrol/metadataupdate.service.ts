@@ -220,8 +220,14 @@ export class MetadataUpdateService {
     public startEditing(recid: string): Observable<boolean> {
         return this.dapsvc.edit(recid).pipe(
             tap((recsvc) => {
-                if (!recsvc.canEdit())
-                    throw new daperrs.NotAuthorizedError(recid, "write");
+                recsvc.canEdit().subscribe({
+                    next: (success) => {
+                        //Do nothing
+                    },
+                    error: (err) => {
+                        throw new daperrs.NotAuthorizedError(recid, "write");
+                    }
+                })
 
                 this.dapUpdtSvc = recsvc as MIDASDAPUpdateService;
                 let rec = this.dapUpdtSvc.getRecord();
