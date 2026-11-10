@@ -5,7 +5,16 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NotificationService } from '../../../shared/notification-service/notification.service';
 import { MetadataUpdateService } from '../../editcontrol/metadataupdate.service';
 import { LandingpageService, HelpTopic } from '../../landingpage.service';
-import { SectionMode, SectionHelp, MODE, Sections, SectionPrefs, GlobalService, iconClass } from '../../../shared/globals/globals';
+import {
+    SectionMode,
+    SectionHelp,
+    MODE,
+    Sections,
+    SectionPrefs,
+    GlobalService,
+    iconClass,
+    Message
+} from '../../../shared/globals/globals';
 import {
     CdkDragDrop,
     moveItemInArray,
@@ -21,7 +30,7 @@ import { TextEditComponent } from '../../../text-edit/text-edit.component';
 import { RefEditComponent } from '../ref-edit/ref-edit.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faXmark } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'lib-ref-list',
@@ -34,7 +43,6 @@ import { faPlus } from '@fortawesome/free-solid-svg-icons';
         CollapseModule,
         TextEditComponent,
         RefEditComponent,
-        ConfirmationDialogComponent,
         DragDropModule,
         FontAwesomeModule
     ],
@@ -54,14 +62,9 @@ export class RefListComponent implements OnInit {
     editBlockStatus: string = 'collapsed';
     placeholder: string = "Enter reference data below";
     orderChanged: boolean = false;
-    currentRef: Reference = {} as Reference;
-    currentRefIndex: number = 0;
     orig_record: NerdmRes = null; // Keep a copy of original record for undo purpose
     forceReset: boolean = false;
     record: NerdmRes = {} as NerdmRes;
-
-    // For error message display
-    errMessage: string
 
     // For warning pop up
     modalRef: any;
@@ -82,10 +85,14 @@ export class RefListComponent implements OnInit {
     //icon class names
     // addIcon = iconClass.ADD;    
     faPlus = faPlus;
+    faXmark = faXmark;
     
     // passed in by the parent component:
     @Input() nerdmRecord: NerdmRes = null;
     @Input() inBrowser: boolean = false;
+    @Input() loadEditRefBlock: boolean = false;
+    @Input() currentRef: Reference = {} as Reference;
+    @Input() currentRefIndex: number = 0;
     @Output() dataCommand: EventEmitter<any> = new EventEmitter();
     @Output() editmodeOutput: EventEmitter<any> = new EventEmitter();
 
@@ -124,6 +131,14 @@ export class RefListComponent implements OnInit {
     ngOnChanges(ch : SimpleChanges) {
         if (ch.nerdmRecord){
             this.resetOriginalValue();
+        }
+
+        if (ch.loadEditRefBlock) {
+            this.loadEditRefBlock = ch.loadEditRefBlock.currentValue;
+
+            if (this.loadEditRefBlock && (!this.record[this.fieldName] || this.record[this.fieldName].length == 0)) {
+                this.onAdd();
+            }            
         }
 
         this.chref.detectChanges();
@@ -295,9 +310,7 @@ export class RefListComponent implements OnInit {
                         this.chref.detectChanges();
                         resolve(true);
                     }else{
-                        let msg = "References update failed";
-                        console.error(msg);
-                        this.errMessage = msg;
+                        //Error was handled in metadata service.
                         resolve(false);
                     }
                 });
@@ -310,10 +323,8 @@ export class RefListComponent implements OnInit {
                             this.notificationService.showSuccessWithTimeout("Successfully updated reference.", "", 3000);
                             this.chref.detectChanges();
                             resolve(true);
-                        }else{
-                            let msg = "Reference update failed";
-                            console.error(msg);
-                            this.errMessage = msg;
+                        } else {
+                            //Error was handled in metadata service.
                             resolve(false);
                         }
                     });
@@ -350,9 +361,7 @@ export class RefListComponent implements OnInit {
                         this.chref.detectChanges();
                         this.notificationService.showSuccessWithTimeout("Successfully added reference.", "", 3000);
                     }else{
-                        let msg = "Failed to add reference";
-                        console.error(msg);
-                        this.errMessage = msg;
+                        //Error was handled in metadata service.
                         return;
                     }
                 });
@@ -393,9 +402,7 @@ export class RefListComponent implements OnInit {
                     this.notificationService.showSuccessWithTimeout("Reverted changes to reference.", "", 3000);
                     this.setMode(MODE.LIST);
                 }else{
-                    let msg = "Failed to undo reference metadata"
-                    console.error(msg);
-                    this.errMessage = msg;
+                    //Error was handled in metadata service.
                     return;
                 }
             });
@@ -498,11 +505,8 @@ export class RefListComponent implements OnInit {
                         this.currentRefIndex = 0;
                         this.currentRef = this.record[this.fieldName][this.currentRefIndex];
                         this.forceReset = true; // Force reference editor to reset data
-                    } else {
-                        let msg = "Failed to restore reference";
-                        console.error(msg);
-                        this.errMessage = msg;
-                    }
+                    } 
+                    //Error was handled in metadata service.
                 })
 
                 break;
@@ -546,9 +550,7 @@ export class RefListComponent implements OnInit {
 
                         this.editmodeOutput.next(this.editMode); 
                     }else{
-                        let msg = "Update failed";
-                        console.error(msg);
-                        this.errMessage = msg;
+                        //error was handled in metadata service, stay on current reference and do not switch to the selected reference.
                     }
                 })
             }else{
@@ -676,27 +678,42 @@ export class RefListComponent implements OnInit {
     }
 
     /**
-     * Undo all changes
+     * Add/close button disabled when in edit/add mode. 
+     * @param button The type of the button
+     * @returns icon class name for the button
      */
-    undoAllChangesConfirmation(){
-        var message = 'This will undo all reference changes.';
+    iconClass(button: string) {
+        let Returnclass: string ="icon_disabled";
 
-        this.modalRef = this.modalService.open(ConfirmationDialogComponent, { centered: true });
-        this.modalRef.componentInstance.title = 'Please confirm';
-        this.modalRef.componentInstance.btnOkText = 'Confirm';
-        this.modalRef.componentInstance.btnCancelText = 'Cancel';
-        this.modalRef.componentInstance.message = message;
-        this.modalRef.componentInstance.showWarningIcon = true;
-        this.modalRef.componentInstance.showCancelButton = true;
-        
-        this.modalRef.result.then(
-            (result) => {
-                if ( result ) {
-                    this.undoChanges();
-                }else{
-                    console.log("User changed mind.");
+        switch (button) {
+            case 'hideList':
+                if (this.isEditing || this.isAdding) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
+                } 
+
+                break;
+            case 'add':
+                if (this.isEditing || this.isAdding) {
+                    Returnclass = "icon_disabled";
+                } else {
+                    Returnclass = "icon_enabled";
                 }
-            }, (reason) => {
-        });
-    }    
+
+                break;
+            default:
+                break;
+        }
+
+        return Returnclass;
+    }       
+    
+    hideListBlock() {
+        this.setMode(MODE.NORMAL);
+
+        if(this.record)
+            this.dataCommand.next({"data": this.record[this.fieldName], "action": "hideListBlock"});
+    }
+
 }

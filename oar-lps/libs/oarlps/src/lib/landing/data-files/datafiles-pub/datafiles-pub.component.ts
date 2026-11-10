@@ -12,7 +12,6 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { SectionPrefs, Sections, GlobalService, iconClass } from '../../../shared/globals/globals';
 import { LandingpageService } from '../../landingpage.service';
-import { UserMessageService } from '../../../frame/usermessage.service';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TreeTableModule } from 'primeng/treetable';
@@ -246,21 +245,19 @@ export class DatafilesPubComponent {
     faChevronDown = faChevronDown;
 
     // @ViewChild('tt', { read: ElementRef }) public treeTable: ElementRef<any>;
-    @ViewChild("tt") treeTable!: TreeTable;
-
-    constructor(
-        private cartService: CartService,
-        public breakpointObserver: BreakpointObserver,
-        public lpService: LandingpageService,
-        private msgsvc: UserMessageService,
-        private chref: ChangeDetectorRef,
-        private modalService: NgbModal,
-        public edstatsvc: EditStatusService,
-        private gaService: GoogleAnalyticsService,
-        private cfg: AppConfig,
-        public iconLibrary: FaIconLibrary,
-        private ngZone: NgZone,
-    ) {
+    @ViewChild('tt') treeTable!: TreeTable; 
+    
+    constructor(private cartService: CartService,
+                public breakpointObserver: BreakpointObserver,
+                public lpService: LandingpageService, 
+                private chref: ChangeDetectorRef,
+                private modalService: NgbModal,
+                public edstatsvc: EditStatusService,
+                private gaService: GoogleAnalyticsService,
+                private cfg: AppConfig,
+                public iconLibrary: FaIconLibrary,
+                private ngZone: NgZone)
+    {
         iconLibrary.addIcons(
             faCircle,
             faDownload,
@@ -983,14 +980,8 @@ export class DatafilesPubComponent {
         dosave: boolean = true,
     ): DataCartItem {
         if (cart && file.filepath && file.downloadURL) {
-            let added: DataCartItem = cart.addFile(
-                this.ediid,
-                file,
-                selected,
-                dosave,
-                this.msgsvc,
-            );
-            added["resTitle"] = this.record["title"];
+            let added: DataCartItem = cart.addFile(this.ediid, file, selected, dosave);
+            added['resTitle'] = this.record['title'];
             return added;
         }
     }

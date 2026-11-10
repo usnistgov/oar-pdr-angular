@@ -31,8 +31,14 @@
                     [pTooltip]="getTooltip('edit')"
                     tooltipPosition="top" >
 
-                    <fa-icon [icon]="['fas', getEditIconClass()]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="getTooltip('edit')"></fa-icon>
+                    <fa-icon 
+                        [icon]="['fas', getEditIconClass()]" 
+                        size="sm" 
+                        [style.opacity]="iconOpacity()" 
+                        data-toggle="tooltip"
+                        [title]="getTooltip('edit')"
+                        [class]="iconClass('editOrSave')">
+                    </fa-icon>
 
                     <!-- <fa-icon [icon]="['fas', getEditIconClass()]" size="sm" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="getTooltip('edit')"></fa-icon> -->
@@ -49,8 +55,14 @@
                     [pTooltip]="custBtnTooltip"
                     tooltipPosition="top" >
 
-                    <fa-icon [icon]="['fas', custBtnIcon]" size="sm"  [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="Costom"></fa-icon>
+                    <fa-icon 
+                        [icon]="['fas', custBtnIcon]" 
+                        size="sm"  
+                        [style.opacity]="iconOpacity()" 
+                        data-toggle="tooltip"
+                        [title]="Costom"
+                        [class]="iconClass('custom')">
+                    </fa-icon>
                     <!-- <i [class]="custBtnIcon" [style.opacity]="iconOpacity()"  data-toggle="tooltip" [title]="Costom"></i> -->
                 </button>
 
@@ -65,10 +77,15 @@
                     pTooltip="Edit this item"
                     tooltipPosition="top" >
 
-                    <fa-icon [icon]="['fas', editIcon]" size="sm" [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="getTooltip('edit')"></fa-icon>
-                    <!-- <i [class]="getEditOnlyIconClass()" [style.opacity]="iconOpacity(editing)"
-                        data-toggle="tooltip" [title]="getTooltip('edit')"></i> -->
+                    <fa-icon 
+                        [icon]="['fas', editIcon]" 
+                        size="sm" 
+                        [class]="getEditOnlyIconClass()" 
+                        [style.opacity]="iconOpacity()" 
+                        data-toggle="tooltip"
+                        [title]="getTooltip('edit')"
+                        [class]="iconClass('editOnly')">
+                    </fa-icon>
                 </button>
 
                 <!-- Delete/undoEdit button-->
@@ -82,10 +99,15 @@
                     [pTooltip]="getTooltip('delete')"
                     tooltipPosition="top">
 
-                    <fa-icon [icon]="['fas', getDelIconClass()]" size="sm" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="getTooltip('delete')"></fa-icon>
-                    <!-- <i [class]="getDelIconClass()" [style.opacity]="iconOpacity()"
-                        data-toggle="tooltip" [title]="getTooltip('delete')"></i> -->
+                    <fa-icon 
+                        [icon]="['fas', getDelIconClass()]" 
+                        size="sm" 
+                        [style.opacity]="iconOpacity()"
+                        data-toggle="tooltip" 
+                        [title]="getTooltip('delete')"
+                        [class]="iconClass('delete')">
+                    </fa-icon>
+
                 </button>
 
                 <!-- Restore button-->
@@ -100,8 +122,14 @@
                     data-container="body"
                     tooltipPosition="top">
 
-                    <fa-icon [icon]="['fas', undoIcon]" size="sm" [style.opacity]="iconOpacity(editing)" data-toggle="tooltip"
-                        [title]="getTooltip('restore')"></fa-icon>
+                    <fa-icon 
+                        [icon]="['fas', undoIcon]" 
+                        size="sm" 
+                        [style.opacity]="iconOpacity(editing)" 
+                        data-toggle="tooltip"
+                        [title]="getTooltip('restore')"
+                        [class]="iconClass('restore')">
+                    </fa-icon>
 
                     <!-- <i [class]="undoIcon" [style.opacity]="iconOpacity(editing)"
                         data-toggle="tooltip" [title]="getTooltip('restore')"></i> -->
@@ -118,8 +146,14 @@
                     pTooltip="Add new item"
                     tooltipPosition="top">
 
-                    <fa-icon [icon]="['fas', addIcon]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="Add"></fa-icon>
+                    <fa-icon 
+                        [icon]="['fas', addIcon]" 
+                        size="sm" 
+                        [style.opacity]="iconOpacity()" 
+                        data-toggle="tooltip"
+                        [title]="Add"
+                        [class]="iconClass('add')">
+                    </fa-icon>
                     <!-- <i class="faa faa-plus" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="Add"></i> -->
                 </button>
@@ -135,8 +169,14 @@
                     [pTooltip]="submitTooltip"
                     tooltipPosition="top">
 
-                    <fa-icon [icon]="['fas', submitIcon]" size="sm" [style.opacity]="iconOpacity()" data-toggle="tooltip"
-                        [title]="submit"></fa-icon>
+                    <fa-icon 
+                        [icon]="['fas', submitIcon]" 
+                        size="sm" 
+                        [style.opacity]="iconOpacity()" 
+                        data-toggle="tooltip"
+                        [title]="submit"
+                        [class]="iconClass('submit')">
+                    </fa-icon>
 
                     <!-- <i [class]="submitIcon" [style.opacity]="iconOpacity()"
                         data-toggle="tooltip" [title]="submit"></i> -->

@@ -447,8 +447,10 @@ a:visited {
   border-style: solid;
   border-color: lightgrey;
   border-width: 1px 1px 1px 0px;
-  margin-right: .5em;
+  /* margin-right: .5em; */
 }
+
+
 
 .undo_button {
   display: table-cell;
@@ -462,15 +464,15 @@ a:visited {
   border-width: 1px 1px 1px 0px;
 }
 
-.icon_enabled {
-  color: black;
+/* .icon_enabled {
+  color: var(--nist-blue-default);
   font-size: 1em;
 }
 
 .icon_disabled {
   color: rgb(200, 200, 200);
   font-size: 1em;
-}
+} */
 
 .filter-black{
   filter: invert(0.5);
