@@ -1,7 +1,7 @@
 <!-- This component display submit status from one review system that passed in from parent component
      Only display this component if there is submit status data -->
 @if( hasSubmitStatusData ) {
-    <div class="wrapper">
+    <div class="wrapper" [ngStyle]="submitStyle()">
         <div [ngClass]="showFeedback? 'submission-card' : 'submission-card-sb'">
             <div><strong>Phase:</strong> 
                 <span class="bubble">{{ submitStatus.phase }}</span>

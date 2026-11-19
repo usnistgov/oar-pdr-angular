@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CollapseModule } from '../../collapseDirective/collapse.module';
@@ -15,29 +15,38 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'accesspage-pub',
+    selector: "accesspage-pub",
     standalone: true,
-    imports: [ CommonModule, CollapseModule, NgbModule, FontAwesomeModule ],
-    templateUrl: './accesspage-pub.component.html',
-    styleUrls: ['../../landing.component.scss', './accesspage-pub.component.css'],
+    imports: [CommonModule, CollapseModule, NgbModule, FontAwesomeModule],
+    templateUrl: "./accesspage-pub.component.html",
+    styleUrls: [
+        "../../landing.component.scss",
+        "./accesspage-pub.component.css",
+    ],
     animations: [
-        trigger('enterAnimation', [
-        state('enter', style({height: '0px', opacity: 0})),
-        state('leave', style({height: '*', opacity: 1})),
-        transition('enter <=> leave', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        trigger("enterAnimation", [
+            state("enter", style({ height: "0px", opacity: 0 })),
+            state("leave", style({ height: "*", opacity: 1 })),
+            transition(
+                "enter <=> leave",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
         ]),
-        trigger('editExpanded', [
-            state('false', style({height: '0px', minHeight: '0'})),
-            state('true', style({height: '*'})),
-            transition('true <=> false', animate('625ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ])
-    ]
+        trigger("editExpanded", [
+            state("false", style({ height: "0px", minHeight: "0" })),
+            state("true", style({ height: "*" })),
+            transition(
+                "true <=> false",
+                animate("625ms cubic-bezier(0.4, 0.0, 0.2, 1)"),
+            ),
+        ]),
+    ],
 })
 export class AccesspagePubComponent {
     accessPages: NerdmComp[] = [];
     editBlockExpanded: boolean = false;
     fieldName: string = SectionPrefs.getFieldName(Sections.ACCESS_PAGES);
-    overflowStyle: string = 'hidden';
+    overflowStyle: string = "hidden";
     nonAccessPages: NerdmComp[] = []; // Keep a copy of original record for update purpose
     scienceTheme = Themes.SCIENCE_THEME;
 
@@ -51,52 +60,60 @@ export class AccesspagePubComponent {
     faCaretRight = faCaretRight;
 
     isMouseOver: boolean = false;
-    
+
     @Input() record: NerdmRes = null;
     @Input() theme: string;
     @Input() isPublicSite: boolean = true;
-    
-    constructor( private gaService: GoogleAnalyticsService,
+    @Output() hasContentChange = new EventEmitter<boolean>();
+
+    constructor(
+        private gaService: GoogleAnalyticsService,
         public globalsvc: GlobalService,
         public iconLibrary: FaIconLibrary,
-        private chref: ChangeDetectorRef ) {
-        
+        private chref: ChangeDetectorRef,
+    ) {
         iconLibrary.addIcons(
             faArrowUpRightFromSquare,
             faCaretDown,
-            faCaretRight
+            faCaretRight,
         );
     }
 
     ngOnInit(): void {
-        if (this.record && this.record[this.fieldName] && this.record[this.fieldName].length > 0){
+        if (
+            this.record &&
+            this.record[this.fieldName] &&
+            this.record[this.fieldName].length > 0
+        ) {
             this.useMetadata();
         }
     }
 
-    ngOnChanges(ch : SimpleChanges) {
-        if (ch.record){
-            this.useMetadata();  // initialize internal component data based on metadata
+    ngOnChanges(ch: SimpleChanges) {
+        if (ch.record) {
+            this.useMetadata(); // initialize internal component data based on metadata
         }
-            
+
         this.chref.detectChanges();
     }
 
     /**
      * select the AccessPage components to display, adding special disply options
      */
-    selectAccessPages() : NerdmComp[] {
-        let use: NerdmComp[] = (new NERDResource(this.record)).selectAccessPages();
-        use = (JSON.parse(JSON.stringify(use))) as NerdmComp[];
-        if(use) {
+    selectAccessPages(): NerdmComp[] {
+        let use: NerdmComp[] = new NERDResource(
+            this.record,
+        ).selectAccessPages();
+        use = JSON.parse(JSON.stringify(use)) as NerdmComp[];
+        if (use) {
             return use.map((cmp) => {
-                if (! cmp['title']) cmp['title'] = cmp['accessURL'];
-    
-                cmp['showDesc'] = false;
-                cmp['backcolor'] = this.getStyle()['background-color'];
+                if (!cmp["title"]) cmp["title"] = cmp["accessURL"];
+
+                cmp["showDesc"] = false;
+                cmp["backcolor"] = this.getStyle()["background-color"];
                 return cmp;
             });
-        }else{
+        } else {
             return [] as NerdmComp[];
         }
     }
@@ -106,22 +123,32 @@ export class AccesspagePubComponent {
         if (this.record[this.fieldName]) {
             this.accessPages = this.selectAccessPages();
 
-            // If this is a science theme and the collection contains one or more components 
-            // that contain both AccessPage (or SearchPage) and DynamicSourceSet, 
-            // we want to remove it from accessPages array since it's already displayed 
+            // If this is a science theme and the collection contains one or more components
+            // that contain both AccessPage (or SearchPage) and DynamicSourceSet,
+            // we want to remove it from accessPages array since it's already displayed
             // in the search result.
-            if(this.theme == this.scienceTheme) 
-                this.accessPages = this.accessPages.filter(cmp => ! cmp['@type'].includes("nrda:DynamicResourceSet"));
+            if (this.theme == this.scienceTheme)
+                this.accessPages = this.accessPages.filter(
+                    (cmp) => !cmp["@type"].includes("nrda:DynamicResourceSet"),
+                );
+
+            //Signal parent if this component has content
+            this.hasContentChange.emit(this.accessPages.length > 0);
         }
     }
-    
+
     /**
      * Get the section style based on different modes
      * @returns div style
      */
-    getStyle(){
-        return { 'border': '0px solid white', 'background-color': 'white', 'padding-right': '1em', 'cursor': 'default' };
-    }    
+    getStyle() {
+        return {
+            border: "0px solid white",
+            "background-color": "white",
+            "padding-right": "1em",
+            cursor: "default",
+        };
+    }
 
     /**
      * Google Analytics track event
@@ -130,27 +157,27 @@ export class AccesspagePubComponent {
      * @param title - action title
      */
     googleAnalytics(url: string, event, title) {
-        this.gaService.gaTrackEvent('accesspage', event, title, url);
-    }   
-    
+        this.gaService.gaTrackEvent("accesspage", event, title, url);
+    }
+
     downloadBtnStyle() {
-        if(this.theme == this.scienceTheme) {
+        if (this.theme == this.scienceTheme) {
             return {
-                '--button-text-color': 'white',
-                '--button-color': 'var(--science-theme-background-default)',
-                '--hover-color': 'var(--science-theme-background-light2)'
+                "--button-text-color": "white",
+                "--button-color": "var(--science-theme-background-default)",
+                "--hover-color": "var(--science-theme-background-light2)",
             };
-        }else{
+        } else {
             return {
-                '--button-text-color': 'white',
-                '--button-color': 'var(--nist-green-default)',
-                '--hover-color': 'var(--nist-green-light)'
+                "--button-text-color": "white",
+                "--button-color": "var(--nist-green-default)",
+                "--hover-color": "var(--nist-green-light)",
             };
         }
     }
 
     iconName(aPage: any) {
-        if (aPage['showDesc']) {
+        if (aPage["showDesc"]) {
             return this.caretDownIcon;
         }
         return this.caretRightIcon;

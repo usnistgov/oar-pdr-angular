@@ -20,33 +20,30 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'app-metricsinfo',
+    selector: "app-metricsinfo",
     standalone: true,
-    imports: [
-        CommonModule,
-        FontAwesomeModule
-    ],
-    templateUrl: './metricsinfo.component.html',
-    styleUrls: ['./metricsinfo.component.css']
+    imports: [CommonModule, FontAwesomeModule],
+    templateUrl: "./metricsinfo.component.html",
+    styleUrls: ["./metricsinfo.component.css"],
 })
 export class MetricsinfoComponent implements OnInit {
     allCollections: any = {};
     colorScheme: any;
     spinnerTimeout: boolean = false;
-    
+
     // the resource record metadata that the tool menu data is drawn from
-    @Input() record : NerdmRes|null = null;
+    @Input() record: NerdmRes | null = null;
 
     @Input() inBrowser: boolean = false;
 
     // Record level metrics data
-    @Input() metricsData : MetricsData;
+    @Input() metricsData: MetricsData;
 
     // flag if metrics is ready to display
-    @Input() showMetrics : boolean = false;
+    @Input() showMetrics: boolean = false;
 
     @Input() collection: string = Collections.DEFAULT;
-    
+
     // flag if there is file level metrics data
     hasFileLevelMetrics: boolean = false;
 
@@ -55,7 +52,7 @@ export class MetricsinfoComponent implements OnInit {
     metricsInfoOb: Observable<string[]>;
 
     fileLevelMetrics: any;
-    recordLevelMetrics : RecordLevelMetrics;
+    recordLevelMetrics: RecordLevelMetrics;
 
     time: any;
 
@@ -66,21 +63,22 @@ export class MetricsinfoComponent implements OnInit {
     faSpinner = faSpinner;
     faChartBar = faChartBar;
 
-    constructor(public commonFunctionService: CommonFunctionService,
-                public metricsService: MetricsService,
-                public collectionService: CollectionService,
-                public globalService: GlobalService,
-                public iconLibrary: FaIconLibrary,
-                private cfg: AppConfig) 
-    { 
+    constructor(
+        public commonFunctionService: CommonFunctionService,
+        public metricsService: MetricsService,
+        public collectionService: CollectionService,
+        public globalService: GlobalService,
+        public iconLibrary: FaIconLibrary,
+        private cfg: AppConfig,
+    ) {
         // iconLibrary.addIcons(
         //     faSpinner,
         //     faChartBar
         // );
-        
+
         this.globalService.watchColorPalette((colorPalette) => {
             this.colorScheme = colorPalette;
-        })         
+        });
     }
 
     ngOnInit(): void {
@@ -88,28 +86,31 @@ export class MetricsinfoComponent implements OnInit {
 
         //Set spinner timeout to 10 sec
         setTimeout(() => {
-            if(!this.metricsData.dataReady)
-                this.spinnerTimeout = true;
+            if (!this.metricsData.dataReady) this.spinnerTimeout = true;
         }, 10000);
-
     }
 
     get totalUsers() {
-        return this.metricsData.totalUsers > 1? this.metricsData.totalUsers.toString() + ' unique users': this.metricsData.totalUsers.toString() + ' unique user';
+        return this.metricsData.totalUsers > 1
+            ? this.metricsData.totalUsers.toString() + " unique users"
+            : this.metricsData.totalUsers.toString() + " unique user";
     }
 
     /**
      * Reture record level total download size
      */
     get totalDownloadSize() {
-        if(this.metricsData != undefined)
+        if (this.metricsData != undefined)
             return formatBytes(this.metricsData.totalDownloadSize, 2);
-        else
-            return "";
+        else return "";
     }
 
     get hasCurrentMetrics() {
-        return this.metricsData.totalDatasetDownload > 0 || this.metricsData.totalUsers > 0 || this.metricsData.totalDownloadSize > 0;
+        return (
+            this.metricsData.totalDatasetDownload > 0 ||
+            this.metricsData.totalUsers > 0 ||
+            this.metricsData.totalDownloadSize > 0
+        );
     }
 
     metricsStyle(header: boolean) {
@@ -120,9 +121,9 @@ export class MetricsinfoComponent implements OnInit {
         }
 
         return {
-            '--background-default': defaultColor,
-            '--background-lighter': this.colorScheme.lighterVar,
-            '--background-hover': this.colorScheme.hoverVar
+            "--background-default": defaultColor,
+            "--background-lighter": this.colorScheme.lighterVar,
+            "--background-hover": this.colorScheme.hoverVar,
         };
-    }    
+    }
 }

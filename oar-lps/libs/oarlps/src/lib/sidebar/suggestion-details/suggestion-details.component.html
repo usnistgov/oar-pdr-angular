@@ -18,7 +18,7 @@
         *ngIf="caretRightIcon && caretDownIcon" 
         [class.amplified]="isMouseOver"
         [icon]="['fas', showDetails? caretDownIcon : caretRightIcon]" 
-        class="amplifiable"
+        class="amplifiable expand-btn"
         style="margin-left: 3px;"
         (mouseover)="isMouseOver = true" 
         (mouseleave)="isMouseOver = false" aria-label="Show warning steps">
