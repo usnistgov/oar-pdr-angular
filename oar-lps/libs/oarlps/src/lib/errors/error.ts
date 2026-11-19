@@ -3,9 +3,10 @@
  */
 import { ErrorHandler, Injector, Injectable, Inject, PLATFORM_ID, Optional } from "@angular/core";
 import { isPlatformServer } from '@angular/common';
-import { Router }                             from "@angular/router";
+import { Router } from "@angular/router";
 import { RESPONSE } from '@nguniversal/express-engine/tokens';
 import { Response } from 'express';
+import { GlobalService, Message } from "../shared/globals/globals";
 
 /**
  * an application-wide ErrorHandler.
@@ -15,49 +16,74 @@ import { Response } from 'express';
  */
 @Injectable()
 export class AppErrorHandler implements ErrorHandler {
+    private reportedErrors = new Set<string>();
 
-    constructor(@Inject(PLATFORM_ID) private platid : object, private injector : Injector)
-    { }
+    constructor(
+        @Inject(PLATFORM_ID) private platid: object,
+        public globalService: GlobalService,
+        private injector: Injector,
+    ) {}
 
-    public handleError(error : any) {
-        console.error("LPS Application Error: "+error);
+    public handleError(error: any) {
+        if (!error) return;
+
+        const message =
+            error instanceof Error
+                ? `${error.name}: ${error.message}`
+                : String(error);
+
+        if (this.reportedErrors.has(message)) {
+            return;
+        }
+
+        this.reportedErrors.add(message);
+        let msg: Message = {} as Message;
+        msg.text = message;
+        this.globalService.setMessage1(msg);
+
+        // console.error("LPS Application Error: " + error.message);
         if (isPlatformServer(this.platid) && error.stack)
             console.error(error.stack);
-        let router : Router|null = null
+        let router: Router | null = null;
         try {
             router = this.injector.get(Router) as Router;
         } catch (e) {
-            console.log("No router available to reroute on error. ("+e.message+")");
+            console.log(
+                "No router available to reroute on error. (" + e.message + ")",
+            );
         }
 
         if (isPlatformServer(this.platid)) {
             let respstat = 500;
-            if (error instanceof IDNotFound)
-                respstat = 404;
-            else if (error instanceof NotAuthorizedError)
-                respstat = 401;
-            
+            if (error instanceof IDNotFound) respstat = 404;
+            else if (error instanceof NotAuthorizedError) respstat = 401;
+
             // this is needed if rerouting is not possible or status was already set (?)
-            console.log("Setting response status to "+respstat);
-            let resp : Response = this.injector.get(RESPONSE) as Response;
+            console.log("Setting response status to " + respstat);
+            let resp: Response = this.injector.get(RESPONSE) as Response;
             resp.status(respstat);
         }
 
         if (router) {
-            // rerouting may not work if we've already started to build the page.  
+            // rerouting may not work if we've already started to build the page.
 
             if (error instanceof IDNotFound) {
-                console.log("attempting reroute to /not-found");
-                router.navigateByUrl("/not-found/"+error.id, { skipLocationChange: true });
-            }
-            else if (error instanceof NotAuthorizedError) {
+                // console.log("attempting reroute to /not-found");
+                this.globalService.syserror(
+                    "Resource not found. " + error.message,
+                );
+                // router.navigateByUrl("/not-found/"+error.id, { skipLocationChange: true });
+            } else if (error instanceof NotAuthorizedError) {
                 // in the future, we may want to route to an error page specific to this error
-                console.log("attempting reroute to /not-found");
-                router.navigateByUrl("/not-found/"+error.id, { skipLocationChange: true });
-            }
-            else {
-                console.log("attempting reroute to /int-error");
-                router.navigateByUrl("/int-error", { skipLocationChange: true });
+                // console.log("attempting reroute to /not-found");
+                this.globalService.syserror(
+                    "User not authorized. " + error.message,
+                );
+                // router.navigateByUrl("/not-found/"+error.id, { skipLocationChange: true });
+            } else {
+                // console.log("attempting reroute to /int-error");
+                this.globalService.syserror(error.message);
+                // router.navigateByUrl("/int-error", { skipLocationChange: true });
             }
         }
     }

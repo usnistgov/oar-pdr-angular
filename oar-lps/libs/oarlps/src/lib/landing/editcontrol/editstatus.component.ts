@@ -72,7 +72,15 @@ export class EditStatusComponent implements OnInit {
         public iconLibrary: FaIconLibrary,
         public lpService: LandingpageService) {
 
-        this.globalService.watchMessage((message: string) => {
+        // iconLibrary.addIcons(faSpinner);
+        
+        // effect(() => {
+        //     this.message = this.globalsvc.message();
+        //     this.showMessage(this.message);
+        //     this.cdr.detectChanges();
+        // });
+
+        this.globalService.watchMessage1((message: string) => {
             this.showMessage(message);
         });
 

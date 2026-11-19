@@ -12,7 +12,6 @@ import { AppConfig } from 'oarlps'
 import { MetadataTransfer, NerdmRes } from 'oarlps'
 // import { MetadataService, TransferMetadataService } from 'oarlps'
 import { MetadataUpdateService } from 'oarlps';
-import { UserMessageService } from 'oarlps';
 import { AuthService, WebAuthService, MockAuthService } from 'oarlps';
 import { CartService } from "oarlps";
 import { DownloadService } from "oarlps";
@@ -88,7 +87,6 @@ describe('LandingPageComponent', () => {
                 { provide: AuthenticationService, useValue: new MockAuthenticationService(null)},
                 { provide: ActivatedRoute, useValue: route },
                 { provide: ElementRef, useValue: null },
-                UserMessageService, 
                 MetadataUpdateService, 
                 DatePipe,
                 HttpHandler,
@@ -104,7 +102,7 @@ describe('LandingPageComponent', () => {
                 { provide: DAPService, useFactory: createDAPService, 
                     deps: [ environment, HttpClient, AppConfig ] },
                 { provide: MetadataUpdateService, useValue: new MetadataUpdateService(
-                    new UserMessageService(), edstatsvc, dapsvc, null)
+                    edstatsvc, dapsvc, null, null)
                 }
             ]
         }).compileComponents();
