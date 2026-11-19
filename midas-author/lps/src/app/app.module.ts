@@ -50,7 +50,7 @@ enableProdMode();
     ],
     imports: [
         OARLPSModule,
-        ErrorsModule,
+        // ErrorsModule,
         AppRoutingModule,
         LandingAboutComponent,
         ConfigModule,
