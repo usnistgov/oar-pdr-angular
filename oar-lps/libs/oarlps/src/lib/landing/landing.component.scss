@@ -446,22 +446,23 @@ a:visited {
   border-color: lightgrey;
   border-width: 0px 0px 0px 0px;
   z-index: 99;
-  color: var(--link);
+  color: var(--nist-blue-light);
+  margin-right: 0px;
 }
 
 .edit_button:hover:enabled {
     border: 1px solid var(--nist-blue-default);
 }
 
-.icon_enabled { 
-  color: var(--link);
-  font-size: 1em;
-}
+// .icon_enabled { 
+//   color: var(--nist-blue-default);
+//   font-size: 1em;
+// }
 
-.icon_disabled { 
-  color: rgb(200, 200, 200);
-  font-size: 1em;
-}
+// .icon_disabled { 
+//   color: rgb(200, 200, 200);
+//   font-size: 1em;
+// }
 
 .filter-black{
   filter: invert(0.5);
@@ -554,7 +555,7 @@ a:visited {
 }
 
 .link-icon {
-    color: var(--link);
+    color: var(--nist-blue-light);
 }
 
 .for-public {
@@ -592,7 +593,7 @@ a:visited {
 .expand-btn {
     margin-left: 0.5rem;
     cursor: pointer;
-    color: var(--nist-blue-dark3);
+    color: var(--nist-blue-default);
 }
 
 // Drag and drop styles
