@@ -78,16 +78,10 @@ export abstract class DAPUpdateService {
      * return true if the current user has write-access to the current record.  
      */
     canEdit() : Observable<boolean> {
-        if (this._rec &&
-            this._rec["userPerms"] &&
-            this._rec["userPerms"].findIndex((el) => el == "write") >= 0
-        ) {
-            throw new Error("Un authorized.");
-        }
-            // return of(
-            //     this._rec["userPerms"].findIndex((el) => el == "write") >= 0,
-            // );
-        return of(true);
+        if (! this._rec)
+            throw new Error("Record not retrieved yet");
+        return of(Boolean(this._rec["requester_permissions"] && 
+                          this._rec["requester_permissions"].includes("write")));
     }
 
     /**
@@ -381,14 +375,14 @@ export class MIDASDAPService extends DAPService implements SupportsAuthenticatio
      * if permission does not allow write-access or if the given identifier does not exist.
      */
     canEdit(id : string) : Observable<boolean> {
-        const url = this.endpoint + id + "/acls/:user";
+        const url = this.endpoint + id + "/acls/write/:user";
         const hdrs = _headersFor(this, "get");
 
         return this.webclient.get(url, {headers: hdrs}).pipe(
             catchError(err => {
                 if (err.status && err.status == 404)
                     return of(false);
-                return _handleWebError(err, id, url, "access", "/acls/:user");
+                return _handleWebError(err, id, url, "access", "/acls/write/:user");
             })
         ) as Observable<boolean>;
     }
