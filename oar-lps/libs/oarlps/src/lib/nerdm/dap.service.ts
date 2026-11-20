@@ -768,7 +768,7 @@ export class MIDASDAPUpdateService extends DAPUpdateService implements SupportsA
 
         if (action == "finalize") {
             if(option && option.message) body["message"] = option.message; 
-        } else if (action == "submit") {
+        } else {
             if (option) body["action_options"] = option;
         }
 

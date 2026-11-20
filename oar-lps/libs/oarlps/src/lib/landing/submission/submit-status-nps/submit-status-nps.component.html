@@ -6,7 +6,7 @@
             <div><strong>Phase:</strong> 
                 <span class="bubble">{{ submitStatus.phase }}</span>
             </div>
-            <div><strong>Last Updated:</strong> {{ submitStatus.updated | date:'medium' }}</div>
+            <div><strong>Last Updated:</strong> <span style="font-size: smaller;padding-left: 10px;">{{ lastUpdated }}</span></div>
 
             <!-- Link to NPS page -->
             <a *ngIf="submitStatus.info_at" href={{submitStatus.info_at}} target="_blank">

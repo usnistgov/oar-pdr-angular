@@ -1,30 +1,68 @@
 import {
-    Component, OnInit, AfterViewInit, ViewChild, ChangeDetectorRef,
-    PLATFORM_ID, Inject, ViewEncapsulation, HostListener, ElementRef,
-    effect
+    Component,
+    OnInit,
+    AfterViewInit,
+    ViewChild,
+    ChangeDetectorRef,
+    PLATFORM_ID,
+    Inject,
+    ViewEncapsulation,
+    HostListener,
+    ElementRef,
+    effect,
 } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { HttpEventType } from '@angular/common/http';
 import { NerdmRes, NERDResource, ReviewResponse } from 'oarlps';
-import { NERDmResourceService, EditStatusService, MetadataUpdateService, GlobalService,
-         MetricsService, LandingpageService, LandingConstants, IDNotFound } from 'oarlps';
-import { AppConfig, DataCartStatus, RecordLevelMetrics, formatBytes, CartActions,
-         MetricsData } from 'oarlps';
+import {
+    NERDmResourceService,
+    EditStatusService,
+    MetadataUpdateService,
+    GlobalService,
+    MetricsService,
+    LandingpageService,
+    LandingConstants,
+    IDNotFound,
+} from 'oarlps';
+import {
+    AppConfig,
+    DataCartStatus,
+    RecordLevelMetrics,
+    formatBytes,
+    CartActions,
+    MetricsData,
+} from 'oarlps';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { Themes, ThemesPrefs, Collections, CollectionService } from 'oarlps';
-import { state, style, trigger, transition, animate } from '@angular/animations';
+import {
+    state,
+    style,
+    trigger,
+    transition,
+    animate,
+} from '@angular/animations';
 import questionhelp from '../../assets/site-constants/question-help.json';
 import wordMapping from '../../assets/site-constants/word-mapping.json';
 import * as REVISION_TYPES from '../../../../../node_modules/oarlps/src/assets/site-constants/revision-types.json';
 import { CommonModule } from '@angular/common';
 import { DownloadStatusModule, SearchresultModule, DoneModule } from 'oarlps';
-import { MetricsinfoComponent, SubmitStatusComponent, SidebarComponent, CitationPopupComponent,
-         MenuComponent, EditControlComponent, LandingBodyComponent, FrameModule
- } from 'oarlps';
+import {
+    MetricsinfoComponent,
+    SubmitStatusComponent,
+    SidebarComponent,
+    CitationPopupComponent,
+    MenuComponent,
+    EditControlComponent,
+    LandingBodyComponent,
+    FrameModule,
+} from 'oarlps';
 import { AuthenticationService } from 'oarng';
-import { FontAwesomeModule, FaIconLibrary } from '@fortawesome/angular-fontawesome';
+import {
+    FontAwesomeModule,
+    FaIconLibrary,
+} from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 
 /**
@@ -57,58 +95,70 @@ import { faList } from '@fortawesome/free-solid-svg-icons';
         EditControlComponent,
         SubmitStatusComponent,
         FrameModule,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    providers: [
-        Title
-    ],
+    providers: [Title],
     templateUrl: './landingpage.component.html',
     styleUrls: ['./landingpage.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations: [
-        trigger("togglemain", [
-            state('mainsquished',
+        trigger('togglemain', [
+            state(
+                'mainsquished',
                 style({
-                    "width": "{{lps_width}}"
-                }), { params: { lps_width: '450px' } }
-            ),
-            state('mainexpanded', style({
-                "width": "95%"
-            })),
-            state('mainfullyexpanded', style({
-                "width": "100%"
-            })),
-            transition('mainsquished <=> mainexpanded', [
-                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
-            ])
-        ]),
-        trigger("togglesbar", [
-            state('mainsquished',
-                style({
-                    "width": "{{help_width}}"
+                    width: '{{lps_width}}',
                 }),
-                { params: { help_width: '450px' } }
+                { params: { lps_width: '450px' } },
             ),
-            state('mainexpanded',
+            state(
+                'mainexpanded',
                 style({
-                    "width": "15px"
-            })),
-            state('mainfullyexpanded', style({
-                "width": "0%"
-            })),
+                    width: '95%',
+                }),
+            ),
+            state(
+                'mainfullyexpanded',
+                style({
+                    width: '100%',
+                }),
+            ),
             transition('mainsquished <=> mainexpanded', [
-                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)')
-            ])
-        ])
-    ]
+                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)'),
+            ]),
+        ]),
+        trigger('togglesbar', [
+            state(
+                'mainsquished',
+                style({
+                    width: '{{help_width}}',
+                }),
+                { params: { help_width: '450px' } },
+            ),
+            state(
+                'mainexpanded',
+                style({
+                    width: '15px',
+                }),
+            ),
+            state(
+                'mainfullyexpanded',
+                style({
+                    width: '0%',
+                }),
+            ),
+            transition('mainsquished <=> mainexpanded', [
+                animate('.5s cubic-bezier(0.4, 0.0, 0.2, 1)'),
+            ]),
+        ]),
+    ],
 })
 export class LandingPageComponent implements OnInit, AfterViewInit {
     layoutCompact: boolean = true;
     layoutMode: string = 'horizontal';
     profileMode: string = 'inline';
-    md: NerdmRes = null;       // the NERDm resource metadata
-    midasRecord: any = null;    // the new Midas record metadata
-    reqId: string;             // the ID that was used to request this page
+    md: NerdmRes = null; // the NERDm resource metadata
+    midasRecord: any = null; // the new Midas record metadata
+    reqId: string; // the ID that was used to request this page
     inBrowser: boolean = false;
     citetext: string = null;
     citationVisible: boolean = false;
@@ -117,7 +167,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     public EDIT_MODES: any = LandingConstants.editModes;
     editMode: string = LandingConstants.editModes.VIEWONLY_MODE;
     recStates = LandingConstants.recStates;
-    curRecState: string;    // Current record state
+    curRecState: string; // Current record state
     // reviseTypes: any = Globals.LandingConstants.reviseTypes;
     arrRevisionTypes: any[] = [];
     editRequested: boolean = false;
@@ -127,7 +177,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     message: string;
     displaySpecialMessage: boolean = false;
     citationDialogWith: number = 550; // Default width
-    recordLevelMetrics : RecordLevelMetrics;
+    recordLevelMetrics: RecordLevelMetrics;
 
     loadingMessage = 'Loading...';
 
@@ -151,16 +201,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     topBarHeight: number = 150;
     bottomBarHeight: number = 170;
     showMetrics: boolean = false;
-    recordType: string = "";
+    recordType: string = '';
     imageURL: string = 'assets/images/fingerprint.jpg';
     theme: string;
     scienceTheme = Themes.SCIENCE_THEME;
     defaultTheme = Themes.DEFAULT_THEME;
     hideToolMenu: boolean = true;
 
-    private _sbarvisible : boolean = true;
+    private _sbarvisible: boolean = true;
     sidebarVisible: boolean = true;
-    mainBodyStatus: string = "mainsquished";
+    mainBodyStatus: string = 'mainsquished';
     sidebarStartY: number = 120;
     sidebarY: number = 120;
     sidebarHeight: number = 400;
@@ -168,14 +218,14 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     // For help (sidebar)
     helpWidth: number = 300;
     helpWidthDefault: number = 300;
-    helpMode: string = "normal";
+    helpMode: string = 'normal';
     helpMaxWidth: number = 500;
     helpMinWidth: number = 200;
     helpWidthRatio = 0.2;
 
     // For the split bar between landing page body and help box
     splitterHeight: number = 500;
-    mouse: any = {x:0, y:0};
+    mouse: any = { x: 0, y: 0 };
     mouseDragging: boolean = false;
     prevMouseX: number = 0;
     prevHelpWidth: number = 0;
@@ -191,10 +241,10 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
 
     scrollMaxHeight: number;
     wordMapping: any = wordMapping;
-    resourceType: string = "resource";
+    resourceType: string = 'resource';
 
-    suggustedSections: string[] = ["title", "keyword", "references"];
-    public helpContentAll:{} = questionhelp;
+    suggustedSections: string[] = ['title', 'keyword', 'references'];
+    public helpContentAll: {} = questionhelp;
     helpContentUpdated: boolean = false;
     collection: string = Collections.DEFAULT;
     collectionData: any;
@@ -207,12 +257,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     isEditMode: boolean = false;
     landingPageURL: string;
     landingPageServiceStr: string;
-    pubLandingPageURL: string = ""
+    pubLandingPageURL: string = '';
     suggestions: ReviewResponse = {} as ReviewResponse;
 
     submitStatus: any = {};
     submitStatusPopup: boolean = false;
-    
+
     //Icons
     faList = faList;
 
@@ -240,30 +290,37 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * @param res     a CurrentResource object for sharing the metadata and requested
      *                 ID with child components.
      */
-    constructor(private route: ActivatedRoute,
-                private router: Router,
-                @Inject(PLATFORM_ID) private platformId: Object,
-                public titleSv: Title,
-                private cfg: AppConfig,
-                private nerdmReserv: NERDmResourceService,
-                public edstatsvc: EditStatusService,
-                private mdupdsvc: MetadataUpdateService,
-                public metricsService: MetricsService,
-                public breakpointObserver: BreakpointObserver,
-                private chref: ChangeDetectorRef,
-                public globalService: GlobalService,
-                public authsvc: AuthenticationService,
-                public collectionService: CollectionService,
-                public lpService: LandingpageService)
-    {
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        @Inject(PLATFORM_ID) private platformId: Object,
+        public titleSv: Title,
+        private cfg: AppConfig,
+        private nerdmReserv: NERDmResourceService,
+        public edstatsvc: EditStatusService,
+        private mdupdsvc: MetadataUpdateService,
+        public metricsService: MetricsService,
+        public breakpointObserver: BreakpointObserver,
+        private chref: ChangeDetectorRef,
+        public globalService: GlobalService,
+        public authsvc: AuthenticationService,
+        public collectionService: CollectionService,
+        public lpService: LandingpageService,
+    ) {
         // Init the size of landing page body and the help box
         this.updateScreenSize();
 
         this.reqId = this.route.snapshot.paramMap.get('id');
         this.inBrowser = isPlatformBrowser(platformId);
-        this.cfg_editEnabled = cfg.get('dapEditing.editEnabled', false) as boolean;
+        this.cfg_editEnabled = cfg.get(
+            'dapEditing.editEnabled',
+            false,
+        ) as boolean;
         this.editMode = this.EDIT_MODES.VIEWONLY_MODE;
-        this.delayTimeForMetricsRefresh = +this.cfg.get("delayTimeForMetricsRefresh", "300");
+        this.delayTimeForMetricsRefresh = +this.cfg.get(
+            'delayTimeForMetricsRefresh',
+            '300',
+        );
 
         this.lpService.watchCurrentSection((currentSection) => {
             this.goToSection(currentSection);
@@ -272,62 +329,71 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         if (this.cfg_editEnabled) {
             this.edstatsvc.watchRecState((recState) => {
                 this.curRecState = recState;
-            })
+            });
 
             this.edstatsvc.watchIsEditMode((isEditMode) => {
                 this.isEditMode = isEditMode;
-            })
+            });
 
             this.edstatsvc.watchEditMode((editMode) => {
                 this.editMode = editMode;
 
                 //Hide the right side menu bar if we are in edit mode
-                this.hideToolMenu = (this.editMode == this.EDIT_MODES.EDIT_MODE || (this.curRecState == this.recStates.REVISE && this.editMode == this.EDIT_MODES.EDIT_MODE));
+                this.hideToolMenu =
+                    this.editMode == this.EDIT_MODES.EDIT_MODE ||
+                    (this.curRecState == this.recStates.REVISE &&
+                        this.editMode == this.EDIT_MODES.EDIT_MODE);
 
-                if( this.hideToolMenu && this.editMode != this.EDIT_MODES.PREVIEW_MODE && this.editMode != this.EDIT_MODES.VIEWONLY_MODE){
+                if (
+                    this.hideToolMenu &&
+                    this.editMode != this.EDIT_MODES.PREVIEW_MODE &&
+                    this.editMode != this.EDIT_MODES.VIEWONLY_MODE
+                ) {
                     this.helpWidth = this.helpWidthDefault;
                 }
 
                 this.updateSidebarStatus(true);
 
-                if (this.editMode == this.EDIT_MODES.DONE_MODE ||
-                    this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE)
-                {
+                if (
+                    this.editMode == this.EDIT_MODES.DONE_MODE ||
+                    this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE
+                ) {
                     this.displaySpecialMessage = true;
                     // this._showContent = true;
                     this.setMessage();
-                }                
+                }
             });
 
-            this.mdupdsvc.subscribe(
-                (md) => {
-                    if (md && md != this.md) {
-                        this.md = md as NerdmRes;
-                    }
-
-                    if (md) {
-                        if(!this.helpContentUpdated)
-                            this.updateHelpContent();
-                        else {
-                            //Load suggestions:
-                            this.mdupdsvc.validate().subscribe((suggestions: ReviewResponse) => {
-                                this.suggestions = suggestions;
-                                this.lpService.setSubmitResponse(this.suggestions);
-                            })
-                        }
-
-                        //If status is "submitted", get external_review property from record status
-                        if (this.mdupdsvc.submitted || this.mdupdsvc.resubmit) {
-                            this.submitStatus = this.mdupdsvc.recStatus.external_review;    
-                            if (!this.submitStatus) this.submitStatus = {};
-                        
-                        }
-                    }
-
-                    this.globalService.setCurrentRec(this.md);
-                    // this.showData();
+            this.mdupdsvc.subscribe((md) => {
+                if (md && md != this.md) {
+                    this.md = md as NerdmRes;
                 }
-            );
+
+                if (md) {
+                    if (!this.helpContentUpdated) this.updateHelpContent();
+                    else {
+                        //Load suggestions:
+                        this.mdupdsvc
+                            .validate()
+                            .subscribe((suggestions: ReviewResponse) => {
+                                this.suggestions = suggestions;
+                                this.lpService.setSubmitResponse(
+                                    this.suggestions,
+                                );
+                            });
+                    }
+
+                    //If status is "submitted", get external_review property from record status
+                    if (this.mdupdsvc.isSubmitted || this.mdupdsvc.resubmit) {
+                        this.submitStatus =
+                            this.mdupdsvc.recStatus.external_review;
+                        if (!this.submitStatus) this.submitStatus = {};
+                    }
+                }
+
+                this.globalService.setCurrentRec(this.md);
+                // this.showData();
+            });
 
             this.edstatsvc.watchShowLPContent((showContent) => {
                 this._showContent = showContent && this._showContent;
@@ -336,23 +402,29 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     }
 
     get showSplitter() {
-        return (this.mainBodyStatus == "mainsquished") && !this.mobileMode && this.hideToolMenu;
+        return (
+            this.mainBodyStatus == 'mainsquished' &&
+            !this.mobileMode &&
+            this.hideToolMenu
+        );
     }
 
-   
     getCollection() {
         let keys = Object.keys(Collections);
-        let collectionKey: string = "";
+        let collectionKey: string = '';
 
         for (let key of keys) {
-            if (key != "DEFAULT" && this.reqId.includes(this.allCollections[Collections[key]]["id"])) {
+            if (
+                key != 'DEFAULT' &&
+                this.reqId.includes(this.allCollections[Collections[key]]['id'])
+            ) {
                 collectionKey = key;
                 break;
             }
-        };
+        }
 
-        if (collectionKey == "") {
-            collectionKey = "DEFAULT";
+        if (collectionKey == '') {
+            collectionKey = 'DEFAULT';
         }
 
         this.collection = Collections[collectionKey];
@@ -368,27 +440,36 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             next: (data) => {
                 colorPalettes = data;
 
-                if (this.collectionData && this.collectionData[this.collection]) {
-                    cp = colorPalettes[this.collectionData[this.collection].colorPalette]
+                if (
+                    this.collectionData &&
+                    this.collectionData[this.collection]
+                ) {
+                    cp =
+                        colorPalettes[
+                            this.collectionData[this.collection].colorPalette
+                        ];
                     colorPalette = cp ? cp : colorPalettes[Collections.DEFAULT];
                 } else {
                     colorPalette = colorPalettes[Collections.DEFAULT];
                 }
-            
-                this.globalService.setColorPalette(colorPalette);                
+
+                this.globalService.setColorPalette(colorPalette);
             },
             error: (err) => {
                 //Will add notification for this error later. For now just log it in console and use default color palette.
-                console.error("Failed to load color palettes from json file", err);
-            }
+                console.error(
+                    'Failed to load color palettes from json file',
+                    err,
+                );
+            },
         });
     }
-    
+
     loadBannerUrl() {
         this.collectionObj = this.collectionData[this.collection] as any;
 
         this.imageURL = this.collectionObj.bannerUrl;
-        if(this.collection == Collections.DEFAULT) this.imageURL = "";
+        if (this.collection == Collections.DEFAULT) this.imageURL = '';
 
         setTimeout(() => {
             // this.displayBanner = true;
@@ -400,49 +481,55 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * the Angular rendering infrastructure.
      */
     ngOnInit() {
-        this.landingPageURL = this.cfg.get('links.pdrIDResolver','/od/id/');
-        this.landingPageServiceStr = this.cfg.get('links.pdrIDResolver','https://data.nist.gov/od/id/');
+        this.landingPageURL = this.cfg.get('links.pdrIDResolver', '/od/id/');
+        this.landingPageServiceStr = this.cfg.get(
+            'links.pdrIDResolver',
+            'https://data.nist.gov/od/id/',
+        );
         this.helpWidthRatio = this.helpWidth / window.innerWidth;
 
-        this.landingPageURL = this.cfg.get('PDRAPIs.mdService','/od/id/');
-        this.landingPageServiceStr = this.cfg.get('PDRAPIs.mdService','https://data.nist.gov/od/id/');
+        this.landingPageURL = this.cfg.get('PDRAPIs.mdService', '/od/id/');
+        this.landingPageServiceStr = this.cfg.get(
+            'PDRAPIs.mdService',
+            'https://data.nist.gov/od/id/',
+        );
 
-        this.arrRevisionTypes = REVISION_TYPES["default"];
+        this.arrRevisionTypes = REVISION_TYPES['default'];
         this.recordLevelMetrics = new RecordLevelMetrics();
         this.displaySpecialMessage = false;
         this.CART_ACTIONS = CartActions.cartActions;
 
         this.collectionData = require('../../assets/collection/collections.json');
-        this.collectionService.setCollectionData(this.collectionData); 
-        this.allCollections = JSON.parse(JSON.stringify(this.collectionService.loadAllCollections()));
+        this.collectionService.setCollectionData(this.collectionData);
+        this.allCollections = JSON.parse(
+            JSON.stringify(this.collectionService.loadAllCollections()),
+        );
         this.getCollection();
         this.loadBannerUrl();
-        this.loadColorPalette();   
+        this.loadColorPalette();
 
         // Only listen to storage change if we are not in edit mode
-        if(this.inBrowser && !this.cfg_editEnabled){
+        if (this.inBrowser && !this.cfg_editEnabled) {
             this.cartChangeHandler = this.cartChanged.bind(this);
-            window.addEventListener("storage", this.cartChangeHandler);
+            window.addEventListener('storage', this.cartChangeHandler);
         }
         this.metricsData = new MetricsData();
 
         // Clean up cart status storage
-        if(this.inBrowser){
+        if (this.inBrowser) {
             this.dataCartStatus = DataCartStatus.openCartStatus();
             this.dataCartStatus.cleanUpStatusStorage();
         }
 
         if (this.cfg_editEnabled) {
-            this.route.queryParamMap.subscribe(queryParams => {
+            this.route.queryParamMap.subscribe((queryParams) => {
                 // Use parameter "editEnabled". Need to decide the edit mode when backend is ready.
                 // For now, always go to edit mode.
                 // let param = queryParams.get("editmode");
-                let param = queryParams.get("editenabled");
-                if(param)
+                let param = queryParams.get('editenabled');
+                if (param)
                     this.paramEditEnabled = param.toLocaleLowerCase() == 'true';
-                else
-                    this.paramEditEnabled = false;
-
+                else this.paramEditEnabled = false;
             });
 
             // Retrive Nerdm record and keep it in case we need to display it in preview mode
@@ -467,7 +554,6 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                         if(this.theme == Themes.DEFAULT_THEME){
                                             this.getMetrics();
                                         }
-
                                     }
                                 }
 
@@ -510,15 +596,15 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                 this.globalService.setAuthorized(false);
                                 console.log("Load error", err);
                                 this.loadingMessage = "Failed to load data for editing. " + err.message;
-                            }
-                        })
-                    }else{
-                        //Not authenticated:
-                        this.globalService.setAuthenticated(false);
-                        this.displayOnly();
-                    }
-                })
-        }else{
+                        },
+                    });
+                } else {
+                    //Not authenticated:
+                    this.globalService.setAuthenticated(false);
+                    this.displayOnly();
+                }
+            });
+        } else {
             this.displayOnly();
         }
     }
@@ -626,119 +712,179 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     updateHelpContent() {
         //Read meta from Midas record
-        this.mdupdsvc.loadMetaData().subscribe( midasrec => {
-            if(midasrec["resourceType"] != undefined) {
-                this.wordMapping["resource"] = midasrec["resourceType"];
-                this.resourceType = midasrec["resourceType"];
+        this.mdupdsvc.loadMetaData().subscribe((midasrec) => {
+            if (midasrec['resourceType'] != undefined) {
+                this.wordMapping['resource'] = midasrec['resourceType'];
+                this.resourceType = midasrec['resourceType'];
 
                 //Broadcast resource type
                 this.lpService.setResourceType(this.resourceType);
 
                 //Update helpContentAll
                 let keys = Object.keys(this.wordMapping);
-                keys.forEach(key => {
-                    this.helpContentAll = JSON.parse(JSON.stringify(this.helpContentAll).replace(new RegExp(key, 'g'), this.wordMapping[key]));
-                })
+                keys.forEach((key) => {
+                    this.helpContentAll = JSON.parse(
+                        JSON.stringify(this.helpContentAll).replace(
+                            new RegExp(key, 'g'),
+                            this.wordMapping[key],
+                        ),
+                    );
+                });
 
                 //Only update help content once
                 this.helpContentUpdated = true;
             }
-        })
+        });
 
         //Load suggestions:
         this.mdupdsvc.validate().subscribe((suggestions) => {
             this.suggestions = suggestions as ReviewResponse;
             this.lpService.setSubmitResponse(this.suggestions);
-        })
+        });
     }
 
     /**
      * Get metrics data
      */
-     getMetrics() {
+    getMetrics() {
         let ediid = this.md.ediid;
-        this.metricsService.getFileLevelMetrics(ediid).subscribe(async (event) => {
-            // Some large dataset might take a while to download. Only handle the response
-            // when download is completed
-            if(event.type == HttpEventType.Response){
-                let response = await event.body.text();
+        this.metricsService.getFileLevelMetrics(ediid).subscribe(
+            async (event) => {
+                // Some large dataset might take a while to download. Only handle the response
+                // when download is completed
+                if (event.type == HttpEventType.Response) {
+                    let response = await event.body.text();
 
-                this.fileLevelMetrics = JSON.parse(response);
+                    this.fileLevelMetrics = JSON.parse(response);
 
-                if(this.fileLevelMetrics.FilesMetrics != undefined && this.fileLevelMetrics.FilesMetrics.length > 0 && this.md.components){
-                    // check if there is any current metrics data
-                    for(let i = 1; i < this.md.components.length; i++){
-                        let filepath = this.md.components[i].filepath;
-                        if(filepath) filepath = filepath.trim();
+                    if (
+                        this.fileLevelMetrics.FilesMetrics != undefined &&
+                        this.fileLevelMetrics.FilesMetrics.length > 0 &&
+                        this.md.components
+                    ) {
+                        // check if there is any current metrics data
+                        for (let i = 1; i < this.md.components.length; i++) {
+                            let filepath = this.md.components[i].filepath;
+                            if (filepath) filepath = filepath.trim();
 
-                        this.metricsData.hasCurrentMetrics = this.fileLevelMetrics.FilesMetrics.find(x => x.filepath.substr(x.filepath.indexOf(ediid)+ediid.length+1).trim() == filepath) != undefined;
-                        if(this.metricsData.hasCurrentMetrics) break;
-                    }
-                }else{
-                    this.metricsData.hasCurrentMetrics = false;
-                }
-
-                if(this.metricsData.hasCurrentMetrics){
-                    this.metricsService.getRecordLevelMetrics(ediid).subscribe(async (event) => {
-                        if(event.type == HttpEventType.Response){
-                            this.recordLevelMetrics = JSON.parse(await event.body.text());
-
-                            let hasFile = false;
-
-                            if(this.md.components && this.md.components.length > 0){
-                                this.md.components.forEach(element => {
-                                    if(element.filepath){
-                                        hasFile = true;
-                                        return;
-                                    }
-                                });
-                            }
-
-                            if(hasFile){
-                                //Now check if there is any metrics data
-                                this.metricsData.totalDatasetDownload = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].record_download : 0;
-
-                                this.metricsData.totalDownloadSize = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].total_size_download : 0;
-
-                                this.metricsData.totalUsers = this.recordLevelMetrics.DataSetMetrics[0] != undefined? this.recordLevelMetrics.DataSetMetrics[0].number_users : 0;
-
-                                this.metricsData.totalUsers = this.metricsData.totalUsers == undefined? 0 : this.metricsData.totalUsers;
-                            }
-
-                            this.metricsData.dataReady = true;
+                            this.metricsData.hasCurrentMetrics =
+                                this.fileLevelMetrics.FilesMetrics.find(
+                                    (x) =>
+                                        x.filepath
+                                            .substr(
+                                                x.filepath.indexOf(ediid) +
+                                                    ediid.length +
+                                                    1,
+                                            )
+                                            .trim() == filepath,
+                                ) != undefined;
+                            if (this.metricsData.hasCurrentMetrics) break;
                         }
-                    },
-                    (err) => {
-                        console.error("Failed to retrieve dataset metrics: ", err);
+                    } else {
                         this.metricsData.hasCurrentMetrics = false;
-                        this.showMetrics = true;
+                    }
+
+                    if (this.metricsData.hasCurrentMetrics) {
+                        this.metricsService
+                            .getRecordLevelMetrics(ediid)
+                            .subscribe(
+                                async (event) => {
+                                    if (event.type == HttpEventType.Response) {
+                                        this.recordLevelMetrics = JSON.parse(
+                                            await event.body.text(),
+                                        );
+
+                                        let hasFile = false;
+
+                                        if (
+                                            this.md.components &&
+                                            this.md.components.length > 0
+                                        ) {
+                                            this.md.components.forEach(
+                                                (element) => {
+                                                    if (element.filepath) {
+                                                        hasFile = true;
+                                                        return;
+                                                    }
+                                                },
+                                            );
+                                        }
+
+                                        if (hasFile) {
+                                            //Now check if there is any metrics data
+                                            this.metricsData.totalDatasetDownload =
+                                                this.recordLevelMetrics
+                                                    .DataSetMetrics[0] !=
+                                                undefined
+                                                    ? this.recordLevelMetrics
+                                                          .DataSetMetrics[0]
+                                                          .record_download
+                                                    : 0;
+
+                                            this.metricsData.totalDownloadSize =
+                                                this.recordLevelMetrics
+                                                    .DataSetMetrics[0] !=
+                                                undefined
+                                                    ? this.recordLevelMetrics
+                                                          .DataSetMetrics[0]
+                                                          .total_size_download
+                                                    : 0;
+
+                                            this.metricsData.totalUsers =
+                                                this.recordLevelMetrics
+                                                    .DataSetMetrics[0] !=
+                                                undefined
+                                                    ? this.recordLevelMetrics
+                                                          .DataSetMetrics[0]
+                                                          .number_users
+                                                    : 0;
+
+                                            this.metricsData.totalUsers =
+                                                this.metricsData.totalUsers ==
+                                                undefined
+                                                    ? 0
+                                                    : this.metricsData
+                                                          .totalUsers;
+                                        }
+
+                                        this.metricsData.dataReady = true;
+                                    }
+                                },
+                                (err) => {
+                                    console.error(
+                                        'Failed to retrieve dataset metrics: ',
+                                        err,
+                                    );
+                                    this.metricsData.hasCurrentMetrics = false;
+                                    this.showMetrics = true;
+                                    this.metricsData.dataReady = true;
+                                },
+                            );
+                    } else {
                         this.metricsData.dataReady = true;
-                    });
-                }else{
-                    this.metricsData.dataReady = true;
+                    }
+                    this.showMetrics = true;
                 }
+            },
+            (err) => {
+                console.error('Failed to retrieve file metrics: ', err);
+                this.metricsData.hasCurrentMetrics = false;
                 this.showMetrics = true;
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve file metrics: ", err);
-            this.metricsData.hasCurrentMetrics = false;
-            this.showMetrics = true;
-            this.metricsData.dataReady = true; // ready to display message
-        });
+                this.metricsData.dataReady = true; // ready to display message
+            },
+        );
     }
 
     /**
      * Detect window scroll
      */
-    @HostListener("window:scroll", [])
+    @HostListener('window:scroll', [])
     onWindowScroll() {
         this.scrollMaxHeight = document.body.scrollHeight - window.innerHeight;
 
-        if(this.mobileMode)
-            this.windowScrolled = (window.pageYOffset > this.btnPosition);
-        else
-            this.windowScrolled = (window.pageYOffset > this.menuPosition);
+        if (this.mobileMode)
+            this.windowScrolled = window.pageYOffset > this.btnPosition;
+        else this.windowScrolled = window.pageYOffset > this.menuPosition;
 
         this.sidebarY = this.sidebarStartY - window.pageYOffset;
         this.sidebarY = this.sidebarY < 0 ? 0 : this.sidebarY;
@@ -756,28 +902,35 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      *
      * @param ev Event - storage changed
      */
-    cartChanged(ev){
-       if(ev.key == this.dataCartStatus.getName()){
-           let newValue = JSON.parse(ev.newValue);
-           setTimeout(() => {
-               this.dataCartStatus.restore();
-               if(newValue.action == this.CART_ACTIONS["SET_DOWNLOAD_COMPLETE"]){
-                   this.refreshMetrics();
-               }
-           }, 10);
-       }
+    cartChanged(ev) {
+        if (ev.key == this.dataCartStatus.getName()) {
+            let newValue = JSON.parse(ev.newValue);
+            setTimeout(() => {
+                this.dataCartStatus.restore();
+                if (
+                    newValue.action ==
+                    this.CART_ACTIONS['SET_DOWNLOAD_COMPLETE']
+                ) {
+                    this.refreshMetrics();
+                }
+            }, 10);
+        }
     }
 
     /**
      * Refresh metrics data in N minutes. N is defined in environment.ts
      * @param delay if this is false, refresh immediately
      */
-    refreshMetrics(delay:boolean = true){
+    refreshMetrics(delay: boolean = true) {
         let delayTime;
-        if(delay){
-            console.log("Metrics will be refreshed in " + this.delayTimeForMetricsRefresh + " seconds.");
-            delayTime = this.delayTimeForMetricsRefresh*1000;
-        }else{
+        if (delay) {
+            console.log(
+                'Metrics will be refreshed in ' +
+                    this.delayTimeForMetricsRefresh +
+                    ' seconds.',
+            );
+            delayTime = this.delayTimeForMetricsRefresh * 1000;
+        } else {
             delayTime = 0;
         }
 
@@ -792,12 +945,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * @param downloadStatus download status of a direct download event. Currently only handle "downloaded" status.
      */
     onDownloadStatusChanged(downloadStatus) {
-        if(typeof downloadStatus === 'string') {
-            if(downloadStatus == "downloaded") {
+        if (typeof downloadStatus === 'string') {
+            if (downloadStatus == 'downloaded') {
                 this.refreshMetrics();
             }
-        }else{
-            console.error("Invalid event type", typeof event);
+        } else {
+            console.error('Invalid event type', typeof event);
         }
     }
 
@@ -809,10 +962,12 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * Reture record level total download size
      */
     get totalDownloadSize() {
-        if(this.recordLevelMetrics.DataSetMetrics[0] != undefined)
-            return formatBytes(this.recordLevelMetrics.DataSetMetrics[0].total_size_download, 2);
-        else
-            return "";
+        if (this.recordLevelMetrics.DataSetMetrics[0] != undefined)
+            return formatBytes(
+                this.recordLevelMetrics.DataSetMetrics[0].total_size_download,
+                2,
+            );
+        else return '';
     }
 
     /**
@@ -821,9 +976,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
     ngAfterViewInit() {
         this.sidebarHeight = window.innerHeight - 250;
 
-        if(this.inBrowser) {
-            if(this.splitter){
-              this.splitterX = this.splitter.nativeElement.offsetLeft + 6;
+        if (this.inBrowser) {
+            if (this.splitter) {
+                this.splitterX = this.splitter.nativeElement.offsetLeft + 6;
             }
 
             //Set the position of the sticky menu (or menu button)
@@ -851,10 +1006,16 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         let visibleTopBarHeight = this.topBarHeight - window.pageYOffset + 50;
         visibleTopBarHeight = visibleTopBarHeight > 0 ? visibleTopBarHeight : 0;
 
-        let visibleBottomBarHeight = this.bottomBarHeight - this.scrollMaxHeight + window.pageYOffset;
-        visibleBottomBarHeight = visibleBottomBarHeight > 0 ? visibleBottomBarHeight : 0;
+        let visibleBottomBarHeight =
+            this.bottomBarHeight - this.scrollMaxHeight + window.pageYOffset;
+        visibleBottomBarHeight =
+            visibleBottomBarHeight > 0 ? visibleBottomBarHeight : 0;
 
-        this.sidebarHeight = window.innerHeight - visibleTopBarHeight - visibleBottomBarHeight - 50;
+        this.sidebarHeight =
+            window.innerHeight -
+            visibleTopBarHeight -
+            visibleBottomBarHeight -
+            50;
     }
 
     /**
@@ -864,23 +1025,25 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         // Bootstrap breakpoint observer (to switch between desktop/mobile mode)
         // The breakpoint for PrimeNG menu is 750. For some reason the following min-width
         // need to set to 768 to be able to change the state at 750px.
-        if(this.inBrowser){
+        if (this.inBrowser) {
             this.breakpointObserver
-            .observe(['(min-width: 768px)'])
-            .subscribe((state: BreakpointState) => {
-                if (state.matches) {
-                    this.mobileMode = false;
-                    if (this.menuElement){
-                        this.menuPosition = this.menuElement.nativeElement.offsetTop - 40;
+                .observe(['(min-width: 768px)'])
+                .subscribe((state: BreakpointState) => {
+                    if (state.matches) {
+                        this.mobileMode = false;
+                        if (this.menuElement) {
+                            this.menuPosition =
+                                this.menuElement.nativeElement.offsetTop - 40;
+                        }
+                    } else {
+                        this.mobileMode = true;
+                        if (this.btnElement)
+                            this.btnPosition =
+                                this.btnElement.nativeElement.offsetTop + 10;
                     }
-                } else {
-                    this.mobileMode = true;
-                    if (this.btnElement)
-                        this.btnPosition = this.btnElement.nativeElement.offsetTop + 10;
-                }
 
-                this.lpService.setMobileMode(this.mobileMode);
-            });
+                    this.lpService.setMobileMode(this.mobileMode);
+                });
         }
     }
 
@@ -892,16 +1055,14 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         return this.editMode == this.EDIT_MODES.EDIT_MODE;
     }
 
-    showData() : void{
+    showData(): void {
         if (this.md != null) {
-            
             setTimeout(() => {
                 this.setMenuPosition();
                 this.updateScreenSize();
                 this._showData = true;
             }, 0);
-        }else
-            this._showData = false;
+        } else this._showData = false;
     }
 
     /**
@@ -928,23 +1089,35 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     // Check revision mode
                     if (this.mdupdsvc.published) {
                         this.edstatsvc.setRecState(this.recStates.PUBLISHED);
-                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
+                        this.edstatsvc.setEditMode(
+                            this.EDIT_MODES.PREVIEW_MODE,
+                        );
                     } else if (this.mdupdsvc.revision) {
                         this.edstatsvc.setRecState(this.recStates.REVISE);
                         // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
-                    } else if( this.mdupdsvc.submitted ) {
+                        this.edstatsvc.setEditMode(
+                            this.EDIT_MODES.PREVIEW_MODE,
+                        );
+                    } else if (this.mdupdsvc.isSubmitted) {
                         this.edstatsvc.setRecState(this.recStates.SUBMITTED);
-                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEW_MODE);                        
-                    } else if( this.mdupdsvc.resubmit ) {
+                        this.edstatsvc.setEditMode(
+                            this.EDIT_MODES.PREVIEW_MODE,
+                        );
+                    } else if (this.mdupdsvc.resubmit) {
                         this.edstatsvc.setRecState(this.recStates.RESUBMIT);
                         this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
-                    } else {
+                    } else if (this.mdupdsvc.editState) {
                         this.editRequested = true;
                         // this.isEditMode = true;
-                        this.edstatsvc.setRecState(this.recStates.EDIT);                        
+                        this.edstatsvc.setRecState(this.recStates.EDIT);
                         this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
                         // this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
+                    } else {
+                        this.editRequested = false;
+                        this.edstatsvc.setRecState('undefined');
+                        this.edstatsvc.setEditMode(
+                            this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE,
+                        );
                     }
                 }else { // Not authorized to edit. Set to view only mode.
                     this.editRequested = false;
@@ -957,7 +1130,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                 this.edstatsvc.setShowLPContent(true);
                 this.showData();
             });
-        }else{
+        } else {
             this.editRequested = false;
             this.edstatsvc.setRecState(this.recStates.EDIT);
             this.edstatsvc.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
@@ -977,40 +1150,45 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * set the document's title.
      */
     setDocumentTitle(): void {
-        let title = "PDR: ";
-        if (this.md['abbrev']) title += this.md['abbrev'] + " - ";
-        if (this.md['title'])
-            title += this.md['title']
-        else
-            title += this.md['@id']
+        let title = 'PDR: ';
+        if (this.md['abbrev']) title += this.md['abbrev'] + ' - ';
+        if (this.md['title']) title += this.md['title'];
+        else title += this.md['@id'];
         this.titleSv.setTitle(title);
     }
 
     /**
      * return the current document title
      */
-    getDocumentTitle(): string { return this.titleSv.getTitle(); }
+    getDocumentTitle(): string {
+        return this.titleSv.getTitle();
+    }
 
     /**
      * apply the URL fragment by scrolling to the proper place in the document
      */
     public useFragment() {
-        this.router.events.subscribe(s => {
+        this.router.events.subscribe((s) => {
             if (s instanceof NavigationEnd) {
                 const tree = this.router.parseUrl(this.router.url);
                 let element = null;
                 if (tree.fragment) {
-                    element = document.querySelector("#" + tree.fragment);
-                }
-                else {
-                    element = document.querySelector("body");
+                    element = document.querySelector('#' + tree.fragment);
+                } else {
+                    element = document.querySelector('body');
                     if (!element)
-                        console.warn("useFragment: failed to find document body!");
+                        console.warn(
+                            'useFragment: failed to find document body!',
+                        );
                 }
                 if (element) {
                     //element.scrollIntoView();
                     setTimeout(() => {
-                        element.scrollIntoView({ behavior: "smooth", block: "start", inline: "nearest" });
+                        element.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start',
+                            inline: 'nearest',
+                        });
                     }, 1);
                 }
             }
@@ -1025,11 +1203,11 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     goToSection(sectionId: string) {
         // If sectionID is "Metadata", scroll to About This Dataset and display JSON viewer
-        this.showJsonViewer = (sectionId == "Metadata");
-        if(sectionId == "Metadata") sectionId = "about";
+        this.showJsonViewer = sectionId == 'Metadata';
+        if (sectionId == 'Metadata') sectionId = 'about';
 
         setTimeout(() => {
-            if(this.landingBodyComponent != undefined)
+            if (this.landingBodyComponent != undefined)
                 this.landingBodyComponent.goToSection(sectionId);
         }, 50);
     }
@@ -1046,11 +1224,9 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * toggle the visibility of the citation pop-up window
      * @param size
      */
-    toggleCitation(size: string) : void {
-        if(size == 'small')
-            this.citationDialogWith = 400;
-        else
-            this.citationDialogWith = 550;
+    toggleCitation(size: string): void {
+        if (size == 'small') this.citationDialogWith = 400;
+        else this.citationDialogWith = 550;
 
         this.citationVisible = !this.citationVisible;
     }
@@ -1059,7 +1235,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * return text representing the recommended citation for this resource
      */
     getCitation(): string {
-        this.citetext = (new NERDResource(this.md)).getCitation();
+        this.citetext = new NERDResource(this.md).getCitation();
         return this.citetext;
     }
 
@@ -1068,20 +1244,22 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      */
     setMessage() {
         if (this.editMode == this.EDIT_MODES.DONE_MODE)
-            this.message = 'You can now close this browser tab <p>and go back to MIDAS to either accept or discard the changes.'
+            this.message =
+                'You can now close this browser tab <p>and go back to MIDAS to either accept or discard the changes.';
 
         if (this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE)
-            this.message = 'This record is not currently available for editing. <p>Please return to MIDAS and click "Edit Landing Page" to edit.'
+            this.message =
+                'This record is not currently available for editing. <p>Please return to MIDAS and click "Edit Landing Page" to edit.';
     }
 
     /**
      * Setup landing page layout
      */
     landingpageClass() {
-        if(this.mobileMode){
-            return "col-12 md:col-12 lg:col-12 sm:flex-nowrap";
-        }else{
-            "col-10 md:col-10 lg:col-10 sm:flex-nowrap";
+        if (this.mobileMode) {
+            return 'col-12 md:col-12 lg:col-12 sm:flex-nowrap';
+        } else {
+            ('col-10 md:col-10 lg:col-10 sm:flex-nowrap');
         }
     }
 
@@ -1090,50 +1268,50 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * in the visiblity of the sidebar will be animated (either opened or closed).
      */
     toggleSbarView() {
-        this._sbarvisible = ! this._sbarvisible;
+        this._sbarvisible = !this._sbarvisible;
         this.chref.detectChanges();
     }
 
     isSbarVisible() {
-        return this._sbarvisible
+        return this._sbarvisible;
     }
 
     updateSidebarStatus(sbarVisible) {
         this.sidebarVisible = sbarVisible;
         let helpWidth = null;
-        if(this.mobileMode){
+        if (this.mobileMode) {
             this.helpWidth = 0;
             this.lpsWidth = window.innerWidth;
-            this.mainBodyStatus = "mainfullyexpanded";
-        }else {
-            if(this.sidebarVisible){
-              this.helpWidth = window.innerWidth * 0.35;
-              this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
+            this.mainBodyStatus = 'mainfullyexpanded';
+        } else {
+            if (this.sidebarVisible) {
+                this.helpWidth = window.innerWidth * 0.35;
+                this.lpsWidth =
+                    window.innerWidth - this.helpWidth - this.gapForSplitter;
 
-              this.mainBodyStatus = "mainsquished";
-
-            }else{
+                this.mainBodyStatus = 'mainsquished';
+            } else {
                 this.helpWidth = window.innerWidth * 0.05;
                 this.lpsWidth = window.innerWidth * 0.95 - 0;
-                this.mainBodyStatus = "mainexpanded";
+                this.mainBodyStatus = 'mainexpanded';
             }
         }
 
-          this.updateScreenSize(0, helpWidth);
+        this.updateScreenSize(0, helpWidth);
     }
 
     /**
      *  Following functions detect screen size
      */
-    @HostListener("window:resize", [])
-        public onResize() {
-            this.updateScreenSize();
+    @HostListener('window:resize', [])
+    public onResize() {
+        this.updateScreenSize();
     }
 
-    private updateScreenSize(diff: number = 0, helpWidth: number=null) {
+    private updateScreenSize(diff: number = 0, helpWidth: number = null) {
         setTimeout(() => {
-            if(this.inBrowser){
-                switch (this.mainBodyStatus){
+            if (this.inBrowser) {
+                switch (this.mainBodyStatus) {
                     case 'mainexpanded':
                         this.helpWidth = 50;
                         this.lpsWidth = window.innerWidth;
@@ -1145,25 +1323,35 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     default: //mainsquished
                         if (helpWidth) {
                             this.helpWidth = helpWidth;
-                            this.helpWidthRatio = this.helpWidth / window.innerWidth;
-                        } 
-                        else {
+                            this.helpWidthRatio =
+                                this.helpWidth / window.innerWidth;
+                        } else {
                             if (diff) {
                                 this.helpWidth = this.helpWidth - diff;
-                                this.helpWidthRatio = this.helpWidth / window.innerWidth;
+                                this.helpWidthRatio =
+                                    this.helpWidth / window.innerWidth;
                             } else {
-                                this.helpWidth = window.innerWidth * this.helpWidthRatio;
+                                this.helpWidth =
+                                    window.innerWidth * this.helpWidthRatio;
                             }
                         }
 
-                        this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
+                        this.lpsWidth =
+                            window.innerWidth -
+                            this.helpWidth -
+                            this.gapForSplitter;
 
                         this.helpMaxWidth = window.innerWidth / 2;
-                        this.sidebarHeight = window.innerHeight - this.topBarHeight - 50;
+                        this.sidebarHeight =
+                            window.innerHeight - this.topBarHeight - 50;
                         this.pageYOffset = window.pageYOffset;
-                        this.splitterPaddingTop = (window.innerHeight - this.topBarHeight) / 2 - 100;
-                        this.helpWidth = this.helpWidth < this.helpMinWidth? this.helpMinWidth : this.helpWidth;
-                        this.lpsWidthForPreview = window.innerWidth * .75;
+                        this.splitterPaddingTop =
+                            (window.innerHeight - this.topBarHeight) / 2 - 100;
+                        this.helpWidth =
+                            this.helpWidth < this.helpMinWidth
+                                ? this.helpMinWidth
+                                : this.helpWidth;
+                        this.lpsWidthForPreview = window.innerWidth * 0.75;
                         break;
                 }
 
@@ -1173,42 +1361,43 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         }, 0);
     }
 
-
     setLpsWidth() {
-      if(this.hideToolMenu){
-          this.lpsWidth = window.innerWidth - this.helpWidth - this.gapForSplitter;
-          this.globalService.setLpsLeftWidth(this.lpsWidth - this.widthForSplitter);
-      }else{
-          // this.mainBodyStatus = "mainsquished";
-          this.prevLpsWidth = this.lpsWidth;
-          // this.lpsWidth = this.lpsWidthForPreview;
+        if (this.hideToolMenu) {
+            this.lpsWidth =
+                window.innerWidth - this.helpWidth - this.gapForSplitter;
+            this.globalService.setLpsLeftWidth(
+                this.lpsWidth - this.widthForSplitter,
+            );
+        } else {
+            // this.mainBodyStatus = "mainsquished";
+            this.prevLpsWidth = this.lpsWidth;
+            // this.lpsWidth = this.lpsWidthForPreview;
 
-          if(!this.mobileMode) {
-            this.lpsWidth = window.innerWidth - 450;
-          }
-          //Preview mode
-          //In preview mode, the width of the right side menu is 18% of of the page width
-          //So left side should be 80% of the page width (splitter also need some space)
-          this.globalService.setLpsLeftWidth(this.lpsWidth);
-      }
-
+            if (!this.mobileMode) {
+                this.lpsWidth = window.innerWidth - 450;
+            }
+            //Preview mode
+            //In preview mode, the width of the right side menu is 18% of of the page width
+            //So left side should be 80% of the page width (splitter also need some space)
+            this.globalService.setLpsLeftWidth(this.lpsWidth);
+        }
     }
 
     updateSplitterHeight() {
-        if(this.lpscontent){
+        if (this.lpscontent) {
             this.splitterHeight = this.lpscontent.nativeElement.offsetHeight;
         }
     }
 
     // The following mouse functions handle drag action
     @HostListener('window:mousemove', ['$event'])
-    onMouseMove(event: MouseEvent){
+    onMouseMove(event: MouseEvent) {
         this.mouse = {
             x: event.clientX,
-            y: event.clientY
-        }
+            y: event.clientY,
+        };
 
-        if(this.mouseDragging) {
+        if (this.mouseDragging) {
             this.splitterX = this.mouse.x;
 
             let diff = this.mouse.x - this.prevMouseX;
@@ -1228,8 +1417,8 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
         this.mouseDragging = false;
     }
 
-    toggleMenu(event){
-      event.stopPropagation();
-      this.showStickMenu = !this.showStickMenu
+    toggleMenu(event) {
+        event.stopPropagation();
+        this.showStickMenu = !this.showStickMenu;
     }
 }

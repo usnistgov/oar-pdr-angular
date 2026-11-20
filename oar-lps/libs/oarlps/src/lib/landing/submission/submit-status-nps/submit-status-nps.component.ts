@@ -66,6 +66,11 @@ export class SubmitStatusNpsComponent {
         );
     }
 
+    get lastUpdated() {
+        const date = new Date(this.submitStatus.updated * 1000);
+        return date.toISOString().split('T')[0]
+    }
+
     ngOnChanges(changes: SimpleChanges): void {
         this.reloadFeedback();
     }
