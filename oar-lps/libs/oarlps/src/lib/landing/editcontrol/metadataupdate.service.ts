@@ -109,6 +109,13 @@ export class MetadataUpdateService {
         );
     }
 
+    /**
+     * Indicate if the record's state is edit.
+     */
+    get editState() {
+        return this._recStatus.state == "edit";
+    }
+
     private _authorized: boolean = false;
     get authorized() {
         return this._authorized;
@@ -217,52 +224,62 @@ export class MetadataUpdateService {
      *         this record
      * @throws Error   if a problem occurred while opening up the record
      */
+
     public startEditing(recid: string): Observable<boolean> {
         return this.dapsvc.edit(recid).pipe(
-            tap((recsvc) => {
-                recsvc.canEdit().subscribe({
-                    next: (success) => {
-                        //Do nothing
-                    },
-                    error: (err) => {
-                        throw new daperrs.NotAuthorizedError(recid, "write");
-                    }
-                })
+            switchMap((recsvc) =>
+                recsvc.canEdit().pipe(
+                    catchError((err) =>
+                        throwError(
+                            () =>
+                                new daperrs.NotAuthorizedError(recid, "write"),
+                        ),
+                    ),
+                    switchMap((canedit) => {
+                        this.dapUpdtSvc = recsvc as MIDASDAPUpdateService;
+                        const rec = this.dapUpdtSvc.getRecord();
+                        this._recStatus = rec.status;
 
-                this.dapUpdtSvc = recsvc as MIDASDAPUpdateService;
-                let rec = this.dapUpdtSvc.getRecord();
+                        if (rec.status?.modified) {
+                            this.lastUpdate = {
+                                userAttributes: {
+                                    userName: rec.status?.byWho,
+                                },
+                                _updateDate: new Date(
+                                    rec.status.modified * 1000,
+                                ).toLocaleString(),
+                            };
+                        }
 
-                this._recStatus = rec.status;
+                        if (rec.status?.byWho && this.staffsvc) {
+                            // TODO: use staff directory to look up last editor
+                        }
 
-                if (rec.status?.modified)
-                    this.lastUpdate = {
-                        userAttributes: { userName: rec.status?.byWho },
-                        _updateDate: new Date(
-                            rec.status.modified * 1000,
-                        ).toLocaleString(),
-                    };
-                if (rec.status?.byWho && this.staffsvc) {
-                    // TODO: use staff directory to look up user who made last edit
+                        // Only retrieve data when permission is granted
+                        return recsvc.getData().pipe(
+                            tap((data) => {
+                                this.cacheMetadata(data as NerdmRes);
+                                this.checkUpdatedFields(data as NerdmRes);
+                            }),
+                            map(() => canedit),
+                        );                     
+                    }),
+                ),
+            ),
+            tap((authorized) => {
+                if (authorized) {
+                    this._authorized = true;
+                    this.globalsvc?.setAuthorized(true);
                 }
-            }),
-            switchMap((recsvc) => {
-                return recsvc.getData();
-            }),
-            tap((data) => {
-                this.cacheMetadata(data as NerdmRes);
-                this.checkUpdatedFields(data as NerdmRes);
-            }),
-            map((data) => {
-                this._authorized = true;
-                this.globalsvc?.setAuthorized(true);
-                return true;
             }),
             catchError((err) => {
                 if (err instanceof daperrs.NotAuthorizedError) {
+                    this._authorized = false;
                     this.globalsvc?.setAuthorized(false);
                     return of(false);
                 }
-                throw err;
+
+                return throwError(() => err);
             }),
         );
     }

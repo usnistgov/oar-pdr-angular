@@ -692,7 +692,7 @@ export class LandingConstants {
             PREVIEW_MODE: 'previewMode',
             DONE_MODE: 'doneMode',
             VIEWONLY_MODE: 'viewOnlyMode',
-            VIEWONLY_WITH_CONTROL_MODE: 'viewOnlyControlMode',
+            PREVIEWONLY_MODE: 'previewOnlyMode',
             OUTSIDE_MIDAS_MODE: 'outsideMidasMode'
         }
     };

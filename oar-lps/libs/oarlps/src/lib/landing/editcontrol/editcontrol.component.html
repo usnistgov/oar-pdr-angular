@@ -12,8 +12,8 @@
                 <fa-icon [icon]="faTimes"></fa-icon>
             </span>
             {{currentMode}}
-            <span *ngIf="mdupdsvc.submitted || mdupdsvc.published" class="splitter1"> | </span>
-            <span *ngIf="mdupdsvc.submitted || mdupdsvc.published" id="submitted">
+            <span *ngIf="!mdupdsvc.editState" class="splitter1"> | </span>
+            <span *ngIf="!mdupdsvc.editState" id="submitted">
                 {{stateForDisplay}}
                 <!-- <i class="fas fa-info-circle" id="ec-info-btn-sm" (click)="toogleMessage()" data-toggle="tooltip"
                     title="Show message"></i> -->
@@ -170,7 +170,7 @@
             type="button" 
             pTooltip="Edit" 
             tooltipPosition="bottom" 
-            *ngIf="!mobileMode && isPreviewMode"
+            *ngIf="!mobileMode && (isPreviewMode || !isEditing)"
             class="btn btn-labeled" 
             (click)="onEdit()" 
             id="ec-edit-btn" 
@@ -184,7 +184,7 @@
             type="button" 
             pTooltip="Edit" 
             tooltipPosition="bottom" 
-            *ngIf="mobileMode && isPreviewMode" 
+            *ngIf="mobileMode && (isPreviewMode || !isEditing)" 
             class="btn btn-labeled" 
             (click)="onEdit()" 
             id="ec-edit-btn-sm"
@@ -199,7 +199,7 @@
             type="button" 
             pTooltip="Preview" 
             tooltipPosition="bottom" 
-            *ngIf="!mobileMode && isEditMode"
+            *ngIf="!mobileMode && isEditing"
             class="btn btn-labeled" 
             (click)="preview()" 
             id="ec-preview-btn" 
@@ -213,7 +213,7 @@
             type="button" 
             pTooltip="Preview" 
             tooltipPosition="bottom" 
-            *ngIf="mobileMode && isEditMode" 
+            *ngIf="mobileMode && isEditing" 
             class="btn btn-labeled" 
             (click)="preview()" 
             id="ec-preview-btn-mo" 
