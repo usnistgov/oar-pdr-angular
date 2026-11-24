@@ -174,7 +174,7 @@
             class="btn btn-labeled" 
             (click)="onEdit()" 
             id="ec-edit-btn" 
-            [disabled]="!editEnable">
+            [disabled]="!readyEdit || !editEnable">
 
             <fa-icon [icon]="faPencil"></fa-icon>
             {{editBtnLabel}}
@@ -188,7 +188,7 @@
             class="btn btn-labeled" 
             (click)="onEdit()" 
             id="ec-edit-btn-sm"
-            [disabled]="!editEnable">
+            [disabled]="!readyEdit || !editEnable">
 
             <fa-icon [icon]="faPencil"></fa-icon>
         </button>
