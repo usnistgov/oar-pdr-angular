@@ -79,19 +79,26 @@ export class MetadataUpdateService {
      */
     get revision() {
         return (
-            this._recStatus.state == "edit" &&
-            this._recStatus.published &&
-            this._recStatus.published != "" &&
-            this._recStatus.published > this._recStatus.submitted
+            this._recStatus.state == "revision"
         );
     }
 
     /**
-     * Consider this is a submitted record if:
+     * Consider this record is currently submitted if:
      * state = 'submitted'
      */
-    get submitted() {
+    get isSubmitted() {
         return this._recStatus.state == "submitted";
+    }
+
+    /**
+     * Consider this record was submitted if:
+     * state != 'submitted' and submitted date is not empty
+     */
+    get wasSubmitted() {
+        return (
+            this._recStatus.state != "submitted" && this._recStatus.submitted
+        );
     }
 
     /**
@@ -110,7 +117,7 @@ export class MetadataUpdateService {
     }
 
     /**
-     * Indicate if the record's state is edit.
+     * Check if record state is 'edit'.
      */
     get editState() {
         return this._recStatus.state == "edit";
@@ -136,8 +143,6 @@ export class MetadataUpdateService {
     watchFileManagerUrl(subscriber: any) {
         return this._fileManagerUrl.subscribe(subscriber);
     }
-
-    // globalsvc = inject(GlobalService);
 
     /**
      * any Observable that will send out the date of the last update each time the metadata

@@ -88,7 +88,7 @@
             class="btn btn-labeled" 
             id="ec-review-btn" 
             (click)="submitReview()"  
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable" 
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit" 
             label="Submit for Review" 
             iconPos="left">
 
@@ -103,7 +103,7 @@
              class="btn btn-labeled" 
              id="ec-review-btn-sm" 
              (click)="submitReview()" 
-             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable" 
+             [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit" 
              label="Submit" 
              iconPos="left">
 
@@ -123,7 +123,7 @@
             class="btn btn-labeled" 
             id="ec-review-btn-mo" 
             (click)="openDialog()" 
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable">
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
 
             <fa-icon [icon]="faCircleArrowUp"></fa-icon>
             <!-- <ng-template pTemplate="content">
@@ -140,7 +140,7 @@
             class="btn btn-labeled"
             id="ec-discard-btn" 
             (click)="confirmDiscardEdits()" 
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable">
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
 
             <fa-icon [icon]="faTrashCan"></fa-icon>
             Discard
@@ -154,7 +154,7 @@
             class="btn btn-labeled"
             id="ec-discard-btn-sm" 
             (click)="confirmDiscardEdits()" 
-            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit || !editEnable">
+            [disabled]="isDoneMode || isOutsideMidasMode || !readyEdit">
 
             <fa-icon [icon]="faTrashCan"></fa-icon>
         </button>
@@ -179,7 +179,7 @@
             <fa-icon [icon]="faPencil"></fa-icon>
             {{editBtnLabel}}
         </button>
-        
+
         <button 
             type="button" 
             pTooltip="Edit" 
@@ -203,7 +203,7 @@
             class="btn btn-labeled" 
             (click)="preview()" 
             id="ec-preview-btn" 
-            [disabled]="!readyEdit || !editEnable">
+            [disabled]="!readyEdit">
 
             <fa-icon [icon]="faEye"></fa-icon>Preview
         </button>
@@ -217,7 +217,7 @@
             class="btn btn-labeled" 
             (click)="preview()" 
             id="ec-preview-btn-mo" 
-            [disabled]="!readyEdit || !editEnable">
+            [disabled]="!readyEdit">
 
             <fa-icon [icon]="faEye"></fa-icon>
         </button>
@@ -232,7 +232,7 @@
             id="ec-files-btn"
             [ngClass]="screenWidth > screenSizeBreakPoint? 'ec-files-btn' : 'ec-files-btn-sm'" 
             (click)="openFileManager()"
-            [disabled]="!readyEdit|| !editEnable">
+            [disabled]="!readyEdit">
 
             <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Manage Files
         </button>
@@ -245,7 +245,7 @@
             class="btn btn-labeled" 
             id="ec-files-btn-sm" 
             (click)="openFileManager()"
-            [disabled]="!readyEdit || !editEnable">
+            [disabled]="!readyEdit">
 
             <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>Files
         </button>
@@ -259,7 +259,7 @@
             id="ec-files-btn-mo" 
             icon="fas fa-external-link-alt faa-1x icon-white"
             (click)="openFileManager()" 
-            [disabled]="!readyEdit || !editEnable">
+            [disabled]="!readyEdit">
 
             <fa-icon [icon]="faArrowUpRightFromSquare"></fa-icon>
         </button>
@@ -272,7 +272,6 @@
         *ngIf="authorized && (editMode==EDIT_MODES.EDIT_MODE || forceDisplay)"
         [(mdrec)]="mdrec"></pdr-edit-status>
  </div>
-
 
 <!-- error messages go here -->
 <!-- <pdr-message [defSysErrorPrefix]="'There was a problem while editing your record.'"></pdr-message> -->

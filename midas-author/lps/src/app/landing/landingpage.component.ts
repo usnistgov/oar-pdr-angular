@@ -384,7 +384,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     }
 
                     //If status is "submitted", get external_review property from record status
-                    if (this.mdupdsvc.submitted || this.mdupdsvc.resubmit) {
+                    if (this.mdupdsvc.isSubmitted || this.mdupdsvc.resubmit) {
                         this.submitStatus =
                             this.mdupdsvc.recStatus.external_review;
                         if (!this.submitStatus) this.submitStatus = {};
@@ -552,6 +552,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                 if (this.inBrowser) {
                                     if (this.cfg_editEnabled) {
                                         this.metricsData.hasCurrentMetrics = false;
+                                        this.metricsData.dataReady = true; //Signal UI to display "Metrics not available"
                                         this.showMetrics = true;
                                     } else {
                                         if (
@@ -650,6 +651,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                     if (this.inBrowser) {
                         if (this.cfg_editEnabled) {
                             this.metricsData.hasCurrentMetrics = false;
+                            this.metricsData.dataReady = true; //Signal UI to display "Metrics not available"
                             this.showMetrics = true;
                         } else {
                             if (this.theme == Themes.DEFAULT_THEME)
@@ -1124,7 +1126,7 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                             this.edstatsvc.setEditMode(
                                 this.EDIT_MODES.PREVIEW_MODE,
                             );
-                        } else if (this.mdupdsvc.submitted) {
+                        } else if (this.mdupdsvc.isSubmitted) {
                             this.edstatsvc.setRecState(
                                 this.recStates.SUBMITTED,
                             );

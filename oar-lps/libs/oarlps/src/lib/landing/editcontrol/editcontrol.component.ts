@@ -65,25 +65,24 @@ import { faCircle } from '@fortawesome/free-regular-svg-icons';
  * orchestrating authentication and authorization.  
  */
 @Component({
-    selector: 'pdr-edit-control',
+    selector: "pdr-edit-control",
     standalone: true,
     imports: [
-        CommonModule, 
-        ConfirmationDialogModule, 
-        ButtonModule, 
-        OverlayPanelModule, 
-        NgbModule, 
-        NgSelectModule, 
+        CommonModule,
+        ConfirmationDialogModule,
+        ButtonModule,
+        OverlayPanelModule,
+        NgbModule,
+        NgSelectModule,
         FormsModule,
         EditStatusComponent,
         SubmitConfirmComponent,
-        FontAwesomeModule
+        FontAwesomeModule,
     ],
-    templateUrl: './editcontrol.component.html',
-    styleUrls: ['./editcontrol.component.css']
+    templateUrl: "./editcontrol.component.html",
+    styleUrls: ["./editcontrol.component.css"],
 })
 export class EditControlComponent implements OnInit, OnChanges {
-
     private _dapUpdtsvc: DAPUpdateService = null;
     private originalRecord: NerdmRes = null;
     editMode: string;
@@ -92,7 +91,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     EDIT_MODES: any;
     screenWidth: number;
     screenSizeBreakPoint: number;
-    fileManagerUrl: string = 'https://nextcloud-dev.nist.gov';
+    fileManagerUrl: string = "https://nextcloud-dev.nist.gov";
     portalURL: string;
     allRevisionTypes: RevisionDetails[] = [];
     revisionTypes = new RevisionTypes();
@@ -113,13 +112,13 @@ export class EditControlComponent implements OnInit, OnChanges {
     revisionStarted: boolean = false;
     recStates = LandingConstants.recStates;
     readonly dialog = inject(MatDialog);
-    
+
     //icon class
     editIcon = iconClass.EDIT;
     closeIcon = iconClass.CLOSE;
     saveIcon = iconClass.SAVE;
     cancelIcon = iconClass.CANCEL;
-    undoIcon = iconClass.UNDO;    
+    undoIcon = iconClass.UNDO;
     timesIcon = iconClass.TIMES;
     circleInfoIcon = iconClass.CIRCLE_INFO;
     circleIcon = iconClass.CIRCLE;
@@ -141,7 +140,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     faTrashCan = faTrashCan;
     faArrowUpRightFromSquare = faArrowUpRightFromSquare;
     faCircle = faCircle;
-    
+
     /**
      * the local copy of the draft (updated) metadata.  This parameter is available to a parent
      * template via [(mdrec)].
@@ -155,8 +154,12 @@ export class EditControlComponent implements OnInit, OnChanges {
      * the original resource identifier
      */
     private _resid: string = null;
-    get resID() { return this._resid; }
-    set resID(resID: string) { this._resid = resID; }
+    get resID() {
+        return this._resid;
+    }
+    set resID(resID: string) {
+        this._resid = resID;
+    }
 
     @Input() inBrowser: boolean = false;
 
@@ -172,26 +175,26 @@ export class EditControlComponent implements OnInit, OnChanges {
      *
      * @param mdupdsvc           a MetadataUpdateService used to receive updates from editing widgets
      * @param authsvc            a AuthService used for interacting with the customization web service
-     *                           (this service will provide the CustomizationService for updating 
+     *                           (this service will provide the CustomizationService for updating
      *                           metadata).
-     * @param confirmDialogSvc   a ConfirmationDialogService for displaying pop-up confirmation windows 
+     * @param confirmDialogSvc   a ConfirmationDialogService for displaying pop-up confirmation windows
      *                           (provided by local injector)
-     * @param globalService      a GlobalService used to receive messages for display in the error 
+     * @param globalService      a GlobalService used to receive messages for display in the error
      *                           message bar
      */
-    public constructor( private mdupdsvc: MetadataUpdateService,
-                        public edstatsvc: EditStatusService,
-                        private authsvc: AuthenticationService,
-                        private confirmDialogSvc: ConfirmationDialogService,
-                        private cfg: AppConfig,
-                        public lpService: LandingpageService, 
-                        private chref: ChangeDetectorRef,
-                        private modalService: NgbModal,
-                        public globalService: GlobalService,
-                        public collectionService: CollectionService,
-                        private notificationService: NotificationService,
-                        public iconLibrary: FaIconLibrary) {
-
+    public constructor(
+        private mdupdsvc: MetadataUpdateService,
+        public edstatsvc: EditStatusService,
+        private authsvc: AuthenticationService,
+        private confirmDialogSvc: ConfirmationDialogService,
+        private cfg: AppConfig,
+        public lpService: LandingpageService,
+        private chref: ChangeDetectorRef,
+        private modalService: NgbModal,
+        public globalService: GlobalService,
+        public collectionService: CollectionService,
+        public iconLibrary: FaIconLibrary,
+    ) {
         iconLibrary.addIcons(
             faPencil,
             faXmark,
@@ -204,7 +207,7 @@ export class EditControlComponent implements OnInit, OnChanges {
             faCircleArrowUp,
             faEye,
             faTrashCan,
-            faArrowUpRightFromSquare
+            faArrowUpRightFromSquare,
         );
 
         this.globalService.watchCollection((collection) => {
@@ -221,29 +224,30 @@ export class EditControlComponent implements OnInit, OnChanges {
 
         this.globalService.watchAuthorized((authorized) => {
             this.authorized = authorized;
-            if(!authorized) {
+            if (!authorized) {
                 let msg: Message = {} as Message;
                 msg.text = "You are not authorized to edit this record.";
                 this.globalService.setMessage1(msg);
             }
-        })
-
-        this.globalService.watchSubmissionData(
-            (data) => {
-                this.submissionData = new SubmissionData(data);
         });
-        
+
+        this.globalService.watchSubmissionData((data) => {
+            this.submissionData = new SubmissionData(data);
+        });
+
+        this.globalService.watchSubmissionData((data) => {
+            this.submissionData = new SubmissionData(data);
+        });
+
         this.EDIT_MODES = LandingConstants.editModes;
-        this.mdupdsvc.subscribe(
-            (md) => {
-                if (md && md != this.mdrec) {
-                    if(md && !md["keyword"]) md["keyword"] = [];
-                    this.mdrec = md as NerdmRes;
-                    this.edstatsvc.setLastUpdated(this.mdupdsvc.lastUpdate);
-                    // this.mdrecChange.emit(md as NerdmRes);
-                }
+        this.mdupdsvc.subscribe((md) => {
+            if (md && md != this.mdrec) {
+                if (md && !md["keyword"]) md["keyword"] = [];
+                this.mdrec = md as NerdmRes;
+                this.edstatsvc.setLastUpdated(this.mdupdsvc.lastUpdate);
+                // this.mdrecChange.emit(md as NerdmRes);
             }
-        );
+        });
 
         this.edstatsvc.setLastUpdated(this.mdupdsvc.lastUpdate);
         // this.edstatsvc.setAuthorized(this.isAuthorized());
@@ -251,22 +255,28 @@ export class EditControlComponent implements OnInit, OnChanges {
         this.authsvc.getCredentials().subscribe((cred) => {
             this.cred = cred;
             this.edstatsvc.setUserID(this.cred.userID);
-        })
+        });
 
         //Load suggestions:
         this.lpService.watchSubmitResponse((suggestions) => {
             this.suggestions = suggestions as ReviewResponse;
-        })
-        
-        this.screenSizeBreakPoint = +this.cfg.get("screenSizeBreakPoint", "768");
-        this.portalURL = this.cfg.get("portalAPI", "https://mdsdev.nist.gov/portal/landing");
+        });
+
+        this.screenSizeBreakPoint = +this.cfg.get(
+            "screenSizeBreakPoint",
+            "768",
+        );
+        this.portalURL = this.cfg.get(
+            "portalAPI",
+            "https://mdsdev.nist.gov/portal/landing",
+        );
     }
 
     ngOnInit() {
         let i = 0;
 
         this.allRevisionTypes = this.revisionTypes.getAllTypes();
-        this.submissionData["isRevision"] = this.isRevision;
+        this.submissionData["isRevision"] = this.isPublished;
         this.globalService.setSubmissionData(this.submissionData);
 
         // set edit mode to view only on init
@@ -286,40 +296,49 @@ export class EditControlComponent implements OnInit, OnChanges {
                 this.fileManagerUrl = fileManagerUrl;
             }
         });
-        
+
         this.edstatsvc.watchEditMode((editMode) => {
             this.editMode = editMode;
-        })
+        });
 
         this.edstatsvc.watchRecState((recState) => {
             this.curRecState = recState;
-            this.submissionData["isRevision"] = this.isRevision;
+            this.submissionData["isRevision"] = this.isPublished;
             this.globalService.setSubmissionData(this.submissionData);
             // this.updateMode(true);
-        })
+        });
 
         this.lpService.watchMobileMode((response) => {
             this.mobileMode = response;
-        })
+        });
 
         this.lpService.watchSubmitResponse((response) => {
             this.submitResponse = response;
-        })
+        });
 
         this.collectionData = this.collectionService.getCollectionData();
     }
 
     get hasRequiredItems() {
-        return this.suggestions && this.suggestions['req'] && this.suggestions['req'].length > 0;
+        return (
+            this.suggestions &&
+            this.suggestions["req"] &&
+            this.suggestions["req"].length > 0
+        );
     }
 
     get isSubmitted() {
-        return this.mdupdsvc.submitted;
+        return this.mdupdsvc.isSubmitted;
         // return this.mdupdsvc.recStatus.state == "submitted";
     }
 
-    get isRevision() {
-        return this.mdupdsvc.revision;
+    get wasSubmitted() {
+        return this.mdupdsvc.wasSubmitted;
+        // return this.mdupdsvc.recStatus.state == "submitted";
+    }
+
+    get isPublished() {
+        return this.mdupdsvc.published;
         // return this.curRecState == this.REC_STATES.REVISE;
     }
 
@@ -336,41 +355,52 @@ export class EditControlComponent implements OnInit, OnChanges {
 
     get isViewonlyMode() {
         return this.editMode == this.EDIT_MODES.VIEWONLY_MODE;
-    }    
+    }
 
     get isDoneMode() {
         return this.editMode == this.EDIT_MODES.DONE_MODE;
     }
 
     get isOutsideMidasMode() {
-        return this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE
+        return this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE;
+    }
+
+    get isRevision() {
+        return this.mdupdsvc.revision;
+        // return this.curRecState == this.REC_STATES.REVISE;
     }
 
     get editBtnLabel() {
-        if (this.isRevision && !this.revisionStarted) return "Revise Record";
+        if (this.isPublished && !this.revisionStarted) return "Revise Record";
         else return "Edit";
     }
 
     get readyEdit() {
-        if (this.authorized){
+        if (this.authorized) {
             if (this.isRevision) return this.revisionStarted;
             else return this.mdupdsvc.editState;
-        }else{
+        } else {
             return false;
         }
     }
 
-    get editEnable() {
-        return this.authorized && !this.isSubmitted && !this.mdupdsvc.published;
+    get readyRevise() {
+        return this.authorized && this.isPublished;
     }
+
+    // get editEnable() {
+    //     return this.authorized && !this.isSubmitted && !this.mdupdsvc.published;
+    // }
 
     get revisionWidth() {
         if (this.screenWidth > this.screenSizeBreakPoint && !this.mobileMode)
-            return {'width': '200px'};
-        else if (this.screenWidth <= this.screenSizeBreakPoint && !this.mobileMode)
-            return {'width': '100px'};
-        else 
-            return {'width': '50px'};
+            return { width: "200px" };
+        else if (
+            this.screenWidth <= this.screenSizeBreakPoint &&
+            !this.mobileMode
+        )
+            return { width: "100px" };
+        else return { width: "50px" };
     }
 
     get stateForDisplay() {
@@ -385,17 +415,21 @@ export class EditControlComponent implements OnInit, OnChanges {
         return state;
     }
 
-    submitBtnLabel(btnType: string = 'normal') {
+    get recStateUndefined() {
+        return this.curRecState == "undefined";
+    }
+
+    submitBtnLabel(btnType: string = "normal") {
         let btnLabel: string = "";
 
         switch (btnType) {
-            case 'mobile':
+            case "mobile":
                 btnLabel = "Submit";
                 break;
-            
+
             default:
                 btnLabel = "Submit for Review";
-                break;                
+                break;
         }
 
         return btnLabel;
@@ -404,16 +438,16 @@ export class EditControlComponent implements OnInit, OnChanges {
     /**
      * Return current mode string for display
      */
-    get currentMode(){
+    get currentMode() {
         let returnString: string = "EDIT MODE";
 
-        if(this.mdupdsvc.published) {
+        if (this.mdupdsvc.published) {
             returnString = "VIEW ONLY MODE";
-        }else if(this.mdupdsvc.submitted) {
+        } else if (this.mdupdsvc.isSubmitted) {
             returnString = "VIEW ONLY MODE";
-        }else if(this.mdupdsvc.resubmit) {
+        } else if (this.mdupdsvc.resubmit) {
             returnString = "RESUBMIT MODE";
-        }else if (this.mdupdsvc.revision) {
+        } else if (this.mdupdsvc.revision) {
             returnString = "REVISION MODE";
         }
 
@@ -430,26 +464,26 @@ export class EditControlComponent implements OnInit, OnChanges {
 
     get editModeIconClass() {
         let returnString: string = "";
-        switch(this.editMode) { 
-            case this.EDIT_MODES.EDIT_MODE: { 
-                if(this.curRecState == this.REC_STATES.EDIT)
+        switch (this.editMode) {
+            case this.EDIT_MODES.EDIT_MODE: {
+                if (this.curRecState == this.REC_STATES.EDIT)
                     returnString = "fa-pencil";
-                else if(this.curRecState == this.REC_STATES.REVISE)
+                else if (this.curRecState == this.REC_STATES.REVISE)
                     returnString = "fa-undo";
-                break; 
-            } 
-            case this.EDIT_MODES.PREVIEW_MODE: { 
+                break;
+            }
+            case this.EDIT_MODES.PREVIEW_MODE: {
                 returnString = "fa-eye";
-                break; 
-            } 
-            case this.EDIT_MODES.DONE_MODE: { 
+                break;
+            }
+            case this.EDIT_MODES.DONE_MODE: {
                 returnString = "fa-check";
-                break; 
-            } 
-            default: { 
-                break; 
-            } 
-        } 
+                break;
+            }
+            default: {
+                break;
+            }
+        }
 
         return returnString;
     }
@@ -458,9 +492,9 @@ export class EditControlComponent implements OnInit, OnChanges {
         return !this.hasRequiredItems;
     }
 
-    get fileManagerTooltip(){
-        if(this.fileManagerUrl) return this.fileManagerUrl;
-        else return "File Manager URL is not available."
+    get fileManagerTooltip() {
+        if (this.fileManagerUrl) return this.fileManagerUrl;
+        else return "File Manager URL is not available.";
     }
 
     ngOnChanges() {
@@ -500,21 +534,19 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     private detectScreenSize() {
-        if(this.inBrowser)
-            this.screenWidth = window.innerWidth;
-        else
-            this.screenWidth = 500; 
+        if (this.inBrowser) this.screenWidth = window.innerWidth;
+        else this.screenWidth = 500;
     }
 
     // setReviseType(type: any) {
-        // this.edstatsvc.setReviseType(type.type);
+    // this.edstatsvc.setReviseType(type.type);
     // }
 
     /**
-     * flag indicating whether the current editing mode of the landing page.  
-     * @param editmode   
+     * flag indicating whether the current editing mode of the landing page.
+     * @param editmode
      */
-    setEditMode(editmode : string){
+    setEditMode(editmode: string) {
         this.editMode = editmode;
         //broadcast the editmode
         this.edstatsvc.setEditMode(editmode);
@@ -525,7 +557,7 @@ export class EditControlComponent implements OnInit, OnChanges {
      * When user clicks on the edit button
      */
     onEdit() {
-        // Regardless if this is revision mode or not, when user clicks on edit button, 
+        // Regardless if this is revision mode or not, when user clicks on edit button,
         // set the flag to true and stay true. This flag is to set the edit button lable
         // for revision mode. For other mode it will be ignored.
         this.startEditing();
@@ -536,22 +568,46 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     /**
-     * start (or resume) editing of the resource metadata.  Calling this will cause editing widgets to 
+     * start (or resume) editing of the resource metadata.  Calling this will cause editing widgets to
      * appear on the landing page, allowing the user to edit various fields.
-     * 
-     * @param nologin   if false (default) and the user is not logged in, the browser will be redirected 
-     *                  to the authentication service.  If true, redirection will not occur; instead, 
-     *                  the app will remain with editing turned off if the user is not logged in.  
+     *
+     * @param nologin   if false (default) and the user is not logged in, the browser will be redirected
+     *                  to the authentication service.  If true, redirection will not occur; instead,
+     *                  the app will remain with editing turned off if the user is not logged in.
      */
-    public startEditing(nologin: boolean = false, remoteStart: boolean = false): void {
-        if(!this.inBrowser)
-            return;
+    public startEditing(
+        nologin: boolean = false,
+        remoteStart: boolean = false,
+    ): void {
+        if (!this.inBrowser) return;
 
         if (this.mdupdsvc.authorized) {
-            if (this.isRevision && !this.revisionStarted) {
+            if (this.isPublished && !this.revisionStarted) {
                 this.mdupdsvc.submit("revise").subscribe((result) => {
                     var message;
                     var err: boolean = false;
+
+                    this.modalRef = this.modalService.open(
+                        ConfirmationDialogComponent,
+                    );
+
+                    //For testing, disable error handling
+                    if (result["error"]) {
+                        err = true;
+                        this.modalRef.componentInstance.title =
+                            "The server returned following error message";
+                        message = result["error"];
+                    } else {
+                        this.modalRef.componentInstance.title = "Note";
+                        message =
+                            "Simple changes to metadata or README files can be published without review.  Adding, removing, or making major changes to files will require NPS review before publishing.";
+                    }
+
+                    this.modalRef.componentInstance.btnOkText = "Ok";
+                    this.modalRef.componentInstance.btnCancelText = "Cancel";
+                    this.modalRef.componentInstance.message = message;
+                    this.modalRef.componentInstance.showWarningIcon = false;
+                    this.modalRef.componentInstance.showCancelButton = false;
 
                     this.modalRef = this.modalService.open(
                         ConfirmationDialogComponent,
@@ -582,6 +638,7 @@ export class EditControlComponent implements OnInit, OnChanges {
                                 this.setEditMode(this.EDIT_MODES.EDIT_MODE);
                                 this.edstatsvc.setShowLPContent(true);
                                 this.revisionStarted = true;
+                                this.startEditing();
                             } else {
                                 console.log("User changed mind.");
                             }
@@ -589,20 +646,19 @@ export class EditControlComponent implements OnInit, OnChanges {
                         (reason) => {},
                     );
                 });
-            } else if (this.mdupdsvc.submitted || this.mdupdsvc.published) {
+            } else if (this.mdupdsvc.isSubmitted || this.mdupdsvc.published) {
                 this.isEditing = false;
                 this.setEditMode(this.EDIT_MODES.PREVIEWONLY_MODE);
-            } else if(this.mdupdsvc.editState) {
+            } else if (this.mdupdsvc.editState) {
                 // this.updateMode(remoteStart);
                 // this.edit();
                 this.isEditing = true;
                 this.setEditMode(this.EDIT_MODES.EDIT_MODE);
                 this.edstatsvc.setShowLPContent(true);
-            } else { //Any other state, set to preview only mode
+            } else {
+                //Any other state, set to preview only mode
                 this.isEditing = false;
-                this.setEditMode(
-                    this.EDIT_MODES.PREVIEWONLY_MODE,
-                );
+                this.setEditMode(this.EDIT_MODES.PREVIEWONLY_MODE);
             }
         } else {
             // Unauthorized - set to the edit mode set by landing page
@@ -646,28 +702,26 @@ export class EditControlComponent implements OnInit, OnChanges {
                     //     console.error("error during discard: " + err.message)
                     //     this.msgsvc.syserror("error during discard: " + err.message)
                     // }
-                }
+                },
             });
-        }
-        else
-            console.warn("Warning: requested edit discard without authorization");
+        } else
+            console.warn(
+                "Warning: requested edit discard without authorization",
+            );
     }
 
     /**
-     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert 
+     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert
      * the data to its previous state.
      */
     public confirmDiscardEdits(): void {
-        var message = 'Edited data will be lost. Do you want to erase changes?';
+        var message = "Edited data will be lost. Do you want to erase changes?";
 
-        this.confirmDialogSvc.confirm(
-            'Please confirm',
-            message, true)
+        this.confirmDialogSvc
+            .confirm("Please confirm", message, true)
             .then((confirmed) => {
-                if (confirmed)
-                    this.discardEdits()
-                else
-                    console.log("User canceled discard request");
+                if (confirmed) this.discardEdits();
+                else console.log("User canceled discard request");
             })
             .catch(() => {
                 console.log("User canceled discard request (indirectly)");
@@ -675,7 +729,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     /**
-     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert 
+     * discard the latest changes after receiving confirmation via a modal pop-up.  This will revert
      * the data to its previous state.
      */
     public showEditControlHelpPopup(event, overlaypanel: OverlayPanel): void {
@@ -690,27 +744,27 @@ export class EditControlComponent implements OnInit, OnChanges {
      */
     public doneEdits(): void {
         window.open(this.portalURL, "_blank");
-    //   if (this._custsvc){
-    //     this._custsvc.doneEditing().subscribe(
-    //       (res) => {
-    //         // console.log("Done edit return:", res);
-    //         this.mdupdsvc.forgetUpdateDate();
-    //         this.mdupdsvc.fieldReset();
-    //         this.setEditMode(this.EDIT_MODES.DONE_MODE);
-    //       },
-    //       (err) => {
-    //         if (err.type == "user")
-    //           this.msgsvc.error(err.message);
-    //         else {
-    //           this.msgsvc.syserror("error during save: " + err.message);
-    //         }
-    //       }
-    //     );
-    //   }
+        //   if (this._custsvc){
+        //     this._custsvc.doneEditing().subscribe(
+        //       (res) => {
+        //         // console.log("Done edit return:", res);
+        //         this.mdupdsvc.forgetUpdateDate();
+        //         this.mdupdsvc.fieldReset();
+        //         this.setEditMode(this.EDIT_MODES.DONE_MODE);
+        //       },
+        //       (err) => {
+        //         if (err.type == "user")
+        //           this.msgsvc.error(err.message);
+        //         else {
+        //           this.msgsvc.syserror("error during save: " + err.message);
+        //         }
+        //       }
+        //     );
+        //   }
     }
 
     /**
-     * pause the editing process: remove the editing widgets from the page so that the user can see how 
+     * pause the editing process: remove the editing widgets from the page so that the user can see how
      * the changes will appear.  This function is called when the "Preview" button is clicked.
      */
     public preview(): void {
@@ -746,8 +800,7 @@ export class EditControlComponent implements OnInit, OnChanges {
         //             console.log("User canceled request (indirectly)");
         //         });
         // }
-            window.open(this.fileManagerUrl);
-      
+        window.open(this.fileManagerUrl);
     }
 
     /**
@@ -755,30 +808,33 @@ export class EditControlComponent implements OnInit, OnChanges {
      */
     openSubmitConfirmDialog() {
         let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
+            backdrop: "static",
             keyboard: false,
             windowClass: "modal-small",
-            size: 'lg'
+            size: "lg",
         };
 
-        this.modalRef = this.modalService.open(SubmitConfirmComponent, ngbModalOptions);
+        this.modalRef = this.modalService.open(
+            SubmitConfirmComponent,
+            ngbModalOptions,
+        );
         this.modalRef.componentInstance.submitResponse = this.submitResponse;
         this.modalRef.componentInstance.returnValue.subscribe(
             (submit) => {
-                if ( submit.goSubmit ) {
-                    // DBIO Web Service Action:  PATCH /dap/mds3/id/status    
+                if (submit.goSubmit) {
+                    // DBIO Web Service Action:  PATCH /dap/mds3/id/status
                     // with input: { "action": "submit" }
                     this.mdupdsvc.submit("submit").subscribe((result) => {
                         //reload the landing page
                         window.location.reload();
-                    })
-                }else{
-                    console.log("User canceled submit.");//Do nothing
+                    });
+                } else {
+                    console.log("User canceled submit."); //Do nothing
                 }
-            }, 
+            },
             (reason) => {
-                console.log("User canceled submit.");//Do nothing
-            }
+                console.log("User canceled submit."); //Do nothing
+            },
         );
     }
 
@@ -787,21 +843,24 @@ export class EditControlComponent implements OnInit, OnChanges {
      */
     openSubmitStatusDialog(submitStatus: any) {
         let ngbModalOptions: NgbModalOptions = {
-            backdrop: 'static',
+            backdrop: "static",
             keyboard: false,
             windowClass: "modal-small",
-            size: 'lg'
+            size: "lg",
         };
 
-        this.modalRef = this.modalService.open(SubmitStatusComponent, ngbModalOptions);
+        this.modalRef = this.modalService.open(
+            SubmitStatusComponent,
+            ngbModalOptions,
+        );
         this.modalRef.componentInstance.submitStatus = submitStatus;
         this.modalRef.componentInstance.returnValue.subscribe(
             (submit) => {
-                    console.log("User closed submit status window.");//Do nothing
-            }, 
+                console.log("User closed submit status window."); //Do nothing
+            },
             (reason) => {
-                console.log("User canceled submit.");//Do nothing
-            }
+                console.log("User canceled submit."); //Do nothing
+            },
         );
     }
 
@@ -810,36 +869,35 @@ export class EditControlComponent implements OnInit, OnChanges {
             //Get external_review property from record status
             let submitStatus = this.mdupdsvc.recStatus.external_review;
 
-            //If submitted, display a popup window to display the overall status state    
+            //If submitted, display a popup window to display the overall status state
             this.openSubmitStatusDialog(submitStatus);
-
         } else {
             // Finalizing
-            this.mdupdsvc.submit("finalize", {"message": "preparing for submission"}).subscribe(
-                (result) => {
+            this.mdupdsvc
+                .submit("finalize", { message: "preparing for submission" })
+                .subscribe((result) => {
                     //Finalize with no error. Then refresh Nerdm record
                     this.mdupdsvc.loadDraft(true).subscribe((result) => {
                         //Once Nerdm record refreshed. Suggestions will automatically refreshed as well
                         //Then display the pop up window
 
                         this.openSubmitConfirmDialog();
-                    })
-                }
-            )
+                    });
+                });
         }
     }
 
     /**
      * Refresh the help text
      */
-    refreshHelpText(){
+    refreshHelpText() {
         let sectionHelp: SectionHelp = {} as SectionHelp;
         sectionHelp.section = "Revision";
         sectionHelp.topic = "general";
         sectionHelp.showGeneral = false;
 
         this.lpService.setSectionHelp(sectionHelp);
-    }    
+    }
 
     toogleMessage() {
         this.forceDisplay = !this.forceDisplay;
