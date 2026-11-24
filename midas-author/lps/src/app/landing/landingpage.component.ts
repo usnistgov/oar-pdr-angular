@@ -535,23 +535,29 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
             // Retrive Nerdm record and keep it in case we need to display it in preview mode
             // use case: user manually open PDR landing page but the record was not edited by MIDAS
             // This part will only be executed if "editEnabled=true" is not in URL parameter.
-            this.authsvc.getCredentials().subscribe(
-                cred => {
-                    if(!!cred && !!cred.token &&
-                        (!cred.expires || (new Date()) < cred.expires)) {
+            this.authsvc.getCredentials().subscribe((cred) => {
+                if (
+                    !!cred &&
+                    !!cred.token &&
+                    (!cred.expires || new Date() < cred.expires)
+                ) {
+                    this.globalService.setAuthenticated(true);
+                    this.mdupdsvc.startEditing(this.reqId).subscribe({
+                        next: (success) => {
+                            
+                                this.theme = ThemesPrefs.getTheme(
+                                    new NERDResource(this.md).theme(),
+                                );
 
-                        this.globalService.setAuthenticated(true);
-                        this.mdupdsvc.startEditing(this.reqId).subscribe({
-                            next: (success) => {
-                                this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
-
-                                if(this.inBrowser){
-                                    if(this.cfg_editEnabled){
+                                if (this.inBrowser) {
+                                    if (this.cfg_editEnabled) {
                                         this.metricsData.hasCurrentMetrics = false;
                                         this.metricsData.dataReady = true; //Signal UI to display "Metrics not available"
                                         this.showMetrics = true;
-                                    }else{
-                                        if(this.theme == Themes.DEFAULT_THEME){
+                                    } else {
+                                        if (
+                                            this.theme == Themes.DEFAULT_THEME
+                                        ) {
                                             this.getMetrics();
                                         }
                                     }
@@ -568,34 +574,36 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
                                 if (this.inBrowser) {
                                     this.edstatsvc.setShowLPContent(true);
 
-                                        if (this.editRequested) {
-                                            showError = false;
-                                            // Need to pass reqID (resID) because the resID in editControlComponent
-                                            // has not been set yet and the startEditing function relies on it.
-                                            this.edstatsvc.startEditing(this.reqId);
-                                        }
-                                        else
-                                            showError = true;
-                                    }
-                                    //Display error if any
-                                    if(showError) {
+                                    if (this.editRequested) {
+                                        showError = false;
+                                        // Need to pass reqID (resID) because the resID in editControlComponent
+                                        // has not been set yet and the startEditing function relies on it.
+                                        this.edstatsvc.startEditing(this.reqId);
+                                    } else showError = true;
+                                }
+                                //Display error if any
+                                if (showError) {
+                                }
 
-                                    }
-
-                                    this.mdupdsvc.loadDBIOrecord().subscribe({
-                                        next: (dbio) => {
-                                            // console.log("dbio", dbio)
-                                        },
-                                        error: (err) => {
-                                            console.error(err);
-                                        }
-                                    });
-
-                            },
-                            error: (err) => {
+                                this.mdupdsvc.loadDBIOrecord().subscribe({
+                                    next: (dbio) => {
+                                        // console.log("dbio", dbio)
+                                    },
+                                    error: (err) => {
+                                        console.error(err);
+                                    },
+                                });
+                            if (!success) {
                                 this.globalService.setAuthorized(false);
-                                console.log("Load error", err);
-                                this.loadingMessage = "Failed to load data for editing. " + err.message;
+                                // this.displayOnly();
+                            }
+                        },
+                        error: (err) => {
+                            this.globalService.setAuthorized(false);
+                            console.log('Load error', err);
+                            this.loadingMessage =
+                                'Failed to load data for editing. ' +
+                                err.message;
                         },
                     });
                 } else {
@@ -623,88 +631,105 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      * to edit the draft data.
      */
     loadPublicData() {
-        let metadataError = "";
+        let metadataError = '';
         var showError: boolean = true;
 
         this.nerdmReserv.getResource(this.reqId).subscribe(
             (data) => {
-            // successful metadata request
-            this.md = data;
+                // successful metadata request
+                this.md = data;
 
-            if (!this.md) {
-                // id not found; reroute
-                console.error("No data found for ID=" + this.reqId);
-                metadataError = "not-found";
-            }
-            else{
-                this.theme = ThemesPrefs.getTheme((new NERDResource(this.md)).theme());
+                if (!this.md) {
+                    // id not found; reroute
+                    console.error('No data found for ID=' + this.reqId);
+                    metadataError = 'not-found';
+                } else {
+                    this.theme = ThemesPrefs.getTheme(
+                        new NERDResource(this.md).theme(),
+                    );
 
-                if(this.inBrowser){
-                    if(this.cfg_editEnabled){
-                        this.metricsData.hasCurrentMetrics = false;
-                        this.metricsData.dataReady = true; //Signal UI to display "Metrics not available"
-                        this.showMetrics = true;
-                    }else{
-                        if(this.theme == Themes.DEFAULT_THEME)
-                            this.getMetrics();
+                    if (this.inBrowser) {
+                        if (this.cfg_editEnabled) {
+                            this.metricsData.hasCurrentMetrics = false;
+                            this.metricsData.dataReady = true; //Signal UI to display "Metrics not available"
+                            this.showMetrics = true;
+                        } else {
+                            if (this.theme == Themes.DEFAULT_THEME)
+                                this.getMetrics();
+                        }
+                    }
+
+                    // proceed with rendering of the component
+                    this.useMetadata();
+
+                    // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
+                    // in editing mode.  This is done in concert with the authentication process that can involve
+                    // redirection to an authentication server; on successful authentication, the server can
+                    // redirect the browser back to this landing page with editing turned on.
+                    if (this.inBrowser) {
+                        // Display content after 15sec no matter what
+                        setTimeout(() => {
+                            this.edstatsvc.setShowLPContent(true);
+                            // this._showContent = true;
+                        }, 1000);
+
+                        if (this.editRequested) {
+                            showError = false;
+                            // console.log("Returning from authentication redirection (editmode="+
+                            //             this.editRequested+")");
+
+                            // Need to pass reqID (resID) because the resID in editControlComponent
+                            // has not been set yet and the startEditing function relies on it.
+                            this.edstatsvc.startEditing(this.reqId);
+                        } else showError = true;
                     }
                 }
 
-                // proceed with rendering of the component
-                this.useMetadata();
-
-                // if editing is enabled, and "editEnabled=true" is in URL parameter, try to start the page
-                // in editing mode.  This is done in concert with the authentication process that can involve
-                // redirection to an authentication server; on successful authentication, the server can
-                // redirect the browser back to this landing page with editing turned on.
-                if (this.inBrowser) {
-                    // Display content after 15sec no matter what
-                    setTimeout(() => {
-                        this.edstatsvc.setShowLPContent(true);
-                        // this._showContent = true;
-                    }, 1000);
-
-                    if (this.editRequested) {
-                        showError = false;
-                        // console.log("Returning from authentication redirection (editmode="+
-                        //             this.editRequested+")");
-
-                        // Need to pass reqID (resID) because the resID in editControlComponent
-                        // has not been set yet and the startEditing function relies on it.
-                        this.edstatsvc.startEditing(this.reqId);
-                    }
-                    else
-                        showError = true;
-                }
-            }
-
-            if (showError) {
-                if (metadataError == "not-found") {
-                    if (this.editRequested) {
-                        console.log("ID not found...");
-                        this.globalService.error("The record with ID '" + this.reqId + "' was not found. You may have been trying to access a draft record that has not been created yet.");
-                        this.edstatsvc.setEditMode(this.EDIT_MODES.OUTSIDE_MIDAS_MODE);
-                        this.setMessage();
-                        this.displaySpecialMessage = true;
-                    }
-                    else {
-                        this.globalService.error("The record with ID '" + this.reqId + "' was not found. Please check the ID and try again.");
+                if (showError) {
+                    if (metadataError == 'not-found') {
+                        if (this.editRequested) {
+                            console.log('ID not found...');
+                            this.globalService.error(
+                                "The record with ID '" +
+                                    this.reqId +
+                                    "' was not found. You may have been trying to access a draft record that has not been created yet.",
+                            );
+                            this.edstatsvc.setEditMode(
+                                this.EDIT_MODES.OUTSIDE_MIDAS_MODE,
+                            );
+                            this.setMessage();
+                            this.displaySpecialMessage = true;
+                        } else {
+                            this.globalService.error(
+                                "The record with ID '" +
+                                    this.reqId +
+                                    "' was not found. Please check the ID and try again.",
+                            );
+                        }
                     }
                 }
-            }
-        },
-        (err) => {
-            console.error("Failed to retrieve metadata: ", err);
-            this.edstatsvc.setShowLPContent(true);
-            this._showContent = true;
-            if (err instanceof IDNotFound) {
-                this.globalService.error("The record with ID '" + this.reqId + "' was not found. Please check the ID and try again.");
-            } else {
-                let msg = "An error occurred while retrieving the record with ID '" + this.reqId + "'. " + err.message;
-                this.globalService.syserror(msg);
-                console.error(msg);
-            }
-        });
+            },
+            (err) => {
+                console.error('Failed to retrieve metadata: ', err);
+                this.edstatsvc.setShowLPContent(true);
+                this._showContent = true;
+                if (err instanceof IDNotFound) {
+                    this.globalService.error(
+                        "The record with ID '" +
+                            this.reqId +
+                            "' was not found. Please check the ID and try again.",
+                    );
+                } else {
+                    let msg =
+                        "An error occurred while retrieving the record with ID '" +
+                        this.reqId +
+                        "'. " +
+                        err.message;
+                    this.globalService.syserror(msg);
+                    console.error(msg);
+                }
+            },
+        );
     }
 
     /**
@@ -1073,53 +1098,62 @@ export class LandingPageComponent implements OnInit, AfterViewInit {
      *  * set the page's title (as displayed in the browser title bar).
      */
     useMetadata(authenticated: boolean = false): void {
-        this.metricsData.url = "/metrics/" + this.reqId;
-        this.recordType = (new NERDResource(this.md)).resourceLabel();
+        this.metricsData.url = '/metrics/' + this.reqId;
+        this.recordType = new NERDResource(this.md).resourceLabel();
 
         // set the document title
         this.setDocumentTitle();
         this.mdupdsvc.cacheMetadata(this.md);
 
-        if (this.paramEditEnabled && authenticated){
+        if (this.paramEditEnabled && authenticated) {
             this.editRequested = true;
 
             this.mdupdsvc.isAuthorized(this.reqId).subscribe((result) => {
                 this.globalService.setAuthorized(result);
                 if (result) {
-                    // Check revision mode
-                    if (this.mdupdsvc.published) {
-                        this.edstatsvc.setRecState(this.recStates.PUBLISHED);
-                        this.edstatsvc.setEditMode(
-                            this.EDIT_MODES.PREVIEW_MODE,
-                        );
-                    } else if (this.mdupdsvc.revision) {
-                        this.edstatsvc.setRecState(this.recStates.REVISE);
-                        // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
-                        this.edstatsvc.setEditMode(
-                            this.EDIT_MODES.PREVIEW_MODE,
-                        );
-                    } else if (this.mdupdsvc.isSubmitted) {
-                        this.edstatsvc.setRecState(this.recStates.SUBMITTED);
-                        this.edstatsvc.setEditMode(
-                            this.EDIT_MODES.PREVIEW_MODE,
-                        );
-                    } else if (this.mdupdsvc.resubmit) {
-                        this.edstatsvc.setRecState(this.recStates.RESUBMIT);
-                        this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
-                    } else if (this.mdupdsvc.editState) {
-                        this.editRequested = true;
-                        // this.isEditMode = true;
-                        this.edstatsvc.setRecState(this.recStates.EDIT);
-                        this.edstatsvc.setEditMode(this.EDIT_MODES.EDIT_MODE);
-                        // this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
-                    } else {
+                    if (this.mdupdsvc.editState) {
+                        if (this.mdupdsvc.published) {
+                            // Check revision mode
+                            this.edstatsvc.setRecState(
+                                this.recStates.PUBLISHED,
+                            );
+                            this.edstatsvc.setEditMode(
+                                this.EDIT_MODES.PREVIEW_MODE,
+                            );
+                        } else if (this.mdupdsvc.revision) {
+                            this.edstatsvc.setRecState(this.recStates.REVISE);
+                            // this.edstatsvc.setReviseType(this.arrRevisionTypes[0]["type"]);
+                            this.edstatsvc.setEditMode(
+                                this.EDIT_MODES.PREVIEW_MODE,
+                            );
+                        } else if (this.mdupdsvc.isSubmitted) {
+                            this.edstatsvc.setRecState(
+                                this.recStates.SUBMITTED,
+                            );
+                            this.edstatsvc.setEditMode(
+                                this.EDIT_MODES.PREVIEW_MODE,
+                            );
+                        } else if (this.mdupdsvc.resubmit) {
+                            this.edstatsvc.setRecState(this.recStates.RESUBMIT);
+                            this.edstatsvc.setEditMode(
+                                this.EDIT_MODES.EDIT_MODE,
+                            );
+                        } else {
+                            this.editRequested = true;
+                            // this.isEditMode = true;
+                            this.edstatsvc.setRecState(this.recStates.EDIT);
+                            this.edstatsvc.setEditMode(
+                                this.EDIT_MODES.EDIT_MODE,
+                            );
+                            // this.edstatsvc.editMode.set(this.EDIT_MODES.EDIT_MODE);
+                        }
+                    }else{ // Not in edit state, set to view only mode
                         this.editRequested = false;
-                        this.edstatsvc.setRecState('undefined');
-                        this.edstatsvc.setEditMode(
-                            this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE,
-                        );
+                        this.edstatsvc.setRecState(this.recStates.EDIT);
+                        this.edstatsvc.setEditMode(this.EDIT_MODES.PREVIEWONLY_MODE);
                     }
-                }else { // Not authorized to edit. Set to view only mode.
+                } else {
+                    // Not authorized to edit. Set to view only mode.
                     this.editRequested = false;
                     this.edstatsvc.setRecState(this.recStates.EDIT);
                     this.edstatsvc.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);

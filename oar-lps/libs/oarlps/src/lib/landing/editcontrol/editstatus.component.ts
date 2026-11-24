@@ -232,48 +232,83 @@ export class EditStatusComponent implements OnInit {
      * display the time of the last update, if known
      */
     public showLastUpdate() {
-        switch(this.editmode){
+        switch (this.editmode) {
             case this.EDIT_MODES.EDIT_MODE:
             case this.EDIT_MODES.VIEWONLY_MODE:
-            case this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE:
+            case this.EDIT_MODES.PREVIEWONLY_MODE:
                 // We are editing the metadata (and are logged in)
-                if (this.updateDetails){
+                if (this.updateDetails) {
                     // Check if this record has been edited or published
-                
+
                     let message = "";
                     if (this.mdupdsvc.recStatus.published) {
                         // message = "by " + user + " on " + new Date(this.datePipe.transform(new Date(this.mdupdsvc.recStatus.published * 1000), "MMM d, y, h:mm:ss a"));
-                        message = "by " + this.user + " on " + new Date(this.mdupdsvc.recStatus.published * 1000).toLocaleString();
+                        message =
+                            "by " +
+                            this.user +
+                            " on " +
+                            new Date(
+                                this.mdupdsvc.recStatus.published * 1000,
+                            ).toLocaleString();
                     } else if (this.mdupdsvc.recStatus.submitted) {
-                        message = "by " + this.user + " on " + new Date(this.mdupdsvc.recStatus.submitted * 1000).toLocaleString();
-                    } else if (this._updateDetails._updateDate) { // _updateDate is either the date of last edit or last save, depending on the status of the record
-                        message = "by " + this.user + " on " + this._updateDetails._updateDate;
+                        message =
+                            "by " +
+                            this.user +
+                            " on " +
+                            new Date(
+                                this.mdupdsvc.recStatus.submitted * 1000,
+                            ).toLocaleString();
+                    } else if (this._updateDetails._updateDate) {
+                        // _updateDate is either the date of last edit or last save, depending on the status of the record
+                        message =
+                            "by " +
+                            this.user +
+                            " on " +
+                            this._updateDetails._updateDate;
                     }
 
                     this.showMessage(message);
-                }else
-                    this.showMessage('');
-            break;
+                } else this.showMessage("");
+                break;
             case this.EDIT_MODES.PREVIEW_MODE:
                 if (this.updateDetails) {
                     if (this.mdupdsvc.recStatus.published) {
-                            this.showMessage("There are un-submitted changes last edited on " + this.updateDetails._updateDate + ".  Click on the Revise Record button to continue editing.",
-                                false, "rgb(255, 115, 0)");
-                        } else if(this.mdupdsvc.recStatus.submitted) {
-                            this.showMessage("by " + this.user + " on " + new Date(this.mdupdsvc.recStatus.submitted * 1000).toLocaleString(),
-                                false, "rgb(255, 115, 0)");
-                        } else {
-                            this.showMessage("There are un-submitted changes last edited on " + this.updateDetails._updateDate + ".  Click on the Edit button to continue editing.",
-                                false, "rgb(255, 115, 0)");
-                        }
-
-                } else{
-                    this.showMessage('To see any previously edited inputs or to otherwise edit this page, click on the "Edit" button.');
+                        this.showMessage(
+                            "There are un-submitted changes last edited on " +
+                                this.updateDetails._updateDate +
+                                ".  Click on the Revise Record button to continue editing.",
+                            false,
+                            "rgb(255, 115, 0)",
+                        );
+                    } else if (this.mdupdsvc.recStatus.submitted) {
+                        this.showMessage(
+                            "by " +
+                                this.user +
+                                " on " +
+                                new Date(
+                                    this.mdupdsvc.recStatus.submitted * 1000,
+                                ).toLocaleString(),
+                            false,
+                            "rgb(255, 115, 0)",
+                        );
+                    } else {
+                        this.showMessage(
+                            "There are un-submitted changes last edited on " +
+                                this.updateDetails._updateDate +
+                                ".  Click on the Edit button to continue editing.",
+                            false,
+                            "rgb(255, 115, 0)",
+                        );
+                    }
+                } else {
+                    this.showMessage(
+                        'To see any previously edited inputs or to otherwise edit this page, click on the "Edit" button.',
+                    );
                 }
-            break;   
+                break;
             case this.EDIT_MODES.DONE_MODE:
-                this.showMessage('');
-            break;
+                this.showMessage("");
+                break;
         }        
     }
 }

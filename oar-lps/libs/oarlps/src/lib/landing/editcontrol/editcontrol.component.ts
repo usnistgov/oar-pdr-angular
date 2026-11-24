@@ -14,14 +14,14 @@ import {
     RevisionTypes,
     SubmissionData,
     SubmitResponse,
-    Collections,
+    Message,
     GlobalService,
     ReviewResponse,
     SectionHelp,
     iconClass,
     SubmissionStatus,
-    SubmissionFeedback
-} from '../../shared/globals/globals';
+    SubmissionFeedback,
+} from "../../shared/globals/globals";
 import { LandingpageService } from '../landingpage.service';
 import { NgbModalOptions, NgbModal, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { SubmitConfirmComponent } from '../submission/submit-confirm/submit-confirm.component';
@@ -106,6 +106,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     authorized: boolean = false;
     collectionData: any;
     forceDisplay: boolean = false;
+    isEditing: boolean = false;
 
     suggestions: ReviewResponse = {} as ReviewResponse;
     revisionStarted: boolean = false;
@@ -178,21 +179,22 @@ export class EditControlComponent implements OnInit, OnChanges {
      *                           metadata).
      * @param confirmDialogSvc   a ConfirmationDialogService for displaying pop-up confirmation windows
      *                           (provided by local injector)
-     * @param globalService      a GlobalService used to receive messages for display in the error 
+     * @param globalService      a GlobalService used to receive messages for display in the error
      *                           message bar
      */
-    public constructor( private mdupdsvc: MetadataUpdateService,
-                        public edstatsvc: EditStatusService,
-                        private authsvc: AuthenticationService,
-                        private confirmDialogSvc: ConfirmationDialogService,
-                        private cfg: AppConfig,
-                        public lpService: LandingpageService, 
-                        private chref: ChangeDetectorRef,
-                        private modalService: NgbModal,
-                        public globalService: GlobalService,
-                        public collectionService: CollectionService,
-                        public iconLibrary: FaIconLibrary) {
-
+    public constructor(
+        private mdupdsvc: MetadataUpdateService,
+        public edstatsvc: EditStatusService,
+        private authsvc: AuthenticationService,
+        private confirmDialogSvc: ConfirmationDialogService,
+        private cfg: AppConfig,
+        public lpService: LandingpageService,
+        private chref: ChangeDetectorRef,
+        private modalService: NgbModal,
+        public globalService: GlobalService,
+        public collectionService: CollectionService,
+        public iconLibrary: FaIconLibrary,
+    ) {
         iconLibrary.addIcons(
             faPencil,
             faXmark,
@@ -222,6 +224,15 @@ export class EditControlComponent implements OnInit, OnChanges {
 
         this.globalService.watchAuthorized((authorized) => {
             this.authorized = authorized;
+            if (!authorized) {
+                let msg: Message = {} as Message;
+                msg.text = "You are not authorized to edit this record.";
+                this.globalService.setMessage1(msg);
+            }
+        });
+
+        this.globalService.watchSubmissionData((data) => {
+            this.submissionData = new SubmissionData(data);
         });
 
         this.globalService.watchSubmissionData((data) => {
@@ -338,13 +349,13 @@ export class EditControlComponent implements OnInit, OnChanges {
     get isPreviewMode() {
         return (
             this.editMode == this.EDIT_MODES.PREVIEW_MODE ||
-            this.editMode == this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE
+            this.editMode == this.EDIT_MODES.PREVIEWONLY_MODE
         );
     }
 
     get isViewonlyMode() {
         return this.editMode == this.EDIT_MODES.VIEWONLY_MODE;
-    }    
+    }
 
     get isDoneMode() {
         return this.editMode == this.EDIT_MODES.DONE_MODE;
@@ -354,16 +365,23 @@ export class EditControlComponent implements OnInit, OnChanges {
         return this.editMode == this.EDIT_MODES.OUTSIDE_MIDAS_MODE;
     }
 
+    get isRevision() {
+        return this.mdupdsvc.revision;
+        // return this.curRecState == this.REC_STATES.REVISE;
+    }
+
     get editBtnLabel() {
         if (this.isPublished && !this.revisionStarted) return "Revise Record";
         else return "Edit";
     }
 
     get readyEdit() {
-        return this.authorized &&
-            !this.isSubmitted &&
-            !this.recStateUndefined &&
-            (!this.isPublished || this.isPublished && this.revisionStarted);
+        if (this.authorized) {
+            if (this.isRevision) return this.revisionStarted;
+            else return this.mdupdsvc.editState;
+        } else {
+            return false;
+        }
     }
 
     get readyRevise() {
@@ -398,7 +416,7 @@ export class EditControlComponent implements OnInit, OnChanges {
     }
 
     get recStateUndefined() {
-        return this.curRecState == 'undefined';
+        return this.curRecState == "undefined";
     }
 
     submitBtnLabel(btnType: string = "normal") {
@@ -542,52 +560,11 @@ export class EditControlComponent implements OnInit, OnChanges {
         // Regardless if this is revision mode or not, when user clicks on edit button,
         // set the flag to true and stay true. This flag is to set the edit button lable
         // for revision mode. For other mode it will be ignored.
-        if (this.isPublished && !this.revisionStarted) {
-            this.mdupdsvc.submit("revise").subscribe((result) => {
-                var message;
-                var err: boolean = false;
+        this.startEditing();
 
-                this.modalRef = this.modalService.open(ConfirmationDialogComponent);
-
-                //For testing, disable error handling
-                if (result["error"]) {
-                    err = true;
-                    this.modalRef.componentInstance.title =
-                        "The server returned following error message";
-                    message = result["error"];
-                } else {
-                    this.modalRef.componentInstance.title = "Note";
-                    message =
-                        "Simple changes to metadata or README files can be published without review.  Adding, removing, or making major changes to files will require NPS review before publishing.";
-                }
-
-                this.modalRef.componentInstance.btnOkText = "Ok";
-                this.modalRef.componentInstance.btnCancelText = "Cancel";
-                this.modalRef.componentInstance.message = message;
-                this.modalRef.componentInstance.showWarningIcon = false;
-                this.modalRef.componentInstance.showCancelButton = false;
-
-                this.modalRef.result.then(
-                    (result) => {
-                        if (result && !err) {
-                            this.setEditMode(this.EDIT_MODES.EDIT_MODE);
-                            this.edstatsvc.setShowLPContent(true);
-                            this.revisionStarted = true;
-                            this.startEditing();
-                        } else {
-                            console.log("User changed mind.");
-                        }
-                    },
-                    (reason) => {},
-                );
-            });
-        } else {
-            this.startEditing();
+        if (this.curRecState == this.REC_STATES.REVISE) {
+            this.revisionStarted = true;
         }
-
-        // if (this.curRecState == this.REC_STATES.REVISE) {
-        //     this.revisionStarted = true;
-        // }
     }
 
     /**
@@ -605,19 +582,88 @@ export class EditControlComponent implements OnInit, OnChanges {
         if (!this.inBrowser) return;
 
         if (this.mdupdsvc.authorized) {
-            if (this.readyEdit){
+            if (this.isPublished && !this.revisionStarted) {
+                this.mdupdsvc.submit("revise").subscribe((result) => {
+                    var message;
+                    var err: boolean = false;
+
+                    this.modalRef = this.modalService.open(
+                        ConfirmationDialogComponent,
+                    );
+
+                    //For testing, disable error handling
+                    if (result["error"]) {
+                        err = true;
+                        this.modalRef.componentInstance.title =
+                            "The server returned following error message";
+                        message = result["error"];
+                    } else {
+                        this.modalRef.componentInstance.title = "Note";
+                        message =
+                            "Simple changes to metadata or README files can be published without review.  Adding, removing, or making major changes to files will require NPS review before publishing.";
+                    }
+
+                    this.modalRef.componentInstance.btnOkText = "Ok";
+                    this.modalRef.componentInstance.btnCancelText = "Cancel";
+                    this.modalRef.componentInstance.message = message;
+                    this.modalRef.componentInstance.showWarningIcon = false;
+                    this.modalRef.componentInstance.showCancelButton = false;
+
+                    this.modalRef = this.modalService.open(
+                        ConfirmationDialogComponent,
+                    );
+
+                    //For testing, disable error handling
+                    if (result["error"] && false) {
+                        err = true;
+                        this.modalRef.componentInstance.title =
+                            "The server returned following error message";
+                        message = result["error"];
+                    } else {
+                        this.modalRef.componentInstance.title = "Note";
+                        message =
+                            "Simple changes to metadata or README files can be published without review.  Adding, removing, or making major changes to files will require NPS review before publishing.";
+                    }
+
+                    this.modalRef.componentInstance.btnOkText = "Ok";
+                    this.modalRef.componentInstance.btnCancelText = "Cancel";
+                    this.modalRef.componentInstance.message = message;
+                    this.modalRef.componentInstance.showWarningIcon = false;
+                    this.modalRef.componentInstance.showCancelButton = false;
+
+                    this.modalRef.result.then(
+                        (result) => {
+                            if (result) {
+                                this.isEditing = true;
+                                this.setEditMode(this.EDIT_MODES.EDIT_MODE);
+                                this.edstatsvc.setShowLPContent(true);
+                                this.revisionStarted = true;
+                                this.startEditing();
+                            } else {
+                                console.log("User changed mind.");
+                            }
+                        },
+                        (reason) => {},
+                    );
+                });
+            } else if (this.mdupdsvc.isSubmitted || this.mdupdsvc.published) {
+                this.isEditing = false;
+                this.setEditMode(this.EDIT_MODES.PREVIEWONLY_MODE);
+            } else if (this.mdupdsvc.editState) {
                 // this.updateMode(remoteStart);
                 // this.edit();
+                this.isEditing = true;
                 this.setEditMode(this.EDIT_MODES.EDIT_MODE);
-
                 this.edstatsvc.setShowLPContent(true);
             } else {
-                this.setEditMode(this.EDIT_MODES.VIEWONLY_WITH_CONTROL_MODE);
+                //Any other state, set to preview only mode
+                this.isEditing = false;
+                this.setEditMode(this.EDIT_MODES.PREVIEWONLY_MODE);
             }
         } else {
             // Unauthorized - set to the edit mode set by landing page
             // this.edit();
-            this.setEditMode(this.EDIT_MODES.VIEWONLY_MODE);
+            this.setEditMode(this.EDIT_MODES.PREVIEWONLY_MODE);
 
             this.edstatsvc.setShowLPContent(true);
         }
@@ -722,6 +768,7 @@ export class EditControlComponent implements OnInit, OnChanges {
      * the changes will appear.  This function is called when the "Preview" button is clicked.
      */
     public preview(): void {
+        this.isEditing = false;
         this.setEditMode(this.EDIT_MODES.PREVIEW_MODE);
     }
 
